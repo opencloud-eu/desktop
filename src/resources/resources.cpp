@@ -45,7 +45,7 @@ Q_GLOBAL_STATIC(IconCache, iconCache)
 
 QString vanillaThemePath()
 {
-    return QStringLiteral(":/client/ownCloud/theme");
+    return QStringLiteral(":/client/OpenCloud/theme");
 }
 
 QString brandThemePath()
@@ -99,7 +99,7 @@ bool Resources::hasMonoTheme()
 
 bool Resources::isVanillaTheme()
 {
-    return std::string_view(APPLICATION_SHORTNAME) == "ownCloud";
+    return std::string_view(APPLICATION_SHORTNAME) == "OpenCloud";
 }
 
 bool OCC::Resources::isUsingDarkTheme()
@@ -118,7 +118,7 @@ QIcon OCC::Resources::getCoreIcon(const QString &iconName)
     if (cached.isNull()) {
         const QString iconPath = QStringLiteral(":/client/resources/core/%1.svg").arg(iconName);
         Q_ASSERT(QFileInfo::exists(iconPath));
-        const QString color = isUsingDarkTheme() ? QStringLiteral("#ADACAB") : QStringLiteral("#435671");
+        const QString color = isUsingDarkTheme() ? QStringLiteral("#E2BAFF") : QStringLiteral("#20434F");
         QByteArray data = Template::renderTemplateFromFile(iconPath, {{QStringLiteral("color"), color}}).toUtf8();
         QBuffer buffer(&data);
         QImageReader iconReader(&buffer, "svg");

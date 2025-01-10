@@ -32,7 +32,7 @@ QUrl Resources::QMLResources::resourcePath2(const QString &provider, const QStri
 
 QUrl Resources::QMLResources::resourcePath(const QString &theme, const QString &icon, bool enabled)
 {
-    return resourcePath2(QStringLiteral("ownCloud"), icon, enabled, {{QStringLiteral("theme"), theme}});
+    return resourcePath2(QStringLiteral("OpenCloud"), icon, enabled, {{QStringLiteral("theme"), theme}});
 }
 
 Resources::QMLResources::Icon Resources::QMLResources::parseIcon(const QString &id)

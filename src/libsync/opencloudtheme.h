@@ -11,23 +11,17 @@
  * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
  * for more details.
  */
-
-#ifndef OWNCLOUD_THEME_H
-#define OWNCLOUD_THEME_H
+#pragma once
 
 #include "theme.h"
 
 namespace OCC {
 
-/**
- * @brief The ownCloudTheme class
- * @ingroup libsync
- */
-class ownCloudTheme : public Theme
+class OpenCloudTheme : public Theme
 {
     Q_OBJECT
 public:
-    ownCloudTheme();
+    OpenCloudTheme();
     QColor wizardHeaderBackgroundColor() const override;
     QColor wizardHeaderTitleColor() const override;
     QIcon wizardHeaderLogo() const override;
@@ -36,4 +30,3 @@ public:
     QmlButtonColor secondaryButtonColor() const override;
 };
 }
-#endif // OWNCLOUD_THEME_H

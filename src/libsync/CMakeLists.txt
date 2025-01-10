@@ -21,7 +21,7 @@ set(libsync_SRCS
     abstractnetworkjob.cpp
     networkjobs.cpp
     owncloudpropagator.cpp
-    owncloudtheme.cpp
+    opencloudtheme.cpp
     platform.cpp
     progressdispatcher.cpp
     propagatorjobs.cpp
@@ -137,7 +137,7 @@ GENERATE_EXPORT_HEADER(libsync
 )
 
 set_target_properties(libsync PROPERTIES
-        OUTPUT_NAME "ownCloudLibSync"
+        OUTPUT_NAME "OpenCloudLibSync"
         VERSION ${MIRALL_VERSION}
         SOVERSION ${MIRALL_SOVERSION}
 )

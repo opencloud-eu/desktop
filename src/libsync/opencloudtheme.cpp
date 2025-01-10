@@ -12,7 +12,7 @@
  * for more details.
  */
 
-#include "owncloudtheme.h"
+#include "opencloudtheme.h"
 
 #include <QCoreApplication>
 #include <QIcon>
@@ -21,39 +21,37 @@
 
 namespace OCC {
 
-ownCloudTheme::ownCloudTheme()
+OpenCloudTheme::OpenCloudTheme()
     : Theme()
 {
 }
 
-QColor ownCloudTheme::wizardHeaderBackgroundColor() const
+QColor OpenCloudTheme::wizardHeaderBackgroundColor() const
 {
-    return QColor(4, 30, 66);
+    return QColor("#20434F");
 }
 
-QColor ownCloudTheme::wizardHeaderTitleColor() const
+QColor OpenCloudTheme::wizardHeaderTitleColor() const
 {
     return Qt::white;
 }
 
-QIcon ownCloudTheme::wizardHeaderLogo() const
+QIcon OpenCloudTheme::wizardHeaderLogo() const
 {
     return Resources::themeUniversalIcon(QStringLiteral("wizard_logo"));
 }
-
-QIcon ownCloudTheme::aboutIcon() const
+QIcon OpenCloudTheme::aboutIcon() const
 {
-    return Resources::themeUniversalIcon(QStringLiteral("oc-image-about"));
+    return Resources::themeUniversalIcon(QStringLiteral("opencloud-icon"));
 }
 
-QmlButtonColor ownCloudTheme::primaryButtonColor() const
+QmlButtonColor OpenCloudTheme::primaryButtonColor() const
 {
-    const QColor button("#709cd2");
-    return {button, Qt::white, button.darker()};
+    return {"#E2BAFF", "#20434F", "#DADADA"};
 }
 
-QmlButtonColor ownCloudTheme::secondaryButtonColor() const
+QmlButtonColor OpenCloudTheme::secondaryButtonColor() const
 {
-    return {"#d4d3d0", Qt::black, QColor(Qt::black).lighter()};
+    return {"#CA8DF5", "#19353F", "#B0B0B0"};
 }
 }
