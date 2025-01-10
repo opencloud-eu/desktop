@@ -426,7 +426,6 @@ int main(int argc, char **argv)
             // Find the folder and the original owncloud URL
             QStringList splitted = tmp.path().split(ctx.account->davPath());
             tmp.setPath(splitted.value(0));
-            tmp.setScheme(tmp.scheme().replace(QLatin1String("owncloud"), QLatin1String("http")));
             return tmp;
         }();
 
