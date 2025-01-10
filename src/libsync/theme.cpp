@@ -261,7 +261,7 @@ QString Theme::gitSHA1(VersionFormat format) const
     if (!aboutShowCopyright()) {
         return gitShahSort;
     }
-    const auto gitUrl = QStringLiteral("https://github.com/owncloud/client/commit/%1").arg(Version::gitSha());
+    const auto gitUrl = QStringLiteral("https://github.com/opencloud-eu/desktop/commit/%1").arg(Version::gitSha());
     switch (format) {
     case Theme::VersionFormat::OneLiner:
         Q_FALLTHROUGH();
@@ -291,12 +291,14 @@ QString Theme::aboutVersions(Theme::VersionFormat format) const
         Q_UNREACHABLE();
     }();
     const QString qtVersion = QString::fromUtf8(qVersion());
-    const QString qtVersionString = (QLatin1String(QT_VERSION_STR) == qtVersion ? qtVersion : QCoreApplication::translate("ownCloudTheme::qtVer", "%1 (Built against Qt %2)").arg(qtVersion, QStringLiteral(QT_VERSION_STR)));
+    const QString qtVersionString = (QLatin1String(QT_VERSION_STR) == qtVersion
+            ? qtVersion
+            : QCoreApplication::translate("OpenCloudTheme::qtVer", "%1 (Built against Qt %2)").arg(qtVersion, QStringLiteral(QT_VERSION_STR)));
     QString _version = Version::displayString();
     QString gitUrl;
     if (!Version::gitSha().isEmpty()) {
         if (format != Theme::VersionFormat::Url) {
-            _version = QCoreApplication::translate("ownCloudTheme::versionWithSha", "%1 %2").arg(_version, gitSHA1(format));
+            _version = QCoreApplication::translate("OpenCloudTheme::versionWithSha", "%1 %2").arg(_version, gitSHA1(format));
         } else {
             gitUrl = gitSHA1(format) + br;
         }
@@ -308,7 +310,7 @@ QString Theme::aboutVersions(Theme::VersionFormat format) const
         sysInfo << QStringLiteral("QPA: %1").arg(guiApp->platformName());
     }
 
-    return QCoreApplication::translate("ownCloudTheme::aboutVersions()",
+    return QCoreApplication::translate("OpenCloudTheme::aboutVersions()",
         "%1 %2%7"
         "%8"
         "Libraries Qt %3, %4%7"
@@ -321,22 +323,12 @@ QString Theme::aboutVersions(Theme::VersionFormat format) const
 
 QString Theme::about() const
 {
-    // Ideally, the vendor should be "ownCloud GmbH", but it cannot be changed without
-    // changing the location of the settings and other registery keys.
-    const QString vendor = Resources::isVanillaTheme() ? QStringLiteral("ownCloud GmbH") : QStringLiteral(APPLICATION_VENDOR);
-    return tr("<p>Version %1. For more information visit <a href=\"%2\">https://%3</a></p>"
-              "<p>For known issues and help, please visit: <a href=\"https://central.owncloud.com/c/desktop-client\">https://central.owncloud.com</a></p>"
-              "<p><small>By Klaas Freitag, Daniel Molkentin, Olivier Goffart, Markus Götz, "
-              " Jan-Christoph Borchardt, Thomas Müller,<br>"
-              "Dominik Schmidt, Michael Stingl, Hannah von Reth, Fabian Müller and others.</small></p>"
-              "<p>Copyright ownCloud GmbH</p>"
-              "<p>Distributed by %4 and licensed under the GNU General Public License (GPL) Version 2.0.<br/>"
-              "%5 and the %5 logo are registered trademarks of %4 in the "
-              "United States, other countries, or both.</p>"
-              "<p><small>%6</small></p>")
-        .arg(Utility::escape(Version::displayString()), Utility::escape(QStringLiteral("https://" APPLICATION_DOMAIN)),
-            Utility::escape(QStringLiteral(APPLICATION_DOMAIN)), Utility::escape(vendor), Utility::escape(appNameGUI()),
-            aboutVersions(Theme::VersionFormat::RichText));
+    return tr("<p>Version %1. For more information visit <a href=\"https://opencloud.eu/\">https://opencloud.eu/</a></p>"
+              "<p>For known issues and help, please visit: <a href=\"https://github.com/opencloud-eu/desktop\">GitHub</a></p>"
+              "<p>Copyright OpenCloud GmbH<br/>"
+              "Copyright ownCloud GmbH</p>"
+              "<p><small>%2</small></p>")
+        .arg(Utility::escape(Version::displayString()), aboutVersions(Theme::VersionFormat::RichText));
 }
 
 bool Theme::aboutShowCopyright() const
