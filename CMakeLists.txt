@@ -107,12 +107,15 @@ if(APPLE)
   set( SOCKETAPI_TEAM_IDENTIFIER_PREFIX "" CACHE STRING "SocketApi prefix (including a following dot) that must match the codesign key's TeamIdentifier/Organizational Unit" )
 endif()
 
-if(APPLE)
-    find_package(Sparkle REQUIRED)
-endif(APPLE)
 
-if(WITH_APPIMAGEUPDATER)
-    find_package(AppImageUpdate REQUIRED)
+if (WITH_AUTO_UPDATER)
+    if(APPLE)
+        find_package(Sparkle REQUIRED)
+    endif(APPLE)
+
+    if(WITH_APPIMAGEUPDATER)
+        find_package(AppImageUpdate REQUIRED)
+    endif()
 endif()
 
 if(UNIX AND NOT APPLE)
