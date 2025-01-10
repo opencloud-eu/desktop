@@ -21,7 +21,7 @@ private Q_SLOTS:
         QTest::addColumn<QString>("url");
         QTest::addColumn<OCUpdater::DownloadState>("result");
         // a redirect to attic
-        QTest::newRow("redirect") << "https://download.owncloud.com/desktop/stable/ownCloud-2.2.4.6408-setup.exe" << OCUpdater::DownloadComplete;
+        QTest::newRow("redirect") << "https://download.opencloud.eu/desktop/stable/ownCloud-2.2.4.6408-setup.exe" << OCUpdater::DownloadComplete;
         QTest::newRow("broken url") << "https://&" << OCUpdater::DownloadFailed;
     }
 
@@ -31,7 +31,7 @@ private Q_SLOTS:
         QFETCH(OCUpdater::DownloadState, result);
         UpdateInfo info;
         info.setDownloadUrl(url);
-        info.setVersionString(QStringLiteral("ownCloud 2.2.4 (build 6408)"));
+        info.setVersionString(QStringLiteral("OpenCloud 2.2.4 (build 6408)"));
         // esnure we do the update
         info.setVersion(QStringLiteral("100.2.4.6408"));
         auto *updater = new WindowsUpdater({});

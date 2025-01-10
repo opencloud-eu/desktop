@@ -25,7 +25,7 @@ void Utility::startShellIntegration()
 
 QString Utility::socketApiSocketPath()
 {
-    return QStringLiteral(R"(\\.\pipe\ownCloud-%1)").arg(qEnvironmentVariable("USERNAME"));
+    return QStringLiteral(R"(\\.\pipe\OpenCloud-%1)").arg(qEnvironmentVariable("USERNAME"));
 }
 
 } // namespace OCC

@@ -50,7 +50,7 @@ namespace TestUtils {
 
     QTemporaryDir createTempDir()
     {
-        return QTemporaryDir { QStringLiteral("%1/ownCloud-unit-test-%2-XXXXXX").arg(QDir::tempPath(), qApp->applicationName()) };
+        return QTemporaryDir{QStringLiteral("%1/OpenCloud-unit-test-%2-XXXXXX").arg(QDir::tempPath(), qApp->applicationName())};
     }
 
     FolderMan *folderMan()

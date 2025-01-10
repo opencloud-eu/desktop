@@ -706,7 +706,7 @@ void PropagateDownloadFile::slotGetFinished()
 
         if (!_item->_directDownloadUrl.isEmpty() && err != QNetworkReply::OperationCanceledError) {
             // If this was with a direct download, retry without direct download
-            qCWarning(lcPropagateDownload) << "Direct download of" << _item->_directDownloadUrl << "failed. Retrying through owncloud.";
+            qCWarning(lcPropagateDownload) << "Direct download of" << _item->_directDownloadUrl << "failed. Retrying through OpenCloud.";
             _item->_directDownloadUrl.clear();
             start();
             return;

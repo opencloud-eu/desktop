@@ -155,9 +155,7 @@ void ConnectionValidator::slotCheckServerAndAuth()
 void ConnectionValidator::slotStatusFound(const QUrl &url, const QJsonObject &info)
 {
     // status.php was found.
-    qCInfo(lcConnectionValidator) << "** Application: ownCloud found: "
-                                  << url << " with version "
-                                  << info.value(QLatin1String("versionstring")).toString();
+    qCInfo(lcConnectionValidator) << "** Application: OpenCloud found: " << url << " with version " << info.value(QLatin1String("versionstring")).toString();
 
     // Update server URL in case of redirection
     if (_account->url() != url) {

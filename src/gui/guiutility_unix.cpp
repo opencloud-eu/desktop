@@ -25,7 +25,7 @@ void Utility::startShellIntegration()
 
 QString Utility::socketApiSocketPath()
 {
-    return QStringLiteral("%1/ownCloud/socket").arg(QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation));
+    return QStringLiteral("%1/OpenCloud/socket").arg(QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation));
 }
 
 } // namespace OCC

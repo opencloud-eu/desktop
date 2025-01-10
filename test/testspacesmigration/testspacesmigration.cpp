@@ -56,7 +56,7 @@ private Q_SLOTS:
 
 
         const QUrl personalUrl(
-            QStringLiteral("https://ocis.owncloud.test/dav/spaces/1284d238-aa92-42ce-bdc4-0b0000009157$534bb038-6f9d-4093-946f-133be61fa4e7"));
+            QStringLiteral("https://demo.opencloud.eu/dav/spaces/1284d238-aa92-42ce-bdc4-0b0000009157$534bb038-6f9d-4093-946f-133be61fa4e7"));
         QByteArray folder1Uuid;
         auto newAccountState = AccountState::fromNewAccount(fakeFolder.account());
         {
@@ -82,7 +82,7 @@ private Q_SLOTS:
             QCOMPARE(folder2->remotePath(), QStringLiteral("/Documents"));
 
             QCOMPARE(folder3->webDavUrl(),
-                QUrl(QStringLiteral("https://ocis.owncloud.test/dav/spaces/1284d238-aa92-42ce-bdc4-0b0000009157$31f599a1-94e1-4dfb-8bc9-841a57066d05")));
+                QUrl(QStringLiteral("https://demo.opencloud.eu/dav/spaces/1284d238-aa92-42ce-bdc4-0b0000009157$31f599a1-94e1-4dfb-8bc9-841a57066d05")));
             QCOMPARE(folder3->remotePath(), QStringLiteral("/"));
 
             // The shares folder was not migrated

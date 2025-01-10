@@ -41,7 +41,7 @@ private Q_SLOTS:
             QVERIFY( tmpFileName.length() <= 254);
         }
         // with absolute dir
-        fn = QStringLiteral("/Users/guruz/ownCloud/rocks/GPL");
+        fn = QStringLiteral("/Users/guruz/OpenCloud/rocks/GPL");
         for (int i = 1; i < 1000; i++) {
             fn += QLatin1Char('F');
             QString tmpFileName = createDownloadTmpFileName(fn);

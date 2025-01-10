@@ -81,8 +81,8 @@ int main()
     int argc;
     wchar_t **argv = CommandLineToArgvW(commandLine, &argc);
 
-    const auto process = getHWND(argc == 2 ? argv[1] : L"owncloud.exe");
-//    const auto process = getHWND(L"WINDOW_TEST.exe");
+    const auto process = getHWND(argc == 2 ? argv[1] : L"opencloud.exe");
+    //    const auto process = getHWND(L"WINDOW_TEST.exe");
 
     std::wcout << "Query: WM_QUERYENDSESSION" << std::endl;
     broadcast(process, WM_QUERYENDSESSION, 0, ENDSESSION_CLOSEAPP);

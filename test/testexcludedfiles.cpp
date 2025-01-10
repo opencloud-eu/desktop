@@ -76,7 +76,7 @@ private Q_SLOTS:
                 workPath += fileName;
                 QFile file(workPath);
                 QVERIFY(file.open(QFile::WriteOnly));
-                file.write("ownCloud");
+                file.write("OpenCloud");
                 file.close();
             };
             if (create) {

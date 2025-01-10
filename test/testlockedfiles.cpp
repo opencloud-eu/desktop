@@ -73,7 +73,7 @@ private Q_SLOTS:
             QVERIFY(QFileInfo(tmpFile).dir().mkpath(QStringLiteral(".")));
             QFile tmp(tmpFile);
             QVERIFY(tmp.open(QFile::WriteOnly));
-            QVERIFY(tmp.write("ownCLoud"));
+            QVERIFY(tmp.write("OpenCloud"));
         }
         QVERIFY(QFile::exists(tmpFile));
 
