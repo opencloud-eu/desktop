@@ -80,10 +80,6 @@ GeneralSettings::GeneralSettings(QWidget *parent)
     });
 
     connect(_ui->about_pushButton, &QPushButton::clicked, this, &GeneralSettings::showAbout);
-
-    if (!Theme::instance()->aboutShowCopyright()) {
-        _ui->copyrightLabel->hide();
-    }
 }
 
 GeneralSettings::~GeneralSettings()

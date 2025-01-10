@@ -201,7 +201,7 @@ QString Theme::defaultServerFolder() const
 
 QString Theme::helpUrl() const
 {
-    return QStringLiteral("https://doc.owncloud.com/desktop/latest/");
+    return {};
 }
 
 QString Theme::conflictHelpUrl() const
@@ -243,7 +243,11 @@ void Theme::setSystrayUseMonoIcons(bool mono)
 
 QUrl Theme::updateCheckUrl() const
 {
+#ifdef APPLICATION_UPDATE_URL
     return QUrl(QStringLiteral(APPLICATION_UPDATE_URL));
+#else
+    return {};
+#endif
 }
 
 bool Theme::wizardSkipAdvancedPage() const

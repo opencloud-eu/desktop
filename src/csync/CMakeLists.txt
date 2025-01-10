@@ -72,7 +72,7 @@ set_target_properties(
   csync
     PROPERTIES
       OUTPUT_NAME
-        "ownCloudCsync"
+        "OpenCloudCsync"
       VERSION
         ${MIRALL_VERSION}
       SOVERSION
