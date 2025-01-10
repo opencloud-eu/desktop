@@ -100,11 +100,11 @@ CommandLineOptions parseOptions(const QStringList &arguments)
                                  .arg(Theme::instance()->appName(), OCC::Version::displayString())
                           << Qt::endl;
 
-    if (Theme::instance()->appName() == QLatin1String("ownCloud")) {
+    if (Resources::isVanillaTheme()) {
         descriptionTextStream
             << Qt::endl
             << Qt::endl
-            << QApplication::translate("CommandLine", "For more information, see %1", "link to homepage").arg(QStringLiteral("https://www.owncloud.com"));
+            << QApplication::translate("CommandLine", "For more information, see %1", "link to homepage").arg(QStringLiteral("https://www.opencloud.eu"));
     }
 
     parser.setApplicationDescription(descriptionText);

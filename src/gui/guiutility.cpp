@@ -32,12 +32,12 @@ Q_LOGGING_CATEGORY(lcGuiUtility, "gui.utility", QtInfoMsg)
 namespace {
 const QString dirTag()
 {
-    return QStringLiteral("com.owncloud.spaces.app");
+    return QStringLiteral("eu.opencloud.spaces.app");
 }
 
 const QString uuidTag()
 {
-    return QStringLiteral("com.owncloud.spaces.account-uuid");
+    return QStringLiteral("eu.opencloud.spaces.account-uuid");
 }
 } // anonymous namespace
 

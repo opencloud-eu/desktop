@@ -32,19 +32,19 @@ private Q_SLOTS:
 
         model->setActivityList({
             Activity{Activity::ActivityType, QStringLiteral("1"), acc1->account(), QStringLiteral("test"), QStringLiteral("test"), QStringLiteral("foo.cpp"),
-                QUrl(QStringLiteral("https://owncloud.com")), QDateTime::currentDateTime()},
+                QUrl(QStringLiteral("https://opencloud.eu")), QDateTime::currentDateTime()},
             Activity{Activity::ActivityType, QStringLiteral("2"), acc1->account(), QStringLiteral("test"), QStringLiteral("test"), QStringLiteral("foo.cpp"),
-                QUrl(QStringLiteral("https://owncloud.com")), QDateTime::currentDateTime()},
+                QUrl(QStringLiteral("https://opencloud.eu")), QDateTime::currentDateTime()},
             Activity{Activity::ActivityType, QStringLiteral("021ad48a-80ae-4af6-b878-aeb836bd367d"), acc2->account(), QStringLiteral("test"),
-                QStringLiteral("test"), QStringLiteral("foo.cpp"), QUrl(QStringLiteral("https://owncloud.com")), QDateTime::currentDateTime()},
+                QStringLiteral("test"), QStringLiteral("foo.cpp"), QUrl(QStringLiteral("https://opencloud.eu")), QDateTime::currentDateTime()},
         });
         model->setActivityList({
             Activity{Activity::ActivityType, QStringLiteral("1"), acc2->account(), QStringLiteral("test"), QStringLiteral("test"), QStringLiteral("foo.cpp"),
-                QUrl(QStringLiteral("https://owncloud.com")), QDateTime::currentDateTime()},
+                QUrl(QStringLiteral("https://opencloud.eu")), QDateTime::currentDateTime()},
             Activity{Activity::ActivityType, QStringLiteral("2"), acc1->account(), QStringLiteral("test"), QStringLiteral("test"), QStringLiteral("foo.cpp"),
-                QUrl(QStringLiteral("https://owncloud.com")), QDateTime::currentDateTime()},
+                QUrl(QStringLiteral("https://opencloud.eu")), QDateTime::currentDateTime()},
             Activity{Activity::ActivityType, QStringLiteral("021ad48a-80ae-4af6-b878-aeb836bd367d"), acc2->account(), QStringLiteral("test"),
-                QStringLiteral("test"), QStringLiteral("foo.cpp"), QUrl(QStringLiteral("https://owncloud.com")), QDateTime::currentDateTime()},
+                QStringLiteral("test"), QStringLiteral("foo.cpp"), QUrl(QStringLiteral("https://opencloud.eu")), QDateTime::currentDateTime()},
         });
         model->slotRemoveAccount(AccountManager::instance()->accounts().first());
     }

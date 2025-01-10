@@ -19,7 +19,7 @@
             "root": {
                 "eTag": "\"997dd59b42bb42b90c822362f441c88d\"",
                 "id": "1284d238-aa92-42ce-bdc4-0b0000009157$534bb038-6f9d-4093-946f-133be61fa4e7",
-                "webDavUrl": "https://ocis.owncloud.test/dav/spaces/1284d238-aa92-42ce-bdc4-0b0000009157$534bb038-6f9d-4093-946f-133be61fa4e7"
+                "webDavUrl": "https://demo.opencloud.eu/dav/spaces/1284d238-aa92-42ce-bdc4-0b0000009157$534bb038-6f9d-4093-946f-133be61fa4e7"
             }
         },
         {
@@ -61,7 +61,7 @@
                         ]
                     }
                 ],
-                "webDavUrl": "https://ocis.owncloud.test/dav/spaces/1284d238-aa92-42ce-bdc4-0b0000009157$31f599a1-94e1-4dfb-8bc9-841a57066d05"
+                "webDavUrl": "https://demo.opencloud.eu/dav/spaces/1284d238-aa92-42ce-bdc4-0b0000009157$31f599a1-94e1-4dfb-8bc9-841a57066d05"
             },
             "special": [
                 {
@@ -77,7 +77,7 @@
                         "name": "image"
                     },
                     "webDavUrl":
-                        "https://ocis.owncloud.test/dav/spaces/1284d238-aa92-42ce-bdc4-0b0000009157$31f599a1-94e1-4dfb-8bc9-841a57066d05%2131f599a1-94e1-4dfb-8bc9-841a57066d05/.space/mind-blow-galaxy.gif"
+                        "https://demo.opencloud.eu/dav/spaces/1284d238-aa92-42ce-bdc4-0b0000009157$31f599a1-94e1-4dfb-8bc9-841a57066d05%2131f599a1-94e1-4dfb-8bc9-841a57066d05/.space/mind-blow-galaxy.gif"
                 },
                 {
                     "eTag": "\"c70081a95ad0938009aea08a45ab458f\"",
@@ -92,7 +92,7 @@
                         "name": "readme"
                     },
                     "webDavUrl":
-                        "https://ocis.owncloud.test/dav/spaces/1284d238-aa92-42ce-bdc4-0b0000009157$31f599a1-94e1-4dfb-8bc9-841a57066d05%2131f599a1-94e1-4dfb-8bc9-841a57066d05/.space/readme.md"
+                        "https://demo.opencloud.eu/dav/spaces/1284d238-aa92-42ce-bdc4-0b0000009157$31f599a1-94e1-4dfb-8bc9-841a57066d05%2131f599a1-94e1-4dfb-8bc9-841a57066d05/.space/readme.md"
                 }
             ]
         },
@@ -110,7 +110,7 @@
             "root": {
                 "eTag": "\"d1a362a801c8821c9c3074385c2a7d44\"",
                 "id": "a0ca6a90-a365-4782-871e-d44447bbc668$a0ca6a90-a365-4782-871e-d44447bbc668",
-                "webDavUrl": "https://ocis.owncloud.test/dav/spaces/a0ca6a90-a365-4782-871e-d44447bbc668$a0ca6a90-a365-4782-871e-d44447bbc668"
+                "webDavUrl": "https://demo.opencloud.eu/dav/spaces/a0ca6a90-a365-4782-871e-d44447bbc668$a0ca6a90-a365-4782-871e-d44447bbc668"
             }
         },
         {
@@ -138,10 +138,10 @@
                     "name": "New folder",
                     "size": 45204672,
                     "webDavUrl":
-                        "https://ocis.owncloud.test/dav/spaces/1284d238-aa92-42ce-bdc4-0b0000009157$4c510ada-c86b-4815-8820-42cdf82c3d51%21b58e4a22-6395-45f9-89a2-4233ba16d2fe"
+                        "https://demo.opencloud.eu/dav/spaces/1284d238-aa92-42ce-bdc4-0b0000009157$4c510ada-c86b-4815-8820-42cdf82c3d51%21b58e4a22-6395-45f9-89a2-4233ba16d2fe"
                 },
                 "webDavUrl":
-                    "https://ocis.owncloud.test/dav/spaces/a0ca6a90-a365-4782-871e-d44447bbc668$a0ca6a90-a365-4782-871e-d44447bbc668%2148224266-d46b-4c3c-8ab4-d4334c3020dc"
+                    "https://demo.opencloud.eu/dav/spaces/a0ca6a90-a365-4782-871e-d44447bbc668$a0ca6a90-a365-4782-871e-d44447bbc668%2148224266-d46b-4c3c-8ab4-d4334c3020dc"
             }
         }
     ]

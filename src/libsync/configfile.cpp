@@ -739,7 +739,7 @@ bool ConfigFile::monoIcons() const
     bool monoDefault = false; // On Mac we want bw by default
 #ifdef Q_OS_MAC
     // OEM themes are not obliged to ship mono icons
-    monoDefault = Theme::instance()->appNameGUI() == QStringLiteral("ownCloud");
+    monoDefault = Resources::isVanillaTheme();
 #endif
     return settings.value(monoIconsC(), monoDefault).toBool();
 }

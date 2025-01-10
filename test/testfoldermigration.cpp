@@ -23,7 +23,7 @@ auto Settings_2_4()
                           version=2
                           0\Folders\1\localPath=
                           0\Folders\1\journalPath=._sync_2215dfc5505b.db
-                          0\url=https://demo.owncloud.com
+                          0\url=https://demo.opencloud.eu
                           0\Folders\1\targetPath=/
                           0\http_oauth=true
                           0\serverVersion=10.8.0.4
@@ -60,17 +60,17 @@ private Q_SLOTS:
         QTest::addColumn<QStringList>("journalPaths");
         QTest::addColumn<QString>("url");
 
-        QTest::newRow("2.4") << QStringList{QStringLiteral("._sync_2215dfc5505b.db")} << QStringLiteral("https://demo.owncloud.com");
-        QTest::newRow("2.4 url") << QStringList{QStringLiteral("._sync_2215dfc5505b.db")} << QStringLiteral("https://demo.owncloud.com/");
-        QTest::newRow("2.6") << QStringList{QStringLiteral(".sync_2215dfc5505b.db")} << QStringLiteral("https://demo.owncloud.com");
-        QTest::newRow("2.6 url") << QStringList{QStringLiteral(".sync_2215dfc5505b.db")} << QStringLiteral("https://demo.owncloud.com/");
+        QTest::newRow("2.4") << QStringList{QStringLiteral("._sync_2215dfc5505b.db")} << QStringLiteral("https://demo.opencloud.eu");
+        QTest::newRow("2.4 url") << QStringList{QStringLiteral("._sync_2215dfc5505b.db")} << QStringLiteral("https://demo.opencloud.eu/");
+        QTest::newRow("2.6") << QStringList{QStringLiteral(".sync_2215dfc5505b.db")} << QStringLiteral("https://demo.opencloud.eu");
+        QTest::newRow("2.6 url") << QStringList{QStringLiteral(".sync_2215dfc5505b.db")} << QStringLiteral("https://demo.opencloud.eu/");
         QTest::newRow("2.6 multi") << QStringList{QStringLiteral(".sync_2215dfc5505b.db"), QStringLiteral("._sync_2215dfc5505b.db")}
-                                   << QStringLiteral("https://demo.owncloud.com");
-        QTest::newRow("2.9") << QStringList{QStringLiteral(".sync_journal.db")} << QStringLiteral("https://demo.owncloud.com");
-        QTest::newRow("2.9 url") << QStringList{QStringLiteral(".sync_journal.db")} << QStringLiteral("https://demo.owncloud.com/");
+                                   << QStringLiteral("https://demo.opencloud.eu");
+        QTest::newRow("2.9") << QStringList{QStringLiteral(".sync_journal.db")} << QStringLiteral("https://demo.opencloud.eu");
+        QTest::newRow("2.9 url") << QStringList{QStringLiteral(".sync_journal.db")} << QStringLiteral("https://demo.opencloud.eu/");
         QTest::newRow("2.9 multi") << QStringList{QStringLiteral(".sync_journal.db"), QStringLiteral(".sync_2215dfc5505b.db"),
             QStringLiteral("._sync_2215dfc5505b.db")}
-                                   << "https://demo.owncloud.com";
+                                   << "https://demo.opencloud.eu";
     }
 
     void testFolderMigrationMissingJournalPath()
