@@ -85,8 +85,7 @@ void AboutDialog::setupUpdaterWidget()
     }
     // we want to attach the known english identifiers which are also used within the configuration file as user data inside the data model
     // that way, when we intend to reset to the original selection when the dialog, we can look up the config file's stored value in the data model
-    ui->updateChannel->addItem(QStringLiteral("ownCloud 10 LTS"), QStringLiteral("stable"));
-    ui->updateChannel->addItem(QStringLiteral("ownCloud Infinite Scale stable"), QStringLiteral("ocis"));
+    ui->updateChannel->addItem(QStringLiteral("stable"), QStringLiteral("stable"));
     if (!Resources::isVanillaTheme()) {
         ui->updateChannel->addItem(tr("beta"), QStringLiteral("beta"));
     }
@@ -158,8 +157,7 @@ void AboutDialog::slotUpdateChannelChanged([[maybe_unused]] int index)
 
     auto msgBox = new QMessageBox(QMessageBox::Warning, tr("Change update channel?"),
         tr("<html>The update channel determines which client updates will be offered for installation.<ul>"
-           "<li>\"ownCloud 10 LTS\" contains only upgrades that are considered reliable</li>"
-           "<li>\"ownCloud Infinite Scale stable\" contains only upgrades that are considered reliable but <b>removes support for \"ownCloud 10\"</b></li>"
+           "<li>\"stable\" contains only upgrades that are considered reliable</li>"
            "%1"
            "</ul>"
            "<br>⚠️Downgrades are not supported. If you switch to a stable channel this change will only be applied with the next major release.</html>")
