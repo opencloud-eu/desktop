@@ -24,7 +24,7 @@ PluginFactory::~PluginFactory() = default;
 
 QString pluginFileName(const QString &type, const QString &name)
 {
-    return QStringLiteral("ownCloud_%2_%3").arg(type, name);
+    return QStringLiteral("OpenCloud_%2_%3").arg(type, name);
 }
 
 }

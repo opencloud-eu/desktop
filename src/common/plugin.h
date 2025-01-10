@@ -45,4 +45,4 @@ QString pluginFileName(const QString &type, const QString &name);
 
 }
 
-Q_DECLARE_INTERFACE(OCC::PluginFactory, "org.owncloud.PluginFactory")
+Q_DECLARE_INTERFACE(OCC::PluginFactory, "eu.opencloud.PluginFactory")
