@@ -36,7 +36,7 @@ void OCC::QmlUtils::OCQuickWidget::setOCContext(const QUrl &src, QWidget *parent
     rootContext()->setContextProperty(QStringLiteral("ocQuickWidget"), this);
     rootContext()->setContextProperty(QStringLiteral("ocContext"), ocContext);
     engine()->setObjectOwnership(ocContext, ownership);
-    engine()->addImageProvider(QStringLiteral("ownCloud"), new OCC::Resources::CoreImageProvider());
+    engine()->addImageProvider(QStringLiteral("OpenCloud"), new OCC::Resources::CoreImageProvider());
     setResizeMode(QQuickWidget::SizeRootObjectToView);
 
     // Ensure the parent widget used OC_DECLARE_WIDGET_FOCUS
