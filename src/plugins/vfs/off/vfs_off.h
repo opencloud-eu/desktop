@@ -60,7 +60,7 @@ protected:
 class OffVfsPluginFactory : public QObject, public DefaultPluginFactory<VfsOff>
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID "org.owncloud.PluginFactory" FILE "vfspluginmetadata.json")
+    Q_PLUGIN_METADATA(IID "eu.opencloud.PluginFactory" FILE "vfspluginmetadata.json")
     Q_INTERFACES(OCC::PluginFactory)
 };
 
