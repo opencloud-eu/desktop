@@ -1,56 +1,47 @@
-# ownCloud Desktop Client
-
-[![Build Status](https://drone.owncloud.com/api/badges/owncloud/client/status.svg)](https://drone.owncloud.com/owncloud/client) [![Build Status](https://github.com/owncloud/client/workflows/ownCloud%20CI/badge.svg)](https://github.com/owncloud/client/actions)
+# `OpenCloud Desktop`
 
 ## Introduction
 
-The ownCloud Desktop Client is a tool to synchronize files from ownCloud Server
+`OpenCloud Desktop` is a tool to synchronize files from `OpenCloud`
 with your computer.
 
 ## Download
 
 ### Binary packages
 
-- Refer to the download page https://owncloud.com/desktop-app/
+- Please have a look at our releases https://github.com/opencloud-eu/desktop/releases
 
 ### Source code
 
-The ownCloud Desktop Client is developed in Git. Since Git makes it easy to
+The `OpenCloud Desktop` is developed in Git. Since Git makes it easy to
 fork and improve the source code and to adapt it to your need, many copies
 can be found on the Internet, in particular on GitHub. However, the
 authoritative repository maintained by the developers is located at
-https://github.com/owncloud/client.
+https://github.com/opencloud-eu/desktop/.
 
 ## Reporting issues and contributing
 
 If you find any bugs or have any suggestion for improvement, please
-file an issue at https://github.com/owncloud/client/issues. Do not
+file an issue at https://github.com/opencloud-eu/desktop/issues. Do not
 contact the authors directly by mail, as this increases the chance
 of your report being lost.
 
 If you created a patch, please submit a [Pull
-Request](https://github.com/owncloud/client/pulls). For non-trivial
-patches, we need you to sign the [Contributor
-Agreement](https://owncloud.com/contribute/join-the-development/contributor-agreement/) before
-we can accept your patch.
-
-If you want to contact us, e.g. before starting a more complex feature,
-you can join us at
-[RocketChat](https://talk.owncloud.com/channel/desktop).
+Request](https://github.com/opencloud-eu/desktop/pulls).
 
 ## Maintainers and Contributors
 
 The current maintainers of this repository are:
 
-- Hannah von Reth <hannah.vonreth@owncloud.com>
-- Fabian Müller <fmueller@owncloud.com>
-- Dominik Schmidt <dev@dominik-schmidt.de>
+- Hannah von Reth <h.vonreth@opencloud.eu>
 
-ownCloud Desktop Client is developed by the ownCloud community and [receives
-patches from a variety of authors](https://github.com/owncloud/client/graphs/contributors).
+`OpenCloud Desktop` is developed by the `OpenCloud` community and [receives
+patches from a variety of authors](https://github.com/opencloud-eu/desktop/graphs/contributors).
 
 Past maintainers:
 
+- Fabian Müller <fmueller@owncloud.com>
+- Dominik Schmidt <dev@dominik-schmidt.de>
 - Markus Goetz <guruz@owncloud.com>
 - Olivier Goffart <ogoffart@owncloud.com>
 - Christian Kamm <mail@ckamm.de>
