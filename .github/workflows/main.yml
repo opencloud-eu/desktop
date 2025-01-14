@@ -1,4 +1,4 @@
-name: ownCloud CI
+name: OpenCloud Desktop CI
 
 on:
   push:
@@ -32,23 +32,19 @@ jobs:
               target: windows-cl-msvc2022-x86_64
               os: windows-latest
               container:
-              useSonarCloud: ${{ github.event_name != 'pull_request' }}
             # TODO: align the target with the name
             - name: macos-clang-arm64
               target: macos-clang-arm64
               os: macos-latest
               container:
-              useSonarCloud:
             - name: macos-clang-arm64-debug
               target: macos-clang-arm64-debug
               os: macos-latest
               container:
-              useSonarCloud:
             - name: linux-gcc-x86_64
               target: linux-64-gcc
               os: ubuntu-latest
-              container: owncloudci/appimage-build:sles15-amd64
-              useSonarCloud:
+              container: invent-registry.kde.org/sysadmin/ci-images/sles15-craft:latest
 
     name: ${{ matrix.name }}
 
@@ -63,13 +59,13 @@ jobs:
 
     steps:
     - name: Check out full source code for tooling
-      if: ${{ matrix.useSonarCloud || matrix.name  == 'linux-gcc-x86_64' }}
+      if: ${{ matrix.name  == 'linux-gcc-x86_64' }}
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
     - name: Check out latest commit
-      if: ${{ !matrix.useSonarCloud && matrix.name  != 'linux-gcc-x86_64' }}
+      if: ${{ matrix.name  != 'linux-gcc-x86_64' }}
       uses: actions/checkout@v4
 
     - name: Restore cache
@@ -93,8 +89,8 @@ jobs:
     - name: Prepare
       run: |
         New-Item -ItemType Directory "${env:GITHUB_WORKSPACE}/binaries/"
-        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --set forceAsserts=true owncloud/owncloud-client
-        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --set srcDir="${env:GITHUB_WORKSPACE}" owncloud/owncloud-client
+        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --set forceAsserts=true opencloud/opencloud-desktop
+        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --set srcDir="${env:GITHUB_WORKSPACE}" opencloud/opencloud-desktop
         if ($IsWindows) {
             & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c dev-utils/nsis
         } elseif($IsLinux) {
@@ -103,13 +99,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-          if ("${{ matrix.target }}" -eq "linux-64-gcc" ) {
-              # build with appimage updater and others
-              & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --set enableAppImageUpdater=true owncloud-client
-              & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --set enableCrashReporter=true owncloud/owncloud-client
-              & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --set enableAutoUpdater=true owncloud/owncloud-client
-          }
-          & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --install-deps owncloud/owncloud-client
+          & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --install-deps opencloud/opencloud-desktop
 
     - name: QML format lint
       if: matrix.name  == 'linux-gcc-x86_64'
@@ -134,51 +124,31 @@ jobs:
         }
 
     - name: Build
-      if: ${{ !matrix.useSonarCloud }}
       run: |
         if ("${{ matrix.target }}" -eq "macos-64-clang-debug" ) {
             # https://api.kde.org/ecm/module/ECMEnableSanitizers.html
             # address;leak;undefined
             # clang: error: unsupported option '-fsanitize=leak' for target 'x86_64-apple-darwin21.6.0'
-            & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --set args="-DECM_ENABLE_SANITIZERS='address;undefined'" owncloud/owncloud-client
+            & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --set args="-DECM_ENABLE_SANITIZERS='address;undefined'" opencloud/opencloud-desktop
         }
-        if ("${{ matrix.target }}" -eq "linux-64-gcc" ) {
-            # build with appimage updater and others
-            & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --set enableAppImageUpdater=true owncloud-client
-            & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --set enableCrashReporter=true owncloud/owncloud-client
-            & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --set enableAutoUpdater=true owncloud/owncloud-client
-        }
-        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --no-cache owncloud/owncloud-client
-
-    - name: Build for SonarCloud
-      if: ${{ matrix.useSonarCloud }}
-      run: |
-        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --no-cache --configure owncloud/owncloud-client
-        $env:BUILD_DIR = $(& "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --get buildDir -q owncloud-client)
-        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --run pwsh "${env:GITHUB_WORKSPACE}/.github/workflows/.sonar.ps1" --build
-        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --no-cache --install --qmerge owncloud/owncloud-client
-        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --run pwsh "${env:GITHUB_WORKSPACE}/.github/workflows/.sonar.ps1" --analyze
+        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --no-cache opencloud/opencloud-desktop
 
     - name: Run tests
       run: |
-        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --no-cache --test owncloud/owncloud-client
+        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --no-cache --test opencloud/opencloud-desktop
 
     - name: Clang tidy
       if: github.event_name != 'pull_request'
       run: |
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --run python3 -m pip install clang-html
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c libs/llvm
-        $env:BUILD_DIR = $(& "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --get buildDir -q owncloud-client)
+        $env:BUILD_DIR = $(& "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --get buildDir -q opencloud/opencloud-desktop)
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --run pwsh "${env:GITHUB_WORKSPACE}/.github/workflows/.run-clang-tidy.ps1"
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --run python3 -m clang_html "${env:TMPDIR}/clang-tidy.log" -o "${env:GITHUB_WORKSPACE}/binaries/clang-tidy.html"
 
     - name: Package
       run: |
-        if ("${{ matrix.target }}" -eq "linux-64-gcc" ) {
-            # package without crash reporter
-            & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --set enableCrashReporter=false owncloud/owncloud-client
-        }
-        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --no-cache --package owncloud/owncloud-client
+        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --no-cache --package opencloud/opencloud-desktop
 
     - name: Prepare artifacts
       run: |
