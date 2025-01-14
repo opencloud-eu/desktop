@@ -15,6 +15,7 @@
 #include "webfingeruserinfojobfactory.h"
 #include "common/utility.h"
 #include "creds/httpcredentials.h"
+#include "creds/webfinger.h"
 
 #include <QApplication>
 #include <QJsonArray>
@@ -83,7 +84,7 @@ CoreJob *WebFingerInstanceLookupJobFactory::startJob(const QUrl &url, QObject *p
             const QString rel = linkObject.value(QStringLiteral("rel")).toString();
             const QString href = linkObject.value(QStringLiteral("href")).toString();
 
-            if (rel != QStringLiteral("http://webfinger.owncloud/rel/server-instance")) {
+            if (rel != WebFinger::relId()) {
                 qCDebug(lcWebFingerUserInfoJob) << "skipping invalid link" << href << "with rel" << rel;
                 continue;
             }

@@ -27,14 +27,6 @@
 
 Q_LOGGING_CATEGORY(lcWebFinger, "sync.credentials.webfinger", QtInfoMsg)
 
-namespace {
-
-auto relId()
-{
-    return QStringLiteral("http://webfinger.owncloud/rel/server-instance");
-}
-}
-
 using namespace OCC;
 
 WebFinger::WebFinger(QNetworkAccessManager *nam, QObject *parent)
@@ -45,7 +37,7 @@ WebFinger::WebFinger(QNetworkAccessManager *nam, QObject *parent)
 
 void WebFinger::start(const QUrl &url, const QString &resourceId)
 {
-    //    GET /.well-known/webfinger?rel=http://webfinger.owncloud/rel/server-instance&resource=acct:test@owncloud.com HTTP/1.1
+    //    GET /.well-known/webfinger?rel=http://webfinger.opencloud.eu/rel/server-instance&resource=acct:test@owncloud.com HTTP/1.1
     if (OC_ENSURE(url.scheme() == QLatin1String("https"))) {
         QUrlQuery query;
         query.setQueryItems({ { QStringLiteral("resource"), QString::fromUtf8(QUrl::toPercentEncoding(resourceId)) },
@@ -92,4 +84,9 @@ const QJsonParseError &WebFinger::error() const
 const QUrl &WebFinger::href() const
 {
     return _href;
+}
+
+QString WebFinger::relId()
+{
+    return QStringLiteral("http://webfinger.opencloud.eu/rel/server-instance");
 }

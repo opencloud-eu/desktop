@@ -35,6 +35,11 @@ public:
 
     const QUrl &href() const;
 
+    /***
+     * ID used to describe our rel attribute
+     */
+    static QString relId();
+
 Q_SIGNALS:
     void finished();
 
