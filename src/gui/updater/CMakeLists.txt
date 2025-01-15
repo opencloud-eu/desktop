@@ -7,7 +7,7 @@ if(APPLE)
     endif()
 endif()
 
-target_sources(owncloudGui PRIVATE
+target_sources(OpenCloudGui PRIVATE
     ocupdater.cpp
     ocupdater.h
     newversionavailablewidget.cpp
@@ -24,12 +24,12 @@ target_sources(owncloudGui PRIVATE
 
 if(SPARKLE_FOUND)
     # Define this, we need to check in updater.cpp
-    target_compile_definitions(owncloudGui PUBLIC HAVE_SPARKLE)
-    target_sources(owncloudGui PRIVATE
+    target_compile_definitions(OpenCloudGui PUBLIC HAVE_SPARKLE)
+    target_sources(OpenCloudGui PRIVATE
         sparkleupdater_mac.mm
         sparkleupdater.h
     )
-    target_link_libraries(owncloudGui PRIVATE ${SPARKLE_LIBRARY})
+    target_link_libraries(OpenCloudGui PRIVATE ${SPARKLE_LIBRARY})
 endif()
 
 if(WITH_APPIMAGEUPDATER)
@@ -43,19 +43,19 @@ if(WITH_APPIMAGEUPDATER)
         ${CMAKE_CURRENT_SOURCE_DIR}/appimageupdater.h
     )
 
-    target_sources(owncloudGui PRIVATE ${appimageupdater_sources})
+    target_sources(OpenCloudGui PRIVATE ${appimageupdater_sources})
 
     # as libappimageupdate uses exceptions, we define a shim that catches all incoming exceptions
     # and handles them in a suitable way
     # we have to enable exceptions for this one compilation unit
     set_source_files_properties(${appimageupdater_sources}
-        TARGET_DIRECTORY owncloudGui
+        TARGET_DIRECTORY OpenCloudGui
         PROPERTIES COMPILE_OPTIONS "-fexceptions"
     )
 
-    target_compile_definitions(owncloudGui PRIVATE WITH_APPIMAGEUPDATER)
-    target_link_libraries(owncloudGui PRIVATE libappimageupdate)
+    target_compile_definitions(OpenCloudGui PRIVATE WITH_APPIMAGEUPDATER)
+    target_link_libraries(OpenCloudGui PRIVATE libappimageupdate)
 
     find_package(Threads REQUIRED)
-    target_link_libraries(owncloudGui PUBLIC ${CMAKE_THREAD_LIBS_INIT})
+    target_link_libraries(OpenCloudGui PUBLIC ${CMAKE_THREAD_LIBS_INIT})
 endif()

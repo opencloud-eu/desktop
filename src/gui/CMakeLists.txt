@@ -2,7 +2,10 @@ include(ECMAddAppIcon)
 
 find_package(KDSingleApplication-qt6 1.0.0 REQUIRED)
 
-set(client_UI_SRCS
+
+add_library(OpenCloudGui SHARED)
+
+target_sources(OpenCloudGui PRIVATE
     aboutdialog.ui
     accountsettings.ui
     generalsettings.ui
@@ -21,7 +24,7 @@ set(client_UI_SRCS
     logbrowser.ui
 )
 
-set(client_SRCS
+target_sources(OpenCloudGui PRIVATE
     aboutdialog.cpp
     accountmanager.cpp
     accountsettings.cpp
@@ -88,25 +91,16 @@ set(client_SRCS
     qmlutils.cpp
 )
 
-set(3rdparty_SRC
-    ../3rdparty/QProgressIndicator/QProgressIndicator.cpp
-   )
-
-set( final_src
-    ${MIRALL_RC_SRC}
-    ${client_SRCS}
-    ${client_UI_SRCS}
-    ${3rdparty_SRC}
-)
+# 3rd party code
+target_sources(OpenCloudGui PRIVATE ../3rdparty/QProgressIndicator/QProgressIndicator.cpp)
 
 add_subdirectory(newwizard)
 add_subdirectory(folderwizard)
 
-add_library(owncloudGui SHARED ${final_src})
-set_target_properties(owncloudGui PROPERTIES AUTOUIC ON AUTORCC ON)
+set_target_properties(OpenCloudGui PROPERTIES AUTOUIC ON AUTORCC ON)
 # for the generated qml module
-target_include_directories(owncloudGui PRIVATE models spaces creds)
-target_link_libraries(owncloudGui
+target_include_directories(OpenCloudGui PRIVATE models spaces creds)
+target_link_libraries(OpenCloudGui
     PUBLIC
         Qt::Widgets Qt::Network Qt::Xml Qt::Quick Qt::QuickWidgets Qt::QuickControls2
         newwizard folderwizard
@@ -114,8 +108,8 @@ target_link_libraries(owncloudGui
         Qt6Keychain::Qt6Keychain
 )
 
-apply_common_target_settings(owncloudGui)
-ecm_add_qml_module(owncloudGui
+apply_common_target_settings(OpenCloudGui)
+ecm_add_qml_module(OpenCloudGui
         URI org.ownCloud.gui
         VERSION 1.0
         NAMESPACE OCC
@@ -133,7 +127,7 @@ ecm_add_qml_module(owncloudGui
             spaces/qml/SpacesView.qml
 )
 
-generate_export_header(owncloudGui
+generate_export_header(OpenCloudGui
         EXPORT_MACRO_NAME OWNCLOUDGUI_EXPORT
         EXPORT_FILE_NAME owncloudguilib.h
         STATIC_DEFINE OWNCLOUD_BUILT_AS_STATIC
@@ -143,55 +137,55 @@ add_subdirectory(spaces)
 
 add_subdirectory(socketapi)
 
-target_include_directories(owncloudGui PUBLIC
+target_include_directories(OpenCloudGui PUBLIC
     ${CMAKE_SOURCE_DIR}/src/3rdparty/QProgressIndicator
     ${CMAKE_CURRENT_BINARY_DIR}
 )
 
 IF( APPLE )
-    target_sources(owncloudGui PRIVATE
+    target_sources(OpenCloudGui PRIVATE
             systray.mm
             settingsdialog_mac.mm
             guiutility_mac.mm
             folderwatcher_mac.cpp)
     set_source_files_properties(guiutility_mac.mm PROPERTIES COMPILE_DEFINITIONS SOCKETAPI_TEAM_IDENTIFIER_PREFIX="${SOCKETAPI_TEAM_IDENTIFIER_PREFIX}")
 elseif( WIN32 )
-    target_sources(owncloudGui PRIVATE
+    target_sources(OpenCloudGui PRIVATE
             guiutility_win.cpp
             folderwatcher_win.cpp)
 elseif(UNIX AND NOT APPLE)
     ## handle DBUS for Fdo notifications
     if (TARGET Qt::DBus)
-        target_link_libraries(owncloudGui PUBLIC Qt::DBus)
-        target_compile_definitions(owncloudGui PUBLIC "USE_FDO_NOTIFICATIONS")
+        target_link_libraries(OpenCloudGui PUBLIC Qt::DBus)
+        target_compile_definitions(OpenCloudGui PUBLIC "USE_FDO_NOTIFICATIONS")
     endif()
-    target_sources(owncloudGui PRIVATE
+    target_sources(OpenCloudGui PRIVATE
             folderwatcher_linux.cpp
             guiutility_unix.cpp)
 endif()
 
 if(WITH_AUTO_UPDATER)
     add_subdirectory(updater)
-    target_compile_definitions(owncloudGui PUBLIC $<BUILD_INTERFACE:WITH_AUTO_UPDATER>)
+    target_compile_definitions(OpenCloudGui PUBLIC $<BUILD_INTERFACE:WITH_AUTO_UPDATER>)
 endif()
 
-add_executable(owncloud main.cpp)
-set_target_properties(owncloud PROPERTIES
+add_executable(opencloud main.cpp)
+set_target_properties(opencloud PROPERTIES
     OUTPUT_NAME "${APPLICATION_EXECUTABLE}"
     AUTOUIC ON
     AUTORCC ON
 )
-apply_common_target_settings(owncloud)
-target_link_libraries(owncloud PUBLIC owncloudGui owncloudResources KDAB::kdsingleapplication )
+apply_common_target_settings(opencloud)
+target_link_libraries(opencloud PUBLIC OpenCloudGui owncloudResources KDAB::kdsingleapplication )
 
 MESSAGE(STATUS "OWNCLOUD_SIDEBAR_ICONS: ${APPLICATION_ICON_NAME}: ${OWNCLOUD_SIDEBAR_ICONS}")
 
 ecm_add_app_icon(appIcons ICONS "${OWNCLOUD_ICONS}" SIDEBAR_ICONS "${OWNCLOUD_SIDEBAR_ICONS}" OUTFILE_BASENAME "${APPLICATION_ICON_NAME}")
-target_sources(owncloud PRIVATE ${appIcons})
+target_sources(opencloud PRIVATE ${appIcons})
 
 if(NOT APPLE)
     if(WIN32)
-        target_sources(owncloud PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/owncloud.exe.manifest)
+        target_sources(opencloud PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/owncloud.exe.manifest)
     else()
         file(GLOB _icons "${OEM_THEME_DIR}/theme/colored/*-${APPLICATION_ICON_NAME}-icon.png")
         foreach(_file ${_icons})
@@ -203,7 +197,7 @@ if(NOT APPLE)
 
     # we may not add MACOSX_BUNDLE here, if not building one
 else()
-    target_sources(owncloud PRIVATE ${OWNCLOUD_BUNDLED_RESOURCES})
+    target_sources(opencloud PRIVATE ${OWNCLOUD_BUNDLED_RESOURCES})
 
     set_source_files_properties(
       ${OWNCLOUD_BUNDLED_RESOURCES}
@@ -211,11 +205,11 @@ else()
       MACOSX_PACKAGE_LOCATION Resources
       )
 
-  set_target_properties(owncloud PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/MacOSXBundleInfo.plist)
+  set_target_properties(opencloud PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/MacOSXBundleInfo.plist)
 endif()
 
-install(TARGETS owncloud owncloudGui ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
-ecm_finalize_qml_module(owncloudGui DESTINATION ${KDE_INSTALL_QMLDIR})
+install(TARGETS opencloud OpenCloudGui ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+ecm_finalize_qml_module(OpenCloudGui DESTINATION ${KDE_INSTALL_QMLDIR})
 
 if(UNIX AND NOT APPLE)
     configure_file(${CMAKE_SOURCE_DIR}/owncloud.desktop.in
