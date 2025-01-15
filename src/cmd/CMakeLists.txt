@@ -9,7 +9,7 @@ target_link_libraries(cmd csync libsync Qt::Core Qt::Network)
 apply_common_target_settings(cmd)
 
 if(APPLE)
-    set_target_properties(cmd PROPERTIES RUNTIME_OUTPUT_DIRECTORY "$<TARGET_FILE_DIR:owncloud>")
+    set_target_properties(cmd PROPERTIES RUNTIME_OUTPUT_DIRECTORY "$<TARGET_FILE_DIR:opencloud>")
 else()
     install(TARGETS cmd ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 endif()

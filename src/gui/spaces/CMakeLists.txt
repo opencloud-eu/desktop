@@ -1,4 +1,4 @@
-target_sources(owncloudGui
+target_sources(OpenCloudGui
         PRIVATE
             spacesmodel.cpp
             spacesbrowser.cpp
