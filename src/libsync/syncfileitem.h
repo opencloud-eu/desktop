@@ -254,8 +254,6 @@ private:
      */
     QString _localName;
 
-    // QString _remoteName;
-
 public:
     /** for renames: the name _file should be renamed to
      * for dehydrations: the name _file should become after dehydration (like adding a suffix)
