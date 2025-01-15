@@ -8,4 +8,4 @@ target_compile_definitions(syncenginetestutils PRIVATE TEST_HELPER_EXE="$<TARGET
 # testutilsloader.cpp uses Q_COREAPP_STARTUP_FUNCTION which can't used reliably in a static lib
 # therefore we compile it in the tests
 add_library(testutilsloader OBJECT testutilsloader.cpp)
-target_link_libraries(testutilsloader PUBLIC OpenCloudGui owncloudResources)
+target_link_libraries(testutilsloader PUBLIC OpenCloudGui OpenCloudResources)
