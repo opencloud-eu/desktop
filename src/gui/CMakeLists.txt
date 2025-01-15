@@ -176,7 +176,7 @@ set_target_properties(opencloud PROPERTIES
     AUTORCC ON
 )
 apply_common_target_settings(opencloud)
-target_link_libraries(opencloud PUBLIC OpenCloudGui owncloudResources KDAB::kdsingleapplication )
+target_link_libraries(opencloud PUBLIC OpenCloudGui OpenCloudResources KDAB::kdsingleapplication )
 
 MESSAGE(STATUS "OWNCLOUD_SIDEBAR_ICONS: ${APPLICATION_ICON_NAME}: ${OWNCLOUD_SIDEBAR_ICONS}")
 
