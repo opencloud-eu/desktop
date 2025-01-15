@@ -16,7 +16,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
-import org.ownCloud.resources 1.0
+import eu.OpenCloud.resources 1.0
 
 ColumnLayout {
     property bool collapsed: true

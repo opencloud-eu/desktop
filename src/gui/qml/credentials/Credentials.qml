@@ -18,9 +18,9 @@ import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Layouts
 
-import org.ownCloud.resources 1.0
-import org.ownCloud.gui 1.0
-import org.ownCloud.libsync 1.0
+import eu.OpenCloud.resources 1.0
+import eu.OpenCloud.gui 1.0
+import eu.OpenCloud.libsync 1.0
 
 Pane {
     id: credentialsView

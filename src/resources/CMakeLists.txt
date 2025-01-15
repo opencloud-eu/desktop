@@ -42,7 +42,7 @@ add_resources_to_target(
 )
 
 ecm_add_qml_module(owncloudResources
-        URI org.ownCloud.resources
+        URI eu.OpenCloud.resources
         VERSION 1.0
         NAMESPACE OCC
 )

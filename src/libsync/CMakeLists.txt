@@ -97,7 +97,7 @@ target_link_libraries(libsync
 
 apply_common_target_settings(libsync)
 ecm_add_qml_module(libsync
-        URI org.ownCloud.libsync
+        URI eu.OpenCloud.libsync
         VERSION 1.0
         NAMESPACE OCC
 )

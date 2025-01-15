@@ -110,7 +110,7 @@ target_link_libraries(OpenCloudGui
 
 apply_common_target_settings(OpenCloudGui)
 ecm_add_qml_module(OpenCloudGui
-        URI org.ownCloud.gui
+        URI eu.OpenCloud.gui
         VERSION 1.0
         NAMESPACE OCC
         QML_FILES
