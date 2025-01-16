@@ -1,4 +1,4 @@
-set( APPLICATION_NAME       "OpenCloud" )
+set( APPLICATION_NAME       "OpenCloud Desktop" )
 set( APPLICATION_SHORTNAME  "OpenCloud" )
 set( APPLICATION_EXECUTABLE "opencloud" )
 set( APPLICATION_DOMAIN     "opencloud.eu" )
