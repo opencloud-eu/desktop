@@ -461,7 +461,7 @@ QString Theme::quotaBaseFolder() const
 
 QString Theme::oauthClientId() const
 {
-    return appNameGUI();
+    return QStringLiteral("OpenCloudDesktop");
 }
 
 QString Theme::oauthClientSecret() const
