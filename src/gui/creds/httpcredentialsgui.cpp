@@ -110,7 +110,7 @@ void HttpCredentialsGui::showDialog()
 
     auto basicCredentials = new QmlBasicCredentials(_account->url(), _account->davDisplayName(), this);
     basicCredentials->setReadOnlyName(user());
-    _modalWidget = new AccountModalWidget(tr("Login required"), QUrl(QStringLiteral("qrc:/qt/qml/org/ownCloud/gui/qml/credentials/BasicAuthCredentials.qml")),
+    _modalWidget = new AccountModalWidget(tr("Login required"), QUrl(QStringLiteral("qrc:/qt/qml/eu/OpenCloud/gui/qml/credentials/BasicAuthCredentials.qml")),
         basicCredentials, ocApp()->gui()->settingsDialog());
     connect(basicCredentials, &QmlBasicCredentials::logOutRequested, _modalWidget, [basicCredentials, this] {
         Q_EMIT requestLogout();
@@ -146,7 +146,7 @@ void HttpCredentialsGui::startOAuth()
     connect(_asyncAuth.data(), &OAuth::result, this, &HttpCredentialsGui::asyncAuthResult);
 
     auto *oauthCredentials = new QmlOAuthCredentials(_asyncAuth.data(), _account->url(), _account->davDisplayName());
-    _modalWidget = new AccountModalWidget(tr("Login required"), QUrl(QStringLiteral("qrc:/qt/qml/org/ownCloud/gui/qml/credentials/OAuthCredentials.qml")),
+    _modalWidget = new AccountModalWidget(tr("Login required"), QUrl(QStringLiteral("qrc:/qt/qml/eu/OpenCloud/gui/qml/credentials/OAuthCredentials.qml")),
         oauthCredentials, ocApp()->gui()->settingsDialog());
 
     connect(oauthCredentials, &QmlOAuthCredentials::logOutRequested, _modalWidget, [this] {

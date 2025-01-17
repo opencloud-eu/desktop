@@ -32,7 +32,7 @@ OAuthCredentialsSetupWizardPage::OAuthCredentialsSetupWizardPage(OAuth *oauth, c
     auto *oauthCredentials = new QmlOAuthCredentials(oauth, serverUrl, {});
     oauthCredentials->setIsRefresh(false);
     widget->setOCContext(
-        QUrl(QStringLiteral("qrc:/qt/qml/org/ownCloud/gui/qml/credentials/OAuthCredentials.qml")), this, oauthCredentials, QJSEngine::JavaScriptOwnership);
+        QUrl(QStringLiteral("qrc:/qt/qml/eu/OpenCloud/gui/qml/credentials/OAuthCredentials.qml")), this, oauthCredentials, QJSEngine::JavaScriptOwnership);
 }
 
 bool OAuthCredentialsSetupWizardPage::validateInput()

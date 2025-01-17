@@ -36,7 +36,7 @@ BasicCredentialsSetupWizardPage::BasicCredentialsSetupWizardPage(const QUrl &ser
         basicCredentials->setReadOnlyName(_userName);
     }
     widget->setOCContext(
-        QUrl(QStringLiteral("qrc:/qt/qml/org/ownCloud/gui/qml/credentials/BasicAuthCredentials.qml")), this, basicCredentials, QJSEngine::JavaScriptOwnership);
+        QUrl(QStringLiteral("qrc:/qt/qml/eu/OpenCloud/gui/qml/credentials/BasicAuthCredentials.qml")), this, basicCredentials, QJSEngine::JavaScriptOwnership);
     connect(basicCredentials, &QmlBasicCredentials::readyChanged, this, [basicCredentials, this] {
         _userName = basicCredentials->userName();
         _password = basicCredentials->password();
