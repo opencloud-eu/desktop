@@ -47,7 +47,7 @@ QIcon OpenCloudTheme::aboutIcon() const
 
 QmlButtonColor OpenCloudTheme::primaryButtonColor() const
 {
-    return {"#E2BAFF", "#20434F", "#DADADA"};
+    return {"#E2BAFF", "#19353F", "#DADADA"};
 }
 
 QmlButtonColor OpenCloudTheme::secondaryButtonColor() const
