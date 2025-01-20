@@ -66,7 +66,7 @@ struct HttpContext
 
 void logHttp(const QByteArray &verb, HttpContext *ctx, QJsonObject &&header, QIODevice *device, bool cached = false)
 {
-    static const bool redact = !qEnvironmentVariableIsSet("OWNCLOUD_HTTPLOGGER_NO_REDACT");
+    static const bool redact = !qEnvironmentVariableIsSet("OPENCLOUD_HTTPLOGGER_NO_REDACT");
     const auto reply = qobject_cast<QNetworkReply *>(device);
     const auto contentLength = device ? device->size() : 0;
 
