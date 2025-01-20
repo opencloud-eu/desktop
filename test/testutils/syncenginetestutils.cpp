@@ -22,7 +22,7 @@ using namespace std::chrono;
 namespace {
 inline auto chunkingNgUploadPathC()
 {
-    return QStringLiteral("/owncloud/remote.php/dav/uploads/admin/");
+    return QStringLiteral("/remote.php/dav/uploads/admin/");
 }
 }
 
@@ -1239,9 +1239,9 @@ QString getFilePathFromUrl(const QUrl &url)
 {
     const QString path = url.path();
     // old school dav url
-    const QString sRootUrl = QStringLiteral("/owncloud/remote.php/webdav/");
+    const QString sRootUrl = QStringLiteral("/remote.php/webdav/");
     // more modern dav url including user name
-    const QString sRootUrl2 = QStringLiteral("/owncloud/remote.php/dav/files/admin/");
+    const QString sRootUrl2 = QStringLiteral("/remote.php/dav/files/admin/");
 
     if (path.startsWith(sRootUrl)) {
         return path.mid(sRootUrl.length());
