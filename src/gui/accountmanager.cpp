@@ -73,11 +73,6 @@ auto accountsC()
     return QStringLiteral("Accounts");
 }
 
-auto versionC()
-{
-    return QStringLiteral("version");
-}
-
 auto capabilitesC()
 {
     return QStringLiteral("capabilities");
@@ -141,10 +136,8 @@ void AccountManager::saveAccount(Account *account, bool saveCredentials)
 {
     qCDebug(lcAccountManager) << "Saving account" << account->url().toString();
     auto settings = ConfigFile::settingsWithGroup(accountsC());
-    settings->setValue(versionC(), ConfigFile::UnusedLegacySettingsVersionNumber);
     settings->beginGroup(account->id());
 
-    settings->setValue(versionC(), ConfigFile::UnusedLegacySettingsVersionNumber);
     settings->setValue(urlC(), account->_url.toString());
     settings->setValue(davUserC(), account->_davUser);
     settings->setValue(davUserDisplyNameC(), account->_displayName);
