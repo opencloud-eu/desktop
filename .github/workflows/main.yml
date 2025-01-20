@@ -53,10 +53,6 @@ jobs:
     container: ${{ matrix.container }}
 
     steps:
-    - name: Use ssh instead of https for github repos
-      run: |
-        Add-Content -Path ~/.gitconfig "[url `"git@github.com:`"]`n  insteadOf = `"https://github.com/`""
-
     - name: Check out full source code for tooling
       if: ${{ matrix.name  == 'linux-gcc-x86_64' }}
       uses: actions/checkout@v4
