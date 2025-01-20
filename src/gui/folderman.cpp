@@ -46,18 +46,6 @@ qsizetype numberOfSyncJournals(const QString &path)
 {
     return QDir(path).entryList({ QStringLiteral(".sync_*.db"), QStringLiteral("._sync_*.db") }, QDir::Hidden | QDir::Files).size();
 }
-
-QString makeLegacyDbName(const OCC::FolderDefinition &def, const OCC::AccountPtr &account)
-{
-    // ensure https://demo.owncloud.org/ matches https://demo.owncloud.org
-    // the empty path was the legacy formating before 2.9
-    auto legacyUrl = account->url();
-    if (legacyUrl.path() == QLatin1String("/")) {
-        legacyUrl.setPath(QString());
-    }
-    const QString key = QStringLiteral("%1@%2:%3").arg(account->credentials()->user(), legacyUrl.toString(), def.targetPath());
-    return OCC::SyncJournalDb::makeDbName(def.localPath(), QString::fromUtf8(QCryptographicHash::hash(key.toUtf8(), QCryptographicHash::Md5).left(6).toHex()));
-}
 }
 
 namespace OCC {
@@ -223,46 +211,6 @@ bool FolderMan::setupFoldersHelper(QSettings &settings, AccountStatePtr account)
     for (const auto &folderAlias : childGroups) {
         settings.beginGroup(folderAlias);
         FolderDefinition folderDefinition = FolderDefinition::load(settings, folderAlias.toUtf8());
-        const auto defaultJournalPath = [&account, folderDefinition] {
-            // if we would have booth the 2.9.0 file name and the lagacy file
-            // with the md5 infix we prefer the 2.9.0 version
-            const QDir info(folderDefinition.localPath());
-            const QString defaultPath = SyncJournalDb::makeDbName(folderDefinition.localPath());
-            if (info.exists(defaultPath)) {
-                return defaultPath;
-            }
-            // 2.6
-            QString legacyPath = makeLegacyDbName(folderDefinition, account->account());
-            if (info.exists(legacyPath)) {
-                return legacyPath;
-            }
-            // pre 2.6
-            legacyPath.replace(QLatin1String(".sync_"), QLatin1String("._sync_"));
-            if (info.exists(legacyPath)) {
-                return legacyPath;
-            }
-            return defaultPath;
-        }();
-
-        // migration: 2.10 did not specify a WebDAV URL
-        if (folderDefinition._webDavUrl.isEmpty()) {
-            folderDefinition._webDavUrl = account->account()->davUrl();
-        }
-
-        // Migration: Old settings don't have journalPath
-        if (folderDefinition.journalPath.isEmpty()) {
-            folderDefinition.journalPath = defaultJournalPath;
-        }
-
-        // Migration: ._ files sometimes can't be created.
-        // So if the configured journalPath has a dot-underscore ("._sync_*.db")
-        // but the current default doesn't have the underscore, switch to the
-        // new default if no db exists yet.
-        if (folderDefinition.journalPath.startsWith(QLatin1String("._sync_"))
-            && defaultJournalPath.startsWith(QLatin1String(".sync_"))
-            && !QFile::exists(folderDefinition.absoluteJournalPath())) {
-            folderDefinition.journalPath = defaultJournalPath;
-        }
 
         if (SyncJournalDb::dbIsTooNewForClient(folderDefinition.absoluteJournalPath())) {
             return false;
@@ -274,11 +222,7 @@ bool FolderMan::setupFoldersHelper(QSettings &settings, AccountStatePtr account)
             qFatal("Could not load plugin");
         }
 
-        if (Folder *f = addFolderInternal(std::move(folderDefinition), account, std::move(vfs))) {
-            // save possible changes from the migration
-            f->saveToSettings();
-            Q_EMIT folderSyncStateChange(f);
-        }
+        addFolderInternal(std::move(folderDefinition), account, std::move(vfs));
         settings.endGroup();
     }
 
