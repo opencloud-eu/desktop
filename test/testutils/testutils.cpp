@@ -33,7 +33,7 @@ namespace TestUtils {
         auto acc = Account::create(QUuid::createUuid());
         HttpCredentialsTest *cred = new HttpCredentialsTest(QStringLiteral("testuser"), QStringLiteral("secret"));
         acc->setCredentials(cred);
-        acc->setUrl(QUrl(QStringLiteral("http://localhost/owncloud")));
+        acc->setUrl(QUrl(QStringLiteral("http://localhost/")));
         acc->setDavDisplayName(QStringLiteral("fakename") + acc->uuid().toString(QUuid::WithoutBraces));
         acc->setCapabilities({acc->url(), OCC::TestUtils::testCapabilities()});
         return {OCC::AccountManager::instance()->addAccount(acc).get(), &TestUtilsPrivate::accountStateDeleter};
