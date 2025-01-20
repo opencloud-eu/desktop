@@ -16,10 +16,10 @@
 
 #include "gui/owncloudguilib.h"
 
-#include "syncfileitem.h"
 #include "common/syncfilestatus.h"
-#include "sharedialog.h" // for the ShareDialogStartPage
 #include "common/syncjournalfilerecord.h"
+#include "libsync/accountfwd.h"
+#include "syncfileitem.h"
 
 #if defined(Q_OS_MAC)
 #include "socketapisocket_mac.h"
@@ -64,9 +64,6 @@ public Q_SLOTS:
     void slotRegisterPath(Folder *f);
     void broadcastStatusPushMessage(const QString &systemPath, SyncFileStatus fileStatus);
 
-Q_SIGNALS:
-    void shareCommandReceived(const QString &sharePath, const QString &localPath, ShareDialogStartPage startPage);
-
 private Q_SLOTS:
     void slotNewConnection();
     void slotReadSocket();
@@ -104,9 +101,6 @@ private:
 
     void broadcastMessage(const QString &msg, bool doWait = false);
 
-    // opens share dialog, sends reply
-    void processShareRequest(const QString &localFile, SocketListener *listener, ShareDialogStartPage startPage);
-
     Q_INVOKABLE void command_RETRIEVE_FOLDER_STATUS(const QString &argument, SocketListener *listener);
     Q_INVOKABLE void command_RETRIEVE_FILE_STATUS(const QString &argument, SocketListener *listener);
 
@@ -116,8 +110,6 @@ private:
 
     // The context menu actions
     Q_INVOKABLE void command_SHARE(const QString &localFile, SocketListener *listener);
-    Q_INVOKABLE void command_MANAGE_PUBLIC_LINKS(const QString &localFile, SocketListener *listener);
-    Q_INVOKABLE void command_COPY_PUBLIC_LINK(const QString &localFile, SocketListener *listener);
     Q_INVOKABLE void command_COPY_PRIVATE_LINK(const QString &localFile, SocketListener *listener);
     Q_INVOKABLE void command_EMAIL_PRIVATE_LINK(const QString &localFile, SocketListener *listener);
     Q_INVOKABLE void command_OPEN_PRIVATE_LINK(const QString &localFile, SocketListener *listener);

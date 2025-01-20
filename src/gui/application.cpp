@@ -27,7 +27,6 @@
 #include "folder.h"
 #include "folderman.h"
 #include "settingsdialog.h"
-#include "sharedialog.h"
 #include "socketapi/socketapi.h"
 #include "theme.h"
 
@@ -100,8 +99,6 @@ Application::Application(Platform *platform, const QString &displayLanguage, boo
     for (const auto &ai : AccountManager::instance()->accounts()) {
         slotAccountStateAdded(ai);
     }
-
-    connect(FolderMan::instance()->socketApi(), &SocketApi::shareCommandReceived, _gui.data(), &ownCloudGui::slotShowShareDialog);
 
 #ifdef WITH_AUTO_UPDATER
     // Update checks

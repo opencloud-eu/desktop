@@ -15,10 +15,6 @@ target_sources(OpenCloudGui PRIVATE
     issueswidget.ui
     activitywidget.ui
     settingsdialog.ui
-    sharedialog.ui
-    sharelinkwidget.ui
-    shareusergroupwidget.ui
-    shareuserline.ui
     tlserrordialog.ui
     notificationwidget.ui
     logbrowser.ui
@@ -47,7 +43,6 @@ target_sources(OpenCloudGui PRIVATE
     logbrowser.cpp
     networkinformation.cpp
     networksettings.cpp
-    ocssharejob.cpp
     openfilemanager.cpp
     owncloudgui.cpp
     protocolwidget.cpp
@@ -57,11 +52,6 @@ target_sources(OpenCloudGui PRIVATE
     activitywidget.cpp
     selectivesyncwidget.cpp
     settingsdialog.cpp
-    sharedialog.cpp
-    sharelinkwidget.cpp
-    sharemanager.cpp
-    shareusergroupwidget.cpp
-    sharee.cpp
     tlserrordialog.cpp
     syncrunfilelog.cpp
     systray.cpp
