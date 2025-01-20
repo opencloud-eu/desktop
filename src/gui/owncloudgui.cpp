@@ -34,7 +34,6 @@
 #include "progressdispatcher.h"
 #include "settingsdialog.h"
 #include "setupwizardcontroller.h"
-#include "sharedialog.h"
 
 #include "libsync/graphapi/space.h"
 #include "libsync/graphapi/spacesmanager.h"
@@ -1018,67 +1017,6 @@ void ownCloudGui::raise()
         }
     }
 #endif
-}
-
-
-void ownCloudGui::slotShowShareDialog(const QString &sharePath, const QString &localPath, ShareDialogStartPage startPage)
-{
-    QString file;
-    const auto folder = FolderMan::instance()->folderForPath(localPath, &file);
-    if (!folder) {
-        qCWarning(lcApplication) << "Could not open share dialog for" << localPath << "no responsible folder found";
-        return;
-    }
-    if (folder->accountState()->account()->capabilities().filesSharing().sharing_roles) {
-        fetchPrivateLinkUrl(folder->accountState()->account(), folder->webDavUrl(), sharePath, this, [](const QUrl &url) {
-            const auto queryUrl = Utility::concatUrlPath(url, QString(), {{QStringLiteral("details"), QStringLiteral("sharing")}});
-            Utility::openBrowser(queryUrl, nullptr);
-        });
-    } else {
-        // oC10 code path
-        const auto accountState = folder->accountState();
-
-        SyncJournalFileRecord fileRecord;
-
-        bool resharingAllowed = true; // lets assume the good
-        if (folder->journalDb()->getFileRecord(file, &fileRecord) && fileRecord.isValid()) {
-            // check the permission: Is resharing allowed?
-            if (!fileRecord._remotePerm.isNull() && !fileRecord._remotePerm.hasPermission(RemotePermissions::CanReshare)) {
-                resharingAllowed = false;
-            }
-        }
-
-        // As a first approximation, set the set of permissions that can be granted
-        // either to everything (resharing allowed) or nothing (no resharing).
-        //
-        // The correct value will be found with a propfind from ShareDialog.
-        // (we want to show the dialog directly, not wait for the propfind first)
-        SharePermissions maxSharingPermissions =
-            SharePermissionRead
-            | SharePermissionUpdate | SharePermissionCreate | SharePermissionDelete
-            | SharePermissionShare;
-        if (!resharingAllowed) {
-            maxSharingPermissions = SharePermission(0);
-        }
-
-        if (_shareDialog && _shareDialog->localPath() == localPath) {
-            qCInfo(lcApplication) << "A share dialog for this path already exists" << sharePath << localPath;
-            // There might be another modal dialog on top, but that is usually more important (e.g. a login dialog).
-            raise();
-        } else {
-            qCInfo(lcApplication) << "Opening new share dialog" << sharePath << localPath << maxSharingPermissions;
-            if (_shareDialog) {
-                _shareDialog->close();
-            }
-            _shareDialog = new ShareDialog(accountState, folder->webDavUrl(), sharePath, localPath, maxSharingPermissions, startPage, settingsDialog());
-            _shareDialog->setAttribute(Qt::WA_DeleteOnClose, true);
-            ocApp()
-                ->gui()
-                ->settingsDialog()
-                ->accountSettings(accountState->account().get())
-                ->addModalLegacyDialog(_shareDialog, AccountSettings::ModalWidgetSizePolicy::Expanding);
-        }
-    }
 }
 
 void ownCloudGui::slotAbout()

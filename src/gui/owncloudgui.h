@@ -38,11 +38,6 @@ class ShareDialog;
 class Application;
 class LogBrowser;
 
-enum class ShareDialogStartPage {
-    UsersAndGroups,
-    PublicLinks,
-};
-
 /**
  * @brief The ownCloudGui class
  * @ingroup gui
@@ -100,15 +95,6 @@ public Q_SLOTS:
     void slotOpenPath(const QString &path);
     void slotAccountStateChanged();
     void slotTrayMessageIfServerUnsupported(Account *account);
-
-    /**
-     * Open a share dialog for a file or folder.
-     *
-     * sharePath is the full remote path to the item,
-     * localPath is the absolute local path to it (so not relative
-     * to the folder).
-     */
-    void slotShowShareDialog(const QString &sharePath, const QString &localPath, ShareDialogStartPage startPage);
 
 private:
     void setPauseOnAllFoldersHelper(const QList<AccountStatePtr> &accounts, bool pause);
