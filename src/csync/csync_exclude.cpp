@@ -160,7 +160,7 @@ static CSYNC_EXCLUDE_TYPE _csync_excluded_common(QStringView path, bool excludeC
                 return CSYNC_FILE_SILENTLY_EXCLUDED;
             }
         }
-        if (bname.startsWith(QLatin1String(".owncloudsync.log"), Qt::CaseInsensitive)) { // ".owncloudsync.log*"
+        if (bname.startsWith(QLatin1String(".OpenCloudSync.log"), Qt::CaseInsensitive)) { // ".OpenCloudSync.log*"
             return CSYNC_FILE_SILENTLY_EXCLUDED;
         }
     }

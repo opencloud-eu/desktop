@@ -368,7 +368,7 @@ QUrl Utility::concatUrlPath(const QUrl &url, const QString &concatPath,
 
 bool Utility::urlEqual(QUrl url1, QUrl url2)
 {
-    // ensure https://demo.owncloud.org/ matches https://demo.owncloud.org
+    // ensure https://demo.opencloud.eu/ matches https://demo.opencloud.eu
     // the empty path was the legacy formating before 2.9
     if (url1.path().isEmpty()) {
         url1.setPath(QStringLiteral("/"));
