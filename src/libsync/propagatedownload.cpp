@@ -670,7 +670,6 @@ void PropagateDownloadFile::setDeleteExistingFolder(bool enabled)
     _deleteExisting = enabled;
 }
 
-const char owncloudCustomSoftErrorStringC[] = "owncloud-custom-soft-error-string";
 void PropagateDownloadFile::slotGetFinished()
 {
     propagator()->_activeJobList.removeOne(this);
@@ -715,14 +714,7 @@ void PropagateDownloadFile::slotGetFinished()
             return;
         }
 
-        // This gives a custom QNAM (by the user of libowncloudsync) to abort() a QNetworkReply in its metaDataChanged() slot and
-        // set a custom error string to make this a soft error. In contrast to the default hard error this won't bring down
-        // the whole sync and allows for a custom error message.
-        QNetworkReply *reply = job->reply();
-        if (err == QNetworkReply::OperationCanceledError && reply->property(owncloudCustomSoftErrorStringC).isValid()) {
-            job->setErrorString(reply->property(owncloudCustomSoftErrorStringC).toString());
-            job->setErrorStatus(SyncFileItem::SoftError);
-        } else if (badRangeHeader) {
+        if (badRangeHeader) {
             // Can't do this in classifyError() because 416 without a
             // Range header should result in NormalError.
             job->setErrorStatus(SyncFileItem::SoftError);
