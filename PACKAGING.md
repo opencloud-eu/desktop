@@ -26,7 +26,7 @@ With that, the user gets on the one hand very frequently updated desktop clients
 
 ## Packaging Hints
 
-Here are some hints for packager of the linux distributions which we kindly ask to change their packages in the distros to help us to provide the best ownCloud client integration experience:
+Here are some hints for packager of the linux distributions which we kindly ask to change their packages in the distros to help us to provide the best `OpenCloud Desktop` integration experience:
 
 The shell integrations are available for [KDE Dolphin](https://github.com/opencloud-eu/desktop-shell-integration-dolphin), [Nautilus and Caja](https://github.com/opencloud-eu/desktop-shell-integration-nautilus). While KDE Dolphin needs compiled code, the latter two are using python.
 Each of them should be available as separate distro package, so that they can be suggested to complement "their" file manager.
