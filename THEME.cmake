@@ -29,12 +29,7 @@ if(NOT DEFINED APPLICATION_VIRTUALFILE_SUFFIX)
     set(APPLICATION_VIRTUALFILE_SUFFIX "${APPLICATION_SHORTNAME}_virtual" CACHE STRING "Virtual file suffix (not including the .)")
 endif()
 
-# need this logic to not mess with re/uninstallations via macosx.pkgproj
-if(${APPLICATION_REV_DOMAIN} STREQUAL "com.owncloud.desktopclient")
-    set(APPLICATION_REV_DOMAIN_INSTALLER "com.ownCloud.client")
-else()
-    set(APPLICATION_REV_DOMAIN_INSTALLER ${APPLICATION_REV_DOMAIN})
-endif()
+set(APPLICATION_REV_DOMAIN_INSTALLER ${APPLICATION_REV_DOMAIN})
 
 # For usage in XML files we preprocess
 string(REPLACE "&" "&amp;" APPLICATION_NAME_XML_ESCAPED "${APPLICATION_NAME}")
