@@ -12,7 +12,7 @@ endif()
 # Pass the info through the xcodebuild command line and make sure that the project uses
 # those user-defined settings to build the plist.
 add_custom_target( mac_overlayplugin ALL
-    xcodebuild -project ${CMAKE_SOURCE_DIR}/shell_integration/MacOSX/OwnCloudFinderSync/OwnCloudFinderSync.xcodeproj
+    xcodebuild -project ${CMAKE_SOURCE_DIR}/shell_integration/MacOSX/OpenCloudFinderExtension/OpenCloudFinderExtension.xcodeproj
         -target FinderSyncExt -configuration "${XCODE_CONFIG}" "SYMROOT=${CMAKE_CURRENT_BINARY_DIR}"
         "OC_OEM_SHARE_ICNS=${OC_OEM_SHARE_ICNS}"
         "OC_APPLICATION_NAME=${APPLICATION_NAME}"
