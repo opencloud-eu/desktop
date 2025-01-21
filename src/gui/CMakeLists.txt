@@ -118,9 +118,9 @@ ecm_add_qml_module(OpenCloudGui
 )
 
 generate_export_header(OpenCloudGui
-        EXPORT_MACRO_NAME OWNCLOUDGUI_EXPORT
-        EXPORT_FILE_NAME owncloudguilib.h
-        STATIC_DEFINE OWNCLOUD_BUILT_AS_STATIC
+        EXPORT_MACRO_NAME OPENCLOUD_GUI_EXPORT
+        EXPORT_FILE_NAME opencloudguilib.h
+        STATIC_DEFINE OPENCLOUD_BUILT_AS_STATIC
 )
 add_subdirectory(spaces)
 

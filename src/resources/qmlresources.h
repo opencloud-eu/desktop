@@ -13,7 +13,7 @@
  */
 
 #pragma once
-#include "resources/owncloudresources.h"
+#include "resources/opencloudresourceslib.h"
 
 #include <QIcon>
 #include <QtQml/QtQml>
@@ -21,7 +21,7 @@
 namespace OCC {
 namespace Resources {
 
-    class OWNCLOUDRESOURCES_EXPORT QMLResources : public QObject
+    class OPENCLOUD_RESOURCES_EXPORT QMLResources : public QObject
     {
         Q_OBJECT
         QML_SINGLETON
@@ -40,6 +40,6 @@ namespace Resources {
         static Icon parseIcon(const QString &id);
     };
 
-    QPixmap OWNCLOUDRESOURCES_EXPORT pixmap(const QSize &requestedSize, const QIcon &icon, QIcon::Mode mode, QSize *outSize);
+    QPixmap OPENCLOUD_RESOURCES_EXPORT pixmap(const QSize &requestedSize, const QIcon &icon, QIcon::Mode mode, QSize *outSize);
 } // Resources
 } // OCC

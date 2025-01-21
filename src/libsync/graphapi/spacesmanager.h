@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "owncloudlib.h"
+#include "opencloudsynclib.h"
 
 #include "libsync/accountfwd.h"
 #include "libsync/graphapi/space.h"
@@ -30,7 +30,7 @@ class QTimer;
 namespace OCC {
 namespace GraphApi {
 
-    class OWNCLOUDSYNC_EXPORT SpacesManager : public QObject
+    class OPENCLOUD_SYNC_EXPORT SpacesManager : public QObject
     {
         Q_OBJECT
 

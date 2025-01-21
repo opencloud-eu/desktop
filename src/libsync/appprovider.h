@@ -19,7 +19,7 @@
 
 #include "accountfwd.h"
 #include "capabilities.h"
-#include "owncloudlib.h"
+#include "opencloudsynclib.h"
 
 #include <QJsonObject>
 #include <QMimeType>
@@ -28,10 +28,10 @@
 #include <QVariantMap>
 
 namespace OCC {
-class OWNCLOUDSYNC_EXPORT AppProvider
+class OPENCLOUD_SYNC_EXPORT AppProvider
 {
 public:
-    struct OWNCLOUDSYNC_EXPORT Provider
+    struct OPENCLOUD_SYNC_EXPORT Provider
     {
         // the server might provide multiple apps but no default
         // for now we only support default apps

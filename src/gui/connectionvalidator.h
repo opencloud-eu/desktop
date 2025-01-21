@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "gui/owncloudguilib.h"
+#include "gui/opencloudguilib.h"
 
 #include "common/chronoelapsedtimer.h"
 #include "gui/guiutility.h"
@@ -76,7 +76,7 @@ namespace OCC {
 
     \endcode
  */
-class OWNCLOUDGUI_EXPORT ConnectionValidator : public QObject
+class OPENCLOUD_GUI_EXPORT ConnectionValidator : public QObject
 {
     Q_OBJECT
 public:

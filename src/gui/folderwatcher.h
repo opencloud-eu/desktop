@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "gui/owncloudguilib.h"
+#include "gui/opencloudguilib.h"
 
 
 #include <QElapsedTimer>
@@ -46,7 +46,7 @@ class Folder;
  * @ingroup gui
  */
 
-class OWNCLOUDGUI_EXPORT FolderWatcher : public QObject
+class OPENCLOUD_GUI_EXPORT FolderWatcher : public QObject
 {
     Q_OBJECT
 public:

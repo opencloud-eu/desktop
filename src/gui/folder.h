@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include "gui/owncloudguilib.h"
+#include "gui/opencloudguilib.h"
 
 #include "accountstate.h"
 #include "common/syncjournaldb.h"
@@ -50,7 +50,7 @@ class LocalDiscoveryTracker;
  * @brief The FolderDefinition class
  * @ingroup gui
  */
-class OWNCLOUDGUI_EXPORT FolderDefinition
+class OPENCLOUD_GUI_EXPORT FolderDefinition
 {
 public:
     static auto createNewFolderDefinition(const QUrl &davUrl, const QString &spaceId, const QString &displayName = {})
@@ -145,7 +145,7 @@ private:
  * @brief The Folder class
  * @ingroup gui
  */
-class OWNCLOUDGUI_EXPORT Folder : public QObject
+class OPENCLOUD_GUI_EXPORT Folder : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(GraphApi::Space *space READ space NOTIFY spaceChanged)

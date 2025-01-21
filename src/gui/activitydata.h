@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "gui/owncloudguilib.h"
+#include "gui/opencloudguilib.h"
 
 #include "account.h"
 
@@ -44,7 +44,7 @@ public:
  * contains all the information describing a single activity.
  */
 
-class OWNCLOUDGUI_EXPORT Activity
+class OPENCLOUD_GUI_EXPORT Activity
 {
 public:
     enum Type {

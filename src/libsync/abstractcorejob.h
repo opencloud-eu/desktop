@@ -19,7 +19,7 @@
 #include <QNetworkReply>
 
 #include "abstractnetworkjob.h"
-#include "owncloudlib.h"
+#include "opencloudsynclib.h"
 
 namespace OCC {
 
@@ -30,7 +30,7 @@ namespace OCC {
  * In contrast to the traditional network jobs (e.g., SimpleNetworkJob), core jobs are not bound to an account. Therefore,
  * they can be used with ease in situations where an account object is not available (e.g., the new wizard).
  */
-class OWNCLOUDSYNC_EXPORT CoreJob : public QObject
+class OPENCLOUD_SYNC_EXPORT CoreJob : public QObject
 {
     Q_OBJECT
 
@@ -93,7 +93,7 @@ private:
  *
  * Jobs are built by the startJob factory method, which creates a job instance as well as a network request, wires the required signals up, then sends the request.
  */
-class OWNCLOUDSYNC_EXPORT AbstractCoreJobFactory
+class OPENCLOUD_SYNC_EXPORT AbstractCoreJobFactory
 {
 public:
     /**

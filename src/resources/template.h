@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "resources/owncloudresources.h"
+#include "resources/opencloudresourceslib.h"
 
 #include <QUrl>
 
@@ -25,8 +25,8 @@ namespace Resources {
         /**
          * Replace all occurances of @{} values in template with the values from values
          */
-        OWNCLOUDRESOURCES_EXPORT QString renderTemplateFromFile(const QString &filePath, const QMap<QString, QString> &values);
-        OWNCLOUDRESOURCES_EXPORT QString renderTemplate(QString &&templ, const QMap<QString, QString> &values);
+        OPENCLOUD_RESOURCES_EXPORT QString renderTemplateFromFile(const QString &filePath, const QMap<QString, QString> &values);
+        OPENCLOUD_RESOURCES_EXPORT QString renderTemplate(QString &&templ, const QMap<QString, QString> &values);
     };
 }
 }

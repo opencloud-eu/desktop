@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "gui/owncloudguilib.h"
+#include "gui/opencloudguilib.h"
 
 #include "clientproxy.h"
 #include "folderman.h"
@@ -44,7 +44,7 @@ class Folder;
  * @brief The Application class
  * @ingroup gui
  */
-class OWNCLOUDGUI_EXPORT Application : public QObject
+class OPENCLOUD_GUI_EXPORT Application : public QObject
 {
     Q_OBJECT
 public:

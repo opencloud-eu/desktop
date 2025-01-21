@@ -15,11 +15,11 @@
 #ifndef LOCALDISCOVERYTRACKER_H
 #define LOCALDISCOVERYTRACKER_H
 
-#include "owncloudlib.h"
-#include <set>
-#include <QObject>
+#include "opencloudsynclib.h"
 #include <QByteArray>
+#include <QObject>
 #include <QSharedPointer>
+#include <set>
 
 namespace OCC {
 
@@ -46,7 +46,7 @@ typedef QSharedPointer<SyncFileItem> SyncFileItemPtr;
  *
  * @ingroup libsync
  */
-class OWNCLOUDSYNC_EXPORT LocalDiscoveryTracker : public QObject
+class OPENCLOUD_SYNC_EXPORT LocalDiscoveryTracker : public QObject
 {
     Q_OBJECT
 public:

@@ -14,7 +14,7 @@
 
 #pragma once
 #include "accountfwd.h"
-#include "owncloudlib.h"
+#include "opencloudsynclib.h"
 
 #include <QNetworkReply>
 #include <QPointer>
@@ -49,7 +49,7 @@ class JsonJob;
  *              finalize(...): Q_EMIT result(...)
  *
  */
-class OWNCLOUDSYNC_EXPORT OAuth : public QObject
+class OPENCLOUD_SYNC_EXPORT OAuth : public QObject
 {
     Q_OBJECT
 public:
@@ -129,7 +129,7 @@ private:
  * Instead of relying on the user to provide a working server URL, a CheckServerJob is run upon start(), which also stores the fetched cookies in the account's state.
  * Furthermore, it takes care of storing and loading the dynamic registration data in the account's credentials manager.
  */
-class OWNCLOUDSYNC_EXPORT AccountBasedOAuth : public OAuth
+class OPENCLOUD_SYNC_EXPORT AccountBasedOAuth : public OAuth
 {
     Q_OBJECT
 
@@ -151,6 +151,6 @@ private:
     AccountPtr _account;
 };
 
-QString OWNCLOUDSYNC_EXPORT toString(OAuth::PromptValuesSupportedFlags s);
+QString OPENCLOUD_SYNC_EXPORT toString(OAuth::PromptValuesSupportedFlags s);
 Q_DECLARE_OPERATORS_FOR_FLAGS(OAuth::PromptValuesSupportedFlags)
 } // namespce OCC

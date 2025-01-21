@@ -42,7 +42,7 @@ class OAuth;
    is in HttpCredentialsGui.
 
  */
-class OWNCLOUDSYNC_EXPORT HttpCredentials : public AbstractCredentials
+class OPENCLOUD_SYNC_EXPORT HttpCredentials : public AbstractCredentials
 {
     Q_OBJECT
     friend class HttpCredentialsAccessManager;

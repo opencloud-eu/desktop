@@ -27,9 +27,9 @@ set_target_properties(OpenCloudResources PROPERTIES
 )
 
 generate_export_header(OpenCloudResources
-        EXPORT_MACRO_NAME OWNCLOUDRESOURCES_EXPORT
-        EXPORT_FILE_NAME owncloudresources.h
-        STATIC_DEFINE OWNCLOUD_BUILT_AS_STATIC
+        EXPORT_MACRO_NAME OPENCLOUD_RESOURCES_EXPORT
+        EXPORT_FILE_NAME opencloudresourceslib.h
+        STATIC_DEFINE OPENCLOUD_BUILT_AS_STATIC
 )
 
 # Handle Translations, pick all client_* files from trans directory.

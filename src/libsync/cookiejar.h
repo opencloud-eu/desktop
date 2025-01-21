@@ -17,7 +17,7 @@
 
 #include <QNetworkCookieJar>
 
-#include "owncloudlib.h"
+#include "opencloudsynclib.h"
 
 namespace OCC {
 
@@ -25,7 +25,7 @@ namespace OCC {
  * @brief The CookieJar class
  * @ingroup libsync
  */
-class OWNCLOUDSYNC_EXPORT CookieJar : public QNetworkCookieJar
+class OPENCLOUD_SYNC_EXPORT CookieJar : public QNetworkCookieJar
 {
     Q_OBJECT
 public:

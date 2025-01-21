@@ -67,7 +67,7 @@ public:
     bool valid() const;
 };
 
-class OWNCLOUDSYNC_EXPORT Theme : public QObject
+class OPENCLOUD_SYNC_EXPORT Theme : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool multiAccount READ multiAccount FINAL CONSTANT)

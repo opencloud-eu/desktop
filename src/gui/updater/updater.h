@@ -15,7 +15,7 @@
 #ifndef UPDATER_H
 #define UPDATER_H
 
-#include "gui/owncloudguilib.h"
+#include "gui/opencloudguilib.h"
 
 #include <QLoggingCategory>
 #include <QObject>
@@ -27,7 +27,7 @@ namespace OCC {
 
 Q_DECLARE_LOGGING_CATEGORY(lcUpdater)
 
-class OWNCLOUDGUI_EXPORT Updater : public QObject
+class OPENCLOUD_GUI_EXPORT Updater : public QObject
 {
     Q_OBJECT
 public:

@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "gui/owncloudguilib.h"
+#include "gui/opencloudguilib.h"
 
 #include "common/pinstate.h"
 
@@ -52,7 +52,7 @@ namespace Utility {
 
     QString socketApiSocketPath();
 
-    OWNCLOUDGUI_EXPORT void markDirectoryAsSyncRoot(const QString &path, const QUuid &accountUuid);
+    OPENCLOUD_GUI_EXPORT void markDirectoryAsSyncRoot(const QString &path, const QUuid &accountUuid);
     std::pair<QString, QUuid> getDirectorySyncRootMarkings(const QString &path);
     void unmarkDirectoryAsSyncRoot(const QString &path);
 } // namespace Utility

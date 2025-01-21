@@ -15,12 +15,12 @@
 #ifndef PROGRESSDISPATCHER_H
 #define PROGRESSDISPATCHER_H
 
-#include "owncloudlib.h"
-#include <QObject>
-#include <QHash>
-#include <QTime>
-#include <QQueue>
+#include "opencloudsynclib.h"
 #include <QElapsedTimer>
+#include <QHash>
+#include <QObject>
+#include <QQueue>
+#include <QTime>
 #include <QTimer>
 
 #include "syncfileitem.h"
@@ -31,7 +31,7 @@ class Folder;
  * @brief The ProgressInfo class
  * @ingroup libsync
  */
-class OWNCLOUDSYNC_EXPORT ProgressInfo : public QObject
+class OPENCLOUD_SYNC_EXPORT ProgressInfo : public QObject
 {
     Q_OBJECT
 public:
@@ -138,7 +138,7 @@ public:
      * Holds the current state of something making progress and maintains an
      * estimate of the current progress per second.
      */
-    struct OWNCLOUDSYNC_EXPORT Progress
+    struct OPENCLOUD_SYNC_EXPORT Progress
     {
         Progress()
             : _progressPerSec(0)
@@ -184,7 +184,7 @@ public:
 
     Status _status;
 
-    struct OWNCLOUDSYNC_EXPORT ProgressItem
+    struct OPENCLOUD_SYNC_EXPORT ProgressItem
     {
         SyncFileItem _item;
         Progress _progress;
@@ -255,16 +255,16 @@ private:
 
 namespace Progress {
 
-    OWNCLOUDSYNC_EXPORT QString asActionString(const SyncFileItem &item);
-    OWNCLOUDSYNC_EXPORT QString asResultString(const SyncFileItem &item);
+    OPENCLOUD_SYNC_EXPORT QString asActionString(const SyncFileItem &item);
+    OPENCLOUD_SYNC_EXPORT QString asResultString(const SyncFileItem &item);
 
-    OWNCLOUDSYNC_EXPORT bool isWarningKind(SyncFileItem::Status);
-    OWNCLOUDSYNC_EXPORT bool isIgnoredKind(SyncFileItem::Status);
+    OPENCLOUD_SYNC_EXPORT bool isWarningKind(SyncFileItem::Status);
+    OPENCLOUD_SYNC_EXPORT bool isIgnoredKind(SyncFileItem::Status);
 }
 
 // work around for only having one namespace OCC, and this enum not beeing in a QObject
 namespace ErrorCategoryPrivate {
-    OWNCLOUDSYNC_EXPORT Q_NAMESPACE;
+    OPENCLOUD_SYNC_EXPORT Q_NAMESPACE;
 
     /** Type of error
      *
@@ -289,7 +289,7 @@ using ErrorCategoryPrivate::ErrorCategory;
  * or the overall sync progress.
  *
  */
-class OWNCLOUDSYNC_EXPORT ProgressDispatcher : public QObject
+class OPENCLOUD_SYNC_EXPORT ProgressDispatcher : public QObject
 {
     Q_OBJECT
 public:

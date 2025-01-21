@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "gui/owncloudguilib.h"
+#include "gui/opencloudguilib.h"
 
 #include <QNetworkInformation>
 
@@ -26,7 +26,7 @@ namespace OCC {
  * This class is used instead of QNetworkInformation so we do not need to check for an instance,
  * and to facilitate debugging by being able to force certain network states (i.e. captive portal).
  */
-class OWNCLOUDGUI_EXPORT NetworkInformation : public QObject
+class OPENCLOUD_GUI_EXPORT NetworkInformation : public QObject
 {
     Q_OBJECT
 

@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "gui/owncloudguilib.h"
+#include "gui/opencloudguilib.h"
 
 #include "common/syncfilestatus.h"
 #include "common/syncjournalfilerecord.h"
@@ -46,7 +46,7 @@ Q_DECLARE_LOGGING_CATEGORY(lcSocketApi)
  * @brief The SocketApi class
  * @ingroup gui
  */
-class OWNCLOUDGUI_EXPORT SocketApi : public QObject
+class OPENCLOUD_GUI_EXPORT SocketApi : public QObject
 {
     Q_OBJECT
 

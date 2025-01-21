@@ -562,7 +562,7 @@ bool Theme::withCrashReporter() const
 }
 
 template <>
-OWNCLOUDSYNC_EXPORT QString Utility::enumToDisplayName(Theme::UserIDType userIdType)
+OPENCLOUD_SYNC_EXPORT QString Utility::enumToDisplayName(Theme::UserIDType userIdType)
 {
     switch (userIdType) {
     case Theme::UserIDUserName:

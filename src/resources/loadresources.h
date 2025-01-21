@@ -1,9 +1,9 @@
 #pragma once
 
-#include "owncloudresources.h"
+#include "opencloudresourceslib.h"
 
 namespace OCC {
-class OWNCLOUDRESOURCES_EXPORT ResourcesLoader
+class OPENCLOUD_RESOURCES_EXPORT ResourcesLoader
 {
 public:
     ResourcesLoader();

@@ -15,7 +15,7 @@ class ResourcesCache;
  * This job automatically downloads all available data from the server and stores it in a temporary cache directory on the disk.
  * For convenience, a couple of conversion functions are available to convert the binary data to common Qt classes such as QIcon.
  */
-class OWNCLOUDSYNC_EXPORT ResourceJob : public SimpleNetworkJob
+class OPENCLOUD_SYNC_EXPORT ResourceJob : public SimpleNetworkJob
 {
 public:
     void finished() override;
@@ -33,7 +33,7 @@ private:
 };
 
 
-class OWNCLOUDSYNC_EXPORT ResourcesCache : public QObject
+class OPENCLOUD_SYNC_EXPORT ResourcesCache : public QObject
 {
     Q_OBJECT
 

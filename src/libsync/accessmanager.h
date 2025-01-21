@@ -15,7 +15,7 @@
 #ifndef MIRALL_ACCESS_MANAGER_H
 #define MIRALL_ACCESS_MANAGER_H
 
-#include "owncloudlib.h"
+#include "opencloudsynclib.h"
 #include <QNetworkAccessManager>
 
 class QByteArray;
@@ -28,7 +28,7 @@ class CookieJar;
  * @brief The AccessManager class
  * @ingroup libsync
  */
-class OWNCLOUDSYNC_EXPORT AccessManager : public QNetworkAccessManager
+class OPENCLOUD_SYNC_EXPORT AccessManager : public QNetworkAccessManager
 {
     Q_OBJECT
 

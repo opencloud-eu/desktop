@@ -26,7 +26,7 @@ namespace OCC {
  * @brief Downloads the remote file via GET
  * @ingroup libsync
  */
-class OWNCLOUDSYNC_EXPORT GETFileJob : public AbstractNetworkJob
+class OPENCLOUD_SYNC_EXPORT GETFileJob : public AbstractNetworkJob
 {
     Q_OBJECT
     QIODevice *_device;

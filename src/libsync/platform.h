@@ -20,7 +20,7 @@
 
 #include <memory>
 
-#include "owncloudlib.h"
+#include "opencloudsynclib.h"
 
 namespace OCC {
 
@@ -28,7 +28,7 @@ namespace OCC {
  * @brief The Platform is the baseclass for all platform classes, which in turn implement platform
  *        specific functionality for the GUI.
  */
-class OWNCLOUDSYNC_EXPORT Platform : public QObject
+class OPENCLOUD_SYNC_EXPORT Platform : public QObject
 {
     Q_OBJECT
 public:

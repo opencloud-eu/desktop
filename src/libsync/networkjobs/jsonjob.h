@@ -22,7 +22,7 @@
 namespace OCC {
 
 
-class OWNCLOUDSYNC_EXPORT JsonJob : public SimpleNetworkJob
+class OPENCLOUD_SYNC_EXPORT JsonJob : public SimpleNetworkJob
 {
     Q_OBJECT
 public:
@@ -59,7 +59,7 @@ private:
  *
  * @ingroup libsync
  */
-class OWNCLOUDSYNC_EXPORT JsonApiJob : public JsonJob
+class OPENCLOUD_SYNC_EXPORT JsonApiJob : public JsonJob
 {
     Q_OBJECT
 public:

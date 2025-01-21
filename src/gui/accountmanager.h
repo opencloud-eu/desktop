@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "gui/owncloudguilib.h"
+#include "gui/opencloudguilib.h"
 
 #include "account.h"
 #include "accountstate.h"
@@ -30,7 +30,7 @@ namespace OCC {
    @brief The AccountManager class
    @ingroup gui
 */
-class OWNCLOUDGUI_EXPORT AccountManager : public QObject
+class OPENCLOUD_GUI_EXPORT AccountManager : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QList<AccountState *> accounts READ accountsRaw() NOTIFY accountsChanged)

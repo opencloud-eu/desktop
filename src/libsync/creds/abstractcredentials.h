@@ -19,7 +19,7 @@
 
 #include "accessmanager.h"
 #include "accountfwd.h"
-#include "owncloudlib.h"
+#include "opencloudsynclib.h"
 #include <csync.h>
 
 class QNetworkAccessManager;
@@ -28,7 +28,7 @@ namespace OCC {
 
 class AbstractNetworkJob;
 
-class OWNCLOUDSYNC_EXPORT AbstractCredentials : public QObject
+class OPENCLOUD_SYNC_EXPORT AbstractCredentials : public QObject
 {
     Q_OBJECT
 
