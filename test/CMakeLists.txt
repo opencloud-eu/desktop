@@ -1,72 +1,72 @@
-include(owncloud_add_test.cmake)
+include(opencloud_add_test.cmake)
 
 add_subdirectory(testutils)
 
-owncloud_add_test(JHash)
+opencloud_add_test(JHash)
 
-owncloud_add_test(OwncloudPropagator)
-owncloud_add_test(OwnSql)
-owncloud_add_test(SyncJournalDB)
-owncloud_add_test(SyncFileItem)
-owncloud_add_test(ConcatUrl)
-owncloud_add_test(XmlParse)
-owncloud_add_test(ChecksumValidator)
-owncloud_add_test(ConnectionValidator)
+opencloud_add_test(OwncloudPropagator)
+opencloud_add_test(OwnSql)
+opencloud_add_test(SyncJournalDB)
+opencloud_add_test(SyncFileItem)
+opencloud_add_test(ConcatUrl)
+opencloud_add_test(XmlParse)
+opencloud_add_test(ChecksumValidator)
+opencloud_add_test(ConnectionValidator)
 
 
 # TODO: we need keychain access for this test
 if (NOT APPLE OR NOT DEFINED ENV{GITHUB_ACTION})
-    owncloud_add_test(CredentialManager)
+    opencloud_add_test(CredentialManager)
 endif()
 
-owncloud_add_test(ExcludedFiles)
+opencloud_add_test(ExcludedFiles)
 
-owncloud_add_test(Utility)
+opencloud_add_test(Utility)
 
-owncloud_add_test(SyncEngine)
+opencloud_add_test(SyncEngine)
 
 # TODO: https://github.com/opencloud-eu/desktop/issues/5
 #owncloud_add_test(SyncVirtualFiles)
 
-owncloud_add_test(SyncMove)
+opencloud_add_test(SyncMove)
 add_dependencies(SyncMoveTest test_helper)
-owncloud_add_test(SyncDelete)
-owncloud_add_test(SyncConflict)
-owncloud_add_test(SyncFileStatusTracker)
-owncloud_add_test(Download)
-owncloud_add_test(ChunkingNg)
-owncloud_add_test(UploadReset)
-owncloud_add_test(Blacklist)
-owncloud_add_test(LocalDiscovery)
-owncloud_add_test(RemoteDiscovery)
-owncloud_add_test(Permissions)
-owncloud_add_test(DatabaseError)
-owncloud_add_test(LockedFiles)
+opencloud_add_test(SyncDelete)
+opencloud_add_test(SyncConflict)
+opencloud_add_test(SyncFileStatusTracker)
+opencloud_add_test(Download)
+opencloud_add_test(ChunkingNg)
+opencloud_add_test(UploadReset)
+opencloud_add_test(Blacklist)
+opencloud_add_test(LocalDiscovery)
+opencloud_add_test(RemoteDiscovery)
+opencloud_add_test(Permissions)
+opencloud_add_test(DatabaseError)
+opencloud_add_test(LockedFiles)
 
 if (WITH_AUTO_UPDATER)
-    owncloud_add_test(Updater)
+    opencloud_add_test(Updater)
 endif()
 
-owncloud_add_test(FolderWatcher)
+opencloud_add_test(FolderWatcher)
 
 if( UNIX AND NOT APPLE )
-    owncloud_add_test(InotifyWatcher)
+    opencloud_add_test(InotifyWatcher)
 endif(UNIX AND NOT APPLE)
 
 
-owncloud_add_test(LongPath)
+opencloud_add_test(LongPath)
 
-owncloud_add_test(FolderMan)
+opencloud_add_test(FolderMan)
 
-owncloud_add_test(OAuth)
+opencloud_add_test(OAuth)
 
 configure_file(test_journal.db "${PROJECT_BINARY_DIR}/bin/test_journal.db" COPYONLY)
 
 
-owncloud_add_test(JobQueue)
+opencloud_add_test(JobQueue)
 
 # cern only
-owncloud_add_test(SpacesMigration)
+opencloud_add_test(SpacesMigration)
 target_sources(SpacesMigrationTest PRIVATE ${PROJECT_SOURCE_DIR}/src/gui/spacemigration.cpp)
 
 add_subdirectory(modeltests)
