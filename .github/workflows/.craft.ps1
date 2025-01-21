@@ -5,6 +5,9 @@ if ($IsWindows) {
     $python = (Get-Command python3).Source
 }
 
+# workaround, prevent CraftMaster detecting the platform as android
+$env:ANDROID_NDK = $null
+
 $RepoRoot = "{0}/../../" -f ([System.IO.Path]::GetDirectoryName($myInvocation.MyCommand.Definition))
 $command = @("${env:HOME}/craft/CraftMaster/CraftMaster/CraftMaster.py",
              "--config", "${RepoRoot}/.craft.ini",
