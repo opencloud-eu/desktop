@@ -37,10 +37,10 @@ jobs:
               target: macos-clang-arm64
               os: macos-latest
               container:
-            - name: linux-gcc-x86_64
-              target: linux-64-gcc
-              os: ubuntu-latest
-              container: invent-registry.kde.org/sysadmin/ci-images/sles15-craft:latest
+#            - name: linux-gcc-x86_64
+#              target: linux-64-gcc
+#              os: ubuntu-latest
+#              container: invent-registry.kde.org/sysadmin/ci-images/sles15-craft:latest
 
     name: ${{ matrix.name }}
 
