@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "owncloudlib.h"
+#include "opencloudsynclib.h"
 
 #include "account.h"
 
@@ -23,7 +23,7 @@
 
 namespace OCC {
 
-class OWNCLOUDSYNC_EXPORT WebFinger : public QObject
+class OPENCLOUD_SYNC_EXPORT WebFinger : public QObject
 {
     Q_OBJECT
 public:

@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "gui/owncloudguilib.h"
+#include "gui/opencloudguilib.h"
 
 #include <QString>
 #include <QDomElement>
@@ -10,7 +10,7 @@
 
 namespace OCC {
 
-class OWNCLOUDGUI_EXPORT UpdateInfo
+class OPENCLOUD_GUI_EXPORT UpdateInfo
 {
 public:
     void setVersion(const QString &v);

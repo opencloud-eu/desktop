@@ -13,7 +13,7 @@
  */
 
 #pragma once
-#include "resources/owncloudresources.h"
+#include "resources/opencloudresourceslib.h"
 
 #include <QIcon>
 #include <QUrl>
@@ -32,31 +32,31 @@ Q_ENUM_NS(IconType);
  *
  * @return Whether we are using the vanilla theme
  */
-bool OWNCLOUDRESOURCES_EXPORT isVanillaTheme();
+bool OPENCLOUD_RESOURCES_EXPORT isVanillaTheme();
 
 /**
  * Whether use the dark icon theme
  * The function also ensures the theme supports the dark theme
  */
-bool OWNCLOUDRESOURCES_EXPORT isUsingDarkTheme();
+bool OPENCLOUD_RESOURCES_EXPORT isUsingDarkTheme();
 
-bool OWNCLOUDRESOURCES_EXPORT hasDarkTheme();
+bool OPENCLOUD_RESOURCES_EXPORT hasDarkTheme();
 
 /** Whether the theme provides monochrome tray icons
  */
-bool OWNCLOUDRESOURCES_EXPORT hasMonoTheme();
+bool OPENCLOUD_RESOURCES_EXPORT hasMonoTheme();
 
-QIcon OWNCLOUDRESOURCES_EXPORT getCoreIcon(const QString &icon_name);
+QIcon OPENCLOUD_RESOURCES_EXPORT getCoreIcon(const QString &icon_name);
 
-QIcon OWNCLOUDRESOURCES_EXPORT loadIcon(const QString &flavor, const QString &name, IconType iconType);
-QIcon OWNCLOUDRESOURCES_EXPORT themeIcon(const QString &name, IconType iconType = IconType::BrandedIconWithFallbackToVanillaIcon);
+QIcon OPENCLOUD_RESOURCES_EXPORT loadIcon(const QString &flavor, const QString &name, IconType iconType);
+QIcon OPENCLOUD_RESOURCES_EXPORT themeIcon(const QString &name, IconType iconType = IconType::BrandedIconWithFallbackToVanillaIcon);
 
 /**
  * Returns a universal (non color schema aware) icon.
  */
-QIcon OWNCLOUDRESOURCES_EXPORT themeUniversalIcon(const QString &name, IconType iconType = IconType::BrandedIcon);
+QIcon OPENCLOUD_RESOURCES_EXPORT themeUniversalIcon(const QString &name, IconType iconType = IconType::BrandedIcon);
 
-class OWNCLOUDRESOURCES_EXPORT CoreImageProvider : public QQuickImageProvider
+class OPENCLOUD_RESOURCES_EXPORT CoreImageProvider : public QQuickImageProvider
 {
     Q_OBJECT
 public:

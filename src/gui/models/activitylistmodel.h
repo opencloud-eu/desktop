@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "gui/owncloudguilib.h"
+#include "gui/opencloudguilib.h"
 
 #include "accountstate.h"
 #include "activitydata.h"
@@ -34,7 +34,7 @@ Q_DECLARE_LOGGING_CATEGORY(lcActivity)
  * Simple list model to provide the list view with data.
  */
 
-class OWNCLOUDGUI_EXPORT ActivityListModel : public QAbstractTableModel
+class OPENCLOUD_GUI_EXPORT ActivityListModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:

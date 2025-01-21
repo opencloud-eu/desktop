@@ -15,14 +15,14 @@
 
 #include "networkjobs/jsonjob.h"
 
-#include "owncloudlib.h"
+#include "opencloudsynclib.h"
 #include <OAIDrive.h>
 
 namespace OCC {
 namespace GraphApi {
 
 
-    class OWNCLOUDSYNC_EXPORT Drives : public JsonJob
+    class OPENCLOUD_SYNC_EXPORT Drives : public JsonJob
     {
         Q_OBJECT
     public:

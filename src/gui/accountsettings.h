@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "gui/owncloudguilib.h"
+#include "gui/opencloudguilib.h"
 
 #include "folder.h"
 #include "gui/qmlutils.h"
@@ -46,7 +46,7 @@ class FolderStatusDelegate;
  * @brief The AccountSettings class
  * @ingroup gui
  */
-class OWNCLOUDGUI_EXPORT AccountSettings : public QWidget
+class OPENCLOUD_GUI_EXPORT AccountSettings : public QWidget
 {
     Q_OBJECT
     Q_PROPERTY(AccountState *accountState MEMBER _accountState CONSTANT)

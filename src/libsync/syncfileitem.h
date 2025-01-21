@@ -27,7 +27,7 @@
 #include "common/utility.h"
 #include "csync.h"
 
-#include "owncloudlib.h"
+#include "opencloudsynclib.h"
 
 namespace OCC {
 
@@ -39,7 +39,7 @@ typedef QSharedPointer<SyncFileItem> SyncFileItemPtr;
  * @brief The SyncFileItem class
  * @ingroup libsync
  */
-class OWNCLOUDSYNC_EXPORT SyncFileItem
+class OPENCLOUD_SYNC_EXPORT SyncFileItem
 {
     Q_GADGET
 public:
@@ -333,7 +333,7 @@ private:
 
 
 template <>
-OWNCLOUDSYNC_EXPORT QString Utility::enumToDisplayName(SyncFileItem::Status s);
+OPENCLOUD_SYNC_EXPORT QString Utility::enumToDisplayName(SyncFileItem::Status s);
 
 
 inline bool operator<(const SyncFileItemPtr &item1, const SyncFileItemPtr &item2)
@@ -348,7 +348,7 @@ Q_DECLARE_METATYPE(OCC::SyncFileItemSet)
 Q_DECLARE_METATYPE(OCC::SyncFileItem)
 Q_DECLARE_METATYPE(OCC::SyncFileItemPtr)
 
-OWNCLOUDSYNC_EXPORT QDebug operator<<(QDebug debug, const OCC::SyncFileItem *item);
+OPENCLOUD_SYNC_EXPORT QDebug operator<<(QDebug debug, const OCC::SyncFileItem *item);
 inline QDebug operator<<(QDebug debug, const OCC::SyncFileItemPtr &item)
 {
     return debug << item.data();

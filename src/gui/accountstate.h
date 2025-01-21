@@ -15,7 +15,7 @@
 
 #pragma once
 
-#include "gui/owncloudguilib.h"
+#include "gui/opencloudguilib.h"
 
 #include "connectionvalidator.h"
 #include "creds/abstractcredentials.h"
@@ -41,7 +41,7 @@ class FetchServerSettingsJob;
  * @brief Extra info about an ownCloud server account.
  * @ingroup gui
  */
-class OWNCLOUDGUI_EXPORT AccountState : public QObject
+class OPENCLOUD_GUI_EXPORT AccountState : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(Account *account READ accountForQml CONSTANT)

@@ -18,7 +18,7 @@
 #include <ctime>
 #include <functional>
 
-#include <owncloudlib.h>
+#include <opencloudsynclib.h>
 // Chain in the base include and extend the namespace
 #include "common/filesystembase.h"
 #include "common/result.h"
@@ -50,9 +50,9 @@ namespace FileSystem {
      * Use this over QFileInfo::lastModified() to avoid timezone related bugs. See
      * owncloud/core#9781 for details.
      */
-    time_t OWNCLOUDSYNC_EXPORT getModTime(const QString &filename);
+    time_t OPENCLOUD_SYNC_EXPORT getModTime(const QString &filename);
 
-    bool OWNCLOUDSYNC_EXPORT setModTime(const QString &filename, time_t modTime);
+    bool OPENCLOUD_SYNC_EXPORT setModTime(const QString &filename, time_t modTime);
 
     /**
      * @brief Get the size for a file
@@ -60,12 +60,12 @@ namespace FileSystem {
      * Use this over QFileInfo::size() to avoid bugs with lnk files on Windows.
      * See https://bugreports.qt.io/browse/QTBUG-24831.
      */
-    qint64 OWNCLOUDSYNC_EXPORT getSize(const QFileInfo &info);
+    qint64 OPENCLOUD_SYNC_EXPORT getSize(const QFileInfo &info);
 
     /**
      * @brief Retrieve a file inode with csync
      */
-    bool OWNCLOUDSYNC_EXPORT getInode(const QString &filename, quint64 *inode);
+    bool OPENCLOUD_SYNC_EXPORT getInode(const QString &filename, quint64 *inode);
 
     /**
      * @brief Check if \a fileName has changed given previous size and mtime
@@ -74,7 +74,7 @@ namespace FileSystem {
      *
      * @return true if the file's mtime or size are not what is expected.
      */
-    bool OWNCLOUDSYNC_EXPORT fileChanged(const QFileInfo &info, qint64 previousSize, time_t previousMtime, std::optional<quint64> previousInode = {});
+    bool OPENCLOUD_SYNC_EXPORT fileChanged(const QFileInfo &info, qint64 previousSize, time_t previousMtime, std::optional<quint64> previousInode = {});
 
 
     struct RemoveEntry
@@ -96,15 +96,12 @@ namespace FileSystem {
      *
      * Returns true if all removes succeeded.
      */
-    bool OWNCLOUDSYNC_EXPORT removeRecursively(const QString &path,
-        RemoveEntryList *success,
-        RemoveEntryList *locked,
-        RemoveErrorList *errors);
+    bool OPENCLOUD_SYNC_EXPORT removeRecursively(const QString &path, RemoveEntryList *success, RemoveEntryList *locked, RemoveErrorList *errors);
 
     namespace Tags {
-        std::optional<QByteArray> OWNCLOUDSYNC_EXPORT get(const QString &path, const QString &key);
-        OCC::Result<void, QString> OWNCLOUDSYNC_EXPORT set(const QString &path, const QString &key, const QByteArray &value);
-        bool OWNCLOUDSYNC_EXPORT remove(const QString &path, const QString &key);
+        std::optional<QByteArray> OPENCLOUD_SYNC_EXPORT get(const QString &path, const QString &key);
+        OCC::Result<void, QString> OPENCLOUD_SYNC_EXPORT set(const QString &path, const QString &key, const QByteArray &value);
+        bool OPENCLOUD_SYNC_EXPORT remove(const QString &path, const QString &key);
     }
 }
 

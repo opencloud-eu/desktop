@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "owncloudlib.h"
+#include "opencloudsynclib.h"
 
 #include "libsync/accountfwd.h"
 
@@ -28,7 +28,7 @@ namespace GraphApi {
     class SpacesManager;
     class Space;
 
-    class OWNCLOUDSYNC_EXPORT SpaceImage : public QObject
+    class OPENCLOUD_SYNC_EXPORT SpaceImage : public QObject
     {
         Q_OBJECT
         Q_PROPERTY(QUrl qmlImageUrl READ qmlImageUrl NOTIFY imageChanged)
@@ -57,7 +57,7 @@ namespace GraphApi {
         friend class Space;
     };
 
-    class OWNCLOUDSYNC_EXPORT Space : public QObject
+    class OPENCLOUD_SYNC_EXPORT Space : public QObject
     {
         Q_OBJECT
         Q_PROPERTY(SpaceImage *image READ image NOTIFY imageChanged)

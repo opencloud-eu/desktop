@@ -15,7 +15,7 @@
 
 #pragma once
 
-#include "gui/owncloudguilib.h"
+#include "gui/opencloudguilib.h"
 
 #include "folder.h"
 #include "scheduling/syncscheduler.h"
@@ -79,7 +79,7 @@ private:
  *   (_timeScheduler and slotScheduleFolderByTime()
  *    and Folder::slotSyncFinished())
  */
-class OWNCLOUDGUI_EXPORT FolderMan : public QObject
+class OPENCLOUD_GUI_EXPORT FolderMan : public QObject
 {
     Q_OBJECT
 public:

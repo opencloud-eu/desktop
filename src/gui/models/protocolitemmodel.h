@@ -13,7 +13,7 @@
  */
 #pragma once
 
-#include "gui/owncloudguilib.h"
+#include "gui/opencloudguilib.h"
 
 #include "common/fixedsizeringbuffer.h"
 #include "protocolitem.h"
@@ -23,7 +23,7 @@
 
 namespace OCC {
 
-class OWNCLOUDGUI_EXPORT ProtocolItemModel : public QAbstractTableModel
+class OPENCLOUD_GUI_EXPORT ProtocolItemModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:

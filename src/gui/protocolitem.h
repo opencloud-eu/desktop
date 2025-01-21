@@ -13,7 +13,7 @@
  */
 #pragma once
 
-#include "gui/owncloudguilib.h"
+#include "gui/opencloudguilib.h"
 
 #include "gui/folder.h"
 
@@ -24,7 +24,7 @@
 
 namespace OCC {
 
-class OWNCLOUDGUI_EXPORT ProtocolItem
+class OPENCLOUD_GUI_EXPORT ProtocolItem
 {
     Q_GADGET
 public:

@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "gui/owncloudguilib.h"
+#include "gui/opencloudguilib.h"
 
 #include <QDialog>
 
@@ -28,7 +28,7 @@ namespace Ui {
  * @brief The LogBrowser class
  * @ingroup gui
  */
-class OWNCLOUDGUI_EXPORT LogBrowser : public QDialog
+class OPENCLOUD_GUI_EXPORT LogBrowser : public QDialog
 {
     Q_OBJECT
 public:

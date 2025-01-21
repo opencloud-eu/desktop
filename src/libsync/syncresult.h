@@ -20,7 +20,7 @@
 #include <QDateTime>
 
 #include "common/utility.h"
-#include "owncloudlib.h"
+#include "opencloudsynclib.h"
 #include "syncfileitem.h"
 
 namespace OCC {
@@ -29,7 +29,7 @@ namespace OCC {
  * @brief The SyncResult class
  * @ingroup libsync
  */
-class OWNCLOUDSYNC_EXPORT SyncResult
+class OPENCLOUD_SYNC_EXPORT SyncResult
 {
     Q_GADGET
 public:
@@ -120,7 +120,7 @@ private:
 };
 
 template <>
-OWNCLOUDSYNC_EXPORT QString Utility::enumToDisplayName(SyncResult::Status status);
+OPENCLOUD_SYNC_EXPORT QString Utility::enumToDisplayName(SyncResult::Status status);
 }
 
 #endif

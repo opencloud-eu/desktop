@@ -14,7 +14,7 @@
 
 #pragma once
 #include "account.h"
-#include "gui/owncloudguilib.h"
+#include "gui/opencloudguilib.h"
 #include "progressdispatcher.h"
 #include "systray.h"
 
@@ -42,7 +42,7 @@ class LogBrowser;
  * @brief The ownCloudGui class
  * @ingroup gui
  */
-class OWNCLOUDGUI_EXPORT ownCloudGui : public QObject
+class OPENCLOUD_GUI_EXPORT ownCloudGui : public QObject
 {
     Q_OBJECT
 public:

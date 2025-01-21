@@ -48,7 +48,7 @@ class ProcessDirectoryJob;
  * @brief The SyncEngine class
  * @ingroup libsync
  */
-class OWNCLOUDSYNC_EXPORT SyncEngine : public QObject
+class OPENCLOUD_SYNC_EXPORT SyncEngine : public QObject
 {
     Q_OBJECT
 public:

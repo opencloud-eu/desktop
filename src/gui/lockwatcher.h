@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "gui/owncloudguilib.h"
+#include "gui/opencloudguilib.h"
 
 #include "filesystem.h"
 
@@ -43,7 +43,7 @@ namespace OCC {
  * @ingroup gui
  */
 
-class OWNCLOUDGUI_EXPORT LockWatcher : public QObject
+class OPENCLOUD_GUI_EXPORT LockWatcher : public QObject
 {
     Q_OBJECT
 public:

@@ -67,7 +67,7 @@ class ResourcesCache;
  * The Account has a name and url. It also has information about credentials,
  * SSL errors and certificates.
  */
-class OWNCLOUDSYNC_EXPORT Account : public QObject
+class OPENCLOUD_SYNC_EXPORT Account : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QUuid uid READ uuid CONSTANT)
@@ -291,6 +291,6 @@ private:
 Q_DECLARE_METATYPE(OCC::AccountPtr)
 
 
-QDebug OWNCLOUDSYNC_EXPORT operator<<(QDebug debug, const OCC::Account *job);
+QDebug OPENCLOUD_SYNC_EXPORT operator<<(QDebug debug, const OCC::Account *job);
 
 #endif //SERVERCONNECTION_H

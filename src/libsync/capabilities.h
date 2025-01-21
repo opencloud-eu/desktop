@@ -16,7 +16,7 @@
 #ifndef CAPABILITIES_H
 #define CAPABILITIES_H
 
-#include "owncloudlib.h"
+#include "opencloudsynclib.h"
 
 #include "common/checksumalgorithms.h"
 
@@ -26,7 +26,7 @@
 
 namespace OCC {
 
-struct OWNCLOUDSYNC_EXPORT Status
+struct OPENCLOUD_SYNC_EXPORT Status
 {
     /**
      <installed>1</installed>
@@ -55,7 +55,7 @@ struct OWNCLOUDSYNC_EXPORT Status
     QString versionString() const;
 };
 
-struct OWNCLOUDSYNC_EXPORT TusSupport
+struct OPENCLOUD_SYNC_EXPORT TusSupport
 {
     /**
     <tus_support>
@@ -76,7 +76,7 @@ struct OWNCLOUDSYNC_EXPORT TusSupport
     bool isValid() const;
 };
 
-struct OWNCLOUDSYNC_EXPORT SpaceSupport
+struct OPENCLOUD_SYNC_EXPORT SpaceSupport
 {
     /**
         "spaces": {
@@ -93,7 +93,7 @@ struct OWNCLOUDSYNC_EXPORT SpaceSupport
     bool isValid() const;
 };
 
-struct OWNCLOUDSYNC_EXPORT FilesSharing
+struct OPENCLOUD_SYNC_EXPORT FilesSharing
 {
     /**
      api_enabled": true,
@@ -112,7 +112,7 @@ struct OWNCLOUDSYNC_EXPORT FilesSharing
     bool sharing_roles = false;
 };
 
-struct OWNCLOUDSYNC_EXPORT Migration
+struct OPENCLOUD_SYNC_EXPORT Migration
 {
     struct SpacesMigration
     {
@@ -130,10 +130,10 @@ struct OWNCLOUDSYNC_EXPORT Migration
  * server
  * @ingroup libsync
  */
-class OWNCLOUDSYNC_EXPORT Capabilities
+class OPENCLOUD_SYNC_EXPORT Capabilities
 {
 public:
-    struct OWNCLOUDSYNC_EXPORT AppProviders
+    struct OPENCLOUD_SYNC_EXPORT AppProviders
     {
         /**
          "app_providers": [

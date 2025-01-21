@@ -14,14 +14,14 @@
 
 #pragma once
 
-#include "resources/owncloudresources.h"
+#include "resources/opencloudresourceslib.h"
 
 #include <QtWidgets/QWidget>
 
 namespace OCC {
 namespace Resources {
 
-    class OWNCLOUDRESOURCES_EXPORT ThemeWatcher : public QObject
+    class OPENCLOUD_RESOURCES_EXPORT ThemeWatcher : public QObject
     {
         Q_OBJECT
     public:

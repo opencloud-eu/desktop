@@ -18,12 +18,12 @@
 #include "abstractcorejob.h"
 
 #include "networkjobs.h"
-#include "owncloudlib.h"
+#include "opencloudsynclib.h"
 
 namespace OCC {
 
 
-class OWNCLOUDSYNC_EXPORT DetermineAuthTypeJobFactory : public AbstractCoreJobFactory
+class OPENCLOUD_SYNC_EXPORT DetermineAuthTypeJobFactory : public AbstractCoreJobFactory
 {
 public:
     using AuthType = DetermineAuthTypeJob::AuthType;

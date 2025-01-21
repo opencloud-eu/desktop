@@ -13,7 +13,7 @@
  */
 
 #pragma once
-#include "gui/owncloudguilib.h"
+#include "gui/opencloudguilib.h"
 
 #include "application.h"
 #include "updater/updatedownloadedwidget.h"
@@ -70,7 +70,7 @@ namespace OCC {
  *                +-------------+
  */
 
-class OWNCLOUDGUI_EXPORT UpdaterScheduler : public QObject
+class OPENCLOUD_GUI_EXPORT UpdaterScheduler : public QObject
 {
     Q_OBJECT
 public:
@@ -99,7 +99,7 @@ private:
  * @brief Class that uses an ownCloud proprietary XML format to fetch update information
  * @ingroup gui
  */
-class OWNCLOUDGUI_EXPORT OCUpdater : public Updater
+class OPENCLOUD_GUI_EXPORT OCUpdater : public Updater
 {
     Q_OBJECT
 public:
@@ -170,7 +170,7 @@ private:
  * @brief Windows Updater Using NSIS
  * @ingroup gui
  */
-class OWNCLOUDGUI_EXPORT WindowsUpdater : public OCUpdater
+class OPENCLOUD_GUI_EXPORT WindowsUpdater : public OCUpdater
 {
     Q_OBJECT
 public:

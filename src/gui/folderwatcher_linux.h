@@ -30,7 +30,7 @@ namespace OCC {
  * @brief Linux (inotify) API implementation of FolderWatcher
  * @ingroup gui
  */
-class OWNCLOUDGUI_EXPORT FolderWatcherPrivate : public QObject
+class OPENCLOUD_GUI_EXPORT FolderWatcherPrivate : public QObject
 {
     Q_OBJECT
 public:

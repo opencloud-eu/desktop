@@ -264,7 +264,7 @@ private:
  * @brief Propagate a directory, and all its sub entries.
  * @ingroup libsync
  */
-class OWNCLOUDSYNC_EXPORT PropagateDirectory : public PropagateItemJob
+class OPENCLOUD_SYNC_EXPORT PropagateDirectory : public PropagateItemJob
 {
     Q_OBJECT
 public:
@@ -328,7 +328,7 @@ private Q_SLOTS:
  * Primary difference to PropagateDirectory is that it keeps track of directory
  * deletions that must happen at the very end.
  */
-class OWNCLOUDSYNC_EXPORT PropagateRootDirectory : public PropagateDirectory
+class OPENCLOUD_SYNC_EXPORT PropagateRootDirectory : public PropagateDirectory
 {
     Q_OBJECT
 public:
@@ -378,7 +378,7 @@ public:
     }
 };
 
-class OWNCLOUDSYNC_EXPORT OwncloudPropagator : public QObject
+class OPENCLOUD_SYNC_EXPORT OwncloudPropagator : public QObject
 {
     Q_OBJECT
 public:

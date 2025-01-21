@@ -20,7 +20,7 @@
 
 namespace OCC {
 
-class OWNCLOUDSYNC_EXPORT CheckServerJobResult
+class OPENCLOUD_SYNC_EXPORT CheckServerJobResult
 {
 
 public:
@@ -36,7 +36,7 @@ private:
 };
 
 
-class OWNCLOUDSYNC_EXPORT CheckServerJobFactory : public AbstractCoreJobFactory
+class OPENCLOUD_SYNC_EXPORT CheckServerJobFactory : public AbstractCoreJobFactory
 {
 public:
     using AbstractCoreJobFactory::AbstractCoreJobFactory;

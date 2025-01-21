@@ -20,7 +20,7 @@
 
 #include "common/asserts.h"
 
-#include "owncloudlib.h"
+#include "opencloudsynclib.h"
 
 #include <QDateTime>
 #include <QElapsedTimer>
@@ -37,7 +37,7 @@
 class QUrl;
 
 
-OWNCLOUDSYNC_EXPORT QDebug operator<<(QDebug debug, const OCC::AbstractNetworkJob *job);
+OPENCLOUD_SYNC_EXPORT QDebug operator<<(QDebug debug, const OCC::AbstractNetworkJob *job);
 
 namespace OCC {
 
@@ -47,7 +47,7 @@ using HeaderMap = QMap<QByteArray, QByteArray>;
  * @brief The AbstractNetworkJob class
  * @ingroup libsync
  */
-class OWNCLOUDSYNC_EXPORT AbstractNetworkJob : public QObject
+class OPENCLOUD_SYNC_EXPORT AbstractNetworkJob : public QObject
 {
     Q_OBJECT
 public:
@@ -250,10 +250,10 @@ private:
  *
  * Returns a null string if no message was found.
  */
-QString OWNCLOUDSYNC_EXPORT extractErrorMessage(const QByteArray &errorResponse);
+QString OPENCLOUD_SYNC_EXPORT extractErrorMessage(const QByteArray &errorResponse);
 
 /** Builds a error message based on the error and the reply body. */
-QString OWNCLOUDSYNC_EXPORT errorMessage(const QString &baseError, const QByteArray &body);
+QString OPENCLOUD_SYNC_EXPORT errorMessage(const QString &baseError, const QByteArray &body);
 
 /** Nicer errorString() for QNetworkReply
  *
@@ -264,6 +264,6 @@ QString OWNCLOUDSYNC_EXPORT errorMessage(const QString &baseError, const QByteAr
  *
  * This function produces clearer error messages for HTTP errors.
  */
-QString OWNCLOUDSYNC_EXPORT networkReplyErrorString(const QNetworkReply &reply);
+QString OPENCLOUD_SYNC_EXPORT networkReplyErrorString(const QNetworkReply &reply);
 
 } // namespace OCC

@@ -13,7 +13,7 @@
 
 using namespace OCC;
 namespace OCC {
-QString OWNCLOUDSYNC_EXPORT createDownloadTmpFileName(const QString &previous);
+QString OPENCLOUD_SYNC_EXPORT createDownloadTmpFileName(const QString &previous);
 }
 
 class TestOwncloudPropagator : public QObject

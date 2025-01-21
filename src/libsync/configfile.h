@@ -16,7 +16,7 @@
 #define CONFIGFILE_H
 
 #include "common/result.h"
-#include "owncloudlib.h"
+#include "opencloudsynclib.h"
 
 #include <QNetworkProxy>
 #include <QSettings>
@@ -40,7 +40,7 @@ class AbstractCredentials;
  * @brief The ConfigFile class
  * @ingroup libsync
  */
-class OWNCLOUDSYNC_EXPORT ConfigFile
+class OPENCLOUD_SYNC_EXPORT ConfigFile
 {
 public:
     static QString configPath();

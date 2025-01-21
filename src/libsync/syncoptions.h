@@ -14,9 +14,9 @@
 
 #pragma once
 
-#include "owncloudlib.h"
 #include "common/filesystembase.h"
 #include "common/vfs.h"
+#include "opencloudsynclib.h"
 
 #include <QRegularExpression>
 #include <QSharedPointer>
@@ -30,7 +30,7 @@ namespace OCC {
 /**
  * Value class containing the options given to the sync engine
  */
-class OWNCLOUDSYNC_EXPORT SyncOptions
+class OPENCLOUD_SYNC_EXPORT SyncOptions
 {
 public:
     explicit SyncOptions(QSharedPointer<Vfs> vfs);

@@ -17,7 +17,7 @@
 #include "abstractcorejob.h"
 namespace OCC {
 
-class OWNCLOUDSYNC_EXPORT FetchUserInfoResult
+class OPENCLOUD_SYNC_EXPORT FetchUserInfoResult
 {
 public:
     FetchUserInfoResult() = default;
@@ -43,7 +43,7 @@ private:
     QString _displayName;
 };
 
-class OWNCLOUDSYNC_EXPORT FetchUserInfoJobFactory : public AbstractCoreJobFactory
+class OPENCLOUD_SYNC_EXPORT FetchUserInfoJobFactory : public AbstractCoreJobFactory
 {
 public:
     static FetchUserInfoJobFactory fromBasicAuthCredentials(QNetworkAccessManager *nam, const QString &username, const QString &token);

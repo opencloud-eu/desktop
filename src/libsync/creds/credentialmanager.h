@@ -3,7 +3,7 @@
 #include <QSettings>
 #include <QVariant>
 
-#include "owncloudlib.h"
+#include "opencloudsynclib.h"
 
 #include <qt6keychain/keychain.h>
 
@@ -13,7 +13,7 @@ namespace OCC {
 class Account;
 class CredentialJob;
 
-class OWNCLOUDSYNC_EXPORT CredentialManager : public QObject
+class OPENCLOUD_SYNC_EXPORT CredentialManager : public QObject
 {
     Q_OBJECT
 public:
@@ -45,7 +45,7 @@ private:
     friend class TestCredentialManager;
 };
 
-class OWNCLOUDSYNC_EXPORT CredentialJob : public QObject
+class OPENCLOUD_SYNC_EXPORT CredentialJob : public QObject
 {
     Q_OBJECT
 public:

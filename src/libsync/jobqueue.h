@@ -13,7 +13,7 @@
  */
 #pragma once
 
-#include "owncloudlib.h"
+#include "opencloudsynclib.h"
 
 #include <QPointer>
 #include <vector>
@@ -23,7 +23,7 @@ namespace OCC {
 class AbstractNetworkJob;
 class Account;
 
-class OWNCLOUDSYNC_EXPORT JobQueue
+class OPENCLOUD_SYNC_EXPORT JobQueue
 {
 public:
     JobQueue(Account *account);
@@ -63,7 +63,7 @@ private:
     friend class JobQueueGuard;
 };
 
-class OWNCLOUDSYNC_EXPORT JobQueueGuard
+class OPENCLOUD_SYNC_EXPORT JobQueueGuard
 {
 public:
     JobQueueGuard(JobQueue *queue);

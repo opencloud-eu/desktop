@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "gui/owncloudguilib.h"
+#include "gui/opencloudguilib.h"
 
 #include <QSet>
 #include <QString>
@@ -26,22 +26,22 @@ namespace Translations {
     /**
     * @return translation files' filename prefix
     */
-    OWNCLOUDGUI_EXPORT const QString translationsFilePrefix();
+    OPENCLOUD_GUI_EXPORT const QString translationsFilePrefix();
 
     /**
     * @returntranslation files' filename suffix
     */
-    OWNCLOUDGUI_EXPORT const QString translationsFileSuffix();
+    OPENCLOUD_GUI_EXPORT const QString translationsFileSuffix();
 
     /**
      * @return path to translation files
      */
-    OWNCLOUDGUI_EXPORT QString translationsDirectoryPath();
+    OPENCLOUD_GUI_EXPORT QString translationsDirectoryPath();
 
     /**
      * @return list of locales for which translations are available
      */
-    OWNCLOUDGUI_EXPORT QSet<QString> listAvailableTranslations();
+    OPENCLOUD_GUI_EXPORT QSet<QString> listAvailableTranslations();
 
 } // namespace Translations
 
