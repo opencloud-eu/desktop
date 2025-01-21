@@ -205,12 +205,4 @@ if(UNIX AND NOT APPLE)
     configure_file(${CMAKE_SOURCE_DIR}/opencloud.desktop.in
                    ${CMAKE_CURRENT_BINARY_DIR}/${APPLICATION_EXECUTABLE}.desktop)
     install(FILES  ${CMAKE_CURRENT_BINARY_DIR}/${APPLICATION_EXECUTABLE}.desktop DESTINATION ${KDE_INSTALL_DATADIR}/applications )
-
-    configure_file(owncloud.xml.in ${APPLICATION_EXECUTABLE}.xml)
-    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${APPLICATION_EXECUTABLE}.xml DESTINATION ${KDE_INSTALL_DATADIR}/mime/packages )
-
-    find_package(SharedMimeInfo)
-    if(SharedMimeInfo_FOUND)
-        update_xdg_mimetypes( ${KDE_INSTALL_DATADIR}/mime/packages )
-    endif(SharedMimeInfo_FOUND)
 endif()
