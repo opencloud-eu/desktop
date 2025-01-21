@@ -175,7 +175,7 @@ target_sources(opencloud PRIVATE ${appIcons})
 
 if(NOT APPLE)
     if(WIN32)
-        target_sources(opencloud PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/owncloud.exe.manifest)
+        target_sources(opencloud PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/opencloud.exe.manifest)
     else()
         file(GLOB _icons "${OEM_THEME_DIR}/theme/colored/*-${APPLICATION_ICON_NAME}-icon.png")
         foreach(_file ${_icons})
