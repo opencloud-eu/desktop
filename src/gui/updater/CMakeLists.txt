@@ -1,9 +1,9 @@
 if(APPLE)
     if (SPARKLE_FOUND)
-        list(APPEND OWNCLOUD_BUNDLED_RESOURCES
+        list(APPEND OPENCLOUD_BUNDLED_RESOURCES
             "${PROJECT_SOURCE_DIR}/admin/osx/deny_autoupdate_com.owncloud.desktopclient.plist"
             "${PROJECT_SOURCE_DIR}/admin/osx/sparkle/dsa_pub.pem")
-        set(OWNCLOUD_BUNDLED_RESOURCES ${OWNCLOUD_BUNDLED_RESOURCES} PARENT_SCOPE)
+        set(OPENCLOUD_BUNDLED_RESOURCES ${OPENCLOUD_BUNDLED_RESOURCES} PARENT_SCOPE)
     endif()
 endif()
 

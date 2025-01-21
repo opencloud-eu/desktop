@@ -168,9 +168,9 @@ set_target_properties(opencloud PROPERTIES
 apply_common_target_settings(opencloud)
 target_link_libraries(opencloud PUBLIC OpenCloudGui OpenCloudResources KDAB::kdsingleapplication )
 
-MESSAGE(STATUS "OWNCLOUD_SIDEBAR_ICONS: ${APPLICATION_ICON_NAME}: ${OWNCLOUD_SIDEBAR_ICONS}")
+MESSAGE(STATUS "OPENCLOUD_SIDEBAR_ICONS: ${APPLICATION_ICON_NAME}: ${OPENCLOUD_SIDEBAR_ICONS}")
 
-ecm_add_app_icon(appIcons ICONS "${OWNCLOUD_ICONS}" SIDEBAR_ICONS "${OWNCLOUD_SIDEBAR_ICONS}" OUTFILE_BASENAME "${APPLICATION_ICON_NAME}")
+ecm_add_app_icon(appIcons ICONS "${OPENCLOUD_ICONS}" SIDEBAR_ICONS "${OPENCLOUD_SIDEBAR_ICONS}" OUTFILE_BASENAME "${APPLICATION_ICON_NAME}")
 target_sources(opencloud PRIVATE ${appIcons})
 
 if(NOT APPLE)
@@ -187,10 +187,10 @@ if(NOT APPLE)
 
     # we may not add MACOSX_BUNDLE here, if not building one
 else()
-    target_sources(opencloud PRIVATE ${OWNCLOUD_BUNDLED_RESOURCES})
+    target_sources(opencloud PRIVATE ${OPENCLOUD_BUNDLED_RESOURCES})
 
     set_source_files_properties(
-      ${OWNCLOUD_BUNDLED_RESOURCES}
+      ${OPENCLOUD_BUNDLED_RESOURCES}
       PROPERTIES
       MACOSX_PACKAGE_LOCATION Resources
       )

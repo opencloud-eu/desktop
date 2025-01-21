@@ -8,10 +8,10 @@ add_library(OpenCloudResources SHARED
     template.cpp
 )
 
-generate_theme(OpenCloudResources OWNCLOUD_SIDEBAR_ICONS)
+generate_theme(OpenCloudResources OPENCLOUD_SIDEBAR_ICONS)
 
 # make them available to the whole project
-set(OWNCLOUD_SIDEBAR_ICONS ${OWNCLOUD_SIDEBAR_ICONS} CACHE INTERNAL "Sidebar icons" FORCE)
+set(OPENCLOUD_SIDEBAR_ICONS ${OPENCLOUD_SIDEBAR_ICONS} CACHE INTERNAL "Sidebar icons" FORCE)
 
 target_link_libraries(OpenCloudResources PUBLIC Qt::Core Qt::Gui Qt::Quick)
 apply_common_target_settings(OpenCloudResources)
