@@ -203,11 +203,12 @@
 					};
 				};
 			};
-			buildConfigurationList = C2B573981B1CD88000303B36 /* Build configuration list for PBXProject "OwnCloudFinderSync" */;
+			buildConfigurationList = C2B573981B1CD88000303B36 /* Build configuration list for PBXProject "OpenCloudFinderExtension" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -499,7 +500,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		C2B573981B1CD88000303B36 /* Build configuration list for PBXProject "OwnCloudFinderSync" */ = {
+		C2B573981B1CD88000303B36 /* Build configuration list for PBXProject "OpenCloudFinderExtension" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C2B573991B1CD88000303B36 /* Debug */,
