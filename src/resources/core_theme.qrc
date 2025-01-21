@@ -26,5 +26,7 @@
         <file alias="theme/white/state-offline.svg">theme/white/ui-dark-plain-monochrom-state-offline.svg</file>
         <file alias="theme/white/state-pause.svg">theme/white/ui-dark-plain-monochrom-state-pause.svg</file>
         <file alias="theme/white/state-sync.svg">theme/white/ui-dark-plain-monochrom-state-sync.svg</file>
+        <file>theme/OpenCloud500-Regular.otf</file>
+        <file>theme/OpenCloud750-Bold.otf</file>
     </qresource>
 </RCC>
