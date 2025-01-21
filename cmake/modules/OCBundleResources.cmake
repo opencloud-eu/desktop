@@ -72,14 +72,14 @@ endfunction()
 
 # add the icons for url buttons to the theme
 function(__addUrlIcons QRC_PATH)
-    file(GLOB_RECURSE OWNCLOUD_URL_ICONS "${OEM_THEME_DIR}/theme/universal/urlIcons/*")
-    foreach(icon ${OWNCLOUD_URL_ICONS})
+    file(GLOB_RECURSE OPENCLOUD_URL_ICONS "${OEM_THEME_DIR}/theme/universal/urlIcons/*")
+    foreach(icon ${OPENCLOUD_URL_ICONS})
         get_filename_component(iconName ${icon} NAME_WE)
         __addIcon(${QRC_PATH} "universal" "urlIcons/${iconName}")
     endforeach()
 endfunction()
 
-function(generate_theme TARGET OWNCLOUD_SIDEBAR_ICONS_OUT)
+function(generate_theme TARGET OPENCLOUD_SIDEBAR_ICONS_OUT)
     if(NOT "${OEM_THEME_DIR}" STREQUAL "${PROJECT_SOURCE_DIR}/src/resources/")
         set(QRC_PATH ${CMAKE_CURRENT_BINARY_DIR}/theme.qrc)
         __write_qrc_file_header(${QRC_PATH} theme)
@@ -105,15 +105,15 @@ function(generate_theme TARGET OWNCLOUD_SIDEBAR_ICONS_OUT)
         target_compile_definitions(${TARGET} PRIVATE BRANDING_AVAILABLE)
 
         # add executable icon on windows and osx
-        file(GLOB_RECURSE OWNCLOUD_SIDEBAR_ICONS "${OEM_THEME_DIR}/theme/colored/*-${APPLICATION_ICON_NAME}-sidebar.png")
+        file(GLOB_RECURSE OPENCLOUD_SIDEBAR_ICONS "${OEM_THEME_DIR}/theme/colored/*-${APPLICATION_ICON_NAME}-sidebar.png")
     else()
-        file(GLOB_RECURSE OWNCLOUD_SIDEBAR_ICONS "${OEM_THEME_DIR}/theme/colored/*-${APPLICATION_ICON_NAME}-icon-sidebar.png")
+        file(GLOB_RECURSE OPENCLOUD_SIDEBAR_ICONS "${OEM_THEME_DIR}/theme/colored/*-${APPLICATION_ICON_NAME}-icon-sidebar.png")
     endif()
-    if (NOT OWNCLOUD_SIDEBAR_ICONS)
+    if (NOT OPENCLOUD_SIDEBAR_ICONS)
         message(WARNING "The branding does not provide sidebar icons falling back to vanilla icons")
-        file(GLOB_RECURSE OWNCLOUD_SIDEBAR_ICONS "${PROJECT_SOURCE_DIR}/src/resources/theme/colored/*-owncloud-icon-sidebar.png")
+        file(GLOB_RECURSE OPENCLOUD_SIDEBAR_ICONS "${PROJECT_SOURCE_DIR}/src/resources/theme/colored/*-opencloud-icon-sidebar.png")
     endif()
-    set(${OWNCLOUD_SIDEBAR_ICONS_OUT} ${OWNCLOUD_SIDEBAR_ICONS} PARENT_SCOPE)
+    set(${OPENCLOUD_SIDEBAR_ICONS_OUT} ${OPENCLOUD_SIDEBAR_ICONS} PARENT_SCOPE)
 endfunction()
 
 
