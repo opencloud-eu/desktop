@@ -116,20 +116,6 @@ function(generate_theme TARGET OPENCLOUD_SIDEBAR_ICONS_OUT)
     set(${OPENCLOUD_SIDEBAR_ICONS_OUT} ${OPENCLOUD_SIDEBAR_ICONS} PARENT_SCOPE)
 endfunction()
 
-
-function(generate_legacy_icons theme_dir OUT)
-    # allow legacy file names
-    file(GLOB_RECURSE OWNCLOUD_ICONS_OLD "${theme_dir}/colored/${APPLICATION_ICON_NAME}-icon-*.png")
-    foreach(icon ${OWNCLOUD_ICONS_OLD})
-        get_filename_component(icon_name ${icon} NAME)
-        string(REGEX MATCH "([0-9]+)" size ${icon_name})
-        set(out_name "${CMAKE_BINARY_DIR}/${size}-app-icon.png")
-        configure_file(${icon} ${out_name} COPYONLY)
-        list(APPEND OWNCLOUD_ICONS ${out_name})
-    endforeach()
-    set(${OUT} ${OWNCLOUD_ICONS} PARENT_SCOPE)
-endfunction()
-
 function(generate_qrc_file)
     set(options "")
     set(oneValueArgs QRC_PATH PREFIX)
