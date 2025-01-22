@@ -106,18 +106,8 @@ private:
     // tray's menu
     QScopedPointer<QMenu> _contextMenu;
 
-    // Manually tracking whether the context menu is visible via aboutToShow
-    // and aboutToHide. Unfortunately aboutToHide isn't reliable everywhere
-    // so this only gets used with _workaroundManualVisibility (when the tray's
-    // isVisible() is unreliable)
-    bool _contextMenuVisibleManual = false;
-
     QMenu *_recentActionsMenu;
     QVector<QMenu *> _accountMenus;
-    bool _workaroundShowAndHideTray = false;
-    bool _workaroundNoAboutToShowUpdate = false;
-    bool _workaroundFakeDoubleClick = false;
-    bool _workaroundManualVisibility = false;
     QTimer _delayedTrayUpdateTimer;
     QPointer<ShareDialog> _shareDialog;
 
