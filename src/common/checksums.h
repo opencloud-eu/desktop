@@ -77,9 +77,6 @@ private:
     QString _error;
 };
 
-/// Checks OWNCLOUD_DISABLE_CHECKSUM_UPLOAD
-OCSYNC_EXPORT bool uploadChecksumEnabled();
-
 /**
  * Computes the checksum of a file.
  * \ingroup libsync

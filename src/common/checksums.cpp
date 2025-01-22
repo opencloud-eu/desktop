@@ -210,12 +210,6 @@ QByteArray findBestChecksum(const QByteArray &_checksums)
     return {};
 }
 
-bool uploadChecksumEnabled()
-{
-    static bool enabled = qEnvironmentVariableIsEmpty("OWNCLOUD_DISABLE_CHECKSUM_UPLOAD");
-    return enabled;
-}
-
 ComputeChecksum::ComputeChecksum(QObject *parent)
     : QObject(parent)
 {
