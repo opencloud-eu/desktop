@@ -66,13 +66,6 @@ public:
     /** The maximum number of active jobs in parallel  */
     int _parallelNetworkJobs = 6;
 
-    /** Reads settings from env vars where available.
-     *
-     * Currently reads _initialChunkSize, _minChunkSize, _maxChunkSize,
-     * _targetChunkUploadDuration, _parallelNetworkJobs.
-     */
-    void fillFromEnvironmentVariables();
-
     /** Ensure min <= initial <= max
      *
      * Previously min/max chunk size values didn't exist, so users might
