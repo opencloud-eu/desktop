@@ -51,28 +51,12 @@ Q_LOGGING_CATEGORY(lcDirectory, "sync.propagator.directory", QtInfoMsg)
 
 qint64 criticalFreeSpaceLimit()
 {
-    qint64 value = 50 * 1000 * 1000LL;
-
-    static bool hasEnv = false;
-    static qint64 env = qgetenv("OWNCLOUD_CRITICAL_FREE_SPACE_BYTES").toLongLong(&hasEnv);
-    if (hasEnv) {
-        value = env;
-    }
-
-    return qBound(0LL, value, freeSpaceLimit());
+    return qBound(0LL, 50 * 1000 * 1000LL, freeSpaceLimit());
 }
 
 qint64 freeSpaceLimit()
 {
-    qint64 value = 250 * 1000 * 1000LL;
-
-    static bool hasEnv = false;
-    static qint64 env = qgetenv("OWNCLOUD_FREE_SPACE_BYTES").toLongLong(&hasEnv);
-    if (hasEnv) {
-        value = env;
-    }
-
-    return value;
+    return 250 * 1000 * 1000LL;
 }
 
 OwncloudPropagator::~OwncloudPropagator()
