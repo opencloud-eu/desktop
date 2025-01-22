@@ -98,13 +98,8 @@ SyncJournalDb::SyncJournalDb(const QString &dbFilePath, QObject *parent)
     , _dbFile(dbFilePath)
     , _transaction(0)
     , _metadataTableIsEmpty(false)
+    , _journalMode(defaultJournalMode(_dbFile))
 {
-    // Allow forcing the journal mode for debugging
-    static QByteArray envJournalMode = qgetenv("OWNCLOUD_SQLITE_JOURNAL_MODE");
-    _journalMode = envJournalMode;
-    if (_journalMode.isEmpty()) {
-        _journalMode = defaultJournalMode(_dbFile);
-    }
 }
 
 QString SyncJournalDb::makeDbName(const QString &localPath,
