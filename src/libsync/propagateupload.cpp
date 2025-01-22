@@ -211,11 +211,7 @@ void PropagateUploadFileCommon::slotComputeTransmissionChecksum(CheckSums::Algor
 
     // Compute the transmission checksum.
     auto computeChecksum = new ComputeChecksum(this);
-    if (uploadChecksumEnabled()) {
-        computeChecksum->setChecksumType(propagator()->account()->capabilities().uploadChecksumType());
-    } else {
-        computeChecksum->setChecksumType(CheckSums::Algorithm::PARSE_ERROR);
-    }
+    computeChecksum->setChecksumType(propagator()->account()->capabilities().uploadChecksumType());
 
     connect(computeChecksum, &ComputeChecksum::done,
         this, &PropagateUploadFileCommon::slotStartUpload);
