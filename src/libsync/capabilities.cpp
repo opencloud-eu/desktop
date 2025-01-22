@@ -160,11 +160,6 @@ CheckSums::Algorithm Capabilities::uploadChecksumType() const
     return CheckSums::Algorithm::PARSE_ERROR;
 }
 
-bool Capabilities::bigfilechunkingEnabled() const
-{
-    return _capabilities.value(QStringLiteral("files")).toMap().value(QStringLiteral("bigfilechunking"), true).toBool();
-}
-
 const Status &Capabilities::status() const
 {
     return _status;
@@ -178,11 +173,6 @@ const TusSupport &Capabilities::tusSupport() const
 const SpaceSupport &Capabilities::spacesSupport() const
 {
     return _spaces;
-}
-
-bool Capabilities::chunkingParallelUploadDisabled() const
-{
-    return _capabilities.value(QStringLiteral("dav")).toMap().value(QStringLiteral("chunkingParallelUploadDisabled")).toBool();
 }
 
 bool Capabilities::privateLinkPropertyAvailable() const

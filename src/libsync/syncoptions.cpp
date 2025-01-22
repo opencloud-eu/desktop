@@ -28,12 +28,6 @@ SyncOptions::~SyncOptions()
 {
 }
 
-void SyncOptions::verifyChunkSizes()
-{
-    _minChunkSize = qMin(_minChunkSize, _initialChunkSize);
-    _maxChunkSize = qMax(_maxChunkSize, _initialChunkSize);
-}
-
 QRegularExpression SyncOptions::fileRegex() const
 {
     return _fileRegex;

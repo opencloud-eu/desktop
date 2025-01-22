@@ -386,12 +386,11 @@ public:
     bool _finishedEmited; // used to ensure that finished is only emitted once
 
 public:
-    OwncloudPropagator(AccountPtr account, const SyncOptions &options, const QUrl &baseUrl, const QString &localDir,
-        const QString &remoteFolder, SyncJournalDb *progressDb)
+    OwncloudPropagator(
+        AccountPtr account, const SyncOptions &options, const QUrl &baseUrl, const QString &localDir, const QString &remoteFolder, SyncJournalDb *progressDb)
         : _journal(progressDb)
         , _finishedEmited(false)
         , _anotherSyncNeeded(false)
-        , _chunkSize(options._initialChunkSize)
         , _account(account)
         , _syncOptions(options)
         , _localDir((localDir.endsWith(QLatin1Char('/'))) ? localDir : localDir + QLatin1Char('/'))
