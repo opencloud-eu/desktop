@@ -67,8 +67,10 @@ const QString geometryC() { return QStringLiteral("geometry"); }
 const QString timeoutC() { return QStringLiteral("timeout"); }
 const QString chunkSizeC() { return QStringLiteral("chunkSize"); }
 const QString minChunkSizeC() { return QStringLiteral("minChunkSize"); }
-const QString maxChunkSizeC() { return QStringLiteral("maxChunkSize"); }
-const QString targetChunkUploadDurationC() { return QStringLiteral("targetChunkUploadDuration"); }
+const QString maxChunkSizeC()
+{
+    return QStringLiteral("maxChunkSize");
+}
 const QString automaticLogDirC() { return QStringLiteral("logToTemporaryLogDir"); }
 const QString numberOfLogsToKeepC()
 {
@@ -192,12 +194,6 @@ qint64 ConfigFile::minChunkSize() const
 {
     auto settings = makeQSettings();
     return settings.value(minChunkSizeC(), 1000 * 1000).toLongLong(); // default to 1 MB
-}
-
-chrono::milliseconds ConfigFile::targetChunkUploadDuration() const
-{
-    auto settings = makeQSettings();
-    return millisecondsValue(settings, targetChunkUploadDurationC(), chrono::minutes(1));
 }
 
 void ConfigFile::setOptionalDesktopNotifications(bool show)

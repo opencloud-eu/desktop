@@ -327,12 +327,7 @@ PropagateItemJob *OwncloudPropagator::createJob(const SyncFileItemPtr &item)
             if (account()->capabilities().tusSupport().isValid()) {
                 job = new PropagateUploadFileTUS(this, item);
             } else {
-                if (item->_size > syncOptions()._initialChunkSize && account()->capabilities().chunkingNg()) {
-                    // Item is above _initialChunkSize, thus will be classified as to be chunked
-                    job = new PropagateUploadFileNG(this, item);
-                } else {
-                    job = new PropagateUploadFileV1(this, item);
-                }
+                job = new PropagateUploadFileV1(this, item);
             }
             job->setDeleteExisting(deleteExisting);
             return job;
