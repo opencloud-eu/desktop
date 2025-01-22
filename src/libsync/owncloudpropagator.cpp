@@ -50,7 +50,9 @@ Q_LOGGING_CATEGORY(lcPropagator, "sync.propagator", QtInfoMsg)
 Q_LOGGING_CATEGORY(lcDirectory, "sync.propagator.directory", QtInfoMsg)
 
 namespace {
-    auto getMinBlacklistTime = 25s;
+    std::chrono::seconds getMinBlacklistTime = 25s;
+
+    std::chrono::seconds getMaxBlacklistTime = 24h;
 }
 
 qint64 criticalFreeSpaceLimit()
@@ -111,15 +113,6 @@ bool PropagateItemJob::scheduleSelfOrChild()
     return true;
 }
 
-
-static qint64 getMaxBlacklistTime()
-{
-    int v = qEnvironmentVariableIntValue("OWNCLOUD_BLACKLIST_TIME_MAX");
-    if (v > 0)
-        return v;
-    return 24 * 60 * 60; // 1 day
-}
-
 /** Creates a blacklist entry, possibly taking into account an old one.
  *
  * The old entry may be invalid, then a fresh entry is created.
@@ -138,7 +131,7 @@ static SyncJournalErrorBlacklistRecord createBlacklistEntry(
     entry._requestId = item._requestId;
 
     static qint64 minBlacklistTime(getMinBlacklistTime.count());
-    static qint64 maxBlacklistTime(qMax(getMaxBlacklistTime(), minBlacklistTime));
+    static qint64 maxBlacklistTime(qMax(getMaxBlacklistTime.count(), minBlacklistTime));
 
     // The factor of 5 feels natural: 25s, 2 min, 10 min, ~1h, ~5h, ~24h
     entry._ignoreDuration = old._ignoreDuration * 5;
