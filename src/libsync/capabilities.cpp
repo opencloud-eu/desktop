@@ -145,12 +145,8 @@ QList<CheckSums::Algorithm> Capabilities::supportedChecksumTypes() const
 
 CheckSums::Algorithm Capabilities::preferredUploadChecksumType() const
 {
-    static auto envType = CheckSums::fromByteArray(qgetenv("OWNCLOUD_CONTENT_CHECKSUM_TYPE"));
-    if (envType != CheckSums::Algorithm::NONE && envType != CheckSums::Algorithm::PARSE_ERROR) {
-        return envType;
-    }
-    const auto val = _capabilities.value(QStringLiteral("checksums")).toMap().value(QStringLiteral("preferredUploadType"), QStringLiteral("SHA1")).toString().toUpper().toUtf8();
-    return CheckSums::fromByteArray(val);
+    return CheckSums::fromByteArray(
+        _capabilities.value(QStringLiteral("checksums")).toMap().value(QStringLiteral("preferredUploadType"), QStringLiteral("SHA1")).toByteArray());
 }
 
 CheckSums::Algorithm Capabilities::uploadChecksumType() const
