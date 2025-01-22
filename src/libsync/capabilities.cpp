@@ -226,11 +226,6 @@ QString Capabilities::invalidFilenameRegex() const
 
 bool Capabilities::uploadConflictFiles() const
 {
-    static auto envIsSet = !qEnvironmentVariableIsEmpty("OWNCLOUD_UPLOAD_CONFLICT_FILES");
-    static int envValue = qEnvironmentVariableIntValue("OWNCLOUD_UPLOAD_CONFLICT_FILES");
-    if (envIsSet)
-        return envValue != 0;
-
     return _capabilities[QStringLiteral("uploadConflictFiles")].toBool();
 }
 
