@@ -30,10 +30,6 @@ SyncOptions::~SyncOptions()
 
 void SyncOptions::fillFromEnvironmentVariables()
 {
-    QByteArray chunkSizeEnv = qgetenv("OWNCLOUD_CHUNK_SIZE");
-    if (!chunkSizeEnv.isEmpty())
-        _initialChunkSize = chunkSizeEnv.toUInt();
-
     QByteArray minChunkSizeEnv = qgetenv("OWNCLOUD_MIN_CHUNK_SIZE");
     if (!minChunkSizeEnv.isEmpty())
         _minChunkSize = minChunkSizeEnv.toUInt();
