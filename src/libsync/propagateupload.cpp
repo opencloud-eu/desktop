@@ -63,11 +63,11 @@ static bool fileIsStillChanging(const SyncFileItem &item)
         && secondsSinceMod > -1s;
 }
 
-PUTFileJob::PUTFileJob(AccountPtr account, const QUrl &url, const QString &path, std::unique_ptr<QIODevice> &&device, const QMap<QByteArray, QByteArray> &headers, int chunk, QObject *parent)
+PUTFileJob::PUTFileJob(
+    AccountPtr account, const QUrl &url, const QString &path, std::unique_ptr<QIODevice> &&device, const QMap<QByteArray, QByteArray> &headers, QObject *parent)
     : AbstractNetworkJob(account, url, path, parent)
     , _device(device.release())
     , _headers(headers)
-    , _chunk(chunk)
 {
     _device->setParent(this);
     // Long uploads must not block non-propagation jobs.

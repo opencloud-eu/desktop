@@ -98,11 +98,10 @@ private:
     QElapsedTimer _requestTimer;
 
 public:
-    explicit PUTFileJob(AccountPtr account, const QUrl &url, const QString &path, std::unique_ptr<QIODevice> &&device,
-        const HeaderMap &headers, int chunk, QObject *parent = nullptr);
+    explicit PUTFileJob(
+        AccountPtr account, const QUrl &url, const QString &path, std::unique_ptr<QIODevice> &&device, const HeaderMap &headers, QObject *parent = nullptr);
     ~PUTFileJob() override;
 
-    int _chunk;
 
     void start() override;
 
@@ -270,29 +269,6 @@ private:
 class PropagateUploadFileV1 : public PropagateUploadFileCommon
 {
     Q_OBJECT
-
-private:
-    /**
-     * That's the start chunk that was stored in the database for resuming.
-     * In the non-resuming case it is 0.
-     * If we are resuming, this is the first chunk we need to send
-     */
-    int _startChunk = 0;
-    /**
-     * This is the next chunk that we need to send. Starting from 0 even if _startChunk != 0
-     * (In other words,  _startChunk + _currentChunk is really the number of the chunk we need to send next)
-     * (In other words, _currentChunk is the number of the chunk that we already sent or started sending)
-     */
-    int _currentChunk = 0;
-    int _chunkCount = 0; /// Total number of chunks for this file
-    uint _transferId = 0; /// transfer id (part of the url)
-
-    qint64 chunkSize() const {
-        // Old chunking does not use dynamic chunking algorithm, and does not adjusts the chunk size respectively,
-        // thus this value should be used as the one classifing item to be chunked
-        return propagator()->syncOptions()._initialChunkSize;
-    }
-
 public:
     PropagateUploadFileV1(OwncloudPropagator *propagator, const SyncFileItemPtr &item)
         : PropagateUploadFileCommon(propagator, item)

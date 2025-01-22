@@ -187,15 +187,9 @@ public:
     // TODO: return SharePermission
     int defaultPermissions() const;
 
-    /// Wheter to use chunking
-    bool bigfilechunkingEnabled() const;
-
     const Status &status() const;
     const TusSupport &tusSupport() const;
     const SpaceSupport &spacesSupport() const;
-
-    /// disable parallel upload in chunking
-    bool chunkingParallelUploadDisabled() const;
 
     /// Whether the "privatelink" DAV property is available
     bool privateLinkPropertyAvailable() const;

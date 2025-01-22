@@ -66,12 +66,9 @@ const QString updateCheckIntervalC() { return QStringLiteral("updateCheckInterva
 const QString updateChannelC() { return QStringLiteral("updateChannel"); }
 const QString uiLanguageC() { return QStringLiteral("uiLanguage"); }
 const QString geometryC() { return QStringLiteral("geometry"); }
-const QString timeoutC() { return QStringLiteral("timeout"); }
-const QString chunkSizeC() { return QStringLiteral("chunkSize"); }
-const QString minChunkSizeC() { return QStringLiteral("minChunkSize"); }
-const QString maxChunkSizeC()
+const QString timeoutC()
 {
-    return QStringLiteral("maxChunkSize");
+    return QStringLiteral("timeout");
 }
 const QString automaticLogDirC() { return QStringLiteral("logToTemporaryLogDir"); }
 const QString numberOfLogsToKeepC()
@@ -178,24 +175,6 @@ std::chrono::seconds ConfigFile::timeout() const
     auto settings = makeQSettings();
     const auto val = settings.value(timeoutC()).toInt(); // default to 5 min
     return val ? std::chrono::seconds(val) : 5min;
-}
-
-qint64 ConfigFile::chunkSize() const
-{
-    auto settings = makeQSettings();
-    return settings.value(chunkSizeC(), 10 * 1000 * 1000).toLongLong(); // default to 10 MB
-}
-
-qint64 ConfigFile::maxChunkSize() const
-{
-    auto settings = makeQSettings();
-    return settings.value(maxChunkSizeC(), 100 * 1000 * 1000).toLongLong(); // default to 100 MB
-}
-
-qint64 ConfigFile::minChunkSize() const
-{
-    auto settings = makeQSettings();
-    return settings.value(minChunkSizeC(), 1000 * 1000).toLongLong(); // default to 1 MB
 }
 
 void ConfigFile::setOptionalDesktopNotifications(bool show)

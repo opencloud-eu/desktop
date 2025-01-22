@@ -135,7 +135,6 @@ void sync(const SyncCTX &ctx)
     }
 
     SyncOptions opt{QSharedPointer<Vfs>(VfsPluginManager::instance().createVfsFromPlugin(Vfs::Off).release())};
-    opt.verifyChunkSizes();
     auto engine = new SyncEngine(
         ctx.account, ctx.options.target_url, ctx.options.source_dir, ctx.options.remoteFolder, db);
     engine->setSyncOptions(opt);

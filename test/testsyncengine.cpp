@@ -748,43 +748,6 @@ private Q_SLOTS:
         QVERIFY(fakeFolder.currentRemoteState().find(QStringLiteral("B/.hidden")));
     }
 
-    // Aborting has had bugs when there are parallel upload jobs
-    void testUploadV1Multiabort()
-    {
-        QFETCH_GLOBAL(Vfs::Mode, vfsMode);
-        QFETCH_GLOBAL(bool, filesAreDehydrated);
-
-        FakeFolder fakeFolder(FileInfo {}, vfsMode, filesAreDehydrated);
-        SyncOptions options = fakeFolder.syncEngine().syncOptions();
-        options._initialChunkSize = 10;
-        options._maxChunkSize = 10;
-        options._minChunkSize = 10;
-        fakeFolder.syncEngine().setSyncOptions(options);
-        auto cap = TestUtils::testCapabilities();
-        // unset chunking v1
-        cap.remove(QStringLiteral("dav"));
-        fakeFolder.account()->setCapabilities({fakeFolder.account()->url(), cap});
-
-        auto counter = std::make_unique<OperationCounter>();
-        fakeFolder.setServerOverride([counter = counter.get(), fakeFolder = &fakeFolder](
-                                         QNetworkAccessManager::Operation op, const QNetworkRequest &request, QIODevice *device) -> QNetworkReply * {
-            counter->serverOverride(op, request, device);
-            if (op == QNetworkAccessManager::PutOperation) {
-                return new FakeHangingReply(op, request, fakeFolder);
-            }
-            return nullptr;
-        });
-
-        fakeFolder.localModifier().insert(QStringLiteral("file"), 1_MiB, 'W');
-        // wait until the sync engine is ready
-        // wait a second and abort
-        connect(&fakeFolder.syncEngine(), &SyncEngine::aboutToPropagate, &fakeFolder.syncEngine(),
-            [&]() { QTimer::singleShot(1s, &fakeFolder.syncEngine(), [&]() { fakeFolder.syncEngine().abort({}); }); });
-        QVERIFY(!fakeFolder.applyLocalModificationsAndSync());
-
-        QCOMPARE(counter->nPUT, 3);
-    }
-
 #ifndef Q_OS_WIN
     void testPropagatePermissions()
     {

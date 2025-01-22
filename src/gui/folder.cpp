@@ -252,11 +252,6 @@ SyncOptions Folder::loadSyncOptions()
     opt._vfs = _vfs;
     opt._parallelNetworkJobs = _accountState->account()->isHttp2Supported() ? 20 : 6;
 
-    opt._initialChunkSize = cfgFile.chunkSize();
-    opt._minChunkSize = cfgFile.minChunkSize();
-    opt._maxChunkSize = cfgFile.maxChunkSize();
-
-    opt.verifyChunkSizes();
     return opt;
 }
 
