@@ -160,15 +160,8 @@ QString Utility::escape(const QString &in)
     return in.toHtmlEscaped();
 }
 
-// This can be overriden from the tests
-OCSYNC_EXPORT bool fsCasePreserving_override = []() -> bool {
-    static bool ok = false;
-    static int env = qEnvironmentVariableIntValue("OWNCLOUD_TEST_CASE_PRESERVING", &ok);
-    if (ok) {
-        return env;
-    }
-    return Utility::isWindows() || Utility::isMac();
-}();
+// This can be overridden from the tests
+OCSYNC_EXPORT bool fsCasePreserving_override = Utility::isWindows() || Utility::isMac();
 
 bool Utility::fsCasePreserving()
 {
