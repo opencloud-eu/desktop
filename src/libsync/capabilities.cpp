@@ -176,12 +176,6 @@ bool Capabilities::chunkingNg() const
 
 bool Capabilities::bigfilechunkingEnabled() const
 {
-    bool ok;
-    const int chunkSize = qEnvironmentVariableIntValue("OWNCLOUD_CHUNK_SIZE", &ok);
-    if (ok && chunkSize == 0)
-    {
-        return false;
-    }
     return _capabilities.value(QStringLiteral("files")).toMap().value(QStringLiteral("bigfilechunking"), true).toBool();
 }
 
