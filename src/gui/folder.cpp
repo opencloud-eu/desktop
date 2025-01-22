@@ -257,7 +257,6 @@ SyncOptions Folder::loadSyncOptions()
     opt._maxChunkSize = cfgFile.maxChunkSize();
     opt._targetChunkUploadDuration = cfgFile.targetChunkUploadDuration();
 
-    opt.fillFromEnvironmentVariables();
     opt.verifyChunkSizes();
     return opt;
 }
