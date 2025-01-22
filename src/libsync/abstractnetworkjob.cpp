@@ -39,13 +39,7 @@ namespace OCC {
 Q_LOGGING_CATEGORY(lcNetworkJob, "sync.networkjob", QtInfoMsg)
 
 // If not set, it is overwritten by the Application constructor with the value from the config
-seconds AbstractNetworkJob::httpTimeout = [] {
-    const auto def = qEnvironmentVariableIntValue("OWNCLOUD_TIMEOUT");
-    if (def <= 0) {
-        return AbstractNetworkJob::DefaultHttpTimeout;
-    }
-    return seconds(def);
-}();
+seconds AbstractNetworkJob::httpTimeout = AbstractNetworkJob::DefaultHttpTimeout;
 
 AbstractNetworkJob::AbstractNetworkJob(AccountPtr account, const QUrl &baseUrl, const QString &path, QObject *parent)
     : QObject(parent)
