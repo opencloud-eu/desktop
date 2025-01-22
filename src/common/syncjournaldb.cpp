@@ -267,16 +267,6 @@ bool SyncJournalDb::checkConnect()
         qCInfo(lcDb) << "sqlite3 journal_mode=" << pragma1.stringValue(0);
     }
 
-    // For debugging purposes, allow temp_store to be set
-    static QByteArray env_temp_store = qgetenv("OWNCLOUD_SQLITE_TEMP_STORE");
-    if (!env_temp_store.isEmpty()) {
-        pragma1.prepare("PRAGMA temp_store = " + env_temp_store + ";");
-        if (!pragma1.exec()) {
-            return sqlFail(QStringLiteral("Set PRAGMA temp_store"), pragma1);
-        }
-        qCInfo(lcDb) << "sqlite3 with temp_store =" << env_temp_store;
-    }
-
     // With WAL journal the NORMAL sync mode is safe from corruption,
     // otherwise use the standard FULL mode.
     QByteArray synchronousMode = "FULL";
