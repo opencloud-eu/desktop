@@ -49,6 +49,10 @@ namespace OCC {
 Q_LOGGING_CATEGORY(lcPropagator, "sync.propagator", QtInfoMsg)
 Q_LOGGING_CATEGORY(lcDirectory, "sync.propagator.directory", QtInfoMsg)
 
+namespace {
+    auto getMinBlacklistTime = 25s;
+}
+
 qint64 criticalFreeSpaceLimit()
 {
     return qBound(0LL, 50 * 1000 * 1000LL, freeSpaceLimit());
@@ -107,11 +111,6 @@ bool PropagateItemJob::scheduleSelfOrChild()
     return true;
 }
 
-static qint64 getMinBlacklistTime()
-{
-    return qMax(qEnvironmentVariableIntValue("OWNCLOUD_BLACKLIST_TIME_MIN"),
-        25); // 25 seconds
-}
 
 static qint64 getMaxBlacklistTime()
 {
@@ -138,7 +137,7 @@ static SyncJournalErrorBlacklistRecord createBlacklistEntry(
     entry._retryCount = old._retryCount + 1;
     entry._requestId = item._requestId;
 
-    static qint64 minBlacklistTime(getMinBlacklistTime());
+    static qint64 minBlacklistTime(getMinBlacklistTime.count());
     static qint64 maxBlacklistTime(qMax(getMaxBlacklistTime(), minBlacklistTime));
 
     // The factor of 5 feels natural: 25s, 2 min, 10 min, ~1h, ~5h, ~24h
