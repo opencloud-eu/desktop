@@ -57,12 +57,6 @@ public:
     /** The maximum chunk size in bytes for chunked uploads */
     qint64 _maxChunkSize = 100 * 1000 * 1000; // 100MB
 
-    /** The target duration of chunk uploads for dynamic chunk sizing.
-     *
-     * Set to 0 it will disable dynamic chunk sizing.
-     */
-    std::chrono::milliseconds _targetChunkUploadDuration = std::chrono::minutes(1);
-
     /** The maximum number of active jobs in parallel  */
     int _parallelNetworkJobs = 6;
 

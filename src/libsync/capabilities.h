@@ -187,8 +187,6 @@ public:
     // TODO: return SharePermission
     int defaultPermissions() const;
 
-    bool chunkingNg() const;
-
     /// Wheter to use chunking
     bool bigfilechunkingEnabled() const;
 

@@ -160,20 +160,6 @@ CheckSums::Algorithm Capabilities::uploadChecksumType() const
     return CheckSums::Algorithm::PARSE_ERROR;
 }
 
-bool Capabilities::chunkingNg() const
-{
-    if (!bigfilechunkingEnabled())
-    {
-        return false;
-    }
-    static const auto chunkng = qgetenv("OWNCLOUD_CHUNKING_NG");
-    if (chunkng == "0")
-        return false;
-    if (chunkng == "1")
-        return true;
-    return _capabilities.value(QStringLiteral("dav")).toMap().value(QStringLiteral("chunking")).toFloat() >= 1.0;
-}
-
 bool Capabilities::bigfilechunkingEnabled() const
 {
     return _capabilities.value(QStringLiteral("files")).toMap().value(QStringLiteral("bigfilechunking"), true).toBool();

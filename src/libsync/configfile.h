@@ -158,7 +158,6 @@ public:
     qint64 chunkSize() const;
     qint64 maxChunkSize() const;
     qint64 minChunkSize() const;
-    std::chrono::milliseconds targetChunkUploadDuration() const;
 
     void saveGeometry(QWidget *w);
     void restoreGeometry(QWidget *w);
