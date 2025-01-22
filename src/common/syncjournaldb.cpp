@@ -251,10 +251,7 @@ bool SyncJournalDb::checkConnect()
     }
 
     // Set locking mode to avoid issues with WAL on Windows
-    static QByteArray locking_mode_env = qgetenv("OWNCLOUD_SQLITE_LOCKING_MODE");
-    if (locking_mode_env.isEmpty())
-        locking_mode_env = "EXCLUSIVE";
-    pragma1.prepare("PRAGMA locking_mode=" + locking_mode_env + ";");
+    pragma1.prepare("PRAGMA locking_mode=EXCLUSIVE;");
     if (!pragma1.exec()) {
         return sqlFail(QStringLiteral("Set PRAGMA locking_mode"), pragma1);
     } else {
