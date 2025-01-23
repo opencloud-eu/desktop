@@ -101,7 +101,6 @@ private:
     enum class StatusIcon { None, Connected, Disconnected, Info, Warning };
     void showConnectionLabel(const QString &message, StatusIcon statusIcon, QStringList errors = QStringList());
 
-    bool event(QEvent *) override;
     void doForceSyncCurrentFolder(Folder *selectedFolder);
 
     Ui::AccountSettings *ui;

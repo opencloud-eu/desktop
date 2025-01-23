@@ -36,7 +36,6 @@
 #include "gui/spaces/spaceimageprovider.h"
 #include "guiutility.h"
 #include "libsync/graphapi/spacesmanager.h"
-#include "quotainfo.h"
 #include "scheduling/syncscheduler.h"
 #include "settingsdialog.h"
 #include "theme.h"
@@ -681,16 +680,6 @@ void AccountSettings::slotDeleteAccount()
         }
     });
     messageBox->open();
-}
-
-bool AccountSettings::event(QEvent *e)
-{
-    if (e->type() == QEvent::Hide || e->type() == QEvent::Show) {
-        if (!_accountState->supportsSpaces()) {
-            _accountState->quotaInfo()->setActive(isVisible());
-        }
-    }
-    return QWidget::event(e);
 }
 
 } // namespace OCC
