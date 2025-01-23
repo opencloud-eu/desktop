@@ -20,8 +20,8 @@
 
 #include "common/checksumalgorithms.h"
 
-#include <QStringList>
 #include <QVariantMap>
+#include <QStringList>
 #include <QVersionNumber>
 
 namespace OCC {
@@ -81,13 +81,11 @@ struct OPENCLOUD_SYNC_EXPORT SpaceSupport
     /**
         "spaces": {
           "version": "0.0.1",
-          "enabled": true,
-          "has_multiple_personal_spaces": true
+          "enabled": true
         }
     */
     SpaceSupport(const QVariantMap &spaces_support);
     bool enabled = false;
-    bool hasMultiplePersonalSpaces = false;
     QVersionNumber version;
 
     bool isValid() const;
@@ -307,4 +305,4 @@ private:
 };
 }
 
-#endif // CAPABILITIES_H
+#endif //CAPABILITIES_H

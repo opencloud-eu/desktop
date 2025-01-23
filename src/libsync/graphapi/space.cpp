@@ -97,11 +97,6 @@ void SpaceImage::update()
 
 QString Space::displayName() const
 {
-    auto hasManyPersonalSpaces = _spaceManager->account()->capabilities().spacesSupport().enabled;
-    if (hasManyPersonalSpaces) {
-        return _drive.getName();
-    }
-
     if (_drive.getDriveType() == personalC) {
         return tr("Personal");
     } else if (_drive.getId() == sharesIdC) {
