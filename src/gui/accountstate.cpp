@@ -24,7 +24,6 @@
 #include "libsync/creds/httpcredentials.h"
 
 #include "gui/networkinformation.h"
-#include "gui/quotainfo.h"
 #include "gui/settingsdialog.h"
 #include "gui/spacemigration.h"
 #include "gui/tlserrordialog.h"
@@ -619,16 +618,6 @@ std::unique_ptr<QSettings> AccountState::settings()
 bool AccountState::supportsSpaces() const
 {
     return _supportsSpaces && _account->hasCapabilities() && _account->capabilities().spacesSupport().enabled;
-}
-
-QuotaInfo *AccountState::quotaInfo()
-{
-    // QuotaInfo should not be used with spaces
-    Q_ASSERT(!supportsSpaces());
-    if (!_quotaInfo) {
-        _quotaInfo = new QuotaInfo(this);
-    }
-    return _quotaInfo;
 }
 
 bool AccountState::isSettingUp() const

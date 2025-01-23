@@ -33,7 +33,6 @@ class QSettings;
 namespace OCC {
 
 class Account;
-class QuotaInfo;
 class TlsErrorDialog;
 class FetchServerSettingsJob;
 
@@ -138,8 +137,6 @@ public:
     // weather the account was created after spaces where implemented
     bool supportsSpaces() const;
 
-    QuotaInfo *quotaInfo();
-
     /** Returns a new settings object for this account, already in the right groups. */
     std::unique_ptr<QSettings> settings();
 
@@ -210,8 +207,6 @@ private:
      * Milliseconds for which to delay reconnection after 503/maintenance.
      */
     std::chrono::milliseconds _maintenanceToConnectedDelay;
-
-    QuotaInfo *_quotaInfo = nullptr;
 
     QPointer<FetchServerSettingsJob> _fetchCapabilitiesJob;
 
