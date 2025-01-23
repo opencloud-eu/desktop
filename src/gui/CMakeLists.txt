@@ -56,7 +56,6 @@ target_sources(OpenCloudGui PRIVATE
     syncrunfilelog.cpp
     systray.cpp
     thumbnailjob.cpp
-    quotainfo.cpp
     accountstate.cpp
     notificationwidget.cpp
     notificationconfirmjob.cpp

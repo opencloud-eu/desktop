@@ -17,7 +17,6 @@
 #include "accountstate.h"
 #include "folderman.h"
 #include "gui/networkinformation.h"
-#include "gui/quotainfo.h"
 #include "theme.h"
 
 #include "libsync/graphapi/space.h"
@@ -297,9 +296,6 @@ QVariant FolderStatusModel::data(const QModelIndex &index, int role) const
                     }
                 }
             }
-        } else {
-            used = f->accountState()->quotaInfo()->lastQuotaUsedBytes();
-            total = f->accountState()->quotaInfo()->lastQuotaTotalBytes();
         }
         if (total <= 0) {
             return {};
