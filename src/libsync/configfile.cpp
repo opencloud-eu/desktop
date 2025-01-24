@@ -50,8 +50,10 @@ const QString logHttpC() { return QStringLiteral("logHttp"); }
 const QString remotePollIntervalC() { return QStringLiteral("remotePollInterval"); }
 //const QString caCertsKeyC() { return QStringLiteral("CaCertificates"); } only used from account.cpp
 const QString forceSyncIntervalC() { return QStringLiteral("forceSyncInterval"); }
-const QString fullLocalDiscoveryIntervalC() { return QStringLiteral("fullLocalDiscoveryInterval"); }
-const QString notificationRefreshIntervalC() { return QStringLiteral("notificationRefreshInterval"); }
+const QString fullLocalDiscoveryIntervalC()
+{
+    return QStringLiteral("fullLocalDiscoveryInterval");
+}
 const QString monoIconsC() { return QStringLiteral("monoIcons"); }
 const QString promptDeleteC() { return QStringLiteral("promptDeleteAllFiles"); }
 const QString crashReporterC() { return QStringLiteral("crashReporter"); }
@@ -477,23 +479,6 @@ chrono::milliseconds OCC::ConfigFile::fullLocalDiscoveryInterval() const
     auto settings = makeQSettings();
     settings.beginGroup(defaultConnection());
     return millisecondsValue(settings, fullLocalDiscoveryIntervalC(), 1h);
-}
-
-chrono::milliseconds ConfigFile::notificationRefreshInterval(const QString &connection) const
-{
-    QString con(connection);
-    if (connection.isEmpty())
-        con = defaultConnection();
-    auto settings = makeQSettings();
-    settings.beginGroup(con);
-
-    auto defaultInterval = chrono::minutes(5);
-    auto interval = millisecondsValue(settings, notificationRefreshIntervalC(), defaultInterval);
-    if (interval < chrono::minutes(1)) {
-        qCWarning(lcConfigFile) << "Notification refresh interval smaller than one minute, setting to one minute";
-        interval = chrono::minutes(1);
-    }
-    return interval;
 }
 
 chrono::milliseconds ConfigFile::updateCheckInterval(const QString &connection) const
