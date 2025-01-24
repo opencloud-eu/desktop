@@ -75,9 +75,6 @@ public:
     /* Set poll interval. Value in milliseconds has to be larger than 5000 */
     void setRemotePollInterval(std::chrono::milliseconds interval, const QString &connection = QString());
 
-    /* Interval to check for new notifications */
-    std::chrono::milliseconds notificationRefreshInterval(const QString &connection = QString()) const;
-
     /* Force sync interval, in milliseconds */
     std::chrono::milliseconds forceSyncInterval(std::chrono::seconds remoteFromCapabilities, const QString &connection = QString()) const;
 

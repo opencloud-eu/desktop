@@ -1,2 +1,1 @@
-opencloud_add_test(ActivityModel)
 opencloud_add_test(ProtocolModel)
