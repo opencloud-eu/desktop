@@ -13,10 +13,8 @@ target_sources(OpenCloudGui PRIVATE
     networksettings.ui
     protocolwidget.ui
     issueswidget.ui
-    activitywidget.ui
     settingsdialog.ui
     tlserrordialog.ui
-    notificationwidget.ui
     logbrowser.ui
 )
 
@@ -48,7 +46,6 @@ target_sources(OpenCloudGui PRIVATE
     protocolwidget.cpp
     protocolitem.cpp
     issueswidget.cpp
-    activitydata.cpp
     activitywidget.cpp
     selectivesyncwidget.cpp
     settingsdialog.cpp
@@ -57,9 +54,6 @@ target_sources(OpenCloudGui PRIVATE
     systray.cpp
     thumbnailjob.cpp
     accountstate.cpp
-    notificationwidget.cpp
-    notificationconfirmjob.cpp
-    servernotificationhandler.cpp
     guiutility.cpp
     elidedlabel.cpp
     translations.cpp
@@ -67,7 +61,6 @@ target_sources(OpenCloudGui PRIVATE
     creds/qmlcredentials.cpp
     updateurldialog.cpp
 
-    models/activitylistmodel.cpp
     models/expandingheaderview.cpp
     models/models.cpp
     models/protocolitemmodel.cpp
