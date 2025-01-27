@@ -138,7 +138,6 @@ private:
     uint32_t _priority = 0;
 
     friend class FolderMan;
-    friend class SpaceMigration;
 };
 
 /**
@@ -517,7 +516,5 @@ private:
      * The vfs mode instance (created by plugin) to use. Never null.
      */
     QSharedPointer<Vfs> _vfs;
-
-    friend class SpaceMigration;
 };
 }

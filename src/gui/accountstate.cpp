@@ -25,7 +25,6 @@
 
 #include "gui/networkinformation.h"
 #include "gui/settingsdialog.h"
-#include "gui/spacemigration.h"
 #include "gui/tlserrordialog.h"
 
 #include "logger.h"
@@ -487,22 +486,6 @@ void AccountState::slotConnectionValidatorResult(ConnectionValidator::Status sta
         _connectionStatus = status;
     }
     _connectionErrors = errors;
-
-    if (Q_UNLIKELY(Theme::instance()->enableCernBranding())) {
-        if (status == ConnectionValidator::Connected) {
-            Q_ASSERT(_account->hasCapabilities());
-            if (_account->capabilities().migration().space_migration.enabled) {
-                auto statePtr = AccountManager::instance()->account(_account->uuid());
-                auto migration = new SpaceMigration(statePtr, _account->capabilities().migration().space_migration.endpoint, this);
-                connect(migration, &SpaceMigration::finished, this, [migration, this] {
-                    migration->deleteLater();
-                    setState(Connected);
-                });
-                migration->start();
-                return;
-            }
-        }
-    }
     switch (status) {
     case ConnectionValidator::Connected:
         setState(Connected);

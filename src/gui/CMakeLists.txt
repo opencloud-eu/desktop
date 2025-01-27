@@ -65,8 +65,6 @@ target_sources(OpenCloudGui PRIVATE
     models/models.cpp
     models/protocolitemmodel.cpp
 
-    spacemigration.cpp
-
     scheduling/syncscheduler.cpp
     scheduling/etagwatcher.cpp
 

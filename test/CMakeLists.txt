@@ -63,8 +63,4 @@ configure_file(test_journal.db "${PROJECT_BINARY_DIR}/bin/test_journal.db" COPYO
 
 opencloud_add_test(JobQueue)
 
-# cern only
-opencloud_add_test(SpacesMigration)
-target_sources(SpacesMigrationTest PRIVATE ${PROJECT_SOURCE_DIR}/src/gui/spacemigration.cpp)
-
 add_subdirectory(modeltests)

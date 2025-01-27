@@ -209,8 +209,6 @@ private:
     std::chrono::milliseconds _maintenanceToConnectedDelay;
 
     QPointer<FetchServerSettingsJob> _fetchCapabilitiesJob;
-
-    friend class SpaceMigration;
 };
 }
 
