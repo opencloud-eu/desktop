@@ -653,8 +653,6 @@ static QString checkPathForSyncRootMarkingRecursive(const QString &path, FolderM
                 return {};
             }
             [[fallthrough]];
-        case FolderMan::NewFolderType::OC10SyncRoot:
-            [[fallthrough]];
         case FolderMan::NewFolderType::SpacesSyncRoot:
             // It's our application but we don't want to create a spaces folder, so it must be another space root
             return FolderMan::tr("Folder '%1' is already in use by another account.").arg(path);
