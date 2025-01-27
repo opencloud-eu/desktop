@@ -44,7 +44,6 @@ namespace TestUtils {
         // TODO: legacy
         auto d = OCC::FolderDefinition::createNewFolderDefinition(account->davUrl(), {});
         d.setLocalPath(path);
-        d.setTargetPath(path);
         return d;
     }
 

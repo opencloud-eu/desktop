@@ -100,7 +100,7 @@ void ETagWatcher::startOC10EtagJob(Folder *f)
         const auto account = f->accountState()->account();
         const auto polltime = cfg.remotePollInterval(account->capabilities().remotePollInterval());
         if (_lastEtagJob[f].lastUpdate.duration() > polltime) {
-            auto *requestEtagJob = new RequestEtagJob(account, f->webDavUrl(), f->remotePath(), f);
+            auto *requestEtagJob = new RequestEtagJob(account, f->webDavUrl(), {}, f);
             requestEtagJob->setTimeout(pollTimeoutC);
             connect(requestEtagJob, &RequestEtagJob::finishedSignal, this, [requestEtagJob, f, this] {
                 if (requestEtagJob->httpStatusCode() == 207) {

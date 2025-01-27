@@ -77,15 +77,11 @@ public:
     /// Ensure / as separator and trailing /.
     void setLocalPath(const QString &path);
 
-    /// Remove ending /, then ensure starting '/': so "/foo/bar" and "/".
-    void setTargetPath(const QString &path);
 
     /// journalPath relative to localPath.
     QString absoluteJournalPath() const;
 
     QString localPath() const;
-
-    QString targetPath() const;
 
     QUrl webDavUrl() const;
 
@@ -128,8 +124,6 @@ private:
     QString _displayName;
     /// path on local machine (always trailing /)
     QString _localPath;
-    /// path on remote (usually no trailing /, exception "/")
-    QString _targetPath;
     bool _deployed = false;
 
     uint32_t _priority = 0;
@@ -190,24 +184,9 @@ public:
     QString cleanPath() const;
 
     /**
-     * remote folder path, usually without trailing /, exception "/"
-     */
-    QString remotePath() const;
-
-    /**
      * The full remote WebDAV URL
      */
     QUrl webDavUrl() const;
-
-    /**
-     * remote folder path, always with a trailing /
-     */
-    QString remotePathTrailingSlash() const;
-
-    /**
-     * remote folder path with server URL
-     */
-    QUrl remoteUrl() const;
 
     /**
      * switch sync on or off

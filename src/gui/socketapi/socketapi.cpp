@@ -464,7 +464,7 @@ void SocketApi::command_SHARE(const QString &localFile, SocketListener *listener
             return;
         }
 
-        auto &remotePath = fileData.serverRelativePath;
+        auto &remotePath = fileData.folderRelativePath;
 
         // Can't share root folder
         if (remotePath == QLatin1String("/")) {
@@ -510,12 +510,7 @@ void SocketApi::fetchPrivateLinkUrlHelper(const QString &localFile, const std::f
             return;
     }
 
-    fetchPrivateLinkUrl(
-        fileData.folder->accountState()->account(),
-        fileData.folder->webDavUrl(),
-        fileData.serverRelativePath,
-        this,
-        targetFun);
+    fetchPrivateLinkUrl(fileData.folder->accountState()->account(), fileData.folder->webDavUrl(), fileData.folderRelativePath, this, targetFun);
 }
 
 void SocketApi::command_COPY_PRIVATE_LINK(const QString &localFile, SocketListener *)
@@ -537,7 +532,7 @@ void SocketApi::command_OPEN_PRIVATE_LINK_VERSIONS(const QString &localFile, Soc
 {
     const auto fileData = FileData::get(localFile);
     if (fileData.isValid() && fileData.folder->accountState()->account()->capabilities().filesSharing().sharing_roles) {
-        fetchPrivateLinkUrl(fileData.folder->accountState()->account(), fileData.folder->webDavUrl(), fileData.serverRelativePath, this, [](const QUrl &url) {
+        fetchPrivateLinkUrl(fileData.folder->accountState()->account(), fileData.folder->webDavUrl(), fileData.folderRelativePath, this, [](const QUrl &url) {
             const auto queryUrl = Utility::concatUrlPath(url, QString(), {{QStringLiteral("details"), QStringLiteral("versions")}});
             Utility::openBrowser(queryUrl, nullptr);
         });
@@ -788,8 +783,6 @@ SocketApi::FileData SocketApi::FileData::get(const QString &localFile)
     data.folder = FolderMan::instance()->folderForPath(data.localPath, &data.folderRelativePath);
     if (!data.folder)
         return data;
-
-    data.serverRelativePath = QDir(data.folder->remotePath()).filePath(data.folderRelativePath);
     return data;
 }
 

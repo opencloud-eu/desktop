@@ -209,12 +209,6 @@ public:
      */
     virtual QString overrideServerPath() const;
 
-    /**
-     * The default folder name without path on the server at setup time.
-     */
-    virtual QString defaultServerFolder() const;
-
-
     /** @return color for the setup wizard */
     virtual QColor wizardHeaderTitleColor() const;
 

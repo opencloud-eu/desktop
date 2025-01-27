@@ -37,12 +37,7 @@ class FolderWizard : public QWizard
 {
     Q_OBJECT
 public:
-    enum PageType {
-        Page_Space,
-        Page_Source,
-        Page_Target,
-        Page_SelectiveSync
-    };
+    enum PageType { Page_Space, Page_Source, Page_SelectiveSync };
     Q_ENUM(PageType)
 
     explicit FolderWizard(const AccountStatePtr &account, QWidget *parent = nullptr);

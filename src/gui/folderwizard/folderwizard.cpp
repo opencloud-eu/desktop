@@ -16,7 +16,6 @@
 #include "folderwizard_p.h"
 
 #include "folderwizardlocalpath.h"
-#include "folderwizardremotepath.h"
 #include "folderwizardselectivesync.h"
 
 #include "spacespage.h"
@@ -82,12 +81,6 @@ FolderWizardPrivate::FolderWizardPrivate(FolderWizard *q, const AccountStatePtr 
     }
     q->setPage(FolderWizard::Page_Source, _folderWizardSourcePage);
 
-    // for now spaces are meant to be synced as a whole
-    if (!_account->supportsSpaces() && !Theme::instance()->singleSyncFolder()) {
-        _folderWizardTargetPage = new FolderWizardRemotePath(this);
-        q->setPage(FolderWizard::Page_Target, _folderWizardTargetPage);
-    }
-
     q->setPage(FolderWizard::Page_SelectiveSync, _folderWizardSelectiveSyncPage);
 }
 
@@ -101,11 +94,6 @@ QString FolderWizardPrivate::initialLocalPath() const
     // Split default sync root:
     const QFileInfo path(defaultSyncRoot());
     return FolderMan::findGoodPathForNewSyncFolder(path.path(), path.fileName(), FolderMan::NewFolderType::OC10SyncRoot, _account->account()->uuid());
-}
-
-QString FolderWizardPrivate::remotePath() const
-{
-    return _folderWizardTargetPage ? _folderWizardTargetPage->targetPath() : QString();
 }
 
 uint32_t FolderWizardPrivate::priority() const
@@ -197,7 +185,6 @@ FolderMan::SyncConnectionDescription FolderWizard::result()
         d->davUrl(), //
         d->spaceId(), //
         localPath, //
-        d->remotePath(), //
         d->displayName(), //
         d->useVirtualFiles(), //
         d->priority(), //

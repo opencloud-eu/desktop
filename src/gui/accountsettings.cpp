@@ -162,9 +162,8 @@ void AccountSettings::slotCustomContextMenuRequested(Folder *folder)
 
     // Add an action to open the folder on the server in a webbrowser:
     if (folder->accountState()->account()->capabilities().privateLinkPropertyAvailable()) {
-        QString path = folder->remotePathTrailingSlash();
-        menu->addAction(CommonStrings::showInWebBrowser(), [path, davUrl = folder->webDavUrl(), this] {
-            fetchPrivateLinkUrl(_accountState->account(), davUrl, path, this, [](const QUrl &url) { Utility::openBrowser(url, nullptr); });
+        menu->addAction(CommonStrings::showInWebBrowser(), [davUrl = folder->webDavUrl(), this] {
+            fetchPrivateLinkUrl(_accountState->account(), davUrl, {}, this, [](const QUrl &url) { Utility::openBrowser(url, nullptr); });
         });
     }
 
@@ -234,8 +233,7 @@ void AccountSettings::showSelectiveSyncDialog(Folder *folder)
     auto *selectiveSync = new SelectiveSyncWidget(_accountState->account(), this);
     selectiveSync->setDavUrl(folder->webDavUrl());
     bool ok;
-    selectiveSync->setFolderInfo(
-        folder->remotePath(), folder->displayName(), folder->journalDb()->getSelectiveSyncList(SyncJournalDb::SelectiveSyncBlackList, &ok));
+    selectiveSync->setFolderInfo(folder->displayName(), folder->journalDb()->getSelectiveSyncList(SyncJournalDb::SelectiveSyncBlackList, &ok));
     Q_ASSERT(ok);
 
     auto *modalWidget = new AccountModalWidget(tr("Choose what to sync"), selectiveSync, this);

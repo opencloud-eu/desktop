@@ -111,11 +111,6 @@ public:
         QString localPath;
 
         /***
-         * The relative remote path
-         */
-        QString remotePath;
-
-        /***
          * The Space name to display in the list of folders or an empty string.
          */
         QString displayName;

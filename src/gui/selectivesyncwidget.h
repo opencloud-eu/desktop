@@ -45,7 +45,7 @@ public:
     qint64 estimatedSize(QTreeWidgetItem *root = nullptr);
 
     // oldBlackList is a list of excluded paths, each including a trailing /
-    void setFolderInfo(const QString &folderPath, const QString &rootName, const QSet<QString> &oldBlackList = {});
+    void setFolderInfo(const QString &rootName, const QSet<QString> &oldBlackList = {});
 
     QSize sizeHint() const override;
 
