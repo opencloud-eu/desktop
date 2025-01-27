@@ -94,16 +94,6 @@ Space *SpacesManager::space(const QString &id) const
     return _spacesMap.value(id);
 }
 
-Space *SpacesManager::spaceByUrl(const QUrl &url) const
-{
-    auto it = std::find_if(_spacesMap.cbegin(), _spacesMap.cend(),
-        [url](const auto *space) { return OCC::Utility::urlEqual(QUrl(space->drive().getRoot().getWebDavUrl()), url); });
-    if (it != _spacesMap.cend()) {
-        return *it;
-    }
-    return {};
-}
-
 Account *SpacesManager::account() const
 {
     return _account;

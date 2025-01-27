@@ -44,7 +44,6 @@ class OPENCLOUD_GUI_EXPORT AccountState : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(Account *account READ accountForQml CONSTANT)
-    Q_PROPERTY(bool supportsSpaces READ supportsSpaces NOTIFY supportsSpacesChanged)
     Q_PROPERTY(bool isConnected READ isConnected NOTIFY isConnectedChanged)
     Q_PROPERTY(AccountState::State state READ state NOTIFY stateChanged)
     QML_ELEMENT
@@ -134,9 +133,6 @@ public:
 
     bool isConnected() const;
 
-    // weather the account was created after spaces where implemented
-    bool supportsSpaces() const;
-
     /** Returns a new settings object for this account, already in the right groups. */
     std::unique_ptr<QSettings> settings();
 
@@ -172,7 +168,6 @@ Q_SIGNALS:
     void isConnectedChanged();
     void urlUpdated();
     void isSettingUpChanged();
-    void supportsSpacesChanged();
 
 protected Q_SLOTS:
     void slotConnectionValidatorResult(ConnectionValidator::Status status, const QStringList &errors);
@@ -192,7 +187,6 @@ private:
     QPointer<ConnectionValidator> _connectionValidator;
     QPointer<UpdateUrlDialog> _updateUrlDialog;
     QPointer<TlsErrorDialog> _tlsDialog;
-    bool _supportsSpaces = true;
 
     bool _settingUp = false;
 

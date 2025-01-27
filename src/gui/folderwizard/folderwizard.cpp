@@ -73,11 +73,9 @@ FolderWizardPrivate::FolderWizardPrivate(FolderWizard *q, const AccountStatePtr 
     , _account(account)
     , _folderWizardSourcePage(new FolderWizardLocalPath(this))
     , _folderWizardSelectiveSyncPage(new FolderWizardSelectiveSync(this))
+    , _spacesPage(new SpacesPage(account->account(), q))
 {
-    if (account->supportsSpaces()) {
-        _spacesPage = new SpacesPage(account->account(), q);
-        q->setPage(FolderWizard::Page_Space, _spacesPage);
-    }
+    q->setPage(FolderWizard::Page_Space, _spacesPage);
     q->setPage(FolderWizard::Page_Source, _folderWizardSourcePage);
 
     q->setPage(FolderWizard::Page_SelectiveSync, _folderWizardSelectiveSyncPage);
@@ -91,38 +89,26 @@ QString FolderWizardPrivate::initialLocalPath() const
 
 uint32_t FolderWizardPrivate::priority() const
 {
-    if (_account->supportsSpaces()) {
-        return _spacesPage->currentSpace()->priority();
-    }
-    return 0;
+    return _spacesPage->currentSpace()->priority();
 }
 
 QUrl FolderWizardPrivate::davUrl() const
 {
-    if (_account->supportsSpaces()) {
-        auto url = _spacesPage->currentSpace()->webdavUrl();
-        if (!url.path().endsWith(QLatin1Char('/'))) {
-            url.setPath(url.path() + QLatin1Char('/'));
-        }
-        return url;
+    auto url = _spacesPage->currentSpace()->webdavUrl();
+    if (!url.path().endsWith(QLatin1Char('/'))) {
+        url.setPath(url.path() + QLatin1Char('/'));
     }
-    return _account->account()->davUrl();
+    return url;
 }
 
 QString FolderWizardPrivate::spaceId() const
 {
-    if (_account->supportsSpaces()) {
-        return _spacesPage->currentSpace()->id();
-    }
-    return {};
+    return _spacesPage->currentSpace()->id();
 }
 
 QString FolderWizardPrivate::displayName() const
 {
-    if (_account->supportsSpaces()) {
-        return _spacesPage->currentSpace()->displayName();
-    }
-    return QString();
+    return _spacesPage->currentSpace()->displayName();
 }
 
 const AccountStatePtr &FolderWizardPrivate::accountState()

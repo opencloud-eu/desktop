@@ -61,15 +61,10 @@ ETagWatcher::ETagWatcher(FolderMan *folderMan, QObject *parent)
     // check wheter we need to query the etag for oc10 servers
     connect(pollTimer, &QTimer::timeout, this, [this] {
         for (auto &info : _lastEtagJob) {
-            // for spaces we use the etag provided by the SpaceManager
-            if (info.first->accountState()->supportsSpaces()) {
-                // we could also connect to the spaceChanged signal but for now this will keep it closer to oc10
-                // ensure we already know about the space (startup)
-                if (auto *space = info.first->space()) {
-                    updateEtag(info.first, space->drive().getRoot().getETag());
-                }
-            } else {
-                startOC10EtagJob(info.first);
+            // we could also connect to the spaceChanged signal but for now this will keep it closer to oc10
+            // ensure we already know about the space (startup)
+            if (auto *space = info.first->space()) {
+                updateEtag(info.first, space->drive().getRoot().getETag());
             }
         }
     });
@@ -90,30 +85,5 @@ void ETagWatcher::updateEtag(Folder *f, const QString &etag)
         info.lastUpdate.reset();
     } else {
         qCWarning(lcEtagWatcher) << "Invalid empty etag received for" << f->displayName() << f->path();
-    }
-}
-
-void ETagWatcher::startOC10EtagJob(Folder *f)
-{
-    if (f->accountState()->state() == AccountState::State::Connected) {
-        ConfigFile cfg;
-        const auto account = f->accountState()->account();
-        const auto polltime = cfg.remotePollInterval(account->capabilities().remotePollInterval());
-        if (_lastEtagJob[f].lastUpdate.duration() > polltime) {
-            auto *requestEtagJob = new RequestEtagJob(account, f->webDavUrl(), {}, f);
-            requestEtagJob->setTimeout(pollTimeoutC);
-            connect(requestEtagJob, &RequestEtagJob::finishedSignal, this, [requestEtagJob, f, this] {
-                if (requestEtagJob->httpStatusCode() == 207) {
-                    if (OC_ENSURE_NOT(requestEtagJob->etag().isEmpty())) {
-                        f->accountState()->tagLastSuccessfullETagRequest(requestEtagJob->responseQTimeStamp());
-                        updateEtag(f, requestEtagJob->etag());
-                    } else {
-                        qCWarning(lcEtagWatcher) << "Invalid empty etag received for" << f->displayName() << f->path() << requestEtagJob;
-                    }
-                }
-            });
-            qCDebug(lcEtagWatcher) << "Starting etag check for folder" << f->displayName() << f->path();
-            requestEtagJob->start();
-        }
     }
 }

@@ -177,13 +177,6 @@ QList<QmlUrlButton> Theme::qmlUrlButtons() const
     return out;
 }
 
-// If this option returns true, the client only supports one folder to sync.
-// The Add-Button is removed accordingly.
-bool Theme::singleSyncFolder() const
-{
-    return false;
-}
-
 bool Theme::multiAccount() const
 {
     return true;

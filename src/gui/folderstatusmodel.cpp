@@ -193,18 +193,16 @@ void FolderStatusModel::setAccountState(const AccountStatePtr &accountState)
 
         connect(FolderMan::instance(), &FolderMan::folderSyncStateChange, this, &FolderStatusModel::slotFolderSyncStateChange);
 
-        if (accountState->supportsSpaces()) {
-            connect(accountState->account()->spacesManager(), &GraphApi::SpacesManager::updated, this,
-                [this] { Q_EMIT dataChanged(index(0, 0), index(rowCount() - 1, 0)); });
-            connect(accountState->account()->spacesManager(), &GraphApi::SpacesManager::spaceChanged, this, [this](auto *space) {
-                for (int i = 0; i < rowCount(); ++i) {
-                    if (_folders[i]->_folder->space() == space) {
-                        Q_EMIT dataChanged(index(i, 0), index(i, 0));
-                        break;
-                    }
+        connect(accountState->account()->spacesManager(), &GraphApi::SpacesManager::updated, this,
+            [this] { Q_EMIT dataChanged(index(0, 0), index(rowCount() - 1, 0)); });
+        connect(accountState->account()->spacesManager(), &GraphApi::SpacesManager::spaceChanged, this, [this](auto *space) {
+            for (int i = 0; i < rowCount(); ++i) {
+                if (_folders[i]->_folder->space() == space) {
+                    Q_EMIT dataChanged(index(i, 0), index(i, 0));
+                    break;
                 }
-            });
-        }
+            }
+        });
     }
     for (const auto &f : FolderMan::instance()->folders()) {
         if (!accountState)
@@ -279,15 +277,11 @@ QVariant FolderStatusModel::data(const QModelIndex &index, int role) const
     case Roles::Quota: {
         qint64 used{};
         qint64 total{};
-        if (_accountState->supportsSpaces()) {
-            if (auto spacesManager = f->accountState()->account()->spacesManager()) {
-                if (auto *space = f->space()) {
-                    const auto quota = space->drive().getQuota();
-                    if (quota.isValid()) {
-                        used = quota.getUsed();
-                        total = quota.getTotal();
-                    }
-                }
+        if (auto *space = f->space()) {
+            const auto quota = space->drive().getQuota();
+            if (quota.isValid()) {
+                used = quota.getUsed();
+                total = quota.getTotal();
             }
         }
         if (total <= 0) {

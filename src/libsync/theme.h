@@ -71,7 +71,6 @@ class OPENCLOUD_SYNC_EXPORT Theme : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool multiAccount READ multiAccount FINAL CONSTANT)
-    Q_PROPERTY(bool singleSyncFolder READ singleSyncFolder FINAL CONSTANT)
     Q_PROPERTY(QList<QmlUrlButton> urlButtons READ qmlUrlButtons FINAL CONSTANT)
     Q_PROPERTY(bool syncNewlyDiscoveredSpaces READ syncNewlyDiscoveredSpaces FINAL CONSTANT)
     Q_PROPERTY(QColor avatarColor READ avatarColor NOTIFY themeChanged)
@@ -150,11 +149,6 @@ public:
     virtual QIcon applicationIcon() const;
     virtual QString applicationIconName() const;
     virtual QIcon aboutIcon() const;
-
-    /**
-     * Characteristics: bool if more than one sync folder is allowed
-     */
-    [[deprecated("oc10 only")]] virtual bool singleSyncFolder() const;
 
     /**
      * When true, client works with multiple accounts.

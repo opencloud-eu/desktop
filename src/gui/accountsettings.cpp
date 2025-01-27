@@ -488,11 +488,9 @@ void AccountSettings::slotAccountStateChanged()
             icon = StatusIcon::Warning;
         }
         showConnectionLabel(tr("Connected"), icon, errors);
-        if (accountsState()->supportsSpaces()) {
-            connect(accountsState()->account()->spacesManager(), &GraphApi::SpacesManager::updated, this, &AccountSettings::slotSpacesUpdated,
-                Qt::UniqueConnection);
-            slotSpacesUpdated();
-        }
+        connect(
+            accountsState()->account()->spacesManager(), &GraphApi::SpacesManager::updated, this, &AccountSettings::slotSpacesUpdated, Qt::UniqueConnection);
+        slotSpacesUpdated();
         break;
     }
     case AccountState::ServiceUnavailable:
@@ -531,11 +529,6 @@ void AccountSettings::slotAccountStateChanged()
 
 void AccountSettings::slotSpacesUpdated()
 {
-    if (!accountsState()->supportsSpaces()) {
-        // oC10 does not support spaces, and there is no `SpacesManager` available.
-        return;
-    }
-
     auto spaces = accountsState()->account()->spacesManager()->spaces();
     auto unsycnedSpaces = std::set<GraphApi::Space *>(spaces.cbegin(), spaces.cend());
     for (const auto &f : std::as_const(FolderMan::instance()->folders())) {
