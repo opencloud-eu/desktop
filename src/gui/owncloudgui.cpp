@@ -73,37 +73,32 @@ void setUpInitialSyncFolder(AccountStatePtr accountStatePtr, bool useVfs)
         FolderMan::instance()->scheduleAllFolders();
     };
 
-    if (accountStatePtr->supportsSpaces()) {
-        QObject::connect(
-            accountStatePtr->account()->spacesManager(), &GraphApi::SpacesManager::ready, accountStatePtr,
-            [accountStatePtr, addFolder, finalize] {
-                auto spaces = accountStatePtr->account()->spacesManager()->spaces();
-                // we do not want to set up folder sync connections for disabled spaces (#10173)
-                spaces.erase(std::remove_if(spaces.begin(), spaces.end(), [](auto *space) { return space->disabled(); }), spaces.end());
+    QObject::connect(
+        accountStatePtr->account()->spacesManager(), &GraphApi::SpacesManager::ready, accountStatePtr,
+        [accountStatePtr, addFolder, finalize] {
+            auto spaces = accountStatePtr->account()->spacesManager()->spaces();
+            // we do not want to set up folder sync connections for disabled spaces (#10173)
+            spaces.erase(std::remove_if(spaces.begin(), spaces.end(), [](auto *space) { return space->disabled(); }), spaces.end());
 
-                if (!spaces.isEmpty()) {
-                    const QString localDir(accountStatePtr->account()->defaultSyncRoot());
-                    FileSystem::setFolderMinimumPermissions(localDir);
-                    Folder::prepareFolder(localDir);
-                    Utility::setupFavLink(localDir);
-                    for (const auto *space : spaces) {
-                        const QString name = space->displayName();
-                        const QString folderName = FolderMan::instance()->findGoodPathForNewSyncFolder(
-                            localDir, name, FolderMan::NewFolderType::SpacesFolder, accountStatePtr->account()->uuid());
-                        auto folder = addFolder(folderName, QUrl(space->drive().getRoot().getWebDavUrl()), space->drive().getRoot().getId(), name);
-                        folder->setPriority(space->priority());
-                        // save the new priority
-                        folder->saveToSettings();
-                    }
-                    finalize();
+            if (!spaces.isEmpty()) {
+                const QString localDir(accountStatePtr->account()->defaultSyncRoot());
+                FileSystem::setFolderMinimumPermissions(localDir);
+                Folder::prepareFolder(localDir);
+                Utility::setupFavLink(localDir);
+                for (const auto *space : spaces) {
+                    const QString name = space->displayName();
+                    const QString folderName = FolderMan::instance()->findGoodPathForNewSyncFolder(
+                        localDir, name, FolderMan::NewFolderType::SpacesFolder, accountStatePtr->account()->uuid());
+                    auto folder = addFolder(folderName, QUrl(space->drive().getRoot().getWebDavUrl()), space->drive().getRoot().getId(), name);
+                    folder->setPriority(space->priority());
+                    // save the new priority
+                    folder->saveToSettings();
                 }
-            },
-            Qt::SingleShotConnection);
-        accountStatePtr->account()->spacesManager()->checkReady();
-    } else {
-        addFolder(accountStatePtr->account()->defaultSyncRoot(), accountStatePtr->account()->davUrl());
-        finalize();
-    }
+                finalize();
+            }
+        },
+        Qt::SingleShotConnection);
+    accountStatePtr->account()->spacesManager()->checkReady();
 }
 }
 

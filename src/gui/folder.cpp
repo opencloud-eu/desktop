@@ -185,10 +185,7 @@ Result<void, QString> Folder::checkPathLength(const QString &path)
 
 GraphApi::Space *Folder::space() const
 {
-    if (_accountState->supportsSpaces()) {
-        return _accountState->account()->spacesManager()->space(_definition.spaceId());
-    }
-    return nullptr;
+    return _accountState->account()->spacesManager()->space(_definition.spaceId());
 }
 
 bool Folder::checkLocalPath()
@@ -765,14 +762,6 @@ void Folder::saveToSettings() const
 {
     auto definitionToSave = _definition;
 
-    // migration
-    if (accountState()->supportsSpaces() && _definition.spaceId().isEmpty()) {
-        OC_DISABLE_DEPRECATED_WARNING
-        if (auto *space = accountState()->account()->spacesManager()->spaceByUrl(webDavUrl())) {
-            OC_ENABLE_DEPRECATED_WARNING
-            definitionToSave.setSpaceId(space->drive().getRoot().getId());
-        }
-    }
     // with spaces we rely on the space id
     // we save the dav URL nevertheless to have it available during startup
     definitionToSave.setWebDavUrl(webDavUrl());
