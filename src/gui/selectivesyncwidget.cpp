@@ -117,9 +117,8 @@ void SelectiveSyncWidget::refreshFolders()
     _loading->move(10, _folderTree->header()->height() + 10);
 }
 
-void SelectiveSyncWidget::setFolderInfo(const QString &folderPath, const QString &rootName, const QSet<QString> &oldBlackList)
+void SelectiveSyncWidget::setFolderInfo(const QString &rootName, const QSet<QString> &oldBlackList)
 {
-    _folderPath = Utility::stripTrailingSlash(folderPath);
     _rootName = rootName;
     _oldBlackList = oldBlackList;
     refreshFolders();

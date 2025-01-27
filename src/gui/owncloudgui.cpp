@@ -60,11 +60,10 @@ void setUpInitialSyncFolder(AccountStatePtr accountStatePtr, bool useVfs)
     auto folderMan = FolderMan::instance();
 
     // saves a bit of duplicate code
-    auto addFolder = [folderMan, accountStatePtr, useVfs](const QString &localFolder, const QString &remotePath, const QUrl &davUrl,
-                         const QString &spaceId = {}, const QString &displayName = {}) {
+    auto addFolder = [folderMan, accountStatePtr, useVfs](
+                         const QString &localFolder, const QUrl &davUrl, const QString &spaceId = {}, const QString &displayName = {}) {
         auto def = FolderDefinition::createNewFolderDefinition(davUrl, spaceId, displayName);
         def.setLocalPath(localFolder);
-        def.setTargetPath(remotePath);
         return folderMan->addFolderFromWizard(accountStatePtr, std::move(def), useVfs);
     };
 
@@ -91,7 +90,7 @@ void setUpInitialSyncFolder(AccountStatePtr accountStatePtr, bool useVfs)
                         const QString name = space->displayName();
                         const QString folderName = FolderMan::instance()->findGoodPathForNewSyncFolder(
                             localDir, name, FolderMan::NewFolderType::SpacesFolder, accountStatePtr->account()->uuid());
-                        auto folder = addFolder(folderName, {}, QUrl(space->drive().getRoot().getWebDavUrl()), space->drive().getRoot().getId(), name);
+                        auto folder = addFolder(folderName, QUrl(space->drive().getRoot().getWebDavUrl()), space->drive().getRoot().getId(), name);
                         folder->setPriority(space->priority());
                         // save the new priority
                         folder->saveToSettings();
@@ -102,7 +101,7 @@ void setUpInitialSyncFolder(AccountStatePtr accountStatePtr, bool useVfs)
             Qt::SingleShotConnection);
         accountStatePtr->account()->spacesManager()->checkReady();
     } else {
-        addFolder(accountStatePtr->account()->defaultSyncRoot(), Theme::instance()->defaultServerFolder(), accountStatePtr->account()->davUrl());
+        addFolder(accountStatePtr->account()->defaultSyncRoot(), accountStatePtr->account()->davUrl());
         finalize();
     }
 }
@@ -190,7 +189,7 @@ void ownCloudGui::slotSyncStateChange(Folder *folder)
 
     auto result = folder->syncResult();
 
-    qCInfo(lcApplication) << "Sync state changed for folder " << folder->remoteUrl().toString() << ": " << Utility::enumToDisplayName(result.status());
+    qCInfo(lcApplication) << "Sync state changed for folder " << folder->displayName() << ": " << Utility::enumToDisplayName(result.status());
 }
 
 void ownCloudGui::slotFoldersChanged()

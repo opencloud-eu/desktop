@@ -47,12 +47,6 @@ struct OCSYNC_EXPORT VfsSetupParams
      */
     QString filesystemPath;
 
-    /** The path to the synced folder on the account
-     *
-     * Always ends with /.
-     */
-    QString remotePath;
-
     /// Account url, credentials etc for network calls
     AccountPtr account;
 

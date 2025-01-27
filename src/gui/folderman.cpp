@@ -405,7 +405,7 @@ void FolderMan::slotFolderSyncStarted()
         return;
 
     qCInfo(lcFolderMan) << ">========== Sync started for folder [" << f->shortGuiLocalPath() << "] of account ["
-                        << f->accountState()->account()->displayNameWithHost() << "] with remote [" << f->remoteUrl().toDisplayString() << "]";
+                        << f->accountState()->account()->displayNameWithHost() << "]";
 }
 
 /*
@@ -422,7 +422,7 @@ void FolderMan::slotFolderSyncFinished(const SyncResult &)
         return;
 
     qCInfo(lcFolderMan) << "<========== Sync finished for folder [" << f->shortGuiLocalPath() << "] of account ["
-                        << f->accountState()->account()->displayNameWithHost() << "] with remote [" << f->remoteUrl().toDisplayString() << "]";
+                        << f->accountState()->account()->displayNameWithHost() << "]";
 }
 
 Folder *FolderMan::addFolder(const AccountStatePtr &accountState, const FolderDefinition &folderDefinition)
@@ -879,7 +879,6 @@ Folder *FolderMan::addFolderFromFolderWizardResult(const AccountStatePtr &accoun
 {
     FolderDefinition definition = FolderDefinition::createNewFolderDefinition(description.davUrl, description.spaceId, description.displayName);
     definition.setLocalPath(description.localPath);
-    definition.setTargetPath(description.remotePath);
     auto f = addFolderFromWizard(accountStatePtr, std::move(definition), description.useVirtualFiles);
     if (f) {
         f->journalDb()->setSelectiveSyncList(SyncJournalDb::SelectiveSyncBlackList, description.selectiveSyncBlackList);

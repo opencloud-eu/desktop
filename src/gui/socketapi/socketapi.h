@@ -91,8 +91,6 @@ private:
         QString localPath;
         // Relative path of the file locally, as in the DB. (May be a virtual file)
         QString folderRelativePath;
-        // Path of the file on the server (In case of virtual file, it points to the actual file)
-        QString serverRelativePath;
 
         bool isSyncFolder() const;
 

@@ -115,7 +115,7 @@ Folder::Folder(const FolderDefinition &definition, const AccountStatePtr &accoun
         prepareFolder(path());
         // those errors should not persist over sessions
         _journal.wipeErrorBlacklistCategory(SyncJournalErrorBlacklistRecord::Category::LocalSoftError);
-        _engine.reset(new SyncEngine(_accountState->account(), webDavUrl(), path(), remotePath(), &_journal));
+        _engine.reset(new SyncEngine(_accountState->account(), webDavUrl(), path(), {}, &_journal));
         // pass the setting if hidden files are to be ignored, will be read in csync_update
         _engine->setIgnoreHiddenFiles(_definition.ignoreHiddenFiles);
 
@@ -353,11 +353,6 @@ bool Folder::isSyncRunning() const
     return !hasSetupError() && _engine->isSyncRunning();
 }
 
-QString Folder::remotePath() const
-{
-    return _definition.targetPath();
-}
-
 QUrl Folder::webDavUrl() const
 {
     const QString spaceId = _definition.spaceId();
@@ -367,21 +362,6 @@ QUrl Folder::webDavUrl() const
         }
     }
     return _definition.webDavUrl();
-}
-
-QString Folder::remotePathTrailingSlash() const
-{
-    const QString remote = remotePath();
-    if (remote == QLatin1Char('/')) {
-        return remote;
-    }
-    Q_ASSERT(!remote.endsWith(QLatin1Char('/')));
-    return remote + QLatin1Char('/');
-}
-
-QUrl Folder::remoteUrl() const
-{
-    return Utility::concatUrlPath(webDavUrl(), remotePath());
 }
 
 bool Folder::syncPaused() const
@@ -550,7 +530,6 @@ void Folder::startVfs()
 
     VfsSetupParams vfsParams(_accountState->account(), webDavUrl(), groupInSidebar(), _engine.get());
     vfsParams.filesystemPath = path();
-    vfsParams.remotePath = remotePathTrailingSlash();
     vfsParams.journal = &_journal;
     vfsParams.providerDisplayName = Theme::instance()->appNameGUI();
     vfsParams.providerName = Theme::instance()->appName();
@@ -921,8 +900,7 @@ void Folder::startSync()
     setSyncState(SyncResult::SyncPrepare);
     _syncResult.reset();
 
-    qCInfo(lcFolder) << "*** Start syncing " << remoteUrl().toString() << "client version"
-                     << Theme::instance()->aboutVersions(Theme::VersionFormat::OneLiner);
+    qCInfo(lcFolder) << "*** Start syncing " << displayName() << "client version" << Theme::instance()->aboutVersions(Theme::VersionFormat::OneLiner);
 
     _fileLog->start(path());
 
@@ -1221,7 +1199,6 @@ void FolderDefinition::save(QSettings &settings, const FolderDefinition &folder)
 {
     settings.setValue(QStringLiteral("localPath"), folder.localPath());
     settings.setValue(QStringLiteral("journalPath"), folder.journalPath);
-    settings.setValue(QStringLiteral("targetPath"), folder.targetPath());
     if (!folder.spaceId().isEmpty()) {
         settings.setValue(spaceIdC(), folder.spaceId());
     }
@@ -1240,7 +1217,6 @@ FolderDefinition FolderDefinition::load(QSettings &settings, const QByteArray &i
     FolderDefinition folder{id, settings.value(davUrlC()).toUrl(), settings.value(spaceIdC()).toString(), settings.value(displayNameC()).toString()};
     folder.setLocalPath(settings.value(QStringLiteral("localPath")).toString());
     folder.journalPath = settings.value(QStringLiteral("journalPath")).toString();
-    folder.setTargetPath(settings.value(QStringLiteral("targetPath")).toString());
     folder.paused = settings.value(QStringLiteral("paused")).toBool();
     folder.ignoreHiddenFiles = settings.value(QStringLiteral("ignoreHiddenFiles"), QVariant(true)).toBool();
     folder._deployed = settings.value(deployedC(), false).toBool();
@@ -1266,16 +1242,6 @@ void FolderDefinition::setLocalPath(const QString &path)
     }
 }
 
-void FolderDefinition::setTargetPath(const QString &path)
-{
-    _targetPath = Utility::stripTrailingSlash(path);
-    // Doing this second ensures the empty string or "/" come
-    // out as "/".
-    if (!_targetPath.startsWith(QLatin1Char('/'))) {
-        _targetPath.prepend(QLatin1Char('/'));
-    }
-}
-
 QString FolderDefinition::absoluteJournalPath() const
 {
     return QDir(localPath()).filePath(journalPath);
@@ -1289,15 +1255,7 @@ const QByteArray &FolderDefinition::id() const
 QString FolderDefinition::displayName() const
 {
     if (_displayName.isEmpty()) {
-        if (targetPath().length() > 0 && targetPath() != QLatin1String("/")) {
-            QString a = QFileInfo(targetPath()).fileName();
-            if (a.startsWith(QLatin1Char('/'))) {
-                a = a.remove(0, 1);
-            }
-            return a;
-        } else {
-            return Theme::instance()->appNameGUI();
-        }
+        return Theme::instance()->appNameGUI();
     }
     return _displayName;
 }
@@ -1323,11 +1281,6 @@ QUrl FolderDefinition::webDavUrl() const
 {
     Q_ASSERT(_webDavUrl.isValid());
     return _webDavUrl;
-}
-
-QString FolderDefinition::targetPath() const
-{
-    return _targetPath;
 }
 
 QString FolderDefinition::localPath() const

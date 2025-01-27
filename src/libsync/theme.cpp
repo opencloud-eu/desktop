@@ -189,11 +189,6 @@ bool Theme::multiAccount() const
     return true;
 }
 
-QString Theme::defaultServerFolder() const
-{
-    return QStringLiteral("/");
-}
-
 QString Theme::helpUrl() const
 {
     return {};
