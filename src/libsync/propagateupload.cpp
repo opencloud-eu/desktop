@@ -531,8 +531,6 @@ QMap<QByteArray, QByteArray> PropagateUploadFileCommon::headers()
     if (!_item->_etag.isEmpty() && _item->_etag != QLatin1String("empty_etag")
         && (_item->instruction() & ~(CSYNC_INSTRUCTION_NEW | CSYNC_INSTRUCTION_TYPE_CHANGE)) // On new files never send a If-Match
         && !_deleteExisting) {
-        // We add quotes because the owncloud server always adds quotes around the etag, and
-        //  csync_owncloud.c's owncloud_file_id always strips the quotes.
         headers[QByteArrayLiteral("If-Match")] = QStringLiteral("\"%1\"").arg(_item->_etag).toUtf8();
     }
 
