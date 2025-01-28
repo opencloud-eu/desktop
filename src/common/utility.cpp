@@ -82,7 +82,6 @@ QString Utility::octetsToString(qint64 octets)
     return QLocale().formattedDataSize(octets, precision, QLocale::DataSizeTraditionalFormat);
 }
 
-// Qtified version of get_platforms() in csync_owncloud.c
 static QLatin1String platform()
 {
 #if defined(Q_OS_WIN)

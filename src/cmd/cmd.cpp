@@ -421,7 +421,7 @@ int main(int argc, char **argv)
 
         const QUrl baseUrl = [&ctx] {
             auto tmp = ctx.options.server_url;
-            // Find the folder and the original owncloud URL
+            // Find the url leading to the dav root
             QStringList splitted = tmp.path().split(ctx.account->davPath());
             tmp.setPath(splitted.value(0));
             return tmp;
