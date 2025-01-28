@@ -196,7 +196,7 @@ public:
     virtual QString overrideServerUrl() const;
 
     /** Same as overrideServerUrl allows override by
-     *  setting $OWNCLOUD_OVERRIDE_SERVER_URL
+     *  setting $OPENCLOUD_OVERRIDE_SERVER_URL
      */
     QString overrideServerUrlV2() const;
 
