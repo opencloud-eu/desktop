@@ -104,9 +104,7 @@ bool Resources::isVanillaTheme()
 
 bool OCC::Resources::isUsingDarkTheme()
 {
-    // TODO: replace by a command line switch
-    static bool forceDark = qEnvironmentVariableIntValue("OWNCLOUD_FORCE_DARK_MODE") != 0;
-    return forceDark || QPalette().base().color().lightnessF() <= 0.5;
+    return QPalette().base().color().lightnessF() <= 0.5;
 }
 
 QIcon OCC::Resources::getCoreIcon(const QString &iconName)
