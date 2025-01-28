@@ -124,8 +124,7 @@ struct OPENCLOUD_SYNC_EXPORT Migration
 };
 
 /**
- * @brief The Capabilities class represents the capabilities of an ownCloud
- * server
+ * @brief The Capabilities class represents the capabilities of the server
  * @ingroup libsync
  */
 class OPENCLOUD_SYNC_EXPORT Capabilities
