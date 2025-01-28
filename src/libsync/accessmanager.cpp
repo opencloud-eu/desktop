@@ -82,7 +82,7 @@ QNetworkReply *AccessManager::createRequest(QNetworkAccessManager::Operation op,
 
     if (newRequest.url().scheme() == QLatin1String("https")) { // Not for "http": QTBUG-61397
         // http2 seems to cause issues, as with our recommended server setup we don't support http2, disable it by default for now
-        static const bool http2EnabledEnv = qEnvironmentVariableIntValue("OWNCLOUD_HTTP2_ENABLED") == 1;
+        static const bool http2EnabledEnv = qEnvironmentVariableIntValue("OPENCLOUD_HTTP2_ENABLED") == 1;
 
         newRequest.setAttribute(QNetworkRequest::Http2AllowedAttribute, http2EnabledEnv);
     }
