@@ -43,10 +43,8 @@ void PropagateUploadFileV1::doStartUpload()
         return;
     }
 
-    const SyncJournalDb::UploadInfo progressInfo = propagator()->_journal->getUploadInfo(_item->localName());
-
     if (!_item->_checksumHeader.isEmpty()) {
-        // If there is only one chunk, write the checksum in the database, so if the PUT is sent
+        // Write the checksum in the database, so if the PUT is sent
         // to the server, but the connection drops before we get the etag, we can check the checksum
         // in reconcile (issue #5106)
         auto pi = _item->toUploadInfo();
@@ -57,13 +55,6 @@ void PropagateUploadFileV1::doStartUpload()
         propagator()->_journal->commit(QStringLiteral("Upload info"));
     }
     propagator()->reportProgress(*_item, 0);
-    startNextChunk();
-}
-
-void PropagateUploadFileV1::startNextChunk()
-{
-    if (propagator()->_abortRequested)
-        return;
 
     qint64 fileSize = _item->_size;
     auto headers = PropagateUploadFileCommon::headers();
@@ -71,18 +62,12 @@ void PropagateUploadFileV1::startNextChunk()
 
     QString path = _item->localName();
 
-    qint64 chunkStart = 0;
-    qint64 currentChunkSize = fileSize;
-
-
     if (!_transmissionChecksumHeader.isEmpty()) {
         qCInfo(lcPropagateUploadV1) << propagator()->fullRemotePath(path) << _transmissionChecksumHeader;
         headers[checkSumHeaderC] = _transmissionChecksumHeader;
     }
 
-    const QString fileName = propagator()->fullLocalPath(_item->localName());
-    auto device = std::make_unique<UploadDevice>(fileName, chunkStart, currentChunkSize,
-        propagator()->_bandwidthManager);
+    auto device = std::make_unique<UploadDevice>(fileName, 0, fileSize, propagator()->_bandwidthManager);
     if (!device->open(QIODevice::ReadOnly)) {
         qCWarning(lcPropagateUploadV1) << "Could not prepare upload device: " << device->errorString();
         // Soft error because this is likely caused by the user modifying his files while syncing
@@ -114,7 +99,7 @@ void PropagateUploadFileV1::slotPutFinished()
         return;
     }
 
-    _item->_httpErrorCode = job->reply()->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+    _item->_httpErrorCode = job->httpStatusCode();
     _item->_responseTimeStamp = job->responseTimestamp();
     _item->_requestId = job->requestId();
     QNetworkReply::NetworkError err = job->reply()->error();

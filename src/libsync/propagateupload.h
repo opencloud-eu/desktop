@@ -279,7 +279,6 @@ public:
 public Q_SLOTS:
     void abort(PropagatorJob::AbortType abortType) override;
 private Q_SLOTS:
-    void startNextChunk();
     void slotPutFinished();
     void slotUploadProgress(qint64, qint64);
 };
