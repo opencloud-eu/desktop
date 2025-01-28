@@ -31,24 +31,9 @@ Request](https://github.com/opencloud-eu/desktop/pulls).
 
 ## Maintainers and Contributors
 
-The current maintainers of this repository are:
-
-- Hannah von Reth <h.vonreth@opencloud.eu>
-
 `OpenCloud Desktop` is developed by the `OpenCloud` community and [receives
 patches from a variety of authors](https://github.com/opencloud-eu/desktop/graphs/contributors).
 
-Past maintainers:
-
-- Fabian Müller <fmueller@owncloud.com>
-- Dominik Schmidt <dev@dominik-schmidt.de>
-- Markus Goetz <guruz@owncloud.com>
-- Olivier Goffart <ogoffart@owncloud.com>
-- Christian Kamm <mail@ckamm.de>
-- Thomas Müller <thomas.mueller@owncloud.com>
-- Klaas Freitag <freitag@owncloud.com>
-- Daniel Molkentin <daniel@molkentin.de>
-- Andreas Schneider <asn@cryptomilk.org>
 
 ## License
 
