@@ -72,8 +72,6 @@ Application::Application(Platform *platform, const QString &displayLanguage, boo
     }
     if (VfsPluginManager::instance().isVfsPluginAvailable(Vfs::WindowsCfApi))
         qCInfo(lcApplication) << "VFS windows plugin is available";
-    if (VfsPluginManager::instance().isVfsPluginAvailable(Vfs::WithSuffix))
-        qCInfo(lcApplication) << "VFS suffix plugin is available";
 
     ConfigFile cfg;
 
@@ -194,45 +192,6 @@ void Application::slotUseMonoIconsChanged(bool)
 bool Application::debugMode()
 {
     return _debugMode;
-}
-
-void Application::openVirtualFile(const QString &filename)
-{
-    QString virtualFileExt = Theme::instance()->appDotVirtualFileSuffix();
-    if (!filename.endsWith(virtualFileExt)) {
-        qWarning(lcApplication) << "Can only handle file ending in .owncloud. Unable to open" << filename;
-        return;
-    }
-    QString relativePath;
-    auto folder = FolderMan::instance()->folderForPath(filename, &relativePath);
-    if (!folder) {
-        qWarning(lcApplication) << "Can't find sync folder for" << filename;
-        // TODO: show a QMessageBox for errors
-        return;
-    }
-    folder->implicitlyHydrateFile(relativePath);
-    QString normalName = filename.left(filename.size() - virtualFileExt.size());
-    auto con = QSharedPointer<QMetaObject::Connection>::create();
-    *con = connect(folder, &Folder::syncFinished, folder, [folder, con, normalName] {
-        folder->disconnect(*con);
-        if (QFile::exists(normalName)) {
-            QDesktopServices::openUrl(QUrl::fromLocalFile(normalName));
-        }
-    });
-}
-
-bool Application::eventFilter(QObject *obj, QEvent *event)
-{
-#ifdef Q_OS_MAC
-    if (event->type() == QEvent::FileOpen) {
-        QFileOpenEvent *openEvent = static_cast<QFileOpenEvent *>(event);
-        qCDebug(lcApplication) << "QFileOpenEvent" << openEvent->file();
-        // virtual file, open it after the Folder were created (if the app is not terminated)
-        QString fn = openEvent->file();
-        QTimer::singleShot(0, this, [this, fn] { openVirtualFile(fn); });
-    }
-#endif
-    return QObject::eventFilter(obj, event);
 }
 
 std::unique_ptr<Application> Application::createInstance(Platform *platform, const QString &displayLanguage, bool debugMode)

@@ -193,13 +193,6 @@ private:
     /** An DB operation failed */
     void dbError();
 
-    [[nodiscard]] QString addVirtualFileSuffix(const QString &str) const;
-    bool hasVirtualFileSuffix(const QString &str) const;
-    Q_REQUIRED_RESULT QString chopVirtualFileSuffix(const QString &str) const;
-
-    /** Convenience to detect suffix-vfs modes */
-    bool isVfsWithSuffix() const;
-
     /** Start a remote discovery network job
      *
      * It fills _serverNormalQueryEntries and sets _serverQueryDone when done.
@@ -219,18 +212,6 @@ private:
      * parent's pin state is inherited.
      */
     void computePinState(PinState parentState);
-
-    /** Adjust record._type if the db pin state suggests it.
-     *
-     * If the pin state is stored in the database (suffix vfs only right now)
-     * its effects won't be seen in localEntry._type. Instead the effects
-     * should materialize in dbEntry._type.
-     *
-     * This function checks whether the combination of file type and pin
-     * state suggests a hydration or dehydration action and changes the
-     * _type field accordingly.
-     */
-    void setupDbPinStateActions(SyncJournalFileRecord &record);
 
     QueryMode _queryServer = QueryMode::NormalQuery;
     QueryMode _queryLocal = QueryMode::NormalQuery;

@@ -32,11 +32,6 @@ AccountConfiguredSetupWizardState::AccountConfiguredSetupWizardState(SetupWizard
         vfsIsAvailable = true;
         enableVfsByDefault = true;
         break;
-    case Vfs::WithSuffix:
-        // we ignore forceVirtualFilesOption if experimental features are disabled
-        vfsIsAvailable = false;
-        enableVfsByDefault = false;
-        break;
     default:
         break;
     }

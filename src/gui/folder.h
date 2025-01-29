@@ -68,9 +68,6 @@ public:
     /// Which virtual files setting the folder uses
     Vfs::Mode virtualFilesMode = Vfs::Off;
 
-    /// Whether the vfs mode shall silently be updated if possible
-    bool upgradeVfsMode = false;
-
     /// Saves the folder definition into the current settings group.
     static void save(QSettings &settings, const FolderDefinition &folder);
 

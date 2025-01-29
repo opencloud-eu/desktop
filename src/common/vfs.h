@@ -111,11 +111,7 @@ public:
      *
      * Currently plugins and modes are one-to-one but that's not required.
      */
-    enum Mode {
-        Off,
-        WithSuffix,
-        WindowsCfApi
-    };
+    enum Mode { Off, WindowsCfApi };
     Q_ENUM(Mode)
     enum class ConvertToPlaceholderResult {
         Ok,
@@ -141,13 +137,6 @@ public:
     ~Vfs() override;
 
     virtual Mode mode() const = 0;
-
-    /// For WithSuffix modes: the suffix (including the dot)
-    virtual QString fileSuffix() const = 0;
-
-    /// The fileName without fileSuffix
-    /// TODO: better naming welcome
-    virtual QString underlyingFileName(const QString &fileName) const;
 
     /// Access to the parameters the instance was start()ed with.
     const VfsSetupParams &params() const { return *_setupParams.get(); }

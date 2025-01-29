@@ -118,7 +118,7 @@ SyncFileStatus SyncFileStatusTracker::fileStatus(const QString &relativePath)
     // it's an acceptable compromize to treat all exclude types the same.
     // Update: This extra check shouldn't hurt even though silently excluded files
     // are now available via slotAddSilentlyExcluded().
-    if (_syncEngine->isExcluded(_syncEngine->syncOptions()._vfs->underlyingFileName(absolutePath))) {
+    if (_syncEngine->isExcluded(absolutePath)) {
         return SyncFileStatus(SyncFileStatus::StatusExcluded);
     }
 

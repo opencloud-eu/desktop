@@ -790,17 +790,11 @@ SocketApi::FileData SocketApi::FileData::get(const QString &localFile)
         return data;
 
     data.serverRelativePath = QDir(data.folder->remotePath()).filePath(data.folderRelativePath);
-    if (data.folder->isReady()) {
-        data.serverRelativePath = data.folder->vfs().underlyingFileName(data.serverRelativePath);
-    }
     return data;
 }
 
 QString SocketApi::FileData::folderRelativePathNoVfsSuffix() const
 {
-    if (folder->isReady()) {
-        return folder->vfs().underlyingFileName(folderRelativePath);
-    }
     return folderRelativePath;
 }
 

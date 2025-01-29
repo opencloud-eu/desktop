@@ -1254,11 +1254,6 @@ FolderDefinition FolderDefinition::load(QSettings &settings, const QByteArray &i
         } else {
             qCWarning(lcFolder) << "Unknown virtualFilesMode:" << vfsModeString << "assuming 'off'";
         }
-    } else {
-        if (settings.value(QStringLiteral("usePlaceholders")).toBool()) {
-            folder.virtualFilesMode = Vfs::WithSuffix;
-            folder.upgradeVfsMode = true; // maybe winvfs is available?
-        }
     }
     return folder;
 }
