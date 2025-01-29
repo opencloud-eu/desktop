@@ -48,7 +48,7 @@
     // - Be prefixed with the code signing Team ID
     // - Then infixed with the sandbox App Group
     // - The App Group itself must be a prefix of (or equal to) the application bundle identifier
-    // We end up in the official signed client with: 9B5WD74GWJ.com.owncloud.desktopclient.socketApi
+    // We end up in the official signed client with: 9B5WD74GWJ.eu.opencloud.desktop.socketApi
     // With ad-hoc signing (the '-' signing identity) we must drop the Team ID.
     // When the code isn't sandboxed (e.g. the OC client or the legacy overlay icon extension)
     // the OS doesn't seem to put any restriction on the port name, so we just follow what
