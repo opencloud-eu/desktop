@@ -38,7 +38,7 @@ void Platform::migrate()
 {
 }
 
-void Platform::setApplication(QCoreApplication *application)
+void Platform::setApplication([[maybe_unused]] QCoreApplication *application)
 {
 #ifdef CRASHREPORTER_EXECUTABLE
     if (ConfigFile().crashReporter()) {

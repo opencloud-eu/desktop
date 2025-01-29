@@ -58,7 +58,6 @@ namespace {
         {
         public:
             Progress() { }
-            bool isNull() const { return _progressString.isEmpty() && _overallSyncString.isEmpty(); }
             QString _progressString;
             QString _overallSyncString;
             float _overallPercent = 0;
