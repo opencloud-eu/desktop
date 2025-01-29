@@ -87,7 +87,7 @@ class SparkleUpdater::Private
         DelegateObject *delegate;
 };
 
-// Delete ~/Library//Preferences/com.owncloud.desktopclient.plist to re-test
+// Delete ~/Library//Preferences/eu.opencloud.desktop.plist to re-test
 SparkleUpdater::SparkleUpdater(const QUrl& appCastUrl)
     : Updater()
 {
