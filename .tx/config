@@ -1,12 +1,9 @@
 [main]
 host = https://www.transifex.com
 
-[o:owncloud-org:p:owncloud:r:client]
-source_file = translations/client_en.ts
+[o:opencloud-eu:p:opencloud-eu:r:desktop]
+source_file = translations/desktop_en.ts
 source_lang = en
-file_filter = translations/client_<lang>.ts
+file_filter = translations/desktop_<lang>.ts
 type = TS
 minimum_perc = 75
-
-# de_DE holds the formal translation which we want as default
-lang_map = de_DE: de, de: de-informal, pt_PT: pt, cs_CZ: cs, et_EE: et, fi_FI: fi, ja_JP: ja, hu_HU: hu, sk_SK: client_sk, th_TH: th
