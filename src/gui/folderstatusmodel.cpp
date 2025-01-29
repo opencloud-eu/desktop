@@ -333,12 +333,12 @@ QHash<int, QByteArray> FolderStatusModel::roleNames() const
 
 void FolderStatusModel::slotUpdateFolderState(Folder *folder)
 {
-    if (!folder)
+    if (!folder) {
         return;
-    for (int i = 0; i < _folders.size(); ++i) {
-        if (_folders.at(i)->_folder == folder) {
-            Q_EMIT dataChanged(index(i, 0), index(i, 0));
-        }
+    }
+    const auto folderIndex = indexOf(folder);
+    if (folderIndex != -1) {
+        Q_EMIT dataChanged(index(folderIndex, 0), index(folderIndex, 0));
     }
 }
 
