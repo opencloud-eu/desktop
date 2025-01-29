@@ -70,7 +70,6 @@ void PropagateRemoteMove::start()
     QString remoteSource = propagator()->fullRemotePath(origin);
     QString remoteDestination = QDir::cleanPath(propagator()->webDavUrl().path() + propagator()->fullRemotePath(_item->_renameTarget));
 
-    auto &vfs = propagator()->syncOptions()._vfs;
     auto itype = _item->_type;
     OC_ASSERT(itype != ItemTypeVirtualFileDownload && itype != ItemTypeVirtualFileDehydration);
     _job = new MoveJob(propagator()->account(), propagator()->webDavUrl(), remoteSource, remoteDestination, {}, this);
