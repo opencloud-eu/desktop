@@ -30,7 +30,7 @@ namespace Translations {
 
     const QString translationsFilePrefix()
     {
-        return QStringLiteral("client_");
+        return QStringLiteral("desktop_");
     }
 
     const QString translationsFileSuffix()

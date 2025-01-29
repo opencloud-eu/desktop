@@ -120,7 +120,7 @@ private Q_SLOTS:
         QScopedPointer<QTranslator> translator;
         if (useTranslation) {
             translator.reset(new QTranslator(QCoreApplication::instance()));
-            QVERIFY(translator->load(QStringLiteral("client_en.ts"), QStringLiteral(":/client/translations/")));
+            QVERIFY(translator->load(QStringLiteral("desktop_en.ts"), QStringLiteral(":/client/translations/")));
             QCoreApplication::instance()->installTranslator(translator.data());
         }
 

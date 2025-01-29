@@ -32,13 +32,13 @@ generate_export_header(OpenCloudResources
         STATIC_DEFINE OPENCLOUD_BUILT_AS_STATIC
 )
 
-# Handle Translations, pick all client_* files from trans directory.
-file(GLOB client_translations ${CMAKE_SOURCE_DIR}/translations/client_*.ts)
-qt_add_lrelease(OpenCloudResources TS_FILES ${client_translations} QM_FILES_OUTPUT_VARIABLE client_compiled_translations)
+# Handle Translations, pick all desktop_*.ts files from translations directory.
+file(GLOB desktop_translations ${CMAKE_SOURCE_DIR}/translations/desktop_*.ts)
+qt_add_lrelease(OpenCloudResources TS_FILES ${desktop_translations} QM_FILES_OUTPUT_VARIABLE desktop_compiled_translations)
 add_resources_to_target(
     TARGET OpenCloudResources
     PREFIX translations
-    FILES "${client_compiled_translations}"
+    FILES "${desktop_compiled_translations}"
 )
 
 ecm_add_qml_module(OpenCloudResources
