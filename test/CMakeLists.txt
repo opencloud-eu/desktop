@@ -25,9 +25,6 @@ opencloud_add_test(Utility)
 
 opencloud_add_test(SyncEngine)
 
-# TODO: https://github.com/opencloud-eu/desktop/issues/5
-#owncloud_add_test(SyncVirtualFiles)
-
 opencloud_add_test(SyncMove)
 add_dependencies(SyncMoveTest test_helper)
 opencloud_add_test(SyncDelete)

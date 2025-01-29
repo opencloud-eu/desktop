@@ -367,12 +367,6 @@ void SyncEngine::startSync()
 
     _lastLocalDiscoveryStyle = _localDiscoveryStyle;
 
-    if (syncOptions()._vfs->mode() == Vfs::WithSuffix && syncOptions()._vfs->fileSuffix().isEmpty()) {
-        Q_EMIT syncError(tr("Using virtual files with suffix, but suffix is not set"));
-        finalize(false);
-        return;
-    }
-
     bool ok;
     auto selectiveSyncBlackList = _journal->getSelectiveSyncList(SyncJournalDb::SelectiveSyncBlackList, &ok);
     if (ok) {

@@ -85,8 +85,6 @@ struct CommandLineOptions
     bool logDebug = false;
 
     bool debugMode = false;
-
-    QString fileToOpen;
 };
 
 CommandLineOptions parseOptions(const QStringList &arguments)
@@ -135,10 +133,6 @@ CommandLineOptions parseOptions(const QStringList &arguments)
     auto debugOption = addOption({QStringLiteral("debug"), QApplication::translate("CommandLine", "Enable debug mode.")});
     addOption({QStringLiteral("cmd"), QApplication::translate("CommandLine", "Forward all arguments to the cmd client. This argument must be the first.")});
 
-    // virtual file system parameters (optional)
-    parser.addPositionalArgument(QStringLiteral("vfs file"), QApplication::translate("CommandLine", "Virtual file system file to be opened (optional)."),
-        {QStringLiteral("[<vfs file>]")});
-
     parser.process(arguments);
 
     CommandLineOptions out;
@@ -169,12 +163,6 @@ CommandLineOptions parseOptions(const QStringList &arguments)
         out.debugMode = true;
     }
 
-    auto positionalArguments = parser.positionalArguments();
-
-    // ignore any positional arguments beyond the first one
-    if (!positionalArguments.empty()) {
-        out.fileToOpen = positionalArguments.front();
-    }
     return out;
 }
 
@@ -506,9 +494,6 @@ int main(int argc, char **argv)
                 if (options.quitInstance) {
                     qApp->quit();
                 }
-                if (!options.fileToOpen.isEmpty()) {
-                    QTimer::singleShot(0, ocApp.get(), [ocApp = ocApp.get(), fileToOpen = options.fileToOpen] { ocApp->openVirtualFile(fileToOpen); });
-                }
             }
         });
 
@@ -529,9 +514,6 @@ int main(int argc, char **argv)
         if (options.show) {
             ocApp->gui()->slotShowSettings();
             // The user explicitly requested the settings dialog, so don't start the new-account wizard.
-        } else if (!options.fileToOpen.isEmpty() && !AccountManager::instance()->accounts().isEmpty()) {
-            // Only try to open a file when accounts have been configured.
-            QTimer::singleShot(0, ocApp.get(), [ocApp = ocApp.get(), fileToOpen = options.fileToOpen] { ocApp->openVirtualFile(fileToOpen); });
         }
 
         // Display the wizard if we don't have an account yet, and no other UI is showing.

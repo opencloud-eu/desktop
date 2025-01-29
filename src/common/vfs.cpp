@@ -40,11 +40,6 @@ Vfs::Vfs(QObject* parent)
 {
 }
 
-QString Vfs::underlyingFileName(const QString &fileName) const
-{
-    return fileName;
-}
-
 Vfs::~Vfs() = default;
 
 Optional<Vfs::Mode> Vfs::modeFromString(const QString &str)
@@ -53,8 +48,6 @@ Optional<Vfs::Mode> Vfs::modeFromString(const QString &str)
     // keep in sync with: QString Utility::enumToString(Vfs::Mode mode)
     if (str == QLatin1String("off")) {
         return Off;
-    } else if (str == QLatin1String("suffix")) {
-        return WithSuffix;
     } else if (str == QLatin1String("wincfapi")) {
         return WindowsCfApi;
     }
@@ -67,8 +60,6 @@ QString Utility::enumToString(Vfs::Mode mode)
     // Note: Strings are used for config and must be stable
     // keep in sync with: Optional<Vfs::Mode> Vfs::modeFromString(const QString &str)
     switch (mode) {
-    case Vfs::Mode::WithSuffix:
-        return QStringLiteral("suffix");
     case Vfs::Mode::WindowsCfApi:
         return QStringLiteral("wincfapi");
     case Vfs::Mode::Off:
@@ -237,8 +228,6 @@ Vfs::Mode OCC::VfsPluginManager::bestAvailableVfsMode() const
 {
     if (isVfsPluginAvailable(Vfs::WindowsCfApi)) {
         return Vfs::WindowsCfApi;
-    } else if (isVfsPluginAvailable(Vfs::WithSuffix)) {
-        return Vfs::WithSuffix;
     } else if (isVfsPluginAvailable(Vfs::Off)) {
         return Vfs::Off;
     }

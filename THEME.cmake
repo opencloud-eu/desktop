@@ -24,11 +24,6 @@ endif()
 
 message(STATUS "Branding: ${APPLICATION_NAME}")
 
-# Default suffix if the theme doesn't define one
-if(NOT DEFINED APPLICATION_VIRTUALFILE_SUFFIX)
-    set(APPLICATION_VIRTUALFILE_SUFFIX "${APPLICATION_SHORTNAME}_virtual" CACHE STRING "Virtual file suffix (not including the .)")
-endif()
-
 set(APPLICATION_REV_DOMAIN_INSTALLER ${APPLICATION_REV_DOMAIN})
 
 # For usage in XML files we preprocess

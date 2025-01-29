@@ -128,8 +128,6 @@ public:
      */
     QString appName() const;
 
-    QString appDotVirtualFileSuffix() const;
-
     QString orgDomainName() const;
 
     QString vendor() const;

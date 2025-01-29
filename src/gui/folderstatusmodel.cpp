@@ -246,13 +246,6 @@ QVariant FolderStatusModel::data(const QModelIndex &index, int role) const
         if (f->syncResult().hasUnresolvedConflicts()) {
             errors.append(tr("There are unresolved conflicts."));
         }
-        if (f->isReady() && f->virtualFilesEnabled() && f->vfs().mode() == Vfs::Mode::WithSuffix) {
-            errors.append({
-                tr("The Suffix-VFS plugin is deprecated and will be removed in the 7.0 release.\n"
-                   "Please use the context menu and select \"Disable virtual file support\" to ensure future access to your synced files.\n"
-                   "You are going to lose access to your sync folder if you do not do so!"),
-            });
-        }
         return errors;
     };
 
