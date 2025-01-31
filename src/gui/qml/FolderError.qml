@@ -45,12 +45,20 @@ ColumnLayout {
         id: expandedError
         ColumnLayout {
             Layout.fillWidth: true
-            Repeater {
-                model: errorMessages
-                delegate: ErrorItem {
-                    required property string modelData
-                    text: modelData
+            ScrollView {
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                ColumnLayout {
+                    Layout.fillHeight: true
                     Layout.fillWidth: true
+                    Repeater {
+                        model: errorMessages
+                        delegate: ErrorItem {
+                            required property string modelData
+                            text: modelData
+                            Layout.fillWidth: true
+                        }
+                    }
                 }
             }
             Label {
@@ -69,7 +77,7 @@ ColumnLayout {
             Layout.fillWidth: true
             ErrorItem {
                 Layout.fillWidth: true
-                text: errorMessages
+                text: errorMessages[0]
                 maximumLineCount: 1
             }
             Label {
