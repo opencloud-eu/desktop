@@ -140,43 +140,77 @@ Pane {
                                 statusSource: QMLResources.resourcePath("core", statusIcon, enabled)
                                 title: displayName
 
-                                // we will either display quota or overallText
-                                Label {
-                                    Accessible.ignored: true
-                                    Layout.fillWidth: true
-                                    elide: Text.ElideRight
-                                    text: folderDelegate.quota
-                                    visible: folderDelegate.quota && !folderDelegate.overallText
-                                }
-                                Item {
-                                    Accessible.ignored: true
-                                    Layout.fillWidth: true
-                                    // ensure the progress bar always consumes its space
-                                    Layout.preferredHeight: 10
+                                Component {
+                                    id: progressBar
 
-                                    ProgressBar {
-                                        anchors.fill: parent
-                                        value: folderDelegate.progress
-                                        visible: folderDelegate.overallText || folderDelegate.itemText
+                                    ColumnLayout {
+                                        Layout.fillWidth: true
+                                        ProgressBar {
+                                            Layout.fillWidth: true
+                                            value: folderDelegate.progress
+                                            visible: folderDelegate.overallText || folderDelegate.itemText
+                                            indeterminate: value === 0
+                                        }
+                                        Label {
+                                            id: overallLabel
+                                            Accessible.ignored: true
+                                            Layout.fillWidth: true
+                                            elide: Text.ElideMiddle
+                                            text: folderDelegate.overallText
+                                        }
+                                        Label {
+                                            id: itemTextLabel
+                                            Accessible.ignored: true
+                                            Layout.fillWidth: true
+                                            elide: Text.ElideMiddle
+                                            text: folderDelegate.itemText
+                                        }
                                     }
                                 }
-                                Label {
+                                Component {
+                                    id: quotaDisplay
+
+                                    Label {
+                                        Accessible.ignored: true
+                                        Layout.fillWidth: true
+                                        elide: Text.ElideRight
+                                        text: folderDelegate.quota
+                                        visible: folderDelegate.quota && !folderDelegate.overallText
+                                    }
+                                }
+
+                                // we will either display quota or overallText
+
+                                Loader {
+                                    id: progressLoader
                                     Accessible.ignored: true
                                     Layout.fillWidth: true
-                                    elide: Text.ElideMiddle
-                                    text: folderDelegate.overallText
+                                    Layout.minimumHeight: 10
+
+                                    Timer {
+                                        id: debounce
+                                        interval: 500
+                                        onTriggered: progressLoader.sourceComponent = folderDelegate.overallText || folderDelegate.itemText ? progressBar : quotaDisplay
+                                    }
+
+                                    Connections {
+                                        target: folderDelegate
+                                        function onOverallTextChanged() {
+                                            debounce.start();
+                                        }
+                                    }
+                                    Connections {
+                                        target: folderDelegate
+                                        function onItemTextChanged() {
+                                            debounce.start();
+                                        }
+                                    }
                                 }
-                                Label {
-                                    Accessible.ignored: true
-                                    Layout.fillWidth: true
-                                    elide: Text.ElideMiddle
-                                    text: folderDelegate.itemText
-                                }
+
                                 FolderError {
                                     Accessible.ignored: true
                                     Layout.fillWidth: true
                                     errorMessages: folderDelegate.errorMsg
-
                                     onCollapsedChanged: {
                                         if (!collapsed) {
                                             // TODO: not cool
