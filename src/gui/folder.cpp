@@ -410,11 +410,6 @@ SyncResult Folder::syncResult() const
     return _syncResult;
 }
 
-void Folder::prepareToSync()
-{
-    setSyncState(SyncResult::NotYetStarted);
-}
-
 void Folder::showSyncResultPopup()
 {
     if (_syncResult.firstItemNew()) {
