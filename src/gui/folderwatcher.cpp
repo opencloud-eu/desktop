@@ -46,8 +46,10 @@ FolderWatcher::FolderWatcher(Folder *folder)
     , _folder(folder)
 {
     _timer.setInterval(notificationTimeoutC);
+    _timer.setSingleShot(true);
     connect(&_timer, &QTimer::timeout, this, [this] {
         auto paths = popChangeSet();
+        Q_ASSERT(!paths.empty());
         if (!paths.isEmpty()) {
             qCInfo(lcFolderWatcher) << "Detected changes in paths:" << paths;
             Q_EMIT pathChanged(paths);
@@ -138,6 +140,8 @@ int FolderWatcher::testLinuxWatchCount() const
 void FolderWatcher::changeDetected(const QSet<QString> &paths)
 {
     Q_ASSERT(thread() == QThread::currentThread());
+    // the timer must be inactive if we haven't received changes yet
+    Q_ASSERT(!_timer.isActive() && _changeSet.isEmpty() || !_changeSet.isEmpty());
     _changeSet.unite(paths);
     if (!_timer.isActive()) {
         _timer.start();
