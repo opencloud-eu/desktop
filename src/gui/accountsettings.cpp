@@ -148,7 +148,7 @@ void AccountSettings::slotCustomContextMenuRequested(Folder *folder)
     // Add an action to open the folder in the system's file browser:
     const QUrl folderUrl = QUrl::fromLocalFile(folder->path());
     if (!folderUrl.isEmpty()) {
-        QAction *ac = menu->addAction(CommonStrings::showInFileBrowser(), [folderUrl]() {
+        QAction *ac = menu->addAction(CommonStrings::showInFileBrowser(), this, [folderUrl]() {
             qCInfo(lcAccountSettings) << "Opening local folder" << folderUrl;
             if (!QDesktopServices::openUrl(folderUrl)) {
                 qCWarning(lcAccountSettings) << "QDesktopServices::openUrl failed for" << folderUrl;
@@ -162,7 +162,7 @@ void AccountSettings::slotCustomContextMenuRequested(Folder *folder)
 
     // Add an action to open the folder on the server in a webbrowser:
     if (folder->accountState()->account()->capabilities().privateLinkPropertyAvailable()) {
-        menu->addAction(CommonStrings::showInWebBrowser(), [davUrl = folder->webDavUrl(), this] {
+        menu->addAction(CommonStrings::showInWebBrowser(), this, [davUrl = folder->webDavUrl(), this] {
             fetchPrivateLinkUrl(_accountState->account(), davUrl, {}, this, [](const QUrl &url) { Utility::openBrowser(url, nullptr); });
         });
     }

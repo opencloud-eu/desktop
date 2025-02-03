@@ -138,7 +138,7 @@ void ProtocolWidget::showContextMenu(QWidget *parent, QTableView *table, Models:
             [showInWebBrowserAction, parent, pos = menu->actions().size(), menu = QPointer<QMenu>(menu)](const QUrl &url) {
                 // as fetchPrivateLinkUrl is async we need to check the menu still exists
                 if (menu) {
-                    connect(showInWebBrowserAction, &QAction::triggered, [url, parent] { Utility::openBrowser(url, parent); });
+                    connect(showInWebBrowserAction, &QAction::triggered, parent, [url, parent] { Utility::openBrowser(url, parent); });
                     showInWebBrowserAction->setEnabled(true);
                 }
             });
@@ -150,11 +150,11 @@ void ProtocolWidget::showContextMenu(QWidget *parent, QTableView *table, Models:
         int columnNr = table->columnAt(pos.x());
         QString columnName = itemModel->headerData(columnNr, Qt::Horizontal, Qt::DisplayRole).toString();
         auto ascendingAction =
-            menu->addAction(tr("Sort ascending by %1").arg(columnName), [table, columnNr]() { table->sortByColumn(columnNr, Qt::AscendingOrder); });
+            menu->addAction(tr("Sort ascending by %1").arg(columnName), table, [table, columnNr]() { table->sortByColumn(columnNr, Qt::AscendingOrder); });
         ascendingAction->setCheckable(true);
         sortActions->addAction(ascendingAction);
         auto descendingAction =
-            menu->addAction(tr("Sort descending by %1").arg(columnName), [table, columnNr]() { table->sortByColumn(columnNr, Qt::DescendingOrder); });
+            menu->addAction(tr("Sort descending by %1").arg(columnName), table, [table, columnNr]() { table->sortByColumn(columnNr, Qt::DescendingOrder); });
         descendingAction->setCheckable(true);
         sortActions->addAction(descendingAction);
         if (columnNr == sortModel->sortColumn()) {

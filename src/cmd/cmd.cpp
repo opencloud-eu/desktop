@@ -245,11 +245,10 @@ void setupCredentials(SyncCTX &ctx)
 
     ctx.account->setCredentials(HttpCredentialsText::create(ctx.options.interactive, ctx.user, password));
     if (ctx.options.trustSSL) {
-        QObject::connect(ctx.account->accessManager(), &QNetworkAccessManager::sslErrors, [](QNetworkReply *reply, const QList<QSslError> &errors) {
-            reply->ignoreSslErrors(errors);
-        });
+        QObject::connect(ctx.account->accessManager(), &QNetworkAccessManager::sslErrors, qApp,
+            [](QNetworkReply *reply, const QList<QSslError> &errors) { reply->ignoreSslErrors(errors); });
     } else {
-        QObject::connect(ctx.account->accessManager(), &QNetworkAccessManager::sslErrors, [](QNetworkReply *reply, const QList<QSslError> &errors) {
+        QObject::connect(ctx.account->accessManager(), &QNetworkAccessManager::sslErrors, qApp, [](QNetworkReply *reply, const QList<QSslError> &errors) {
             Q_UNUSED(reply)
 
             qCritical() << "SSL error encountered";
@@ -432,7 +431,7 @@ int main(int argc, char **argv)
 
         auto *checkServerJob = CheckServerJobFactory(ctx.account->accessManager()).startJob(ctx.account->url(), qApp);
 
-        QObject::connect(checkServerJob, &CoreJob::finished, [ctx, checkServerJob] {
+        QObject::connect(checkServerJob, &CoreJob::finished, qApp, [ctx, checkServerJob] {
             if (checkServerJob->success()) {
                 // Perform a call to get the capabilities.
                 auto *capabilitiesJob = new JsonApiJob(ctx.account, QStringLiteral("ocs/v1.php/cloud/capabilities"), {}, {}, nullptr);

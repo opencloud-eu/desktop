@@ -25,6 +25,7 @@ function(apply_common_target_settings targetName)
             QT_MESSAGELOGCONTEXT  # enable function name and line number in debug output
             QT_NO_FOREACH
             QT_DISABLE_DEPRECATED_BEFORE=0x060200
+            QT_NO_CONTEXTLESS_CONNECT
     )
 
     if(WIN32)

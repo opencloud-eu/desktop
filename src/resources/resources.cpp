@@ -37,7 +37,7 @@ struct IconCache
     IconCache()
     {
         auto *watcher = new ThemeWatcher(qApp);
-        QObject::connect(watcher, &ThemeWatcher::themeChanged, [this]() { _cache.clear(); });
+        QObject::connect(watcher, &ThemeWatcher::themeChanged, qApp, [this]() { _cache.clear(); });
     }
     QMap<QString, QIcon> _cache;
 };
