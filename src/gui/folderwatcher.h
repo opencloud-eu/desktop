@@ -18,10 +18,8 @@
 
 
 #include <QElapsedTimer>
-#include <QHash>
 #include <QList>
 #include <QLoggingCategory>
-#include <QObject>
 #include <QScopedPointer>
 #include <QSet>
 #include <QString>
@@ -90,6 +88,12 @@ Q_SIGNALS:
     /** Emitted when one of the watched directories or one
      *  of the contained files is changed. */
     void pathChanged(const QSet<QString> &path);
+
+    /**
+     * We detected a file change, this signal can be used to trigger the prepareSync state
+     */
+    // TODO: rename
+    void changeDetectedSignal();
 
     /**
      * Emitted if some notifications were lost.

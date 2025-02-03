@@ -145,6 +145,8 @@ void FolderWatcher::changeDetected(const QSet<QString> &paths)
     _changeSet.unite(paths);
     if (!_timer.isActive()) {
         _timer.start();
+        // promote that we will report changes once _timer times out
+        Q_EMIT changeDetectedSignal();
     }
 }
 
