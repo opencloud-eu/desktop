@@ -410,15 +410,35 @@ void FolderStatusModel::slotFolderSyncStateChange(Folder *f)
     if (!f->canSync()) {
         // Reset progress info.
         pi = {};
-    } else if (state == SyncResult::NotYetStarted) {
-        pi = {};
-        pi._overallSyncString = tr("Queued");
-    } else if (state == SyncResult::SyncPrepare) {
-        pi = {};
-        pi._overallSyncString = Utility::enumToDisplayName(SyncResult::SyncPrepare);
-    } else if (state == SyncResult::Problem || state == SyncResult::Success || state == SyncResult::Error) {
-        // Reset the progress info after a sync.
-        pi = {};
+    } else {
+        switch (state) {
+        case SyncResult::SyncPrepare:
+            [[fallthrough]];
+        case SyncResult::NotYetStarted:
+            pi = {};
+            pi._overallSyncString = Utility::enumToDisplayName(state);
+            break;
+        case SyncResult::Problem:
+            [[fallthrough]];
+        case SyncResult::Success:
+            [[fallthrough]];
+        case SyncResult::Error:
+            // Reset the progress info after a sync.
+            pi = {};
+            break;
+        case SyncResult::Undefined:
+            [[fallthrough]];
+        case SyncResult::SyncRunning:
+            [[fallthrough]];
+        case SyncResult::SyncAbortRequested:
+            [[fallthrough]];
+        case SyncResult::Paused:
+            [[fallthrough]];
+        case SyncResult::Offline:
+            [[fallthrough]];
+        case SyncResult::SetupError:
+            break;
+        }
     }
 
     // update the icon etc. now
