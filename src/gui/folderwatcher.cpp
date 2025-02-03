@@ -137,7 +137,7 @@ int FolderWatcher::testLinuxWatchCount() const
 #endif
 }
 
-void FolderWatcher::changeDetected(const QSet<QString> &paths)
+void FolderWatcher::addChanges(const QSet<QString> &paths)
 {
     Q_ASSERT(thread() == QThread::currentThread());
     // the timer must be inactive if we haven't received changes yet
@@ -145,6 +145,8 @@ void FolderWatcher::changeDetected(const QSet<QString> &paths)
     _changeSet.unite(paths);
     if (!_timer.isActive()) {
         _timer.start();
+        // promote that we will report changes once _timer times out
+        Q_EMIT changesDetected();
     }
 }
 

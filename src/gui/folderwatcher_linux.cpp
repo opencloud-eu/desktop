@@ -191,7 +191,7 @@ void FolderWatcherPrivate::slotReceivedNotification(int fd)
         }
     }
     if (!paths.isEmpty()) {
-        _parent->changeDetected(paths);
+        _parent->addChanges(paths);
     }
 }
 

@@ -18,10 +18,8 @@
 
 
 #include <QElapsedTimer>
-#include <QHash>
 #include <QList>
 #include <QLoggingCategory>
-#include <QObject>
 #include <QScopedPointer>
 #include <QSet>
 #include <QString>
@@ -92,6 +90,11 @@ Q_SIGNALS:
     void pathChanged(const QSet<QString> &path);
 
     /**
+     * We detected a file change, this signal can be used to trigger the prepareSync state
+     */
+    void changesDetected();
+
+    /**
      * Emitted if some notifications were lost.
      *
      * Would happen, for example, if the number of pending notifications
@@ -109,7 +112,7 @@ Q_SIGNALS:
 
 protected Q_SLOTS:
     // called from the implementations to indicate a change in path
-    void changeDetected(const QSet<QString> &paths);
+    void addChanges(const QSet<QString> &paths);
 
 private Q_SLOTS:
     void startNotificationTestWhenReady();

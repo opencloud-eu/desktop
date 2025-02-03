@@ -105,7 +105,7 @@ void FolderWatcherPrivate::startWatching()
 
 void FolderWatcherPrivate::doNotifyParent(const QSet<QString> &paths)
 {
-    _parent->changeDetected(paths);
+    _parent->addChanges(paths);
 }
 
 

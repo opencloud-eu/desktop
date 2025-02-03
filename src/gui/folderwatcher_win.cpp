@@ -220,7 +220,7 @@ FolderWatcherPrivate::FolderWatcherPrivate(FolderWatcher *p, const QString &path
 {
     _thread.reset(new WatcherThread(this, path));
     // we are using connects instead of directly emitting on p as we need to cross thread borders
-    connect(_thread.get(), &WatcherThread::changed, _parent, &FolderWatcher::changeDetected, Qt::QueuedConnection);
+    connect(_thread.get(), &WatcherThread::changed, _parent, &FolderWatcher::addChanges, Qt::QueuedConnection);
     connect(_thread.get(), &WatcherThread::lostChanges, _parent, &FolderWatcher::lostChanges, Qt::QueuedConnection);
     _thread->start();
 }
