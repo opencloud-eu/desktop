@@ -14,7 +14,8 @@
 
 #include "syncresult.h"
 #include "progressdispatcher.h"
-#include "theme.h"
+
+#include <QApplication>
 
 namespace OCC {
 
@@ -39,27 +40,27 @@ QString Utility::enumToDisplayName(SyncResult::Status status)
 {
     switch (status) {
     case SyncResult::Status::Undefined:
-        return QStringLiteral("Undefined");
+        return QApplication::translate("SyncResult::Status", "Undefined");
     case SyncResult::Status::NotYetStarted:
-        return QStringLiteral("Awaiting sync");
+        return QApplication::translate("SyncResult::Status", "Queued");
     case SyncResult::Status::SyncRunning:
-        return QStringLiteral("Sync running");
+        return QApplication::translate("SyncResult::Status", "Sync running");
     case SyncResult::Status::Success:
-        return QStringLiteral("Success");
+        return QApplication::translate("SyncResult::Status", "Success");
     case SyncResult::Status::Error:
-        return QStringLiteral("Error");
+        return QApplication::translate("SyncResult::Status", "Error");
     case SyncResult::Status::SetupError:
-        return QStringLiteral("Setup error");
+        return QApplication::translate("SyncResult::Status", "Setup error");
     case SyncResult::Status::SyncPrepare:
-        return QStringLiteral("Preparing to sync");
+        return QApplication::translate("SyncResult::Status", "Preparing to sync");
     case SyncResult::Status::Problem:
-        return QStringLiteral("Success, some files were ignored.");
+        return QApplication::translate("SyncResult::Status", "Success, some files were ignored.");
     case SyncResult::Status::SyncAbortRequested:
-        return QStringLiteral("Aborting sync");
+        return QApplication::translate("SyncResult::Status", "Aborting sync");
     case SyncResult::Status::Paused:
-        return QStringLiteral("Sync paused");
+        return QApplication::translate("SyncResult::Status", "Sync paused");
     case SyncResult::Status::Offline:
-        return QStringLiteral("Offline");
+        return QApplication::translate("SyncResult::Status", "Offline");
     }
     Q_UNREACHABLE();
 }
@@ -88,7 +89,7 @@ void SyncResult::appendErrorString(const QString &err)
 QString SyncResult::errorString() const
 {
     if (_errors.isEmpty())
-        return QString();
+        return {};
     return _errors.first();
 }
 
