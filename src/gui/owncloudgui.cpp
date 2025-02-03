@@ -514,7 +514,7 @@ void ownCloudGui::updateContextMenu()
         auto captivePortalCheckbox = debugMenu->addAction(QStringLiteral("Behind Captive Portal"));
         captivePortalCheckbox->setCheckable(true);
         captivePortalCheckbox->setChecked(NetworkInformation::instance()->isForcedCaptivePortal());
-        connect(captivePortalCheckbox, &QAction::triggered, [](bool checked) { NetworkInformation::instance()->setForcedCaptivePortal(checked); });
+        connect(captivePortalCheckbox, &QAction::triggered, this, [](bool checked) { NetworkInformation::instance()->setForcedCaptivePortal(checked); });
     }
 
     _contextMenu->addSeparator();
@@ -725,7 +725,7 @@ void ownCloudGui::runNewAccountWizard()
 
                                     // TODO: duplication of AccountSettings
                                     // adapted from AccountSettings::slotFolderWizardAccepted()
-                                    connect(folderWizard, &QDialog::accepted, [accountStatePtr, folderWizard]() {
+                                    connect(folderWizard, &QDialog::accepted, accountStatePtr.data(), [accountStatePtr, folderWizard]() {
                                         FolderMan *folderMan = FolderMan::instance();
 
                                         qCInfo(lcApplication) << "Folder wizard completed";
@@ -745,7 +745,7 @@ void ownCloudGui::runNewAccountWizard()
                                         accountStatePtr->setSettingUp(false);
                                     });
 
-                                    connect(folderWizard, &QDialog::rejected, [accountStatePtr]() {
+                                    connect(folderWizard, &QDialog::rejected, accountStatePtr.data(), [accountStatePtr]() {
                                         qCInfo(lcApplication) << "Folder wizard cancelled";
                                         FolderMan::instance()->setSyncEnabled(true);
                                         accountStatePtr->setSettingUp(false);

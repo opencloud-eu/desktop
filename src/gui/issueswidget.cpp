@@ -228,7 +228,7 @@ IssuesWidget::IssuesWidget(QWidget *parent)
 
     connect(_ui->_tableView, &QTreeView::customContextMenuRequested, this, &IssuesWidget::slotItemContextMenu);
     _ui->_tableView->horizontalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(header, &QHeaderView::customContextMenuRequested, [this, header]() {
+    connect(header, &QHeaderView::customContextMenuRequested, this, [this, header]() {
         auto menu = showFilterMenu(header);
         menu->addAction(tr("Reset column sizes"), header, [header] { header->resizeColumns(true); });
     });
@@ -289,7 +289,7 @@ QMenu *IssuesWidget::showFilterMenu(QWidget *parent)
 
 void IssuesWidget::addResetFiltersAction(QMenu *menu, const QList<std::function<void()>> &resetFunctions)
 {
-    menu->addAction(QCoreApplication::translate("OCC::Models", "Reset Filters"), [resetFunctions]() {
+    menu->addAction(QCoreApplication::translate("OCC::Models", "Reset Filters"), menu, [resetFunctions]() {
         for (const auto &reset : resetFunctions) {
             reset();
         }

@@ -490,7 +490,7 @@ private Q_SLOTS:
         fakeFolder.remoteModifier().appendByte(QStringLiteral("C/c1"));
         fakeFolder.remoteModifier().setModTime(QStringLiteral("C/c1"), changedMtime2);
 
-        connect(&fakeFolder.syncEngine(), &SyncEngine::aboutToPropagate, [&](const SyncFileItemSet &items) {
+        connect(&fakeFolder.syncEngine(), &SyncEngine::aboutToPropagate, this, [&](const SyncFileItemSet &items) {
             SyncFileItemPtr a1, b1, c1;
             for (auto &item : items) {
                 if (item->localName() == QLatin1String("A/a1"))

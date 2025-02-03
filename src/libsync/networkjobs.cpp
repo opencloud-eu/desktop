@@ -291,7 +291,7 @@ void PropfindJob::finished()
             connect(&parser, &LsColXMLParser::directoryListingIterated, this, &PropfindJob::directoryListingIterated);
             connect(&parser, &LsColXMLParser::finishedWithoutError, this, &PropfindJob::finishedWithoutError);
             if (_depth == Depth::Zero) {
-                connect(&parser, &LsColXMLParser::directoryListingIterated,
+                connect(&parser, &LsColXMLParser::directoryListingIterated, this,
                     [&parser, counter = 0, this](const QString &name, const QMap<QString, QString> &) mutable {
                         counter++;
                         // With a depths of 0 we must receive only one listing

@@ -42,7 +42,7 @@ void loadQNetworkInformationBackend()
     qCDebug(lcNetInfo) << "Available backends:" << QNetworkInformation::availableBackends().join(QStringLiteral(", "));
 
     if (auto qni = QNetworkInformation::instance()) {
-        QObject::connect(qni, &QNetworkInformation::reachabilityChanged, [qni](QNetworkInformation::Reachability reachability) {
+        QObject::connect(qni, &QNetworkInformation::reachabilityChanged, qni, [qni](QNetworkInformation::Reachability reachability) {
             qCInfo(lcNetInfo) << "Connection Status changed to:" << reachability << "captive portal status:" << qni->isBehindCaptivePortal();
         });
     }
