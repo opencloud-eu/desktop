@@ -210,8 +210,6 @@ public:
         return _syncResult.status() == SyncResult::SetupError;
     }
 
-    void prepareToSync();
-
     /** True if the folder is currently synchronizing */
     bool isSyncRunning() const;
 
