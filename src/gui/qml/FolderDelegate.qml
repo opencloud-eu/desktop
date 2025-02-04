@@ -91,6 +91,8 @@ Pane {
                     // model index
                     required property int index
 
+                    readonly property real spacing: 10
+
                     Pane {
                         id: delegatePane
                         anchors.fill: parent
@@ -130,11 +132,13 @@ Pane {
                         }
                         RowLayout {
                             anchors.fill: parent
-                            spacing: 10
+                            spacing: folderDelegate.spacing
 
                             SpaceDelegate {
                                 Layout.fillHeight: true
                                 Layout.fillWidth: true
+                                spacing: folderDelegate.spacing
+
                                 description: folderDelegate.subtitle
                                 imageSource: folderDelegate.folder.space ? folderDelegate.folder.space.image.qmlImageUrl : QMLResources.resourcePath("core", "folder-sync-small", enabled)
                                 statusSource: QMLResources.resourcePath("core", statusIcon, enabled)
@@ -185,7 +189,7 @@ Pane {
                                     id: progressLoader
                                     Accessible.ignored: true
                                     Layout.fillWidth: true
-                                    Layout.minimumHeight: 10
+                                    Layout.minimumHeight: folderDelegate.spacing
 
                                     Timer {
                                         id: debounce
