@@ -65,7 +65,7 @@ Item {
                         id: statusIcon
                         Layout.preferredHeight: 16
                         Layout.preferredWidth: 16
-                        visible: statusSource
+                        visible: statusSource.toString() !== ""
                         sourceSize.width: width
                         sourceSize.height: height
                     }
