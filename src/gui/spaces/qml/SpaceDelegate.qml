@@ -24,15 +24,18 @@ Item {
     property alias imageSource: image.source
     property alias statusSource: statusIcon.source
 
+    property real spacing: 10
+
     default property alias content: colLayout.data
 
     ColumnLayout {
         anchors.fill: parent
-        spacing: 10
+        spacing: spaceDelegate.spacing
 
         RowLayout {
             Layout.alignment: Qt.AlignTop
             Layout.fillWidth: true
+            spacing: spaceDelegate.spacing
 
             Pane {
                 Accessible.ignored: true
@@ -52,7 +55,7 @@ Item {
             }
             ColumnLayout {
                 id: colLayout
-                spacing: 6
+                spacing: spaceDelegate.spacing
                 Layout.alignment: Qt.AlignTop | Qt.AlignLeft
                 Layout.fillWidth: true
 

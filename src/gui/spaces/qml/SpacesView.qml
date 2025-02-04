@@ -82,7 +82,9 @@ Pane {
 
                 required property int index
 
-                width: ListView.view.width - scrollView.ScrollBar.vertical.width - 10
+                readonly property real spacing: 10
+
+                width: ListView.view.width - scrollView.ScrollBar.vertical.width - spacing
 
                 implicitHeight: normalSize
 
@@ -116,10 +118,11 @@ Pane {
                     RowLayout {
                         anchors.fill: parent
 
-                        spacing: 10
+                        spacing: spaceDelegate.spacing
                         SpaceDelegate {
                             Layout.fillWidth: true
                             Layout.fillHeight: true
+                            spacing: spaceDelegate.spacing
 
                             title: spaceDelegate.name
                             description: spaceDelegate.subtitle
