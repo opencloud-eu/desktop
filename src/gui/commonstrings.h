@@ -13,15 +13,21 @@
  */
 #pragma once
 
-#include <QString>
+#include <QObject>
+#include <QtQml/QQmlEngine>
 
 namespace OCC {
 
-namespace CommonStrings {
-    QString fileBrowser();
-    QString showInFileBrowser();
-    QString showInWebBrowser();
-    QString copyToClipBoard();
-    QString filterButtonText(int filterCount);
-}
+class CommonStrings : public QObject
+{
+    Q_OBJECT
+    QML_SINGLETON
+    QML_ELEMENT
+public:
+    Q_INVOKABLE static QString fileBrowser();
+    Q_INVOKABLE static QString showInFileBrowser();
+    Q_INVOKABLE static QString showInWebBrowser();
+    Q_INVOKABLE static QString copyToClipBoard();
+    Q_INVOKABLE static QString filterButtonText(int filterCount);
+};
 }
