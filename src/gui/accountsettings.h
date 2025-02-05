@@ -53,6 +53,8 @@ class OPENCLOUD_GUI_EXPORT AccountSettings : public QWidget
     Q_PROPERTY(QSortFilterProxyModel *model MEMBER _sortModel CONSTANT)
     Q_PROPERTY(uint unsyncedSpaces READ unsyncedSpaces NOTIFY unsyncedSpacesChanged)
     Q_PROPERTY(uint syncedSpaces READ syncedSpaces NOTIFY syncedSpacesChanged)
+    Q_PROPERTY(QString connectionLabel READ connectionLabel NOTIFY connectionLabelChanged)
+    Q_PROPERTY(QString accountStateIconName READ accountStateIconName NOTIFY connectionLabelChanged)
     OC_DECLARE_WIDGET_FOCUS
     QML_ELEMENT
     QML_UNCREATABLE("C++ only")
@@ -72,12 +74,16 @@ public:
     uint unsyncedSpaces() const;
     uint syncedSpaces() const;
 
-    auto model() { return _sortModel; }
+    auto model() const;
+
+    QString connectionLabel();
+    QString accountStateIconName();
 
 Q_SIGNALS:
     void showIssuesList();
     void unsyncedSpacesChanged();
     void syncedSpacesChanged();
+    void connectionLabelChanged();
 
 public Q_SLOTS:
     void slotAccountStateChanged();
@@ -98,8 +104,7 @@ protected Q_SLOTS:
 private:
     void showSelectiveSyncDialog(Folder *folder);
 
-    enum class StatusIcon { None, Connected, Disconnected, Info, Warning };
-    void showConnectionLabel(const QString &message, StatusIcon statusIcon, QStringList errors = QStringList());
+    void showConnectionLabel(const QString &message, SyncResult::Status status, QStringList errors = {});
 
     void doForceSyncCurrentFolder(Folder *selectedFolder);
 
@@ -113,6 +118,8 @@ private:
     bool _goingDown = false;
     uint _syncedSpaces = 0;
     uint _unsyncedSpaces = 0;
+    QString _connectionLabel;
+    QString _accountStateIconName;
 };
 
 } // namespace OCC
