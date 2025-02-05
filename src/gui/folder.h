@@ -29,7 +29,7 @@
 #include <QDateTime>
 #include <QObject>
 #include <QUuid>
-#include <QtQml/QtQml>
+#include <QtQml/QqmlEngine>
 
 #include <chrono>
 #include <memory>

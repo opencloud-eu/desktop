@@ -36,9 +36,10 @@
 #include "gui/spaces/spaceimageprovider.h"
 #include "guiutility.h"
 #include "libsync/graphapi/spacesmanager.h"
+#include "libsync/syncresult.h"
+#include "libsync/theme.h"
 #include "scheduling/syncscheduler.h"
 #include "settingsdialog.h"
-#include "theme.h"
 
 #include <QAction>
 #include <QMessageBox>
@@ -76,25 +77,9 @@ AccountSettings::AccountSettings(const AccountStatePtr &accountState, QWidget *p
 
     connect(FolderMan::instance(), &FolderMan::folderListChanged, _model, &FolderStatusModel::resetFolders);
 
-    ui->connectionStatusLabel->clear();
 
     connect(_accountState.data(), &AccountState::stateChanged, this, &AccountSettings::slotAccountStateChanged);
     slotAccountStateChanged();
-
-    connect(ui->manageAccountButton, &QToolButton::clicked, this, [this] {
-        QMenu *menu = new QMenu(this);
-        menu->setAttribute(Qt::WA_DeleteOnClose);
-        menu->setAccessibleName(tr("Account options menu"));
-        menu->addAction(_accountState->isSignedOut() ? tr("Log in") : tr("Log out"), this, &AccountSettings::slotToggleSignInState);
-        auto *reconnectAction = menu->addAction(tr("Reconnect"), this, [this] { _accountState->checkConnectivity(true); });
-        reconnectAction->setEnabled(!_accountState->isConnected() && !_accountState->isSignedOut());
-        menu->addAction(CommonStrings::showInWebBrowser(), this, [this] { QDesktopServices::openUrl(_accountState->account()->url()); });
-        menu->addAction(tr("Remove"), this, &AccountSettings::slotDeleteAccount);
-        menu->popup(mapToGlobal(ui->manageAccountButton->pos()));
-
-        // set the focus for accessability
-        menu->setFocus();
-    });
 
     connect(_accountState.get(), &AccountState::isSettingUpChanged, this, [this] {
         if (_accountState->isSettingUp()) {
@@ -105,8 +90,6 @@ AccountSettings::AccountSettings(const AccountStatePtr &accountState, QWidget *p
             ui->stackedWidget->setCurrentWidget(ui->quickWidget);
         }
     });
-    connect(ui->stackedWidget, &QStackedWidget::currentChanged, this,
-        [this] { ui->manageAccountButton->setEnabled(ui->stackedWidget->currentWidget() == ui->quickWidget); });
     ui->stackedWidget->setCurrentWidget(ui->quickWidget);
 }
 
@@ -347,42 +330,18 @@ void AccountSettings::slotDisableVfsCurrentFolder(Folder *folder)
     msgBox->open();
 }
 
-void AccountSettings::showConnectionLabel(const QString &message, StatusIcon statusIcon, QStringList errors)
+void AccountSettings::showConnectionLabel(const QString &message, SyncResult::Status status, QStringList errors)
 {
     if (errors.isEmpty()) {
-        ui->connectionStatusLabel->setText(message);
-        ui->connectionStatusLabel->setToolTip(QString());
+        _connectionLabel = message;
     } else {
         errors.prepend(message);
         const QString msg = errors.join(QLatin1String("\n"));
         qCDebug(lcAccountSettings) << msg;
-        ui->connectionStatusLabel->setText(msg);
-        ui->connectionStatusLabel->setToolTip(QString());
+        _connectionLabel = msg;
     }
-    ui->accountStatus->setVisible(!message.isEmpty());
-
-    QIcon icon;
-    switch (statusIcon) {
-    case StatusIcon::None:
-        break;
-    case StatusIcon::Connected:
-        icon = Resources::getCoreIcon(QStringLiteral("states/ok"));
-        break;
-    case StatusIcon::Disconnected:
-        icon = Resources::getCoreIcon(QStringLiteral("states/offline"));
-        break;
-    case StatusIcon::Info:
-        icon = Resources::getCoreIcon(QStringLiteral("states/information"));
-        break;
-    case StatusIcon::Warning:
-        icon = Resources::getCoreIcon(QStringLiteral("states/warning"));
-        break;
-    }
-
-    if (!icon.isNull()) {
-        ui->warningLabel->setPixmap(icon.pixmap(ui->warningLabel->size()));
-    }
-    ui->warningLabel->setVisible(statusIcon != StatusIcon::None);
+    _accountStateIconName = QStringLiteral("states/%1").arg(Theme::instance()->syncStateIconName(SyncResult(status)));
+    Q_EMIT connectionLabelChanged();
 }
 
 void AccountSettings::slotEnableCurrentFolder(Folder *folder, bool terminate)
@@ -482,10 +441,10 @@ void AccountSettings::slotAccountStateChanged()
     switch (state) {
     case AccountState::Connected: {
         QStringList errors;
-        StatusIcon icon = StatusIcon::Connected;
+        auto icon = SyncResult::Success;
         if (account->serverSupportLevel() != Account::ServerSupportLevel::Supported) {
             errors << tr("The server version %1 is unsupported! Proceed at your own risk.").arg(account->capabilities().status().versionString());
-            icon = StatusIcon::Warning;
+            icon = SyncResult::Problem;
         }
         showConnectionLabel(tr("Connected"), icon, errors);
         connect(
@@ -494,35 +453,35 @@ void AccountSettings::slotAccountStateChanged()
         break;
     }
     case AccountState::ServiceUnavailable:
-        showConnectionLabel(tr("Server is temporarily unavailable"), StatusIcon::Disconnected);
+        showConnectionLabel(tr("Server is temporarily unavailable"), SyncResult::Offline);
         break;
     case AccountState::MaintenanceMode:
-        showConnectionLabel(tr("Server is currently in maintenance mode"), StatusIcon::Disconnected);
+        showConnectionLabel(tr("Server is currently in maintenance mode"), SyncResult::Offline);
         break;
     case AccountState::SignedOut:
-        showConnectionLabel(tr("Signed out"), StatusIcon::Disconnected);
+        showConnectionLabel(tr("Signed out"), SyncResult::Offline);
         break;
     case AccountState::AskingCredentials: {
-        showConnectionLabel(tr("Updating credentials..."), StatusIcon::Info);
+        showConnectionLabel(tr("Updating credentials..."), SyncResult::Undefined);
         break;
     }
     case AccountState::Connecting:
         if (NetworkInformation::instance()->isBehindCaptivePortal()) {
-            showConnectionLabel(tr("Captive portal prevents connections to the server."), StatusIcon::Disconnected);
+            showConnectionLabel(tr("Captive portal prevents connections to the server."), SyncResult::Offline);
         } else if (NetworkInformation::instance()->isMetered() && ConfigFile().pauseSyncWhenMetered()) {
-            showConnectionLabel(tr("Sync is paused due to metered internet connection"), StatusIcon::Disconnected);
+            showConnectionLabel(tr("Sync is paused due to metered internet connection"), SyncResult::Offline);
         } else {
-            showConnectionLabel(tr("Connecting..."), StatusIcon::Info);
+            showConnectionLabel(tr("Connecting..."), SyncResult::Undefined);
         }
         break;
     case AccountState::ConfigurationError:
-        showConnectionLabel(tr("Server configuration error"), StatusIcon::Warning, _accountState->connectionErrors());
+        showConnectionLabel(tr("Server configuration error"), SyncResult::Problem, _accountState->connectionErrors());
         break;
     case AccountState::NetworkError:
         // don't display the error to the user, https://github.com/owncloud/client/issues/9790
         [[fallthrough]];
     case AccountState::Disconnected:
-        showConnectionLabel(tr("Disconnected"), StatusIcon::Disconnected);
+        showConnectionLabel(tr("Disconnected"), SyncResult::Offline);
         break;
     }
 }
@@ -649,6 +608,21 @@ uint AccountSettings::unsyncedSpaces() const
 uint AccountSettings::syncedSpaces() const
 {
     return _syncedSpaces;
+}
+
+auto AccountSettings::model() const
+{
+    return _sortModel;
+}
+
+QString AccountSettings::connectionLabel()
+{
+    return _connectionLabel;
+}
+
+QString AccountSettings::accountStateIconName()
+{
+    return _accountStateIconName;
 }
 
 void AccountSettings::slotDeleteAccount()

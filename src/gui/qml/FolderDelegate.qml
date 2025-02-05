@@ -33,7 +33,7 @@ Pane {
         target: widget
 
         function onFocusFirst() {
-            listView.forceActiveFocus(Qt.TabFocusReason);
+            manageAccountButton.forceActiveFocus(Qt.TabFocusReason);
         }
 
         function onFocusLast() {
@@ -47,6 +47,61 @@ Pane {
 
     ColumnLayout {
         anchors.fill: parent
+
+        RowLayout {
+            Layout.fillWidth: true
+            Image {
+                source: QMLResources.resourcePath("core", accountSettings.accountStateIconName, enabled)
+                Layout.preferredHeight: 16
+                Layout.preferredWidth: 16
+                sourceSize.width: width
+                sourceSize.height: height
+            }
+
+            Label {
+                text: accountSettings.connectionLabel
+                Layout.fillWidth: true
+            }
+            // spacer
+            Item {}
+            Button {
+                id: manageAccountButton
+                text: qsTr("Manage Account")
+
+                Menu {
+                    id: accountMenu
+
+                    MenuItem {
+                        text: accountSettings.accountState.state === AccountState.SignedOut ? qsTr("Log in") : qsTr("Log out")
+                        onTriggered: accountSettings.slotToggleSignInState()
+                    }
+                    MenuItem {
+                        text: qsTr("Reconnect")
+                        enabled: accountSettings.accountState.state !== AccountState.SignedOut && accountSettings.accountState.state !== AccountState.Connected
+                        onTriggered: accountSettings.accountState.checkConnectivity(true)
+                    }
+                    MenuItem {
+                        text: CommonStrings.showInWebBrowser()
+                        onTriggered: Qt.openUrlExternally(accountSettings.accountState.account.url)
+                    }
+
+                    MenuItem {
+                        text: qsTr("Remove")
+                        onTriggered: accountSettings.slotDeleteAccount()
+                    }
+                }
+
+                onClicked: {
+                    accountMenu.open();
+                    Accessible.announce(qsTr("Account options Menu"));
+                }
+
+                Keys.onBacktabPressed: {
+                    widget.parentFocusWidget.focusPrevious();
+                }
+            }
+        }
+
         ScrollView {
             id: scrollView
             Layout.fillHeight: true
@@ -111,7 +166,7 @@ Pane {
                         }
 
                         Keys.onBacktabPressed: {
-                            widget.parentFocusWidget.focusPrevious();
+                            manageAccountButton.forceActiveFocus(Qt.TabFocusReason);
                         }
                         Keys.onTabPressed: {
                             moreButton.forceActiveFocus(Qt.TabFocusReason);
