@@ -24,26 +24,26 @@ QString CommonStrings::fileBrowser()
 #elif defined(Q_OS_MAC)
     return QStringLiteral("Finder");
 #else
-    return QCoreApplication::translate("CommonStrings", "file manager");
+    return tr("file manager");
 #endif
 }
 
 QString CommonStrings::showInFileBrowser()
 {
-    return QCoreApplication::translate("CommonStrings", "Show in %1").arg(fileBrowser());
+    return tr("Show in %1").arg(fileBrowser());
 }
 
 QString CommonStrings::showInWebBrowser()
 {
-    return QCoreApplication::translate("CommonStrings", "Show in web browser");
+    return tr("Show in web browser");
 }
 
 QString CommonStrings::copyToClipBoard()
 {
-    return QCoreApplication::translate("CommonStrings", "Copy");
+    return tr("Copy");
 }
 
 QString CommonStrings::filterButtonText(int filterCount)
 {
-    return QCoreApplication::translate("CommonStrings", "%n Filter(s)", nullptr, filterCount);
+    return tr("%n Filter(s)", nullptr, filterCount);
 }
