@@ -718,7 +718,7 @@ QString FolderMan::checkPathValidityRecursive(const QString &path, FolderMan::Ne
  */
 QString FolderMan::checkPathValidityForNewFolder(const QString &path, NewFolderType folderType, const QUuid &accountUuid) const
 {
-    // check if the local directory isn't used yet in another ownCloud sync
+    // check if the local directory isn't used yet in another sync
     const auto cs = Utility::fsCaseSensitivity();
 
     const QString userDir = QDir::cleanPath(canonicalPath(path)) + QLatin1Char('/');

@@ -56,10 +56,9 @@ ETagWatcher::ETagWatcher(FolderMan *folderMan, QObject *parent)
 
     auto *pollTimer = new QTimer(this);
     pollTimer->setInterval(pollTimeoutC);
-    // check wheter we need to query the etag for oc10 servers
     connect(pollTimer, &QTimer::timeout, this, [this] {
         for (auto &info : _lastEtagJob) {
-            // we could also connect to the spaceChanged signal but for now this will keep it closer to oc10
+            // we could also connect to the spaceChanged signal but for legacy reason we poll
             // ensure we already know about the space (startup)
             if (auto *space = info.first->space()) {
                 updateEtag(info.first, space->drive().getRoot().getETag());

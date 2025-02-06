@@ -100,7 +100,7 @@ public:
         QUrl davUrl;
 
         /***
-         * The id of the space or empty in case of ownCloud 10.
+         * The id of the space
          */
         QString spaceId;
 
@@ -201,7 +201,7 @@ public:
      *
      * Uses \a basePath as the baseline. It'll return this path if it's acceptable.
      *
-     * Note that this can fail. If someone syncs ~ and \a basePath is ~/ownCloud, no
+     * Note that this can fail. If someone syncs ~ and \a basePath is ~/OpenCloud, no
      * subfolder of ~ would be a good candidate. When that happens \a basePath
      * is returned.
      */

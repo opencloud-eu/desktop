@@ -20,7 +20,6 @@ namespace OCC::Wizard::Jobs {
 
 /**
  * Check whether we need to run an authenticated WebFinger request to find a user's list of allowed instances.
- * https://owncloud.dev/services/webfinger/
  */
 class DiscoverWebFingerServiceJobFactory : public AbstractCoreJobFactory
 {

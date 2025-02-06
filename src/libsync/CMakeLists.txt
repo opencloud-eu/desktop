@@ -67,7 +67,7 @@ endif()
 
 set(libsync_SRCS ${libsync_SRCS} creds/httpcredentials.cpp)
 
-# These headers are installed for libowncloudsync to be used by 3rd party apps
+# These headers are installed for libopencloudsync to be used by 3rd party apps
 INSTALL(
     FILES
         ${CMAKE_CURRENT_BINARY_DIR}/opencloudsynclib.h
