@@ -283,8 +283,7 @@ CmdOptions parseOptions(const QStringList &app_args)
     auto excludeOption = addOption({ { QStringLiteral("exclude") }, QStringLiteral("Path to an exclude list [file]"), QStringLiteral("file") });
     auto unsyncedfoldersOption = addOption({ { QStringLiteral("unsyncedfolders") }, QStringLiteral("File containing the list of unsynced remote folders (selective sync)"), QStringLiteral("file") });
 
-    auto serverOption = addOption({{QStringLiteral("server")},
-        QStringLiteral("Use [url] as the location of the server. OCIS only (server location and spaces URL can differ)"), QStringLiteral("url")});
+    auto serverOption = addOption({{QStringLiteral("server")}, QStringLiteral("Use [url] as the location of the server."), QStringLiteral("url")});
     auto userOption = addOption({ { QStringLiteral("u"), QStringLiteral("user") }, QStringLiteral("Use [name] as the login name"), QStringLiteral("name") });
     auto passwordOption = addOption({{QStringLiteral("p"), QStringLiteral("password")}, QStringLiteral("Use [pass] as password"), QStringLiteral("password")});
 
