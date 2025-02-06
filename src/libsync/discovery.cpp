@@ -1284,7 +1284,7 @@ DiscoverySingleDirectoryJob *ProcessDirectoryJob::startAsyncServerQuery()
             auto code = results.error().code;
             qCWarning(lcDisco) << "Server error in directory" << _currentFolder._server << code;
             if (serverJob->isRootPath()) {
-                if (code == 404 && _discoveryData->isSpace()) {
+                if (code == 404) {
                     Q_EMIT _discoveryData->fatalError(tr("This Space is currently unavailable"));
                     return;
                 }
