@@ -109,13 +109,12 @@ Q_SIGNALS:
      * message that can be shown to users.
      */
     void becameUnreliable(const QString &message);
-
-protected Q_SLOTS:
-    // called from the implementations to indicate a change in path
-    void addChanges(const QSet<QString> &paths);
-
 private Q_SLOTS:
     void startNotificationTestWhenReady();
+
+protected:
+    // called from the implementations to indicate a change in path
+    void addChanges(QSet<QString> &&paths);
 
 private:
     QScopedPointer<FolderWatcherPrivate> _d;
