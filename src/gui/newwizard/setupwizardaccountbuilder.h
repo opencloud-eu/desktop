@@ -43,10 +43,7 @@ public:
      */
     virtual bool isValid() = 0;
 
-    /**
-     * The username used for ownCloud 10 dav requests.
-     */
-    QString davUser();
+    [[deprecated("https://github.com/opencloud-eu/desktop/issues/76")]] QString davUser();
     void setDavUser(const QString &user);
 
     virtual FetchUserInfoJobFactory makeFetchUserInfoJobFactory(QNetworkAccessManager *nam) = 0;
@@ -105,7 +102,7 @@ public:
     SetupWizardAccountBuilder();
 
     /**
-     * Set ownCloud server URL as well as the authentication type that needs to be used with this server.
+     * Set server URL as well as the authentication type that needs to be used with this server.
      * @param serverUrl URL to server
      */
     void setServerUrl(const QUrl &serverUrl, DetermineAuthTypeJob::AuthType workflowType);

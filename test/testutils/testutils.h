@@ -27,8 +27,8 @@ namespace TestUtils {
 
     /***
      * Create a QTemporaryDir with a test specific name pattern
-     * ownCloud-unit-test-{TestName}-XXXXXX
-     * This allow to clean up after failed tests
+     * OpenCloud-unit-test-{TestName}-XXXXXX
+     * This allows to clean up after failed tests
      */
     QTemporaryDir createTempDir();
 

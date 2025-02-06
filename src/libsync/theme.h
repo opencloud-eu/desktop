@@ -156,15 +156,13 @@ public:
     virtual bool multiAccount() const;
 
     /**
-    * URL to documentation.
-    *
-    * This is opened in the browser when the "Help" action is selected from the tray menu.
-    *
-    * If the function is overridden to return an empty string the action is removed from
-    * the menu.
-    *
-    * Defaults to ownCloud's client documentation website.
-    */
+     * URL to documentation.
+     *
+     * This is opened in the browser when the "Help" action is selected from the tray menu.
+     *
+     * If the function is overridden to return an empty string the action is removed from
+     * the menu.
+     */
     virtual QString helpUrl() const;
 
     /**
@@ -332,7 +330,7 @@ public:
 
     /**
      * The OAuth client_id, secret pair.
-     * Note that client that change these value cannot connect to un-branded owncloud servers.
+     * Note that client that change these value cannot connect to un-branded OpenCloud.
      */
     virtual QString oauthClientId() const;
     virtual QString oauthClientSecret() const;

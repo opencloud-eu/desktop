@@ -294,7 +294,7 @@ void PropfindJob::finished()
                     });
             }
 
-            const QString expectedPath = reply()->request().url().path(); // something like "/owncloud/remote.php/webdav/folder"
+            const QString expectedPath = reply()->request().url().path(); // something like "/remote.php/webdav/folder"
             if (!parser.parse(reply()->readAll(), &_sizes, expectedPath)) {
                 // XML parse error
                 Q_EMIT finishedWithError();

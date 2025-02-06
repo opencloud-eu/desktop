@@ -96,7 +96,7 @@ private:
 };
 
 /**
- * @brief Class that uses an ownCloud proprietary XML format to fetch update information
+ * @brief Class that uses an a proprietary XML format to fetch update information
  * @ingroup gui
  */
 class OPENCLOUD_GUI_EXPORT OCUpdater : public Updater

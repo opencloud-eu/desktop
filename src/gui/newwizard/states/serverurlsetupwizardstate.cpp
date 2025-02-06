@@ -112,7 +112,7 @@ void ServerUrlSetupWizardState::evaluatePage()
         // and certificates are deleted from the access manager
         _context->resetAccessManager();
 
-        // since classic WebFinger is not enabled, we need to check whether modern (oCIS) WebFinger is available
+        // check whether WebFinger is available
         // therefore, we run the corresponding discovery job
         auto checkWebFingerAuthJob = Jobs::DiscoverWebFingerServiceJobFactory(_context->accessManager()).startJob(serverUrl, this);
 

@@ -494,7 +494,7 @@ void WindowsUpdater::applyUpdateAndRestart()
     // When MSIs are installed without gui they cannot launch applications
     // as they lack the user context. That is why we need to run the client
     // manually here. We wrap the msiexec and client invocation in a powershell
-    // script because owncloud.exe will be shut down for installation.
+    // script because opencloud.exe will be shut down for installation.
     // | Out-Null forces powershell to wait for msiexec to finish.
     auto preparePathForPowershell = [](QString path) {
         path.replace(QLatin1String("'"), QLatin1String("''"));

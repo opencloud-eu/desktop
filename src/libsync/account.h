@@ -60,13 +60,6 @@ namespace GraphApi {
 
 class ResourcesCache;
 
-/**
- * @brief The Account class represents an account on an ownCloud Server
- * @ingroup libsync
- *
- * The Account has a name and url. It also has information about credentials,
- * SSL errors and certificates.
- */
 class OPENCLOUD_SYNC_EXPORT Account : public QObject
 {
     Q_OBJECT
@@ -104,8 +97,7 @@ public:
     void setDavUser(const QString &newDavUser);
 
     /***
-     * With OC 10 this is the equivalent to the sync root.
-     * With ocis and spaces this will be the default folder containing all spaces.
+     * The default folder containing all spaces.
      * This function will assert if the sync root is empty.
      */
     QString defaultSyncRoot() const;

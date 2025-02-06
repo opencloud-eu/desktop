@@ -6,6 +6,6 @@ Qt 5 handles those window messages incorrect causing our client to close, with t
 
 ## Use
 ```
-close_window.exe owncloud.exe
+close_window.exe opencloud.exe
 ```
-If invoked without an argument it will try to close owncloud.exe
+If invoked without an argument it will try to close opencloud.exe

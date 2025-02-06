@@ -36,7 +36,7 @@ AccountConfiguredSetupWizardState::AccountConfiguredSetupWizardState(SetupWizard
         break;
     }
 
-    // We need some sync root, either for spaces, or for OC10. It's never a Space folder.
+    // We need some sync root for spaces. It's never a Space folder.
     // We pass an invalid UUID, because we don't "own" a syncroot yet, and all checks against UUIDs should fail.
     const QString defaultSyncTargetDir = FolderMan::suggestSyncFolder(FolderMan::NewFolderType::SpacesSyncRoot, {});
     QString syncTargetDir = _context->accountBuilder().syncTargetDir();
@@ -71,7 +71,7 @@ void AccountConfiguredSetupWizardState::evaluatePage()
             return;
         }
 
-        // Doesn't matter wether it's a spaces sync root or a oc10 sync root
+        // Doesn't matter wether it's a spaces sync root
         QString invalidPathErrorMessage = FolderMan::checkPathValidityRecursive(syncTargetDir, FolderMan::NewFolderType::SpacesSyncRoot, {});
         if (!invalidPathErrorMessage.isEmpty()) {
             Q_EMIT evaluationFailed(errorMessageTemplate.arg(invalidPathErrorMessage));
