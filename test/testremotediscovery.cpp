@@ -71,19 +71,20 @@ private Q_SLOTS:
         QTest::addColumn<int>("errorKind");
         QTest::addColumn<QString>("expectedErrorString");
         QTest::addColumn<bool>("syncSucceeds");
+        QTest::addColumn<QString>("syncRootError");
 
         QString itemErrorMessage = QStringLiteral("Internal Server Fake Error");
 
-        QTest::newRow("400") << 400 << itemErrorMessage << false;
-        QTest::newRow("401") << 401 << QStringLiteral("Fake credentials error") << false;
-        QTest::newRow("403") << 403 << QStringLiteral("Fake access denied error") << true;
-        QTest::newRow("404") << 404 << itemErrorMessage << true;
-        QTest::newRow("500") << 500 << itemErrorMessage << true;
-        QTest::newRow("503") << 503 << itemErrorMessage << true;
+        QTest::newRow("400") << 400 << itemErrorMessage << false << QString{};
+        QTest::newRow("401") << 401 << QStringLiteral("Fake credentials error") << false << QString{};
+        QTest::newRow("403") << 403 << QStringLiteral("Fake access denied error") << true << QString{};
+        QTest::newRow("404") << 404 << QString{} << true << QStringLiteral("This Space is currently unavailable");
+        QTest::newRow("500") << 500 << itemErrorMessage << true << QString{};
+        QTest::newRow("503") << 503 << itemErrorMessage << true << QString{};
         // 200 should be an error since propfind should return 207
-        QTest::newRow("200") << 200 << itemErrorMessage << false;
-        QTest::newRow("InvalidXML") << +InvalidXML << "Unknown error" << false;
-        QTest::newRow("Timeout") << +Timeout << "Connection timed out" << false;
+        QTest::newRow("200") << 200 << itemErrorMessage << false << QString{};
+        QTest::newRow("InvalidXML") << +InvalidXML << "Unknown error" << false << QString{};
+        QTest::newRow("Timeout") << +Timeout << "Connection timed out" << false << QString{};
     }
 
 
@@ -96,6 +97,7 @@ private Q_SLOTS:
         QFETCH(int, errorKind);
         QFETCH(QString, expectedErrorString);
         QFETCH(bool, syncSucceeds);
+        QFETCH(QString, syncRootError);
 
         FakeFolder fakeFolder(FileInfo::A12_B12_C12_S12(), vfsMode, filesAreDehydrated);
 
@@ -157,7 +159,7 @@ private Q_SLOTS:
         errorSpy.clear();
         QVERIFY(!fakeFolder.applyLocalModificationsAndSync());
         QCOMPARE(errorSpy.size(), 1);
-        QCOMPARE(errorSpy[0][0].toString(), QString(fatalErrorPrefix + expectedErrorString));
+        QCOMPARE(errorSpy[0][0].toString(), syncRootError.isEmpty() ? QString(fatalErrorPrefix + expectedErrorString) : syncRootError);
     }
 
     void testMissingData()
