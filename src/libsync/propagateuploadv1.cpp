@@ -161,14 +161,6 @@ void PropagateUploadFileV1::slotPutFinished()
     }
 
     _item->_etag = etag;
-
-    if (job->reply()->rawHeader("X-OC-MTime") != "accepted") {
-        // X-OC-MTime is supported since owncloud 5.0.   But not when chunking.
-        // Normally Owncloud 6 always puts X-OC-MTime
-        qCWarning(lcPropagateUploadV1) << "Server does not support X-OC-MTime" << job->reply()->rawHeader("X-OC-MTime");
-        // Well, the mtime was not set
-    }
-
     finalize();
 }
 
