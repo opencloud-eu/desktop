@@ -38,10 +38,6 @@ opencloud_add_test(Permissions)
 opencloud_add_test(DatabaseError)
 opencloud_add_test(LockedFiles)
 
-if (WITH_AUTO_UPDATER)
-    opencloud_add_test(Updater)
-endif()
-
 opencloud_add_test(FolderWatcher)
 
 if( UNIX AND NOT APPLE )
