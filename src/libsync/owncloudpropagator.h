@@ -12,8 +12,7 @@
  * for more details.
  */
 
-#ifndef OWNCLOUDPROPAGATOR_H
-#define OWNCLOUDPROPAGATOR_H
+#pragma once
 
 #include <QHash>
 #include <QObject>
@@ -591,5 +590,3 @@ public:
     void start() override;
 };
 }
-
-#endif
