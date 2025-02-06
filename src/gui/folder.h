@@ -115,7 +115,6 @@ public:
 private:
     FolderDefinition(const QByteArray &id, const QUrl &davUrl, const QString &spaceId, const QString &displayName);
 
-    // oc10 and as cache for ocis
     QUrl _webDavUrl;
 
     QString _spaceId;

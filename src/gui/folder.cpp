@@ -353,10 +353,9 @@ bool Folder::isSyncRunning() const
 QUrl Folder::webDavUrl() const
 {
     const QString spaceId = _definition.spaceId();
-    if (!spaceId.isEmpty()) {
-        if (auto *space = _accountState->account()->spacesManager()->space(spaceId)) {
-            return QUrl(space->drive().getRoot().getWebDavUrl());
-        }
+    Q_ASSERT(!spaceId.isEmpty());
+    if (auto *space = _accountState->account()->spacesManager()->space(spaceId); OC_ENSURE(space)) {
+        return QUrl(space->drive().getRoot().getWebDavUrl());
     }
     return _definition.webDavUrl();
 }
