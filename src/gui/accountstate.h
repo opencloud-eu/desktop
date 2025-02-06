@@ -36,10 +36,6 @@ class Account;
 class TlsErrorDialog;
 class FetchServerSettingsJob;
 
-/**
- * @brief Extra info about an ownCloud server account.
- * @ingroup gui
- */
 class OPENCLOUD_GUI_EXPORT AccountState : public QObject
 {
     Q_OBJECT
