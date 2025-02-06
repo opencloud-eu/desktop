@@ -17,8 +17,8 @@
                         "version": "@{version}",
                         "versionstring": "10.11.0",
                         "edition": "Community",
-                        "productname": "Infinite Scale",
-                        "product": "Infinite Scale",
+                        "productname": "OpenCloud",
+                        "product": "OpenCloud",
                         "productversion": "@{productversion}"
                     },
                     "support-url-signing": true,
@@ -171,7 +171,7 @@
                 "micro": 0,
                 "string": "10.11.0",
                 "edition": "Community",
-                "product": "Infinite Scale",
+                "product": "OpenCloud",
                 "productversion": "4.0.5"
             }
         }
