@@ -262,10 +262,6 @@ public:
     QByteArray _dataFingerprint;
     bool _anotherSyncNeeded = false;
 
-    /**
-     * @return whether we are syncing to a ocis space or not
-     */
-    bool isSpace() const;
 
 Q_SIGNALS:
     void fatalError(const QString &errorString);
