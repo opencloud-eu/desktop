@@ -103,7 +103,7 @@ namespace TestUtils {
                         QVariantMap{{QStringLiteral("installed"), QStringLiteral("1")}, {QStringLiteral("maintenance"), QStringLiteral("0")},
                             {QStringLiteral("needsDbUpgrade"), QStringLiteral("0")}, {QStringLiteral("version"), QStringLiteral("10.11.0.0")},
                             {QStringLiteral("versionstring"), QStringLiteral("10.11.0")}, {QStringLiteral("edition"), QStringLiteral("Community")},
-                            {QStringLiteral("productname"), QStringLiteral("Infinite Scale")}, {QStringLiteral("product"), QStringLiteral("Infinite Scale")},
+                            {QStringLiteral("productname"), QStringLiteral("OpenCloud")}, {QStringLiteral("product"), QStringLiteral("OpenCloud")},
                             {QStringLiteral("productversion"), QStringLiteral("2.0.0-beta1+7c2e3201b")}}}}},
             {QStringLiteral("files"), QVariantList{}}, {QStringLiteral("dav"), QVariantMap{{QStringLiteral("chunking"), QStringLiteral("1.0")}}},
             {QStringLiteral("checksums"),

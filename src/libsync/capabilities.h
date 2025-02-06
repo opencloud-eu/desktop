@@ -35,9 +35,9 @@ struct OPENCLOUD_SYNC_EXPORT Status
     <version>10.11.0.0</version>
     <versionstring>10.11.0</versionstring>
     <edition>Community</edition>
-    <productname>Infinite Scale</productname>
-    <product>Infinite Scale</product>
-    <productversion>2.0.0-beta1+7c2e3201b</productversion>
+    <productname>OpenCloud</productname>
+    <product>OpenCloud</product>
+    <productversion>1.0.0-beta1+7c2e3201b</productversion>
     */
 
     Status(const QVariantMap &status);
