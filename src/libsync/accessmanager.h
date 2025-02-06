@@ -48,7 +48,7 @@ public:
      */
     void addCustomTrustedCaCertificates(const QList<QSslCertificate> &certificates);
 
-    CookieJar *ownCloudCookieJar() const;
+    CookieJar *openCloudCookieJar() const;
 
     /***
      * Remove all errors for already accepted certificates

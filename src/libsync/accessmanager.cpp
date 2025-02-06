@@ -127,7 +127,7 @@ void AccessManager::addCustomTrustedCaCertificates(const QList<QSslCertificate> 
     clearConnectionCache();
 }
 
-CookieJar *AccessManager::ownCloudCookieJar() const
+CookieJar *AccessManager::openCloudCookieJar() const
 {
     auto jar = qobject_cast<CookieJar *>(cookieJar());
     Q_ASSERT(jar);

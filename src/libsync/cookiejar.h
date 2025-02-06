@@ -12,30 +12,22 @@
  * for more details.
  */
 
-#ifndef MIRALL_COOKIEJAR_H
-#define MIRALL_COOKIEJAR_H
+#pragma once
+#include "opencloudsynclib.h"
 
 #include <QNetworkCookieJar>
 
-#include "opencloudsynclib.h"
-
 namespace OCC {
 
-/**
- * @brief The CookieJar class
- * @ingroup libsync
- */
 class OPENCLOUD_SYNC_EXPORT CookieJar : public QNetworkCookieJar
 {
     Q_OBJECT
 public:
-    explicit CookieJar(QObject *parent = nullptr);
-    ~CookieJar() override;
+    using QNetworkCookieJar::QNetworkCookieJar;
 
+    // expose protected functions
     using QNetworkCookieJar::setAllCookies;
     using QNetworkCookieJar::allCookies;
 };
 
 } // namespace OCC
-
-#endif // MIRALL_COOKIEJAR_H

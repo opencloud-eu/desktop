@@ -14,23 +14,4 @@
 
 #include "cookiejar.h"
 
-#include "configfile.h"
-
-#include <QDir>
-#include <QLoggingCategory>
-#include <QNetworkCookie>
-
-namespace OCC {
-
-Q_LOGGING_CATEGORY(lcCookieJar, "sync.cookiejar", QtInfoMsg)
-
-CookieJar::CookieJar(QObject *parent)
-    : QNetworkCookieJar(parent)
-{
-}
-
-CookieJar::~CookieJar()
-{
-}
-
-} // namespace OCC
+// empty file for moc
