@@ -187,16 +187,6 @@ QString Theme::helpUrl() const
     return {};
 }
 
-QString Theme::conflictHelpUrl() const
-{
-    auto baseUrl = helpUrl();
-    if (baseUrl.isEmpty())
-        return QString();
-    if (!baseUrl.endsWith(QLatin1Char('/')))
-        baseUrl.append(QLatin1Char('/'));
-    return baseUrl + QStringLiteral("conflicts.html");
-}
-
 QString Theme::overrideServerUrl() const
 {
     return QString();

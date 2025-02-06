@@ -166,17 +166,6 @@ public:
     virtual QString helpUrl() const;
 
     /**
-     * The url to use for showing help on conflicts.
-     *
-     * If the function is overridden to return an empty string no help link will be shown.
-     *
-     * Defaults to helpUrl() + "conflicts.html", which is a page in ownCloud's client
-     * documentation website. If helpUrl() is empty, this function will also return the
-     * empty string.
-     */
-    virtual QString conflictHelpUrl() const;
-
-    /**
      * Setting a value here will pre-define the server url.
      *
      * The respective UI controls will be disabled

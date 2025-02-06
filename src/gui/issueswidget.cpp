@@ -248,11 +248,6 @@ IssuesWidget::IssuesWidget(QWidget *parent)
         _ui->_tooManyIssuesWarning->setVisible(_model->isModelFull());
     });
 
-    _ui->_conflictHelp->hide();
-    _ui->_conflictHelp->setText(
-        tr("There were conflicts. <a href=\"%1\">Check the documentation on how to resolve them.</a>")
-            .arg(Theme::instance()->conflictHelpUrl()));
-
     connect(FolderMan::instance(), &FolderMan::folderRemoved, this, [this](Folder *f) {
         _model->remove_if([f](const ProtocolItem &item) {
             return item.folder() == f;
@@ -339,9 +334,7 @@ void IssuesWidget::slotProgressInfo(Folder *folder, const ProgressInfo &progress
                 conflicts.append(rawData.path());
             }
         }
-        Q_EMIT ProgressDispatcher::instance()->folderConflicts(folder, conflicts);
-
-        _ui->_conflictHelp->setHidden(Theme::instance()->conflictHelpUrl().isEmpty() || conflicts.isEmpty());
+        Q_EMIT ProgressDispatcher::instance() -> folderConflicts(folder, conflicts);
     }
 }
 
