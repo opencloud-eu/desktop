@@ -13,17 +13,9 @@
  * for more details.
  */
 
-#include <QBuffer>
-#include <QCoreApplication>
-#include <QNetworkRequest>
-#include <QPainter>
-#include <QPainterPath>
-
-#include "creds/httpcredentials.h"
-
-#include "account.h"
 #include "networkjobs.h"
-
+#include "account.h"
+#include "creds/httpcredentials.h"
 
 using namespace std::chrono_literals;
 
@@ -31,7 +23,6 @@ namespace OCC {
 
 Q_LOGGING_CATEGORY(lcEtagJob, "sync.networkjob.etag", QtInfoMsg)
 Q_LOGGING_CATEGORY(lcPropfindJob, "sync.networkjob.propfind", QtInfoMsg)
-Q_LOGGING_CATEGORY(lcAvatarJob, "sync.networkjob.avatar", QtInfoMsg)
 Q_LOGGING_CATEGORY(lcMkColJob, "sync.networkjob.mkcol", QtInfoMsg)
 Q_LOGGING_CATEGORY(lcDetermineAuthTypeJob, "sync.networkjob.determineauthtype", QtInfoMsg)
 
@@ -322,57 +313,6 @@ void PropfindJob::finished()
 const QHash<QString, qint64> &PropfindJob::sizes() const
 {
     return _sizes;
-}
-
-/*********************************************************************************************/
-
-AvatarJob::AvatarJob(AccountPtr account, const QString &userId, int size, QObject *parent)
-    : AbstractNetworkJob(account, account->url(), QStringLiteral("remote.php/dav/avatars/%1/%2.png").arg(userId, QString::number(size)), parent)
-{
-    setStoreInCache(true);
-}
-
-void AvatarJob::start()
-{
-    sendRequest("GET");
-    AbstractNetworkJob::start();
-}
-
-QPixmap AvatarJob::makeCircularAvatar(const QPixmap &baseAvatar)
-{
-    int dim = baseAvatar.width();
-
-    QPixmap avatar(dim, dim);
-    avatar.fill(Qt::transparent);
-
-    QPainter painter(&avatar);
-    painter.setRenderHint(QPainter::Antialiasing);
-
-    QPainterPath path;
-    path.addEllipse(0, 0, dim, dim);
-    painter.setClipPath(path);
-
-    painter.drawPixmap(0, 0, baseAvatar);
-    painter.end();
-
-    return avatar;
-}
-
-void AvatarJob::finished()
-{
-    int http_result_code = reply()->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-
-    QPixmap avImage;
-
-    if (http_result_code == 200) {
-        QByteArray pngData = reply()->readAll();
-        if (pngData.size()) {
-            if (avImage.loadFromData(pngData)) {
-                qCDebug(lcAvatarJob) << "Retrieved Avatar pixmap!";
-            }
-        }
-    }
-    Q_EMIT avatarPixmap(avImage);
 }
 
 /*********************************************************************************************/

@@ -111,40 +111,6 @@ private:
     Depth _depth;
 };
 
-
-/**
- * @brief Retrieves the account users avatar from the server using a GET request.
- *
- * If the server does not have the avatar, the result Pixmap is empty.
- *
- * @ingroup libsync
- */
-class OPENCLOUD_SYNC_EXPORT AvatarJob : public AbstractNetworkJob
-{
-    Q_OBJECT
-public:
-    /**
-     * @param userId The user for which to obtain the avatar
-     * @param size The size of the avatar (square so size*size)
-     */
-    explicit AvatarJob(AccountPtr account, const QString &userId, int size, QObject *parent = nullptr);
-
-    void start() override;
-
-    /** The retrieved avatar images don't have the circle shape by default */
-    static QPixmap makeCircularAvatar(const QPixmap &baseAvatar);
-
-Q_SIGNALS:
-    /**
-     * @brief avatarPixmap - returns either a valid pixmap or not.
-     */
-
-    void avatarPixmap(const QPixmap &);
-
-private Q_SLOTS:
-    void finished() override;
-};
-
 /**
  * @brief The MkColJob class
  * @ingroup libsync
