@@ -43,11 +43,9 @@ ETagWatcher::ETagWatcher(FolderMan *folderMan, QObject *parent)
                 if (it != _lastEtagJob.cend()) {
                     intersection[f] = std::move(it->second);
                 } else {
-                    intersection[f] = {};
+                    intersection.emplace(f, QString());
                     connect(&f->syncEngine(), &SyncEngine::rootEtag, this, [f, this](const QString &etag, const QDateTime &time) {
-                        auto &info = _lastEtagJob[f];
-                        info.etag = etag;
-                        info.lastUpdate.reset();
+                        _lastEtagJob[f] = etag;
                         f->accountState()->tagLastSuccessfullETagRequest(time);
                     });
                 }
@@ -77,12 +75,11 @@ void ETagWatcher::updateEtag(Folder *f, const QString &etag)
     // https://github.com/owncloud/ocis/issues/7160
     if (OC_ENSURE_NOT(etag.isEmpty())) {
         auto &info = _lastEtagJob[f];
-        if (f->canSync() && info.etag != etag) {
+        if (f->canSync() && info != etag) {
             qCDebug(lcEtagWatcher) << "Scheduling sync of" << f->displayName() << f->path() << "due to an etag change";
-            info.etag = etag;
+            info = etag;
             _folderMan->scheduler()->enqueueFolder(f);
         }
-        info.lastUpdate.reset();
     } else {
         qCWarning(lcEtagWatcher) << "Invalid empty etag received for" << f->displayName() << f->path();
     }

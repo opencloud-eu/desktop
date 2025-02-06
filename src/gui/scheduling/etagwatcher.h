@@ -36,14 +36,7 @@ private:
 
     FolderMan *_folderMan;
 
-    struct ETagInfo
-    {
-        QString etag;
-        // only used with oc10 in order to decide whether we need to query the etag
-        Utility::ChronoElapsedTimer lastUpdate;
-    };
-
-    std::unordered_map<Folder *, ETagInfo> _lastEtagJob;
+    std::unordered_map<Folder *, QString> _lastEtagJob;
 };
 
 }
