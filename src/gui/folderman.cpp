@@ -709,10 +709,6 @@ QString FolderMan::checkPathValidityRecursive(const QString &path, FolderMan::Ne
 }
 
 /*
- * OC10 folder:
- *  - sync root not in syncdb folder
- *  - sync root not in spaces root
- * with spaces:
  *  - spaces sync root not in syncdb folder
  *  - spaces sync root not in another spaces sync root
  *
