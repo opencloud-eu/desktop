@@ -60,7 +60,7 @@ void FetchServerSettingsJob::start()
                 _account->setHttp2Supported(reply->attribute(QNetworkRequest::Http2WasUsedAttribute).toBool());
             }
             _account->setCapabilities({_account->url(), caps.toVariantMap()});
-            // We cannot deal with servers < 10.0.0
+
             switch (_account->serverSupportLevel()) {
             case Account::ServerSupportLevel::Unknown:
                 [[fallthrough]];
