@@ -356,19 +356,11 @@ Account::ServerSupportLevel Account::serverSupportLevel() const
         return ServerSupportLevel::Supported;
     }
 
-    // ocis
+    // OpenCloud
     if (!capabilities().status().productversion.isEmpty()) {
         return ServerSupportLevel::Supported;
     }
-
-    // Older version which is not "end of life" according to https://github.com/owncloud/core/wiki/Maintenance-and-Release-Schedule
-    if (!capabilities().status().legacyVersion.isNull()) {
-        if (capabilities().status().legacyVersion < QVersionNumber(10)) {
-            return ServerSupportLevel::Unsupported;
-        }
-        return ServerSupportLevel::Supported;
-    }
-    return ServerSupportLevel::Unknown;
+    return ServerSupportLevel::Unsupported;
 }
 
 QString Account::defaultSyncRoot() const
