@@ -62,11 +62,6 @@ void ConnectionValidator::setClearCookies(bool clearCookies)
 void ConnectionValidator::checkServer(ConnectionValidator::ValidationMode mode)
 {
     _mode = mode;
-    if (!_account) {
-        _errors << tr("No ownCloud account configured");
-        reportResult(NotConfigured);
-        return;
-    }
     qCDebug(lcConnectionValidator) << "Checking server and authentication";
 
     // Lookup system proxy in a thread https://github.com/owncloud/client/issues/2993
