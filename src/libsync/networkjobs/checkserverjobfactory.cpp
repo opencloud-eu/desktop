@@ -73,8 +73,8 @@ CheckServerJobFactory CheckServerJobFactory::createFromAccount(const AccountPtr 
     nam->setParent(parent);
     // do we start with the old cookies or new
     if (!(clearCookies && Theme::instance()->connectionValidatorClearCookies())) {
-        const auto accountCookies = account->accessManager()->ownCloudCookieJar()->allCookies();
-        nam->ownCloudCookieJar()->setAllCookies(accountCookies);
+        const auto accountCookies = account->accessManager()->openCloudCookieJar()->allCookies();
+        nam->openCloudCookieJar()->setAllCookies(accountCookies);
     }
     return CheckServerJobFactory(nam);
 }
