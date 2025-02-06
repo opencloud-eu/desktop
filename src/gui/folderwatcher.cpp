@@ -137,22 +137,12 @@ int FolderWatcher::testLinuxWatchCount() const
 #endif
 }
 
-void FolderWatcher::addChanges(const QSet<QString> &paths)
+void FolderWatcher::addChanges(QSet<QString> &&paths)
 {
     Q_ASSERT(thread() == QThread::currentThread());
     // the timer must be inactive if we haven't received changes yet
     Q_ASSERT(!_timer.isActive() && _changeSet.isEmpty() || !_changeSet.isEmpty());
-    _changeSet.unite(paths);
-    if (!_timer.isActive()) {
-        _timer.start();
-        // promote that we will report changes once _timer times out
-        Q_EMIT changesDetected();
-    }
-}
-
-QSet<QString> FolderWatcher::popChangeSet()
-{
-    auto paths = std::move(_changeSet);
+    Q_ASSERT(!paths.isEmpty());
     // ------- handle ignores:
     auto it = paths.cbegin();
     while (it != paths.cend()) {
@@ -166,7 +156,19 @@ QSet<QString> FolderWatcher::popChangeSet()
             ++it;
         }
     }
-    return paths;
+    if (!paths.isEmpty()) {
+        _changeSet.unite(paths);
+        if (!_timer.isActive()) {
+            _timer.start();
+            // promote that we will report changes once _timer times out
+            Q_EMIT changesDetected();
+        }
+    }
+}
+
+QSet<QString> FolderWatcher::popChangeSet()
+{
+    return std::move(_changeSet);
 }
 
 } // namespace OCC

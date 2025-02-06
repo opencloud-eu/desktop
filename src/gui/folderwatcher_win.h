@@ -50,7 +50,7 @@ protected:
     void closeHandle();
 
 Q_SIGNALS:
-    void changed(const QSet<QString> &path);
+    void changed(QSet<QString> path);
     void lostChanges();
 
 private:

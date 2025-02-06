@@ -73,7 +73,7 @@ static void callback(
     }
 
     if (!paths.isEmpty()) {
-        reinterpret_cast<FolderWatcherPrivate *>(clientCallBackInfo)->doNotifyParent(paths);
+        reinterpret_cast<FolderWatcherPrivate *>(clientCallBackInfo)->doNotifyParent(std::move(paths));
     }
 }
 
@@ -103,9 +103,9 @@ void FolderWatcherPrivate::startWatching()
     FSEventStreamStart(_stream);
 }
 
-void FolderWatcherPrivate::doNotifyParent(const QSet<QString> &paths)
+void FolderWatcherPrivate::doNotifyParent(QSet<QString> &&paths)
 {
-    _parent->addChanges(paths);
+    _parent->addChanges(std::move(paths));
 }
 
 
