@@ -72,7 +72,6 @@ class OPENCLOUD_SYNC_EXPORT Theme : public QObject
     Q_OBJECT
     Q_PROPERTY(bool multiAccount READ multiAccount FINAL CONSTANT)
     Q_PROPERTY(QList<QmlUrlButton> urlButtons READ qmlUrlButtons FINAL CONSTANT)
-    Q_PROPERTY(bool syncNewlyDiscoveredSpaces READ syncNewlyDiscoveredSpaces FINAL CONSTANT)
     Q_PROPERTY(QColor avatarColor READ avatarColor NOTIFY themeChanged)
     Q_PROPERTY(QColor avatarColorChecked READ avatarColorChecked NOTIFY themeChanged)
     Q_PROPERTY(QColor brandedBackgoundColor READ wizardHeaderBackgroundColor CONSTANT)
@@ -425,14 +424,6 @@ public:
      * Default: true
      */
     virtual bool enableMoveToTrash() const;
-
-    /**
-     * @brief Automatically add sync connections for newly discovered Spaces.
-     *
-     * Default: false
-     * See #11749
-     */
-    virtual bool syncNewlyDiscoveredSpaces() const;
 
     /**
      * Whether to enable the special code for cernbox

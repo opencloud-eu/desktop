@@ -99,7 +99,6 @@ protected Q_SLOTS:
     void slotFolderWizardAccepted();
     void slotDeleteAccount();
     void slotToggleSignInState();
-    void slotCustomContextMenuRequested(Folder *folder);
 
 private:
     void showSelectiveSyncDialog(Folder *folder);

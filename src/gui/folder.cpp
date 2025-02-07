@@ -252,6 +252,15 @@ SyncOptions Folder::loadSyncOptions()
     return opt;
 }
 
+void Folder::setIsReady(bool b)
+{
+    if (b == _vfsIsReady) {
+        return;
+    }
+    _vfsIsReady = b;
+    Q_EMIT isReadyChanged();
+}
+
 void Folder::prepareFolder(const QString &path)
 {
 #ifdef Q_OS_WIN
@@ -361,14 +370,14 @@ QUrl Folder::webDavUrl() const
     return _definition.webDavUrl();
 }
 
-bool Folder::syncPaused() const
+bool Folder::isSyncPaused() const
 {
     return _definition.paused;
 }
 
 bool Folder::canSync() const
 {
-    return _engine && !syncPaused() && accountState()->readyForSync() && isReady() && _accountState->account()->hasCapabilities() && _folderWatcher;
+    return _engine && !isSyncPaused() && accountState()->readyForSync() && isReady() && _accountState->account()->hasCapabilities() && _folderWatcher;
 }
 
 bool Folder::isReady() const
@@ -548,7 +557,7 @@ void Folder::startVfs()
                 FolderMan::instance()->scheduler()->enqueueFolder(this, SyncScheduler::Priority::High);
             }
         });
-        _vfsIsReady = true;
+        setIsReady(true);
         Q_EMIT FolderMan::instance()->folderListChanged();
         // we are setup, schedule ourselves if we can
         // if not the scheduler will take care of it later.
@@ -559,7 +568,7 @@ void Folder::startVfs()
     connect(_vfs.data(), &Vfs::error, this, [this](const QString &error) {
         _syncResult.appendErrorString(error);
         setSyncState(SyncResult::SetupError);
-        _vfsIsReady = false;
+        setIsReady(false);
     });
 
     slotNextSyncFullLocalDiscovery();
@@ -708,7 +717,7 @@ void Folder::setVirtualFilesEnabled(bool enabled)
             _vfs->wipeDehydratedVirtualFiles();
 
             // Tear down the VFS
-            _vfsIsReady = false;
+            setIsReady(false);
             _vfs->stop();
             _vfs->unregisterFolder();
 
@@ -801,6 +810,11 @@ bool Folder::isFileExcludedRelative(const QString &relativePath) const
     return isFileExcludedAbsolute(path() + relativePath);
 }
 
+void Folder::openInWebBrowser()
+{
+    fetchPrivateLinkUrl(_accountState->account(), webDavUrl(), {}, this, [](const QUrl &url) { Utility::openBrowser(url, nullptr); });
+}
+
 void Folder::slotTerminateSync(const QString &reason)
 {
     if (isReady()) {
@@ -819,7 +833,7 @@ void Folder::wipeForRemoval()
         return;
     }
     // prevent interaction with the db etc
-    _vfsIsReady = false;
+    setIsReady(false);
 
     // stop reacting to changes
     // especially the upcoming deletion of the db
@@ -964,6 +978,7 @@ void Folder::slotSyncStarted()
 {
     qCInfo(lcFolder) << "#### Propagation start ####################################################";
     setSyncState(SyncResult::SyncRunning);
+    Q_EMIT isSyncRunningChanged();
 }
 
 void Folder::slotSyncFinished(bool success)
@@ -973,6 +988,7 @@ void Folder::slotSyncFinished(bool success)
         return;
     }
     qCInfo(lcFolder) << "Client version" << Theme::instance()->aboutVersions(Theme::VersionFormat::OneLiner);
+    Q_EMIT isSyncRunningChanged();
 
     bool syncError = !_syncResult.errorStrings().isEmpty();
     if (syncError) {
