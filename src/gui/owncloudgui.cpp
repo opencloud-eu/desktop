@@ -243,7 +243,7 @@ void ownCloudGui::slotComputeOverallSyncStatus()
 
     const auto &map = FolderMan::instance()->folders();
     for (auto *f : map) {
-        if (!f->syncPaused()) {
+        if (!f->isSyncPaused()) {
             allPaused = false;
         }
     }
@@ -304,9 +304,7 @@ void ownCloudGui::slotComputeOverallSyncStatus()
 #else
     QStringList allStatusStrings;
     for (auto *folder : map) {
-        QString folderMessage = FolderMan::trayTooltipStatusString(
-            folder->syncResult(),
-            folder->syncPaused());
+        QString folderMessage = FolderMan::trayTooltipStatusString(folder->syncResult(), folder->isSyncPaused());
         allStatusStrings += tr("Folder %1: %2").arg(folder->shortGuiLocalPath(), folderMessage);
     }
     trayMessage = allStatusStrings.join(QLatin1String("\n"));
@@ -354,7 +352,7 @@ void ownCloudGui::addAccountContextMenu(AccountStatePtr accountState, QMenu *men
             continue;
         }
 
-        if (folder->syncPaused()) {
+        if (folder->isSyncPaused()) {
             onePaused = true;
         }
         menu->addAction(tr("Open folder '%1'").arg(folder->shortGuiLocalPath()), this, [this, folder] { slotFolderOpenAction(folder); });
@@ -461,7 +459,7 @@ void ownCloudGui::updateContextMenu()
     }
 
     for (auto *f : FolderMan::instance()->folders()) {
-        if (f->syncPaused()) {
+        if (f->isSyncPaused()) {
             atLeastOnePaused = true;
         }
     }

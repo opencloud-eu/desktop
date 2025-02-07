@@ -138,6 +138,12 @@ class OPENCLOUD_GUI_EXPORT Folder : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(GraphApi::Space *space READ space NOTIFY spaceChanged)
+    Q_PROPERTY(QString path READ path CONSTANT)
+    Q_PROPERTY(QUrl webDavUrl READ webDavUrl CONSTANT)
+    Q_PROPERTY(bool isReady READ isReady NOTIFY isReadyChanged)
+    Q_PROPERTY(bool isSyncPaused READ isSyncPaused NOTIFY syncPausedChanged)
+    Q_PROPERTY(bool isSyncRunning READ isSyncRunning NOTIFY isSyncRunningChanged)
+    Q_PROPERTY(bool isDeployed READ isDeployed CONSTANT)
     QML_ELEMENT
     QML_UNCREATABLE("Folders can only be created by the FolderManager")
 
@@ -192,7 +198,7 @@ public:
      */
     void setSyncPaused(bool);
 
-    bool syncPaused() const;
+    bool isSyncPaused() const;
 
     /**
      * Returns true when the folder may sync.
@@ -327,6 +333,8 @@ Q_SIGNALS:
     void syncPausedChanged(Folder *, bool paused);
     void canSyncChanged();
     void spaceChanged();
+    void isReadyChanged();
+    void isSyncRunningChanged();
 
 
     /**
@@ -336,6 +344,8 @@ Q_SIGNALS:
     void watchedFileChangedExternally(const QString &path);
 
 public Q_SLOTS:
+    void openInWebBrowser();
+
     /**
        * terminate the current sync run
        */
@@ -420,6 +430,8 @@ private:
     bool checkLocalPath();
 
     SyncOptions loadSyncOptions();
+
+    void setIsReady(bool b);
 
     /**
      * Sets up this folder's folderWatcher if possible.

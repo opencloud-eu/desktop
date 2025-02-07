@@ -45,7 +45,7 @@ namespace {
         auto status = f->syncResult();
         if (!f->accountState()->isConnected()) {
             status.setStatus(SyncResult::Status::Offline);
-        } else if (f->syncPaused() || NetworkInformation::instance()->isBehindCaptivePortal() || NetworkInformation::instance()->isMetered()) {
+        } else if (f->isSyncPaused() || NetworkInformation::instance()->isBehindCaptivePortal() || NetworkInformation::instance()->isMetered()) {
             status.setStatus(SyncResult::Status::Paused);
         }
         return QStringLiteral("states/%1").arg(Theme::instance()->syncStateIconName(status));

@@ -62,7 +62,7 @@ void TrayOverallStatusResult::addResult(Folder *f)
         lastSyncDone = time;
     }
 
-    auto status = f->syncPaused() || NetworkInformation::instance()->isBehindCaptivePortal() || NetworkInformation::instance()->isMetered()
+    auto status = f->isSyncPaused() || NetworkInformation::instance()->isBehindCaptivePortal() || NetworkInformation::instance()->isMetered()
         ? SyncResult::Paused
         : f->syncResult().status();
     if (status == SyncResult::Undefined) {
@@ -466,7 +466,7 @@ Folder *FolderMan::addFolderInternal(
 
     qCInfo(lcFolderMan) << "Adding folder to Folder Map " << folder << folder->path();
     _folders.push_back(folder);
-    if (folder->syncPaused()) {
+    if (folder->isSyncPaused()) {
         _disabledFolders.insert(folder);
     }
 

@@ -131,7 +131,7 @@ Pane {
                     id: folderDelegate
 
                     implicitHeight: normalSize
-                    width: ListView.view.width - scrollView.ScrollBar.vertical.width - 10
+                    width: ListView.view.width - scrollView.ScrollBar.vertical.width - spacing
 
                     required property string displayName
                     required property var errorMsg
@@ -178,7 +178,7 @@ Pane {
 
                             onClicked: mouse => {
                                 if (mouse.button === Qt.RightButton) {
-                                    accountSettings.slotCustomContextMenuRequested(folder);
+                                    contextMenu.popup();
                                 } else {
                                     folderDelegate.ListView.view.currentIndex = folderDelegate.index;
                                     folderDelegate.forceActiveFocus(Qt.TabFocusReason);
@@ -304,13 +304,53 @@ Pane {
                                 }
 
                                 onClicked: {
-                                    accountSettings.slotCustomContextMenuRequested(folder);
+                                    contextMenu.open();
                                 }
 
                                 // select the list item the button belongs to
                                 onFocusChanged: {
                                     if (moreButton.focusReason == Qt.TabFocusReason || moreButton.focusReason == Qt.BacktabFocusReason) {
                                         folderDelegate.ListView.view.currentIndex = folderDelegate.index;
+                                    }
+                                }
+
+                                Menu {
+                                    id: contextMenu
+
+                                    MenuItem {
+                                        text: CommonStrings.showInFileBrowser()
+                                        onTriggered: Qt.openUrlExternally("file:///" + folderDelegate.folder.path)
+                                    }
+
+                                    MenuItem {
+                                        text: CommonStrings.showInWebBrowser()
+                                        onTriggered: folderDelegate.folder.openInWebBrowser()
+                                    }
+
+                                    MenuSeparator {}
+
+                                    MenuItem {
+                                        text: folderDelegate.folder.isSyncRunning ? qsTr("Restart sync") : qsTr("Force sync now")
+                                        enabled: accountSettings.accountState.state === AccountState.Connected && !folderDelegate.folder.isSyncPaused
+                                        onTriggered: accountSettings.slotForceSyncCurrentFolder(folderDelegate.folder)
+                                        visible: folderDelegate.folder.isReady
+                                    }
+
+                                    MenuItem {
+                                        text: folderDelegate.folder.isSyncPaused ? qsTr("Resume sync") : qsTr("Pause sync")
+                                        enabled: accountSettings.accountState.state === AccountState.Connected
+                                        onTriggered: accountSettings.slotEnableCurrentFolder(folderDelegate.folder, true)
+                                        visible: folderDelegate.folder.isReady
+                                    }
+
+                                    MenuItem {
+                                        text: qsTr("Remove folder sync connection")
+                                        onTriggered: accountSettings.slotRemoveCurrentFolder(folderDelegate.folder)
+                                        visible: !folderDelegate.isDeployed
+                                    }
+
+                                    onOpened: {
+                                        Accessible.announce(qsTr("Sync options menu"));
                                     }
                                 }
                             }
@@ -332,8 +372,6 @@ Pane {
                     accountSettings.slotAddFolder();
                 }
                 enabled: (accountSettings.accountState.state === AccountState.Connected) && accountSettings.unsyncedSpaces
-
-                visible: !Theme.syncNewlyDiscoveredSpaces
 
                 Keys.onBacktabPressed: {
                     listView.currentItem.forceActiveFocus(Qt.TabFocusReason);

@@ -102,115 +102,6 @@ void AccountSettings::slotToggleSignInState()
     }
 }
 
-void AccountSettings::slotCustomContextMenuRequested(Folder *folder)
-{
-    // qpointer for async calls
-    const auto isDeployed = folder->isDeployed();
-    const auto addRemoveFolderAction = [isDeployed, folder, this](QMenu *menu) {
-        Q_ASSERT(!isDeployed);
-        return menu->addAction(tr("Remove folder sync connection"), this, [folder, this] { slotRemoveCurrentFolder(folder); });
-    };
-
-
-    auto *menu = new QMenu(ui->quickWidget);
-    menu->setAccessibleName(tr("Sync options menu"));
-    menu->setAttribute(Qt::WA_DeleteOnClose);
-    connect(folder, &OCC::Folder::destroyed, menu, &QMenu::close);
-    // Only allow removal if the item isn't in "ready" state.
-    if (!folder->isReady() && !isDeployed) {
-        if (Theme::instance()->syncNewlyDiscoveredSpaces()) {
-            menu->addAction(tr("Folder is not ready yet"))->setEnabled(false);
-        } else {
-            addRemoveFolderAction(menu);
-        }
-        menu->popup(QCursor::pos());
-        // accassebility
-        menu->setFocus();
-        return;
-    }
-    // Add an action to open the folder in the system's file browser:
-    const QUrl folderUrl = QUrl::fromLocalFile(folder->path());
-    if (!folderUrl.isEmpty()) {
-        QAction *ac = menu->addAction(CommonStrings::showInFileBrowser(), this, [folderUrl]() {
-            qCInfo(lcAccountSettings) << "Opening local folder" << folderUrl;
-            if (!QDesktopServices::openUrl(folderUrl)) {
-                qCWarning(lcAccountSettings) << "QDesktopServices::openUrl failed for" << folderUrl;
-            }
-        });
-
-        if (!QFile::exists(folderUrl.toLocalFile())) {
-            ac->setEnabled(false);
-        }
-    }
-
-    // Add an action to open the folder on the server in a webbrowser:
-    if (folder->accountState()->account()->capabilities().privateLinkPropertyAvailable()) {
-        menu->addAction(CommonStrings::showInWebBrowser(), this, [davUrl = folder->webDavUrl(), this] {
-            fetchPrivateLinkUrl(_accountState->account(), davUrl, {}, this, [](const QUrl &url) { Utility::openBrowser(url, nullptr); });
-        });
-    }
-
-
-    // Root-folder specific actions:
-    menu->addSeparator();
-
-    // qpointer for the async context menu
-    if (OC_ENSURE(folder->isReady())) {
-        const bool folderPaused = folder->syncPaused();
-
-        if (!folderPaused) {
-            QAction *forceSyncAction = menu->addAction(tr("Force sync now"));
-            if (folder->isSyncRunning()) {
-                forceSyncAction->setText(tr("Restart sync"));
-            }
-            forceSyncAction->setEnabled(folder->accountState()->isConnected());
-            connect(forceSyncAction, &QAction::triggered, this, [folder, this] { slotForceSyncCurrentFolder(folder); });
-        }
-
-        QAction *resumeAction = menu->addAction(folderPaused ? tr("Resume sync") : tr("Pause sync"));
-        connect(resumeAction, &QAction::triggered, this, [folder, this] { slotEnableCurrentFolder(folder, true); });
-
-        if (!isDeployed) {
-            if (!Theme::instance()->syncNewlyDiscoveredSpaces()) {
-                addRemoveFolderAction(menu);
-            }
-
-            auto maybeShowEnableVfs = [folder, menu, this]() {
-                // Only show "Enable VFS" if a VFS mode is available
-                const auto mode = VfsPluginManager::instance().bestAvailableVfsMode();
-                if (FolderMan::instance()->checkVfsAvailability(folder->path(), mode)) {
-                    if (mode == Vfs::WindowsCfApi) {
-                        QAction *enableVfsAction = menu->addAction(tr("Enable virtual file support"));
-                        connect(enableVfsAction, &QAction::triggered, this, [folder, this] { slotEnableVfsCurrentFolder(folder); });
-                    }
-                }
-            };
-
-            if (Theme::instance()->showVirtualFilesOption()) {
-                if (Theme::instance()->forceVirtualFilesOption()) {
-                    if (!folder->virtualFilesEnabled()) {
-                        // VFS is currently disabled, but is forced on by theming (e.g. due to a theme change)
-                        maybeShowEnableVfs();
-                    }
-                } else {
-                    if (folder->virtualFilesEnabled()) {
-                        menu->addAction(tr("Disable virtual file support"), this, [folder, this] { slotDisableVfsCurrentFolder(folder); });
-                    } else {
-                        maybeShowEnableVfs();
-                    }
-                }
-            }
-            if (!folder->virtualFilesEnabled()) {
-                menu->addAction(tr("Choose what to sync"), this, [folder, this] { showSelectiveSyncDialog(folder); });
-            }
-            menu->popup(QCursor::pos());
-            menu->setFocus(); // for accassebility (keyboard navigation)
-        } else {
-            menu->deleteLater();
-        }
-    }
-}
-
 void AccountSettings::showSelectiveSyncDialog(Folder *folder)
 {
     auto *selectiveSync = new SelectiveSyncWidget(_accountState->account(), this);
@@ -266,6 +157,7 @@ void AccountSettings::slotFolderWizardAccepted()
 
 void AccountSettings::slotRemoveCurrentFolder(Folder *folder)
 {
+    // TODO: move to qml
     qCInfo(lcAccountSettings) << "Remove Folder " << folder->path();
     QString shortGuiLocalPath = folder->shortGuiLocalPath();
 
@@ -351,7 +243,7 @@ void AccountSettings::slotEnableCurrentFolder(Folder *folder, bool terminate)
     bool currentlyPaused = false;
 
     // this sets the folder status to disabled but does not interrupt it.
-    currentlyPaused = folder->syncPaused();
+    currentlyPaused = folder->isSyncPaused();
     if (!currentlyPaused && !terminate) {
         // check if a sync is still running and if so, ask if we should terminate.
         if (folder->isSyncRunning()) { // its still running
@@ -494,44 +386,14 @@ void AccountSettings::slotSpacesUpdated()
         unsycnedSpaces.erase(f->space());
     }
 
-    // Check if we should add new spaces automagically, or only signal that there are unsynced spaces.
-    if (Theme::instance()->syncNewlyDiscoveredSpaces()) {
-        QTimer::singleShot(0, [this, unsycnedSpaces]() {
-            auto accountStatePtr = accountsState();
-
-            for (GraphApi::Space *newSpace : unsycnedSpaces) {
-                // TODO: Problem: when a space is manually removed, this will re-add it!
-                qCInfo(lcAccountSettings) << "Adding sync connection for newly discovered space" << newSpace->displayName();
-
-                const QString localDir(accountsState()->account()->defaultSyncRoot());
-                const QString folderName = FolderMan::instance()->findGoodPathForNewSyncFolder(
-                    localDir, newSpace->displayName(), FolderMan::NewFolderType::SpacesFolder, accountStatePtr->account()->uuid());
-
-                FolderMan::SyncConnectionDescription fwr;
-                fwr.davUrl = QUrl(newSpace->drive().getRoot().getWebDavUrl());
-                fwr.spaceId = newSpace->drive().getRoot().getId();
-                fwr.localPath = folderName;
-                fwr.displayName = newSpace->displayName();
-                fwr.useVirtualFiles = Utility::isWindows() ? Theme::instance()->showVirtualFilesOption() : false;
-                fwr.priority = newSpace->priority();
-                FolderMan::instance()->addFolderFromFolderWizardResult(accountStatePtr, fwr);
-            }
-
-            _unsyncedSpaces = 0;
-            _syncedSpaces = accountsState()->account()->spacesManager()->spaces().size();
-            Q_EMIT unsyncedSpacesChanged();
-            Q_EMIT syncedSpacesChanged();
-        });
-    } else {
-        if (_unsyncedSpaces != unsycnedSpaces.size()) {
-            _unsyncedSpaces = static_cast<uint>(unsycnedSpaces.size());
-            Q_EMIT unsyncedSpacesChanged();
-        }
-        uint syncedSpaces = spaces.size() - _unsyncedSpaces;
-        if (_syncedSpaces != syncedSpaces) {
-            _syncedSpaces = syncedSpaces;
-            Q_EMIT syncedSpacesChanged();
-        }
+    if (_unsyncedSpaces != unsycnedSpaces.size()) {
+        _unsyncedSpaces = static_cast<uint>(unsycnedSpaces.size());
+        Q_EMIT unsyncedSpacesChanged();
+    }
+    uint syncedSpaces = spaces.size() - _unsyncedSpaces;
+    if (_syncedSpaces != syncedSpaces) {
+        _syncedSpaces = syncedSpaces;
+        Q_EMIT syncedSpacesChanged();
     }
 }
 
