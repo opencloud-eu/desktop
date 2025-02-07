@@ -13,7 +13,6 @@
  */
 
 #include "serverurlsetupwizardstate.h"
-#include "determineauthtypejobfactory.h"
 #include "jobs/discoverwebfingerservicejobfactory.h"
 #include "jobs/resolveurljobfactory.h"
 #include "theme.h"
@@ -75,7 +74,7 @@ void ServerUrlSetupWizardState::evaluatePage()
 
     // (ab)use the account builder as temporary storage for the URL we are about to probe (after sanitation)
     // in case of errors, the user can just edit the previous value
-    _context->accountBuilder().setServerUrl(serverUrl, DetermineAuthTypeJob::AuthType::Unknown);
+    _context->accountBuilder().setServerUrl(serverUrl);
 
     // TODO: perform some better validation
     if (!serverUrl.isValid()) {
@@ -121,23 +120,8 @@ void ServerUrlSetupWizardState::evaluatePage()
                         Q_EMIT evaluationFailed(resolveJob->errorMessage());
                         return;
                     }
-
-                    const auto resolvedUrl = resolveJob->result().toUrl();
-
-                    // next, we need to find out which kind of authentication page we have to present to the user
-                    auto authTypeJob = DetermineAuthTypeJobFactory(_context->accessManager()).startJob(resolvedUrl, this);
-
-                    connect(authTypeJob, &CoreJob::finished, authTypeJob, [this, authTypeJob, resolvedUrl]() {
-                        authTypeJob->deleteLater();
-
-                        if (authTypeJob->result().isNull()) {
-                            Q_EMIT evaluationFailed(authTypeJob->errorMessage());
-                            return;
-                        }
-
-                        _context->accountBuilder().setServerUrl(resolvedUrl, qvariant_cast<DetermineAuthTypeJob::AuthType>(authTypeJob->result()));
-                        Q_EMIT evaluationSuccessful();
-                    });
+                    _context->accountBuilder().setServerUrl(resolveJob->result().toUrl());
+                    Q_EMIT evaluationSuccessful();
                 });
 
                 connect(

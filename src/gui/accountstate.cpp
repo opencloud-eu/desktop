@@ -541,8 +541,8 @@ void AccountState::slotInvalidCredentials()
             }
             qCInfo(lcAccountState) << "refreshing oauth failed";
         }
-        qCInfo(lcAccountState) << "asking user";
-        account()->credentials()->askFromUser();
+        qCInfo(lcAccountState) << "restart oauth";
+        account()->credentials()->restartOauth();
         setState(AskingCredentials);
     }
 }

@@ -333,42 +333,6 @@ void EntityExistsJob::finished()
     Q_EMIT exists(reply());
 }
 
-/*********************************************************************************************/
-
-
-DetermineAuthTypeJob::DetermineAuthTypeJob(AccountPtr account, QObject *parent)
-    : AbstractNetworkJob(account, account->davUrl(), {}, parent)
-{
-    setAuthenticationJob(true);
-    setForceIgnoreCredentialFailure(true);
-}
-
-void DetermineAuthTypeJob::start()
-{
-    qCInfo(lcDetermineAuthTypeJob) << "Determining auth type for" << url();
-
-    QNetworkRequest req;
-    // Prevent HttpCredentialsAccessManager from setting an Authorization header.
-    req.setAttribute(HttpCredentials::DontAddCredentialsAttribute, true);
-    // Don't reuse previous auth credentials
-    req.setAttribute(QNetworkRequest::AuthenticationReuseAttribute, QNetworkRequest::Manual);
-    sendRequest("PROPFIND", req);
-    AbstractNetworkJob::start();
-}
-
-void DetermineAuthTypeJob::finished()
-{
-    auto authChallenge = reply()->rawHeader("WWW-Authenticate").toLower();
-    auto result = AuthType::Basic;
-    if (authChallenge.contains("bearer ")) {
-        result = AuthType::OAuth;
-    } else if (authChallenge.isEmpty()) {
-        qCWarning(lcDetermineAuthTypeJob) << "Did not receive WWW-Authenticate reply to auth-test PROPFIND";
-    }
-    qCInfo(lcDetermineAuthTypeJob) << "Auth type for" << _account->davUrl() << "is" << result;
-    Q_EMIT this->authType(result);
-}
-
 SimpleNetworkJob::SimpleNetworkJob(AccountPtr account, const QUrl &rootUrl, const QString &path, const QByteArray &verb, const QNetworkRequest &req, QObject *parent)
     : AbstractNetworkJob(account, rootUrl, path, parent)
     , _request(req)

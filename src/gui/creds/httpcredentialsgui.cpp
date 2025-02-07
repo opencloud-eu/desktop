@@ -32,108 +32,13 @@ namespace OCC {
 
 Q_LOGGING_CATEGORY(lcHttpCredentialsGui, "sync.credentials.http.gui", QtInfoMsg)
 
-HttpCredentialsGui::HttpCredentialsGui(const QString &loginUser, const QString &password)
-    : HttpCredentials(DetermineAuthTypeJob::AuthType::Basic, loginUser, password)
-{
-}
-
-HttpCredentialsGui::HttpCredentialsGui(const QString &davUser, const QString &password, const QString &refreshToken)
-    : HttpCredentials(DetermineAuthTypeJob::AuthType::OAuth, davUser, password)
+HttpCredentialsGui::HttpCredentialsGui(const QString &davUser, const QString &accessToken, const QString &refreshToken)
+    : HttpCredentials(davUser, accessToken)
 {
     _refreshToken = refreshToken;
 }
 
-void HttpCredentialsGui::askFromUser()
-{
-    // This function can be called from AccountState::slotInvalidCredentials,
-    // which (indirectly, through HttpCredentials::invalidateToken) schedules
-    // a cache wipe of the qnam. We can only execute a network job again once
-    // the cache has been cleared, otherwise we'd interfere with the job.
-    QTimer::singleShot(0, this, [this] {
-        if (isUsingOAuth()) {
-            startOAuth();
-        } else {
-            // First, we will check what kind of auth we need.
-            auto job = new DetermineAuthTypeJob(_account->sharedFromThis(), this);
-            QObject::connect(job, &DetermineAuthTypeJob::authType, this, [this](DetermineAuthTypeJob::AuthType type) {
-                _authType = type;
-                if (type == DetermineAuthTypeJob::AuthType::OAuth) {
-                    startOAuth();
-                } else if (type == DetermineAuthTypeJob::AuthType::Basic) {
-                    showDialog();
-                } else {
-                    qCWarning(lcHttpCredentialsGui) << "Bad http auth type:" << type;
-                    Q_EMIT fetched();
-                }
-            });
-            job->start();
-        }
-    });
-}
-
-void HttpCredentialsGui::asyncAuthResult(OAuth::Result r, const QString &token, const QString &refreshToken)
-{
-    _asyncAuth.reset();
-    switch (r) {
-    case OAuth::NotSupported:
-        if (_modalWidget) {
-            _modalWidget->deleteLater();
-            _modalWidget.clear();
-        }
-        // show basic auth dialog for historic reasons
-        showDialog();
-        return;
-    case OAuth::ErrorInsecureUrl:
-        // should not happen after the initial setup
-        Q_ASSERT(false);
-        [[fallthrough]];
-    case OAuth::Error:
-        Q_EMIT oAuthErrorOccurred();
-        return;
-    case OAuth::LoggedIn:
-        Q_EMIT oAuthLoginAccepted();
-        break;
-    }
-
-    _password = token;
-    _refreshToken = refreshToken;
-    _ready = true;
-    persist();
-    Q_EMIT fetched();
-}
-
-void HttpCredentialsGui::showDialog()
-{
-    if (_modalWidget) {
-        return;
-    }
-
-    auto basicCredentials = new QmlBasicCredentials(_account->url(), _account->davDisplayName(), this);
-    basicCredentials->setReadOnlyName(user());
-    _modalWidget = new AccountModalWidget(tr("Login required"), QUrl(QStringLiteral("qrc:/qt/qml/eu/OpenCloud/gui/qml/credentials/BasicAuthCredentials.qml")),
-        basicCredentials, ocApp()->gui()->settingsDialog());
-    connect(basicCredentials, &QmlBasicCredentials::logOutRequested, _modalWidget, [basicCredentials, this] {
-        Q_EMIT requestLogout();
-        Q_EMIT fetched();
-        _modalWidget->reject();
-        basicCredentials->deleteLater();
-    });
-    connect(basicCredentials, &QmlBasicCredentials::loginRequested, _modalWidget, [basicCredentials, this] {
-        _password = basicCredentials->password();
-        basicCredentials->deleteLater();
-        _refreshToken.clear();
-        _ready = true;
-        persist();
-
-        Q_EMIT fetched();
-        _modalWidget->accept();
-    });
-
-
-    ocApp()->gui()->settingsDialog()->accountSettings(_account)->addModalWidget(_modalWidget);
-}
-
-void HttpCredentialsGui::startOAuth()
+void HttpCredentialsGui::restartOauth()
 {
     qCDebug(lcHttpCredentialsGui) << "showing modal dialog asking user to log in again via OAuth2";
     if (_asyncAuth) {
@@ -159,7 +64,7 @@ void HttpCredentialsGui::startOAuth()
         _modalWidget->reject();
         _modalWidget.clear();
         _asyncAuth.reset();
-        startOAuth();
+        restartOauth();
     });
     connect(this, &HttpCredentialsGui::oAuthLoginAccepted, _modalWidget, &AccountModalWidget::accept);
     connect(this, &HttpCredentialsGui::oAuthErrorOccurred, oauthCredentials, [this]() {
@@ -170,5 +75,29 @@ void HttpCredentialsGui::startOAuth()
     ocApp()->gui()->settingsDialog()->accountSettings(_account)->addModalWidget(_modalWidget);
     _asyncAuth->startAuthentication();
 }
+
+void HttpCredentialsGui::asyncAuthResult(OAuth::Result r, const QString &token, const QString &refreshToken)
+{
+    _asyncAuth.reset();
+    switch (r) {
+    case OAuth::ErrorInsecureUrl:
+        // should not happen after the initial setup
+        Q_ASSERT(false);
+        [[fallthrough]];
+    case OAuth::Error:
+        Q_EMIT oAuthErrorOccurred();
+        return;
+    case OAuth::LoggedIn:
+        Q_EMIT oAuthLoginAccepted();
+        break;
+    }
+
+    _accessToken = token;
+    _refreshToken = refreshToken;
+    _ready = true;
+    persist();
+    Q_EMIT fetched();
+}
+
 
 } // namespace OCC

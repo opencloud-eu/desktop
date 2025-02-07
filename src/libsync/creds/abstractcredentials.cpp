@@ -33,5 +33,6 @@ void AbstractCredentials::setAccount(Account *account)
     OC_ENFORCE_X(!_account, "should only setAccount once");
     _account = account;
 }
+void AbstractCredentials::checkCredentials(QNetworkReply *reply) { }
 
 } // namespace OCC
