@@ -631,8 +631,7 @@ void OAuth::openBrowser()
 
     if (!QDesktopServices::openUrl(authorisationLink())) {
         qCWarning(lcOauth) << "QDesktopServices::openUrl Failed";
-        // We cannot open the browser, then we claim we don't support OAuth.
-        Q_EMIT result(NotSupported, QString());
+        Q_EMIT result(Error, {});
     }
 }
 
