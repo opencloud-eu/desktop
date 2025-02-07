@@ -7,7 +7,6 @@
 #include "states/abstractsetupwizardstate.h"
 #include "states/accountconfiguredsetupwizardstate.h"
 #include "states/basiccredentialssetupwizardstate.h"
-#include "states/legacywebfingersetupwizardstate.h"
 #include "states/oauthcredentialssetupwizardstate.h"
 #include "states/serverurlsetupwizardstate.h"
 #include "theme.h"
@@ -31,10 +30,6 @@ QList<SetupWizardState> getNavigationEntries()
     QList<SetupWizardState> states = {
         SetupWizardState::ServerUrlState
     };
-
-    if (Theme::instance()->wizardEnableWebfinger()) {
-        states.append(SetupWizardState::LegacyWebFingerState);
-    }
 
     states.append({
         SetupWizardState::CredentialsState,
@@ -85,12 +80,6 @@ SetupWizardController::SetupWizardController(SettingsDialog *parent)
         qCDebug(lcSetupWizardController) << "back button clicked, current state" << _currentState;
 
         auto previousState = static_cast<SetupWizardState>(currentStateIdx - 1);
-
-        // skip WebFinger page when WebFinger is not available
-        if (previousState == SetupWizardState::LegacyWebFingerState && !Theme::instance()->wizardEnableWebfinger()) {
-            previousState = SetupWizardState::ServerUrlState;
-        }
-
         changeStateTo(previousState);
     });
 }
@@ -112,10 +101,6 @@ void SetupWizardController::changeStateTo(SetupWizardState nextState, ChangeReas
     switch (nextState) {
     case SetupWizardState::ServerUrlState: {
         _currentState = new ServerUrlSetupWizardState(_context);
-        break;
-    }
-    case SetupWizardState::LegacyWebFingerState: {
-        _currentState = new LegacyWebFingerSetupWizardState(_context);
         break;
     }
     case SetupWizardState::CredentialsState: {
@@ -160,14 +145,6 @@ void SetupWizardController::changeStateTo(SetupWizardState nextState, ChangeReas
     connect(_currentState, &AbstractSetupWizardState::evaluationSuccessful, this, [this]() {
         switch (_currentState->state()) {
         case SetupWizardState::ServerUrlState: {
-            if (Theme::instance()->wizardEnableWebfinger()) {
-                changeStateTo(SetupWizardState::LegacyWebFingerState);
-            } else {
-                changeStateTo(SetupWizardState::CredentialsState);
-            }
-            return;
-        }
-        case SetupWizardState::LegacyWebFingerState: {
             changeStateTo(SetupWizardState::CredentialsState);
             return;
         }

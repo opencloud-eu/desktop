@@ -35,15 +35,7 @@ Q_LOGGING_CATEGORY(lcSetupWizardServerUrlState, "gui.setupwizard.states.serverur
 ServerUrlSetupWizardState::ServerUrlSetupWizardState(SetupWizardContext *context)
     : AbstractSetupWizardState(context)
 {
-    auto serverUrl = [this]() {
-        if (Theme::instance()->wizardEnableWebfinger()) {
-            return _context->accountBuilder().legacyWebFingerServerUrl();
-        } else {
-            return _context->accountBuilder().serverUrl();
-        }
-    }();
-
-    _page = new ServerUrlSetupWizardPage(serverUrl);
+    _page = new ServerUrlSetupWizardPage(_context->accountBuilder().serverUrl());
 }
 
 SetupWizardState ServerUrlSetupWizardState::state() const
@@ -131,14 +123,6 @@ void ServerUrlSetupWizardState::evaluatePage()
                     }
 
                     const auto resolvedUrl = resolveJob->result().toUrl();
-
-                    // classic WebFinger workflow: auth type determination is delegated to whatever server the WebFinger service points us to in a dedicated
-                    // step we can skip it here therefore
-                    if (Theme::instance()->wizardEnableWebfinger()) {
-                        _context->accountBuilder().setLegacyWebFingerServerUrl(resolvedUrl);
-                        Q_EMIT evaluationSuccessful();
-                        return;
-                    }
 
                     // next, we need to find out which kind of authentication page we have to present to the user
                     auto authTypeJob = DetermineAuthTypeJobFactory(_context->accessManager()).startJob(resolvedUrl, this);

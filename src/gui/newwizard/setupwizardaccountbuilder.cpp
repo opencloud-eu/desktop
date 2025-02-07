@@ -109,11 +109,6 @@ DetermineAuthTypeJob::AuthType SetupWizardAccountBuilder::authType()
     return _authType;
 }
 
-void SetupWizardAccountBuilder::setLegacyWebFingerUsername(const QString &username)
-{
-    _legacyWebFingerUsername = username;
-}
-
 AccountPtr SetupWizardAccountBuilder::build()
 {
     auto newAccountPtr = Account::create(QUuid::createUuid());
@@ -194,21 +189,6 @@ void SetupWizardAccountBuilder::setSyncTargetDir(const QString &syncTargetDir)
 QString SetupWizardAccountBuilder::syncTargetDir() const
 {
     return _defaultSyncTargetDir;
-}
-
-QString SetupWizardAccountBuilder::legacyWebFingerUsername() const
-{
-    return _legacyWebFingerUsername;
-}
-
-void SetupWizardAccountBuilder::setLegacyWebFingerServerUrl(const QUrl &webFingerServerUrl)
-{
-    _legacyWebFingerServerUrl = webFingerServerUrl;
-}
-
-QUrl SetupWizardAccountBuilder::legacyWebFingerServerUrl() const
-{
-    return _legacyWebFingerServerUrl;
 }
 
 void SetupWizardAccountBuilder::setDynamicRegistrationData(const QVariantMap &dynamicRegistrationData)
