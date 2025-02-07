@@ -39,16 +39,6 @@ constexpr std::chrono::seconds TokenRefreshDefaultTimeout = 30s;
 constexpr int CredentialVersion = 1;
 const char authenticationFailedC[] = "opencloud-authentication-failed";
 
-auto isOAuthC()
-{
-    return QStringLiteral("oauth");
-}
-
-auto passwordKeyC()
-{
-    return QStringLiteral("http/password");
-}
-
 auto refreshTokenKeyC()
 {
     return QStringLiteral("http/oauthtoken");
@@ -82,13 +72,8 @@ protected:
     {
         QNetworkRequest req(request);
         if (!req.attribute(HttpCredentials::DontAddCredentialsAttribute).toBool()) {
-            if (_cred && !_cred->_password.isEmpty()) {
-                if (_cred->isUsingOAuth()) {
-                    req.setRawHeader("Authorization", "Bearer " + _cred->_password.toUtf8());
-                } else {
-                    QByteArray credHash = QByteArray(_cred->user().toUtf8() + ":" + _cred->_password.toUtf8()).toBase64();
-                    req.setRawHeader("Authorization", "Basic " + credHash);
-                }
+            if (_cred && !_cred->_accessToken.isEmpty()) {
+                req.setRawHeader("Authorization", "Bearer " + _cred->_accessToken.toUtf8());
             }
         }
         return AccessManager::createRequest(op, req, outgoingData);
@@ -100,11 +85,10 @@ private:
     QPointer<const HttpCredentials> _cred;
 };
 
-HttpCredentials::HttpCredentials(DetermineAuthTypeJob::AuthType authType, const QString &user, const QString &password)
+HttpCredentials::HttpCredentials(const QString &user, const QString &accessToken)
     : _user(user)
-    , _password(password)
+    , _accessToken(accessToken)
     , _ready(true)
-    , _authType(authType)
 {
 }
 
@@ -123,10 +107,6 @@ void HttpCredentials::setAccount(Account *account)
     AbstractCredentials::setAccount(account);
     if (_user.isEmpty()) {
         fetchUser();
-    }
-    const auto isOauth = account->credentialSetting(isOAuthC());
-    if (isOauth.isValid()) {
-        _authType = isOauth.toBool() ? DetermineAuthTypeJob::AuthType::OAuth : DetermineAuthTypeJob::AuthType::Basic;
     }
 }
 
@@ -181,12 +161,12 @@ void HttpCredentials::fetchFromKeychain()
 void HttpCredentials::fetchFromKeychainHelper()
 {
     if (_user.isEmpty()) {
-        _password.clear();
+        _accessToken.clear();
         _ready = false;
         Q_EMIT fetched();
         return;
     }
-    auto job = _account->credentialManager()->get(isUsingOAuth() ? refreshTokenKeyC() : passwordKeyC());
+    auto job = _account->credentialManager()->get(refreshTokenKeyC());
     connect(job, &CredentialJob::finished, this, [job, this] {
         auto handleError = [job, this] {
             qCWarning(lcHttpCredentials) << "Could not retrieve client password from keychain" << job->errorString();
@@ -196,7 +176,7 @@ void HttpCredentials::fetchFromKeychainHelper()
 
             _fetchErrorString = job->error() != QKeychain::EntryNotFound ? job->errorString() : QString();
 
-            _password.clear();
+            _accessToken.clear();
             _ready = false;
             Q_EMIT fetched();
         };
@@ -206,35 +186,22 @@ void HttpCredentials::fetchFromKeychainHelper()
         }
         const auto data = job->data().toString();
         if (OC_ENSURE(!data.isEmpty())) {
-            if (isUsingOAuth()) {
-                _refreshToken = data;
-                refreshAccessToken();
-            } else {
-                _password = data;
-                _ready = true;
-                Q_EMIT fetched();
-            }
+            _refreshToken = data;
+            refreshAccessToken();
         } else {
             handleError();
         }
     });
 }
 
-bool HttpCredentials::stillValid(QNetworkReply *reply)
+void HttpCredentials::checkCredentials(QNetworkReply *reply)
 {
-    if (isUsingOAuth()) {
-        // The function is called in order to determine whether we need to ask the user for a password
-        // if we are using OAuth, we already started a refresh in slotAuthentication, at least in theory, ensure the auth is started.
-        // If the refresh fails, we are going to Q_EMIT authenticationFailed ourselves
-        if (reply->error() == QNetworkReply::AuthenticationRequiredError) {
-            slotAuthentication(reply, nullptr);
-        }
-        return true;
+    // The function is called in order to determine whether we need to ask the user for a password
+    // if we are using OAuth, we already started a refresh in slotAuthentication, at least in theory, ensure the auth is started.
+    // If the refresh fails, we are going to Q_EMIT authenticationFailed ourselves
+    if (reply->error() == QNetworkReply::AuthenticationRequiredError) {
+        slotAuthentication(reply, nullptr);
     }
-    return ((reply->error() != QNetworkReply::AuthenticationRequiredError)
-        // returned if user or password is incorrect
-        && (reply->error() != QNetworkReply::OperationCanceledError
-               || !reply->property(authenticationFailedC).toBool()));
 }
 
 void HttpCredentials::slotAuthentication(QNetworkReply *reply, QAuthenticator *authenticator)
@@ -248,7 +215,7 @@ void HttpCredentials::slotAuthentication(QNetworkReply *reply, QAuthenticator *a
     qCWarning(lcHttpCredentials) << "Stop request: Authentication failed for " << reply->url().toString() << reply->request().rawHeader("Original-Request-ID");
     reply->setProperty(authenticationFailedC, true);
 
-    if (!_oAuthJob && isUsingOAuth()) {
+    if (!_oAuthJob) {
         qCInfo(lcHttpCredentials) << "Refreshing token";
         refreshAccessToken();
     }
@@ -340,7 +307,7 @@ bool HttpCredentials::refreshAccessTokenInternal(int tokenRefreshRetriesCount)
         _refreshToken = refreshToken;
         if (!accessToken.isNull()) {
             _ready = true;
-            _password = accessToken;
+            _accessToken = accessToken;
             persist();
         }
         Q_EMIT fetched();
@@ -355,10 +322,10 @@ void HttpCredentials::invalidateToken()
 {
     qCWarning(lcHttpCredentials) << "Invalidating the credentials";
 
-    if (!_password.isEmpty()) {
-        _previousPassword = _password;
+    if (!_accessToken.isEmpty()) {
+        _previousPassword = _accessToken;
     }
-    _password = QString();
+    _accessToken = QString();
     _ready = false;
 
     // User must be fetched from config file to generate a valid key
@@ -399,19 +366,12 @@ void HttpCredentials::persist()
     }
     _account->setCredentialSetting(CredentialVersionKey(), CredentialVersion);
     _account->setCredentialSetting(userC(), _user);
-    _account->setCredentialSetting(isOAuthC(), isUsingOAuth());
     Q_EMIT _account->wantsAccountSaved(_account);
 
     // write secrets to the keychain
-    if (isUsingOAuth()) {
-        // _refreshToken should only be empty when we are logged out...
-        if (!_refreshToken.isEmpty()) {
-            _account->credentialManager()->set(refreshTokenKeyC(), _refreshToken);
-        }
-    } else {
-        if (!_password.isEmpty()) {
-            _account->credentialManager()->set(passwordKeyC(), _password);
-        }
+    // _refreshToken should only be empty when we are logged out...
+    if (!_refreshToken.isEmpty()) {
+        _account->credentialManager()->set(refreshTokenKeyC(), _refreshToken);
     }
 }
 

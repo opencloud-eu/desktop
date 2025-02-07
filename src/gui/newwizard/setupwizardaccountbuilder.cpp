@@ -34,37 +34,6 @@ void AbstractAuthenticationStrategy::setDavUser(const QString &user)
     _davUser = user;
 }
 
-HttpBasicAuthenticationStrategy::HttpBasicAuthenticationStrategy(const QString &username, const QString &password)
-    : _loginUser(username)
-    , _password(password)
-{
-}
-
-HttpCredentialsGui *HttpBasicAuthenticationStrategy::makeCreds()
-{
-    return new HttpCredentialsGui(loginUser(), _password);
-}
-
-bool HttpBasicAuthenticationStrategy::isValid()
-{
-    return !loginUser().isEmpty() && !_password.isEmpty();
-}
-
-QString HttpBasicAuthenticationStrategy::password() const
-{
-    return _password;
-}
-
-QString HttpBasicAuthenticationStrategy::loginUser() const
-{
-    return _loginUser;
-}
-
-FetchUserInfoJobFactory HttpBasicAuthenticationStrategy::makeFetchUserInfoJobFactory(QNetworkAccessManager *nam)
-{
-    return FetchUserInfoJobFactory::fromBasicAuthCredentials(nam, loginUser(), _password);
-}
-
 OAuth2AuthenticationStrategy::OAuth2AuthenticationStrategy(const QString &token, const QString &refreshToken)
     : _token(token)
     , _refreshToken(refreshToken)
@@ -89,10 +58,9 @@ FetchUserInfoJobFactory OAuth2AuthenticationStrategy::makeFetchUserInfoJobFactor
 
 SetupWizardAccountBuilder::SetupWizardAccountBuilder() = default;
 
-void SetupWizardAccountBuilder::setServerUrl(const QUrl &serverUrl, DetermineAuthTypeJob::AuthType authType)
+void SetupWizardAccountBuilder::setServerUrl(const QUrl &serverUrl)
 {
     _serverUrl = serverUrl;
-    _authType = authType;
 
     // to not keep credentials longer than necessary, we purge them whenever the URL is set
     // for this reason, we also don't insert already-known credentials on the credentials pages when switching to them
@@ -102,11 +70,6 @@ void SetupWizardAccountBuilder::setServerUrl(const QUrl &serverUrl, DetermineAut
 QUrl SetupWizardAccountBuilder::serverUrl() const
 {
     return _serverUrl;
-}
-
-DetermineAuthTypeJob::AuthType SetupWizardAccountBuilder::authType()
-{
-    return _authType;
 }
 
 AccountPtr SetupWizardAccountBuilder::build()
@@ -204,7 +167,6 @@ QVariantMap SetupWizardAccountBuilder::dynamicRegistrationData() const
 void SetupWizardAccountBuilder::setWebFingerAuthenticationServerUrl(const QUrl &url)
 {
     _webFingerAuthenticationServerUrl = url;
-    _authType = DetermineAuthTypeJob::AuthType::OAuth;
 }
 
 QUrl SetupWizardAccountBuilder::webFingerAuthenticationServerUrl() const

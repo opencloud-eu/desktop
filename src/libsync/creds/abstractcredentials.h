@@ -64,9 +64,9 @@ public:
      *
      * Should Q_EMIT asked() when done.
      */
-    virtual void askFromUser() = 0;
+    virtual void restartOauth() = 0;
 
-    virtual bool stillValid(QNetworkReply *reply) = 0;
+    virtual void checkCredentials(QNetworkReply *reply);
     virtual void persist() = 0;
 
     /** Invalidates token used to authorize requests, it will no longer be used.

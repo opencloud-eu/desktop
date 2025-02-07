@@ -12,13 +12,11 @@ class HttpCredentialsTest : public OCC::HttpCredentials
 {
 public:
     HttpCredentialsTest(const QString &user, const QString &password)
-        : HttpCredentials(OCC::DetermineAuthTypeJob::AuthType::Basic, user, password)
+        : HttpCredentials(user, password)
     {
     }
 
-    void askFromUser() override
-    {
-    }
+    void restartOauth() override { }
 };
 }
 
