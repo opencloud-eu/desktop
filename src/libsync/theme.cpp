@@ -500,11 +500,6 @@ bool Theme::allowDuplicatedFolderSyncPair() const
     return true;
 }
 
-bool Theme::wizardEnableWebfinger() const
-{
-    return false;
-}
-
 QVector<std::tuple<QString, QString, QUrl>> Theme::urlButtons() const
 {
     return {};

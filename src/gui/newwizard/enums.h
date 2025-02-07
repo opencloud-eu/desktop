@@ -25,8 +25,6 @@ enum class SetupWizardState {
     ServerUrlState,
     FirstState = ServerUrlState,
 
-    LegacyWebFingerState,
-
     CredentialsState,
 
     AccountConfiguredState,

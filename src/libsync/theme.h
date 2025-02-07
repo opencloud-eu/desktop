@@ -408,11 +408,6 @@ public:
     virtual bool allowDuplicatedFolderSyncPair() const;
 
     /**
-     * Enable Webfinger page in setup wizard.
-     */
-    virtual bool wizardEnableWebfinger() const;
-
-    /**
      * Returns a list of IconName, Name, Url pairs that will be displayed as buttons on AccountSettings.
      * For each url there must be an icon provided in the form of #IconName.svg or multiple #IconName-#resolution.png like for the other theme icons.
      * */
