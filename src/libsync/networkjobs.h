@@ -149,30 +149,6 @@ private:
 };
 
 /**
- * @brief Checks with auth type to use for a server
- * @ingroup libsync
- */
-class OPENCLOUD_SYNC_EXPORT DetermineAuthTypeJob : public AbstractNetworkJob
-{
-    Q_OBJECT
-public:
-    enum class AuthType {
-        Basic, // also the catch-all fallback for backwards compatibility reasons
-        OAuth,
-        Unknown
-    };
-    Q_ENUM(AuthType)
-
-    explicit DetermineAuthTypeJob(AccountPtr account, QObject *parent = nullptr);
-    void start() override;
-Q_SIGNALS:
-    void authType(AuthType);
-
-protected Q_SLOTS:
-    void finished() override;
-};
-
-/**
  * @brief A basic job around a network request without extra funtionality
  * @ingroup libsync
  *
