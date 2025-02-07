@@ -53,7 +53,7 @@ class OPENCLOUD_SYNC_EXPORT OAuth : public QObject
 {
     Q_OBJECT
 public:
-    enum Result { NotSupported, LoggedIn, Error, ErrorInsecureUrl };
+    enum Result { LoggedIn, Error, ErrorInsecureUrl };
     Q_ENUM(Result)
     enum class TokenEndpointAuthMethods : char { none, client_secret_basic, client_secret_post };
     Q_ENUM(TokenEndpointAuthMethods)
