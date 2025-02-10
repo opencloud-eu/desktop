@@ -154,6 +154,14 @@ OCSYNC_EXPORT Q_DECLARE_LOGGING_CATEGORY(lcUtility)
         return s.toString();
     }
 
+    inline auto stripLeadingSlash(QStringView s)
+    {
+        if (s.startsWith(QLatin1Char('/'))) {
+            s.slice(1);
+        }
+        return s.toString();
+    }
+
     inline QString ensureTrailingSlash(QStringView s)
     {
         if (!s.endsWith(QLatin1Char('/'))) {

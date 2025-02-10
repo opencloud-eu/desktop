@@ -62,7 +62,7 @@ public:
     Q_ENUM(PromptValuesSupported)
     Q_DECLARE_FLAGS(PromptValuesSupportedFlags, PromptValuesSupported)
 
-    OAuth(const QUrl &serverUrl, const QString &davUser, QNetworkAccessManager *networkAccessManager, const QVariantMap &dynamicRegistrationData, QObject *parent);
+    OAuth(const QUrl &serverUrl, QNetworkAccessManager *networkAccessManager, const QVariantMap &dynamicRegistrationData, QObject *parent);
     ~OAuth() override;
 
     virtual void startAuthentication();
@@ -91,7 +91,6 @@ protected:
     void updateDynamicRegistration();
 
     QUrl _serverUrl;
-    QString _davUser;
     QVariantMap _dynamicRegistrationData;
     QNetworkAccessManager *_networkAccessManager;
     bool _isRefreshingToken = false;

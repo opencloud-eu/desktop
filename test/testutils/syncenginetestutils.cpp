@@ -850,9 +850,8 @@ FakeFolder::FakeFolder(const FileInfo &fileTemplate, OCC::Vfs::Mode vfsMode, boo
     account()->setCredentials(new FakeCredentials{_fakeAm});
 
     _journalDb.reset(new OCC::SyncJournalDb(localPath() + QStringLiteral(".sync_test.db")));
-    // TODO: davUrl
 
-    _syncEngine.reset(new OCC::SyncEngine(account(), account()->davUrl(), localPath(), QString(), _journalDb.get()));
+    _syncEngine.reset(new OCC::SyncEngine(account(), OCC::TestUtils::dummyDavUrl(), localPath(), QString(), _journalDb.get()));
     _syncEngine->setSyncOptions(OCC::SyncOptions { QSharedPointer<OCC::Vfs>(OCC::VfsPluginManager::instance().createVfsFromPlugin(vfsMode).release()) });
 
     // Ignore temporary files from the download. (This is in the default exclude list, but we don't load it)
@@ -891,7 +890,7 @@ void FakeFolder::switchToVfs(QSharedPointer<OCC::Vfs> vfs)
     opts._vfs = vfs;
     _syncEngine->setSyncOptions(opts);
 
-    OCC::VfsSetupParams vfsParams(account(), account()->davUrl(), false, &syncEngine());
+    OCC::VfsSetupParams vfsParams(account(), OCC::TestUtils::dummyDavUrl(), false, &syncEngine());
     vfsParams.filesystemPath = localPath();
     vfsParams.journal = _journalDb.get();
     vfsParams.providerName = QStringLiteral("OC-TEST");
@@ -1132,15 +1131,16 @@ void FakeReply::abort()
 QString getFilePathFromUrl(const QUrl &url)
 {
     const QString path = url.path();
-    // old school dav url
-    const QString sRootUrl = QStringLiteral("/remote.php/webdav/");
-    // more modern dav url including user name
-    const QString sRootUrl2 = QStringLiteral("/remote.php/dav/files/admin/");
+    const QString sRootUrl = OCC::TestUtils::dummyDavUrl().path();
 
+    const QString legacyConnectionValidator = QStringLiteral("/remote.php/webdav/");
+
+
+    QString out;
     if (path.startsWith(sRootUrl)) {
-        return path.mid(sRootUrl.length());
-    } else if (path.startsWith(sRootUrl2)) {
-        return path.mid(sRootUrl2.length());
+        out = path.mid(sRootUrl.length());
+    } else if (path.startsWith(legacyConnectionValidator)) {
+        out = path.mid(legacyConnectionValidator.length());
     }
-    return {};
+    return OCC::Utility::stripLeadingSlash(out);
 }

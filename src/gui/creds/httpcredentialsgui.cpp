@@ -32,8 +32,8 @@ namespace OCC {
 
 Q_LOGGING_CATEGORY(lcHttpCredentialsGui, "sync.credentials.http.gui", QtInfoMsg)
 
-HttpCredentialsGui::HttpCredentialsGui(const QString &davUser, const QString &accessToken, const QString &refreshToken)
-    : HttpCredentials(davUser, accessToken)
+HttpCredentialsGui::HttpCredentialsGui(const QString &accessToken, const QString &refreshToken)
+    : HttpCredentials(accessToken)
 {
     _refreshToken = refreshToken;
 }
