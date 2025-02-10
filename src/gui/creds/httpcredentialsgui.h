@@ -33,12 +33,8 @@ class HttpCredentialsGui : public HttpCredentials
 public:
     HttpCredentialsGui() = default;
 
-    HttpCredentialsGui(const QString &davUser, const QString &password, const QString &refreshToken);
+    HttpCredentialsGui(const QString &accessToken, const QString &refreshToken);
 
-    /**
-     * This will query the server and either uses OAuth via _asyncAuth->start()
-     * or call showDialog to ask the password
-     */
     void restartOauth() override;
 
 

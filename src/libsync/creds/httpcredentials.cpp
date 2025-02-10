@@ -48,11 +48,6 @@ auto CredentialVersionKey()
 {
     return QStringLiteral("CredentialVersion");
 }
-
-const QString userC()
-{
-    return QStringLiteral("user");
-}
 }
 
 namespace OCC {
@@ -85,9 +80,8 @@ private:
     QPointer<const HttpCredentials> _cred;
 };
 
-HttpCredentials::HttpCredentials(const QString &user, const QString &accessToken)
-    : _user(user)
-    , _accessToken(accessToken)
+HttpCredentials::HttpCredentials(const QString &accessToken)
+    : _accessToken(accessToken)
     , _ready(true)
 {
 }
@@ -97,17 +91,9 @@ QString HttpCredentials::authType() const
     return QStringLiteral("http");
 }
 
-QString HttpCredentials::user() const
-{
-    return _user;
-}
-
 void HttpCredentials::setAccount(Account *account)
 {
     AbstractCredentials::setAccount(account);
-    if (_user.isEmpty()) {
-        fetchUser();
-    }
 }
 
 AccessManager *HttpCredentials::createAM() const
@@ -125,24 +111,9 @@ bool HttpCredentials::ready() const
     return _ready;
 }
 
-QString HttpCredentials::fetchUser()
-{
-    // it makes no sense to overwrite an existing username with a config file value
-    if (_user.isEmpty()) {
-        qCDebug(lcHttpCredentials) << "user not set, populating from settings";
-        _user = _account->credentialSetting(userC()).toString();
-    } else {
-        qCDebug(lcHttpCredentials) << "user already set, no need to fetch from settings";
-    }
-    return _user;
-}
-
 void HttpCredentials::fetchFromKeychain()
 {
     _wasFetched = true;
-
-    // User must be fetched from config file
-    fetchUser();
 
     if (!_ready && !_refreshToken.isEmpty()) {
         // This happens if the credentials are still loaded from the keychain, bur we are called
@@ -160,12 +131,6 @@ void HttpCredentials::fetchFromKeychain()
 
 void HttpCredentials::fetchFromKeychainHelper()
 {
-    if (_user.isEmpty()) {
-        _accessToken.clear();
-        _ready = false;
-        Q_EMIT fetched();
-        return;
-    }
     auto job = _account->credentialManager()->get(refreshTokenKeyC());
     connect(job, &CredentialJob::finished, this, [job, this] {
         auto handleError = [job, this] {
@@ -328,9 +293,6 @@ void HttpCredentials::invalidateToken()
     _accessToken = QString();
     _ready = false;
 
-    // User must be fetched from config file to generate a valid key
-    fetchUser();
-
     // clear the session cookie.
     _account->clearCookieJar();
 
@@ -360,12 +322,7 @@ void HttpCredentials::forgetSensitiveData()
 
 void HttpCredentials::persist()
 {
-    if (_user.isEmpty()) {
-        // We never connected or fetched the user, there is nothing to save.
-        return;
-    }
     _account->setCredentialSetting(CredentialVersionKey(), CredentialVersion);
-    _account->setCredentialSetting(userC(), _user);
     Q_EMIT _account->wantsAccountSaved(_account);
 
     // write secrets to the keychain

@@ -151,7 +151,6 @@ void SetupWizardController::changeStateTo(SetupWizardState nextState, ChangeReas
                 if (fetchUserInfoJob->success()) {
                     auto result = fetchUserInfoJob->result().value<FetchUserInfoResult>();
                     _context->accountBuilder().setDisplayName(result.displayName());
-                    _context->accountBuilder().authenticationStrategy()->setDavUser(result.userName());
                     changeStateTo(SetupWizardState::AccountConfiguredState);
                 } else if (fetchUserInfoJob->reply()->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 401) {
                     _context->window()->showErrorMessage(tr("Invalid credentials"));

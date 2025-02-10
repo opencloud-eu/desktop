@@ -24,15 +24,6 @@ namespace OCC::Wizard {
 
 AbstractAuthenticationStrategy::~AbstractAuthenticationStrategy() { }
 
-QString AbstractAuthenticationStrategy::davUser()
-{
-    return _davUser;
-}
-
-void AbstractAuthenticationStrategy::setDavUser(const QString &user)
-{
-    _davUser = user;
-}
 
 OAuth2AuthenticationStrategy::OAuth2AuthenticationStrategy(const QString &token, const QString &refreshToken)
     : _token(token)
@@ -43,12 +34,12 @@ OAuth2AuthenticationStrategy::OAuth2AuthenticationStrategy(const QString &token,
 HttpCredentialsGui *OAuth2AuthenticationStrategy::makeCreds()
 {
     Q_ASSERT(isValid());
-    return new HttpCredentialsGui(davUser(), _token, _refreshToken);
+    return new HttpCredentialsGui(_token, _refreshToken);
 }
 
 bool OAuth2AuthenticationStrategy::isValid()
 {
-    return !davUser().isEmpty() && !_token.isEmpty() && !_refreshToken.isEmpty();
+    return !_token.isEmpty() && !_refreshToken.isEmpty();
 }
 
 FetchUserInfoJobFactory OAuth2AuthenticationStrategy::makeFetchUserInfoJobFactory(QNetworkAccessManager *nam)
@@ -87,7 +78,6 @@ AccountPtr SetupWizardAccountBuilder::build()
     Q_ASSERT(hasValidCredentials());
 
     // TODO: perhaps _authenticationStrategy->setUpAccountPtr(...) would be more elegant? no need for getters then
-    newAccountPtr->setDavUser(_authenticationStrategy->davUser());
     newAccountPtr->setCredentials(_authenticationStrategy->makeCreds());
 
     newAccountPtr->setDavDisplayName(_displayName);

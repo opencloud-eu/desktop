@@ -242,10 +242,9 @@ void logCredentialsJobResult(CredentialJob *credentialsJob)
 }
 }
 
-OAuth::OAuth(const QUrl &serverUrl, const QString &davUser, QNetworkAccessManager *networkAccessManager, const QVariantMap &dynamicRegistrationData, QObject *parent)
+OAuth::OAuth(const QUrl &serverUrl, QNetworkAccessManager *networkAccessManager, const QVariantMap &dynamicRegistrationData, QObject *parent)
     : QObject(parent)
     , _serverUrl(serverUrl)
-    , _davUser(davUser)
     , _dynamicRegistrationData(dynamicRegistrationData)
     , _networkAccessManager(networkAccessManager)
     , _clientId(Theme::instance()->oauthClientId())
@@ -370,39 +369,7 @@ void OAuth::startAuthentication()
                         Q_EMIT result(Error);
                         return;
                     }
-
-                    if (!_davUser.isEmpty()) {
-                        auto *job = FetchUserInfoJobFactory::fromOAuth2Credentials(_networkAccessManager, accessToken).startJob(_serverUrl, this);
-
-                        connect(job, &CoreJob::finished, this, [=]() {
-                            if (!job->success()) {
-                                httpReplyAndClose(socket, QStringLiteral("500 Internal Server Error"), tr("Login Error"),
-                                    tr("<h1>Login Error</h1><p>%1</p>").arg(job->errorMessage()));
-                                Q_EMIT result(Error);
-                            } else {
-                                auto fetchUserInfo = job->result().value<FetchUserInfoResult>();
-
-                                // note: the username still shouldn't be empty
-                                Q_ASSERT(!_davUser.isEmpty());
-
-                                // dav usernames are case-insensitive, we might compare a user input with the string provided by the server
-                                if (fetchUserInfo.userName().compare(_davUser, Qt::CaseInsensitive) != 0) {
-                                    // Connected with the wrong user
-                                    qCWarning(lcOauth) << "We expected the user" << _davUser << "but the server answered with user" << fetchUserInfo.userName();
-                                    const QString message = tr("<h1>Wrong user</h1>"
-                                                               "<p>You logged-in with user <em>%1</em>, but must login with user <em>%2</em>.<br>"
-                                                               "Please return to the %3 client and restart the authentication.</p>")
-                                                                .arg(fetchUserInfo.userName(), _davUser, Theme::instance()->appNameGUI());
-                                    httpReplyAndClose(socket, QStringLiteral("403 Forbidden"), tr("Wrong user"), message);
-                                    Q_EMIT result(Error);
-                                } else {
-                                    finalize(socket, accessToken, refreshToken, messageUrl);
-                                }
-                            }
-                        });
-                    } else {
-                        finalize(socket, accessToken, refreshToken, messageUrl);
-                    }
+                    finalize(socket, accessToken, refreshToken, messageUrl);
                 });
             });
         }
@@ -469,13 +436,7 @@ QUrl OAuth::authorisationLink() const
         {QStringLiteral("prompt"), QString::fromUtf8(QUrl::toPercentEncoding(toString(_supportedPromtValues)))},
         {QStringLiteral("state"), QString::fromUtf8(_state)}};
 
-    if (!_davUser.isEmpty()) {
-        const QString davUser = QString::fromUtf8(QUrl::toPercentEncoding(_davUser)); // Issue #7762;
-        // open id connect
-        query.addQueryItem(QStringLiteral("login_hint"), davUser);
-        // oc 10
-        query.addQueryItem(QStringLiteral("user"), davUser);
-    }
+    // TODO: readd user name
     const QUrl url = _authEndpoint.isValid()
         ? Utility::concatUrlPath(_authEndpoint, {}, query)
         : Utility::concatUrlPath(_serverUrl, QStringLiteral("/index.php/apps/oauth2/authorize"), query);
@@ -636,7 +597,7 @@ void OAuth::openBrowser()
 }
 
 AccountBasedOAuth::AccountBasedOAuth(AccountPtr account, QObject *parent)
-    : OAuth(account->url(), account->davUser(), account->accessManager(), {}, parent)
+    : OAuth(account->url(), account->accessManager(), {}, parent)
     , _account(account)
 {
     connect(this, &AccountBasedOAuth::dynamicRegistrationDataReceived, this, [this](const QVariantMap &dynamicRegistrationData) {
