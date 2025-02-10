@@ -57,7 +57,7 @@ public:
     AccessManager *createAM() const override;
     bool ready() const override;
     void fetchFromKeychain() override;
-    void checkCredentials(QNetworkReply *reply);
+    void checkCredentials(QNetworkReply *reply) override;
     void persist() override;
     void invalidateToken() override;
     void forgetSensitiveData() override;
