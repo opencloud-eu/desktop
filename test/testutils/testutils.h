@@ -21,7 +21,7 @@ namespace TestUtils {
     }
 
     FolderMan *folderMan();
-    FolderDefinition createDummyFolderDefinition(const AccountPtr &account, const QString &path);
+    FolderDefinition createDummyFolderDefinition(const QString &path);
     TestUtilsPrivate::AccountStateRaii createDummyAccount();
     bool writeRandomFile(const QString &fname, int size = -1);
 
@@ -33,5 +33,7 @@ namespace TestUtils {
     QTemporaryDir createTempDir();
 
     const QVariantMap testCapabilities(CheckSums::Algorithm algo = CheckSums::Algorithm::DUMMY_FOR_TESTS);
+
+    QUrl dummyDavUrl();
 }
 }

@@ -348,11 +348,6 @@ QColor Theme::avatarColorChecked() const
     return {};
 }
 
-QString Theme::webDavPath() const
-{
-    return QStringLiteral("remote.php/webdav/");
-}
-
 bool Theme::linkSharing() const
 {
     return true;

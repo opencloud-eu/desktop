@@ -113,7 +113,7 @@ private Q_SLOTS:
         auto oldLocalState = fakeFolder.currentLocalState();
         auto oldRemoteState = fakeFolder.currentRemoteState();
 
-        QString errorFolder = fakeFolder.account()->davPath() + QStringLiteral("B");
+        QString errorFolder = Utility::concatUrlPath(OCC::TestUtils::dummyDavUrl(), QStringLiteral("B")).path();
         QString fatalErrorPrefix = QStringLiteral("Server replied with an error while reading directory 'B' : ");
         fakeFolder.setServerOverride([&](QNetworkAccessManager::Operation op, const QNetworkRequest &req, QIODevice *) -> QNetworkReply * {
             if (req.attribute(QNetworkRequest::CustomVerbAttribute).toByteArray() == "PROPFIND" && req.url().path().endsWith(errorFolder)) {
@@ -154,7 +154,7 @@ private Q_SLOTS:
         //
         // Check the same discovery error on the sync root
         //
-        errorFolder = fakeFolder.account()->davPath();
+        errorFolder = Utility::ensureTrailingSlash(OCC::TestUtils::dummyDavUrl().path());
         fatalErrorPrefix = QStringLiteral("Server replied with an error while reading directory '/' : ");
         errorSpy.clear();
         QVERIFY(!fakeFolder.applyLocalModificationsAndSync());

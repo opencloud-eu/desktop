@@ -11,8 +11,8 @@ namespace {
 class HttpCredentialsTest : public OCC::HttpCredentials
 {
 public:
-    HttpCredentialsTest(const QString &user, const QString &password)
-        : HttpCredentials(user, password)
+    HttpCredentialsTest(const QString &password)
+        : HttpCredentials(password)
     {
     }
 
@@ -29,7 +29,7 @@ namespace TestUtils {
         std::ignore = folderMan();
         // don't use the account manager to create the account, it would try to use widgets
         auto acc = Account::create(QUuid::createUuid());
-        HttpCredentialsTest *cred = new HttpCredentialsTest(QStringLiteral("testuser"), QStringLiteral("secret"));
+        HttpCredentialsTest *cred = new HttpCredentialsTest(QStringLiteral("secret"));
         acc->setCredentials(cred);
         acc->setUrl(QUrl(QStringLiteral("http://localhost/")));
         acc->setDavDisplayName(QStringLiteral("fakename") + acc->uuid().toString(QUuid::WithoutBraces));
@@ -37,10 +37,9 @@ namespace TestUtils {
         return {OCC::AccountManager::instance()->addAccount(acc).get(), &TestUtilsPrivate::accountStateDeleter};
     }
 
-    FolderDefinition createDummyFolderDefinition(const AccountPtr &account, const QString &path)
+    FolderDefinition createDummyFolderDefinition(const QString &path)
     {
-        // TODO: legacy
-        auto d = OCC::FolderDefinition::createNewFolderDefinition(account->davUrl(), {});
+        auto d = OCC::FolderDefinition::createNewFolderDefinition(Utility::concatUrlPath(dummyDavUrl(), path), {});
         d.setLocalPath(path);
         return d;
     }
@@ -106,6 +105,11 @@ namespace TestUtils {
             {QStringLiteral("files"), QVariantList{}}, {QStringLiteral("dav"), QVariantMap{{QStringLiteral("chunking"), QStringLiteral("1.0")}}},
             {QStringLiteral("checksums"),
                 QVariantMap{{QStringLiteral("preferredUploadType"), Utility::enumToString(algo)}, {QStringLiteral("supportedTypes"), algorithmNames}}}};
+    }
+
+    QUrl dummyDavUrl()
+    {
+        return QUrl(QStringLiteral("http://localhost/dav/spaces/0e443965-2ebb-4673-9464-b2c1d388e666$cb867555-fdf7-48ce-8f1c-d64570812f21"));
     }
 
     void TestUtilsPrivate::accountStateDeleter(OCC::AccountState *acc)

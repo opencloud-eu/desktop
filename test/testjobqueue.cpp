@@ -21,7 +21,7 @@ class TestJob : public AbstractNetworkJob
 public:
     // TODO: davurl
     TestJob(AccountPtr account)
-        : AbstractNetworkJob(account, account->davUrl(), QStringLiteral("/A/a1"))
+        : AbstractNetworkJob(account, OCC::TestUtils::dummyDavUrl(), QStringLiteral("/A/a1"))
     {
     }
 

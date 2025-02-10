@@ -83,11 +83,6 @@ Account::~Account()
 {
 }
 
-QString Account::davPath() const
-{
-    return QLatin1String("/remote.php/dav/files/") + davUser() + QLatin1Char('/');
-}
-
 void Account::setSharedThis(AccountPtr sharedThis)
 {
     _sharedThis = sharedThis.toWeakRef();
@@ -106,20 +101,6 @@ QUuid Account::uuid() const
 AccountPtr Account::sharedFromThis()
 {
     return _sharedThis.toStrongRef();
-}
-
-QString Account::davUser() const
-{
-    return _davUser.isEmpty() ? _credentials->user() : _davUser;
-}
-
-void Account::setDavUser(const QString &newDavUser)
-{
-    if (_davUser == newDavUser) {
-        return;
-    }
-    _davUser = newDavUser;
-    Q_EMIT wantsAccountSaved(this);
 }
 
 QIcon Account::avatar() const
@@ -165,9 +146,6 @@ QGradient::Preset Account::avatarGradient() const
 
 QString Account::davDisplayName() const
 {
-    if (_displayName.isEmpty()) {
-        return davUser();
-    }
     return _displayName;
 }
 
@@ -224,11 +202,6 @@ void Account::setCredentials(AbstractCredentials *cred)
         _queueGuard.block();
     });
     connect(_credentials.data(), &AbstractCredentials::authenticationFailed, this, [this] { _queueGuard.clear(); });
-}
-
-QUrl Account::davUrl() const
-{
-    return Utility::concatUrlPath(url(), davPath());
 }
 
 /**
