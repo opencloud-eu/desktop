@@ -30,7 +30,7 @@ OAuthCredentialsSetupWizardState::OAuthCredentialsSetupWizardState(SetupWizardCo
 
     auto oAuth = new OAuth(authServerUrl, _context->accessManager(), {}, this);
     connect(oAuth, &OAuth::dynamicRegistrationDataReceived, this,
-        [this](const QVariantMap &dynamicRegistrationData) { _context->accountBuilder().setDynamicRegistrationData(dynamicRegistrationData); });
+        [oAuth, this] { _context->accountBuilder().setDynamicRegistrationData(oAuth->dynamicRegistrationData()); });
 
     _page = new OAuthCredentialsSetupWizardPage(oAuth, authServerUrl);
 
