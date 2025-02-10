@@ -14,13 +14,14 @@
 
 #pragma once
 #include "accountfwd.h"
+#include "libsync/creds/idtoken.h"
+#include "libsync/creds/jwt.h"
 #include "opencloudsynclib.h"
 
 #include <QNetworkReply>
 #include <QPointer>
 #include <QTcpServer>
 #include <QUrl>
-
 
 namespace OCC {
 class JsonJob;
@@ -65,6 +66,11 @@ public:
     OAuth(const QUrl &serverUrl, QNetworkAccessManager *networkAccessManager, const QVariantMap &dynamicRegistrationData, QObject *parent);
     ~OAuth() override;
 
+    void setIdToken(IdToken &&idToken);
+    const IdToken &idToken() const;
+
+    QVariantMap dynamicRegistrationData() const;
+
     virtual void startAuthentication();
     void openBrowser();
     QUrl authorisationLink() const;
@@ -85,7 +91,7 @@ Q_SIGNALS:
 
     void fetchWellKnownFinished();
 
-    void dynamicRegistrationDataReceived(const QVariantMap &dynamicRegistrationData);
+    void dynamicRegistrationDataReceived();
 
 protected:
     void updateDynamicRegistration();
@@ -119,6 +125,9 @@ private:
     QByteArray _pkceCodeVerifier;
     QByteArray _state;
 
+    IdToken _idToken;
+
+private:
     TokenEndpointAuthMethods _endpointAuthMethod = TokenEndpointAuthMethods::client_secret_basic;
     PromptValuesSupportedFlags _supportedPromtValues = {PromptValuesSupported::consent, PromptValuesSupported::select_account};
 };
