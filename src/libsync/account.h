@@ -64,7 +64,6 @@ class OPENCLOUD_SYNC_EXPORT Account : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QUuid uid READ uuid CONSTANT)
-    Q_PROPERTY(QString davUser MEMBER _davUser)
     Q_PROPERTY(QString davDisplayName READ davDisplayName NOTIFY displayNameChanged)
     Q_PROPERTY(QString displayNameWithHost READ displayNameWithHost NOTIFY displayNameChanged)
     Q_PROPERTY(QString initials READ initials NOTIFY displayNameChanged)
@@ -86,15 +85,6 @@ public:
     ~Account() override;
 
     AccountPtr sharedFromThis();
-
-    /**
-     * The user that can be used in dav url.
-     *
-     * This can very well be different frome the login user that's
-     * stored in credentials()->user().
-     */
-    QString davUser() const;
-    void setDavUser(const QString &newDavUser);
 
     /***
      * The default folder containing all spaces.
@@ -132,16 +122,6 @@ public:
     void setUrl(const QUrl &url);
     QUrl url() const;
     QString hostName() const;
-
-    /**
-     * @brief The possibly themed dav path for the account. It has
-     *        a trailing slash.
-     * @returns the (themeable) dav path for the account.
-     */
-    QString davPath() const;
-
-    /** Returns WebDAV entry URL, based on url() */
-    QUrl davUrl() const;
 
     /** Holds the accounts credentials */
     AbstractCredentials *credentials() const;
@@ -254,7 +234,6 @@ private:
     QWeakPointer<Account> _sharedThis;
     QString _id;
     QUuid _uuid;
-    QString _davUser;
     QString _displayName;
     QString _defaultSyncRoot;
     QIcon _avatarImg;

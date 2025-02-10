@@ -43,13 +43,7 @@ public:
      */
     virtual bool isValid() = 0;
 
-    [[deprecated("https://github.com/opencloud-eu/desktop/issues/76")]] QString davUser();
-    void setDavUser(const QString &user);
-
     virtual FetchUserInfoJobFactory makeFetchUserInfoJobFactory(QNetworkAccessManager *nam) = 0;
-
-private:
-    QString _davUser;
 };
 
 class OAuth2AuthenticationStrategy : public AbstractAuthenticationStrategy
