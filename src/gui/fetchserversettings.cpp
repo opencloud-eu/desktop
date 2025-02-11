@@ -80,10 +80,6 @@ void FetchServerSettingsJob::start()
                     Q_EMIT finishedSignal(Result::InvalidCredentials);
                 } else if (userJob->ocsSuccess()) {
                     const auto userData = userJob->data().value(QStringLiteral("ocs")).toObject().value(QStringLiteral("data")).toObject();
-                    const QString user = userData.value(QStringLiteral("id")).toString();
-                    if (!user.isEmpty()) {
-                        _account->setDavUser(user);
-                    }
                     const QString displayName = userData.value(QStringLiteral("display-name")).toString();
                     if (!displayName.isEmpty()) {
                         _account->setDavDisplayName(displayName);

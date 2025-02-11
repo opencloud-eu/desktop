@@ -14,6 +14,7 @@
 
 #pragma once
 #include "accountfwd.h"
+#include "libsync/creds/jwt.h"
 #include "opencloudsynclib.h"
 
 #include <QNetworkReply>
@@ -53,7 +54,7 @@ class OPENCLOUD_SYNC_EXPORT OAuth : public QObject
 {
     Q_OBJECT
 public:
-    enum Result { NotSupported, LoggedIn, Error, ErrorInsecureUrl };
+    enum Result { LoggedIn, Error, ErrorInsecureUrl };
     Q_ENUM(Result)
     enum class TokenEndpointAuthMethods : char { none, client_secret_basic, client_secret_post };
     Q_ENUM(TokenEndpointAuthMethods)
@@ -62,8 +63,13 @@ public:
     Q_ENUM(PromptValuesSupported)
     Q_DECLARE_FLAGS(PromptValuesSupportedFlags, PromptValuesSupported)
 
-    OAuth(const QUrl &serverUrl, const QString &davUser, QNetworkAccessManager *networkAccessManager, const QVariantMap &dynamicRegistrationData, QObject *parent);
+    OAuth(const QUrl &serverUrl, QNetworkAccessManager *networkAccessManager, const QVariantMap &dynamicRegistrationData, QObject *parent);
     ~OAuth() override;
+
+    void setIdToken(IdToken &&idToken);
+    const IdToken &idToken() const;
+
+    QVariantMap dynamicRegistrationData() const;
 
     virtual void startAuthentication();
     void openBrowser();
@@ -85,13 +91,12 @@ Q_SIGNALS:
 
     void fetchWellKnownFinished();
 
-    void dynamicRegistrationDataReceived(const QVariantMap &dynamicRegistrationData);
+    void dynamicRegistrationDataReceived();
 
 protected:
     void updateDynamicRegistration();
 
     QUrl _serverUrl;
-    QString _davUser;
     QVariantMap _dynamicRegistrationData;
     QNetworkAccessManager *_networkAccessManager;
     bool _isRefreshingToken = false;
@@ -120,6 +125,9 @@ private:
     QByteArray _pkceCodeVerifier;
     QByteArray _state;
 
+    IdToken _idToken;
+
+private:
     TokenEndpointAuthMethods _endpointAuthMethod = TokenEndpointAuthMethods::client_secret_basic;
     PromptValuesSupportedFlags _supportedPromtValues = {PromptValuesSupported::consent, PromptValuesSupported::select_account};
 };

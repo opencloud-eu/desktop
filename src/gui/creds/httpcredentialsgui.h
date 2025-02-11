@@ -33,20 +33,13 @@ class HttpCredentialsGui : public HttpCredentials
 public:
     HttpCredentialsGui() = default;
 
-    HttpCredentialsGui(const QString &loginUser, const QString &password);
+    HttpCredentialsGui(const QString &accessToken, const QString &refreshToken);
 
-    HttpCredentialsGui(const QString &davUser, const QString &password, const QString &refreshToken);
-
-    /**
-     * This will query the server and either uses OAuth via _asyncAuth->start()
-     * or call showDialog to ask the password
-     */
     void askFromUser() override;
 
 
 private Q_SLOTS:
     void asyncAuthResult(OAuth::Result, const QString &accessToken, const QString &refreshToken);
-    void showDialog();
 
 Q_SIGNALS:
     void oAuthLoginAccepted();

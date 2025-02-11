@@ -135,13 +135,8 @@ void ConnectionValidator::slotCheckServerAndAuth()
                 break;
             }
 
-            if (!_account->credentials()->stillValid(checkServerJob->reply())) {
-                // Note: Why would this happen on a status.php request?
-                _errors.append(tr("Authentication error: Either username or password are wrong."));
-            } else {
-                //_errors.append(tr("Unable to connect to %1").arg(_account->url().toString()));
-                _errors.append(checkServerJob->errorMessage());
-            }
+            _account->credentials()->checkCredentials(checkServerJob->reply());
+            _errors.append(checkServerJob->errorMessage());
             reportResult(StatusNotFound);
         }
     });
@@ -187,7 +182,7 @@ void ConnectionValidator::checkAuthentication()
     qCDebug(lcConnectionValidator) << "# Check whether authenticated propfind works.";
 
     // we explicitly use a legacy dav path here
-    auto *job = new PropfindJob(_account, _account->url(), Theme::instance()->webDavPath(), PropfindJob::Depth::Zero, this);
+    auto *job = new PropfindJob(_account, _account->url(), QStringLiteral("/remote.php/webdav/"), PropfindJob::Depth::Zero, this);
     job->setAuthenticationJob(true); // don't retry
     job->setTimeout(timeoutToUse());
     job->setProperties({ QByteArrayLiteral("getlastmodified") });
@@ -205,9 +200,9 @@ void ConnectionValidator::slotAuthFailed()
         _errors << job->errorStringParsingBody();
         stat = NetworkInformation::instance()->isBehindCaptivePortal() ? CaptivePortal : SslError;
 
-    } else if (job->reply()->error() == QNetworkReply::AuthenticationRequiredError || !_account->credentials()->stillValid(job->reply())) {
-        qCWarning(lcConnectionValidator) << "******** Password is wrong!" << job->reply()->error() << job;
-        _errors << tr("The provided credentials are not correct");
+    } else if (job->reply()->error() == QNetworkReply::AuthenticationRequiredError) {
+        qCWarning(lcConnectionValidator) << "******** Authentication failed!" << job->reply()->error() << job;
+        _errors << tr("Authentication error");
         stat = CredentialsWrong;
     } else if (job->reply()->error() == QNetworkReply::ContentAccessDenied) {
         stat = ClientUnsupported;

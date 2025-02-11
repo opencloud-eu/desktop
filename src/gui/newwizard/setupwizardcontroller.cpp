@@ -1,13 +1,10 @@
 #include "setupwizardcontroller.h"
 
-#include "determineauthtypejobfactory.h"
 #include "gui/application.h"
 #include "gui/folderman.h"
 #include "pages/accountconfiguredwizardpage.h"
 #include "states/abstractsetupwizardstate.h"
 #include "states/accountconfiguredsetupwizardstate.h"
-#include "states/basiccredentialssetupwizardstate.h"
-#include "states/legacywebfingersetupwizardstate.h"
 #include "states/oauthcredentialssetupwizardstate.h"
 #include "states/serverurlsetupwizardstate.h"
 #include "theme.h"
@@ -31,10 +28,6 @@ QList<SetupWizardState> getNavigationEntries()
     QList<SetupWizardState> states = {
         SetupWizardState::ServerUrlState
     };
-
-    if (Theme::instance()->wizardEnableWebfinger()) {
-        states.append(SetupWizardState::LegacyWebFingerState);
-    }
 
     states.append({
         SetupWizardState::CredentialsState,
@@ -85,12 +78,6 @@ SetupWizardController::SetupWizardController(SettingsDialog *parent)
         qCDebug(lcSetupWizardController) << "back button clicked, current state" << _currentState;
 
         auto previousState = static_cast<SetupWizardState>(currentStateIdx - 1);
-
-        // skip WebFinger page when WebFinger is not available
-        if (previousState == SetupWizardState::LegacyWebFingerState && !Theme::instance()->wizardEnableWebfinger()) {
-            previousState = SetupWizardState::ServerUrlState;
-        }
-
         changeStateTo(previousState);
     });
 }
@@ -114,24 +101,9 @@ void SetupWizardController::changeStateTo(SetupWizardState nextState, ChangeReas
         _currentState = new ServerUrlSetupWizardState(_context);
         break;
     }
-    case SetupWizardState::LegacyWebFingerState: {
-        _currentState = new LegacyWebFingerSetupWizardState(_context);
+    case SetupWizardState::CredentialsState:
+        _currentState = new OAuthCredentialsSetupWizardState(_context);
         break;
-    }
-    case SetupWizardState::CredentialsState: {
-        switch (_context->accountBuilder().authType()) {
-        case DetermineAuthTypeJob::AuthType::Basic:
-            _currentState = new BasicCredentialsSetupWizardState(_context);
-            break;
-        case DetermineAuthTypeJob::AuthType::OAuth:
-            _currentState = new OAuthCredentialsSetupWizardState(_context);
-            break;
-        default:
-            Q_UNREACHABLE();
-        }
-
-        break;
-    }
     case SetupWizardState::AccountConfiguredState: {
         _currentState = new AccountConfiguredSetupWizardState(_context);
 
@@ -160,14 +132,6 @@ void SetupWizardController::changeStateTo(SetupWizardState nextState, ChangeReas
     connect(_currentState, &AbstractSetupWizardState::evaluationSuccessful, this, [this]() {
         switch (_currentState->state()) {
         case SetupWizardState::ServerUrlState: {
-            if (Theme::instance()->wizardEnableWebfinger()) {
-                changeStateTo(SetupWizardState::LegacyWebFingerState);
-            } else {
-                changeStateTo(SetupWizardState::CredentialsState);
-            }
-            return;
-        }
-        case SetupWizardState::LegacyWebFingerState: {
             changeStateTo(SetupWizardState::CredentialsState);
             return;
         }
@@ -187,7 +151,6 @@ void SetupWizardController::changeStateTo(SetupWizardState nextState, ChangeReas
                 if (fetchUserInfoJob->success()) {
                     auto result = fetchUserInfoJob->result().value<FetchUserInfoResult>();
                     _context->accountBuilder().setDisplayName(result.displayName());
-                    _context->accountBuilder().authenticationStrategy()->setDavUser(result.userName());
                     changeStateTo(SetupWizardState::AccountConfiguredState);
                 } else if (fetchUserInfoJob->reply()->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 401) {
                     _context->window()->showErrorMessage(tr("Invalid credentials"));
