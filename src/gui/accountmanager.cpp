@@ -48,11 +48,6 @@ auto defaultSyncRootC()
     return QStringLiteral("default_sync_root");
 }
 
-const QString davUserC()
-{
-    return QStringLiteral("dav_user");
-}
-
 const QString davUserDisplyNameC()
 {
     return QStringLiteral("display-name");
@@ -139,7 +134,6 @@ void AccountManager::saveAccount(Account *account, bool saveCredentials)
     settings->beginGroup(account->id());
 
     settings->setValue(urlC(), account->_url.toString());
-    settings->setValue(davUserC(), account->_davUser);
     settings->setValue(davUserDisplyNameC(), account->_displayName);
     settings->setValue(userUUIDC(), account->uuid());
     if (account->hasCapabilities()) {
@@ -221,7 +215,6 @@ AccountPtr AccountManager::loadAccountHelper(QSettings &settings)
 
     acc->setUrl(urlConfig.toUrl());
 
-    acc->_davUser = settings.value(davUserC()).toString();
     acc->_displayName = settings.value(davUserDisplyNameC()).toString();
     acc->setCapabilities({acc->url(), settings.value(capabilitesC()).value<QVariantMap>()});
     acc->setDefaultSyncRoot(settings.value(defaultSyncRootC()).toString());

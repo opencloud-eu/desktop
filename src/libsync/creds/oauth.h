@@ -53,7 +53,7 @@ class OPENCLOUD_SYNC_EXPORT OAuth : public QObject
 {
     Q_OBJECT
 public:
-    enum Result { NotSupported, LoggedIn, Error, ErrorInsecureUrl };
+    enum Result { LoggedIn, Error, ErrorInsecureUrl };
     Q_ENUM(Result)
     enum class TokenEndpointAuthMethods : char { none, client_secret_basic, client_secret_post };
     Q_ENUM(TokenEndpointAuthMethods)
@@ -62,7 +62,7 @@ public:
     Q_ENUM(PromptValuesSupported)
     Q_DECLARE_FLAGS(PromptValuesSupportedFlags, PromptValuesSupported)
 
-    OAuth(const QUrl &serverUrl, const QString &davUser, QNetworkAccessManager *networkAccessManager, const QVariantMap &dynamicRegistrationData, QObject *parent);
+    OAuth(const QUrl &serverUrl, QNetworkAccessManager *networkAccessManager, const QVariantMap &dynamicRegistrationData, QObject *parent);
     ~OAuth() override;
 
     virtual void startAuthentication();
@@ -91,7 +91,6 @@ protected:
     void updateDynamicRegistration();
 
     QUrl _serverUrl;
-    QString _davUser;
     QVariantMap _dynamicRegistrationData;
     QNetworkAccessManager *_networkAccessManager;
     bool _isRefreshingToken = false;
