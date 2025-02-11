@@ -96,13 +96,12 @@ protected Q_SLOTS:
     void slotRemoveCurrentFolder(Folder *folder);
     void slotEnableVfsCurrentFolder(Folder *folder);
     void slotDisableVfsCurrentFolder(Folder *folder);
+    void showSelectiveSyncDialog(Folder *folder);
     void slotFolderWizardAccepted();
     void slotDeleteAccount();
     void slotToggleSignInState();
 
 private:
-    void showSelectiveSyncDialog(Folder *folder);
-
     void showConnectionLabel(const QString &message, SyncResult::Status status, QStringList errors = {});
 
     void doForceSyncCurrentFolder(Folder *selectedFolder);
