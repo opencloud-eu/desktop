@@ -344,6 +344,12 @@ Pane {
                                     }
 
                                     MenuItem {
+                                        text: qsTr("Choose what to sync")
+                                        onTriggered: accountSettings.showSelectiveSyncDialog(folderDelegate.folder)
+                                        visible: folderDelegate.folder.isReady
+                                    }
+
+                                    MenuItem {
                                         text: qsTr("Remove folder sync connection")
                                         onTriggered: accountSettings.slotRemoveCurrentFolder(folderDelegate.folder)
                                         visible: !folderDelegate.isDeployed
