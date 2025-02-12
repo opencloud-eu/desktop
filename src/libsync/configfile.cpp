@@ -54,7 +54,6 @@ const QString fullLocalDiscoveryIntervalC()
 {
     return QStringLiteral("fullLocalDiscoveryInterval");
 }
-const QString monoIconsC() { return QStringLiteral("monoIcons"); }
 const QString promptDeleteC() { return QStringLiteral("promptDeleteAllFiles"); }
 const QString crashReporterC() { return QStringLiteral("crashReporter"); }
 const QString optionalDesktopNoficationsC()
@@ -691,23 +690,6 @@ void ConfigFile::setPromptDeleteFiles(bool promptDeleteFiles)
 {
     auto settings = makeQSettings();
     settings.setValue(promptDeleteC(), promptDeleteFiles);
-}
-
-bool ConfigFile::monoIcons() const
-{
-    auto settings = makeQSettings();
-    bool monoDefault = false; // On Mac we want bw by default
-#ifdef Q_OS_MAC
-    // OEM themes are not obliged to ship mono icons
-    monoDefault = Resources::isVanillaTheme();
-#endif
-    return settings.value(monoIconsC(), monoDefault).toBool();
-}
-
-void ConfigFile::setMonoIcons(bool useMonoIcons)
-{
-    auto settings = makeQSettings();
-    settings.setValue(monoIconsC(), useMonoIcons);
 }
 
 bool ConfigFile::crashReporter() const

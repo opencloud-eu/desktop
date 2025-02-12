@@ -36,27 +36,6 @@
          </property>
          <layout class="QGridLayout" name="gridLayout_2">
           <item row="1" column="0">
-           <widget class="QCheckBox" name="monoIconsCheckBox">
-            <property name="text">
-             <string>Use Monochrome Icons in the system tray</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QCheckBox" name="desktopNotificationsCheckBox">
-            <property name="text">
-             <string>Show Desktop Notifications</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QCheckBox" name="autostartCheckBox">
-            <property name="text">
-             <string>Start on Login</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
            <layout class="QHBoxLayout" name="horizontalLayout_6">
             <item>
              <widget class="QLabel" name="languageLabel">
@@ -94,6 +73,20 @@
              </widget>
             </item>
            </layout>
+          </item>
+          <item row="0" column="1">
+           <widget class="QCheckBox" name="desktopNotificationsCheckBox">
+            <property name="text">
+             <string>Show Desktop Notifications</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QCheckBox" name="autostartCheckBox">
+            <property name="text">
+             <string>Start on Login</string>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -253,7 +246,6 @@
  <tabstops>
   <tabstop>autostartCheckBox</tabstop>
   <tabstop>desktopNotificationsCheckBox</tabstop>
-  <tabstop>monoIconsCheckBox</tabstop>
   <tabstop>languageDropdown</tabstop>
   <tabstop>syncHiddenFilesCheckBox</tabstop>
   <tabstop>crashreporterCheckBox</tabstop>
