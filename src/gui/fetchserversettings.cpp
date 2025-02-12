@@ -16,8 +16,10 @@
 
 #include "gui/accountstate.h"
 #include "gui/connectionvalidator.h"
+#include "gui/networkinformation.h"
 
 #include "libsync/networkjobs/jsonjob.h"
+
 
 using namespace std::chrono_literals;
 
@@ -67,7 +69,7 @@ void FetchServerSettingsJob::start()
             case Account::ServerSupportLevel::Supported:
                 break;
             case Account::ServerSupportLevel::Unsupported:
-                Q_EMIT finishedSignal(Result::UnsupportedServer);
+                Q_EMIT finishedSignal(ConnectionValidator::ServerVersionMismatch);
                 return;
             }
             auto *userJob = new JsonApiJob(_account, QStringLiteral("ocs/v2.php/cloud/user"), SimpleNetworkJob::UrlQuery{}, QNetworkRequest{}, this);
@@ -75,9 +77,9 @@ void FetchServerSettingsJob::start()
             userJob->setTimeout(fetchSettingsTimeout());
             connect(userJob, &JsonApiJob::finishedSignal, this, [userJob, this] {
                 if (userJob->timedOut()) {
-                    Q_EMIT finishedSignal(Result::TimeOut);
+                    Q_EMIT finishedSignal(ConnectionValidator::Timeout);
                 } else if (userJob->httpStatusCode() == 401) {
-                    Q_EMIT finishedSignal(Result::InvalidCredentials);
+                    Q_EMIT finishedSignal(ConnectionValidator::CredentialsWrong);
                 } else if (userJob->ocsSuccess()) {
                     const auto userData = userJob->data().value(QStringLiteral("ocs")).toObject().value(QStringLiteral("data")).toObject();
                     const QString displayName = userData.value(QStringLiteral("display-name")).toString();
@@ -85,19 +87,26 @@ void FetchServerSettingsJob::start()
                         _account->setDavDisplayName(displayName);
                     }
                     runAsyncUpdates();
-                    Q_EMIT finishedSignal(Result::Success);
+                    Q_EMIT finishedSignal(ConnectionValidator::Connected);
                 } else {
-                    Q_EMIT finishedSignal(Result::Undefined);
+                    Q_EMIT finishedSignal(ConnectionValidator::Undefined);
                 }
             });
             userJob->start();
         } else {
-            if (job->timedOut()) {
-                Q_EMIT finishedSignal(Result::TimeOut);
+            if (job->reply()->error() == QNetworkReply::ContentAccessDenied) {
+                Q_EMIT finishedSignal(ConnectionValidator::ClientUnsupported, extractErrorMessage(job->reply()->readAll()));
+            } else if (job->reply()->error() == QNetworkReply::SslHandshakeFailedError) {
+                Q_EMIT finishedSignal(
+                    NetworkInformation::instance()->isBehindCaptivePortal() ? ConnectionValidator::CaptivePortal : ConnectionValidator::SslError);
+            } else if (job->timedOut()) {
+                Q_EMIT finishedSignal(ConnectionValidator::Timeout);
             } else if (job->httpStatusCode() == 401) {
-                Q_EMIT finishedSignal(Result::InvalidCredentials);
+                Q_EMIT finishedSignal(ConnectionValidator::CredentialsWrong);
+            } else if (job->httpStatusCode() == 503) {
+                Q_EMIT finishedSignal(ConnectionValidator::ServiceUnavailable);
             } else {
-                Q_EMIT finishedSignal(Result::Undefined);
+                Q_EMIT finishedSignal(ConnectionValidator::Undefined);
             }
         }
     });

@@ -29,64 +29,13 @@
 
 namespace OCC {
 
-/**
- * This is a job-like class to check that the server is up and that we are connected.
- * There are two entry points: checkServerAndAuth and checkAuthentication
- * checkAuthentication is the quick version that only does the propfind
- * while checkServerAndAuth is doing the 4 calls.
- *
- * We cannot use the capabilites call to test the login and the password because of
- * https://github.com/owncloud/core/issues/12930
- *
- * Here follows the state machine
-
-\code{.unparsed}
-*---> checkServerAndAuth  (check status.php)
-        Will asynchronously check for system proxy (if using system proxy)
-        And then invoke slotCheckServerAndAuth
-        CheckServerJob
-        |
-        +-> slotNoStatusFound --> X
-        |
-        +-> slotJobTimeout --> X
-        |
-        +-> slotStatusFound --+--> X (if credentials are still missing)
-                              |
-  +---------------------------+
-  |
-*-+-> checkAuthentication (PROPFIND on root)
-        PropfindJob
-        |
-        +-> slotAuthFailed --> X
-        |
-        +-> slotAuthSuccess --+--> X (depending if coming from checkServerAndAuth or not)
-                              |
-  +---------------------------+
-  |
-  +-> checkServerCapabilities
-        JsonApiJob (cloud/capabilities) -> slotCapabilitiesRecieved -+
-                                                                     |
-  +------------------------------------------------------------------+
-  |
-  +-> fetchUser -+
-                 |
-                 +-> AvatarJob
-                            |
-                            +-> slotAvatarImage --> reportResult()
-
-    \endcode
- */
 class OPENCLOUD_GUI_EXPORT ConnectionValidator : public QObject
 {
     Q_OBJECT
 public:
     explicit ConnectionValidator(AccountPtr account, QObject *parent = nullptr);
 
-    enum class ValidationMode {
-        ValidateServer,
-        ValidateAuth,
-        ValidateAuthAndUpdate
-    };
+    enum class ValidationMode { ValidateServer, ValidateAuthAndUpdate };
     Q_ENUM(ValidationMode)
 
     enum Status {
@@ -127,14 +76,9 @@ Q_SIGNALS:
     void sslErrors(const QList<QSslError> &errors);
 
 protected Q_SLOTS:
-    /// Checks authentication only.
-    void checkAuthentication();
     void slotCheckServerAndAuth();
 
     void slotStatusFound(const QUrl &url, const QJsonObject &info);
-
-    void slotAuthFailed();
-    void slotAuthSuccess();
 
 private:
     void reportResult(Status status);

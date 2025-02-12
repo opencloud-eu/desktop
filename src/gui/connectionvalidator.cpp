@@ -33,14 +33,6 @@ namespace OCC {
 
 Q_LOGGING_CATEGORY(lcConnectionValidator, "sync.connectionvalidator", QtInfoMsg)
 
-// Make sure the timeout for this job is less than how often we get called
-// This makes sure we get tried often enough without "ConnectionValidator already running"
-namespace {
-    auto timeoutToUse()
-    {
-        return std::min(ConnectionValidator::DefaultCallingInterval - 5s, AbstractNetworkJob::httpTimeout);
-    };
-}
 
 ConnectionValidator::ConnectionValidator(AccountPtr account, QObject *parent)
     : QObject(parent)
@@ -169,92 +161,36 @@ void ConnectionValidator::slotStatusFound(const QUrl &url, const QJsonObject &in
     }
     // now check the authentication
     if (_mode != ConnectionValidator::ValidationMode::ValidateServer) {
-        checkAuthentication();
-    } else {
-        reportResult(Connected);
-    }
-}
-
-void ConnectionValidator::checkAuthentication()
-{
-    // simply GET the WebDAV root, will fail if credentials are wrong.
-    // continue in slotAuthCheck here :-)
-    qCDebug(lcConnectionValidator) << "# Check whether authenticated propfind works.";
-
-    // we explicitly use a legacy dav path here
-    auto *job = new PropfindJob(_account, _account->url(), QStringLiteral("/remote.php/webdav/"), PropfindJob::Depth::Zero, this);
-    job->setAuthenticationJob(true); // don't retry
-    job->setTimeout(timeoutToUse());
-    job->setProperties({ QByteArrayLiteral("getlastmodified") });
-    connect(job, &PropfindJob::finishedWithoutError, this, &ConnectionValidator::slotAuthSuccess);
-    connect(job, &PropfindJob::finishedWithError, this, &ConnectionValidator::slotAuthFailed);
-    job->start();
-}
-
-void ConnectionValidator::slotAuthFailed()
-{
-    auto job = qobject_cast<PropfindJob *>(sender());
-    Status stat = Timeout;
-
-    if (job->reply()->error() == QNetworkReply::SslHandshakeFailedError) {
-        _errors << job->errorStringParsingBody();
-        stat = NetworkInformation::instance()->isBehindCaptivePortal() ? CaptivePortal : SslError;
-
-    } else if (job->reply()->error() == QNetworkReply::AuthenticationRequiredError) {
-        qCWarning(lcConnectionValidator) << "******** Authentication failed!" << job->reply()->error() << job;
-        _errors << tr("Authentication error");
-        stat = CredentialsWrong;
-    } else if (job->reply()->error() == QNetworkReply::ContentAccessDenied) {
-        stat = ClientUnsupported;
-        _errors << extractErrorMessage(job->reply()->readAll());
-    } else if (job->reply()->error() != QNetworkReply::NoError) {
-        _errors << job->errorStringParsingBody();
-
-        if (job->httpStatusCode() == 503) {
-            _errors.clear();
-            stat = ServiceUnavailable;
-        }
-    }
-
-    reportResult(stat);
-}
-
-void ConnectionValidator::slotAuthSuccess()
-{
-    _errors.clear();
-    if (_mode != ConnectionValidator::ValidationMode::ValidateAuth) {
         auto *fetchSetting = new FetchServerSettingsJob(_account, this);
         const auto unsupportedServerError = [this] {
             _errors.append({tr("The configured server for this client is too old."), tr("Please update to the latest server and restart the client.")});
         };
-        connect(fetchSetting, &FetchServerSettingsJob::finishedSignal, this, [unsupportedServerError, this](FetchServerSettingsJob::Result result) {
-            switch (result) {
-            case FetchServerSettingsJob::Result::UnsupportedServer:
-                unsupportedServerError();
-                reportResult(ServerVersionMismatch);
-                break;
-            case FetchServerSettingsJob::Result::InvalidCredentials:
-                reportResult(CredentialsWrong);
-                break;
-            case FetchServerSettingsJob::Result::TimeOut:
-                reportResult(Timeout);
-                break;
-            case FetchServerSettingsJob::Result::Success:
-                if (_account->serverSupportLevel() == Account::ServerSupportLevel::Unknown) {
-                    unsupportedServerError();
+        connect(fetchSetting, &FetchServerSettingsJob::finishedSignal, this,
+            [unsupportedServerError, this](ConnectionValidator::Status result, const QString &error) {
+                if (!error.isEmpty()) {
+                    _errors.append(error);
                 }
-                reportResult(Connected);
-                break;
-            case FetchServerSettingsJob::Result::Undefined:
-                reportResult(Undefined);
-                break;
-            }
-        });
+                switch (result) {
+                case ServerVersionMismatch:
+                    unsupportedServerError();
+                    reportResult(ServerVersionMismatch);
+                    break;
+                case Connected:
+                    if (_account->serverSupportLevel() == Account::ServerSupportLevel::Unknown) {
+                        unsupportedServerError();
+                    }
+                    [[fallthrough]];
+                default:
+                    reportResult(result);
+                    break;
+                }
+            });
 
         fetchSetting->start();
         return;
+    } else {
+        reportResult(Connected);
     }
-    reportResult(Connected);
 }
 
 void ConnectionValidator::reportResult(Status status)
