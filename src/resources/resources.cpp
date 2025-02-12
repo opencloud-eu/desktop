@@ -63,11 +63,6 @@ QString coloredTheme()
     return QStringLiteral("colored");
 }
 
-QString whiteTheme()
-{
-    return QStringLiteral("white");
-}
-
 bool hasTheme(IconType type, const QString &theme)
 {
     // <<is vanilla, theme name>, bool
@@ -88,13 +83,6 @@ bool OCC::Resources::hasDarkTheme()
     static bool _hasBrandedColored = hasTheme(IconType::BrandedIcon, coloredTheme());
     static bool _hasBrandedDark = hasTheme(IconType::BrandedIcon, darkTheme());
     return _hasBrandedColored == _hasBrandedDark;
-}
-
-bool Resources::hasMonoTheme()
-{
-    // mono icons are only supported in vanilla and if a customer provides them
-    // no fallback to vanilla
-    return hasTheme(Resources::IconType::BrandedIcon, whiteTheme());
 }
 
 bool Resources::isVanillaTheme()

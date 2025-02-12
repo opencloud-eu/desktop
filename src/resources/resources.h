@@ -42,10 +42,6 @@ bool OPENCLOUD_RESOURCES_EXPORT isUsingDarkTheme();
 
 bool OPENCLOUD_RESOURCES_EXPORT hasDarkTheme();
 
-/** Whether the theme provides monochrome tray icons
- */
-bool OPENCLOUD_RESOURCES_EXPORT hasMonoTheme();
-
 QIcon OPENCLOUD_RESOURCES_EXPORT getCoreIcon(const QString &icon_name);
 
 QIcon OPENCLOUD_RESOURCES_EXPORT loadIcon(const QString &flavor, const QString &name, IconType iconType);

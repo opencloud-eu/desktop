@@ -220,11 +220,6 @@ public:
     virtual QString about() const;
     virtual bool aboutShowCopyright() const;
 
-    /**
-     * Define if the systray icons should be using mono design
-     */
-    void setSystrayUseMonoIcons(bool mono);
-
 
     /**
      * @brief Where to check for new Updates.
@@ -440,8 +435,6 @@ protected:
     }
 
 Q_SIGNALS:
-    void systrayUseMonoIconsChanged(bool);
-
     void themeChanged();
 
 private:
@@ -450,7 +443,6 @@ private:
     Theme &operator=(Theme const &);
 
     static Theme *_instance;
-    bool _mono = false;
 };
 
 template <>

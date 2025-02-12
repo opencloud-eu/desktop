@@ -35,16 +35,6 @@
 #endif
 
 namespace {
-QString whiteTheme()
-{
-    return QStringLiteral("white");
-}
-
-QString blackTheme()
-{
-    return QStringLiteral("black");
-}
-
 QString darkTheme()
 {
     return QStringLiteral("dark");
@@ -136,27 +126,13 @@ QIcon Theme::aboutIcon() const
 
 QIcon Theme::themeTrayIcon(const SyncResult &result, [[maybe_unused]] bool sysTrayMenuVisible, Resources::IconType iconType) const
 {
-    auto systrayIconFlavor = [&]() {
-        QString flavor;
-        if (_mono) {
-            flavor = Utility::hasDarkSystray() ? whiteTheme() : blackTheme();
-
-#ifdef Q_OS_MAC
-            if (sysTrayMenuVisible) {
-                flavor = whiteTheme();
-            }
-#endif
-        } else {
-            // we have a dark sys tray and the theme has support for that
-            flavor = (Utility::hasDarkSystray() && Resources::hasDarkTheme()) ? darkTheme() : coloredTheme();
-        }
-        return flavor;
-    };
-    auto icon = Resources::loadIcon(systrayIconFlavor(), QStringLiteral("state-%1").arg(syncStateIconName(result)), iconType);
+    // we have a dark sys tray and the theme has support for that
+    const QString flavor = (Utility::hasDarkSystray() && Resources::hasDarkTheme()) ? darkTheme() : coloredTheme();
+    auto icon = Resources::loadIcon(flavor, QStringLiteral("state-%1").arg(syncStateIconName(result)), iconType);
 #ifdef Q_OS_MAC
     // This defines the icon as a template and enables automatic macOS color handling
     // See https://bugreports.qt.io/browse/QTBUG-42109
-    icon.setIsMask(_mono && !sysTrayMenuVisible);
+    icon.setIsMask(true);
 #endif
     return icon;
 }
@@ -206,12 +182,6 @@ QString Theme::overrideServerUrlV2() const
 QString Theme::overrideServerPath() const
 {
     return {};
-}
-
-void Theme::setSystrayUseMonoIcons(bool mono)
-{
-    _mono = mono;
-    Q_EMIT systrayUseMonoIconsChanged(mono);
 }
 
 QUrl Theme::updateCheckUrl() const

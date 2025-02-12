@@ -43,7 +43,6 @@ GeneralSettings::GeneralSettings(QWidget *parent)
     loadMiscSettings();
 
     // misc
-    connect(_ui->monoIconsCheckBox, &QAbstractButton::toggled, this, &GeneralSettings::saveMiscSettings);
     connect(_ui->crashreporterCheckBox, &QAbstractButton::toggled, this, &GeneralSettings::saveMiscSettings);
 
     connect(_ui->languageDropdown, QOverload<int>::of(&QComboBox::activated), this, [this]() {
@@ -69,10 +68,6 @@ GeneralSettings::GeneralSettings(QWidget *parent)
         Q_EMIT syncOptionsChanged();
     });
 
-    // OEM themes are not obliged to ship mono icons, so there
-    // is no point in offering an option
-    _ui->monoIconsCheckBox->setVisible(Resources::hasMonoTheme());
-
     connect(_ui->ignoredFilesButton, &QAbstractButton::clicked, this, &GeneralSettings::slotIgnoreFilesEditor);
     connect(_ui->logSettingsButton, &QPushButton::clicked, this, [] {
         // only access occApp after things are set up
@@ -91,10 +86,8 @@ void GeneralSettings::loadMiscSettings()
 {
     QScopedValueRollback<bool> scope(_currentlyLoading, true);
     ConfigFile cfgFile;
-    _ui->monoIconsCheckBox->setChecked(cfgFile.monoIcons());
     _ui->desktopNotificationsCheckBox->setChecked(cfgFile.optionalDesktopNotifications());
     _ui->crashreporterCheckBox->setChecked(cfgFile.crashReporter());
-    _ui->monoIconsCheckBox->setChecked(cfgFile.monoIcons());
 
     // the dropdown has to be populated before we can can pick an entry below based on the stored setting
     loadLanguageNamesIntoDropdown();
@@ -114,9 +107,6 @@ void GeneralSettings::saveMiscSettings()
     if (_currentlyLoading)
         return;
     ConfigFile cfgFile;
-    bool isChecked = _ui->monoIconsCheckBox->isChecked();
-    cfgFile.setMonoIcons(isChecked);
-    Theme::instance()->setSystrayUseMonoIcons(isChecked);
     cfgFile.setCrashReporter(_ui->crashreporterCheckBox->isChecked());
 
     // the first entry, identified by index 0, means "use default", which is a special case handled below
