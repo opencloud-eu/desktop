@@ -422,10 +422,8 @@ void AccountState::checkConnectivity(bool blockJobs)
         // already connected.
         if (blockJobs) {
             _connectionValidator->setClearCookies(true);
-            mode = ConnectionValidator::ValidationMode::ValidateAuth;
-        } else {
-            mode = ConnectionValidator::ValidationMode::ValidateAuthAndUpdate;
         }
+        mode = ConnectionValidator::ValidationMode::ValidateAuthAndUpdate;
     } else {
         // Check the server and then the auth.
         if (_waitingForNewCredentials) {
