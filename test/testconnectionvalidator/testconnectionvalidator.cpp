@@ -30,7 +30,7 @@ class TestConnectionValidator : public QObject
 {
     Q_OBJECT
 
-    enum class FailStage { Invalid, StatusPhp, AuthValidation, Capabilities, UserInfo };
+    enum class FailStage { Invalid, StatusPhp, Capabilities, UserInfo };
 
     // we can't use QMap direclty with QFETCH
     using Values = QMap<QString, QString>;
@@ -60,20 +60,17 @@ private Q_SLOTS:
         const auto defaultValue = Values{{QStringLiteral("maintenance"), QStringLiteral("false")}, {QStringLiteral("version"), QStringLiteral("10.11.0.0")},
             {QStringLiteral("productversion"), QStringLiteral("4.0.5")}};
 
-        QTest::newRow("stauts.php maintenance") << FailStage::StatusPhp << [value = defaultValue]() mutable {
+        QTest::newRow("status.php maintenance") << FailStage::StatusPhp << [value = defaultValue]() mutable {
             value[QStringLiteral("maintenance")] = QStringLiteral("true");
             return value;
         }() << ConnectionValidator::MaintenanceMode;
-        QTest::newRow("stauts.php ServiceUnavailable") << FailStage::StatusPhp << defaultValue << ConnectionValidator::StatusNotFound;
-        QTest::newRow("stauts.php UnsupportedClient") << FailStage::StatusPhp << defaultValue << ConnectionValidator::ClientUnsupported;
-
-        QTest::newRow("auth 401") << FailStage::AuthValidation << defaultValue << ConnectionValidator::CredentialsWrong;
-        QTest::newRow("auth timeout") << FailStage::AuthValidation << defaultValue << ConnectionValidator::Timeout;
-        QTest::newRow("auth ServiceUnavailable") << FailStage::AuthValidation << defaultValue << ConnectionValidator::ServiceUnavailable;
-        QTest::newRow("auth UnsupportedClient") << FailStage::AuthValidation << defaultValue << ConnectionValidator::ClientUnsupported;
+        QTest::newRow("status.php ServiceUnavailable") << FailStage::StatusPhp << defaultValue << ConnectionValidator::StatusNotFound;
+        QTest::newRow("status.php UnsupportedClient") << FailStage::StatusPhp << defaultValue << ConnectionValidator::ClientUnsupported;
 
         QTest::newRow("capabilites timeout") << FailStage::Capabilities << defaultValue << ConnectionValidator::CredentialsWrong;
         QTest::newRow("capabilites 401") << FailStage::Capabilities << defaultValue << ConnectionValidator::Timeout;
+        QTest::newRow("capabilites ServiceUnavailable") << FailStage::Capabilities << defaultValue << ConnectionValidator::ServiceUnavailable;
+        QTest::newRow("capabilites UnsupportedClient") << FailStage::Capabilities << defaultValue << ConnectionValidator::ClientUnsupported;
         QTest::newRow("capabilites unsupported server") << FailStage::Capabilities << [value = defaultValue]() mutable {
             value[QStringLiteral("version")] = QStringLiteral("7.0");
             value[QStringLiteral("productversion")] = QString();
@@ -116,6 +113,10 @@ private Q_SLOTS:
                     if (failStage == FailStage::Capabilities) {
                         if (status == ConnectionValidator::CredentialsWrong) {
                             return new FakeErrorReply(op, request, this, 401);
+                        } else if (status == ConnectionValidator::ClientUnsupported) {
+                            return new FakeErrorReply(op, request, this, 403);
+                        } else if (status == ConnectionValidator::ServiceUnavailable) {
+                            return new FakeErrorReply(op, request, this, 503);
                         } else if (status == ConnectionValidator::Timeout) {
                             return new FakeHangingReply(op, request, this);
                         }
@@ -131,17 +132,6 @@ private Q_SLOTS:
                         }
                     }
                     return new FakePayloadReply(op, request, getPayload(QStringLiteral("user.json")), this);
-                }
-            } else if (failStage == FailStage::AuthValidation && verb == "PROPFIND") {
-                reachedStage = FailStage::AuthValidation;
-                if (status == ConnectionValidator::CredentialsWrong) {
-                    return new FakeErrorReply(op, request, this, 401);
-                } else if (status == ConnectionValidator::Timeout) {
-                    return new FakeHangingReply(op, request, this);
-                } else if (status == ConnectionValidator::ServiceUnavailable) {
-                    return new FakeErrorReply(op, request, this, 503);
-                } else if (status == ConnectionValidator::ClientUnsupported) {
-                    return new FakeErrorReply(op, request, this, 403);
                 }
             }
             return nullptr;

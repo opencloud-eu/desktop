@@ -1133,14 +1133,8 @@ QString getFilePathFromUrl(const QUrl &url)
     const QString path = url.path();
     const QString sRootUrl = OCC::TestUtils::dummyDavUrl().path();
 
-    const QString legacyConnectionValidator = QStringLiteral("/remote.php/webdav/");
-
-
-    QString out;
     if (path.startsWith(sRootUrl)) {
-        out = path.mid(sRootUrl.length());
-    } else if (path.startsWith(legacyConnectionValidator)) {
-        out = path.mid(legacyConnectionValidator.length());
+        return OCC::Utility::stripLeadingSlash(path.mid(sRootUrl.length()));
     }
-    return OCC::Utility::stripLeadingSlash(out);
+    return {};
 }
