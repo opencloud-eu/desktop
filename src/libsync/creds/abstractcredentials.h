@@ -45,7 +45,6 @@ public:
     virtual void setAccount(Account *account);
 
     virtual QString authType() const = 0;
-    virtual QString user() const = 0;
     virtual AccessManager *createAM() const = 0;
 
     /** Whether there are credentials that can be used for a connection attempt. */
@@ -66,7 +65,7 @@ public:
      */
     virtual void askFromUser() = 0;
 
-    virtual bool stillValid(QNetworkReply *reply) = 0;
+    virtual void checkCredentials(QNetworkReply *reply);
     virtual void persist() = 0;
 
     /** Invalidates token used to authorize requests, it will no longer be used.

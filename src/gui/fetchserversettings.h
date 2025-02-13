@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include "gui/connectionvalidator.h"
 #include "libsync/accountfwd.h"
 
 #include <QObject>
@@ -25,14 +26,12 @@ class FetchServerSettingsJob : public QObject
 {
     Q_OBJECT
 public:
-    enum class Result { Success, TimeOut, InvalidCredentials, UnsupportedServer, Undefined };
-    Q_ENUM(Result);
     FetchServerSettingsJob(const AccountPtr &account, QObject *parent);
 
     void start();
 
 Q_SIGNALS:
-    void finishedSignal(Result);
+    void finishedSignal(ConnectionValidator::Status, QString errorMessage = {});
 
 private:
     void runAsyncUpdates();

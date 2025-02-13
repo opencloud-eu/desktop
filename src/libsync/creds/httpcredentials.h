@@ -51,45 +51,37 @@ public:
     /// Don't add credentials if this is set on a QNetworkRequest
     static constexpr QNetworkRequest::Attribute DontAddCredentialsAttribute = QNetworkRequest::User;
 
-    explicit HttpCredentials(DetermineAuthTypeJob::AuthType authType, const QString &user, const QString &password);
+    explicit HttpCredentials(const QString &accessToken);
 
     QString authType() const override;
     AccessManager *createAM() const override;
     bool ready() const override;
     void fetchFromKeychain() override;
-    bool stillValid(QNetworkReply *reply) override;
+    void checkCredentials(QNetworkReply *reply);
     void persist() override;
-    QString user() const override;
     void invalidateToken() override;
     void forgetSensitiveData() override;
-    QString fetchUser();
 
     /* If we still have a valid refresh token, try to refresh it assynchronously and Q_EMIT fetched()
      * otherwise return false
      */
     bool refreshAccessToken();
 
-    // To fetch the user name as early as possible
     void setAccount(Account *account) override;
 
-    // Whether we are using OAuth
-    bool isUsingOAuth() const { return _authType == DetermineAuthTypeJob::AuthType::OAuth; }
 protected:
     HttpCredentials() = default;
 
     void slotAuthentication(QNetworkReply *reply, QAuthenticator *authenticator);
     void fetchFromKeychainHelper();
 
-    QString _user;
-    QString _password; // user's password, or access_token for OAuth
+    QString _accessToken; // user's password, or access_token for OAuth
     QString _refreshToken; // OAuth _refreshToken, set if OAuth is used.
     QString _previousPassword;
 
     QString _fetchErrorString;
     bool _ready = false;
     QPointer<AccountBasedOAuth> _oAuthJob;
-
-    DetermineAuthTypeJob::AuthType _authType = DetermineAuthTypeJob::AuthType::Unknown;
 
 private:
     bool refreshAccessTokenInternal(int tokenRefreshRetriesCount);

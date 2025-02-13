@@ -43,37 +43,7 @@ public:
      */
     virtual bool isValid() = 0;
 
-    [[deprecated("https://github.com/opencloud-eu/desktop/issues/76")]] QString davUser();
-    void setDavUser(const QString &user);
-
     virtual FetchUserInfoJobFactory makeFetchUserInfoJobFactory(QNetworkAccessManager *nam) = 0;
-
-private:
-    QString _davUser;
-};
-
-class HttpBasicAuthenticationStrategy : public AbstractAuthenticationStrategy
-{
-public:
-    explicit HttpBasicAuthenticationStrategy(const QString &username, const QString &password);
-
-    HttpCredentialsGui *makeCreds() override;
-
-    bool isValid() override;
-
-    // access is needed to be able to check these credentials against the server
-    QString password() const;
-
-    /**
-     *  The user name used for authentication
-     */
-    QString loginUser() const;
-
-    FetchUserInfoJobFactory makeFetchUserInfoJobFactory(QNetworkAccessManager *nam) override;
-
-private:
-    QString _loginUser;
-    QString _password;
 };
 
 class OAuth2AuthenticationStrategy : public AbstractAuthenticationStrategy
@@ -105,11 +75,8 @@ public:
      * Set server URL as well as the authentication type that needs to be used with this server.
      * @param serverUrl URL to server
      */
-    void setServerUrl(const QUrl &serverUrl, DetermineAuthTypeJob::AuthType workflowType);
+    void setServerUrl(const QUrl &serverUrl);
     QUrl serverUrl() const;
-
-    // TODO: move this out of the class's state
-    DetermineAuthTypeJob::AuthType authType();
 
     void setAuthenticationStrategy(AbstractAuthenticationStrategy *strategy);
     AbstractAuthenticationStrategy *authenticationStrategy() const;
@@ -165,8 +132,6 @@ private:
     QUrl _webFingerAuthenticationServerUrl;
     QVector<QUrl> _webFingerInstances;
     QUrl _webFingerSelectedInstance;
-
-    DetermineAuthTypeJob::AuthType _authType = DetermineAuthTypeJob::AuthType::Unknown;
 
     std::unique_ptr<AbstractAuthenticationStrategy> _authenticationStrategy;
 

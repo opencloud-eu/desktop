@@ -28,7 +28,7 @@ OAuthCredentialsSetupWizardState::OAuthCredentialsSetupWizardState(SetupWizardCo
         return _context->accountBuilder().serverUrl();
     }();
 
-    auto oAuth = new OAuth(authServerUrl, {}, _context->accessManager(), {}, this);
+    auto oAuth = new OAuth(authServerUrl, _context->accessManager(), {}, this);
     connect(oAuth, &OAuth::dynamicRegistrationDataReceived, this,
         [this](const QVariantMap &dynamicRegistrationData) { _context->accountBuilder().setDynamicRegistrationData(dynamicRegistrationData); });
 
@@ -50,11 +50,6 @@ OAuthCredentialsSetupWizardState::OAuthCredentialsSetupWizardState(SetupWizardCo
             }
             case OAuth::Result::Error: {
                 Q_EMIT evaluationFailed(tr("Error while trying to log in to OAuth2-enabled server."));
-                break;
-            }
-            case OAuth::Result::NotSupported: {
-                // should never happen
-                Q_EMIT evaluationFailed(tr("Server reports that OAuth2 is not supported."));
                 break;
             }
             case OAuth::Result::ErrorInsecureUrl: {

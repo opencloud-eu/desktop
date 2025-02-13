@@ -232,14 +232,6 @@ public:
     virtual bool wizardSkipAdvancedPage() const;
 
     /**
-     * Alternative path on the server that provides access to the WebDAV capabilities
-     *
-     * Attention: Make sure that this string does NOT have a leading slash and that
-     * it has a trailing slash, for example "remote.php/webdav/".
-     */
-    virtual QString webDavPath() const;
-
-    /**
      * @brief Sharing options
      *
      * Allow link sharing and or user/group sharing

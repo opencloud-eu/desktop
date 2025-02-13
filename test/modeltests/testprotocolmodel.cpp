@@ -37,10 +37,8 @@ private Q_SLOTS:
         const QDir d(dir.path());
         QVERIFY(d.mkdir(QStringLiteral("foo")));
         QVERIFY(d.mkdir(QStringLiteral("bar")));
-        auto foo = TestUtils::folderMan()->addFolder(
-            newAccountState.get(), TestUtils::createDummyFolderDefinition(newAccountState->account(), dir.path() + QStringLiteral("/foo")));
-        auto bar = TestUtils::folderMan()->addFolder(
-            newAccountState.get(), TestUtils::createDummyFolderDefinition(newAccountState->account(), dir.path() + QStringLiteral("/bar")));
+        auto foo = TestUtils::folderMan()->addFolder(newAccountState.get(), TestUtils::createDummyFolderDefinition(dir.path() + QStringLiteral("/foo")));
+        auto bar = TestUtils::folderMan()->addFolder(newAccountState.get(), TestUtils::createDummyFolderDefinition(dir.path() + QStringLiteral("/bar")));
 
         QVERIFY(foo);
         QVERIFY(bar);
