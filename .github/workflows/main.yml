@@ -3,7 +3,7 @@ name: OpenCloud Desktop CI
 on:
   push:
     branches:
-      - master
+      - main
       - '[0-9]+'
   pull_request:
   workflow_dispatch:
