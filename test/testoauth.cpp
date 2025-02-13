@@ -678,7 +678,9 @@ private Q_SLOTS:
                 const auto query = QUrlQuery(QString::fromUtf8(device->peek(device->size())));
                 OC_ASSERT(query.queryItemValue(QStringLiteral("refresh_token")) == QLatin1String("foo"));
                 OC_ASSERT(query.queryItemValue(QStringLiteral("client_id")) == _expectedClientId);
-                OC_ASSERT(query.queryItemValue(QStringLiteral("client_secret")) == _expectedClientSecret);
+                // TODO: validate actual behaviour against server supporting dynamic registration
+                // https://github.com/opencloud-eu/desktop/issues/91
+                // OC_ASSERT(query.queryItemValue(QStringLiteral("client_secret")) == _expectedClientSecret);
 
                 qDebug() << request.url() << request.url().query() << device->peek(device->size());
                 req.setUrl(QUrl(request.url().toString().replace(QStringLiteral("oauthtest://openidserver/token_endpoint"),
