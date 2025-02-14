@@ -28,14 +28,10 @@ SpaceImageProvider::SpaceImageProvider(const AccountPtr &account)
 QPixmap SpaceImageProvider::requestPixmap(const QString &id, QSize *size, const QSize &requestedSize)
 {
     QIcon icon;
-    if (id == QLatin1String("placeholder")) {
-        icon = Resources::getCoreIcon(QStringLiteral("space"));
-    } else {
-        const auto ids = id.split(QLatin1Char('/'));
-        const auto *space = _account->spacesManager()->space(ids.last());
-        if (space) {
-            icon = space->image()->image();
-        }
+    const auto ids = id.split(QLatin1Char('/'));
+    const auto *space = _account->spacesManager()->space(ids.last());
+    if (space) {
+        icon = space->image()->image();
     }
     Q_ASSERT(!icon.isNull());
     return Resources::pixmap(requestedSize, icon, QIcon::Normal, size);
