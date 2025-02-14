@@ -33,8 +33,6 @@ class HttpCredentialsGui : public HttpCredentials
 public:
     HttpCredentialsGui() = default;
 
-    HttpCredentialsGui(const QString &loginUser, const QString &password);
-
     HttpCredentialsGui(const QString &davUser, const QString &password, const QString &refreshToken);
 
     /**
@@ -46,7 +44,6 @@ public:
 
 private Q_SLOTS:
     void asyncAuthResult(OAuth::Result, const QString &accessToken, const QString &refreshToken);
-    void showDialog();
 
 Q_SIGNALS:
     void oAuthLoginAccepted();

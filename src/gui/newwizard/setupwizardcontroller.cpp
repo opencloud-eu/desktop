@@ -1,12 +1,10 @@
 #include "setupwizardcontroller.h"
 
-#include "determineauthtypejobfactory.h"
 #include "gui/application.h"
 #include "gui/folderman.h"
 #include "pages/accountconfiguredwizardpage.h"
 #include "states/abstractsetupwizardstate.h"
 #include "states/accountconfiguredsetupwizardstate.h"
-#include "states/basiccredentialssetupwizardstate.h"
 #include "states/oauthcredentialssetupwizardstate.h"
 #include "states/serverurlsetupwizardstate.h"
 #include "theme.h"
@@ -103,20 +101,9 @@ void SetupWizardController::changeStateTo(SetupWizardState nextState, ChangeReas
         _currentState = new ServerUrlSetupWizardState(_context);
         break;
     }
-    case SetupWizardState::CredentialsState: {
-        switch (_context->accountBuilder().authType()) {
-        case DetermineAuthTypeJob::AuthType::Basic:
-            _currentState = new BasicCredentialsSetupWizardState(_context);
-            break;
-        case DetermineAuthTypeJob::AuthType::OAuth:
-            _currentState = new OAuthCredentialsSetupWizardState(_context);
-            break;
-        default:
-            Q_UNREACHABLE();
-        }
-
+    case SetupWizardState::CredentialsState:
+        _currentState = new OAuthCredentialsSetupWizardState(_context);
         break;
-    }
     case SetupWizardState::AccountConfiguredState: {
         _currentState = new AccountConfiguredSetupWizardState(_context);
 
