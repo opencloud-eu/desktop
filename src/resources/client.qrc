@@ -25,6 +25,7 @@
         <file alias="resources/core/states/sync.svg">font-awesome/states/sync.svg</file>
         <file alias="resources/core/states/warning.svg">font-awesome/states/warning.svg</file>
         <file alias="resources/core/activity.svg">font-awesome/right-left-solid.svg</file>
-        <file alias="resources/core/folder-sync-small.svg">font-awesome/folder-solid-small.svg</file>
+        <file alias="resources/core/share.svg">remixicon/share.svg</file>
+        <file alias="resources/core/folder-sync-small.svg">remixicon/folder.svg</file>
     </qresource>
 </RCC>

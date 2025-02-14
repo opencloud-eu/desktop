@@ -62,6 +62,11 @@ SpaceImage::SpaceImage(Space *space)
 QIcon SpaceImage::image() const
 {
     if (_image.isNull()) {
+        if (_space->drive().getDriveType() == personalC) {
+            return Resources::getCoreIcon(QStringLiteral("folder-sync-small"));
+        } else if (_space->drive().getId() == sharesIdC) {
+            return Resources::getCoreIcon(QStringLiteral("share"));
+        }
         return Resources::getCoreIcon(QStringLiteral("space"));
     }
     return _image;
@@ -69,11 +74,10 @@ QIcon SpaceImage::image() const
 
 QUrl SpaceImage::qmlImageUrl() const
 {
-    if (!_image.isNull()) {
+    if (!etag().isNull()) {
         return QUrl(QStringLiteral("image://space/%1/%2").arg(etag(), _space->id()));
     } else {
-        // invalid space id to display the placeholder
-        return QUrl(QStringLiteral("image://space/placeholder"));
+        return QUrl(QStringLiteral("image://space/%1").arg(_space->id()));
     }
 }
 

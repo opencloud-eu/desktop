@@ -195,7 +195,7 @@ Pane {
                                 spacing: folderDelegate.spacing
 
                                 description: folderDelegate.subtitle
-                                imageSource: folderDelegate.folder.space ? folderDelegate.folder.space.image.qmlImageUrl : QMLResources.resourcePath("core", "folder-sync-small", enabled)
+                                imageSource: folderDelegate.folder.space ? folderDelegate.folder.space.image.qmlImageUrl : QMLResources.resourcePath("core", "space", enabled)
                                 statusSource: QMLResources.resourcePath("core", statusIcon, enabled)
                                 title: displayName
 
