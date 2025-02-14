@@ -142,6 +142,7 @@ jobs:
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --run python3 -m clang_html "${env:TMPDIR}/clang-tidy.log" -o "${env:GITHUB_WORKSPACE}/binaries/clang-tidy.html"
 
     - name: Package
+      if: matrix.name  != 'macos-clang-arm64'
       run: |
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --no-cache --package opencloud/opencloud-desktop
 
