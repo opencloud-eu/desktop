@@ -56,7 +56,6 @@ SpaceImage::SpaceImage(Space *space)
     : QObject(space)
     , _space(space)
 {
-    update();
 }
 
 QIcon SpaceImage::image() const
@@ -74,10 +73,11 @@ QIcon SpaceImage::image() const
 
 QUrl SpaceImage::qmlImageUrl() const
 {
-    if (!etag().isNull()) {
+    // while the icon is being loaded we provide a different url, qml caches the icon based on the url
+    if (_fetched) {
         return QUrl(QStringLiteral("image://space/%1/%2").arg(etag(), _space->id()));
     } else {
-        return QUrl(QStringLiteral("image://space/%1").arg(_space->id()));
+        return QUrl(QStringLiteral("image://space/invalid/%1").arg(_space->id()));
     }
 }
 
@@ -86,16 +86,21 @@ void SpaceImage::update()
     const auto &special = _space->drive().getSpecial();
     const auto img = std::find_if(special.cbegin(), special.cend(), [](const auto &it) { return it.getSpecialFolder().getName() == QLatin1String("image"); });
     if (img != special.cend()) {
+        _fetched = false;
         _url = QUrl(img->getWebDavUrl());
         _etag = Utility::normalizeEtag(img->getETag());
         auto job = _space->_spaceManager->account()->resourcesCache()->makeGetJob(_url, {}, _space);
         QObject::connect(job, &SimpleNetworkJob::finishedSignal, _space, [job, this] {
+            _fetched = true;
             if (job->httpStatusCode() == 200) {
                 _image = job->asIcon();
                 Q_EMIT imageChanged();
             }
         });
         job->start();
+    } else {
+        // nothing to fetch
+        _fetched = true;
     }
 }
 

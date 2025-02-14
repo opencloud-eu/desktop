@@ -53,6 +53,7 @@ namespace GraphApi {
         QString _etag;
         QIcon _image;
         Space *_space = nullptr;
+        bool _fetched = false;
 
         friend class Space;
     };
