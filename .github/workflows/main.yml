@@ -66,11 +66,17 @@ jobs:
     - name: Restore cache
       uses: actions/cache@v4
       with:
-        path: ~/cache
+        path: |
+          ~/cache
+          ~/ccache
         key: ${{ runner.os }}-${{ matrix.target }}
 
     - name: Clone CraftMaster
-      run: git clone --depth=1 https://invent.kde.org/kde/craftmaster.git "$env:HOME/craft/CraftMaster/CraftMaster"
+      run: |
+        if ($IsWindows -and (-not ${env:HOME})) {
+          $env:HOME = "${env:USERPROFILE}"
+        }
+        git clone --depth=1 https://invent.kde.org/kde/craftmaster.git "${env:HOME}/craft/CraftMaster/CraftMaster"
 
     - name: Craft setup
       run: |
@@ -84,8 +90,18 @@ jobs:
     - name: Prepare
       run: |
         New-Item -ItemType Directory "${env:GITHUB_WORKSPACE}/binaries/"
+        # bootsrtap
+        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c craft
+        # settings
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --set forceAsserts=true opencloud/opencloud-desktop
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --set srcDir="${env:GITHUB_WORKSPACE}" opencloud/opencloud-desktop
+        # ccache
+        if (-not $IsWindows) {
+          & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c dev-utils/ccache
+          & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --run "ccache -M1GB"
+          & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --run "ccache -s"
+        }
+        # optional deployment dependencies
         if ($IsWindows) {
             & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c dev-utils/nsis
         } elseif($IsLinux) {
