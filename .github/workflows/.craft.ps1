@@ -1,4 +1,7 @@
 if ($IsWindows) {
+    if (-not ${env:HOME}) {
+        $env:HOME = "${env:USERPROFILE}"
+    }
     $python = (Get-Command py).Source
     $python=(py -c "import sys; print(sys.executable)")
 } else {
