@@ -172,6 +172,9 @@ jobs:
       if: matrix.name  != 'macos-clang-arm64'
       run: |
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --no-cache --package opencloud/opencloud-desktop
+        if ($isWindows) {
+            & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --no-cache --package --options "[Packager]PackageType=AppxPackager" opencloud/opencloud-desktop
+        }
 
     - name: Prepare artifacts
       run: |
