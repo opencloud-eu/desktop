@@ -63,7 +63,18 @@ jobs:
       if: ${{ matrix.name  != 'linux-gcc-x86_64' }}
       uses: actions/checkout@v4
 
+    - name: Restore and update cache
+      if: github.event_name != 'pull_request'
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/cache
+          ~/ccache
+        key: ${{ runner.os }}-${{ matrix.target }}-${{ github.run_id }} # generate a new key every time to trigger an update
+        restore-keys: ${{ runner.os }}-${{ matrix.target }}
+
     - name: Restore cache
+      if: github.event_name == 'pull_request'
       uses: actions/cache@v4
       with:
         path: |
@@ -86,12 +97,12 @@ jobs:
     - name: Craft unshelve
       run: |
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --unshelve "${env:GITHUB_WORKSPACE}/.craft.shelf"
+        # bootsrtap in case the shelf was empty
+        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c craft
 
     - name: Prepare
       run: |
         New-Item -ItemType Directory "${env:GITHUB_WORKSPACE}/binaries/"
-        # bootsrtap
-        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c craft
         # settings
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --set forceAsserts=true opencloud/opencloud-desktop
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --set srcDir="${env:GITHUB_WORKSPACE}" opencloud/opencloud-desktop
