@@ -99,12 +99,7 @@ protected:
     QString _expectedClientId = Theme::instance()->oauthClientId();
 
 public:
-    enum State { StartState,
-        StatusPhpState,
-        BrowserOpened,
-        TokenAsked,
-        UserInfoFetched,
-        CustomState } state = StartState;
+    enum State { StartState, StatusPhpState, BrowserOpened, TokenAsked, CustomState } state = StartState;
     Q_ENUM(State);
 
     // for oauth2 we use localhost, for oidc we use 127.0.0.1
@@ -134,8 +129,6 @@ public:
                 return this->wellKnownReply(op, req);
             } else if (req.url().path().endsWith(QLatin1String("status.php"))) {
                 return this->statusPhpReply(op, req);
-            } else if (req.url().path().endsWith(QLatin1String("ocs/v2.php/cloud/user")) && req.url().query() == QLatin1String("format=json")) {
-                return this->userInfoReply(op, req);
             } else if (req.url().path().endsWith(QLatin1String("clients-registrations"))) {
                 return this->clientRegistrationReply(op, req);
             }
@@ -189,7 +182,7 @@ public:
 
     virtual void browserReplyFinished() {
         QCOMPARE(sender(), browserReply.data());
-        QCOMPARE(state, UserInfoFetched);
+        QCOMPARE(state, TokenAsked);
         browserReply->deleteLater();
         QCOMPARE(QNetworkReply::NoError, browserReply->error());
         QCOMPARE(browserReply->rawHeader("Location"), QByteArray("opencloud://success"));
@@ -220,19 +213,6 @@ public:
         return new FakePostReply(op, req, std::move(payload), fakeAm);
     }
 
-    virtual QNetworkReply *userInfoReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req)
-    {
-        OC_ASSERT(state == TokenAsked);
-        state = UserInfoFetched;
-        OC_ASSERT(op == QNetworkAccessManager::GetOperation);
-        OC_ASSERT(req.url().toString().startsWith(sOAuthTestServer.toString()));
-        OC_ASSERT(req.url().path() == sOAuthTestServer.path() + QStringLiteral("/ocs/v2.php/cloud/user"));
-        OC_ASSERT(req.url().query() == QStringLiteral("format=json"));
-        auto payload = std::make_unique<QBuffer>();
-        payload->setData(userInfoPayload());
-        return new FakePostReply(op, req, std::move(payload), fakeAm);
-    }
-
     virtual QNetworkReply *wellKnownReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req)
     {
         return new FakeErrorReply(op, req, fakeAm, 404);
@@ -246,7 +226,7 @@ public:
     virtual QByteArray tokenReplyPayload() const {
         // the dummy server provides the user admin
         QJsonDocument jsondata(QJsonObject{{QStringLiteral("access_token"), QStringLiteral("123")}, {QStringLiteral("refresh_token"), QStringLiteral("456")},
-            {QStringLiteral("message_url"), QStringLiteral("opencloud://success")}, {QStringLiteral("user_id"), QStringLiteral("admin")},
+            {QStringLiteral("message_url"), QStringLiteral("opencloud://success")}, {QStringLiteral("id_token"), idToken()},
             {QStringLiteral("token_type"), QStringLiteral("Bearer")}});
         return jsondata.toJson();
     }
@@ -260,25 +240,49 @@ public:
         return jsondata.toJson();
     }
 
-    virtual QByteArray userInfoPayload() const
+    virtual QString idToken() const
     {
-        // the dummy server provides the user admin
-        // we don't provide "meta" at the moment, since it is not used
-        QJsonDocument jsonData(QJsonObject{{QStringLiteral("ocs"),
-            QJsonObject{{QStringLiteral("data"),
-                QJsonObject{
-                    {QStringLiteral("display-name"), QStringLiteral("Admin")},
-                    {QStringLiteral("id"), QStringLiteral("admin")},
-                    {QStringLiteral("email"), QStringLiteral("admin@admin.admin")},
-
-                }}}}});
-        return jsonData.toJson();
+        /* https://10015.io/tools/jwt-encoder-decoder with sample key
+        {
+          "amr": [
+            "pwd",
+            "pop",
+            "hwk",
+            "user",
+            "pin",
+            "mfa"
+          ],
+          "at_hash": "jEL4ptHeYx4eQa847tOVoQ",
+          "aud": [
+            "OpenCloudDesktop"
+          ],
+          "auth_time": 1737560752,
+          "azp": "OpenCloudDesktop",
+          "client_id": "OpenCloudDesktop",
+          "email": "admin@admin.admin",
+          "email_verified": true,
+          "exp": 1739884152,
+          "iat": 1739880552,
+          "iss": "oauthtest://someserver/opencloud",
+          "jti": "e2db5f2d-6bcc-42d7-a20f-46955d7ab6b4",
+          "name": "Admin",
+          "preferred_username": "admin",
+          "sub": "f4a04b62-e17a-4a98-bcc6-63345ded5a25"
+        }
+         */
+        return QStringLiteral(
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9."
+            "eyJhbXIiOlsicHdkIiwicG9wIiwiaHdrIiwidXNlciIsInBpbiIsIm1mYSJdLCJhdF9oYXNoIjoiakVMNHB0SGVZeDRlUWE4NDd0T1ZvUSIsImF1ZCI6WyJPcGVuQ2xvdWREZXNrdG9wIl0sIm"
+            "F1dGhfdGltZSI6MTczNzU2MDc1MiwiYXpwIjoiT3BlbkNsb3VkRGVza3RvcCIsImNsaWVudF9pZCI6Ik9wZW5DbG91ZERlc2t0b3AiLCJlbWFpbCI6ImFkbWluQGFkbWluLmFkbWluIiwiZW1h"
+            "aWxfdmVyaWZpZWQiOnRydWUsImV4cCI6MTczOTg4NDE1MiwiaWF0IjoxNzM5ODgwNTUyLCJpc3MiOiJvYXV0aHRlc3Q6Ly9zb21lc2VydmVyL29wZW5jbG91ZCIsImp0aSI6ImUyZGI1ZjJkLT"
+            "ZiY2MtNDJkNy1hMjBmLTQ2OTU1ZDdhYjZiNCIsIm5hbWUiOiJBZG1pbiIsInByZWZlcnJlZF91c2VybmFtZSI6ImFkbWluIiwic3ViIjoiZjRhMDRiNjItZTE3YS00YTk4LWJjYzYtNjMzNDVk"
+            "ZWQ1YTI1In0.wj3NyKWaDhWWwui6lxGdmJEGUyqCsNYCRJFTbgIUeC4");
     }
 
     virtual void oauthResult(OAuth::Result result, const QString &token, const QString &refreshToken)
     {
         QCOMPARE(result, OAuth::LoggedIn);
-        QCOMPARE(state, UserInfoFetched);
+        QCOMPARE(state, TokenAsked);
         QCOMPARE(token, QStringLiteral("123"));
         QCOMPARE(refreshToken, QStringLiteral("456"));
         gotAuthOk = true;
@@ -636,6 +640,18 @@ private Q_SLOTS:
                 auto *out = new FakePayloadReply(op, request, payload, fakeAm);
                 out->setAttribute(QNetworkRequest::HttpStatusCodeAttribute, 201);
                 return out;
+            }
+
+            QString idToken() const override
+            {
+                // same as the parent implementation but  with the current client id
+                return QStringLiteral(
+                    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9."
+                    "eyJhbXIiOlsicHdkIiwicG9wIiwiaHdrIiwidXNlciIsInBpbiIsIm1mYSJdLCJhdF9oYXNoIjoiakVMNHB0SGVZeDRlUWE4NDd0T1ZvUSIsImF1ZCI6WyIzZTRlYTBmMy01OWVhLT"
+                    "QzNGEtOTJmMi1iMGQzYjU0NDQzZTkiXSwiYXV0aF90aW1lIjoxNzM3NTYwNzUyLCJhenAiOiJPcGVuQ2xvdWREZXNrdG9wIiwiY2xpZW50X2lkIjoiT3BlbkNsb3VkRGVza3RvcCIs"
+                    "ImVtYWlsIjoiYWRtaW5AYWRtaW4uYWRtaW4iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZXhwIjoxNzM5ODg0MTUyLCJpYXQiOjE3Mzk4ODA1NTIsImlzcyI6Im9hdXRodGVzdDovL3"
+                    "NvbWVzZXJ2ZXIvb3BlbmNsb3VkIiwianRpIjoiZTJkYjVmMmQtNmJjYy00MmQ3LWEyMGYtNDY5NTVkN2FiNmI0IiwibmFtZSI6IkFkbWluIiwicHJlZmVycmVkX3VzZXJuYW1lIjoi"
+                    "YWRtaW4iLCJzdWIiOiJmNGEwNGI2Mi1lMTdhLTRhOTgtYmNjNi02MzM0NWRlZDVhMjUifQ.UVjqXnuHFiu2iIPOW8qXze_a8tVMk03kuxoN4FKxhoY");
             }
 
         } test;
