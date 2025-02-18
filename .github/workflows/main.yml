@@ -39,7 +39,7 @@ jobs:
               container:
             - name: linux-gcc-x86_64
               target: linux-64-gcc
-              os: ubuntu-latest
+              os: self-hosted
               container: ghcr.io/opencloud-eu/ci-docker-desktop/appimage:latest
 
     name: ${{ matrix.name }}
