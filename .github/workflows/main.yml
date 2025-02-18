@@ -82,12 +82,10 @@ jobs:
           ~/ccache
         key: ${{ runner.os }}-${{ matrix.target }}
 
+
     - name: Clone CraftMaster
       run: |
-        if ($IsWindows -and (-not ${env:HOME})) {
-          $env:HOME = "${env:USERPROFILE}"
-        }
-        git clone --depth=1 https://invent.kde.org/kde/craftmaster.git "${env:HOME}/craft/CraftMaster/CraftMaster"
+        git clone --depth=1 https://invent.kde.org/kde/craftmaster.git "${home}/craft/CraftMaster/CraftMaster"
 
     - name: Craft setup
       run: |
@@ -175,7 +173,7 @@ jobs:
 
     - name: Prepare artifacts
       run: |
-        Copy-Item "$env:HOME/craft/binaries/*" "${env:GITHUB_WORKSPACE}/binaries/" -ErrorAction SilentlyContinue
+        Copy-Item "${home}/craft/binaries/*" "${env:GITHUB_WORKSPACE}/binaries/" -ErrorAction SilentlyContinue
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --shelve "${env:GITHUB_WORKSPACE}/.craft.shelf"
         Copy-Item "${env:GITHUB_WORKSPACE}/.craft.shelf" "${env:GITHUB_WORKSPACE}/binaries/"
 
