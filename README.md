@@ -1,3 +1,4 @@
+[![OpenCloud Desktop CI](https://github.com/opencloud-eu/desktop/actions/workflows/main.yml/badge.svg)](https://github.com/opencloud-eu/desktop/actions/workflows/main.yml)
 # `OpenCloud Desktop`
 
 ## Introduction
