@@ -13,8 +13,6 @@ ServerUrlSetupWizardPage::ServerUrlSetupWizardPage(const QUrl &serverUrl)
 {
     _ui->setupUi(this);
 
-    _ui->welcomeTextLabel->setText(tr("Welcome to %1").arg(Theme::instance()->appNameGUI()));
-
     // not the best style, but we hacked such branding into the pages elsewhere, too
     if (!Theme::instance()->overrideServerUrlV2().isEmpty()) {
         // note that the text should be set before the page is displayed, this way validateInput() will enable the next button
