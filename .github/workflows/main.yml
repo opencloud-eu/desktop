@@ -173,7 +173,7 @@ jobs:
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --no-cache --package opencloud/opencloud-desktop
 
     - name: Package Appx
-      if: ${{ matrix.os  != 'windows-latest' && github.event_name != 'pull_request' }}
+      if: ${{ matrix.os  == 'windows-latest' && github.event_name != 'pull_request' }}
       run: |
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --no-cache --package --options "[Packager]PackageType=AppxPackager" opencloud/opencloud-desktop
 
