@@ -49,6 +49,7 @@ jobs:
     env:
       CRAFT_TARGET: ${{ matrix.target }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      CRAFT_PACKAGE_SYMBOLS: ${{  github.event_name != 'pull_request' }}
 
     container: ${{ matrix.container }}
 
