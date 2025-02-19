@@ -71,17 +71,20 @@ QString FolderWizardPrivate::defaultSyncRoot() const
 FolderWizardPrivate::FolderWizardPrivate(FolderWizard *q, const AccountStatePtr &account)
     : q_ptr(q)
     , _account(account)
-    , _folderWizardSourcePage(new FolderWizardLocalPath(this))
     , _folderWizardSelectiveSyncPage(new FolderWizardSelectiveSync(this))
     , _spacesPage(new SpacesPage(account->account(), q))
 {
     q->setPage(FolderWizard::Page_Space, _spacesPage);
-    q->setPage(FolderWizard::Page_Source, _folderWizardSourcePage);
+
+    if (!_account->account()->hasDefaultSyncRoot()) {
+        _folderWizardSourcePage = new FolderWizardLocalPath(this);
+        q->setPage(FolderWizard::Page_Source, _folderWizardSourcePage);
+    }
 
     q->setPage(FolderWizard::Page_SelectiveSync, _folderWizardSelectiveSyncPage);
 }
 
-QString FolderWizardPrivate::initialLocalPath() const
+QString FolderWizardPrivate::localPath() const
 {
     return FolderMan::findGoodPathForNewSyncFolder(
         defaultSyncRoot(), _spacesPage->currentSpace()->displayName(), FolderMan::NewFolderType::SpacesSyncRoot, _account->account()->uuid());
@@ -121,7 +124,7 @@ bool FolderWizardPrivate::useVirtualFiles() const
     const auto mode = VfsPluginManager::instance().bestAvailableVfsMode();
     const bool useVirtualFiles = (Theme::instance()->forceVirtualFilesOption() && mode == Vfs::WindowsCfApi) || (_folderWizardSelectiveSyncPage->useVirtualFiles());
     if (useVirtualFiles) {
-        const auto availability = Vfs::checkAvailability(initialLocalPath(), mode);
+        const auto availability = Vfs::checkAvailability(localPath(), mode);
         if (!availability) {
             auto msg = new QMessageBox(QMessageBox::Warning, FolderWizard::tr("Virtual files are not available for the selected folder"), availability.error(), QMessageBox::Ok, ocApp()->gui()->settingsDialog());
             msg->setAttribute(Qt::WA_DeleteOnClose);
@@ -149,16 +152,13 @@ FolderWizard::~FolderWizard()
 FolderMan::SyncConnectionDescription FolderWizard::result()
 {
     Q_D(FolderWizard);
+    const QString localPath = d->localPath();
 
-    const QString localPath = d->_folderWizardSourcePage->localPath();
-    if (!d->_account->account()->hasDefaultSyncRoot()) {
-        if (FileSystem::isChildPathOf(localPath, d->defaultSyncRoot())) {
-            d->_account->account()->setDefaultSyncRoot(d->defaultSyncRoot());
-            if (!QFileInfo::exists(d->defaultSyncRoot())) {
-                OC_ASSERT(QDir().mkpath(d->defaultSyncRoot()));
-            }
-        }
+    if (d->_folderWizardSourcePage) {
+        d->_account->account()->setDefaultSyncRoot(d->_folderWizardSourcePage->localPath());
     }
+    // the local path must be a child of defaultSyncRoot
+    Q_ASSERT(FileSystem::isChildPathOf(localPath, d->defaultSyncRoot()));
 
     return {
         d->davUrl(), //

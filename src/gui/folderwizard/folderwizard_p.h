@@ -35,7 +35,7 @@ public:
     FolderWizardPrivate(FolderWizard *q, const AccountStatePtr &account);
     static QString formatWarnings(const QStringList &warnings, bool isError = false);
 
-    QString initialLocalPath() const;
+    QString localPath() const;
 
     QString remotePath() const;
 

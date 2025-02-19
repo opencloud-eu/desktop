@@ -35,11 +35,7 @@ FolderWizardLocalPath::FolderWizardLocalPath(FolderWizardPrivate *parent)
     , _ui(new Ui_FolderWizardSourcePage)
 {
     _ui->setupUi(this);
-    registerField(QStringLiteral("sourceFolder*"), _ui->localFolderLineEdit);
     connect(_ui->localFolderChooseBtn, &QAbstractButton::clicked, this, &FolderWizardLocalPath::slotChooseLocalFolder);
-    _ui->localFolderChooseBtn->setToolTip(tr("Click to select a local folder to sync."));
-
-    _ui->localFolderLineEdit->setToolTip(tr("Enter the path to the local folder."));
 
     _ui->warnLabel->setTextFormat(Qt::RichText);
     _ui->warnLabel->hide();
@@ -53,7 +49,7 @@ FolderWizardLocalPath::~FolderWizardLocalPath()
 void FolderWizardLocalPath::initializePage()
 {
     _ui->warnLabel->hide();
-    _ui->localFolderLineEdit->setText(QDir::toNativeSeparators(folderWizardPrivate()->initialLocalPath()));
+    _ui->localFolderLineEdit->setText(QDir::toNativeSeparators(folderWizardPrivate()->defaultSyncRoot()));
 }
 
 QString FolderWizardLocalPath::localPath() const
@@ -97,9 +93,7 @@ void FolderWizardLocalPath::slotChooseLocalFolder()
     if (dirs.count() > 0)
         sf += QLatin1Char('/') + dirs.at(0); // Take the first dir in home dir.
 
-    QString dir = QFileDialog::getExistingDirectory(this,
-        tr("Select the local folder"),
-        sf);
+    QString dir = QFileDialog::getExistingDirectory(this, tr("Select the Spaces root folder"), sf);
     if (!dir.isEmpty()) {
         // set the last directory component name as alias
         _ui->localFolderLineEdit->setText(QDir::toNativeSeparators(dir));
