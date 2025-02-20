@@ -26,6 +26,7 @@
 
 #include <QBuffer>
 #include <QDesktopServices>
+#include <QFile>
 #include <QIcon>
 #include <QJsonArray>
 #include <QJsonDocument>
@@ -60,20 +61,19 @@ auto defaultOauthPromtValue()
 
 QString renderHttpTemplate(const QString &title, const QString &content)
 {
-    const QString icon = [] {
-        const auto img = Theme::instance()->aboutIcon().pixmap(256).toImage();
-        QByteArray out;
-        QBuffer buffer(&out);
-        img.save(&buffer, "PNG");
-        return QString::fromUtf8(out.toBase64());
-    }();
+    auto loadFile = [](const QString &font) {
+        QFile f(font);
+        OC_ASSERT(f.open(QFile::ReadOnly));
+        return f.readAll().toBase64();
+    };
     return Resources::Template::renderTemplateFromFile(QStringLiteral(":/client/resources/oauth/oauth.html.in"),
         {
-            {QStringLiteral("TITLE"), title}, //
-            {QStringLiteral("CONTENT"), content}, //
-            {QStringLiteral("ICON"), icon}, //
-            {QStringLiteral("BACKGROUND_COLOR"), Theme::instance()->wizardHeaderBackgroundColor().name()}, //
-            {QStringLiteral("FONT_COLOR"), Theme::instance()->wizardHeaderTitleColor().name()} //
+            {"TITLE", title}, //
+            {"CONTENT", content}, //
+            {"ICON", loadFile(QStringLiteral(":/client/OpenCloud/theme/universal/wizard_logo.svg"))}, //
+            {"BACKGROUND_COLOR", Theme::instance()->wizardHeaderBackgroundColor().name()}, //
+            {"FONT_COLOR", Theme::instance()->wizardHeaderTitleColor().name()}, //
+            {"FONT", loadFile(QStringLiteral(":/client/OpenCloud/theme/OpenCloud500-Regular.woff2"))} //
         });
 }
 
