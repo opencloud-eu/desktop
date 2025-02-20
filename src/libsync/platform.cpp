@@ -14,23 +14,24 @@
 
 #include "platform.h"
 
-#include "platform_unix.h"
 #if defined(Q_OS_WIN)
 #include "platform_win.h"
-#endif
-
-#if defined(Q_OS_MAC)
+#elif defined(Q_OS_MACOS)
 #include "platform_mac.h"
+#else
+#include "platform_unix.h"
 #endif
 
 #include "configfile.h"
 
+
 #ifdef CRASHREPORTER_EXECUTABLE
 #include <QDir>
-
 #include <libcrashreporter-handler/Handler.h>
-
 #endif
+
+#include <QApplication>
+#include <QFontDatabase>
 
 namespace OCC {
 
@@ -40,6 +41,15 @@ void Platform::migrate()
 
 void Platform::setApplication([[maybe_unused]] QCoreApplication *application)
 {
+    if (qobject_cast<QApplication *>(application)) {
+        const auto fontID = QFontDatabase::addApplicationFont(QStringLiteral(":/client/OpenCloud/theme/OpenCloud500-Regular.otf"));
+        const auto fontBoldID = QFontDatabase::addApplicationFont(QStringLiteral(":/client/OpenCloud/theme/OpenCloud750-Bold.otf"));
+        if (fontID != -1) {
+            auto font = QApplication::font();
+            font.setFamilies(QFontDatabase::applicationFontFamilies(fontID) << QFontDatabase::applicationFontFamilies(fontBoldID) << font.families());
+            QApplication::setFont(font);
+        }
+    }
 #ifdef CRASHREPORTER_EXECUTABLE
     if (ConfigFile().crashReporter()) {
         auto *crashHandler =
