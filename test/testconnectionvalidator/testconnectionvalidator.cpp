@@ -33,7 +33,7 @@ class TestConnectionValidator : public QObject
     enum class FailStage { Invalid, StatusPhp, Capabilities, UserInfo };
 
     // we can't use QMap direclty with QFETCH
-    using Values = QMap<QString, QString>;
+    using Values = QMap<QAnyStringView, QAnyStringView>;
     auto getPayload(const QString &payloadName)
     {
         QFile f(QStringLiteral(SOURCEDIR "/test/testconnectionvalidator/%1").arg(payloadName));
@@ -41,7 +41,7 @@ class TestConnectionValidator : public QObject
         return f.readAll();
     }
 
-    auto getPayloadTemplated(const QString &payloadName, const QMap<QString, QString> &values)
+    auto getPayloadTemplated(const QString &payloadName, const Values &values)
     {
         return Resources::Template::renderTemplate(QString::fromUtf8(getPayload(payloadName)), values).toUtf8();
     }
