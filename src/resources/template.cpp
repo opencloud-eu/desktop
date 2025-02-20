@@ -25,7 +25,7 @@ using namespace OCC::Resources;
 
 Q_LOGGING_CATEGORY(lcResourcesTeplate, "sync.resoruces.template", QtInfoMsg)
 
-QString Template::renderTemplateFromFile(const QString &filePath, const QMap<QString, QString> &values)
+QString Template::renderTemplateFromFile(const QString &filePath, const QMap<QAnyStringView, QAnyStringView> &values)
 {
     return renderTemplate(
         [&] {
@@ -36,7 +36,7 @@ QString Template::renderTemplateFromFile(const QString &filePath, const QMap<QSt
         values);
 }
 
-QString Template::renderTemplate(QString &&templ, const QMap<QString, QString> &values)
+QString Template::renderTemplate(QString &&templ, const QMap<QAnyStringView, QAnyStringView> &values)
 {
     static const QRegularExpression pattern(QStringLiteral("@{([^{}]+)}"));
     const auto replace = [&templ, &values](QRegularExpressionMatchIterator it) {
@@ -50,7 +50,7 @@ QString Template::renderTemplate(QString &&templ, const QMap<QString, QString> &
                 }
                 return true;
             }());
-            templ.replace(match.captured(0), values.value(match.captured(1)));
+            templ.replace(match.captured(0), values.value(match.captured(1)).toString());
         }
     };
 

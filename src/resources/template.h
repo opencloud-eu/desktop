@@ -25,8 +25,8 @@ namespace Resources {
         /**
          * Replace all occurances of @{} values in template with the values from values
          */
-        OPENCLOUD_RESOURCES_EXPORT QString renderTemplateFromFile(const QString &filePath, const QMap<QString, QString> &values);
-        OPENCLOUD_RESOURCES_EXPORT QString renderTemplate(QString &&templ, const QMap<QString, QString> &values);
+        OPENCLOUD_RESOURCES_EXPORT QString renderTemplateFromFile(const QString &filePath, const QMap<QAnyStringView, QAnyStringView> &values);
+        OPENCLOUD_RESOURCES_EXPORT QString renderTemplate(QString &&templ, const QMap<QAnyStringView, QAnyStringView> &values);
     };
 }
 }
