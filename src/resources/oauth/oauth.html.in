@@ -11,10 +11,18 @@ html, body {
     margin: 0;
 }
 
+@font-face {
+    font-family: OpenCloud;
+    src: url('data:font/woff2;base64,@{FONT}') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
 body {
     background-color: @{BACKGROUND_COLOR};
     color: @{FONT_COLOR};
-    font-family: "Noto Sans", OpenSans, Verdana, Helvetica, Arial, sans-serif;
+    font-family: OpenCloud, "Noto Sans", OpenSans, Verdana, Helvetica, Arial, sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -36,7 +44,7 @@ body {
 <body>
 <div class="row">
     <div class="content">
-        <img src="data:image/png;base64,@{ICON}" />
+        <img src="data:image/svg+xml;base64,@{ICON}" />
         @{CONTENT}
     </div>
 </div>
