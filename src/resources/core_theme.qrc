@@ -14,5 +14,6 @@
         <file alias="theme/dark/state-sync.svg">theme/universal/opencloud-icon.svg</file>
         <file>theme/universal/opencloud-icon.svg</file>
         <file>theme/universal/wizard_logo.svg</file>
+        <file>theme/OpenCloud500-Regular.woff2</file>
     </qresource>
 </RCC>
