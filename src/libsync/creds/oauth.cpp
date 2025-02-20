@@ -394,11 +394,11 @@ void OAuth::startAuthentication()
                         // Connected with the wrong user
                         qCWarning(lcOauth) << "We expected the user" << _idToken.preferred_username() << "but the server answered with user"
                                            << idToken.preferred_username();
-                        const QString message = tr("<h1>Wrong user</h1>"
+                        const QString message = tr("<h1>Incorrect user</h1>"
                                                    "<p>You logged-in with user <em>%1</em>, but must login with user <em>%2</em>.<br>"
-                                                   "Please return to the %3 client and restart the authentication.</p>")
+                                                   "Please return to the %3 and restart the authentication.</p>")
                                                     .arg(idToken.preferred_username(), _idToken.preferred_username(), Theme::instance()->appNameGUI());
-                        httpReplyAndClose(socket, QStringLiteral("403 Forbidden"), tr("Wrong user"), message);
+                        httpReplyAndClose(socket, QStringLiteral("403 Forbidden"), tr("Incorrect user"), message);
                         Q_EMIT result(Error);
                     } else {
                         setIdToken(std::move(idToken));
@@ -412,8 +412,8 @@ void OAuth::startAuthentication()
 
 void OAuth::finalize(const QPointer<QTcpSocket> &socket, const QString &accessToken, const QString &refreshToken, const QUrl &messageUrl)
 {
-    const QString loginSuccessfulHtml = tr("<h1>Login Successful</h1><p>You can close this window.</p>");
-    const QString loginSuccessfulTitle = tr("Login Successful");
+    const QString loginSuccessfulHtml = tr("<h1>Login successful</h1><p>You can close this window.</p>");
+    const QString loginSuccessfulTitle = tr("Login successful");
     if (messageUrl.isValid()) {
         httpReplyAndClose(socket, QStringLiteral("303 See Other"), loginSuccessfulTitle, loginSuccessfulHtml,
             {QStringLiteral("Location: %1").arg(QString::fromUtf8(messageUrl.toEncoded()))});
