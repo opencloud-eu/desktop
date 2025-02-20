@@ -176,7 +176,7 @@ jobs:
     - name: Package Appx
       if: ${{ matrix.os  == 'windows-latest' && github.event_name != 'pull_request' }}
       run: |
-        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --no-cache --package --options "[Packager]PackageType=AppxPackager" opencloud/opencloud-desktop
+        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --no-cache --package --options "[Packager]PackageType=AppxPackager" --options "[Packager]Destination=${{ github.workspace }}/appx/" opencloud/opencloud-desktop
 
     - name: Prepare artifacts
       run: |
@@ -187,5 +187,12 @@ jobs:
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ matrix.name }}
+        name: ${{ matrix.name }}-${{ github.ref_name }}-${{ github.run_number }}
         path: ${{ github.workspace }}/binaries/*
+
+    - name: Upload appx
+      if: ${{ matrix.os  == 'windows-latest' && github.event_name != 'pull_request' }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ matrix.name }}-${{ github.ref_name }}-${{ github.run_number }}
+        path: ${{ github.workspace }}/appx/*
