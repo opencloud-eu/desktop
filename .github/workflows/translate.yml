@@ -26,7 +26,7 @@ jobs:
         with:
           ssh-key: ${{ secrets.DEPLOYMENT_SSH_KEY }}
           submodules: recursive
-          ref: "master"
+          ref: "main"
 
       - name: install-deps
         run: sudo apt install -y qt6-l10n-tools
@@ -34,10 +34,10 @@ jobs:
       - name: l10n-remove-old
         run: |
           rm translations/*.ts
-          git checkout translations/client_en.ts
+          git checkout translations/desktop_en.ts
 
       - name: l10n-read
-        run: /usr/lib/qt6/bin/lupdate src -no-obsolete -ts translations/client_en.ts
+        run: /usr/lib/qt6/bin/lupdate src -no-obsolete -ts translations/desktop_en.ts
 
       - name: l10n-push-source
         uses: transifex/cli-action@v2
@@ -56,6 +56,6 @@ jobs:
 
       - uses: GuillaumeFalourd/git-commit-push@v1.3
         with:
-          email: devops@owncloud.com
-          name: ownClouders
+          email: devops@opencloud.eu
+          name: OpenCloud
           commit_message: "[tx] updated translations from transifex"
