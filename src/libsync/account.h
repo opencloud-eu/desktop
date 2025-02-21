@@ -115,9 +115,6 @@ public:
     QString initials() const;
     QGradient::Preset avatarGradient() const;
 
-    /// The internal id of the account.
-    Q_DECL_DEPRECATED_X("Use uuid") QString id() const;
-
     /** Server url of the account */
     void setUrl(const QUrl &url);
     QUrl url() const;
@@ -232,7 +229,6 @@ private:
     void setSharedThis(AccountPtr sharedThis);
 
     QWeakPointer<Account> _sharedThis;
-    QString _id;
     QUuid _uuid;
     QString _displayName;
     QString _defaultSyncRoot;

@@ -161,7 +161,8 @@ QSettings &CredentialManager::credentialsList() const
 {
     // delayed init as scope requires a fully inizialised acc
     if (!_credentialsList) {
-        _credentialsList = ConfigFile::settingsWithGroup(QStringLiteral("Credentials/") + scope(this));
+        _credentialsList = ConfigFile::makeQSettingsPointer();
+        _credentialsList->beginGroup(QStringLiteral("Credentials/") + scope(this));
     }
     return *_credentialsList;
 }

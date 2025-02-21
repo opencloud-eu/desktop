@@ -46,6 +46,8 @@ public:
     static QString configPath();
     static QString configFile();
     static QSettings makeQSettings();
+    static std::unique_ptr<QSettings> makeQSettingsPointer();
+
     static bool exists();
 
     ConfigFile();
@@ -172,9 +174,6 @@ public:
         Updated by configVersionMigration() at client startup. */
     QString clientVersionWithBuildNumberString() const;
     void setClientVersionWithBuildNumberString(const QString &version);
-
-    /**  Returns a new settings pre-set in a specific group. */
-    static std::unique_ptr<QSettings> settingsWithGroup(const QString &group);
 
     /// Add the system and user exclude file path to the ExcludedFiles instance.
     static void setupDefaultExcludeFilePaths(ExcludedFiles &excludedFiles);

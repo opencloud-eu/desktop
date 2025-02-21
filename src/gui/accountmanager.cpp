@@ -94,91 +94,87 @@ AccountManager *AccountManager::create(QQmlEngine *qmlEngine, QJSEngine *)
 
 bool AccountManager::restore()
 {
-    auto settings = ConfigFile::settingsWithGroup(accountsC());
-    if (settings->status() != QSettings::NoError) {
-        qCWarning(lcAccountManager) << "Could not read settings from" << settings->fileName()
-                                    << settings->status();
+    auto settings = ConfigFile::makeQSettings();
+    if (settings.status() != QSettings::NoError) {
+        qCWarning(lcAccountManager) << "Could not read settings from" << settings.fileName() << settings.status();
         return false;
     }
 
-    // If there are no accounts, check the old format.
-    const auto &childGroups = settings->childGroups();
-
-    for (const auto &accountId : childGroups) {
-        settings->beginGroup(accountId);
-        if (auto acc = loadAccountHelper(*settings)) {
-            acc->_id = accountId;
-            if (auto accState = AccountState::loadFromSettings(acc, *settings)) {
+    const auto size = settings.beginReadArray(accountsC());
+    for (auto i = 0; i < size; ++i) {
+        settings.setArrayIndex(i);
+        if (auto acc = loadAccountHelper(settings)) {
+            if (auto accState = AccountState::loadFromSettings(acc, settings)) {
                 addAccountState(std::move(accState));
             }
         }
-        settings->endGroup();
     }
+    settings.endArray();
 
     return true;
 }
 
 void AccountManager::save(bool saveCredentials)
 {
-    for (const auto &acc : std::as_const(_accounts)) {
-        saveAccount(acc->account().data(), saveCredentials);
+    auto settings = ConfigFile::makeQSettings();
+    settings.remove(accountsC());
+    settings.beginWriteArray(accountsC(), _accounts.size());
+
+    int i = 0;
+    for (const auto &accountState : std::as_const(_accounts)) {
+        settings.setArrayIndex(i++);
+        auto account = accountState->account();
+        qCDebug(lcAccountManager) << "Saving account" << account->url().toString();
+        settings.setValue(urlC(), account->_url.toString());
+        settings.setValue(davUserDisplyNameC(), account->_displayName);
+        settings.setValue(userUUIDC(), account->uuid());
+        if (account->hasCapabilities()) {
+            settings.setValue(capabilitesC(), account->capabilities().raw());
+        }
+        if (account->hasDefaultSyncRoot()) {
+            settings.setValue(defaultSyncRootC(), account->defaultSyncRoot());
+        }
+        if (account->_credentials) {
+            if (saveCredentials) {
+                // Only persist the credentials if the parameter is set, on migration from 1.8.x
+                // we want to save the accounts but not overwrite the credentials
+                // (This is easier than asynchronously fetching the credentials from keychain and then
+                // re-persisting them)
+                account->_credentials->persist();
+            }
+
+            for (auto it = account->_settingsMap.constBegin(); it != account->_settingsMap.constEnd(); ++it) {
+                settings.setValue(it.key(), it.value());
+            }
+
+            // HACK: Save http_user also as user
+            if (account->_settingsMap.contains(httpUserC()))
+                settings.setValue(userC(), account->_settingsMap.value(httpUserC()));
+        }
+
+        // Save accepted certificates.
+        settings.beginGroup("General");
+        qCInfo(lcAccountManager) << "Saving " << account->approvedCerts().count() << " unknown certs.";
+        const auto approvedCerts = account->approvedCerts();
+        QByteArray certs;
+        for (const auto &cert : approvedCerts) {
+            certs += cert.toPem() + '\n';
+        }
+        if (!certs.isEmpty()) {
+            settings.setValue(caCertsKeyC(), certs);
+        }
+        settings.endGroup();
+
+        // save the account state
+        this->account(account->uuid())->writeToSettings(settings);
+        settings.endGroup();
+
+        settings.sync();
+        qCDebug(lcAccountManager) << "Saved account settings, status:" << settings.status();
     }
+    settings.endArray();
 
     qCInfo(lcAccountManager) << "Saved all account settings";
-}
-
-void AccountManager::saveAccount(Account *account, bool saveCredentials)
-{
-    qCDebug(lcAccountManager) << "Saving account" << account->url().toString();
-    auto settings = ConfigFile::settingsWithGroup(accountsC());
-    settings->beginGroup(account->id());
-
-    settings->setValue(urlC(), account->_url.toString());
-    settings->setValue(davUserDisplyNameC(), account->_displayName);
-    settings->setValue(userUUIDC(), account->uuid());
-    if (account->hasCapabilities()) {
-        settings->setValue(capabilitesC(), account->capabilities().raw());
-    }
-    if (account->hasDefaultSyncRoot()) {
-        settings->setValue(defaultSyncRootC(), account->defaultSyncRoot());
-    }
-    if (account->_credentials) {
-        if (saveCredentials) {
-            // Only persist the credentials if the parameter is set, on migration from 1.8.x
-            // we want to save the accounts but not overwrite the credentials
-            // (This is easier than asynchronously fetching the credentials from keychain and then
-            // re-persisting them)
-            account->_credentials->persist();
-        }
-
-        for (auto it = account->_settingsMap.constBegin(); it != account->_settingsMap.constEnd(); ++it) {
-            settings->setValue(it.key(), it.value());
-        }
-
-        // HACK: Save http_user also as user
-        if (account->_settingsMap.contains(httpUserC()))
-            settings->setValue(userC(), account->_settingsMap.value(httpUserC()));
-    }
-
-    // Save accepted certificates.
-    settings->beginGroup(QStringLiteral("General"));
-    qCInfo(lcAccountManager) << "Saving " << account->approvedCerts().count() << " unknown certs.";
-    const auto approvedCerts = account->approvedCerts();
-    QByteArray certs;
-    for (const auto &cert : approvedCerts) {
-        certs += cert.toPem() + '\n';
-    }
-    if (!certs.isEmpty()) {
-        settings->setValue(caCertsKeyC(), certs);
-    }
-    settings->endGroup();
-
-    // save the account state
-    this->account(account->uuid())->writeToSettings(*settings);
-    settings->endGroup();
-
-    settings->sync();
-    qCDebug(lcAccountManager) << "Saved account settings, status:" << settings->status();
 }
 
 QStringList AccountManager::accountNames() const
@@ -240,28 +236,13 @@ AccountPtr AccountManager::loadAccountHelper(QSettings &settings)
     return acc;
 }
 
-AccountStatePtr AccountManager::account(const QString &name)
+AccountStatePtr AccountManager::account(const QUuid uuid)
 {
-    for (const auto &acc : std::as_const(_accounts)) {
-        if (acc->account()->displayNameWithHost() == name) {
-            return acc;
-        }
-    }
-    return AccountStatePtr();
-}
-
-AccountStatePtr AccountManager::account(const QUuid uuid) {
     return _accounts.value(uuid);
 }
 
 AccountStatePtr AccountManager::addAccount(const AccountPtr &newAccount)
 {
-    auto id = newAccount->id();
-    if (id.isEmpty() || !isAccountIdAvailable(id)) {
-        id = generateFreeAccountId();
-    }
-    newAccount->_id = id;
-
     return addAccountState(AccountState::fromNewAccount(newAccount));
 }
 
@@ -283,12 +264,10 @@ void AccountManager::deleteAccount(AccountStatePtr account)
     account->account()->credentials()->forgetSensitiveData();
     account->account()->credentialManager()->clear();
 
-    auto settings = ConfigFile::settingsWithGroup(accountsC());
-    settings->remove(account->account()->id());
-
     Q_EMIT accountRemoved(account);
     Q_EMIT accountsChanged();
     account->deleteLater();
+    save(false);
 }
 
 AccountPtr AccountManager::createAccount(const QUuid &uuid)
@@ -305,36 +284,12 @@ void AccountManager::shutdown()
     }
 }
 
-bool AccountManager::isAccountIdAvailable(const QString &id) const
-{
-    for (const auto &acc : _accounts) {
-        if (acc->account()->id() == id) {
-            return false;
-        }
-    }
-    if (_additionalBlockedAccountIds.contains(id))
-        return false;
-    return true;
-}
-
-QString AccountManager::generateFreeAccountId() const
-{
-    int i = 0;
-    while (true) {
-        QString id = QString::number(i);
-        if (isAccountIdAvailable(id)) {
-            return id;
-        }
-        ++i;
-    }
-}
-
 AccountStatePtr AccountManager::addAccountState(std::unique_ptr<AccountState> &&accountState)
 {
     auto *rawAccount = accountState->account().data();
-    connect(rawAccount, &Account::wantsAccountSaved, this, [rawAccount, this] {
+    connect(rawAccount, &Account::wantsAccountSaved, this, [this] {
         // persis the account, not the credentials, we don't know whether they are ready yet
-        saveAccount(rawAccount, false);
+        save(false);
     });
 
     AccountStatePtr statePtr = accountState.release();

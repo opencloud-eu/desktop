@@ -129,9 +129,6 @@ public:
 
     bool isConnected() const;
 
-    /** Returns a new settings object for this account, already in the right groups. */
-    std::unique_ptr<QSettings> settings();
-
     /** Mark the timestamp when the last successful ETag check happened for
      *  this account.
      *  The checkConnectivity() method uses the timestamp to save a call to

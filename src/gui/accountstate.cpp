@@ -583,13 +583,6 @@ Account *AccountState::accountForQml() const
     return _account.data();
 }
 
-std::unique_ptr<QSettings> AccountState::settings()
-{
-    auto s = ConfigFile::settingsWithGroup(QStringLiteral("Accounts"));
-    s->beginGroup(_account->id());
-    return s;
-}
-
 bool AccountState::isSettingUp() const
 {
     return _settingUp;

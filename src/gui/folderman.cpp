@@ -42,6 +42,12 @@ using namespace std::chrono;
 using namespace std::chrono_literals;
 
 namespace {
+
+QAnyStringView foldersC()
+{
+    return QAnyStringView("Folders");
+}
+
 qsizetype numberOfSyncJournals(const QString &path)
 {
     return QDir(path).entryList({ QStringLiteral(".sync_*.db"), QStringLiteral("._sync_*.db") }, QDir::Hidden | QDir::Files).size();
@@ -94,6 +100,9 @@ FolderMan::FolderMan()
             f->slotWatchedPathsChanged({path}, Folder::ChangeReason::UnLock);
         }
     });
+
+    // directly save changes
+    connect(this, &FolderMan::folderListChanged, this, &FolderMan::saveFolders, Qt::DirectConnection);
 }
 
 FolderMan *FolderMan::instance()
@@ -134,14 +143,15 @@ void FolderMan::unloadFolder(Folder *f)
 
 void FolderMan::unloadAndDeleteAllFolders()
 {
-    // clear the list of existing folders.
-    const auto folders = std::move(_folders);
-    for (auto *folder : folders) {
-        folder->saveToSettings();
-        _socketApi->slotUnregisterPath(folder);
-        folder->deleteLater();
+    if (!_folders.isEmpty()) {
+        // clear the list of existing folders.
+        saveFolders();
+        const auto folders = std::move(_folders);
+        for (auto *folder : folders) {
+            _socketApi->slotUnregisterPath(folder);
+            folder->deleteLater();
+        }
     }
-    Q_EMIT folderListChanged();
 }
 
 void FolderMan::registerFolderWithSocketApi(Folder *folder)
@@ -156,64 +166,19 @@ void FolderMan::registerFolderWithSocketApi(Folder *folder)
         _socketApi->slotRegisterPath(folder);
 }
 
-std::optional<qsizetype> FolderMan::setupFolders()
+std::optional<qsizetype> FolderMan::loadFolders()
 {
-    unloadAndDeleteAllFolders();
-
-    auto settings = ConfigFile::settingsWithGroup(QStringLiteral("Accounts"));
-    const auto &accountsWithSettings = settings->childGroups();
-
     qCInfo(lcFolderMan) << "Setup folders from settings file";
 
-    for (const auto &account : AccountManager::instance()->accounts()) {
-        const auto id = account->account()->id();
-        if (!accountsWithSettings.contains(id)) {
-            continue;
-        }
+    auto settings = ConfigFile::makeQSettings();
+    const auto size = settings.beginReadArray(foldersC());
 
-        settings->beginGroup(id); // Process settings for this account.
-
-        auto process = [&](const QString &groupName) -> bool {
-            settings->beginGroup(groupName);
-            bool success = setupFoldersHelper(*settings, account);
-            settings->endGroup();
-            return success;
-        };
-
-        if (!process(QStringLiteral("Folders"))) {
-            return {};
-        }
-
-        // removed in 5.0
-        {
-            if (!process(QStringLiteral("FoldersWithPlaceholders"))) {
-                return {};
-            }
-
-            // We don't save to `Multifolders` anymore, but for backwards compatibility we will just
-            // read it like it is a `Folders` entry.
-            if (!process(QStringLiteral("Multifolders"))) {
-                return {};
-            }
-        }
-
-        settings->endGroup(); // Finished processing this account.
-    }
-
-    Q_EMIT folderListChanged();
-
-    return _folders.size();
-}
-
-bool FolderMan::setupFoldersHelper(QSettings &settings, AccountStatePtr account)
-{
-    const auto &childGroups = settings.childGroups();
-    for (const auto &folderAlias : childGroups) {
-        settings.beginGroup(folderAlias);
-        FolderDefinition folderDefinition = FolderDefinition::load(settings, folderAlias.toUtf8());
+    for (auto i = 0; i < size; ++i) {
+        settings.setArrayIndex(i);
+        FolderDefinition folderDefinition = FolderDefinition::load(settings);
 
         if (SyncJournalDb::dbIsTooNewForClient(folderDefinition.absoluteJournalPath())) {
-            return false;
+            continue;
         }
 
         auto vfs = VfsPluginManager::instance().createVfsFromPlugin(folderDefinition.virtualFilesMode);
@@ -222,11 +187,30 @@ bool FolderMan::setupFoldersHelper(QSettings &settings, AccountStatePtr account)
             qFatal("Could not load plugin");
         }
 
-        addFolderInternal(std::move(folderDefinition), account, std::move(vfs));
-        settings.endGroup();
+        addFolderInternal(std::move(folderDefinition), AccountManager::instance()->account(folderDefinition.accountUUID()), std::move(vfs));
     }
+    settings.endArray();
 
-    return true;
+    Q_EMIT folderListChanged();
+
+    return _folders.size();
+}
+
+void FolderMan::saveFolders()
+{
+    auto settings = ConfigFile::makeQSettings();
+    settings.remove(foldersC());
+    settings.beginWriteArray(foldersC(), _folders.size());
+    int i = 0;
+    for (const auto folder : std::as_const(_folders)) {
+        settings.setArrayIndex(i++);
+        auto definitionToSave = folder->_definition;
+        // with spaces we rely on the space id
+        // we save the dav URL nevertheless to have it available during startup
+        definitionToSave.setWebDavUrl(folder->webDavUrl());
+        FolderDefinition::save(settings, definitionToSave);
+    }
+    settings.endArray();
 }
 
 bool FolderMan::ensureJournalGone(const QString &journalDbFile)
@@ -278,19 +262,6 @@ void FolderMan::slotFolderCanSyncChanged()
     } else {
         _socketApi->slotUnregisterPath(f);
     }
-}
-
-Folder *FolderMan::folder(const QByteArray &id)
-{
-    if (!id.isEmpty()) {
-        auto f = std::find_if(_folders.cbegin(), _folders.cend(), [id](auto f) {
-            return f->id() == id;
-        });
-        if (f != _folders.cend()) {
-            return *f;
-        }
-    }
-    return nullptr;
 }
 
 void FolderMan::scheduleAllFolders()
@@ -444,7 +415,6 @@ Folder *FolderMan::addFolder(const AccountStatePtr &accountState, const FolderDe
     auto folder = addFolderInternal(definition, accountState, std::move(vfs));
 
     if (folder) {
-        folder->saveToSettings();
         Q_EMIT folderSyncStateChange(folder);
         Q_EMIT folderListChanged();
     }
@@ -457,11 +427,6 @@ Folder *FolderMan::addFolderInternal(
     const AccountStatePtr &accountState,
     std::unique_ptr<Vfs> vfs)
 {
-    // ensure we don't add multiple legacy folders with the same id
-    if (!OC_ENSURE(!folderDefinition.id().isEmpty() && !folder(folderDefinition.id()))) {
-        folderDefinition._id = QUuid::createUuid().toByteArray(QUuid::WithoutBraces);
-    }
-
     auto folder = new Folder(folderDefinition, accountState, std::move(vfs), this);
 
     qCInfo(lcFolderMan) << "Adding folder to Folder Map " << folder << folder->path();
@@ -523,9 +488,6 @@ void FolderMan::removeFolder(Folder *f)
 
     f->setSyncPaused(true);
     f->wipeForRemoval();
-
-    // remove the folder configuration
-    f->removeFromSettings();
 
     unloadFolder(f);
     f->deleteLater();
@@ -794,8 +756,8 @@ void FolderMan::setIgnoreHiddenFiles(bool ignore)
     // are deleted...
     for (auto *folder : std::as_const(_folders)) {
         folder->setIgnoreHiddenFiles(ignore);
-        folder->saveToSettings();
     }
+    saveFolders();
 }
 
 Result<void, QString> FolderMan::unsupportedConfiguration(const QString &path) const
@@ -862,7 +824,6 @@ Folder *FolderMan::addFolderFromWizard(const AccountStatePtr &accountStatePtr, F
             Utility::setupFavLink(folderDefinition.localPath());
         }
         qCDebug(lcFolderMan) << "Local sync folder" << folderDefinition.localPath() << "successfully created!";
-        newFolder->saveToSettings();
     } else {
         qCWarning(lcFolderMan) << "Failed to create local sync folder!";
     }
@@ -871,13 +832,12 @@ Folder *FolderMan::addFolderFromWizard(const AccountStatePtr &accountStatePtr, F
 
 Folder *FolderMan::addFolderFromFolderWizardResult(const AccountStatePtr &accountStatePtr, const SyncConnectionDescription &description)
 {
-    FolderDefinition definition = FolderDefinition::createNewFolderDefinition(description.davUrl, description.spaceId, description.displayName);
+    FolderDefinition definition{description.davUrl, description.spaceId, description.displayName};
     definition.setLocalPath(description.localPath);
     auto f = addFolderFromWizard(accountStatePtr, std::move(definition), description.useVirtualFiles);
     if (f) {
         f->journalDb()->setSelectiveSyncList(SyncJournalDb::SelectiveSyncBlackList, description.selectiveSyncBlackList);
         f->setPriority(description.priority);
-        f->saveToSettings();
     }
     return f;
 }

@@ -39,7 +39,7 @@ namespace TestUtils {
 
     FolderDefinition createDummyFolderDefinition(const QString &path)
     {
-        auto d = OCC::FolderDefinition::createNewFolderDefinition(Utility::concatUrlPath(dummyDavUrl(), path), {});
+        auto d = OCC::FolderDefinition(Utility::concatUrlPath(dummyDavUrl(), path), {});
         d.setLocalPath(path);
         return d;
     }
