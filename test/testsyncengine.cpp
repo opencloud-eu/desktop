@@ -759,12 +759,12 @@ private Q_SLOTS:
         auto perm = QFileDevice::Permission(0x7704); // user/owner: rwx, group: r, other: -
         QFile::setPermissions(fakeFolder.localPath() + QStringLiteral("A/a1"), perm);
         QFile::setPermissions(fakeFolder.localPath() + QStringLiteral("A/a2"), perm);
-        fakeFolder.applyLocalModificationsAndSync(); // get the metadata-only change out of the way
+        QVERIFY(fakeFolder.applyLocalModificationsAndSync()); // get the metadata-only change out of the way
         fakeFolder.remoteModifier().appendByte(QStringLiteral("A/a1"));
         fakeFolder.remoteModifier().appendByte(QStringLiteral("A/a2"));
         fakeFolder.localModifier().appendByte(QStringLiteral("A/a2"));
         fakeFolder.localModifier().appendByte(QStringLiteral("A/a2"));
-        fakeFolder.applyLocalModificationsAndSync(); // perms should be preserved
+        QVERIFY(fakeFolder.applyLocalModificationsAndSync()); // perms should be preserved
         QCOMPARE(QFileInfo(fakeFolder.localPath() + QStringLiteral("A/a1")).permissions(), perm);
         QCOMPARE(QFileInfo(fakeFolder.localPath() + QStringLiteral("A/a2")).permissions(), perm);
 

@@ -845,7 +845,7 @@ FakeFolder::FakeFolder(const FileInfo &fileTemplate, OCC::Vfs::Mode vfsMode, boo
     toDisk(rootDir, filesAreDehydrated ? FileInfo() : fileTemplate);
 
     _fakeAm = new FakeAM(fileTemplate, this);
-    _accountState = std::move(OCC::TestUtils::createDummyAccount());
+    _accountState = OCC::TestUtils::createDummyAccount();
     account()->setCredentials(new FakeCredentials{_fakeAm});
 
     _journalDb.reset(new OCC::SyncJournalDb(localPath() + QStringLiteral(".sync_test.db")));
