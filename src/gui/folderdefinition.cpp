@@ -49,10 +49,11 @@ auto priorityC()
 }
 }
 
-FolderDefinition::FolderDefinition(const QUrl &davUrl, const QString &spaceId, const QString &displayName)
+FolderDefinition::FolderDefinition(const QUuid &accountUuid, const QUrl &davUrl, const QString &spaceId, const QString &displayName)
     : _webDavUrl(davUrl)
     , _spaceId(spaceId)
     , _displayName(displayName)
+    , _accountUUID(accountUuid)
 {
 }
 
@@ -89,9 +90,9 @@ void FolderDefinition::save(QSettings &settings, const FolderDefinition &folder)
 
 FolderDefinition FolderDefinition::load(QSettings &settings)
 {
-    FolderDefinition folder{settings.value(davUrlC()).toUrl(), settings.value(spaceIdC()).toString(), settings.value(displayNameC()).toString()};
+    FolderDefinition folder{settings.value("accountUUID").toUuid(), settings.value(davUrlC()).toUrl(), settings.value(spaceIdC()).toString(),
+        settings.value(displayNameC()).toString()};
 
-    folder._accountUUID = settings.value("accountUUID").toUuid();
     folder.setLocalPath(settings.value("localPath").toString());
     folder.journalPath = settings.value("journalPath").toString();
     folder.paused = settings.value("paused").toBool();

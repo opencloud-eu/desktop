@@ -832,7 +832,7 @@ Folder *FolderMan::addFolderFromWizard(const AccountStatePtr &accountStatePtr, F
 
 Folder *FolderMan::addFolderFromFolderWizardResult(const AccountStatePtr &accountStatePtr, const SyncConnectionDescription &description)
 {
-    FolderDefinition definition{description.davUrl, description.spaceId, description.displayName};
+    FolderDefinition definition{accountStatePtr->account()->uuid(), description.davUrl, description.spaceId, description.displayName};
     definition.setLocalPath(description.localPath);
     auto f = addFolderFromWizard(accountStatePtr, std::move(definition), description.useVirtualFiles);
     if (f) {

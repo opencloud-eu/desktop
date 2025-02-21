@@ -31,7 +31,7 @@ namespace OCC {
 class OPENCLOUD_GUI_EXPORT FolderDefinition
 {
 public:
-    FolderDefinition(const QUrl &davUrl, const QString &spaceId, const QString &displayName);
+    FolderDefinition(const QUuid &accountUuid, const QUrl &davUrl, const QString &spaceId, const QString &displayName);
     /// path to the journal, usually relative to localPath
     QString journalPath;
 
@@ -97,8 +97,6 @@ private:
     uint32_t _priority = 0;
 
     QUuid _accountUUID;
-
-    friend class FolderMan;
 };
 
 }

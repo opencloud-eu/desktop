@@ -52,8 +52,10 @@ private Q_SLOTS:
         auto newAccountState = TestUtils::createDummyAccount();
         FolderMan *folderman = TestUtils::folderMan();
         QCOMPARE(folderman, FolderMan::instance());
-        QVERIFY(folderman->addFolder(newAccountState.get(), TestUtils::createDummyFolderDefinition(dirPath + QStringLiteral("/sub/OpenCloud1"))));
-        QVERIFY(folderman->addFolder(newAccountState.get(), TestUtils::createDummyFolderDefinition(dirPath + QStringLiteral("/OpenCloud2"))));
+        QVERIFY(folderman->addFolder(
+            newAccountState.get(), TestUtils::createDummyFolderDefinition(newAccountState->account(), dirPath + QStringLiteral("/sub/OpenCloud1"))));
+        QVERIFY(folderman->addFolder(
+            newAccountState.get(), TestUtils::createDummyFolderDefinition(newAccountState->account(), dirPath + QStringLiteral("/OpenCloud2"))));
 
         const auto type = FolderMan::NewFolderType::SpacesFolder;
         const QUuid uuid = {};
@@ -177,8 +179,10 @@ private Q_SLOTS:
         auto newAccountState = TestUtils::createDummyAccount();
 
         FolderMan *folderman = TestUtils::folderMan();
-        QVERIFY(folderman->addFolder(newAccountState.get(), TestUtils::createDummyFolderDefinition(dirPath + QStringLiteral("/sub/OpenCloud/"))));
-        QVERIFY(folderman->addFolder(newAccountState.get(), TestUtils::createDummyFolderDefinition(dirPath + QStringLiteral("/OpenCloud (2)/"))));
+        QVERIFY(folderman->addFolder(
+            newAccountState.get(), TestUtils::createDummyFolderDefinition(newAccountState->account(), dirPath + QStringLiteral("/sub/OpenCloud/"))));
+        QVERIFY(folderman->addFolder(
+            newAccountState.get(), TestUtils::createDummyFolderDefinition(newAccountState->account(), dirPath + QStringLiteral("/OpenCloud (2)/"))));
 
         // TEST
         const auto folderType = FolderMan::NewFolderType::SpacesFolder;

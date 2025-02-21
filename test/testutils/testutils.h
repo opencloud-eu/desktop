@@ -21,7 +21,7 @@ namespace TestUtils {
     }
 
     FolderMan *folderMan();
-    FolderDefinition createDummyFolderDefinition(const QString &path);
+    FolderDefinition createDummyFolderDefinition(const AccountPtr &acc, const QString &path);
     TestUtilsPrivate::AccountStateRaii createDummyAccount();
     bool writeRandomFile(const QString &fname, int size = -1);
 

@@ -62,7 +62,7 @@ void setUpInitialSyncFolder(AccountStatePtr accountStatePtr, bool useVfs)
     // saves a bit of duplicate code
     auto addFolder = [folderMan, accountStatePtr, useVfs](
                          const QString &localFolder, const QUrl &davUrl, const QString &spaceId = {}, const QString &displayName = {}) {
-        auto def = FolderDefinition{davUrl, spaceId, displayName};
+        auto def = FolderDefinition{accountStatePtr->account()->uuid(), davUrl, spaceId, displayName};
         def.setLocalPath(localFolder);
         return folderMan->addFolderFromWizard(accountStatePtr, std::move(def), useVfs);
     };

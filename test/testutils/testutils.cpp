@@ -37,9 +37,9 @@ namespace TestUtils {
         return {OCC::AccountManager::instance()->addAccount(acc).get(), &TestUtilsPrivate::accountStateDeleter};
     }
 
-    FolderDefinition createDummyFolderDefinition(const QString &path)
+    FolderDefinition createDummyFolderDefinition(const AccountPtr &acc, const QString &path)
     {
-        auto d = OCC::FolderDefinition(Utility::concatUrlPath(dummyDavUrl(), path), {}, QStringLiteral("Dummy Folder"));
+        auto d = OCC::FolderDefinition(acc->uuid(), Utility::concatUrlPath(dummyDavUrl(), path), {}, QStringLiteral("Dummy Folder"));
         d.setLocalPath(path);
         return d;
     }
