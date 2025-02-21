@@ -6,13 +6,12 @@
  */
 
 #include "syncenginetestutils.h"
-#include "testutils.h"
 
 #include "accessmanager.h"
-#include "gui/accountmanager.h"
 #include "httplogger.h"
-#include "libsync/configfile.h"
+#include "libsync/filesystem.h"
 #include "libsync/syncresult.h"
+#include "testutils.h"
 
 #include <thread>
 

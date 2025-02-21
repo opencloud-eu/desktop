@@ -9,23 +9,19 @@
 #include "account.h"
 #include "common/filesystembase.h"
 #include "common/syncjournaldb.h"
-#include "common/syncjournalfilerecord.h"
 #include "common/vfs.h"
 #include "creds/abstractcredentials.h"
-#include "csync_exclude.h"
-#include "filesystem.h"
 #include "folder.h"
-#include "logger.h"
 #include "syncengine.h"
 #include "testutils.h"
-#include <cstring>
+#include <cookiejar.h>
+
 
 #include <QDir>
 #include <QMap>
 #include <QNetworkReply>
 #include <QTimer>
 #include <QtTest>
-#include <cookiejar.h>
 
 #include <chrono>
 
