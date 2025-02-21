@@ -345,7 +345,12 @@ QString ConfigFile::configFile()
 
 QSettings ConfigFile::makeQSettings()
 {
-    return { configFile(), QSettings::IniFormat };
+    return {configFile(), QSettings::IniFormat};
+}
+
+std::unique_ptr<QSettings> ConfigFile::makeQSettingsPointer()
+{
+    return std::unique_ptr<QSettings>(new QSettings(makeQSettings()));
 }
 
 bool ConfigFile::exists()
@@ -762,14 +767,6 @@ void ConfigFile::setClientVersionWithBuildNumberString(const QString &version)
 {
     auto settings = makeQSettings();
     settings.setValue(clientVersionC(), version);
-}
-
-std::unique_ptr<QSettings> ConfigFile::settingsWithGroup(const QString &group)
-{
-    // this actually works by move magic
-    std::unique_ptr<QSettings> settings(new QSettings(makeQSettings()));
-    settings->beginGroup(group);
-    return settings;
 }
 
 void ConfigFile::setupDefaultExcludeFilePaths(ExcludedFiles &excludedFiles)

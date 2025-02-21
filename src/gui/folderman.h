@@ -141,7 +141,7 @@ public:
 
     /// \returns empty if a downgrade of a folder was detected, otherwise it will return the number
     ///          of folders that were set up (note: this can be zero when no folders were configured).
-    std::optional<qsizetype> setupFolders();
+    std::optional<qsizetype> loadFolders();
 
     const QVector<Folder *> &folders() const;
 
@@ -166,9 +166,6 @@ public:
      * relativePath.
      */
     Folder *folderForPath(const QString &path, QString *relativePath = nullptr);
-
-    /** Returns the folder by id or NULL if no folder with the id exists. */
-    [[deprecated("directly reference the folder")]] Folder *folder(const QByteArray &id);
 
     /**
      * Ensures that a given directory does not contain a sync journal file.
@@ -305,15 +302,14 @@ private:
     /* unloads a folder object, does not delete it */
     void unloadFolder(Folder *);
 
+    void saveFolders();
+
     // finds all folder configuration files
     // and create the folders
     QString getBackupName(QString fullPathName) const;
 
     // makes the folder known to the socket api
     void registerFolderWithSocketApi(Folder *folder);
-
-    /// \returns false when a downgrade of the database is detected, true otherwise.
-    bool setupFoldersHelper(QSettings &settings, AccountStatePtr account);
 
     QSet<Folder *> _disabledFolders;
     QVector<Folder *> _folders;

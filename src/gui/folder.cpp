@@ -298,11 +298,6 @@ void Folder::prepareFolder(const QString &path)
 #endif
 }
 
-QByteArray Folder::id() const
-{
-    return _definition.id();
-}
-
 QString Folder::displayName() const
 {
     if (auto *s = space()) {
@@ -395,7 +390,6 @@ void Folder::setSyncPaused(bool paused)
     }
 
     _definition.paused = paused;
-    saveToSettings();
 
     Q_EMIT syncPausedChanged(this, paused);
     if (!paused) {
@@ -737,7 +731,6 @@ void Folder::setVirtualFilesEnabled(bool enabled)
                     }
                 });
             }
-            saveToSettings();
             if (!isPaused) {
                 setSyncPaused(isPaused);
             }
@@ -760,41 +753,6 @@ bool Folder::supportsSelectiveSync() const
 bool Folder::isDeployed() const
 {
     return _definition.isDeployed();
-}
-
-void Folder::saveToSettings() const
-{
-    auto definitionToSave = _definition;
-
-    // with spaces we rely on the space id
-    // we save the dav URL nevertheless to have it available during startup
-    definitionToSave.setWebDavUrl(webDavUrl());
-
-    // keep the scope of the interaction with the settings limited to prevent possible loss of settings
-    [definitionToSave, settings = _accountState->settings(), id = QString::fromUtf8(definitionToSave.id())] {
-        // Remove first to make sure we don't get duplicates
-        removeFromSettings(settings.get(), id);
-
-        settings->beginGroup(QStringLiteral("Folders/%1").arg(id));
-        // Note: Each of these groups might have a "version" tag, but that's
-        //       currently unused.
-        FolderDefinition::save(*settings.get(), definitionToSave);
-
-        settings->sync();
-        qCInfo(lcFolder) << "Saved folder" << definitionToSave.localPath() << "to settings, status" << settings->status();
-    }();
-}
-
-void Folder::removeFromSettings(QSettings *settings, const QString &id)
-{
-    settings->remove(QStringLiteral("Folders/%1").arg(id));
-    settings->remove(QStringLiteral("Multifolders/%1").arg(id));
-    settings->remove(QStringLiteral("FoldersWithPlaceholders/%1").arg(id));
-}
-
-void Folder::removeFromSettings() const
-{
-    Folder::removeFromSettings(_accountState->settings().get(), QString::fromUtf8(_definition.id()));
 }
 
 bool Folder::isFileExcludedAbsolute(const QString &fullPath) const
@@ -1178,10 +1136,9 @@ bool Folder::virtualFilesEnabled() const
     return _definition.virtualFilesMode != Vfs::Off;
 }
 
-FolderDefinition::FolderDefinition(const QByteArray &id, const QUrl &davUrl, const QString &spaceId, const QString &displayName)
+FolderDefinition::FolderDefinition(const QUrl &davUrl, const QString &spaceId, const QString &displayName)
     : _webDavUrl(davUrl)
     , _spaceId(spaceId)
-    , _id(id)
     , _displayName(displayName)
 {
 }
@@ -1191,6 +1148,11 @@ void FolderDefinition::setPriority(uint32_t newPriority)
     _priority = newPriority;
 }
 
+QUuid FolderDefinition::accountUUID() const
+{
+    return _accountUUID;
+}
+
 uint32_t FolderDefinition::priority() const
 {
     return _priority;
@@ -1198,11 +1160,10 @@ uint32_t FolderDefinition::priority() const
 
 void FolderDefinition::save(QSettings &settings, const FolderDefinition &folder)
 {
+    settings.setValue("accountUUID", folder.accountUUID());
     settings.setValue(QStringLiteral("localPath"), folder.localPath());
     settings.setValue(QStringLiteral("journalPath"), folder.journalPath);
-    if (!folder.spaceId().isEmpty()) {
-        settings.setValue(spaceIdC(), folder.spaceId());
-    }
+    settings.setValue(spaceIdC(), folder.spaceId());
     settings.setValue(davUrlC(), folder.webDavUrl());
     settings.setValue(displayNameC(), folder.displayName());
     settings.setValue(QStringLiteral("paused"), folder.paused);
@@ -1213,9 +1174,11 @@ void FolderDefinition::save(QSettings &settings, const FolderDefinition &folder)
     settings.setValue(QStringLiteral("virtualFilesMode"), Utility::enumToString(folder.virtualFilesMode));
 }
 
-FolderDefinition FolderDefinition::load(QSettings &settings, const QByteArray &id)
+FolderDefinition FolderDefinition::load(QSettings &settings)
 {
-    FolderDefinition folder{id, settings.value(davUrlC()).toUrl(), settings.value(spaceIdC()).toString(), settings.value(displayNameC()).toString()};
+    FolderDefinition folder{settings.value(davUrlC()).toUrl(), settings.value(spaceIdC()).toString(), settings.value(displayNameC()).toString()};
+
+    folder._accountUUID = settings.value("accountUUID").toUuid();
     folder.setLocalPath(settings.value(QStringLiteral("localPath")).toString());
     folder.journalPath = settings.value(QStringLiteral("journalPath")).toString();
     folder.paused = settings.value(QStringLiteral("paused")).toBool();
@@ -1246,11 +1209,6 @@ void FolderDefinition::setLocalPath(const QString &path)
 QString FolderDefinition::absoluteJournalPath() const
 {
     return QDir(localPath()).filePath(journalPath);
-}
-
-const QByteArray &FolderDefinition::id() const
-{
-    return _id;
 }
 
 QString FolderDefinition::displayName() const

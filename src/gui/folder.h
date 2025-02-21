@@ -53,11 +53,7 @@ class LocalDiscoveryTracker;
 class OPENCLOUD_GUI_EXPORT FolderDefinition
 {
 public:
-    static auto createNewFolderDefinition(const QUrl &davUrl, const QString &spaceId, const QString &displayName = {})
-    {
-        return FolderDefinition(QUuid::createUuid().toByteArray(QUuid::WithoutBraces), davUrl, spaceId, displayName);
-    }
-
+    FolderDefinition(const QUrl &davUrl, const QString &spaceId, const QString &displayName = {});
     /// path to the journal, usually relative to localPath
     QString journalPath;
 
@@ -68,15 +64,14 @@ public:
     /// Which virtual files setting the folder uses
     Vfs::Mode virtualFilesMode = Vfs::Off;
 
-    /// Saves the folder definition into the current settings group.
+    /// Saves the folder definition into the current settings.
     static void save(QSettings &settings, const FolderDefinition &folder);
 
-    /// Reads a folder definition from the current settings group.
-    static FolderDefinition load(QSettings &settings, const QByteArray &id);
+    /// Reads a folder definition from the current settings.
+    static FolderDefinition load(QSettings &settings);
 
     /// Ensure / as separator and trailing /.
     void setLocalPath(const QString &path);
-
 
     /// journalPath relative to localPath.
     QString absoluteJournalPath() const;
@@ -94,8 +89,6 @@ public:
 
     void setSpaceId(const QString &spaceId) { _spaceId = spaceId; }
 
-    const QByteArray &id() const;
-
     QString displayName() const;
 
     /**
@@ -112,20 +105,20 @@ public:
 
     void setPriority(uint32_t newPriority);
 
-private:
-    FolderDefinition(const QByteArray &id, const QUrl &davUrl, const QString &spaceId, const QString &displayName);
+    QUuid accountUUID() const;
 
+private:
     QUrl _webDavUrl;
 
     QString _spaceId;
-    /// For legacy reasons this can be a string, new folder objects will use a uuid
-    QByteArray _id;
     QString _displayName;
     /// path on local machine (always trailing /)
     QString _localPath;
     bool _deployed = false;
 
     uint32_t _priority = 0;
+
+    QUuid _accountUUID;
 
     friend class FolderMan;
 };
@@ -165,8 +158,6 @@ public:
      * The account the folder is configured on.
      */
     AccountStatePtr accountState() const { return _accountState; }
-
-    QByteArray id() const;
 
     QString displayName() const;
 
@@ -265,12 +256,6 @@ public:
     auto lastSyncTime() const { return QDateTime::currentDateTime().addMSecs(-msecSinceLastSync().count()); }
     std::chrono::milliseconds msecSinceLastSync() const { return std::chrono::milliseconds(_timeSinceLastSyncDone.elapsed()); }
     std::chrono::milliseconds msecLastSyncDuration() const { return _lastSyncDuration; }
-
-    /// Saves the folder data in the account's settings.
-    void saveToSettings() const;
-    /// Removes the folder from the account's settings.
-    static void removeFromSettings(QSettings *settings, const QString &id);
-    void removeFromSettings() const;
 
     /**
       * Returns whether a file inside this folder should be excluded.
@@ -501,5 +486,7 @@ private:
      * The vfs mode instance (created by plugin) to use. Never null.
      */
     QSharedPointer<Vfs> _vfs;
+
+    friend class FolderMan;
 };
 }

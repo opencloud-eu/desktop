@@ -666,10 +666,8 @@ void SocketApi::command_V2_LIST_ACCOUNTS(const QSharedPointer<SocketApiJobV2> &j
 {
     QJsonArray out;
     for (auto acc : AccountManager::instance()->accounts()) {
-        OC_DISABLE_DEPRECATED_WARNING; // allow use of id
-        out << QJsonObject({{QStringLiteral("name"), acc->account()->displayNameWithHost()}, {QStringLiteral("id"), acc->account()->id()},
-            {QStringLiteral("uuid"), acc->account()->uuid().toString(QUuid::WithoutBraces)}});
-        OC_ENABLE_DEPRECATED_WARNING
+        out << QJsonObject(
+            {{QStringLiteral("name"), acc->account()->displayNameWithHost()}, {QStringLiteral("uuid"), acc->account()->uuid().toString(QUuid::WithoutBraces)}});
     }
     job->success({ { QStringLiteral("accounts"), out } });
 }

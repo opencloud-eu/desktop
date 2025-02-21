@@ -74,11 +74,6 @@ public:
     /**
      * Return the account state pointer for an account identified by its display name
      */
-    Q_DECL_DEPRECATED_X("Please use the uuid to specify the account") AccountStatePtr account(const QString &name);
-
-    /**
-     * Return the account state pointer for an account identified by its display name
-     */
     AccountStatePtr account(const QUuid uuid);
 
     /**
@@ -106,15 +101,8 @@ private:
     void saveAccountHelper(Account *account, QSettings &settings, bool saveCredentials = true);
     AccountPtr loadAccountHelper(QSettings &settings);
 
-    bool isAccountIdAvailable(const QString &id) const;
-    QString generateFreeAccountId() const;
-
     // Adds an account to the tracked list, emitting accountAdded()
     AccountStatePtr addAccountState(std::unique_ptr<AccountState> &&accountState);
-
-public Q_SLOTS:
-    /// Saves account data, not including the credentials
-    void saveAccount(Account *account, bool saveCredentials);
 
 Q_SIGNALS:
     void accountAdded(AccountStatePtr account);
@@ -123,6 +111,7 @@ Q_SIGNALS:
 
 private:
     AccountManager() {}
+
     QMap<QUuid, AccountStatePtr> _accounts;
     /// Account ids from settings that weren't read
     QSet<QString> _additionalBlockedAccountIds;
