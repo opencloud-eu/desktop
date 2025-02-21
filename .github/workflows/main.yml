@@ -195,5 +195,5 @@ jobs:
       if: ${{ matrix.os  == 'windows-latest' && github.event_name != 'pull_request' }}
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ matrix.name }}-${{ github.ref_name }}-${{ github.run_number }}
+        name: ${{ matrix.name }}-appx-${{ github.ref_name }}-${{ github.run_number }}
         path: ${{ github.workspace }}/appx/*
