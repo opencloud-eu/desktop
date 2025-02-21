@@ -731,7 +731,7 @@ private Q_SLOTS:
                 return out;
             }
 
-            virtual void test()
+            virtual void test() override
             {
                 oauth = prepareOauth();
                 oauth->saveDynamicRegistrationDataForAccount(account, {});
@@ -792,7 +792,7 @@ private Q_SLOTS:
                 return new FakePayloadReply(op, request, {}, fakeAm);
             }
 
-            virtual void test()
+            virtual void test() override
             {
                 oauth = prepareOauth();
                 oauth->saveDynamicRegistrationDataForAccount(account, {});
