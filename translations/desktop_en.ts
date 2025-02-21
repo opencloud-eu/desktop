@@ -394,11 +394,21 @@ File synchronization desktop utility.</source>
     </message>
     <message>
         <location filename="../src/gui/folderwizard/folderwizardsourcepage.ui" line="20"/>
-        <source>Pick a local folder on your computer to sync</source>
+        <source>Select a local folder to synchronize your Spaces to:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/gui/folderwizard/folderwizardsourcepage.ui" line="32"/>
+        <source>Enter the path to the Spaces root folder. This folder will contain all your synchronized Spaces.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/gui/folderwizard/folderwizardsourcepage.ui" line="39"/>
+        <source>Click to select a the Spaces root folder.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/gui/folderwizard/folderwizardsourcepage.ui" line="42"/>
         <source>&amp;Choose...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1184,17 +1194,17 @@ Please consider removing this folder from the account and adding it again.</sour
 <context>
     <name>OCC::FolderWizard</name>
     <message>
-        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="126"/>
+        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="129"/>
         <source>Virtual files are not available for the selected folder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="139"/>
+        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="142"/>
         <source>Add Folder Sync Connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="141"/>
+        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="144"/>
         <source>Add Sync Connection</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1202,18 +1212,8 @@ Please consider removing this folder from the account and adding it again.</sour
 <context>
     <name>OCC::FolderWizardLocalPath</name>
     <message>
-        <location filename="../src/gui/folderwizard/folderwizardlocalpath.cpp" line="40"/>
-        <source>Click to select a local folder to sync.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/gui/folderwizard/folderwizardlocalpath.cpp" line="42"/>
-        <source>Enter the path to the local folder.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/gui/folderwizard/folderwizardlocalpath.cpp" line="101"/>
-        <source>Select the local folder</source>
+        <location filename="../src/gui/folderwizard/folderwizardlocalpath.cpp" line="96"/>
+        <source>Select the Spaces root folder</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1751,6 +1751,26 @@ Note that using any logging command line options will override the settings.</so
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../src/libsync/creds/oauth.cpp" line="397"/>
+        <source>&lt;h1&gt;Incorrect user&lt;/h1&gt;&lt;p&gt;You logged-in with user &lt;em&gt;%1&lt;/em&gt;, but must login with user &lt;em&gt;%2&lt;/em&gt;.&lt;br&gt;Please return to the %3 and restart the authentication.&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/libsync/creds/oauth.cpp" line="401"/>
+        <source>Incorrect user</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/libsync/creds/oauth.cpp" line="415"/>
+        <source>&lt;h1&gt;Login successful&lt;/h1&gt;&lt;p&gt;You can close this window.&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/libsync/creds/oauth.cpp" line="416"/>
+        <source>Login successful</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="366"/>
         <source>Login Error</source>
         <translation type="unfinished"></translation>
@@ -1758,26 +1778,6 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="392"/>
         <source>The audience of the id_token did not contain &quot;%1&quot;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="397"/>
-        <source>&lt;h1&gt;Wrong user&lt;/h1&gt;&lt;p&gt;You logged-in with user &lt;em&gt;%1&lt;/em&gt;, but must login with user &lt;em&gt;%2&lt;/em&gt;.&lt;br&gt;Please return to the %3 client and restart the authentication.&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="401"/>
-        <source>Wrong user</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="415"/>
-        <source>&lt;h1&gt;Login Successful&lt;/h1&gt;&lt;p&gt;You can close this window.&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="416"/>
-        <source>Login Successful</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
