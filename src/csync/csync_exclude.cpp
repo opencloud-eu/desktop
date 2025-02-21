@@ -394,9 +394,9 @@ CSYNC_EXCLUDE_TYPE ExcludedFiles::traversalPatternMatch(QStringView path, ItemTy
 
     QRegularExpressionMatch m;
     if (filetype == ItemTypeDirectory) {
-        m = _bnameTraversalRegexDir.match(bnameStr);
+        m = _bnameTraversalRegexDir.matchView(bnameStr);
     } else {
-        m = _bnameTraversalRegexFile.match(bnameStr);
+        m = _bnameTraversalRegexFile.matchView(bnameStr);
     }
     if (!m.hasMatch())
         return CSYNC_NOT_EXCLUDED;
@@ -410,9 +410,9 @@ CSYNC_EXCLUDE_TYPE ExcludedFiles::traversalPatternMatch(QStringView path, ItemTy
     QStringView pathStr = path;
 
     if (filetype == ItemTypeDirectory) {
-        m = _fullTraversalRegexDir.match(pathStr);
+        m = _fullTraversalRegexDir.matchView(pathStr);
     } else {
-        m = _fullTraversalRegexFile.match(pathStr);
+        m = _fullTraversalRegexFile.matchView(pathStr);
     }
     if (m.hasMatch()) {
         if (m.capturedStart(QStringLiteral("exclude")) != -1) {
@@ -434,9 +434,9 @@ CSYNC_EXCLUDE_TYPE ExcludedFiles::fullPatternMatch(QStringView p, ItemType filet
 
     QRegularExpressionMatch m;
     if (filetype == ItemTypeDirectory) {
-        m = _fullRegexDir.match(p);
+        m = _fullRegexDir.matchView(p);
     } else {
-        m = _fullRegexFile.match(p);
+        m = _fullRegexFile.matchView(p);
     }
     if (m.hasMatch()) {
         if (m.capturedStart(QStringLiteral("exclude")) != -1) {
