@@ -31,6 +31,7 @@
 #include "folderman.h"
 #include "folderwatcher.h"
 #include "gui/accountsettings.h"
+#include "gui/folderdefinition.h"
 #include "libsync/graphapi/spacesmanager.h"
 #include "localdiscoverytracker.h"
 #include "scheduling/syncscheduler.h"
@@ -60,32 +61,6 @@ namespace {
  * Either due to _engine->isAnotherSyncNeeded or a sync error
  */
 constexpr int retrySyncLimitC = 3;
-
-
-auto davUrlC()
-{
-    return QStringLiteral("davUrl");
-}
-
-auto spaceIdC()
-{
-    return QStringLiteral("spaceId");
-}
-
-auto displayNameC()
-{
-    return QLatin1String("displayString");
-}
-
-auto deployedC()
-{
-    return QStringLiteral("deployed");
-}
-
-auto priorityC()
-{
-    return QStringLiteral("priority");
-}
 }
 
 namespace OCC {
@@ -1136,89 +1111,6 @@ bool Folder::virtualFilesEnabled() const
     return _definition.virtualFilesMode != Vfs::Off;
 }
 
-FolderDefinition::FolderDefinition(const QUrl &davUrl, const QString &spaceId, const QString &displayName)
-    : _webDavUrl(davUrl)
-    , _spaceId(spaceId)
-    , _displayName(displayName)
-{
-}
-
-void FolderDefinition::setPriority(uint32_t newPriority)
-{
-    _priority = newPriority;
-}
-
-QUuid FolderDefinition::accountUUID() const
-{
-    return _accountUUID;
-}
-
-uint32_t FolderDefinition::priority() const
-{
-    return _priority;
-}
-
-void FolderDefinition::save(QSettings &settings, const FolderDefinition &folder)
-{
-    settings.setValue("accountUUID", folder.accountUUID());
-    settings.setValue(QStringLiteral("localPath"), folder.localPath());
-    settings.setValue(QStringLiteral("journalPath"), folder.journalPath);
-    settings.setValue(spaceIdC(), folder.spaceId());
-    settings.setValue(davUrlC(), folder.webDavUrl());
-    settings.setValue(displayNameC(), folder.displayName());
-    settings.setValue(QStringLiteral("paused"), folder.paused);
-    settings.setValue(QStringLiteral("ignoreHiddenFiles"), folder.ignoreHiddenFiles);
-    settings.setValue(deployedC(), folder.isDeployed());
-    settings.setValue(priorityC(), folder.priority());
-
-    settings.setValue(QStringLiteral("virtualFilesMode"), Utility::enumToString(folder.virtualFilesMode));
-}
-
-FolderDefinition FolderDefinition::load(QSettings &settings)
-{
-    FolderDefinition folder{settings.value(davUrlC()).toUrl(), settings.value(spaceIdC()).toString(), settings.value(displayNameC()).toString()};
-
-    folder._accountUUID = settings.value("accountUUID").toUuid();
-    folder.setLocalPath(settings.value(QStringLiteral("localPath")).toString());
-    folder.journalPath = settings.value(QStringLiteral("journalPath")).toString();
-    folder.paused = settings.value(QStringLiteral("paused")).toBool();
-    folder.ignoreHiddenFiles = settings.value(QStringLiteral("ignoreHiddenFiles"), QVariant(true)).toBool();
-    folder._deployed = settings.value(deployedC(), false).toBool();
-    folder._priority = settings.value(priorityC(), 0).toUInt();
-
-    folder.virtualFilesMode = Vfs::Off;
-    QString vfsModeString = settings.value(QStringLiteral("virtualFilesMode")).toString();
-    if (!vfsModeString.isEmpty()) {
-        if (auto mode = Vfs::modeFromString(vfsModeString)) {
-            folder.virtualFilesMode = *mode;
-        } else {
-            qCWarning(lcFolder) << "Unknown virtualFilesMode:" << vfsModeString << "assuming 'off'";
-        }
-    }
-    return folder;
-}
-
-void FolderDefinition::setLocalPath(const QString &path)
-{
-    _localPath = QDir::fromNativeSeparators(path);
-    if (!_localPath.endsWith(QLatin1Char('/'))) {
-        _localPath.append(QLatin1Char('/'));
-    }
-}
-
-QString FolderDefinition::absoluteJournalPath() const
-{
-    return QDir(localPath()).filePath(journalPath);
-}
-
-QString FolderDefinition::displayName() const
-{
-    if (_displayName.isEmpty()) {
-        return Theme::instance()->appNameGUI();
-    }
-    return _displayName;
-}
-
 bool Folder::groupInSidebar() const
 {
     if (_accountState->account()->hasDefaultSyncRoot()) {
@@ -1231,27 +1123,4 @@ bool Folder::groupInSidebar() const
     return false;
 }
 
-bool FolderDefinition::isDeployed() const
-{
-    return _deployed;
-}
-
-QUrl FolderDefinition::webDavUrl() const
-{
-    Q_ASSERT(_webDavUrl.isValid());
-    return _webDavUrl;
-}
-
-QString FolderDefinition::localPath() const
-{
-    return _localPath;
-}
-
-QString FolderDefinition::spaceId() const
-{
-    // we might call the function to check for the id
-    // anyhow one of the conditions needs to be true
-    Q_ASSERT(_webDavUrl.isValid() || !_spaceId.isEmpty());
-    return _spaceId;
-}
 } // namespace OCC

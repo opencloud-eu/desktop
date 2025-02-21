@@ -32,6 +32,7 @@ target_sources(OpenCloudGui PRIVATE
     commonstrings.cpp
     connectionvalidator.cpp
     folder.cpp
+    folderdefinition.cpp
     folderman.cpp
     folderstatusmodel.cpp
     folderwatcher.cpp
