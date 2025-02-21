@@ -46,7 +46,8 @@ void Platform::setApplication([[maybe_unused]] QCoreApplication *application)
         const auto fontBoldID = QFontDatabase::addApplicationFont(QStringLiteral(":/client/OpenCloud/theme/OpenCloud750-Bold.otf"));
         if (fontID != -1) {
             auto font = QApplication::font();
-            font.setFamilies(QFontDatabase::applicationFontFamilies(fontID) << QFontDatabase::applicationFontFamilies(fontBoldID) << font.families());
+            font.setFamilies(QFontDatabase::applicationFontFamilies(fontID) << QFontDatabase::applicationFontFamilies(fontBoldID));
+            font.setHintingPreference(QFont::PreferNoHinting);
             QApplication::setFont(font);
         }
     }
