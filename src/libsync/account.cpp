@@ -263,27 +263,6 @@ QString Account::hostName() const
     return _url.host();
 }
 
-QVariant Account::credentialSetting(const QString &key) const
-{
-    if (_credentials) {
-        QString prefix = _credentials->authType();
-        QVariant value = _settingsMap.value(prefix + QLatin1Char('_') + key);
-        if (value.isNull()) {
-            value = _settingsMap.value(key);
-        }
-        return value;
-    }
-    return QVariant();
-}
-
-void Account::setCredentialSetting(const QString &key, const QVariant &value)
-{
-    if (_credentials) {
-        QString prefix = _credentials->authType();
-        _settingsMap.insert(prefix + QLatin1Char('_') + key, value);
-    }
-}
-
 JobQueue *Account::jobQueue()
 {
     return &_jobQueue;

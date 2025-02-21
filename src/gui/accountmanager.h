@@ -97,10 +97,6 @@ private:
     // expose raw pointers to qml
     QList<AccountState *> accountsRaw() const;
 
-    // saving and loading Account to settings
-    void saveAccountHelper(Account *account, QSettings &settings, bool saveCredentials = true);
-    AccountPtr loadAccountHelper(QSettings &settings);
-
     // Adds an account to the tracked list, emitting accountAdded()
     AccountStatePtr addAccountState(std::unique_ptr<AccountState> &&accountState);
 

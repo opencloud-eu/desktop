@@ -36,17 +36,11 @@ Q_LOGGING_CATEGORY(lcHttpCredentials, "sync.credentials.http", QtInfoMsg)
 namespace {
 constexpr int TokenRefreshMaxRetries = 3;
 constexpr std::chrono::seconds TokenRefreshDefaultTimeout = 30s;
-constexpr int CredentialVersion = 1;
 const char authenticationFailedC[] = "opencloud-authentication-failed";
 
 auto refreshTokenKeyC()
 {
     return QStringLiteral("http/oauthtoken");
-}
-
-auto CredentialVersionKey()
-{
-    return QStringLiteral("CredentialVersion");
 }
 }
 
@@ -322,7 +316,6 @@ void HttpCredentials::forgetSensitiveData()
 
 void HttpCredentials::persist()
 {
-    _account->setCredentialSetting(CredentialVersionKey(), CredentialVersion);
     Q_EMIT _account->wantsAccountSaved(_account);
 
     // write secrets to the keychain

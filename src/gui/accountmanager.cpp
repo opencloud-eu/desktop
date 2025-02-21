@@ -33,16 +33,6 @@ auto urlC()
     return QStringLiteral("url");
 }
 
-auto userC()
-{
-    return QStringLiteral("user");
-}
-
-auto httpUserC()
-{
-    return QStringLiteral("http_user");
-}
-
 auto defaultSyncRootC()
 {
     return QStringLiteral("default_sync_root");
@@ -103,10 +93,32 @@ bool AccountManager::restore()
     const auto size = settings.beginReadArray(accountsC());
     for (auto i = 0; i < size; ++i) {
         settings.setArrayIndex(i);
-        if (auto acc = loadAccountHelper(settings)) {
-            if (auto accState = AccountState::loadFromSettings(acc, settings)) {
-                addAccountState(std::move(accState));
-            }
+        auto urlConfig = settings.value(urlC());
+        if (!urlConfig.isValid()) {
+            // No URL probably means a corrupted entry in the account settings
+            qCWarning(lcAccountManager) << "No URL for account " << settings.group();
+            continue;
+        }
+
+        auto acc = createAccount(settings.value(userUUIDC(), QVariant::fromValue(QUuid::createUuid())).toUuid());
+
+        acc->setUrl(urlConfig.toUrl());
+
+        acc->_displayName = settings.value(davUserDisplyNameC()).toString();
+        acc->setCapabilities({acc->url(), settings.value(capabilitesC()).value<QVariantMap>()});
+        acc->setDefaultSyncRoot(settings.value(defaultSyncRootC()).toString());
+
+        acc->setCredentials(new HttpCredentialsGui);
+
+        // now the server cert, it is in the general group
+        settings.beginGroup(QStringLiteral("General"));
+        const auto certs = QSslCertificate::fromData(settings.value(caCertsKeyC()).toByteArray());
+        qCInfo(lcAccountManager) << "Restored: " << certs.count() << " unknown certs.";
+        acc->setApprovedCerts(certs);
+        settings.endGroup();
+
+        if (auto accState = AccountState::loadFromSettings(acc, settings)) {
+            addAccountState(std::move(accState));
         }
     }
     settings.endArray();
@@ -142,14 +154,6 @@ void AccountManager::save(bool saveCredentials)
                 // re-persisting them)
                 account->_credentials->persist();
             }
-
-            for (auto it = account->_settingsMap.constBegin(); it != account->_settingsMap.constEnd(); ++it) {
-                settings.setValue(it.key(), it.value());
-            }
-
-            // HACK: Save http_user also as user
-            if (account->_settingsMap.contains(httpUserC()))
-                settings.setValue(userC(), account->_settingsMap.value(httpUserC()));
         }
 
         // Save accepted certificates.
@@ -196,44 +200,6 @@ QList<AccountState *> AccountManager::accountsRaw() const
         out.append(x);
     }
     return out;
-}
-
-AccountPtr AccountManager::loadAccountHelper(QSettings &settings)
-{
-    auto urlConfig = settings.value(urlC());
-    if (!urlConfig.isValid()) {
-        // No URL probably means a corrupted entry in the account settings
-        qCWarning(lcAccountManager) << "No URL for account " << settings.group();
-        return AccountPtr();
-    }
-
-    auto acc = createAccount(settings.value(userUUIDC(), QVariant::fromValue(QUuid::createUuid())).toUuid());
-
-    acc->setUrl(urlConfig.toUrl());
-
-    acc->_displayName = settings.value(davUserDisplyNameC()).toString();
-    acc->setCapabilities({acc->url(), settings.value(capabilitesC()).value<QVariantMap>()});
-    acc->setDefaultSyncRoot(settings.value(defaultSyncRootC()).toString());
-
-    // We want to only restore settings for that auth type and the user value
-    acc->_settingsMap.insert(userC(), settings.value(userC()));
-    const QString authTypePrefix = QStringLiteral("http_");
-    const auto childKeys = settings.childKeys();
-    for (const auto &key : childKeys) {
-        if (!key.startsWith(authTypePrefix))
-            continue;
-        acc->_settingsMap.insert(key, settings.value(key));
-    }
-    acc->setCredentials(new HttpCredentialsGui);
-
-    // now the server cert, it is in the general group
-    settings.beginGroup(QStringLiteral("General"));
-    const auto certs = QSslCertificate::fromData(settings.value(caCertsKeyC()).toByteArray());
-    qCInfo(lcAccountManager) << "Restored: " << certs.count() << " unknown certs.";
-    acc->setApprovedCerts(certs);
-    settings.endGroup();
-
-    return acc;
 }
 
 AccountStatePtr AccountManager::account(const QUuid uuid)
