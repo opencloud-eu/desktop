@@ -71,8 +71,8 @@ QString FolderWizardPrivate::defaultSyncRoot() const
 FolderWizardPrivate::FolderWizardPrivate(FolderWizard *q, const AccountStatePtr &account)
     : q_ptr(q)
     , _account(account)
-    , _folderWizardSelectiveSyncPage(new FolderWizardSelectiveSync(this))
     , _spacesPage(new SpacesPage(account->account(), q))
+    , _folderWizardSelectiveSyncPage(new FolderWizardSelectiveSync(this))
 {
     q->setPage(FolderWizard::Page_Space, _spacesPage);
 
