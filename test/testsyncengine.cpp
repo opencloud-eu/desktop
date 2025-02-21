@@ -7,6 +7,7 @@
 
 #include <syncengine.h>
 
+#include "libsync/filesystem.h"
 #include "testutils/syncenginetestutils.h"
 #include "testutils/testutils.h"
 
