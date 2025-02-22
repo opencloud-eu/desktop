@@ -830,7 +830,7 @@ The update will be performed in the background, and overwrite the current AppIma
 <context>
     <name>OCC::CredentialJob</name>
     <message>
-        <location filename="../src/libsync/creds/credentialmanager.cpp" line="221"/>
+        <location filename="../src/libsync/creds/credentialmanager.cpp" line="222"/>
         <source>Failed to parse credentials %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -878,45 +878,45 @@ The update will be performed in the background, and overwrite the current AppIma
 <context>
     <name>OCC::Folder</name>
     <message>
-        <location filename="../src/gui/folder.cpp" line="225"/>
+        <location filename="../src/gui/folder.cpp" line="200"/>
         <source>Local folder %1 does not exist.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="227"/>
+        <location filename="../src/gui/folder.cpp" line="202"/>
         <source>%1 should be a folder but is not.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="229"/>
+        <location filename="../src/gui/folder.cpp" line="204"/>
         <source>%1 is not readable.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="467"/>
+        <location filename="../src/gui/folder.cpp" line="436"/>
         <source>%1 has been removed.</source>
         <comment>%1 names a file.</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="481"/>
+        <location filename="../src/gui/folder.cpp" line="450"/>
         <source>%1 has been updated.</source>
         <comment>%1 names a file.</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="488"/>
+        <location filename="../src/gui/folder.cpp" line="457"/>
         <source>%1 has been renamed to %2.</source>
         <comment>%1 and %2 name files.</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="495"/>
+        <location filename="../src/gui/folder.cpp" line="464"/>
         <source>%1 has been moved to %2.</source>
         <translation type="unfinished"></translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="465"/>
+        <location filename="../src/gui/folder.cpp" line="434"/>
         <source>%1 and %n other file(s) have been removed.</source>
         <translation>
             <numerusform>%1 and %n other file have been removed.</numerusform>
@@ -924,22 +924,22 @@ The update will be performed in the background, and overwrite the current AppIma
         </translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="177"/>
+        <location filename="../src/gui/folder.cpp" line="152"/>
         <source>The path &apos;%1&apos; is too long. Please enable long paths in the Windows settings or choose a different folder.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="219"/>
+        <location filename="../src/gui/folder.cpp" line="194"/>
         <source>%1 failed to open the database.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="231"/>
+        <location filename="../src/gui/folder.cpp" line="206"/>
         <source>%1 is not writable.</source>
         <translation type="unfinished"></translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="472"/>
+        <location filename="../src/gui/folder.cpp" line="441"/>
         <source>%1 and %n other file(s) have been added.</source>
         <translation>
             <numerusform>%1 and %n other file have been added.</numerusform>
@@ -947,13 +947,13 @@ The update will be performed in the background, and overwrite the current AppIma
         </translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="474"/>
+        <location filename="../src/gui/folder.cpp" line="443"/>
         <source>%1 has been added.</source>
         <comment>%1 names a file.</comment>
         <translation type="unfinished"></translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="479"/>
+        <location filename="../src/gui/folder.cpp" line="448"/>
         <source>%1 and %n other file(s) have been updated.</source>
         <translation>
             <numerusform>%1 and %n other file have been updated.</numerusform>
@@ -961,7 +961,7 @@ The update will be performed in the background, and overwrite the current AppIma
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="486"/>
+        <location filename="../src/gui/folder.cpp" line="455"/>
         <source>%1 has been renamed to %2 and %n other file(s) have been renamed.</source>
         <translation>
             <numerusform>%1 has been renamed to %2 and %n other file have been renamed.</numerusform>
@@ -969,7 +969,7 @@ The update will be performed in the background, and overwrite the current AppIma
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="493"/>
+        <location filename="../src/gui/folder.cpp" line="462"/>
         <source>%1 has been moved to %2 and %n other file(s) have been moved.</source>
         <translation>
             <numerusform>%1 has been moved to %2 and %n other file have been moved.</numerusform>
@@ -977,7 +977,7 @@ The update will be performed in the background, and overwrite the current AppIma
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="500"/>
+        <location filename="../src/gui/folder.cpp" line="469"/>
         <source>%1 and %n other file(s) have sync conflicts.</source>
         <translation>
             <numerusform>%1 and %n other file have sync conflicts.</numerusform>
@@ -985,12 +985,12 @@ The update will be performed in the background, and overwrite the current AppIma
         </translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="502"/>
+        <location filename="../src/gui/folder.cpp" line="471"/>
         <source>%1 has a sync conflict. Please check the conflict file!</source>
         <translation type="unfinished"></translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="507"/>
+        <location filename="../src/gui/folder.cpp" line="476"/>
         <source>%1 and %n other file(s) could not be synced due to errors. See the log for details.</source>
         <translation>
             <numerusform>%1 and %n other file could not be synced due to errors. See the log for details.</numerusform>
@@ -998,37 +998,37 @@ The update will be performed in the background, and overwrite the current AppIma
         </translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="509"/>
+        <location filename="../src/gui/folder.cpp" line="478"/>
         <source>%1 could not be synced due to an error. See the log for details.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="515"/>
+        <location filename="../src/gui/folder.cpp" line="484"/>
         <source>Sync Activity</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="748"/>
+        <location filename="../src/gui/folder.cpp" line="716"/>
         <source>Switching VFS mode on folder &apos;%1&apos;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="906"/>
+        <location filename="../src/gui/folder.cpp" line="839"/>
         <source>Could not read system exclude file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1128"/>
+        <location filename="../src/gui/folder.cpp" line="1061"/>
         <source>The folder %1 was created but was excluded from synchronization previously. Data inside it will not be synchronized.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1131"/>
+        <location filename="../src/gui/folder.cpp" line="1064"/>
         <source>The file %1 was created but was excluded from synchronization previously. It will not be synchronized.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1143"/>
+        <location filename="../src/gui/folder.cpp" line="1076"/>
         <source>Changes in synchronized folders could not be tracked reliably.
 
 This means that the synchronization client might not upload local changes immediately and will instead only scan for local changes and upload them occasionally (every two hours by default).
@@ -1040,102 +1040,102 @@ This means that the synchronization client might not upload local changes immedi
 <context>
     <name>OCC::FolderMan</name>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="237"/>
+        <location filename="../src/gui/folderman.cpp" line="221"/>
         <source>Could not reset folder state</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="238"/>
+        <location filename="../src/gui/folderman.cpp" line="222"/>
         <source>An old sync journal &apos;%1&apos; was found, but could not be removed. Please make sure that no application is currently using it.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="336"/>
+        <location filename="../src/gui/folderman.cpp" line="307"/>
         <source>Account disconnected or paused</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="521"/>
+        <location filename="../src/gui/folderman.cpp" line="486"/>
         <source>Folder is about to be removed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="545"/>
+        <location filename="../src/gui/folderman.cpp" line="507"/>
         <source> (backup)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="550"/>
+        <location filename="../src/gui/folderman.cpp" line="512"/>
         <source> (backup %1)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="604"/>
+        <location filename="../src/gui/folderman.cpp" line="566"/>
         <source>Sync was successful, unresolved conflicts.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="613"/>
+        <location filename="../src/gui/folderman.cpp" line="575"/>
         <source>%1 (Sync is paused)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="645"/>
+        <location filename="../src/gui/folderman.cpp" line="607"/>
         <source>Folder &apos;%1&apos; is already in use by application %2!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="658"/>
+        <location filename="../src/gui/folderman.cpp" line="620"/>
         <source>Folder &apos;%1&apos; is already in use by another account.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="673"/>
+        <location filename="../src/gui/folderman.cpp" line="635"/>
         <source>No valid folder selected!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="695"/>
+        <location filename="../src/gui/folderman.cpp" line="657"/>
         <source>The folder %1 is used in a folder sync connection!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="733"/>
+        <location filename="../src/gui/folderman.cpp" line="695"/>
         <source>The local folder %1 already contains a folder used in a folder sync connection. Please pick another local folder!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="739"/>
+        <location filename="../src/gui/folderman.cpp" line="701"/>
         <source>The local folder %1 is already contained in a folder used in a folder sync connection. Please pick another local folder!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="747"/>
+        <location filename="../src/gui/folderman.cpp" line="709"/>
         <source>%1 Please pick another local folder!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="691"/>
+        <location filename="../src/gui/folderman.cpp" line="653"/>
         <source>The selected path does not exist!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="701"/>
+        <location filename="../src/gui/folderman.cpp" line="663"/>
         <source>The selected path is not a folder!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="705"/>
+        <location filename="../src/gui/folderman.cpp" line="667"/>
         <source>You have no permission to write to the selected folder!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="729"/>
+        <location filename="../src/gui/folderman.cpp" line="691"/>
         <source>There is already a sync from the server to this local folder. Please pick another local folder!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="807"/>
+        <location filename="../src/gui/folderman.cpp" line="769"/>
         <source>Multiple accounts are sharing the folder %1.
 This configuration is know to lead to dataloss and is no longer supported.
 Please consider removing this folder from the account and adding it again.</source>
@@ -2482,80 +2482,80 @@ Note that using any logging command line options will override the settings.</so
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="724"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="722"/>
         <source>I shared something with you</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="737"/>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="767"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="735"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="765"/>
         <source>Share...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="739"/>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="771"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="737"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="769"/>
         <source>Copy private link to clipboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="740"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="738"/>
         <source>Send private link by email...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="765"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="763"/>
         <source>Resharing this file is not allowed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="765"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="763"/>
         <source>Resharing this folder is not allowed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="843"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="841"/>
         <source>Open in %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="854"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="852"/>
         <source>Show file versions in web browser</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="876"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="874"/>
         <source>Rename...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="879"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="877"/>
         <source>Rename and upload...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="884"/>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="888"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="882"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="886"/>
         <source>Move and rename...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="891"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="889"/>
         <source>Move, rename and upload...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="894"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="892"/>
         <source>Delete local changes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="899"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="897"/>
         <source>Move and upload...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="900"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="898"/>
         <source>Delete</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2934,199 +2934,199 @@ Are you sure you want to proceed?</source>
 <context>
     <name>OCC::ownCloudGui</name>
     <message>
-        <location filename="../src/gui/owncloudgui.cpp" line="282"/>
+        <location filename="../src/gui/owncloudgui.cpp" line="280"/>
         <source>Please sign in</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/owncloudgui.cpp" line="308"/>
+        <location filename="../src/gui/owncloudgui.cpp" line="306"/>
         <source>Folder %1: %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/owncloudgui.cpp" line="317"/>
+        <location filename="../src/gui/owncloudgui.cpp" line="315"/>
         <source>Unresolved %1 conflicts</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/owncloudgui.cpp" line="320"/>
+        <location filename="../src/gui/owncloudgui.cpp" line="318"/>
         <source>Ignored errors %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/owncloudgui.cpp" line="335"/>
+        <location filename="../src/gui/owncloudgui.cpp" line="333"/>
         <source>There are no sync folders configured.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/owncloudgui.cpp" line="369"/>
+        <location filename="../src/gui/owncloudgui.cpp" line="367"/>
         <source>Log in...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/owncloudgui.cpp" line="371"/>
+        <location filename="../src/gui/owncloudgui.cpp" line="369"/>
         <source>Log out</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/owncloudgui.cpp" line="413"/>
+        <location filename="../src/gui/owncloudgui.cpp" line="411"/>
         <source>Recent Changes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/owncloudgui.cpp" line="358"/>
+        <location filename="../src/gui/owncloudgui.cpp" line="356"/>
         <source>Open folder &apos;%1&apos;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/owncloudgui.cpp" line="211"/>
+        <location filename="../src/gui/owncloudgui.cpp" line="209"/>
         <source>The server on account %1 runs an unsupported version %2. Using this client with unsupported server versions is untested and potentially dangerous. Proceed at your own risk.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/owncloudgui.cpp" line="269"/>
+        <location filename="../src/gui/owncloudgui.cpp" line="267"/>
         <source>Account %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/gui/owncloudgui.cpp" line="365"/>
-        <location filename="../src/gui/owncloudgui.cpp" line="476"/>
-        <source>Stop synchronization</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/gui/owncloudgui.cpp" line="471"/>
-        <source>Create a new account</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/gui/owncloudgui.cpp" line="566"/>
-        <source>Unknown status</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/gui/owncloudgui.cpp" line="582"/>
-        <source>Details...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/gui/owncloudgui.cpp" line="521"/>
-        <source>Help</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/gui/owncloudgui.cpp" line="363"/>
         <location filename="../src/gui/owncloudgui.cpp" line="474"/>
+        <source>Stop synchronization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/gui/owncloudgui.cpp" line="469"/>
+        <source>Create a new account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/gui/owncloudgui.cpp" line="564"/>
+        <source>Unknown status</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/gui/owncloudgui.cpp" line="580"/>
+        <source>Details...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/gui/owncloudgui.cpp" line="519"/>
+        <source>Help</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/gui/owncloudgui.cpp" line="361"/>
+        <location filename="../src/gui/owncloudgui.cpp" line="472"/>
         <source>Resume synchronization</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/owncloudgui.cpp" line="528"/>
+        <location filename="../src/gui/owncloudgui.cpp" line="526"/>
         <source>Quit %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/owncloudgui.cpp" line="264"/>
+        <location filename="../src/gui/owncloudgui.cpp" line="262"/>
         <source>Disconnected from %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/owncloudgui.cpp" line="210"/>
+        <location filename="../src/gui/owncloudgui.cpp" line="208"/>
         <source>Unsupported Server Version</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/owncloudgui.cpp" line="254"/>
+        <location filename="../src/gui/owncloudgui.cpp" line="252"/>
         <source>Disconnected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/owncloudgui.cpp" line="256"/>
+        <location filename="../src/gui/owncloudgui.cpp" line="254"/>
         <source>Disconnected from some accounts</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/owncloudgui.cpp" line="267"/>
+        <location filename="../src/gui/owncloudgui.cpp" line="265"/>
         <source>Disconnected from accounts:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/owncloudgui.cpp" line="283"/>
+        <location filename="../src/gui/owncloudgui.cpp" line="281"/>
         <source>Signed out</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/owncloudgui.cpp" line="287"/>
+        <location filename="../src/gui/owncloudgui.cpp" line="285"/>
         <source>Account synchronization is disabled</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/owncloudgui.cpp" line="288"/>
+        <location filename="../src/gui/owncloudgui.cpp" line="286"/>
         <source>Synchronization is paused</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/owncloudgui.cpp" line="332"/>
+        <location filename="../src/gui/owncloudgui.cpp" line="330"/>
         <source>Up to date (%1)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/owncloudgui.cpp" line="336"/>
+        <location filename="../src/gui/owncloudgui.cpp" line="334"/>
         <source>No sync folders configured</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/owncloudgui.cpp" line="467"/>
+        <location filename="../src/gui/owncloudgui.cpp" line="465"/>
         <source>Show %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/owncloudgui.cpp" line="525"/>
+        <location filename="../src/gui/owncloudgui.cpp" line="523"/>
         <source>About %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/owncloudgui.cpp" line="579"/>
+        <location filename="../src/gui/owncloudgui.cpp" line="577"/>
         <source>No items synced recently</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/owncloudgui.cpp" line="596"/>
+        <location filename="../src/gui/owncloudgui.cpp" line="594"/>
         <source>Checking for changes in remote &apos;%1&apos;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/owncloudgui.cpp" line="599"/>
+        <location filename="../src/gui/owncloudgui.cpp" line="597"/>
         <source>Checking for changes in local &apos;%1&apos;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/owncloudgui.cpp" line="614"/>
+        <location filename="../src/gui/owncloudgui.cpp" line="612"/>
         <source>Syncing %1 of %2  (%3 left)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/owncloudgui.cpp" line="619"/>
+        <location filename="../src/gui/owncloudgui.cpp" line="617"/>
         <source>Syncing %1 of %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/owncloudgui.cpp" line="628"/>
+        <location filename="../src/gui/owncloudgui.cpp" line="626"/>
         <source>Syncing %1 (%2 left)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/owncloudgui.cpp" line="631"/>
+        <location filename="../src/gui/owncloudgui.cpp" line="629"/>
         <source>Syncing %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/owncloudgui.cpp" line="640"/>
+        <location filename="../src/gui/owncloudgui.cpp" line="638"/>
         <source>%1 (%2, %3)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/owncloudgui.cpp" line="791"/>
+        <location filename="../src/gui/owncloudgui.cpp" line="789"/>
         <source>User paused sync for account &apos;%1&apos;</source>
         <translation type="unfinished"></translation>
     </message>
