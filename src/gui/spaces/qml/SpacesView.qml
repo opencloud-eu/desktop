@@ -30,6 +30,8 @@ Pane {
     Accessible.role: Accessible.List
     Accessible.name: qsTr("Spaces")
 
+    spacing: 10
+
     ScrollView {
         id: scrollView
         anchors.fill: parent
@@ -52,7 +54,7 @@ Pane {
         ListView {
             id: listView
             anchors.fill: parent
-            spacing: 20
+            spacing: spacesView.spacing
             focus: true
             boundsBehavior: Flickable.StopAtBounds
 
@@ -82,9 +84,7 @@ Pane {
 
                 required property int index
 
-                readonly property real spacing: 10
-
-                width: ListView.view.width - scrollView.ScrollBar.vertical.width - spacing
+                width: ListView.view.width - scrollView.ScrollBar.vertical.width - spacesView.spacing
 
                 implicitHeight: normalSize
 
@@ -118,11 +118,11 @@ Pane {
                     RowLayout {
                         anchors.fill: parent
 
-                        spacing: spaceDelegate.spacing
+                        spacing: spacesView.spacing
                         SpaceDelegate {
                             Layout.fillWidth: true
                             Layout.fillHeight: true
-                            spacing: spaceDelegate.spacing
+                            spacing: spacesView.spacing
 
                             title: spaceDelegate.name
                             description: spaceDelegate.subtitle

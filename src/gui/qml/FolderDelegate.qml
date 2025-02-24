@@ -26,6 +26,8 @@ Pane {
     readonly property AccountSettings accountSettings: ocContext
     readonly property OCQuickWidget widget: ocQuickWidget
 
+    spacing: 10
+
     Accessible.role: Accessible.List
     Accessible.name: qsTr("Folder Sync")
 
@@ -119,7 +121,7 @@ Pane {
                 boundsBehavior: Flickable.StopAtBounds
 
                 model: accountSettings.model
-                spacing: 20
+                spacing: folderSyncPanel.spacing
 
                 onCurrentItemChanged: {
                     if (currentItem) {
@@ -131,7 +133,7 @@ Pane {
                     id: folderDelegate
 
                     implicitHeight: normalSize
-                    width: ListView.view.width - scrollView.ScrollBar.vertical.width - spacing
+                    width: ListView.view.width - scrollView.ScrollBar.vertical.width - folderSyncPanel.spacing
 
                     required property string displayName
                     required property var errorMsg
@@ -145,8 +147,6 @@ Pane {
                     required property string subtitle
                     // model index
                     required property int index
-
-                    readonly property real spacing: 10
 
                     Pane {
                         id: delegatePane
@@ -187,12 +187,12 @@ Pane {
                         }
                         RowLayout {
                             anchors.fill: parent
-                            spacing: folderDelegate.spacing
+                            spacing: folderSyncPanel.spacing
 
                             SpaceDelegate {
                                 Layout.fillHeight: true
                                 Layout.fillWidth: true
-                                spacing: folderDelegate.spacing
+                                spacing: folderSyncPanel.spacing
 
                                 description: folderDelegate.subtitle
                                 imageSource: folderDelegate.folder.space ? folderDelegate.folder.space.image.qmlImageUrl : QMLResources.resourcePath("core", "space", enabled)
@@ -244,7 +244,7 @@ Pane {
                                     id: progressLoader
                                     Accessible.ignored: true
                                     Layout.fillWidth: true
-                                    Layout.minimumHeight: folderDelegate.spacing
+                                    Layout.minimumHeight: folderSyncPanel.spacing
 
                                     Timer {
                                         id: debounce
