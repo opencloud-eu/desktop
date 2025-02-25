@@ -25,7 +25,11 @@ IdToken::IdToken(const QJsonObject &payload)
 
 QVariantList IdToken::aud() const
 {
-    return _payload.value(QLatin1String("aud")).toArray().toVariantList();
+    const auto aud = _payload.value(QLatin1String("aud"));
+    if (aud.isArray()) {
+        return aud.toArray().toVariantList();
+    }
+    return {aud.toString()};
 }
 
 QString IdToken::sub() const
