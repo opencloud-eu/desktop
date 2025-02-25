@@ -53,7 +53,6 @@ public:
 
     explicit HttpCredentials(const QString &accessToken);
 
-    QString authType() const override;
     AccessManager *createAM() const override;
     bool ready() const override;
     void fetchFromKeychain() override;
@@ -67,7 +66,6 @@ public:
      */
     bool refreshAccessToken();
 
-    void setAccount(Account *account) override;
 
 protected:
     HttpCredentials() = default;

@@ -1,7 +1,6 @@
-# Currently disabled until we implemented app token support
-return()
 add_executable(cmd
     cmd.cpp
+    tokencredentials.cpp
 )
 set_target_properties(cmd PROPERTIES OUTPUT_NAME "${APPLICATION_EXECUTABLE}cmd")
 ecm_mark_nongui_executable(cmd)
