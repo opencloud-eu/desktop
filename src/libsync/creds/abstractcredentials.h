@@ -44,7 +44,6 @@ public:
      */
     virtual void setAccount(Account *account);
 
-    virtual QString authType() const = 0;
     virtual AccessManager *createAM() const = 0;
 
     /** Whether there are credentials that can be used for a connection attempt. */

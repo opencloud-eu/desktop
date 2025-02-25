@@ -508,7 +508,6 @@ public:
     {
     }
 
-    QString authType() const override { return QStringLiteral("test"); }
     OCC::AccessManager *createAM() const override { return _am; }
     bool ready() const override { return true; }
     void fetchFromKeychain() override { }
