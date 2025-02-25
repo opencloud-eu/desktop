@@ -25,7 +25,6 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ssh-key: ${{ secrets.DEPLOYMENT_SSH_KEY }}
-          submodules: recursive
           ref: "main"
 
       - name: install-deps
