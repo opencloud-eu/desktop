@@ -103,5 +103,5 @@ private Q_SLOTS:
 };
 }
 
-QTEST_GUILESS_MAIN(OCC::TestProtocolModel)
+QTEST_MAIN(OCC::TestProtocolModel)
 #include "testprotocolmodel.moc"
