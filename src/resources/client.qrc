@@ -27,5 +27,6 @@
         <file alias="resources/core/activity.svg">font-awesome/right-left-solid.svg</file>
         <file alias="resources/core/share.svg">remixicon/share.svg</file>
         <file alias="resources/core/folder-sync-small.svg">remixicon/folder.svg</file>
+        <file alias="resources/core/ellipsis-vertical-solid.svg">font-awesome/ellipsis-vertical-solid.svg</file>
     </qresource>
 </RCC>

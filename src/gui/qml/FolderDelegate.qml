@@ -169,7 +169,108 @@ Pane {
                             manageAccountButton.forceActiveFocus(Qt.TabFocusReason);
                         }
                         Keys.onTabPressed: {
-                            moreButton.forceActiveFocus(Qt.TabFocusReason);
+                            if (addSyncButton.enabled) {
+                                addSyncButton.forceActiveFocus(Qt.TabFocusReason);
+                            } else {
+                                widget.parentFocusWidget.focusNext();
+                            }
+                        }
+
+                        Keys.onSpacePressed: {
+                            contextMenu.popup();
+                        }
+
+                        SpaceDelegate {
+                            anchors.fill: parent
+                            Layout.fillHeight: true
+                            Layout.fillWidth: true
+                            spacing: folderSyncPanel.spacing
+
+                            description: folderDelegate.subtitle
+                            imageSource: folderDelegate.folder.space ? folderDelegate.folder.space.image.qmlImageUrl : QMLResources.resourcePath("core", "space", enabled)
+                            statusSource: QMLResources.resourcePath("core", statusIcon, enabled)
+                            title: displayName
+
+                            Component {
+                                id: progressBar
+
+                                ColumnLayout {
+                                    Layout.fillWidth: true
+                                    ProgressBar {
+                                        Layout.fillWidth: true
+                                        value: folderDelegate.progress
+                                        visible: folderDelegate.overallText || folderDelegate.itemText
+                                        indeterminate: value === 0
+                                    }
+                                    Label {
+                                        id: overallLabel
+                                        Accessible.ignored: true
+                                        Layout.fillWidth: true
+                                        elide: Text.ElideMiddle
+                                        text: folderDelegate.overallText
+                                    }
+                                    Label {
+                                        id: itemTextLabel
+                                        Accessible.ignored: true
+                                        Layout.fillWidth: true
+                                        elide: Text.ElideMiddle
+                                        text: folderDelegate.itemText
+                                    }
+                                }
+                            }
+                            Component {
+                                id: quotaDisplay
+
+                                Label {
+                                    Accessible.ignored: true
+                                    Layout.fillWidth: true
+                                    elide: Text.ElideRight
+                                    text: folderDelegate.quota
+                                    visible: folderDelegate.quota && !folderDelegate.overallText
+                                }
+                            }
+
+                            // we will either display quota or overallText
+
+                            Loader {
+                                id: progressLoader
+                                Accessible.ignored: true
+                                Layout.fillWidth: true
+                                Layout.minimumHeight: folderSyncPanel.spacing
+
+                                Timer {
+                                    id: debounce
+                                    interval: 500
+                                    onTriggered: progressLoader.sourceComponent = folderDelegate.overallText || folderDelegate.itemText ? progressBar : quotaDisplay
+                                }
+
+                                Connections {
+                                    target: folderDelegate
+                                    function onOverallTextChanged() {
+                                        debounce.start();
+                                    }
+                                }
+                                Connections {
+                                    target: folderDelegate
+                                    function onItemTextChanged() {
+                                        debounce.start();
+                                    }
+                                }
+                            }
+
+                            FolderError {
+                                Accessible.ignored: true
+                                Layout.fillWidth: true
+                                errorMessages: folderDelegate.errorMsg
+                                onCollapsedChanged: {
+                                    if (!collapsed) {
+                                        // TODO: not cool
+                                        folderDelegate.implicitHeight = normalSize + implicitHeight + 10;
+                                    } else {
+                                        folderDelegate.implicitHeight = normalSize;
+                                    }
+                                }
+                            }
                         }
 
                         MouseArea {
@@ -185,180 +286,74 @@ Pane {
                                 }
                             }
                         }
-                        RowLayout {
+                    }
+
+                    Image {
+                        id: moreButton
+
+                        // directly position at the top
+                        anchors.right: parent.right
+                        anchors.top: parent.top
+                        anchors.rightMargin: folderSyncPanel.spacing - paintedWidth
+                        anchors.topMargin: folderSyncPanel.spacing
+
+                        // this is just a visual hint that we have a context menu
+                        Accessible.ignored: true
+                        source: QMLResources.resourcePath("core", "ellipsis-vertical-solid", enabled)
+                        height: 24
+                        width: 24
+                        sourceSize: Qt.size(height, width)
+                        fillMode: Image.PreserveAspectFit
+                        clip: true
+
+                        MouseArea {
                             anchors.fill: parent
-                            spacing: folderSyncPanel.spacing
+                            onClicked: contextMenu.popup()
+                        }
 
-                            SpaceDelegate {
-                                Layout.fillHeight: true
-                                Layout.fillWidth: true
-                                spacing: folderSyncPanel.spacing
+                        Menu {
+                            id: contextMenu
 
-                                description: folderDelegate.subtitle
-                                imageSource: folderDelegate.folder.space ? folderDelegate.folder.space.image.qmlImageUrl : QMLResources.resourcePath("core", "space", enabled)
-                                statusSource: QMLResources.resourcePath("core", statusIcon, enabled)
-                                title: displayName
-
-                                Component {
-                                    id: progressBar
-
-                                    ColumnLayout {
-                                        Layout.fillWidth: true
-                                        ProgressBar {
-                                            Layout.fillWidth: true
-                                            value: folderDelegate.progress
-                                            visible: folderDelegate.overallText || folderDelegate.itemText
-                                            indeterminate: value === 0
-                                        }
-                                        Label {
-                                            id: overallLabel
-                                            Accessible.ignored: true
-                                            Layout.fillWidth: true
-                                            elide: Text.ElideMiddle
-                                            text: folderDelegate.overallText
-                                        }
-                                        Label {
-                                            id: itemTextLabel
-                                            Accessible.ignored: true
-                                            Layout.fillWidth: true
-                                            elide: Text.ElideMiddle
-                                            text: folderDelegate.itemText
-                                        }
-                                    }
-                                }
-                                Component {
-                                    id: quotaDisplay
-
-                                    Label {
-                                        Accessible.ignored: true
-                                        Layout.fillWidth: true
-                                        elide: Text.ElideRight
-                                        text: folderDelegate.quota
-                                        visible: folderDelegate.quota && !folderDelegate.overallText
-                                    }
-                                }
-
-                                // we will either display quota or overallText
-
-                                Loader {
-                                    id: progressLoader
-                                    Accessible.ignored: true
-                                    Layout.fillWidth: true
-                                    Layout.minimumHeight: folderSyncPanel.spacing
-
-                                    Timer {
-                                        id: debounce
-                                        interval: 500
-                                        onTriggered: progressLoader.sourceComponent = folderDelegate.overallText || folderDelegate.itemText ? progressBar : quotaDisplay
-                                    }
-
-                                    Connections {
-                                        target: folderDelegate
-                                        function onOverallTextChanged() {
-                                            debounce.start();
-                                        }
-                                    }
-                                    Connections {
-                                        target: folderDelegate
-                                        function onItemTextChanged() {
-                                            debounce.start();
-                                        }
-                                    }
-                                }
-
-                                FolderError {
-                                    Accessible.ignored: true
-                                    Layout.fillWidth: true
-                                    errorMessages: folderDelegate.errorMsg
-                                    onCollapsedChanged: {
-                                        if (!collapsed) {
-                                            // TODO: not cool
-                                            folderDelegate.implicitHeight = normalSize + implicitHeight + 10;
-                                        } else {
-                                            folderDelegate.implicitHeight = normalSize;
-                                        }
-                                    }
-                                }
+                            MenuItem {
+                                text: CommonStrings.showInFileBrowser()
+                                onTriggered: Qt.openUrlExternally("file:///" + folderDelegate.folder.path)
                             }
-                            Button {
-                                id: moreButton
 
-                                Accessible.name: delegatePane.Accessible.name
-                                Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
-                                Layout.maximumHeight: 30
-                                display: AbstractButton.IconOnly
-                                icon.source: QMLResources.resourcePath("core", "more", enabled)
-                                // this should have no effect, but without it the highlight is not displayed in Qt 6.7 on Windows
-                                palette.highlight: folderSyncPanel.palette.higlight
+                            MenuItem {
+                                text: CommonStrings.showInWebBrowser()
+                                onTriggered: folderDelegate.folder.openInWebBrowser()
+                            }
 
-                                Keys.onTabPressed: {
-                                    if (addSyncButton.enabled) {
-                                        addSyncButton.forceActiveFocus(Qt.TabFocusReason);
-                                    } else {
-                                        widget.parentFocusWidget.focusNext();
-                                    }
-                                }
+                            MenuSeparator {}
 
-                                Keys.onBacktabPressed: {
-                                    parent.forceActiveFocus(Qt.TabFocusReason);
-                                }
+                            MenuItem {
+                                text: folderDelegate.folder.isSyncRunning ? qsTr("Restart sync") : qsTr("Force sync now")
+                                enabled: accountSettings.accountState.state === AccountState.Connected && !folderDelegate.folder.isSyncPaused
+                                onTriggered: accountSettings.slotForceSyncCurrentFolder(folderDelegate.folder)
+                                visible: folderDelegate.folder.isReady
+                            }
 
-                                onClicked: {
-                                    contextMenu.open();
-                                }
+                            MenuItem {
+                                text: folderDelegate.folder.isSyncPaused ? qsTr("Resume sync") : qsTr("Pause sync")
+                                enabled: accountSettings.accountState.state === AccountState.Connected
+                                onTriggered: accountSettings.slotEnableCurrentFolder(folderDelegate.folder, true)
+                                visible: folderDelegate.folder.isReady
+                            }
 
-                                // select the list item the button belongs to
-                                onFocusChanged: {
-                                    if (moreButton.focusReason == Qt.TabFocusReason || moreButton.focusReason == Qt.BacktabFocusReason) {
-                                        folderDelegate.ListView.view.currentIndex = folderDelegate.index;
-                                    }
-                                }
+                            MenuItem {
+                                text: qsTr("Choose what to sync")
+                                onTriggered: accountSettings.showSelectiveSyncDialog(folderDelegate.folder)
+                                visible: folderDelegate.folder.isReady
+                            }
 
-                                Menu {
-                                    id: contextMenu
+                            MenuItem {
+                                text: qsTr("Remove folder sync connection")
+                                onTriggered: accountSettings.slotRemoveCurrentFolder(folderDelegate.folder)
+                                visible: !folderDelegate.isDeployed
+                            }
 
-                                    MenuItem {
-                                        text: CommonStrings.showInFileBrowser()
-                                        onTriggered: Qt.openUrlExternally("file:///" + folderDelegate.folder.path)
-                                    }
-
-                                    MenuItem {
-                                        text: CommonStrings.showInWebBrowser()
-                                        onTriggered: folderDelegate.folder.openInWebBrowser()
-                                    }
-
-                                    MenuSeparator {}
-
-                                    MenuItem {
-                                        text: folderDelegate.folder.isSyncRunning ? qsTr("Restart sync") : qsTr("Force sync now")
-                                        enabled: accountSettings.accountState.state === AccountState.Connected && !folderDelegate.folder.isSyncPaused
-                                        onTriggered: accountSettings.slotForceSyncCurrentFolder(folderDelegate.folder)
-                                        visible: folderDelegate.folder.isReady
-                                    }
-
-                                    MenuItem {
-                                        text: folderDelegate.folder.isSyncPaused ? qsTr("Resume sync") : qsTr("Pause sync")
-                                        enabled: accountSettings.accountState.state === AccountState.Connected
-                                        onTriggered: accountSettings.slotEnableCurrentFolder(folderDelegate.folder, true)
-                                        visible: folderDelegate.folder.isReady
-                                    }
-
-                                    MenuItem {
-                                        text: qsTr("Choose what to sync")
-                                        onTriggered: accountSettings.showSelectiveSyncDialog(folderDelegate.folder)
-                                        visible: folderDelegate.folder.isReady
-                                    }
-
-                                    MenuItem {
-                                        text: qsTr("Remove folder sync connection")
-                                        onTriggered: accountSettings.slotRemoveCurrentFolder(folderDelegate.folder)
-                                        visible: !folderDelegate.isDeployed
-                                    }
-
-                                    onOpened: {
-                                        Accessible.announce(qsTr("Sync options menu"));
-                                    }
-                                }
+                            onOpened: {
+                                Accessible.announce(qsTr("Sync options menu"));
                             }
                         }
                     }
