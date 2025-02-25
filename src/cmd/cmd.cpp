@@ -15,10 +15,10 @@
  */
 
 #include "account.h"
+#include "cmd/tokencredentials.h"
 #include "common/syncjournaldb.h"
 #include "common/version.h"
 #include "configfile.h" // ONLY ACCESS THE STATIC FUNCTIONS!
-#include "httpcredentialstext.h"
 #include "libsync/logger.h"
 #include "libsync/theme.h"
 #include "networkjobs/checkserverjobfactory.h"
@@ -49,11 +49,11 @@ struct CmdOptions
     QString source_dir;
     QUrl target_url;
     QUrl server_url;
-
     QString remoteFolder;
-    QString config_directory;
-    QString user;
-    QString password;
+
+    QByteArray username;
+    QByteArray token;
+
     QString proxy;
     bool silent = false;
     bool trustSSL = false;
@@ -76,7 +76,6 @@ struct SyncCTX
     CmdOptions options;
     bool promptRemoveAllFiles;
     AccountPtr account;
-    QString user;
 };
 
 /* If the selective sync list is different from before, we need to disable the read from db
@@ -192,18 +191,6 @@ void setupCredentials(SyncCTX &ctx)
     // 2. From options
     // 3. From prompt (if interactive)
 
-    const auto &url = ctx.options.target_url;
-    ctx.user = url.userName();
-    QString password = url.password();
-
-    if (!ctx.options.user.isEmpty()) {
-        ctx.user = ctx.options.user;
-    }
-
-    if (!ctx.options.password.isEmpty()) {
-        password = ctx.options.password;
-    }
-
     if (!ctx.options.proxy.isNull()) {
         QString host;
         uint32_t port = 0;
@@ -243,7 +230,7 @@ void setupCredentials(SyncCTX &ctx)
         f.close();
     }
 
-    ctx.account->setCredentials(HttpCredentialsText::create(ctx.options.interactive, ctx.user, password));
+    ctx.account->setCredentials(new TokenCredentials(std::move(ctx.options.username), std::move(ctx.options.token)));
     if (ctx.options.trustSSL) {
         QObject::connect(ctx.account->accessManager(), &QNetworkAccessManager::sslErrors, qApp,
             [](QNetworkReply *reply, const QList<QSslError> &errors) { reply->ignoreSslErrors(errors); });
@@ -277,15 +264,15 @@ CmdOptions parseOptions(const QStringList &app_args)
         return option;
     };
 
+    auto serverOption = addOption({{QStringLiteral("server")}, QStringLiteral("The URL for the server"), QStringLiteral("url")});
+    auto userOption = addOption({{QStringLiteral("u"), QStringLiteral("user")}, QStringLiteral("Username"), QStringLiteral("name")});
+    auto tokenOption = addOption({{QStringLiteral("t"), QStringLiteral("token")}, QStringLiteral("Authentication token"), QStringLiteral("token")});
+
     auto silentOption = addOption({ { QStringLiteral("s"), QStringLiteral("silent") }, QStringLiteral("Don't be so verbose.") });
     auto httpproxyOption = addOption({ { QStringLiteral("httpproxy") }, QStringLiteral("Specify a http proxy to use."), QStringLiteral("http://server:port") });
     auto trustOption = addOption({ { QStringLiteral("trust") }, QStringLiteral("Trust the SSL certification") });
     auto excludeOption = addOption({ { QStringLiteral("exclude") }, QStringLiteral("Path to an exclude list [file]"), QStringLiteral("file") });
     auto unsyncedfoldersOption = addOption({ { QStringLiteral("unsyncedfolders") }, QStringLiteral("File containing the list of unsynced remote folders (selective sync)"), QStringLiteral("file") });
-
-    auto serverOption = addOption({{QStringLiteral("server")}, QStringLiteral("Use [url] as the location of the server."), QStringLiteral("url")});
-    auto userOption = addOption({ { QStringLiteral("u"), QStringLiteral("user") }, QStringLiteral("Use [name] as the login name"), QStringLiteral("name") });
-    auto passwordOption = addOption({{QStringLiteral("p"), QStringLiteral("password")}, QStringLiteral("Use [pass] as password"), QStringLiteral("password")});
 
     auto nonInterActiveOption = addOption({ { QStringLiteral("non-interactive") }, QStringLiteral("Do not block execution with interaction") });
     auto maxRetriesOption = addOption({ { QStringLiteral("max-sync-retries") }, QStringLiteral("Retries maximum n times (default to 3)"), QStringLiteral("n") });
@@ -302,8 +289,8 @@ CmdOptions parseOptions(const QStringList &app_args)
     parser.addVersionOption();
 
     parser.addPositionalArgument(QStringLiteral("source_dir"), QStringLiteral("The source dir"));
-    parser.addPositionalArgument(QStringLiteral("server_url"), QStringLiteral("The URL to the server"));
-    parser.addPositionalArgument(QStringLiteral("remote_folder"), QStringLiteral("A remote folder"));
+    parser.addPositionalArgument(QStringLiteral("space_url"), QStringLiteral("The URL to the space"));
+    parser.addPositionalArgument(QStringLiteral("remote_folder"), QStringLiteral("A remote folder"), QStringLiteral("[remote folder]"));
 
     parser.process(app_args);
 
@@ -313,11 +300,11 @@ CmdOptions parseOptions(const QStringList &app_args)
         parser.showHelp(EXIT_FAILURE);
     }
 
-    options.source_dir = [arg = args[0]] {
+    options.source_dir = [&parser, arg = args[0]] {
         const QFileInfo fi(arg);
         if (!fi.exists()) {
             qCritical() << "Source dir" << arg << "does not exist.";
-            exit(EXIT_FAILURE);
+            parser.showHelp(EXIT_FAILURE);
         }
         QString sourceDir = fi.absoluteFilePath();
         if (!sourceDir.endsWith(QLatin1Char('/'))) {
@@ -345,13 +332,20 @@ CmdOptions parseOptions(const QStringList &app_args)
     if (parser.isSet(serverOption)) {
         options.server_url = QUrl::fromUserInput(parser.value(serverOption));
     } else {
-        options.server_url = options.target_url;
+        qCritical() << "Server not set";
+        parser.showHelp(EXIT_FAILURE);
+    }
+    if (parser.isSet(tokenOption)) {
+        options.token = parser.value(tokenOption).toUtf8();
+    } else {
+        qCritical() << "Token not set";
+        parser.showHelp(EXIT_FAILURE);
     }
     if (parser.isSet(userOption)) {
-        options.user = parser.value(userOption);
-    }
-    if (parser.isSet(passwordOption)) {
-        options.password = parser.value(passwordOption);
+        options.username = parser.value(userOption).toUtf8();
+    } else {
+        qCritical() << "Username not set";
+        parser.showHelp(EXIT_FAILURE);
     }
     if (parser.isSet(excludeOption)) {
         options.exclude = parser.value(excludeOption);
@@ -417,16 +411,8 @@ int main(int argc, char **argv)
         ctx.options.server_url = ctx.options.server_url.adjusted(QUrl::RemoveUserInfo);
         ctx.options.target_url = ctx.options.target_url.adjusted(QUrl::RemoveUserInfo);
 
-        const QUrl baseUrl = [&ctx] {
-            auto tmp = ctx.options.server_url;
-            // Find the url leading to the dav root
-            QStringList splitted = tmp.path().split(ctx.account->davPath());
-            tmp.setPath(splitted.value(0));
-            return tmp;
-        }();
 
-
-        ctx.account->setUrl(baseUrl);
+        ctx.account->setUrl(ctx.options.server_url);
 
         auto *checkServerJob = CheckServerJobFactory(ctx.account->accessManager()).startJob(ctx.account->url(), qApp);
 
@@ -460,24 +446,9 @@ int main(int argc, char **argv)
                         exit(EXIT_FAILURE);
                     }
 
-                    auto userJob = new JsonApiJob(ctx.account, QStringLiteral("ocs/v1.php/cloud/user"), {}, {}, nullptr);
-                    QObject::connect(userJob, &JsonApiJob::finishedSignal, qApp, [userJob, ctx = ctx]() mutable {
-                        const QJsonObject data = userJob->data().value(QStringLiteral("ocs")).toObject().value(QStringLiteral("data")).toObject();
-                        ctx.account->setDavUser(data.value(QStringLiteral("id")).toString());
-                        ctx.account->setDavDisplayName(data.value(QStringLiteral("display-name")).toString());
-
-                        if (ctx.options.server_url == ctx.options.target_url) {
-                            // guess dav path
-                            if (!ctx.options.target_url.path().contains(ctx.account->davPath())) {
-                                ctx.options.target_url = OCC::Utility::concatUrlPath(ctx.options.target_url, ctx.account->davPath());
-                            }
-                        }
-
-                        // much lower age than the default since this utility is usually made to be run right after a change in the tests
-                        SyncEngine::minimumFileAgeForUpload = std::chrono::seconds(0);
-                        sync(ctx);
-                    });
-                    userJob->start();
+                    // much lower age than the default since this utility is usually made to be run right after a change in the tests
+                    SyncEngine::minimumFileAgeForUpload = std::chrono::seconds(0);
+                    sync(ctx);
                 });
                 capabilitiesJob->start();
             } else {

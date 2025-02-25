@@ -80,16 +80,6 @@ HttpCredentials::HttpCredentials(const QString &accessToken)
 {
 }
 
-QString HttpCredentials::authType() const
-{
-    return QStringLiteral("http");
-}
-
-void HttpCredentials::setAccount(Account *account)
-{
-    AbstractCredentials::setAccount(account);
-}
-
 AccessManager *HttpCredentials::createAM() const
 {
     AccessManager *am = new HttpCredentialsAccessManager(this);
