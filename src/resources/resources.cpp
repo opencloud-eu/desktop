@@ -108,7 +108,8 @@ QIcon OCC::Resources::getCoreIcon(const QString &iconName)
         QByteArray data = Template::renderTemplateFromFile(iconPath, {{QStringLiteral("color"), color}}).toUtf8();
         QBuffer buffer(&data);
         QImageReader iconReader(&buffer, "svg");
-        return cached = QPixmap::fromImageReader(&iconReader);
+        cached = QPixmap::fromImageReader(&iconReader);
+        OC_ASSERT(!cached.isNull());
     }
     return cached;
 }
