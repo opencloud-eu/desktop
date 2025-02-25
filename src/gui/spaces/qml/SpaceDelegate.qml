@@ -42,9 +42,7 @@ Item {
                 Layout.preferredHeight: normalSize - 20
                 Layout.preferredWidth: normalSize - 20
                 Layout.alignment: Qt.AlignTop
-                background: Rectangle {
-                    color: spaceDelegate.palette.alternateBase
-                }
+
                 Image {
                     id: image
                     anchors.fill: parent
