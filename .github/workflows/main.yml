@@ -28,21 +28,17 @@ jobs:
         fail-fast: true
         matrix:
             include:
-            - name: windows-cl-x86_64
-              target: windows-cl-msvc2022-x86_64
+            - target: windows-cl-msvc2022-x86_64
               os: windows-latest
               container:
-            # TODO: align the target with the name
-            - name: macos-clang-arm64
-              target: macos-clang-arm64
+            - target: macos-clang-arm64
               os: macos-latest
               container:
-            - name: linux-gcc-x86_64
-              target: linux-64-gcc
+            - target: linux-gcc-x86_64
               os: ubuntu-latest
               container: ghcr.io/opencloud-eu/ci-docker-desktop/appimage:latest
 
-    name: ${{ matrix.name }}
+    name: ${{ matrix.target }}
 
     runs-on: ${{ matrix.os }}
 
@@ -55,13 +51,13 @@ jobs:
 
     steps:
     - name: Check out full source code for tooling
-      if: ${{ matrix.name  == 'linux-gcc-x86_64' }}
+      if: ${{ matrix.target  == 'linux-gcc-x86_64' }}
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
     - name: Check out latest commit
-      if: ${{ matrix.name  != 'linux-gcc-x86_64' }}
+      if: ${{ matrix.target  != 'linux-gcc-x86_64' }}
       uses: actions/checkout@v4
 
     - name: Restore and update cache
@@ -122,7 +118,7 @@ jobs:
           & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --install-deps opencloud/opencloud-desktop
 
     - name: QML format lint
-      if: matrix.name  == 'linux-gcc-x86_64'
+      if: matrix.target  == 'linux-gcc-x86_64'
       run: |
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c libs/qt6/qttools
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --run pwsh -c "git ls-files *.qml | %{ qmlformat -i `$_}"
@@ -133,7 +129,7 @@ jobs:
         }
 
     - name: clang-format format lint
-      if: matrix.name  == 'linux-gcc-x86_64'
+      if: matrix.target  == 'linux-gcc-x86_64'
       run: |
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c libs/llvm
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --run git clang-format --force  ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}
@@ -168,7 +164,7 @@ jobs:
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --run python3 -m clang_html "$([System.IO.Path]::GetTempPath())/clang-tidy.log" -o "${env:GITHUB_WORKSPACE}/binaries/clang-tidy.html"
 
     - name: Package
-      if: matrix.name  != 'macos-clang-arm64'
+      if: matrix.target  != 'macos-clang-arm64'
       run: |
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --no-cache --package opencloud/opencloud-desktop
 
@@ -186,12 +182,12 @@ jobs:
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ matrix.name }}-${{ github.run_number }}
+        name: ${{ matrix.target }}-${{ github.run_number }}
         path: ${{ github.workspace }}/binaries/*
 
     - name: Upload appx
       if: ${{ matrix.os  == 'windows-latest' && github.event_name != 'pull_request' }}
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ matrix.name }}-appx-${{ github.run_number }}
+        name: ${{ matrix.target }}-appx-${{ github.run_number }}
         path: ${{ github.workspace }}/appx/*
