@@ -52,37 +52,6 @@ QString brandThemePath()
 {
     return QStringLiteral(":/client/" APPLICATION_SHORTNAME "/theme");
 }
-
-QString darkTheme()
-{
-    return QStringLiteral("dark");
-}
-
-QString coloredTheme()
-{
-    return QStringLiteral("colored");
-}
-
-bool hasTheme(IconType type, const QString &theme)
-{
-    // <<is vanilla, theme name>, bool
-    // caches the availability of themes for branded and unbranded themes
-    static QMap<QPair<bool, QString>, bool> _themeCache;
-    const auto key = qMakePair(type != IconType::VanillaIcon, theme);
-    auto it = _themeCache.constFind(key);
-    if (it == _themeCache.cend()) {
-        return _themeCache[key] = QFileInfo(QStringLiteral("%1/%2/").arg(type == IconType::VanillaIcon ? vanillaThemePath() : brandThemePath(), theme)).isDir();
-    }
-    return it.value();
-}
-
-}
-
-bool OCC::Resources::hasDarkTheme()
-{
-    static bool _hasBrandedColored = hasTheme(IconType::BrandedIcon, coloredTheme());
-    static bool _hasBrandedDark = hasTheme(IconType::BrandedIcon, darkTheme());
-    return _hasBrandedColored == _hasBrandedDark;
 }
 
 bool Resources::isVanillaTheme()
@@ -125,10 +94,6 @@ QIcon OCC::Resources::loadIcon(const QString &flavor, const QString &name, IconT
     const QString path = QStringLiteral("%1/%2/%3").arg(useCoreIcon ? vanillaThemePath() : brandThemePath(), flavor, name);
     QIcon &cached = iconCache->_cache[path]; // Take reference, this will also "set" the cache entry
     if (cached.isNull()) {
-        if (isVanillaTheme() && QIcon::hasThemeIcon(name)) {
-            // use from theme
-            return cached = QIcon::fromTheme(name);
-        }
         const QString svg = QStringLiteral("%1.svg").arg(path);
         if (QFile::exists(svg)) {
             return cached = QIcon(svg);
@@ -164,11 +129,6 @@ QIcon OCC::Resources::loadIcon(const QString &flavor, const QString &name, IconT
     return cached;
 }
 
-QIcon OCC::Resources::themeIcon(const QString &name, IconType iconType)
-{
-    return loadIcon((Resources::isUsingDarkTheme() && hasDarkTheme()) ? darkTheme() : coloredTheme(), name, iconType);
-}
-
 QIcon OCC::Resources::themeUniversalIcon(const QString &name, IconType iconType)
 {
     return loadIcon(QStringLiteral("universal"), name, iconType);
@@ -187,8 +147,6 @@ QPixmap CoreImageProvider::requestPixmap(const QString &id, QSize *size, const Q
         icon = getCoreIcon(qmlIcon.iconName);
     } else if (qmlIcon.theme == QLatin1String("universal")) {
         icon = themeUniversalIcon(qmlIcon.iconName);
-    } else {
-        icon = themeIcon(qmlIcon.iconName);
     }
     return Resources::pixmap(requestedSize, icon, qmlIcon.enabled ? QIcon::Normal : QIcon::Disabled, size);
 }

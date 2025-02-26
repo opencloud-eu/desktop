@@ -34,17 +34,6 @@
 #include THEME_INCLUDE
 #endif
 
-namespace {
-QString darkTheme()
-{
-    return QStringLiteral("dark");
-}
-
-QString coloredTheme()
-{
-    return QStringLiteral("colored");
-}
-}
 namespace OCC {
 
 Theme *Theme::_instance = nullptr;
@@ -124,14 +113,15 @@ QIcon Theme::aboutIcon() const
     return applicationIcon();
 }
 
-QIcon Theme::themeTrayIcon(const SyncResult &result, [[maybe_unused]] bool sysTrayMenuVisible, Resources::IconType iconType) const
+QIcon Theme::themeTrayIcon(const SyncResult &result, Resources::IconType iconType) const
 {
+#ifndef Q_OS_MAC
     // we have a dark sys tray and the theme has support for that
-    const QString flavor = (Utility::hasDarkSystray() && Resources::hasDarkTheme()) ? darkTheme() : coloredTheme();
-    auto icon = Resources::loadIcon(flavor, QStringLiteral("state-%1").arg(syncStateIconName(result)), iconType);
-#ifdef Q_OS_MAC
+    auto icon =
+        Resources::loadIcon(Utility::hasDarkSystray() ? QStringLiteral("dark-systray") : QStringLiteral("light-systray"), syncStateIconName(result), iconType);
+#else
     // This defines the icon as a template and enables automatic macOS color handling
-    // See https://bugreports.qt.io/browse/QTBUG-42109
+    auto icon = Resources::loadIcon(QStringLiteral("mask-systray"), syncStateIconName(result), iconType);
     icon.setIsMask(true);
 #endif
     return icon;

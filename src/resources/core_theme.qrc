@@ -1,21 +1,27 @@
 <RCC>
     <qresource prefix="/client/OpenCloud">
-        <file alias="theme/colored/state-ok.svg">theme/universal/opencloud-icon.svg</file>
-        <file alias="theme/colored/state-error.svg">theme/universal/opencloud-icon.svg</file>
-        <file alias="theme/colored/state-information.svg">theme/universal/opencloud-icon.svg</file>
-        <file alias="theme/colored/state-offline.svg">theme/universal/opencloud-icon.svg</file>
-        <file alias="theme/colored/state-pause.svg">theme/universal/opencloud-icon.svg</file>
-        <file alias="theme/colored/state-sync.svg">theme/universal/opencloud-icon.svg</file>
-        <file alias="theme/dark/state-ok.svg">theme/universal/opencloud-icon.svg</file>
-        <file alias="theme/dark/state-error.svg">theme/universal/opencloud-icon.svg</file>
-        <file alias="theme/dark/state-information.svg">theme/universal/opencloud-icon.svg</file>
-        <file alias="theme/dark/state-offline.svg">theme/universal/opencloud-icon.svg</file>
-        <file alias="theme/dark/state-pause.svg">theme/universal/opencloud-icon.svg</file>
-        <file alias="theme/dark/state-sync.svg">theme/universal/opencloud-icon.svg</file>
+        <file>theme/OpenCloud500-Regular.otf</file>
+        <file>theme/OpenCloud500-Regular.woff2</file>
+        <file>theme/OpenCloud750-Bold.otf</file>
+        <file alias="theme/dark-systray/error.svg">theme/dark-systray/ocl-ui_error-flieder-colour.svg</file>
+        <file alias="theme/dark-systray/information.svg">theme/dark-systray/ocl-ui_info-flieder-colour.svg</file>
+        <file alias="theme/dark-systray/ok.svg">theme/dark-systray/ocl-ui_logo-flieder.svg</file>
+        <file alias="theme/dark-systray/offline.svg">theme/dark-systray/ocl-ui_offline-flieder-colour.svg</file>
+        <file alias="theme/dark-systray/pause.svg">theme/dark-systray/ocl-ui_pause-flieder-colour.svg</file>
+        <file alias="theme/dark-systray/sync.svg">theme/dark-systray/ocl-ui_sync-flieder-colour.svg</file>
+        <file alias="theme/light-systray/error.svg">theme/light-systray/ocl-ui_error-petrol-colour.svg</file>
+        <file alias="theme/light-systray/information.svg">theme/light-systray/ocl-ui_info-petrol-colour.svg</file>
+        <file alias="theme/light-systray/ok.svg">theme/light-systray/ocl-ui_logo-petrol.svg</file>
+        <file alias="theme/light-systray/offline.svg">theme/light-systray/ocl-ui_offline-petrol-colour.svg</file>
+        <file alias="theme/light-systray/pause.svg">theme/light-systray/ocl-ui_pause-petrol-colour.svg</file>
+        <file alias="theme/light-systray/sync.svg">theme/light-systray/ocl-ui_sync-petrol-colour.svg</file>
+        <file alias="theme/mask-systray/error.svg">theme/mask-systray/ocl-ui_error-hex#000.svg</file>
+        <file alias="theme/mask-systray/information.svg">theme/mask-systray/ocl-ui_info-hex#000.svg</file>
+        <file alias="theme/mask-systray/ok.svg">theme/mask-systray/ocl-ui_logo-hex#000.svg</file>
+        <file alias="theme/mask-systray/offline.svg">theme/mask-systray/ocl-ui_offline-hex#000.svg</file>
+        <file alias="theme/mask-systray/pause.svg">theme/mask-systray/ocl-ui_pause-hex#000.svg</file>
+        <file alias="theme/mask-systray/sync.svg">theme/mask-systray/ocl-ui_sync-hex#000.svg</file>
         <file>theme/universal/opencloud-icon.svg</file>
         <file>theme/universal/wizard_logo.svg</file>
-        <file>theme/OpenCloud500-Regular.otf</file>
-        <file>theme/OpenCloud750-Bold.otf</file>
-        <file>theme/OpenCloud500-Regular.woff2</file>
     </qresource>
 </RCC>

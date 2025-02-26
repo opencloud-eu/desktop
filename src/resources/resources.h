@@ -40,12 +40,9 @@ bool OPENCLOUD_RESOURCES_EXPORT isVanillaTheme();
  */
 bool OPENCLOUD_RESOURCES_EXPORT isUsingDarkTheme();
 
-bool OPENCLOUD_RESOURCES_EXPORT hasDarkTheme();
-
 QIcon OPENCLOUD_RESOURCES_EXPORT getCoreIcon(const QString &icon_name);
 
 QIcon OPENCLOUD_RESOURCES_EXPORT loadIcon(const QString &flavor, const QString &name, IconType iconType);
-QIcon OPENCLOUD_RESOURCES_EXPORT themeIcon(const QString &name, IconType iconType = IconType::BrandedIconWithFallbackToVanillaIcon);
 
 /**
  * Returns a universal (non color schema aware) icon.
