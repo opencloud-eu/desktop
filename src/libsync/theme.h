@@ -140,8 +140,7 @@ public:
      * get an sync state icon
      */
 
-    QIcon themeTrayIcon(const SyncResult &result, bool sysTrayMenuVisible = false,
-        Resources::IconType iconType = Resources::IconType::BrandedIconWithFallbackToVanillaIcon) const;
+    QIcon themeTrayIcon(const SyncResult &result, Resources::IconType iconType = Resources::IconType::BrandedIconWithFallbackToVanillaIcon) const;
 
     QString syncStateIconName(const SyncResult &result) const;
 
