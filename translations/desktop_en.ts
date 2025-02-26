@@ -216,82 +216,82 @@ File synchronization desktop utility.</source>
 <context>
     <name>FolderDelegate</name>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="30"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="32"/>
         <source>Folder Sync</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="69"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="71"/>
         <source>Manage Account</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="75"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="77"/>
         <source>Log in</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="75"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="77"/>
         <source>Log out</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="79"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="81"/>
         <source>Reconnect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="89"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="91"/>
         <source>Remove</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="96"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="98"/>
         <source>Account options Menu</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="333"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="330"/>
         <source>Restart sync</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="333"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="330"/>
         <source>Force sync now</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="340"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="337"/>
         <source>Resume sync</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="340"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="337"/>
         <source>Pause sync</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="347"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="344"/>
         <source>Choose what to sync</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="353"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="350"/>
         <source>Remove folder sync connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="359"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="356"/>
         <source>Sync options menu</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="373"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="368"/>
         <source>Add Space</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="395"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="390"/>
         <source>You are synchronizing %1 out of %2 spaces</source>
         <translation type="unfinished"></translation>
     </message>
