@@ -168,6 +168,8 @@ void FolderWatcher::addChanges(QSet<QString> &&paths)
 
 QSet<QString> FolderWatcher::popChangeSet()
 {
+    // stop the timer as we pop all queued changes
+    _timer.stop();
     return std::move(_changeSet);
 }
 
