@@ -52,7 +52,7 @@ struct CmdOptions
     QString remoteFolder;
 
     QByteArray username;
-    QByteArray token;
+    QByteArray token = qgetenv("OPENCLOUD_TOKEN");
 
     QString proxy;
     bool silent = false;
@@ -266,7 +266,8 @@ CmdOptions parseOptions(const QStringList &app_args)
 
     auto serverOption = addOption({{QStringLiteral("server")}, QStringLiteral("The URL for the server"), QStringLiteral("url")});
     auto userOption = addOption({{QStringLiteral("u"), QStringLiteral("user")}, QStringLiteral("Username"), QStringLiteral("name")});
-    auto tokenOption = addOption({{QStringLiteral("t"), QStringLiteral("token")}, QStringLiteral("Authentication token"), QStringLiteral("token")});
+    auto tokenOption = addOption(
+        {{QStringLiteral("t"), QStringLiteral("token")}, QStringLiteral("Authentication token, you can also use $OPENCLOUD_TOKEN"), QStringLiteral("token")});
 
     auto silentOption = addOption({ { QStringLiteral("s"), QStringLiteral("silent") }, QStringLiteral("Don't be so verbose.") });
     auto httpproxyOption = addOption({ { QStringLiteral("httpproxy") }, QStringLiteral("Specify a http proxy to use."), QStringLiteral("http://server:port") });
@@ -337,7 +338,7 @@ CmdOptions parseOptions(const QStringList &app_args)
     }
     if (parser.isSet(tokenOption)) {
         options.token = parser.value(tokenOption).toUtf8();
-    } else {
+    } else if (options.token.isEmpty()) {
         qCritical() << "Token not set";
         parser.showHelp(EXIT_FAILURE);
     }
