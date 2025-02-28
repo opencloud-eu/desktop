@@ -29,6 +29,8 @@ public:
     MacPlatform();
     ~MacPlatform() override;
 
+    void setApplication(QCoreApplication *application) override;
+
     void migrate() override;
 
     void startServices() override;
