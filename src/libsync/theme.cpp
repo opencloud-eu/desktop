@@ -353,30 +353,9 @@ bool Theme::forceSystemNetworkProxy() const
     return false;
 }
 
-Theme::UserIDType Theme::userIDType() const
-{
-    return UserIDType::UserIDUserName;
-}
-
-QString Theme::customUserID() const
-{
-    return QString();
-}
-
-QString Theme::userIDHint() const
-{
-    return QString();
-}
-
-
 QString Theme::wizardUrlPostfix() const
 {
     return QString();
-}
-
-QString Theme::quotaBaseFolder() const
-{
-    return QStringLiteral("/");
 }
 
 QString Theme::oauthClientId() const
@@ -477,21 +456,6 @@ bool Theme::withCrashReporter() const
 #else
     return false;
 #endif
-}
-
-template <>
-OPENCLOUD_SYNC_EXPORT QString Utility::enumToDisplayName(Theme::UserIDType userIdType)
-{
-    switch (userIdType) {
-    case Theme::UserIDUserName:
-        return QCoreApplication::translate("Type of user ID", "Username");
-    case Theme::UserIDEmail:
-        return QCoreApplication::translate("Type of user ID", "E-mail address");
-    case Theme::UserIDCustom:
-        return Theme::instance()->customUserID();
-    default:
-        Q_UNREACHABLE();
-    }
 }
 
 } // end namespace client
