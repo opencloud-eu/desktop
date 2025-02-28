@@ -37,7 +37,7 @@ class JsonJob;
  *       |
  *       +----> openBrowser() open the browser after fetchWellKnown finished to the specified page
  *       |                    (or the default 'oauth2/authorize' if fetchWellKnown does not exist)
- *       |                    Then the browser will redirect to http://localhost:xxx
+ *       |                    Then the browser will redirect to http://127.0.0.1:xxx
  *       |
  *       +----> _server starts listening on a TCP port waiting for an HTTP request with a 'code'
  *                |
@@ -121,7 +121,6 @@ private:
 
     QUrl _authEndpoint;
     QUrl _tokenEndpoint;
-    QString _redirectUrl;
     QByteArray _pkceCodeVerifier;
     QByteArray _state;
 

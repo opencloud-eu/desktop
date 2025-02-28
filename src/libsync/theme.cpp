@@ -153,25 +153,11 @@ QString Theme::helpUrl() const
     return {};
 }
 
-QString Theme::overrideServerUrl() const
-{
-    return QString();
-}
 
-QString Theme::overrideServerUrlV2() const
+QUrl Theme::overrideServerUrl() const
 {
     static const auto serverOverride = qEnvironmentVariable("OPENCLOUD_OVERRIDE_SERVER_URL");
-    if (serverOverride.isEmpty()) {
-        OC_DISABLE_DEPRECATED_WARNING
-        return overrideServerUrl();
-        OC_ENABLE_DEPRECATED_WARNING
-    }
-    return serverOverride;
-}
-
-QString Theme::overrideServerPath() const
-{
-    return {};
+    return QUrl{serverOverride};
 }
 
 QUrl Theme::updateCheckUrl() const
@@ -366,11 +352,6 @@ QString Theme::oauthClientId() const
 QString Theme::oauthClientSecret() const
 {
     return QString();
-}
-
-QString Theme::oauthLocalhost() const
-{
-    return QStringLiteral("http://localhost");
 }
 
 QPair<QString, QString> Theme::oauthOverrideAuthUrl() const

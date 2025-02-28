@@ -25,7 +25,7 @@ QString OCC::Utility::enumToDisplayName(SetupWizardState state)
 {
     switch (state) {
     case SetupWizardState::ServerUrlState:
-        if (Theme::instance()->overrideServerUrlV2().isEmpty()) {
+        if (Theme::instance()->overrideServerUrl().isEmpty()) {
             return QApplication::translate("SetupWizardState", "Server URL");
         } else {
             return QApplication::translate("SetupWizardState", "Welcome");

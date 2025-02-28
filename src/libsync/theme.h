@@ -167,26 +167,9 @@ public:
      * Setting a value here will pre-define the server url.
      *
      * The respective UI controls will be disabled
-     * Deprecated: Use overrideServerUrlV2 as it allows overrides
-     */
-    Q_DECL_DEPRECATED_X("Use overrideServerUrlV2")
-    virtual QString overrideServerUrl() const;
-
-    /** Same as overrideServerUrl allows override by
      *  setting $OPENCLOUD_OVERRIDE_SERVER_URL
      */
-    QString overrideServerUrlV2() const;
-
-    /**
-     * If set to a non-empty string, the path part of the URL will be overwritten with this path.
-     * This can be used to set the end-point to a fixed location, and thereby shorten the URL that
-     * is given to the users.
-     *
-     * For example, if the URL for the product always contains `/dav` as the path, and setting that
-     * here, and the URL given to the user is `example.com`, the branded application will contact
-     * `example.com/dav`.
-     */
-    virtual QString overrideServerPath() const;
+    virtual QUrl overrideServerUrl() const;
 
     /** @return color for the setup wizard */
     virtual QColor wizardHeaderTitleColor() const;
@@ -262,12 +245,6 @@ public:
     virtual QString oauthClientId() const;
     virtual QString oauthClientSecret() const;
 
-    /**
-     * Defaults to http://localhost due to historic reasons,
-     * can be set to http://127.0.0.1 reasons.
-     * This option is only available with oauth2 not with OpenID Connect.
-     */
-    virtual QString oauthLocalhost() const;
 
     /**
      * By default the client tries to get the OAuth access endpoint and the OAuth token endpoint from /.well-known/openid-configuration
