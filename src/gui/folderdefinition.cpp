@@ -55,6 +55,7 @@ FolderDefinition::FolderDefinition(const QUuid &accountUuid, const QUrl &davUrl,
     , _displayName(displayName)
     , _accountUUID(accountUuid)
 {
+    Q_ASSERT(!_accountUUID.isNull());
 }
 
 void FolderDefinition::setPriority(uint32_t newPriority)

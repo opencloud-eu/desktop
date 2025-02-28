@@ -186,8 +186,11 @@ std::optional<qsizetype> FolderMan::loadFolders()
             // TODO: Must do better error handling
             qFatal("Could not load plugin");
         }
-
-        addFolderInternal(std::move(folderDefinition), AccountManager::instance()->account(folderDefinition.accountUUID()), std::move(vfs));
+        auto account = AccountManager::instance()->account(folderDefinition.accountUUID());
+        if (account.isNull()) {
+            qFatal("Could not load account");
+        }
+        addFolderInternal(std::move(folderDefinition), account, std::move(vfs));
     }
     settings.endArray();
 
