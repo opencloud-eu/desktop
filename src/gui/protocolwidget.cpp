@@ -187,7 +187,6 @@ void ProtocolWidget::showContextMenu(QWidget *parent, QTableView *table, Models:
             break;
         }
     }
-
     menu->popup(table->mapToGlobal(pos));
     menu->setFocus(); // For accassability
 }

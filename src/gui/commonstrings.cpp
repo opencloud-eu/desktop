@@ -28,9 +28,12 @@ QString CommonStrings::fileBrowser()
 #endif
 }
 
-QString CommonStrings::showInFileBrowser()
+QString CommonStrings::showInFileBrowser(const QString &path)
 {
-    return tr("Show in %1").arg(fileBrowser());
+    if (path.isEmpty()) {
+        return tr("Show in %1").arg(fileBrowser());
+    }
+    return tr("Show \"%1\" in %2").arg(path, fileBrowser());
 }
 
 QString CommonStrings::showInWebBrowser()

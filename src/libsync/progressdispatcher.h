@@ -16,11 +16,7 @@
 #define PROGRESSDISPATCHER_H
 
 #include "opencloudsynclib.h"
-#include <QElapsedTimer>
-#include <QHash>
-#include <QObject>
-#include <QQueue>
-#include <QTime>
+
 #include <QTimer>
 
 #include "syncfileitem.h"
