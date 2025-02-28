@@ -27,6 +27,7 @@
 #include "resources/resources.h"
 #include "theme.h"
 
+#include <QMenuBar>
 #include <QScreen>
 #include <QWindow>
 
@@ -94,6 +95,15 @@ SettingsDialog::SettingsDialog(ownCloudGui *gui, QWidget *parent)
 
     // People perceive this as a Window, so also make Ctrl+W work
     addAction(tr("Hide"), Qt::CTRL | Qt::Key_W, this, &SettingsDialog::hide);
+
+#ifdef Q_OS_MAC
+    // add About to the global menu
+    QMenuBar *menuBar = new QMenuBar(nullptr);
+    // the menu name is not displayed
+    auto *menu = menuBar->addMenu(QString());
+    // the actual name is provided by mac
+    menu->addAction(QStringLiteral("About"), gui, &ownCloudGui::slotAbout)->setMenuRole(QAction::AboutRole);
+#endif
 
     // TODO: fix sizing
     _ui->quickWidget->setFixedHeight(minimumHeight() * 0.13);
