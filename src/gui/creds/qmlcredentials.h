@@ -81,40 +81,4 @@ private:
     QPointer<OAuth> _oauth = nullptr;
     bool _ready = false;
 };
-
-class QmlBasicCredentials : public QmlCredentials
-{
-    Q_OBJECT
-    Q_PROPERTY(QString userName READ userName WRITE setUserName NOTIFY userNameChanged)
-    Q_PROPERTY(bool isReadOnlyName READ isReadOnlyName NOTIFY userNameChanged)
-    Q_PROPERTY(QString password READ password WRITE setPassword NOTIFY passwordChanged)
-    Q_PROPERTY(QString userNameLabel READ userNameLabel CONSTANT)
-    QML_ELEMENT
-    QML_UNCREATABLE("C++ only")
-
-public:
-    using QmlCredentials::QmlCredentials;
-
-    QString userNameLabel() const;
-
-    QString userName() const;
-    void setUserName(const QString &userName);
-
-    QString password() const;
-    void setPassword(const QString &password);
-
-    void setReadOnlyName(const QString &userName);
-    bool isReadOnlyName() const;
-
-    bool isReady() const override;
-Q_SIGNALS:
-    void userNameChanged() const;
-    void passwordChanged() const;
-    void loginRequested() const;
-
-private:
-    bool _readOnlyName = false;
-    QString _userName;
-    QString _password;
-};
 }
