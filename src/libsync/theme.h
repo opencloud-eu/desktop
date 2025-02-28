@@ -161,7 +161,7 @@ public:
      * If the function is overridden to return an empty string the action is removed from
      * the menu.
      */
-    virtual QString helpUrl() const;
+    virtual QUrl helpUrl() const;
 
     /**
      * Setting a value here will pre-define the server url.

@@ -148,9 +148,9 @@ bool Theme::multiAccount() const
     return true;
 }
 
-QString Theme::helpUrl() const
+QUrl Theme::helpUrl() const
 {
-    return {};
+    return QUrl(QStringLiteral("https://docs.opencloud.eu/docs/category/opencloud-desktop-1"));
 }
 
 QString Theme::overrideServerUrl() const
