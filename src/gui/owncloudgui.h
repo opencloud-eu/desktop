@@ -34,7 +34,6 @@ class Folder;
 
 class AboutDialog;
 class SettingsDialog;
-class ShareDialog;
 class Application;
 class LogBrowser;
 
@@ -48,8 +47,6 @@ class OPENCLOUD_GUI_EXPORT ownCloudGui : public QObject
 public:
     explicit ownCloudGui(Application *parent = nullptr);
     ~ownCloudGui() override;
-
-    bool checkAccountExists(bool openSettings);
 
     /**
      * Raises our main Window to the front with the raiseWidget in focus.
@@ -109,7 +106,6 @@ private:
     QMenu *_recentActionsMenu;
     QVector<QMenu *> _accountMenus;
     QTimer _delayedTrayUpdateTimer;
-    QPointer<ShareDialog> _shareDialog;
 
     QAction *_actionStatus;
 
