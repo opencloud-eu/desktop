@@ -15,15 +15,11 @@
 #pragma once
 #include "account.h"
 #include "gui/opencloudguilib.h"
-#include "progressdispatcher.h"
 #include "systray.h"
 
+#include <QMenu>
 #include <QObject>
 #include <QPointer>
-#include <QAction>
-#include <QMenu>
-#include <QSize>
-#include <QTimer>
 
 namespace OCC {
 
@@ -55,9 +51,6 @@ public:
      */
     static void raise();
 
-    /// Whether the tray menu is visible
-    bool contextMenuVisible() const;
-
     void hideAndShowTray();
 
     SettingsDialog *settingsDialog() const;
@@ -68,26 +61,16 @@ Q_SIGNALS:
     void setupProxy();
 
 public Q_SLOTS:
-    void setupContextMenu();
-    void updateContextMenu();
-    void updateContextMenuNeeded();
-    void slotContextMenuAboutToShow();
-    void slotContextMenuAboutToHide();
     void slotComputeOverallSyncStatus();
     void slotShowTrayMessage(const QString &title, const QString &msg, const QIcon &icon = {});
     void slotShowOptionalTrayMessage(const QString &title, const QString &msg, const QIcon &icon = {});
-    void slotFolderOpenAction(Folder *f);
-    void slotRebuildRecentMenus();
-    void slotUpdateProgress(Folder *folder, const ProgressInfo &progress);
     void slotFoldersChanged();
     void slotShowSettings();
     void slotShowSyncProtocol();
     void slotShutdown();
-    void slotSyncStateChange(Folder *);
     void slotTrayClicked(QSystemTrayIcon::ActivationReason reason);
     void slotToggleLogBrowser();
     void slotOpenSettingsDialog();
-    void slotHelp();
     void slotAbout();
     void slotOpenPath(const QString &path);
     void slotAccountStateChanged();
@@ -95,22 +78,15 @@ public Q_SLOTS:
 
 private:
     void setPauseOnAllFoldersHelper(const QList<AccountStatePtr> &accounts, bool pause);
-    void setupActions();
-    void addAccountContextMenu(AccountStatePtr accountState, QMenu *menu);
+
+    void updateContextMenu();
 
     Systray *_tray;
     SettingsDialog *_settingsDialog;
-    // tray's menu
-    QScopedPointer<QMenu> _contextMenu;
 
-    QMenu *_recentActionsMenu;
-    QVector<QMenu *> _accountMenus;
-    QTimer _delayedTrayUpdateTimer;
 
-    QAction *_actionStatus;
-
-    QList<QAction *> _recentItemsActions;
     Application *_app;
+
 
     // keeping a pointer on those dialogs allows us to make sure they will be shown only once
     QPointer<Wizard::SetupWizardController> _wizardController;
