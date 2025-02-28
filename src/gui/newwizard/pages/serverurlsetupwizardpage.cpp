@@ -14,9 +14,9 @@ ServerUrlSetupWizardPage::ServerUrlSetupWizardPage(const QUrl &serverUrl)
     _ui->setupUi(this);
 
     // not the best style, but we hacked such branding into the pages elsewhere, too
-    if (!Theme::instance()->overrideServerUrlV2().isEmpty()) {
+    if (!Theme::instance()->overrideServerUrl().isEmpty()) {
         // note that the text should be set before the page is displayed, this way validateInput() will enable the next button
-        _ui->urlLineEdit->setText(Theme::instance()->overrideServerUrlV2());
+        _ui->urlLineEdit->setText(Theme::instance()->overrideServerUrl().toString());
 
         _ui->urlLineEdit->hide();
         _ui->serverUrlLabel->hide();

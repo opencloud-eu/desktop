@@ -45,6 +45,10 @@ Q_LOGGING_CATEGORY(lcOauth, "sync.credentials.oauth", QtInfoMsg)
 namespace {
 
 const QString wellKnownPathC = QStringLiteral("/.well-known/openid-configuration");
+QString redirectUrlC()
+{
+    return QStringLiteral("http://127.0.0.1");
+}
 
 auto defaultOauthPromtValue()
 {
@@ -254,7 +258,6 @@ OAuth::OAuth(const QUrl &serverUrl, QNetworkAccessManager *networkAccessManager,
     , _networkAccessManager(networkAccessManager)
     , _clientId(Theme::instance()->oauthClientId())
     , _clientSecret(Theme::instance()->oauthClientSecret())
-    , _redirectUrl(Theme::instance()->oauthLocalhost())
     , _supportedPromtValues(defaultOauthPromtValue())
 {
 }
@@ -342,10 +345,10 @@ void OAuth::startAuthentication()
                 _server.close();
 
                 auto reply = postTokenRequest({
-                    { QStringLiteral("grant_type"), QStringLiteral("authorization_code") },
-                    { QStringLiteral("code"), args.queryItemValue(QStringLiteral("code")) },
-                    { QStringLiteral("redirect_uri"), QStringLiteral("%1:%2").arg(_redirectUrl, QString::number(serverPort)) },
-                    { QStringLiteral("code_verifier"), QString::fromUtf8(_pkceCodeVerifier) },
+                    {QStringLiteral("grant_type"), QStringLiteral("authorization_code")},
+                    {QStringLiteral("code"), args.queryItemValue(QStringLiteral("code"))},
+                    {QStringLiteral("redirect_uri"), QStringLiteral("%1:%2").arg(redirectUrlC(), QString::number(serverPort))},
+                    {QStringLiteral("code_verifier"), QString::fromUtf8(_pkceCodeVerifier)},
                 });
 
                 connect(reply, &QNetworkReply::finished, this, [reply, socket, this] {
@@ -425,7 +428,6 @@ void OAuth::finalize(const QPointer<QTcpSocket> &socket, const QString &accessTo
 
 QNetworkReply *OAuth::postTokenRequest(QUrlQuery &&queryItems)
 {
-    const QUrl requestTokenUrl = _tokenEndpoint.isEmpty() ? Utility::concatUrlPath(_serverUrl, QStringLiteral("/index.php/apps/oauth2/api/v1/token")) : _tokenEndpoint;
     QNetworkRequest req;
     req.setTransferTimeout(defaultTimeoutMs());
     switch (_endpointAuthMethod) {
@@ -444,7 +446,7 @@ QNetworkReply *OAuth::postTokenRequest(QUrlQuery &&queryItems)
     req.setAttribute(HttpCredentials::DontAddCredentialsAttribute, true);
 
     queryItems.addQueryItem(QStringLiteral("scope"), QString::fromUtf8(QUrl::toPercentEncoding(Theme::instance()->openIdConnectScopes())));
-    req.setUrl(requestTokenUrl);
+    req.setUrl(_tokenEndpoint);
     return _networkAccessManager->post(req, queryItems.toString(QUrl::FullyEncoded).toUtf8());
 }
 
@@ -466,7 +468,7 @@ QUrl OAuth::authorisationLink() const
     QUrlQuery query{
         {QStringLiteral("response_type"), QStringLiteral("code")},
         {QStringLiteral("client_id"), _clientId},
-        {QStringLiteral("redirect_uri"), QStringLiteral("%1:%2").arg(_redirectUrl, QString::number(_server.serverPort()))},
+        {QStringLiteral("redirect_uri"), QStringLiteral("%1:%2").arg(redirectUrlC(), QString::number(_server.serverPort()))},
         {QStringLiteral("code_challenge"), QString::fromLatin1(code_challenge)},
         {QStringLiteral("code_challenge_method"), QStringLiteral("S256")},
         {QStringLiteral("scope"), QString::fromUtf8(QUrl::toPercentEncoding(Theme::instance()->openIdConnectScopes()))},
@@ -477,11 +479,7 @@ QUrl OAuth::authorisationLink() const
     if (!_idToken.preferred_username().isEmpty()) {
         query.addQueryItem(QStringLiteral("login_hint"), QString::fromUtf8(QUrl::toPercentEncoding(_idToken.preferred_username())));
     }
-    const QUrl url = _authEndpoint.isValid()
-        ? Utility::concatUrlPath(_authEndpoint, {}, query)
-        : Utility::concatUrlPath(_serverUrl, QStringLiteral("/index.php/apps/oauth2/authorize"), query);
-
-    return url;
+    return Utility::concatUrlPath(_authEndpoint, {}, query);
 }
 
 void OAuth::saveDynamicRegistrationDataForAccount(const OCC::AccountPtr &accountPtr, const QVariantMap &dynamicRegistrationData)
@@ -528,8 +526,8 @@ void OAuth::fetchWellKnown()
 
     if (!urls.first.isNull()) {
         OC_ASSERT(!urls.second.isNull());
-        _authEndpoint = QUrl::fromUserInput(urls.first);
-        _tokenEndpoint = QUrl::fromUserInput(urls.second);
+        _authEndpoint = QUrl(urls.first);
+        _tokenEndpoint = QUrl(urls.second);
 
         qCDebug(lcOauth) << "override URL set, using auth endpoint" << _authEndpoint << "and token endpoint" << _tokenEndpoint;
 
@@ -549,8 +547,7 @@ void OAuth::fetchWellKnown()
             _wellKnownFinished = true;
             if (reply->error() != QNetworkReply::NoError) {
                 qCDebug(lcOauth) << "failed to fetch .well-known reply, error:" << reply->error();
-                // Most likely the file does not exist, default to the normal endpoint
-                Q_EMIT fetchWellKnownFinished();
+                Q_EMIT result(Error);
                 return;
             }
             QJsonParseError err = {};
@@ -559,7 +556,6 @@ void OAuth::fetchWellKnown()
                 _authEndpoint = QUrl::fromEncoded(data[QStringLiteral("authorization_endpoint")].toString().toUtf8());
                 _tokenEndpoint = QUrl::fromEncoded(data[QStringLiteral("token_endpoint")].toString().toUtf8());
                 _registrationEndpoint = QUrl::fromEncoded(data[QStringLiteral("registration_endpoint")].toString().toUtf8());
-                _redirectUrl = QStringLiteral("http://127.0.0.1");
 
                 if (_clientSecret.isEmpty()) {
                     _endpointAuthMethod = TokenEndpointAuthMethods::none;
