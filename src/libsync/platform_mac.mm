@@ -173,27 +173,35 @@ class MacPlatformPrivate
 public:
     ~MacPlatformPrivate() { [autoReleasePool release]; }
     NSAutoreleasePool *autoReleasePool = [[NSAutoreleasePool alloc] init];
-    OwnAppDelegate *appDelegate;
+    OwnAppDelegate *appDelegate = nullptr;
     PowerNotificationsListener listener;
 };
 
 MacPlatform::MacPlatform()
     : d_ptr(new MacPlatformPrivate)
 {
-    Q_D(MacPlatform);
-
-    NSApplicationLoad();
-    d->appDelegate = [[OwnAppDelegate alloc] init];
-    d->appDelegate.platform = this;
-    [[NSApplication sharedApplication] setDelegate:d->appDelegate];
-
     signal(SIGPIPE, SIG_IGN);
 }
 
 MacPlatform::~MacPlatform()
 {
     Q_D(MacPlatform);
-    [d->appDelegate release];
+    if (d->appDelegate) {
+        [d->appDelegate release];
+    }
+}
+
+void MacPlatform::setApplication(QCoreApplication *application)
+{
+    Platform::setApplication(application);
+    // only register the delegate resposible for showing up in the dock if we are a core application like the cmd app
+    if (qobject_cast<QApplication *>(application)) {
+        Q_D(MacPlatform);
+        NSApplicationLoad();
+        d->appDelegate = [[OwnAppDelegate alloc] init];
+        d->appDelegate.platform = this;
+        [[NSApplication sharedApplication] setDelegate:d->appDelegate];
+    }
 }
 
 void MacPlatform::migrate()
