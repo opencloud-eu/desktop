@@ -19,6 +19,7 @@
 #include "common/syncjournaldb.h"
 #include "common/version.h"
 #include "configfile.h" // ONLY ACCESS THE STATIC FUNCTIONS!
+#include "libsync/graphapi/spacesmanager.h"
 #include "libsync/logger.h"
 #include "libsync/theme.h"
 #include "networkjobs/checkserverjobfactory.h"
@@ -39,15 +40,52 @@
 #include <memory>
 #include <random>
 
+#include <zlib.h>
+
 
 using namespace OCC;
 
 namespace {
+// start in quiet mode
+bool logQuietMode = true;
+
+void messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &message)
+{
+    if (std::strcmp(context.category, "default")) {
+        if (logQuietMode) {
+            return;
+        }
+        std::cerr << qPrintable(qFormatLogMessage(type, context, message)) << std::endl;
+    } else {
+        switch (type) {
+        case QtInfoMsg:
+            std::cout << qPrintable(message) << std::endl;
+            return;
+        case QtDebugMsg:
+            // ignore debug message if we are in quiet mode
+            if (logQuietMode) {
+                return;
+            }
+            std::cerr << "Debug";
+            break;
+        case QtWarningMsg:
+            std::cerr << "Warning";
+            break;
+        case QtCriticalMsg:
+            std::cerr << "Critical";
+            break;
+        case QtFatalMsg:
+            std::cerr << "Fatal: " << qPrintable(message) << std::endl;
+            exit(EXIT_FAILURE);
+        }
+        std::cerr << ": " << qPrintable(message) << std::endl;
+    }
+}
 
 struct CmdOptions
 {
     QString source_dir;
-    QUrl target_url;
+    QString space_id;
     QUrl server_url;
     QString remoteFolder;
 
@@ -55,7 +93,7 @@ struct CmdOptions
     QByteArray token = qgetenv("OPENCLOUD_TOKEN");
 
     QString proxy;
-    bool silent = false;
+    bool query = false;
     bool trustSSL = false;
     bool interactive = true;
     bool ignoreHiddenFiles = true;
@@ -102,7 +140,7 @@ void selectiveSyncFixup(OCC::SyncJournalDb *journal, const QSet<QString> &newLis
 }
 
 
-void sync(const SyncCTX &ctx)
+void sync(const SyncCTX &ctx, const QUrl &spaceUrl)
 {
     const auto selectiveSyncList = [&]() -> QSet<QString> {
         if (!ctx.options.unsyncedfolders.isEmpty()) {
@@ -134,8 +172,7 @@ void sync(const SyncCTX &ctx)
     }
 
     SyncOptions opt{QSharedPointer<Vfs>(VfsPluginManager::instance().createVfsFromPlugin(Vfs::Off).release())};
-    auto engine = new SyncEngine(
-        ctx.account, ctx.options.target_url, ctx.options.source_dir, ctx.options.remoteFolder, db);
+    auto engine = new SyncEngine(ctx.account, spaceUrl, ctx.options.source_dir, ctx.options.remoteFolder, db);
     engine->setSyncOptions(opt);
     engine->setParent(db);
 
@@ -247,6 +284,26 @@ void setupCredentials(SyncCTX &ctx)
         });
     }
 }
+
+QString hashSaceId(const QString &id)
+{
+    auto adler = adler32_z(0, nullptr, 0);
+    adler = adler32_z(adler, reinterpret_cast<Bytef *>(id.toUtf8().data()), id.size());
+    return QStringLiteral("space:%1").arg(QString::number(adler, 16));
+}
+
+void printSpaces(const QVector<GraphApi::Space *> &spaces)
+{
+    auto printTable = [](const QString &a, const QString &b, const QString &c) {
+        qInfo().noquote() << QStringLiteral("%1 | %2 | %3").arg(a, 15).arg(b, 20).arg(c);
+    };
+    qInfo() << "Listing spaces:";
+    printTable(QStringLiteral("Short ID"), QStringLiteral("DisplayName"), QStringLiteral("ID"));
+    printTable(QString().fill(QLatin1Char('-'), 15), QString().fill(QLatin1Char('-'), 20), QString().fill(QLatin1Char('-'), 20));
+    for (auto *s : spaces) {
+        printTable(hashSaceId(s->id()), s->displayName(), s->id());
+    }
+}
 }
 
 CmdOptions parseOptions(const QStringList &app_args)
@@ -263,14 +320,14 @@ CmdOptions parseOptions(const QStringList &app_args)
         parser.addOption(option);
         return option;
     };
-
-    auto serverOption = addOption({{QStringLiteral("server")}, QStringLiteral("The URL for the server"), QStringLiteral("url")});
     auto userOption = addOption({{QStringLiteral("u"), QStringLiteral("user")}, QStringLiteral("Username"), QStringLiteral("name")});
     auto tokenOption = addOption(
         {{QStringLiteral("t"), QStringLiteral("token")}, QStringLiteral("Authentication token, you can also use $OPENCLOUD_TOKEN"), QStringLiteral("token")});
 
-    auto silentOption = addOption({ { QStringLiteral("s"), QStringLiteral("silent") }, QStringLiteral("Don't be so verbose.") });
-    auto httpproxyOption = addOption({ { QStringLiteral("httpproxy") }, QStringLiteral("Specify a http proxy to use."), QStringLiteral("http://server:port") });
+    auto remoteFolder =
+        addOption({{QStringLiteral("remote-folder")}, QStringLiteral("A subdirectory of the space that is sysnced"), QStringLiteral("remote-folder")});
+    auto quietOption = addOption({{QStringLiteral("q"), QStringLiteral("quiet")}, QStringLiteral("Disable logging")});
+    auto httpproxyOption = addOption({{QStringLiteral("httpproxy")}, QStringLiteral("Specify a http proxy to use"), QStringLiteral("http://server:port")});
     auto trustOption = addOption({ { QStringLiteral("trust") }, QStringLiteral("Trust the SSL certification") });
     auto excludeOption = addOption({ { QStringLiteral("exclude") }, QStringLiteral("Path to an exclude list [file]"), QStringLiteral("file") });
     auto unsyncedfoldersOption = addOption({ { QStringLiteral("unsyncedfolders") }, QStringLiteral("File containing the list of unsynced remote folders (selective sync)"), QStringLiteral("file") });
@@ -289,52 +346,67 @@ CmdOptions parseOptions(const QStringList &app_args)
     parser.addHelpOption();
     parser.addVersionOption();
 
+    parser.addPositionalArgument(
+        QStringLiteral("server_url"), QStringLiteral("The URL to the OpenCloud installation on the server. This is usually the root path"));
+    parser.addPositionalArgument(QStringLiteral("space_id"), QStringLiteral("The id of the space to synchronize"));
     parser.addPositionalArgument(QStringLiteral("source_dir"), QStringLiteral("The source dir"));
-    parser.addPositionalArgument(QStringLiteral("space_url"), QStringLiteral("The URL to the space"));
-    parser.addPositionalArgument(QStringLiteral("remote_folder"), QStringLiteral("A remote folder"), QStringLiteral("[remote folder]"));
 
     parser.process(app_args);
 
 
-    const QStringList args = parser.positionalArguments();
-    if (args.size() < 2 || args.size() > 3) {
+    logQuietMode = parser.isSet(quietOption);
+
+    QStringList args = parser.positionalArguments();
+    if (!args.isEmpty()) {
+        options.server_url = QUrl::fromUserInput(args.takeFirst());
+        if (!options.server_url.isValid()) {
+            qCritical() << "Invalid url: " << options.server_url.toString();
+            parser.showHelp(EXIT_FAILURE);
+        }
+    } else {
+        qCritical() << "Please specify server_url";
         parser.showHelp(EXIT_FAILURE);
     }
 
-    options.source_dir = [&parser, arg = args[0]] {
-        const QFileInfo fi(arg);
-        if (!fi.exists()) {
-            qCritical() << "Source dir" << arg << "does not exist.";
-            parser.showHelp(EXIT_FAILURE);
-        }
-        QString sourceDir = fi.absoluteFilePath();
-        if (!sourceDir.endsWith(QLatin1Char('/'))) {
-            sourceDir.append(QLatin1Char('/'));
-        }
-        return sourceDir;
-    }();
-    options.target_url = QUrl::fromUserInput(args[1]);
-    if (args.size() == 3) {
-        options.remoteFolder = args[2];
+    if (!args.isEmpty()) {
+        options.space_id = args.takeFirst();
+    } else {
+        options.query = true;
+    }
+
+    if (!args.isEmpty()) {
+        options.source_dir = [&parser, arg = args.takeFirst()] {
+            const QFileInfo fi(arg);
+            if (!fi.exists()) {
+                qCritical() << "Source dir" << fi.filePath() << "does not exist.";
+                parser.showHelp(EXIT_FAILURE);
+            }
+            QString sourceDir = fi.absoluteFilePath();
+            if (!sourceDir.endsWith(QLatin1Char('/'))) {
+                sourceDir.append(QLatin1Char('/'));
+            }
+            return sourceDir;
+        }();
+    }
+
+    if (!args.isEmpty()) {
+        qCritical() << "Unhandled arguments" << args;
+        parser.showHelp(EXIT_FAILURE);
+    }
+
+    if (parser.isSet(remoteFolder)) {
+        options.remoteFolder = parser.value(remoteFolder);
     }
 
     if (parser.isSet(httpproxyOption)) {
         options.proxy = parser.value(httpproxyOption);
     }
-    if (parser.isSet(silentOption)) {
-        options.silent = true;
-    }
+
     if (parser.isSet(trustOption)) {
         options.trustSSL = true;
     }
     if (parser.isSet(nonInterActiveOption)) {
         options.interactive = false;
-    }
-    if (parser.isSet(serverOption)) {
-        options.server_url = QUrl::fromUserInput(parser.value(serverOption));
-    } else {
-        qCritical() << "Server not set";
-        parser.showHelp(EXIT_FAILURE);
     }
     if (parser.isSet(tokenOption)) {
         options.token = parser.value(tokenOption).toUtf8();
@@ -381,6 +453,8 @@ CmdOptions parseOptions(const QStringList &app_args)
 int main(int argc, char **argv)
 {
     auto platform = OCC::Platform::create();
+    qSetMessagePattern(Logger::loggerPattern());
+    qInstallMessageHandler(messageHandler);
 
     QCoreApplication app(argc, argv);
 
@@ -393,12 +467,6 @@ int main(int argc, char **argv)
 
     // start the main loop before we ask for the username etc
     QTimer::singleShot(0, &app, [&] {
-        if (ctx.options.silent) {
-            qInstallMessageHandler([](QtMsgType, const QMessageLogContext &, const QString &) {});
-        } else {
-            qSetMessagePattern(Logger::loggerPattern());
-        }
-
         ctx.account = Account::create(QUuid::createUuid());
 
         if (!ctx.account) {
@@ -410,9 +478,6 @@ int main(int argc, char **argv)
 
         // don't leak credentials more than needed
         ctx.options.server_url = ctx.options.server_url.adjusted(QUrl::RemoveUserInfo);
-        ctx.options.target_url = ctx.options.target_url.adjusted(QUrl::RemoveUserInfo);
-
-
         ctx.account->setUrl(ctx.options.server_url);
 
         auto *checkServerJob = CheckServerJobFactory(ctx.account->accessManager()).startJob(ctx.account->url(), qApp);
@@ -447,18 +512,55 @@ int main(int argc, char **argv)
                         exit(EXIT_FAILURE);
                     }
 
-                    // much lower age than the default since this utility is usually made to be run right after a change in the tests
-                    SyncEngine::minimumFileAgeForUpload = std::chrono::seconds(0);
-                    sync(ctx);
+                    if (ctx.options.query) {
+                        QObject::connect(ctx.account->spacesManager(), &GraphApi::SpacesManager::ready, qApp, [ctx] {
+                            printSpaces(ctx.account->spacesManager()->spaces());
+                            qApp->quit();
+                        });
+                    } else {
+                        QObject::connect(ctx.account->spacesManager(), &GraphApi::SpacesManager::ready, qApp, [ctx] {
+                            GraphApi::Space *space = nullptr;
+                            if (ctx.options.space_id.count(QLatin1Char('$')) == 1) {
+                                space = ctx.account->spacesManager()->space(ctx.options.space_id);
+                            } else {
+                                const auto spaces = ctx.account->spacesManager()->spaces();
+                                if (ctx.options.space_id.startsWith(QLatin1String("space:"))) {
+                                    auto it = std::find_if(
+                                        spaces.cbegin(), spaces.cend(), [&](const GraphApi::Space *s) { return hashSaceId(s->id()) == ctx.options.space_id; });
+                                    if (it != spaces.cend()) {
+                                        space = *it;
+                                    }
+                                } else {
+                                    auto it = std::find_if(
+                                        spaces.cbegin(), spaces.cend(), [&](const GraphApi::Space *s) { return s->displayName() == ctx.options.space_id; });
+                                    if (it != spaces.cend()) {
+                                        space = *it;
+                                    }
+                                }
+                            }
+                            if (!space) {
+                                qCritical() << "No spaces found matching:" << ctx.options.space_id;
+                                printSpaces(ctx.account->spacesManager()->spaces());
+                                qApp->exit(EXIT_FAILURE);
+                                return;
+                            }
+
+                            // much lower age than the default since this utility is usually made to be run right after a change in the tests
+                            SyncEngine::minimumFileAgeForUpload = std::chrono::seconds(0);
+                            sync(ctx, space->webdavUrl());
+                        });
+                    }
+
+                    // announce we are ready
+                    Q_EMIT ctx.account->credentialsFetched();
                 });
                 capabilitiesJob->start();
             } else {
                 if (checkServerJob->reply()->error() == QNetworkReply::OperationCanceledError) {
-                    qCritical() << "Looking up " << ctx.account->url().toString() << " timed out.";
+                    qFatal() << "Looking up " << ctx.account->url().toString() << " timed out.";
                 } else {
-                    qCritical() << "Failed to resolve " << ctx.account->url().toString() << " Error: " << checkServerJob->reply()->errorString();
+                    qFatal() << "Failed to resolve " << ctx.account->url().toString() << " Error: " << checkServerJob->reply()->errorString();
                 }
-                exit(EXIT_FAILURE);
             }
         });
     });
