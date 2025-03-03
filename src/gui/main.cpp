@@ -215,6 +215,7 @@ void setupLogging(const CommandLineOptions &options)
 {
     // might be called from second instance
     auto logger = Logger::instance();
+    logger->install();
     // call setLogFlush first, other log settings might already imply flushing
     // so setting it false in the end will have undesired results.
     logger->setLogFlush(options.logFlush);
