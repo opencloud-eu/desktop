@@ -124,7 +124,7 @@ bool AccountManager::restore()
     return true;
 }
 
-void AccountManager::save(bool saveCredentials)
+void AccountManager::save()
 {
     auto settings = ConfigFile::makeQSettings();
     settings.remove(accountsC());
@@ -143,15 +143,6 @@ void AccountManager::save(bool saveCredentials)
         }
         if (account->hasDefaultSyncRoot()) {
             settings.setValue(defaultSyncRootC(), account->defaultSyncRoot());
-        }
-        if (account->_credentials) {
-            if (saveCredentials) {
-                // Only persist the credentials if the parameter is set, on migration from 1.8.x
-                // we want to save the accounts but not overwrite the credentials
-                // (This is easier than asynchronously fetching the credentials from keychain and then
-                // re-persisting them)
-                account->_credentials->persist();
-            }
         }
 
         // Save accepted certificates.
@@ -225,7 +216,7 @@ void AccountManager::deleteAccount(AccountStatePtr account)
     Q_EMIT accountRemoved(account);
     Q_EMIT accountsChanged();
     account->deleteLater();
-    save(false);
+    save();
 }
 
 AccountPtr AccountManager::createAccount(const QUuid &uuid)
@@ -245,10 +236,7 @@ void AccountManager::shutdown()
 AccountStatePtr AccountManager::addAccountState(std::unique_ptr<AccountState> &&accountState)
 {
     auto *rawAccount = accountState->account().data();
-    connect(rawAccount, &Account::wantsAccountSaved, this, [this] {
-        // persis the account, not the credentials, we don't know whether they are ready yet
-        save(false);
-    });
+    connect(rawAccount, &Account::wantsAccountSaved, this, &AccountManager::save);
 
     AccountStatePtr statePtr = accountState.release();
     _accounts.insert(statePtr->account()->uuid(), statePtr);

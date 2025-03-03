@@ -79,6 +79,7 @@ AccountPtr SetupWizardAccountBuilder::build()
 
     // TODO: perhaps _authenticationStrategy->setUpAccountPtr(...) would be more elegant? no need for getters then
     newAccountPtr->setCredentials(_authenticationStrategy->makeCreds());
+    newAccountPtr->credentials()->persist();
 
     newAccountPtr->setDavDisplayName(_displayName);
 

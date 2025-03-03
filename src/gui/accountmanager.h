@@ -43,12 +43,12 @@ public:
     ~AccountManager() override {}
 
     /**
-     * Saves the accounts to a given settings file
+     * Saves the accounts
      */
-    void save(bool saveCredentials = true);
+    void save();
 
     /**
-     * Creates account objects from a given settings file.
+     * Creates account objects from settings.
      *
      * Returns false if there was an error reading the settings,
      * but note that settings not existing is not an error.
