@@ -431,7 +431,7 @@ void ownCloudGui::runNewAccountWizard()
                                 // saving once after adding makes sure the account is stored in the config in a working state
                                 // this is needed to ensure a consistent state in the config file upon unexpected terminations of the client
                                 // (for instance, when running from a debugger and stopping the process from there)
-                                AccountManager::instance()->save(true);
+                                AccountManager::instance()->save();
 
                                 // only now, we can store the dynamic registration data in the keychain
                                 if (!dynamicRegistrationData.isEmpty()) {
