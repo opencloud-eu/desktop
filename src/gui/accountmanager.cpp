@@ -110,12 +110,10 @@ bool AccountManager::restore()
 
         acc->setCredentials(new HttpCredentialsGui);
 
-        // now the server cert, it is in the general group
-        settings.beginGroup(QStringLiteral("General"));
+        // now the server cert
         const auto certs = QSslCertificate::fromData(settings.value(caCertsKeyC()).toByteArray());
         qCInfo(lcAccountManager) << "Restored: " << certs.count() << " unknown certs.";
         acc->setApprovedCerts(certs);
-        settings.endGroup();
 
         if (auto accState = AccountState::loadFromSettings(acc, settings)) {
             addAccountState(std::move(accState));
@@ -157,7 +155,6 @@ void AccountManager::save(bool saveCredentials)
         }
 
         // Save accepted certificates.
-        settings.beginGroup("General");
         qCInfo(lcAccountManager) << "Saving " << account->approvedCerts().count() << " unknown certs.";
         const auto approvedCerts = account->approvedCerts();
         QByteArray certs;
@@ -167,7 +164,6 @@ void AccountManager::save(bool saveCredentials)
         if (!certs.isEmpty()) {
             settings.setValue(caCertsKeyC(), certs);
         }
-        settings.endGroup();
 
         // save the account state
         this->account(account->uuid())->writeToSettings(settings);
