@@ -100,9 +100,6 @@ FolderMan::FolderMan()
             f->slotWatchedPathsChanged({path}, Folder::ChangeReason::UnLock);
         }
     });
-
-    // directly save changes
-    connect(this, &FolderMan::folderListChanged, this, &FolderMan::saveFolders, Qt::DirectConnection);
 }
 
 FolderMan *FolderMan::instance()
@@ -421,6 +418,7 @@ Folder *FolderMan::addFolder(const AccountStatePtr &accountState, const FolderDe
         Q_EMIT folderSyncStateChange(folder);
         Q_EMIT folderListChanged();
     }
+    saveFolders();
 
     return folder;
 }
@@ -497,6 +495,7 @@ void FolderMan::removeFolder(Folder *f)
 
     Q_EMIT folderRemoved(f);
     Q_EMIT folderListChanged();
+    saveFolders();
 }
 
 QString FolderMan::getBackupName(QString fullPathName) const
