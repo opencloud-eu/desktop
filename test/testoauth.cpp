@@ -15,7 +15,7 @@
 
 using namespace std::chrono_literals;
 using namespace OCC;
-
+namespace {
 class DesktopServiceHook : public QObject
 {
     Q_OBJECT
@@ -27,8 +27,9 @@ public:
     ~DesktopServiceHook() { QDesktopServices::unsetUrlHandler(QStringLiteral("oauthtest")); }
 };
 
-static const QUrl sOAuthTestServer(QStringLiteral("oauthtest://someserver/opencloud"));
-
+const QUrl sOAuthTestServer(QStringLiteral("oauthtest://someserver/opencloud"));
+const QString localHost{QStringLiteral("127.0.0.1")};
+}
 
 class FakePostReply : public QNetworkReply
 {
@@ -102,8 +103,6 @@ public:
     enum State { StartState, StatusPhpState, BrowserOpened, TokenAsked, CustomState } state = StartState;
     Q_ENUM(State);
 
-    // for oauth2 we use localhost, for oidc we use 127.0.0.1
-    QString localHost = QStringLiteral("localhost");
     bool replyToBrowserOk = false;
     bool gotAuthOk = false;
     virtual bool done() const { return replyToBrowserOk && gotAuthOk; }
@@ -195,7 +194,7 @@ public:
         state = TokenAsked;
         OC_ASSERT(op == QNetworkAccessManager::PostOperation);
         OC_ASSERT(req.url().toString().startsWith(sOAuthTestServer.toString()));
-        OC_ASSERT(req.url().path() == sOAuthTestServer.path() + QStringLiteral("/index.php/apps/oauth2/api/v1/token"));
+        OC_ASSERT(req.url().path() == sOAuthTestServer.path() + QStringLiteral("/token_endpoint"));
         auto payload = std::make_unique<QBuffer>();
         payload->setData(tokenReplyPayload());
         return new FakePostReply(op, req, std::move(payload), fakeAm);
@@ -215,7 +214,14 @@ public:
 
     virtual QNetworkReply *wellKnownReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req)
     {
-        return new FakeErrorReply(op, req, fakeAm, 404);
+        OC_ASSERT(op == QNetworkAccessManager::GetOperation);
+        QJsonDocument jsondata(QJsonObject{
+            {QStringLiteral("authorization_endpoint"),
+                QJsonValue(Utility::concatUrlPath(sOAuthTestServer, QStringLiteral("/index.php/apps/oauth2/authorize")).toString())},
+            {QStringLiteral("token_endpoint"), Utility::concatUrlPath(sOAuthTestServer, QStringLiteral("token_endpoint")).toString()},
+            {QStringLiteral("token_endpoint_auth_methods_supported"), QJsonArray{QStringLiteral("client_secret_post")}},
+        });
+        return new FakePayloadReply(op, req, jsondata.toJson(), fakeAm);
     }
 
     virtual QNetworkReply *clientRegistrationReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req)
@@ -407,44 +413,6 @@ private Q_SLOTS:
         test.test();
     }
 
-    void testWellKnown() {
-        struct Test : OAuthTestCase {
-            Test()
-            {
-                localHost = QStringLiteral("127.0.0.1");
-            }
-
-            QNetworkReply * wellKnownReply(QNetworkAccessManager::Operation op, const QNetworkRequest & req) override {
-                OC_ASSERT(op == QNetworkAccessManager::GetOperation);
-                QJsonDocument jsondata(QJsonObject{
-                    {QStringLiteral("authorization_endpoint"),
-                        QJsonValue(QStringLiteral("oauthtest://openidserver") + sOAuthTestServer.path() + QStringLiteral("/index.php/apps/oauth2/authorize"))},
-                    {QStringLiteral("token_endpoint"), QStringLiteral("oauthtest://openidserver/token_endpoint")},
-                    {QStringLiteral("token_endpoint_auth_methods_supported"), QJsonArray{QStringLiteral("client_secret_post")}},
-                });
-                return new FakePayloadReply(op, req, jsondata.toJson(), fakeAm);
-            }
-
-            void openBrowserHook(const QUrl & url) override {
-                OC_ASSERT(url.host() == QStringLiteral("openidserver"));
-                QUrl url2 = url;
-                url2.setHost(sOAuthTestServer.host());
-                OAuthTestCase::openBrowserHook(url2);
-            }
-
-            QNetworkReply *tokenReply(QNetworkAccessManager::Operation op, const QNetworkRequest &request, QIODevice *device) override
-            {
-                OC_ASSERT(browserReply);
-                OC_ASSERT(request.url().toString().startsWith(QStringLiteral("oauthtest://openidserver/token_endpoint")));
-                auto req = request;
-                req.setUrl(QUrl(request.url().toString().replace(QLatin1String("oauthtest://openidserver/token_endpoint"),
-                    sOAuthTestServer.toString() + QStringLiteral("/index.php/apps/oauth2/api/v1/token"))));
-                return OAuthTestCase::tokenReply(op, req, device);
-            }
-        } test;
-        test.test();
-    }
-
 
     void testTimeout()
     {
@@ -455,7 +423,6 @@ private Q_SLOTS:
             Test()
                 : rollback(AbstractNetworkJob::httpTimeout, 1s)
             {
-                localHost = QStringLiteral("127.0.0.1");
             }
 
             QNetworkReply *statusPhpReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req) override
@@ -484,10 +451,7 @@ private Q_SLOTS:
         // when this fails we fall back to the default client id and secret
         struct Test : OAuthTestCase
         {
-            Test()
-            {
-                localHost = QStringLiteral("127.0.0.1");
-            }
+            Test() { }
 
             QNetworkReply *wellKnownReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req) override
             {
@@ -516,8 +480,8 @@ private Q_SLOTS:
                 OC_ASSERT(request.url().toString().startsWith(QStringLiteral("oauthtest://openidserver/token_endpoint")));
                 auto req = request;
                 qDebug() << request.url() << request.url().query();
-                req.setUrl(QUrl(request.url().toString().replace(QLatin1String("oauthtest://openidserver/token_endpoint"),
-                    sOAuthTestServer.toString() + QStringLiteral("/index.php/apps/oauth2/api/v1/token"))));
+                req.setUrl(QUrl(request.url().toString().replace(
+                    QLatin1String("oauthtest://openidserver/token_endpoint"), sOAuthTestServer.toString() + QStringLiteral("/token_endpoint"))));
                 return OAuthTestCase::tokenReply(op, req, device);
             }
         } test;
@@ -530,7 +494,7 @@ private Q_SLOTS:
         // when this fails we fall back to the default client id and secret
         struct Test : OAuthTestCase
         {
-            Test() { localHost = QStringLiteral("127.0.0.1"); }
+            Test() { }
 
             QNetworkReply *wellKnownReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req) override
             {
@@ -560,8 +524,8 @@ private Q_SLOTS:
                 OC_ASSERT(request.url().toString().startsWith(QStringLiteral("oauthtest://openidserver/token_endpoint")));
                 auto req = request;
                 qDebug() << request.url() << request.url().query();
-                req.setUrl(QUrl(request.url().toString().replace(QLatin1String("oauthtest://openidserver/token_endpoint"),
-                    sOAuthTestServer.toString() + QStringLiteral("/index.php/apps/oauth2/api/v1/token"))));
+                req.setUrl(QUrl(request.url().toString().replace(
+                    QLatin1String("oauthtest://openidserver/token_endpoint"), sOAuthTestServer.toString() + QStringLiteral("/token_endpoint"))));
                 return OAuthTestCase::tokenReply(op, req, device);
             }
 
@@ -580,11 +544,7 @@ private Q_SLOTS:
         // this means that the client id and secret are provided by the server
         struct Test : OAuthTestCase
         {
-            Test()
-            {
-                localHost = QStringLiteral("127.0.0.1");
-                _expectedClientId = QStringLiteral("3e4ea0f3-59ea-434a-92f2-b0d3b54443e9");
-            }
+            Test() { _expectedClientId = QStringLiteral("3e4ea0f3-59ea-434a-92f2-b0d3b54443e9"); }
 
             QNetworkReply *wellKnownReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req) override
             {
@@ -614,8 +574,8 @@ private Q_SLOTS:
                 OC_ASSERT(request.url().toString().startsWith(QStringLiteral("oauthtest://openidserver/token_endpoint")));
                 auto req = request;
                 qDebug() << request.url() << request.url().query();
-                req.setUrl(QUrl(request.url().toString().replace(QStringLiteral("oauthtest://openidserver/token_endpoint"),
-                    sOAuthTestServer.toString() + QStringLiteral("/index.php/apps/oauth2/api/v1/token"))));
+                req.setUrl(QUrl(request.url().toString().replace(
+                    QStringLiteral("oauthtest://openidserver/token_endpoint"), sOAuthTestServer.toString() + QStringLiteral("/token_endpoint"))));
                 return OAuthTestCase::tokenReply(op, req, device);
             }
 
@@ -665,11 +625,7 @@ private Q_SLOTS:
         struct Test : OAuthTestCase
         {
             QString _expectedClientSecret = QStringLiteral("rmoEXFc1Z5tGTApxanBW7STlWODqRTYx");
-            Test()
-            {
-                localHost = QStringLiteral("127.0.0.1");
-                _expectedClientId = QStringLiteral("3e4ea0f3-59ea-434a-92f2-b0d3b54443e9");
-            }
+            Test() { _expectedClientId = QStringLiteral("3e4ea0f3-59ea-434a-92f2-b0d3b54443e9"); }
 
             QNetworkReply *wellKnownReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req) override
             {
@@ -699,8 +655,8 @@ private Q_SLOTS:
                 // OC_ASSERT(query.queryItemValue(QStringLiteral("client_secret")) == _expectedClientSecret);
 
                 qDebug() << request.url() << request.url().query() << device->peek(device->size());
-                req.setUrl(QUrl(request.url().toString().replace(QStringLiteral("oauthtest://openidserver/token_endpoint"),
-                    sOAuthTestServer.toString() + QStringLiteral("/index.php/apps/oauth2/api/v1/token"))));
+                req.setUrl(QUrl(request.url().toString().replace(
+                    QStringLiteral("oauthtest://openidserver/token_endpoint"), sOAuthTestServer.toString() + QStringLiteral("/token_endpoint"))));
 
                 // OAuthTestCase::tokenReply expects BrowserOpened
                 state = BrowserOpened;
@@ -752,7 +708,7 @@ private Q_SLOTS:
         // client id and secret
         struct Test : OAuthTestCase
         {
-            Test() { localHost = QStringLiteral("127.0.0.1"); }
+            Test() { }
 
             QNetworkReply *wellKnownReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req) override
             {
@@ -778,8 +734,8 @@ private Q_SLOTS:
                 OC_ASSERT(query.queryItemValue(QStringLiteral("refresh_token")) == QLatin1String("foo"));
                 OC_ASSERT(query.queryItemValue(QStringLiteral("client_id")) == _expectedClientId);
                 OC_ASSERT(query.queryItemValue(QStringLiteral("client_secret")) == Theme::instance()->oauthClientSecret());
-                req.setUrl(QUrl(request.url().toString().replace(QStringLiteral("oauthtest://openidserver/token_endpoint"),
-                    sOAuthTestServer.toString() + QStringLiteral("/index.php/apps/oauth2/api/v1/token"))));
+                req.setUrl(QUrl(request.url().toString().replace(
+                    QStringLiteral("oauthtest://openidserver/token_endpoint"), sOAuthTestServer.toString() + QStringLiteral("/token_endpoint"))));
 
                 // OAuthTestCase::tokenReply expects BrowserOpened
                 state = BrowserOpened;
