@@ -20,8 +20,6 @@
 #include "creds/oauth.h"
 #include "networkjobs.h"
 
-#include <QMap>
-#include <QSslCertificate>
 #include <QSslKey>
 #include <QNetworkRequest>
 
