@@ -22,7 +22,6 @@
 #include "syncengine.h"
 
 #include <QAuthenticator>
-#include <QJsonObject>
 #include <QLoggingCategory>
 #include <QNetworkInformation>
 #include <QNetworkReply>
