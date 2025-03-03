@@ -306,8 +306,6 @@ void HttpCredentials::forgetSensitiveData()
 
 void HttpCredentials::persist()
 {
-    Q_EMIT _account->wantsAccountSaved(_account);
-
     // write secrets to the keychain
     // _refreshToken should only be empty when we are logged out...
     if (!_refreshToken.isEmpty()) {
