@@ -167,10 +167,6 @@ void AccountManager::save(bool saveCredentials)
 
         // save the account state
         this->account(account->uuid())->writeToSettings(settings);
-        settings.endGroup();
-
-        settings.sync();
-        qCDebug(lcAccountManager) << "Saved account settings, status:" << settings.status();
     }
     settings.endArray();
 
