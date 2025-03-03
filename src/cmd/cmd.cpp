@@ -190,6 +190,7 @@ void sync(const SyncCTX &ctx, const QUrl &spaceUrl)
                 }
                 qWarning() << "Another sync is needed, but not done because restart count is exceeded" << *restartCount;
             } else {
+                qInfo() << "Sync succeeded";
                 qApp->quit();
             }
         }
@@ -325,36 +326,48 @@ CmdOptions parseOptions(const QStringList &app_args)
         {{QStringLiteral("t"), QStringLiteral("token")}, QStringLiteral("Authentication token, you can also use $OPENCLOUD_TOKEN"), QStringLiteral("token")});
 
     auto remoteFolder =
-        addOption({{QStringLiteral("remote-folder")}, QStringLiteral("A subdirectory of the space that is sysnced"), QStringLiteral("remote-folder")});
-    auto quietOption = addOption({{QStringLiteral("q"), QStringLiteral("quiet")}, QStringLiteral("Disable logging")});
+        addOption({{QStringLiteral("remote-folder")}, QStringLiteral("A subdirectory of the space that is synchronized"), QStringLiteral("remote-folder")});
     auto httpproxyOption = addOption({{QStringLiteral("httpproxy")}, QStringLiteral("Specify a http proxy to use"), QStringLiteral("http://server:port")});
     auto trustOption = addOption({ { QStringLiteral("trust") }, QStringLiteral("Trust the SSL certification") });
     auto excludeOption = addOption({ { QStringLiteral("exclude") }, QStringLiteral("Path to an exclude list [file]"), QStringLiteral("file") });
     auto unsyncedfoldersOption = addOption({ { QStringLiteral("unsyncedfolders") }, QStringLiteral("File containing the list of unsynced remote folders (selective sync)"), QStringLiteral("file") });
 
     auto nonInterActiveOption = addOption({ { QStringLiteral("non-interactive") }, QStringLiteral("Do not block execution with interaction") });
-    auto maxRetriesOption = addOption({ { QStringLiteral("max-sync-retries") }, QStringLiteral("Retries maximum n times (default to 3)"), QStringLiteral("n") });
+    auto maxRetriesOption = addOption({{QStringLiteral("max-sync-retries")}, QStringLiteral("Retries maximum n times (defaults to 3)"), QStringLiteral("n")});
     auto uploadLimitOption = addOption({ { QStringLiteral("uplimit") }, QStringLiteral("Limit the upload speed of files to n KB/s"), QStringLiteral("n") });
     auto downloadLimitption = addOption({ { QStringLiteral("downlimit") }, QStringLiteral("Limit the download speed of files to n KB/s"), QStringLiteral("n") });
     auto syncHiddenFilesOption = addOption({ { QStringLiteral("sync-hidden-files") }, QStringLiteral("Enables synchronization of hidden files") });
 
-    auto logdebugOption = addOption({ { QStringLiteral("logdebug") }, QStringLiteral("More verbose logging") });
-
     const auto testCrashReporter =
         addOption({{QStringLiteral("crash")}, QStringLiteral("Crash the client to test the crash reporter")}, QCommandLineOption::HiddenFromHelp);
+
+    auto verbosityOption = addOption({{QStringLiteral("verbose")}, QStringLiteral("Specify the [verbosity], valid values 0, 1, 2. (defaults to 0)."),
+        QStringLiteral("verbosity"), QStringLiteral("0")});
 
     parser.addHelpOption();
     parser.addVersionOption();
 
     parser.addPositionalArgument(
         QStringLiteral("server_url"), QStringLiteral("The URL to the OpenCloud installation on the server. This is usually the root path"));
-    parser.addPositionalArgument(QStringLiteral("space_id"), QStringLiteral("The id of the space to synchronize"));
-    parser.addPositionalArgument(QStringLiteral("source_dir"), QStringLiteral("The source dir"));
+    parser.addPositionalArgument(QStringLiteral("space_id"),
+        QStringLiteral("The id, name or short id of the space to synchronize, if no [space_id] is provided or the [space_id] did not match any space, a list "
+                       "of spaces is printed."),
+        QStringLiteral("[space_id]"));
+    parser.addPositionalArgument(QStringLiteral("source_dir"), QStringLiteral("The source dir"), QStringLiteral("[source_dir]"));
 
     parser.process(app_args);
 
 
-    logQuietMode = parser.isSet(quietOption);
+    const int verbosity = parser.value(verbosityOption).toInt();
+    if (verbosity >= 0 && verbosity <= 2) {
+        logQuietMode = verbosity == 0;
+        if (verbosity > 1) {
+            Logger::instance()->setLogDebug(true);
+        }
+    } else {
+        qCritical() << "Verbosity:" << verbosity << "is not supported, valid verbosity level are 0, 1, 2";
+        parser.showHelp(EXIT_FAILURE);
+    }
 
     QStringList args = parser.positionalArguments();
     if (!args.isEmpty()) {
@@ -437,10 +450,6 @@ CmdOptions parseOptions(const QStringList &app_args)
     }
     if (parser.isSet(syncHiddenFilesOption)) {
         options.ignoreHiddenFiles = false;
-    }
-    if (parser.isSet(logdebugOption)) {
-        Logger::instance()->setLogFile(QStringLiteral("-"));
-        Logger::instance()->setLogDebug(true);
     }
     if (parser.isSet(testCrashReporter)) {
         // crash onc ethe main loop was started

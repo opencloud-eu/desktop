@@ -37,6 +37,11 @@ class OPENCLOUD_SYNC_EXPORT Logger : public QObject
 public:
     static QString loggerPattern();
 
+    /**
+     * Install the mesage handler
+     */
+    void install();
+
     bool isLoggingToFile() const;
 
     void attacheToConsole();
@@ -105,6 +110,7 @@ private:
     bool _consoleIsAttached = false;
 
     int _maxLogFiles;
+    bool _loggerInstalled = false;
 };
 
 } // namespace OCC

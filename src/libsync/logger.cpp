@@ -67,24 +67,30 @@ Logger::Logger(QObject *parent)
     , _maxLogFiles(std::max(ConfigFile().automaticDeleteOldLogs(), minLogsToKeepC))
 {
     qSetMessagePattern(loggerPattern());
-    _crashLog.resize(crashLogSizeC);
-#ifndef NO_MSG_HANDLER
-    qInstallMessageHandler([](QtMsgType type, const QMessageLogContext &ctx, const QString &message) {
-            Logger::instance()->doLog(type, ctx, message);
-        });
-#endif
 }
 
 Logger::~Logger()
 {
 #ifndef NO_MSG_HANDLER
-    qInstallMessageHandler(nullptr);
+    if (_loggerInstalled) {
+        qInstallMessageHandler(nullptr);
+    }
 #endif
 }
 
 QString Logger::loggerPattern()
 {
     return QStringLiteral("%{time yy-MM-dd hh:mm:ss:zzz} [ %{type} %{category} ]%{if-debug}\t[ %{function} ]%{endif}:\t%{message}");
+}
+
+void Logger::install()
+{
+    Q_ASSERT(!_loggerInstalled);
+    _loggerInstalled = true;
+    _crashLog.resize(crashLogSizeC);
+#ifndef NO_MSG_HANDLER
+    qInstallMessageHandler([](QtMsgType type, const QMessageLogContext &ctx, const QString &message) { Logger::instance()->doLog(type, ctx, message); });
+#endif
 }
 
 bool Logger::isLoggingToFile() const
