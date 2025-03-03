@@ -503,7 +503,6 @@ void AccountSettings::slotDeleteAccount()
         if (messageBox->clickedButton() == yesButton) {
             auto manager = AccountManager::instance();
             manager->deleteAccount(_accountState);
-            manager->save();
         }
     });
     messageBox->open();
