@@ -42,6 +42,7 @@ target_sources(OpenCloudGui PRIVATE
     logbrowser.cpp
     networkinformation.cpp
     networksettings.cpp
+    notifications.cpp
     openfilemanager.cpp
     owncloudgui.cpp
     protocolwidget.cpp
@@ -99,6 +100,8 @@ ecm_add_qml_module(OpenCloudGui
             qml/AccountButton.qml
             qml/FolderDelegate.qml
             qml/FolderError.qml
+
+            qml/Notifications.qml
 
             qml/credentials/Credentials.qml
             qml/credentials/OAuthCredentials.qml

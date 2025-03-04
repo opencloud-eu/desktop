@@ -157,7 +157,7 @@ void AccountManager::save()
         }
 
         // save the account state
-        this->account(account->uuid())->writeToSettings(settings);
+        accountState->writeToSettings(settings);
     }
     settings.endArray();
 

@@ -35,7 +35,7 @@ Pane {
         target: widget
 
         function onFocusFirst() {
-            manageAccountButton.forceActiveFocus(Qt.TabFocusReason);
+            notificationButton.forceActiveFocus(Qt.TabFocusReason);
         }
 
         function onFocusLast() {
@@ -67,6 +67,43 @@ Pane {
             // spacer
             Item {}
             Button {
+                id: notificationButton
+                spacing: folderSyncPanel.spacing
+
+                Popup {
+                    id: notificationPopup
+                    width: 300
+                    height: 200
+                    // kepp some distance to the window corner
+                    rightMargin: 10
+
+                    closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+
+                    contentItem: Frame {
+                        anchors.fill: parent
+                        Notifications {
+                            anchors.fill: parent
+                            notifications: accountSettings.notifications
+
+                            onMarkReadClicked: accountSettings.markNotificationsRead()
+                        }
+                    }
+                }
+
+                text: accountSettings.notifications.length
+                icon.source: QMLResources.resourcePath("core", "bell", enabled)
+                icon.color: "transparent"
+                icon.height: 16
+                icon.width: 16
+
+                onClicked: notificationPopup.open()
+
+                Keys.onBacktabPressed: {
+                    widget.parentFocusWidget.focusPrevious();
+                }
+            }
+
+            Button {
                 id: manageAccountButton
                 text: qsTr("Manage Account")
 
@@ -96,10 +133,6 @@ Pane {
                 onClicked: {
                     accountMenu.open();
                     Accessible.announce(qsTr("Account options Menu"));
-                }
-
-                Keys.onBacktabPressed: {
-                    widget.parentFocusWidget.focusPrevious();
                 }
             }
         }
