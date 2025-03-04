@@ -38,6 +38,7 @@
 #include "libsync/graphapi/spacesmanager.h"
 #include "libsync/syncresult.h"
 #include "libsync/theme.h"
+#include "networkjobs/jsonjob.h"
 #include "scheduling/syncscheduler.h"
 #include "settingsdialog.h"
 
@@ -45,6 +46,8 @@
 #include <QMessageBox>
 #include <QSortFilterProxyModel>
 #include <QtQuickWidgets/QtQuickWidgets>
+
+using namespace std::chrono_literals;
 
 namespace {
 constexpr auto modalWidgetStretchedMarginC = 50;
@@ -91,6 +94,11 @@ AccountSettings::AccountSettings(const AccountStatePtr &accountState, QWidget *p
         }
     });
     ui->stackedWidget->setCurrentWidget(ui->quickWidget);
+
+    auto *notificationsPollTimer = new QTimer(this);
+    notificationsPollTimer->setInterval(1min);
+    notificationsPollTimer->start();
+    connect(notificationsPollTimer, &QTimer::timeout, this, &AccountSettings::updateNotifications);
 }
 
 void AccountSettings::slotToggleSignInState()
@@ -99,6 +107,20 @@ void AccountSettings::slotToggleSignInState()
         _accountState->signIn();
     } else {
         _accountState->signOutByUi();
+    }
+}
+
+void AccountSettings::markNotificationsRead()
+{
+    if (!_notifications.isEmpty()) {
+        auto *job = Notification::dismissAllNotifications(_accountState->account(), _notifications, this);
+        connect(job, &JsonApiJob::finishedSignal, this, [job, this] {
+            if (job->httpStatusCode() == 200) {
+                _notifications.clear();
+                Q_EMIT notificationsChanged();
+            }
+        });
+        job->start();
     }
 }
 
@@ -318,6 +340,17 @@ void AccountSettings::doForceSyncCurrentFolder(Folder *selectedFolder)
     // Restart scheduler
     FolderMan::instance()->scheduler()->start();
 }
+void AccountSettings::updateNotifications()
+{
+    if (_accountState->isConnected()) {
+        auto *job = Notification::createNotificationsJob(_accountState->account(), this);
+        connect(job, &JsonApiJob::finishedSignal, this, [job, this] {
+            _notifications = Notification::getNotifications(job);
+            Q_EMIT notificationsChanged();
+        });
+        job->start();
+    }
+}
 
 void AccountSettings::slotAccountStateChanged()
 {
@@ -342,6 +375,7 @@ void AccountSettings::slotAccountStateChanged()
         connect(
             accountsState()->account()->spacesManager(), &GraphApi::SpacesManager::updated, this, &AccountSettings::slotSpacesUpdated, Qt::UniqueConnection);
         slotSpacesUpdated();
+        updateNotifications();
         break;
     }
     case AccountState::ServiceUnavailable:
@@ -485,6 +519,11 @@ QString AccountSettings::connectionLabel()
 QString AccountSettings::accountStateIconName()
 {
     return _accountStateIconName;
+}
+
+const QList<Notification> &AccountSettings::notifications() const
+{
+    return _notifications;
 }
 
 void AccountSettings::slotDeleteAccount()

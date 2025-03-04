@@ -107,6 +107,7 @@ const QString &JsonApiJob::ocsMessage() const
 {
     return _ocsMessage;
 }
+
 bool JsonApiJob::ocsSuccess() const
 {
     // v1 api: 100

@@ -17,6 +17,7 @@
 #include "gui/opencloudguilib.h"
 
 #include "folder.h"
+#include "gui/notifications.h"
 #include "gui/qmlutils.h"
 #include "owncloudgui.h"
 #include "progressdispatcher.h"
@@ -55,6 +56,7 @@ class OPENCLOUD_GUI_EXPORT AccountSettings : public QWidget
     Q_PROPERTY(uint syncedSpaces READ syncedSpaces NOTIFY syncedSpacesChanged)
     Q_PROPERTY(QString connectionLabel READ connectionLabel NOTIFY connectionLabelChanged)
     Q_PROPERTY(QString accountStateIconName READ accountStateIconName NOTIFY connectionLabelChanged)
+    Q_PROPERTY(QList<Notification> notifications READ notifications NOTIFY notificationsChanged)
     OC_DECLARE_WIDGET_FOCUS
     QML_ELEMENT
     QML_UNCREATABLE("C++ only")
@@ -79,11 +81,14 @@ public:
     QString connectionLabel();
     QString accountStateIconName();
 
+    const QList<Notification> &notifications() const;
+
 Q_SIGNALS:
     void showIssuesList();
     void unsyncedSpacesChanged();
     void syncedSpacesChanged();
     void connectionLabelChanged();
+    void notificationsChanged();
 
 public Q_SLOTS:
     void slotAccountStateChanged();
@@ -100,11 +105,14 @@ protected Q_SLOTS:
     void slotFolderWizardAccepted();
     void slotDeleteAccount();
     void slotToggleSignInState();
+    void markNotificationsRead();
 
 private:
     void showConnectionLabel(const QString &message, SyncResult::Status status, QStringList errors = {});
 
     void doForceSyncCurrentFolder(Folder *selectedFolder);
+
+    void updateNotifications();
 
     Ui::AccountSettings *ui;
 
@@ -118,6 +126,8 @@ private:
     uint _unsyncedSpaces = 0;
     QString _connectionLabel;
     QString _accountStateIconName;
+
+    QList<Notification> _notifications;
 };
 
 } // namespace OCC
