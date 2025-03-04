@@ -341,7 +341,11 @@ CmdOptions parseOptions(const QStringList &app_args)
     const auto testCrashReporter =
         addOption({{QStringLiteral("crash")}, QStringLiteral("Crash the client to test the crash reporter")}, QCommandLineOption::HiddenFromHelp);
 
-    auto verbosityOption = addOption({{QStringLiteral("verbose")}, QStringLiteral("Specify the [verbosity], valid values 0, 1, 2. (defaults to 0)."),
+    auto verbosityOption = addOption({{QStringLiteral("verbose")},
+        QStringLiteral("Specify the [verbosity]\n0: no logging (default)\n"
+                       "1: general logging\n"
+                       "2: all previous and http logs\n"
+                       "3: all previous and debug information"),
         QStringLiteral("verbosity"), QStringLiteral("0")});
 
     parser.addHelpOption();
@@ -359,9 +363,12 @@ CmdOptions parseOptions(const QStringList &app_args)
 
 
     const int verbosity = parser.value(verbosityOption).toInt();
-    if (verbosity >= 0 && verbosity <= 2) {
+    if (verbosity >= 0 && verbosity <= 3) {
         logQuietMode = verbosity == 0;
         if (verbosity > 1) {
+            Logger::instance()->addLogRule({QStringLiteral("sync.httplogger=true")});
+        }
+        if (verbosity > 2) {
             Logger::instance()->setLogDebug(true);
         }
     } else {
