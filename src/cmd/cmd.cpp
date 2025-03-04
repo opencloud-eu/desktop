@@ -326,16 +326,18 @@ CmdOptions parseOptions(const QStringList &app_args)
         {{QStringLiteral("t"), QStringLiteral("token")}, QStringLiteral("Authentication token, you can also use $OPENCLOUD_TOKEN"), QStringLiteral("token")});
 
     auto remoteFolder =
-        addOption({{QStringLiteral("remote-folder")}, QStringLiteral("A subdirectory of the space that is synchronized"), QStringLiteral("remote-folder")});
-    auto httpproxyOption = addOption({{QStringLiteral("httpproxy")}, QStringLiteral("Specify a http proxy to use"), QStringLiteral("http://server:port")});
+        addOption({{QStringLiteral("remote-folder")}, QStringLiteral("The subdirectory of the space that is synchronized"), QStringLiteral("remote-folder")});
+    auto httpproxyOption = addOption({{QStringLiteral("http-proxy")}, QStringLiteral("Specify a http proxy to use"), QStringLiteral("http://server:port")});
     auto trustOption = addOption({ { QStringLiteral("trust") }, QStringLiteral("Trust the SSL certification") });
     auto excludeOption = addOption({ { QStringLiteral("exclude") }, QStringLiteral("Path to an exclude list [file]"), QStringLiteral("file") });
-    auto unsyncedfoldersOption = addOption({ { QStringLiteral("unsyncedfolders") }, QStringLiteral("File containing the list of unsynced remote folders (selective sync)"), QStringLiteral("file") });
+    auto unsyncedfoldersOption = addOption(
+        {{QStringLiteral("unsynced-folders")}, QStringLiteral("File containing the list of unsynced remote folders (selective sync)"), QStringLiteral("file")});
 
     auto nonInterActiveOption = addOption({ { QStringLiteral("non-interactive") }, QStringLiteral("Do not block execution with interaction") });
     auto maxRetriesOption = addOption({{QStringLiteral("max-sync-retries")}, QStringLiteral("Retries maximum n times (defaults to 3)"), QStringLiteral("n")});
-    auto uploadLimitOption = addOption({ { QStringLiteral("uplimit") }, QStringLiteral("Limit the upload speed of files to n KB/s"), QStringLiteral("n") });
-    auto downloadLimitption = addOption({ { QStringLiteral("downlimit") }, QStringLiteral("Limit the download speed of files to n KB/s"), QStringLiteral("n") });
+    auto uploadLimitOption = addOption({{QStringLiteral("upload-limit")}, QStringLiteral("Limit the upload speed of files to n KB/s"), QStringLiteral("n")});
+    auto downloadLimitption =
+        addOption({{QStringLiteral("download-limit")}, QStringLiteral("Limit the download speed of files to n KB/s"), QStringLiteral("n")});
     auto syncHiddenFilesOption = addOption({ { QStringLiteral("sync-hidden-files") }, QStringLiteral("Enables synchronization of hidden files") });
 
     const auto testCrashReporter =
