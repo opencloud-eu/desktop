@@ -55,9 +55,14 @@ public:
     void stop();
 
     bool hasCurrentRunningSyncRunning() const;
+    Folder *currentSync();
 
     void setPauseSyncWhenMetered(bool pauseSyncWhenMetered);
 
+    bool isRunning() const;
+
+Q_SIGNALS:
+    void isRunningChanged();
 
 private:
     void startNext();
