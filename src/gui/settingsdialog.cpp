@@ -160,7 +160,9 @@ SettingsDialog::SettingsDialog(ownCloudGui *gui, QWidget *parent)
     }
     connect(AccountManager::instance(), &AccountManager::accountAdded, this, addAccount);
     connect(AccountManager::instance(), &AccountManager::accountRemoved, this, [this](AccountStatePtr accountStatePtr) {
-        _ui->stack->removeWidget(accountSettings(accountStatePtr->account().data()));
+        auto *widget = accountSettings(accountStatePtr->account().data());
+        _ui->stack->removeWidget(widget);
+        widget->deleteLater();
         // go to the settings page if the last account was removed
         if (_widgetForAccount.isEmpty()) {
             _ui->stack->setCurrentWidget(_generalSettings);
