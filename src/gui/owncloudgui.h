@@ -70,7 +70,6 @@ public Q_SLOTS:
     void slotShutdown();
     void slotTrayClicked(QSystemTrayIcon::ActivationReason reason);
     void slotToggleLogBrowser();
-    void slotOpenSettingsDialog();
     void slotAbout();
     void slotOpenPath(const QString &path);
     void slotAccountStateChanged();
