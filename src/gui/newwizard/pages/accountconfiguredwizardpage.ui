@@ -220,7 +220,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="../../../resources/client.qrc">
-                  <normaloff>:/client/resources/light/more.svg</normaloff>:/client/resources/light/more.svg</iconset>
+                  <normaloff>:/client/resources/core/more.svg</normaloff>:/client/resources/core/more.svg</iconset>
                 </property>
                </widget>
               </item>
@@ -234,7 +234,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="../../../resources/client.qrc">
-                  <normaloff>:/client/resources/light/undo.svg</normaloff>:/client/resources/light/undo.svg</iconset>
+                  <normaloff>:/client/resources/core/undo.svg</normaloff>:/client/resources/core/undo.svg</iconset>
                 </property>
                </widget>
               </item>
