@@ -22,7 +22,7 @@ Pane {
         RowLayout {
             Layout.fillWidth: true
             Label {
-                text: qsTr("Notificaitons")
+                text: qsTr("Notifications")
 
                 font.family: "OpenCloud750"
                 font.bold: true
