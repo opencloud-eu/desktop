@@ -18,7 +18,6 @@
 
 #include "clientproxy.h"
 #include "folderman.h"
-#include "owncloudgui.h"
 #include "platform.h"
 
 #include <QPointer>
@@ -29,15 +28,10 @@ class Handler;
 
 namespace OCC {
 
-Q_DECLARE_LOGGING_CATEGORY(lcApplication)
+class SettingsDialog;
+class AboutDialog;
+class Systray;
 
-class Theme;
-class Folder;
-
-/**
- * @brief The Application class
- * @ingroup gui
- */
 class OPENCLOUD_GUI_EXPORT Application : public QObject
 {
     Q_OBJECT
@@ -47,25 +41,38 @@ public:
 
     bool debugMode();
 
-    ownCloudGui *gui() const;
-
     QString displayLanguage() const;
 
     AccountStatePtr addNewAccount(AccountPtr newAccount);
 
+    void showSettings();
+
+    SettingsDialog *settingsDialog() const;
+
+    void showAbout();
+
+    void slotShowTrayMessage(const QString &title, const QString &msg, const QIcon &icon = {});
+
+    void slotShowOptionalTrayMessage(const QString &title, const QString &msg, const QIcon &icon = {});
+
+
+    void runNewAccountWizard();
+
 protected Q_SLOTS:
-    void slotUseMonoIconsChanged(bool);
     void slotCleanup();
     void slotAccountStateAdded(AccountStatePtr accountState) const;
-    void slotAccountStateRemoved() const;
 
 private:
     explicit Application(const QString &displayLanguage, bool debugMode);
 
-    QPointer<ownCloudGui> _gui = {};
-
     const bool _debugMode = false;
+    SettingsDialog *_settingsDialog = nullptr;
+
     QString _displayLanguage;
+    Systray *_systray;
+
+    // keeping a pointer on those dialogs allows us to make sure they will be shown only once
+    QPointer<AboutDialog> _aboutDialog;
 
     static Application *_instance;
     friend Application *ocApp();

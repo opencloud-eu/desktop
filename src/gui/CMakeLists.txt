@@ -44,7 +44,6 @@ target_sources(OpenCloudGui PRIVATE
     networksettings.cpp
     notifications.cpp
     openfilemanager.cpp
-    owncloudgui.cpp
     protocolwidget.cpp
     protocolitem.cpp
     issueswidget.cpp

@@ -22,7 +22,6 @@
 #include "configfile.h"
 #include "generalsettings.h"
 #include "gui/qmlutils.h"
-#include "owncloudgui.h"
 #include "resources/qmlresources.h"
 #include "resources/resources.h"
 #include "theme.h"
@@ -82,10 +81,9 @@ public:
 
 namespace OCC {
 
-SettingsDialog::SettingsDialog(ownCloudGui *gui, QWidget *parent)
+SettingsDialog::SettingsDialog(QWidget *parent)
     : QMainWindow(parent)
     , _ui(new Ui::SettingsDialog)
-    , _gui(gui)
 {
     setObjectName(QStringLiteral("Settings")); // required as group for saveGeometry call
     setWindowTitle(Theme::instance()->appNameGUI());
@@ -95,15 +93,6 @@ SettingsDialog::SettingsDialog(ownCloudGui *gui, QWidget *parent)
 
     // People perceive this as a Window, so also make Ctrl+W work
     addAction(tr("Hide"), Qt::CTRL | Qt::Key_W, this, &SettingsDialog::hide);
-
-#ifdef Q_OS_MAC
-    // add About to the global menu
-    QMenuBar *menuBar = new QMenuBar(nullptr);
-    // the menu name is not displayed
-    auto *menu = menuBar->addMenu(QString());
-    // the actual name is provided by mac
-    menu->addAction(QStringLiteral("About"), gui, &ownCloudGui::slotAbout)->setMenuRole(QAction::AboutRole);
-#endif
 
     // TODO: fix sizing
     _ui->quickWidget->setFixedHeight(minimumHeight() * 0.13);
@@ -128,7 +117,6 @@ SettingsDialog::SettingsDialog(ownCloudGui *gui, QWidget *parent)
 
     _generalSettings = new GeneralSettings;
     _ui->stack->addWidget(_generalSettings);
-    connect(_generalSettings, &GeneralSettings::showAbout, gui, &ownCloudGui::slotAbout);
     connect(_generalSettings, &GeneralSettings::syncOptionsChanged, FolderMan::instance(), &FolderMan::slotReloadSyncOptions);
 
     ConfigFile().restoreGeometry(this);
@@ -177,7 +165,7 @@ SettingsDialog::~SettingsDialog()
 
 void SettingsDialog::addModalWidget(QWidget *w)
 {
-    ownCloudGui::raise();
+    ocApp()->showSettings();
     if (_ui->dialogStack->indexOf(w) == -1) {
         _ui->dialogStack->addWidget(w);
         _ui->dialogStack->setCurrentWidget(w);
@@ -191,7 +179,7 @@ void SettingsDialog::requestModality(Account *account)
         setCurrentAccount(account);
     }
     _modalStack.append(account);
-    ownCloudGui::raise();
+    ocApp()->showSettings();
 }
 
 void SettingsDialog::ceaseModality(Account *account)
@@ -212,11 +200,6 @@ AccountSettings *SettingsDialog::accountSettings(Account *account) const
 
 void SettingsDialog::setVisible(bool visible)
 {
-    if (!visible) {
-        ConfigFile cfg;
-        cfg.saveGeometry(this);
-    }
-
 #ifdef Q_OS_MAC
     if (visible) {
         setActivationPolicy(ActivationPolicy::Regular);
@@ -271,7 +254,7 @@ Account *SettingsDialog::currentAccount() const
 
 void SettingsDialog::addAccount()
 {
-    ocApp()->gui()->runNewAccountWizard();
+    ocApp()->runNewAccountWizard();
 }
 
 } // namespace OCC

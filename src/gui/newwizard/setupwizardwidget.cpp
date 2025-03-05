@@ -3,7 +3,6 @@
 
 #include "gui/application.h"
 #include "gui/guiutility.h"
-#include "gui/owncloudgui.h"
 #include "gui/settingsdialog.h"
 #include "resources/template.h"
 #include "theme.h"
@@ -47,13 +46,13 @@ SetupWizardWidget::SetupWizardWidget(SettingsDialog *parent)
 
     connect(_ui->cancelButton, &QPushButton::clicked, this, [this] {
         auto messageBox = new QMessageBox(QMessageBox::Warning, tr("Cancel Setup"), tr("Do you really want to cancel the account setup?"),
-            QMessageBox::Yes | QMessageBox::No, ocApp()->gui()->settingsDialog());
+            QMessageBox::Yes | QMessageBox::No, ocApp()->settingsDialog());
         messageBox->setAttribute(Qt::WA_DeleteOnClose);
         connect(messageBox, &QMessageBox::accepted, this, [this] {
             // call the base implementation
             Q_EMIT rejected();
         });
-        ownCloudGui::raise();
+        ocApp()->showSettings();
         messageBox->open();
     });
 
@@ -126,7 +125,7 @@ void SetupWizardWidget::displayPage(AbstractSetupWizardPage *page, SetupWizardSt
     _ui->nextButton->setFocus();
 
     // bring to front if necessary
-    ownCloudGui::raise();
+    ocApp()->showSettings();
 
     connect(_currentPage, &AbstractSetupWizardPage::contentChanged, this, &SetupWizardWidget::slotUpdateNextButton);
 

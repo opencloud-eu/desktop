@@ -19,7 +19,6 @@
 #include "folder.h"
 #include "gui/notifications.h"
 #include "gui/qmlutils.h"
-#include "owncloudgui.h"
 #include "progressdispatcher.h"
 
 #include <QSortFilterProxyModel>

@@ -154,7 +154,7 @@ void AppImageUpdater::versionInfoArrived(const UpdateInfo &info)
         return;
     }
 
-    auto widget = new AppImageUpdateAvailableWidget(currentVersion, newVersion, ocApp()->gui()->settingsDialog());
+    auto widget = new AppImageUpdateAvailableWidget(currentVersion, newVersion, ocApp()->settingsDialog());
 
     connect(widget, &AppImageUpdateAvailableWidget::skipUpdateButtonClicked, this, [newVersion, widget]() {
         qCInfo(lcUpdater) << "Update" << newVersion << "skipped by user";
@@ -181,8 +181,8 @@ void AppImageUpdater::versionInfoArrived(const UpdateInfo &info)
         widget->deleteLater();
     });
 
-    ownCloudGui::raise();
-    ocApp()->gui()->settingsDialog()->addModalWidget(widget);
+    ocApp()->showSettings();
+    ocApp()->settingsDialog()->addModalWidget(widget);
 }
 
 void AppImageUpdater::backgroundCheckForUpdate()

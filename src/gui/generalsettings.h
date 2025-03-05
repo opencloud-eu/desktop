@@ -40,7 +40,6 @@ public:
     ~GeneralSettings() override;
 
 Q_SIGNALS:
-    void showAbout();
     void syncOptionsChanged();
 
 private Q_SLOTS:

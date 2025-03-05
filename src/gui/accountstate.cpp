@@ -61,7 +61,7 @@ UpdateUrlDialog *AccountState::updateUrlDialog(const QUrl &newUrl)
         return nullptr;
     }
 
-    _updateUrlDialog = UpdateUrlDialog::fromAccount(_account, newUrl, ocApp()->gui()->settingsDialog());
+    _updateUrlDialog = UpdateUrlDialog::fromAccount(_account, newUrl, ocApp()->settingsDialog());
 
     connect(_updateUrlDialog, &UpdateUrlDialog::accepted, this, [=]() {
         _account->setUrl(newUrl);
@@ -69,7 +69,7 @@ UpdateUrlDialog *AccountState::updateUrlDialog(const QUrl &newUrl)
         Q_EMIT urlUpdated();
     });
 
-    ownCloudGui::raise();
+    ocApp()->showSettings();
     _updateUrlDialog->open();
 
     return _updateUrlDialog;
@@ -180,9 +180,9 @@ AccountState::AccountState(AccountPtr account)
     }
 
     connect(account.data(), &Account::appProviderErrorOccured, this, [](const QString &error) {
-        QMessageBox *msgBox = new QMessageBox(QMessageBox::Information, Theme::instance()->appNameGUI(), error, {}, ocApp()->gui()->settingsDialog());
+        QMessageBox *msgBox = new QMessageBox(QMessageBox::Information, Theme::instance()->appNameGUI(), error, {}, ocApp()->settingsDialog());
         msgBox->setAttribute(Qt::WA_DeleteOnClose);
-        ownCloudGui::raise();
+        ocApp()->showSettings();
         msgBox->open();
     });
 }
@@ -390,7 +390,7 @@ void AccountState::checkConnectivity(bool blockJobs)
             // ignore errors for already accepted certificates
             auto filteredErrors = _account->accessManager()->filterSslErrors(errors);
             if (!filteredErrors.isEmpty()) {
-                _tlsDialog = new TlsErrorDialog(filteredErrors, _account->url().host(), ocApp()->gui()->settingsDialog());
+                _tlsDialog = new TlsErrorDialog(filteredErrors, _account->url().host(), ocApp()->settingsDialog());
                 _tlsDialog->setAttribute(Qt::WA_DeleteOnClose);
                 QSet<QSslCertificate> certs;
                 certs.reserve(filteredErrors.size());
@@ -411,7 +411,7 @@ void AccountState::checkConnectivity(bool blockJobs)
                     setState(SignedOut);
                 });
 
-                ownCloudGui::raise();
+                ocApp()->showSettings();
                 _tlsDialog->open();
             }
         }

@@ -15,13 +15,8 @@
 #ifndef PROTOCOLWIDGET_H
 #define PROTOCOLWIDGET_H
 
-#include <QDialog>
-#include <QDateTime>
-#include <QLocale>
-
-#include "progressdispatcher.h"
-#include "owncloudgui.h"
 #include "models/protocolitemmodel.h"
+#include "progressdispatcher.h"
 
 #include "protocolitem.h"
 

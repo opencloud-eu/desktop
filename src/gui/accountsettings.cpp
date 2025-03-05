@@ -187,7 +187,7 @@ void AccountSettings::slotRemoveCurrentFolder(Folder *folder)
         tr("<p>Do you really want to stop syncing the folder <i>%1</i>?</p>"
            "<p><b>Note:</b> This will <b>not</b> delete any files.</p>")
             .arg(shortGuiLocalPath),
-        QMessageBox::NoButton, ocApp()->gui()->settingsDialog());
+        QMessageBox::NoButton, ocApp()->settingsDialog());
     messageBox->setAttribute(Qt::WA_DeleteOnClose);
     QPushButton *yesButton = messageBox->addButton(tr("Remove Folder Sync Connection"), QMessageBox::YesRole);
     messageBox->addButton(tr("Cancel"), QMessageBox::NoRole);
@@ -304,14 +304,14 @@ void AccountSettings::slotForceSyncCurrentFolder(Folder *folder)
         auto messageBox = new QMessageBox(QMessageBox::Question, tr("Internet connection is metered"),
             tr("Synchronization is paused because the Internet connection is a metered connection"
                "<p>Do you really want to force a Synchronization now?"),
-            QMessageBox::Yes | QMessageBox::No, ocApp()->gui()->settingsDialog());
+            QMessageBox::Yes | QMessageBox::No, ocApp()->settingsDialog());
         messageBox->setAttribute(Qt::WA_DeleteOnClose);
         connect(messageBox, &QMessageBox::accepted, this, [folder = QPointer<Folder>(folder), this] {
             if (folder) {
                 doForceSyncCurrentFolder(folder);
             }
         });
-        ownCloudGui::raise();
+        ocApp()->showSettings();
         messageBox->open();
     } else {
         doForceSyncCurrentFolder(folder);
@@ -477,11 +477,11 @@ void AccountSettings::addModalLegacyDialog(QWidget *widget, ModalWidgetSizePolic
     connect(widget, &QWidget::destroyed, this, [this, outerWidget] {
         outerWidget->deleteLater();
         if (!_goingDown) {
-            ocApp()->gui()->settingsDialog()->ceaseModality(_accountState->account().get());
+            ocApp()->settingsDialog()->ceaseModality(_accountState->account().get());
         }
     });
     widget->setVisible(true);
-    ocApp()->gui()->settingsDialog()->requestModality(_accountState->account().get());
+    ocApp()->settingsDialog()->requestModality(_accountState->account().get());
 }
 
 void AccountSettings::addModalWidget(AccountModalWidget *widget)
@@ -491,9 +491,9 @@ void AccountSettings::addModalWidget(AccountModalWidget *widget)
 
     connect(widget, &AccountModalWidget::finished, this, [widget, this] {
         widget->deleteLater();
-        ocApp()->gui()->settingsDialog()->ceaseModality(_accountState->account().get());
+        ocApp()->settingsDialog()->ceaseModality(_accountState->account().get());
     });
-    ocApp()->gui()->settingsDialog()->requestModality(_accountState->account().get());
+    ocApp()->settingsDialog()->requestModality(_accountState->account().get());
 }
 
 uint AccountSettings::unsyncedSpaces() const

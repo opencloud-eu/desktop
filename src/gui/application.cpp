@@ -16,8 +16,6 @@
 
 #include "application.h"
 
-#include <random>
-
 #include "account.h"
 #include "accountmanager.h"
 #include "accountstate.h"
@@ -26,6 +24,12 @@
 #include "configfile.h"
 #include "folder.h"
 #include "folderman.h"
+#include "gui/aboutdialog.h"
+#include "gui/accountsettings.h"
+#include "gui/folderwizard/folderwizard.h"
+#include "gui/newwizard/setupwizardcontroller.h"
+#include "gui/systray.h"
+#include "libsync/graphapi/spacesmanager.h"
 #include "settingsdialog.h"
 #include "socketapi/socketapi.h"
 #include "theme.h"
@@ -38,22 +42,65 @@
 #include <qt_windows.h>
 #endif
 
+
 #include <QApplication>
 #include <QDesktopServices>
-#include <QFileOpenEvent>
+#include <QMenuBar>
 
-namespace OCC {
+using namespace OCC;
 
 Q_LOGGING_CATEGORY(lcApplication, "gui.application", QtInfoMsg)
+
+namespace {
+
+void setUpInitialSyncFolder(AccountStatePtr accountStatePtr, bool useVfs)
+{
+    auto folderMan = FolderMan::instance();
+
+    // saves a bit of duplicate code
+    auto addFolder = [folderMan, accountStatePtr, useVfs](
+                         const QString &localFolder, const QUrl &davUrl, const QString &spaceId = {}, const QString &displayName = {}) {
+        auto def = FolderDefinition{accountStatePtr->account()->uuid(), davUrl, spaceId, displayName};
+        def.setLocalPath(localFolder);
+        return folderMan->addFolderFromWizard(accountStatePtr, std::move(def), useVfs);
+    };
+
+    auto finalize = [accountStatePtr] {
+        accountStatePtr->checkConnectivity();
+        FolderMan::instance()->setSyncEnabled(true);
+        FolderMan::instance()->scheduleAllFolders();
+    };
+
+    QObject::connect(
+        accountStatePtr->account()->spacesManager(), &GraphApi::SpacesManager::ready, accountStatePtr,
+        [accountStatePtr, addFolder, finalize] {
+            auto spaces = accountStatePtr->account()->spacesManager()->spaces();
+            // we do not want to set up folder sync connections for disabled spaces (#10173)
+            spaces.erase(std::remove_if(spaces.begin(), spaces.end(), [](auto *space) { return space->disabled(); }), spaces.end());
+
+            if (!spaces.isEmpty()) {
+                const QString localDir(accountStatePtr->account()->defaultSyncRoot());
+                FileSystem::setFolderMinimumPermissions(localDir);
+                Folder::prepareFolder(localDir);
+                Utility::setupFavLink(localDir);
+                for (const auto *space : spaces) {
+                    const QString name = space->displayName();
+                    const QString folderName = FolderMan::instance()->findGoodPathForNewSyncFolder(
+                        localDir, name, FolderMan::NewFolderType::SpacesFolder, accountStatePtr->account()->uuid());
+                    auto folder = addFolder(folderName, QUrl(space->drive().getRoot().getWebDavUrl()), space->drive().getRoot().getId(), name);
+                    folder->setPriority(space->priority());
+                }
+                finalize();
+            }
+        },
+        Qt::SingleShotConnection);
+    accountStatePtr->account()->spacesManager()->checkReady();
+}
+}
 
 QString Application::displayLanguage() const
 {
     return _displayLanguage;
-}
-
-ownCloudGui *Application::gui() const
-{
-    return _gui;
 }
 
 Application *Application::_instance = nullptr;
@@ -62,6 +109,12 @@ Application::Application(const QString &displayLanguage, bool debugMode)
     : _debugMode(debugMode)
     , _displayLanguage(displayLanguage)
 {
+    // ensure the singleton works
+    {
+        _instance = this;
+        _settingsDialog = new SettingsDialog();
+        _systray = new Systray(this);
+    }
     qCInfo(lcApplication) << "Plugin search paths:" << qApp->libraryPaths();
 
     // Check vfs plugins
@@ -83,12 +136,7 @@ Application::Application(const QString &displayLanguage, bool debugMode)
 
     qApp->setQuitOnLastWindowClosed(false);
 
-    // Setting up the gui class will allow tray notifications for the
-    // setup that follows, like folder setup
-    _gui = new ownCloudGui(this);
-
     connect(AccountManager::instance(), &AccountManager::accountAdded, this, &Application::slotAccountStateAdded);
-    connect(AccountManager::instance(), &AccountManager::accountRemoved, this, &Application::slotAccountStateRemoved);
     for (const auto &ai : AccountManager::instance()->accounts()) {
         slotAccountStateAdded(ai);
     }
@@ -102,7 +150,15 @@ Application::Application(const QString &displayLanguage, bool debugMode)
 
     // Cleanup at Quit.
     connect(qApp, &QCoreApplication::aboutToQuit, this, &Application::slotCleanup);
-    qApp->installEventFilter(this);
+
+#ifdef Q_OS_MAC
+    // add About to the global menu
+    QMenuBar *menuBar = new QMenuBar(nullptr);
+    // the menu name is not displayed
+    auto *menu = menuBar->addMenu(QString());
+    // the actual name is provided by mac
+    menu->addAction(QStringLiteral("About"), this, &Application::showAbout)->setMenuRole(QAction::AboutRole);
+#endif
 }
 
 Application::~Application()
@@ -112,25 +168,17 @@ Application::~Application()
     FolderMan::instance()->unloadAndDeleteAllFolders();
 }
 
-void Application::slotAccountStateRemoved() const
-{
-    // if there is no more account, show the wizard.
-    if (_gui && AccountManager::instance()->accounts().isEmpty()) {
-        // allow to add a new account if there is non any more. Always think
-        // about single account theming!
-        gui()->runNewAccountWizard();
-    }
-}
-
 void Application::slotAccountStateAdded(AccountStatePtr accountState) const
 {
-    // Hook up the GUI slots to the account state's Q_SIGNALS:
-    connect(accountState.data(), &AccountState::stateChanged,
-        _gui.data(), &ownCloudGui::slotAccountStateChanged);
-    connect(accountState->account().data(), &Account::serverVersionChanged,
-        _gui.data(), [account = accountState->account().data(), this] {
-            _gui->slotTrayMessageIfServerUnsupported(account);
-        });
+    connect(accountState->account().data(), &Account::serverVersionChanged, ocApp(), [account = accountState->account().data()] {
+        if (account->serverSupportLevel() != Account::ServerSupportLevel::Supported) {
+            ocApp()->slotShowTrayMessage(tr("Unsupported Server Version"),
+                tr("The server on account %1 runs an unsupported version %2. "
+                   "Using this client with unsupported server versions is untested and "
+                   "potentially dangerous. Proceed at your own risk.")
+                    .arg(account->displayNameWithHost(), account->capabilities().status().versionString()));
+        }
+    });
 
     // Hook up the folder manager slots to the account state's Q_SIGNALS:
     connect(accountState.data(), &AccountState::isConnectedChanged, FolderMan::instance(), &FolderMan::slotIsConnectedChanged);
@@ -141,9 +189,8 @@ void Application::slotAccountStateAdded(AccountStatePtr accountState) const
 
 void Application::slotCleanup()
 {
-    // unload the ui to make sure we no longer react to signals
-    _gui->slotShutdown();
-    delete _gui;
+    ConfigFile().saveGeometry(_settingsDialog);
+    delete _settingsDialog;
 
     // by now the credentials are supposed to be persisted
     // don't start async credentials jobs during shutdown
@@ -166,22 +213,185 @@ AccountStatePtr Application::addNewAccount(AccountPtr newAccount)
     bool shouldSetAutoStart = (accountMan->accounts().size() == 1);
 #ifdef Q_OS_MAC
     // Don't auto start when not being 'installed'
-    shouldSetAutoStart = shouldSetAutoStart
-        && QCoreApplication::applicationDirPath().startsWith(QLatin1String("/Applications/"));
+    shouldSetAutoStart = shouldSetAutoStart && QCoreApplication::applicationDirPath().startsWith(QLatin1String("/Applications/"));
 #endif
     if (shouldSetAutoStart) {
         Utility::setLaunchOnStartup(Theme::instance()->appName(), Theme::instance()->appNameGUI(), true);
     }
 
     // showing the UI to show the user that the account has been added successfully
-    _gui->slotShowSettings();
+    showSettings();
 
     return accountStatePtr;
 }
 
-void Application::slotUseMonoIconsChanged(bool)
+void Application::showSettings()
 {
-    _gui->slotComputeOverallSyncStatus();
+    auto window = ocApp()->settingsDialog();
+    window->show();
+    window->raise();
+    window->activateWindow();
+
+#if defined(Q_OS_WIN)
+    // Windows disallows raising a Window when you're not the active application.
+    // Use a common hack to attach to the active application
+    const auto activeProcessId = GetWindowThreadProcessId(GetForegroundWindow(), nullptr);
+    if (activeProcessId != qApp->applicationPid()) {
+        const auto threadId = GetCurrentThreadId();
+        // don't step here with a debugger...
+        if (AttachThreadInput(threadId, activeProcessId, true)) {
+            const auto hwnd = reinterpret_cast<HWND>(window->winId());
+            SetForegroundWindow(hwnd);
+            SetWindowPos(hwnd, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+            AttachThreadInput(threadId, activeProcessId, false);
+        }
+    }
+#endif
+}
+
+SettingsDialog *Application::settingsDialog() const
+{
+    return _settingsDialog;
+}
+
+void Application::showAbout()
+{
+    if (!_aboutDialog) {
+        _aboutDialog = new AboutDialog(_settingsDialog);
+        _aboutDialog->setAttribute(Qt::WA_DeleteOnClose);
+        _settingsDialog->addModalWidget(_aboutDialog);
+    }
+}
+
+void Application::slotShowTrayMessage(const QString &title, const QString &msg, const QIcon &icon)
+{
+    _systray->showMessage(title, msg, icon.isNull() ? Resources::getCoreIcon(QStringLiteral("states/information")) : icon);
+}
+
+void Application::slotShowOptionalTrayMessage(const QString &title, const QString &msg, const QIcon &icon)
+{
+    if (ConfigFile().optionalDesktopNotifications()) {
+        slotShowTrayMessage(title, msg, icon);
+    }
+}
+
+void Application::runNewAccountWizard()
+{
+    // passing the settings dialog as parent makes sure the wizard will be shown above it
+    // as the settingsDialog's lifetime spans across the entire application but the dialog will live much shorter,
+    // we have to clean it up manually when finished() is emitted
+    auto *wizardController = new Wizard::SetupWizardController(ocApp()->settingsDialog());
+
+    // while the wizard is shown, new syncs are disabled
+    FolderMan::instance()->setSyncEnabled(false);
+
+    connect(wizardController, &Wizard::SetupWizardController::finished, ocApp(),
+        [wizardController, this](AccountPtr newAccount, Wizard::SyncMode syncMode, const QVariantMap &dynamicRegistrationData) {
+            // note: while the wizard is shown, we disable the folder synchronization
+            // previously we could perform this just here, but now we have to postpone this depending on whether selective sync was chosen
+            // see also #9497
+
+            // when the dialog is closed before it has finished, there won't be a new account to set up
+            // the wizard controller signalizes this by passing a null pointer
+            if (!newAccount.isNull()) {
+                // finally, call the slot that finalizes the setup
+                auto accountStatePtr = ocApp()->addNewAccount(newAccount);
+                accountStatePtr->setSettingUp(true);
+
+                _settingsDialog->setCurrentAccount(accountStatePtr->account().data());
+
+                // ensure we are connected and fetch the capabilities
+                auto validator = new ConnectionValidator(accountStatePtr->account(), accountStatePtr->account().data());
+
+                connect(validator, &ConnectionValidator::connectionResult, accountStatePtr.data(),
+                    [accountStatePtr, syncMode, dynamicRegistrationData, this](ConnectionValidator::Status status, const QStringList &) {
+                        switch (status) {
+                        // a server we no longer support but that might work
+                        case ConnectionValidator::ServerVersionMismatch:
+                            [[fallthrough]];
+                        case ConnectionValidator::Connected: {
+                            // saving once after adding makes sure the account is stored in the config in a working state
+                            // this is needed to ensure a consistent state in the config file upon unexpected terminations of the client
+                            // (for instance, when running from a debugger and stopping the process from there)
+                            AccountManager::instance()->save();
+
+                            // only now, we can store the dynamic registration data in the keychain
+                            if (!dynamicRegistrationData.isEmpty()) {
+                                OAuth::saveDynamicRegistrationDataForAccount(accountStatePtr->account(), dynamicRegistrationData);
+                            }
+
+                            // the account is now ready, emulate a normal account loading and Q_EMIT that the credentials are ready
+                            Q_EMIT accountStatePtr->account()->credentialsFetched();
+
+                            switch (syncMode) {
+                            case Wizard::SyncMode::SyncEverything:
+                            case Wizard::SyncMode::UseVfs: {
+                                bool useVfs = syncMode == Wizard::SyncMode::UseVfs;
+                                setUpInitialSyncFolder(accountStatePtr, useVfs);
+                                accountStatePtr->setSettingUp(false);
+                                break;
+                            }
+                            case Wizard::SyncMode::ConfigureUsingFolderWizard: {
+                                Q_ASSERT(!accountStatePtr->account()->hasDefaultSyncRoot());
+
+                                auto *folderWizard = new FolderWizard(accountStatePtr, ocApp()->settingsDialog());
+                                folderWizard->setAttribute(Qt::WA_DeleteOnClose);
+
+                                // TODO: duplication of AccountSettings
+                                // adapted from AccountSettings::slotFolderWizardAccepted()
+                                connect(folderWizard, &QDialog::accepted, accountStatePtr.data(), [accountStatePtr, folderWizard]() {
+                                    FolderMan *folderMan = FolderMan::instance();
+
+                                    qCInfo(lcApplication) << "Folder wizard completed";
+                                    const auto config = folderWizard->result();
+
+                                    auto folder = folderMan->addFolderFromFolderWizardResult(accountStatePtr, config);
+
+                                    if (!config.selectiveSyncBlackList.isEmpty() && OC_ENSURE(folder && !config.useVirtualFiles)) {
+                                        folder->journalDb()->setSelectiveSyncList(SyncJournalDb::SelectiveSyncBlackList, config.selectiveSyncBlackList);
+
+                                        // The user already accepted the selective sync dialog. everything is in the white list
+                                        folder->journalDb()->setSelectiveSyncList(SyncJournalDb::SelectiveSyncWhiteList, {QLatin1String("/")});
+                                    }
+
+                                    folderMan->setSyncEnabled(true);
+                                    folderMan->scheduleAllFolders();
+                                    accountStatePtr->setSettingUp(false);
+                                });
+
+                                connect(folderWizard, &QDialog::rejected, accountStatePtr.data(), [accountStatePtr]() {
+                                    qCInfo(lcApplication) << "Folder wizard cancelled";
+                                    FolderMan::instance()->setSyncEnabled(true);
+                                    accountStatePtr->setSettingUp(false);
+                                });
+
+                                _settingsDialog->accountSettings(accountStatePtr->account().get())
+                                    ->addModalLegacyDialog(folderWizard, AccountSettings::ModalWidgetSizePolicy::Expanding);
+                                break;
+                            }
+                            case OCC::Wizard::SyncMode::Invalid:
+                                Q_UNREACHABLE();
+                            }
+                        }
+                        case ConnectionValidator::ClientUnsupported:
+                            break;
+                        default:
+                            Q_UNREACHABLE();
+                        }
+                    });
+
+
+                validator->checkServer();
+            } else {
+                FolderMan::instance()->setSyncEnabled(true);
+            }
+
+            // make sure the wizard is cleaned up eventually
+            wizardController->deleteLater();
+        });
+
+    // all we have to do is show the dialog...
+    settingsDialog()->addModalWidget(wizardController->window());
 }
 
 bool Application::debugMode()
@@ -192,8 +402,7 @@ bool Application::debugMode()
 std::unique_ptr<Application> Application::createInstance(const QString &displayLanguage, bool debugMode)
 {
     Q_ASSERT(!_instance);
-    _instance = new Application(displayLanguage, debugMode);
+    // _instance will be set in the constructor
+    new Application(displayLanguage, debugMode);
     return std::unique_ptr<Application>(_instance);
 }
-
-} // namespace OCC
