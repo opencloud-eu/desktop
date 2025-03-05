@@ -110,13 +110,8 @@ ownCloudGui::ownCloudGui(Application *parent)
 
     // init systray
     slotComputeOverallSyncStatus();
-    updateContextMenu();
+    setContextMenu();
     _tray->show();
-
-    connect(FolderMan::instance(), &FolderMan::folderSyncStateChange, this, &ownCloudGui::slotComputeOverallSyncStatus);
-    connect(FolderMan::instance(), &FolderMan::folderSyncStateChange, this, &ownCloudGui::updateContextMenu);
-    connect(FolderMan::instance(), &FolderMan::folderListChanged, this, &ownCloudGui::updateContextMenu);
-    connect(AccountManager::instance(), &AccountManager::accountsChanged, this, &ownCloudGui::updateContextMenu);
 }
 
 ownCloudGui::~ownCloudGui()
@@ -250,73 +245,29 @@ void ownCloudGui::hideAndShowTray()
     _tray->show();
 }
 
-void ownCloudGui::updateContextMenu()
+void ownCloudGui::setContextMenu()
 {
-    qDebug() << "updateContextMenu";
-    if (auto *menu = _tray->contextMenu()) {
-        menu->deleteLater();
-    }
+    Q_ASSERT(!_tray->contextMenu());
     auto *menu = new QMenu(Theme::instance()->appNameGUI());
 
-    const auto &accountList = AccountManager::instance()->accounts();
-
-    bool atLeastOnePaused = false;
-
-    for (auto *f : FolderMan::instance()->folders()) {
-        if (f->isSyncPaused()) {
-            atLeastOnePaused = true;
-        }
-    }
-
     menu->addAction(Theme::instance()->applicationIcon(), tr("Show %1").arg(Theme::instance()->appNameGUI()), this, &ownCloudGui::slotShowSettings);
-    menu->addSeparator();
-
-    if (accountList.isEmpty()) {
-        menu->addAction(tr("Create a new account"), this, &ownCloudGui::runNewAccountWizard);
-    } else {
-        if (atLeastOnePaused) {
-            menu->addAction(tr("Resume synchronization"), this, [this] { setPauseOnAllFoldersHelper(AccountManager::instance()->accounts(), false); });
+    auto *pauseResume = new QAction(menu);
+    auto updatePauseResumeAction = [pauseResume] {
+        pauseResume->setText(FolderMan::instance()->scheduler()->isRunning() ? tr("Pause synchronizations") : tr("Resume synchronizations"));
+    };
+    connect(pauseResume, &QAction::triggered, FolderMan::instance()->scheduler(), [] {
+        if (FolderMan::instance()->scheduler()->isRunning()) {
+            if (auto *currentSync = FolderMan::instance()->scheduler()->currentSync()) {
+                currentSync->slotTerminateSync(tr("Synchronization paused"));
+            }
+            FolderMan::instance()->scheduler()->stop();
         } else {
-            menu->addAction(tr("Stop synchronization"), this, [this] { setPauseOnAllFoldersHelper(AccountManager::instance()->accounts(), true); });
+            FolderMan::instance()->scheduler()->start();
         }
-        menu->addSeparator();
-
-        // submenus for accounts
-        for (const auto &account : accountList) {
-            auto *accountMenu = menu->addMenu(account->account()->displayNameWithHost());
-            accountMenu->addAction(CommonStrings::showInWebBrowser(), this, [account] { QDesktopServices::openUrl(account->account()->url()); });
-
-            FolderMan *folderMan = FolderMan::instance();
-            const auto &map = folderMan->folders();
-            bool onePaused = false;
-            for (auto *folder : map) {
-                if (folder->accountState() != account.data()) {
-                    continue;
-                }
-
-                if (folder->isSyncPaused()) {
-                    onePaused = true;
-                }
-                accountMenu->addAction(CommonStrings::showInFileBrowser(folder->path()), this, [folder] {
-                    qCInfo(lcApplication) << "opening local URL " << folder->path();
-                    QDesktopServices::openUrl(QUrl::fromLocalFile(folder->path()));
-                });
-            }
-
-            accountMenu->addSeparator();
-            if (onePaused) {
-                accountMenu->addAction(tr("Resume synchronization"), this, [account, this] { setPauseOnAllFoldersHelper({account}, false); });
-            } else {
-                accountMenu->addAction(tr("Stop synchronization"), this, [account, this] { setPauseOnAllFoldersHelper({account}, true); });
-            }
-
-            if (account->isSignedOut()) {
-                accountMenu->addAction(tr("Log in..."), this, [account] { account->signIn(); });
-            } else {
-                accountMenu->addAction(tr("Log out"), this, [account] { account->signOutByUi(); });
-            }
-        }
-    }
+    });
+    connect(FolderMan::instance()->scheduler(), &SyncScheduler::isRunningChanged, pauseResume, updatePauseResumeAction);
+    menu->addAction(pauseResume);
+    updatePauseResumeAction();
 
     if (_app->debugMode()) {
         menu->addSeparator();
@@ -336,6 +287,8 @@ void ownCloudGui::updateContextMenu()
         captivePortalCheckbox->setCheckable(true);
         captivePortalCheckbox->setChecked(NetworkInformation::instance()->isForcedCaptivePortal());
         connect(captivePortalCheckbox, &QAction::triggered, this, [](bool checked) { NetworkInformation::instance()->setForcedCaptivePortal(checked); });
+        connect(NetworkInformation::instance(), &NetworkInformation::isBehindCaptivePortalChanged, captivePortalCheckbox,
+            [captivePortalCheckbox] { captivePortalCheckbox->setChecked(NetworkInformation::instance()->isForcedCaptivePortal()); });
     }
 
     menu->addSeparator();
@@ -488,18 +441,6 @@ void ownCloudGui::runNewAccountWizard()
 
         // all we have to do is show the dialog...
         ocApp()->gui()->settingsDialog()->addModalWidget(_wizardController->window());
-    }
-}
-
-void ownCloudGui::setPauseOnAllFoldersHelper(const QList<AccountStatePtr> &accounts, bool pause)
-{
-    for (auto *f : FolderMan::instance()->folders()) {
-        if (accounts.contains(f->accountState())) {
-            f->setSyncPaused(pause);
-            if (pause) {
-                f->slotTerminateSync(tr("User paused sync for account '%1'").arg(f->accountState()->account()->displayNameWithHost()));
-            }
-        }
     }
 }
 

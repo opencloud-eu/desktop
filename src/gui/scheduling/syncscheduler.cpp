@@ -193,14 +193,21 @@ void SyncScheduler::start()
 {
     _running = true;
     startNext();
+    Q_EMIT isRunningChanged();
 }
 
 void SyncScheduler::stop()
 {
     _running = false;
+    Q_EMIT isRunningChanged();
 }
 
 bool SyncScheduler::hasCurrentRunningSyncRunning() const
+{
+    return _currentSync;
+}
+
+Folder *SyncScheduler::currentSync()
 {
     return _currentSync;
 }
@@ -211,4 +218,9 @@ void SyncScheduler::setPauseSyncWhenMetered(bool pauseSyncWhenMetered)
     if (!pauseSyncWhenMetered) {
         startNext();
     }
+}
+
+bool SyncScheduler::isRunning() const
+{
+    return _running;
 }

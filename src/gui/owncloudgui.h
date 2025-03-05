@@ -76,9 +76,7 @@ public Q_SLOTS:
     void slotTrayMessageIfServerUnsupported(Account *account);
 
 private:
-    void setPauseOnAllFoldersHelper(const QList<AccountStatePtr> &accounts, bool pause);
-
-    void updateContextMenu();
+    void setContextMenu();
 
     Systray *_tray;
     SettingsDialog *_settingsDialog;
