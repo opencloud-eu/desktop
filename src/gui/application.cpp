@@ -58,12 +58,10 @@ ownCloudGui *Application::gui() const
 
 Application *Application::_instance = nullptr;
 
-Application::Application(Platform *platform, const QString &displayLanguage, bool debugMode)
+Application::Application(const QString &displayLanguage, bool debugMode)
     : _debugMode(debugMode)
     , _displayLanguage(displayLanguage)
 {
-    platform->migrate();
-
     qCInfo(lcApplication) << "Plugin search paths:" << qApp->libraryPaths();
 
     // Check vfs plugins
@@ -191,10 +189,10 @@ bool Application::debugMode()
     return _debugMode;
 }
 
-std::unique_ptr<Application> Application::createInstance(Platform *platform, const QString &displayLanguage, bool debugMode)
+std::unique_ptr<Application> Application::createInstance(const QString &displayLanguage, bool debugMode)
 {
     Q_ASSERT(!_instance);
-    _instance = new Application(platform, displayLanguage, debugMode);
+    _instance = new Application(displayLanguage, debugMode);
     return std::unique_ptr<Application>(_instance);
 }
 

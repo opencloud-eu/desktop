@@ -470,13 +470,12 @@ CmdOptions parseOptions(const QStringList &app_args)
 
 int main(int argc, char **argv)
 {
-    auto platform = OCC::Platform::create();
+    auto platform = OCC::Platform::create(Platform::Type::Terminal);
     qSetMessagePattern(Logger::loggerPattern());
     qInstallMessageHandler(messageHandler);
 
     QCoreApplication app(argc, argv);
 
-    platform->migrate();
     platform->setApplication(&app);
 
     app.setApplicationVersion(Theme::instance()->versionSwitchOutput());

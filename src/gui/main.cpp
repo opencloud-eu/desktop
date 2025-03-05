@@ -400,7 +400,7 @@ int main(int argc, char **argv)
 
         // Create a `Platform` instance so it can set-up/tear-down stuff for us, and do any
         // initialisation that needs to be done before creating a QApplication
-        const auto platform = Platform::create();
+        const auto platform = Platform::create(Platform::Type::Gui);
 
         // Create the (Q)Application instance:
         QApplication app(argc, argv);
@@ -479,7 +479,7 @@ int main(int argc, char **argv)
             return -1;
         }
 
-        auto ocApp = Application::createInstance(platform.get(), displayLanguage, options.debugMode);
+        auto ocApp = Application::createInstance(displayLanguage, options.debugMode);
 
         QObject::connect(platform.get(), &Platform::requestAttention, ocApp->gui(), &ownCloudGui::slotShowSettings);
 

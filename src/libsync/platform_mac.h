@@ -26,18 +26,17 @@ class MacPlatformPrivate;
 class MacPlatform : public Platform
 {
 public:
-    MacPlatform();
     ~MacPlatform() override;
-
-    void setApplication(QCoreApplication *application) override;
-
-    void migrate() override;
 
     void startServices() override;
 
 private:
+    MacPlatform(Type t);
+
     Q_DECLARE_PRIVATE(MacPlatform)
+
     QScopedPointer<MacPlatformPrivate> d_ptr;
+    friend class Platform;
 };
 
 } // namespace OCC

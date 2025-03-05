@@ -21,8 +21,6 @@ namespace OCC {
 class WinPlatform : public Platform
 {
 public:
-    WinPlatform();
-
     ~WinPlatform() override;
 
     void setApplication(QCoreApplication *application) override;
@@ -30,8 +28,12 @@ public:
     void startServices() override;
 
 private:
+    WinPlatform(Type type);
+
     /// Utility thread that takes care of proper Windows logout handling.
     void startShutdownWatcher();
+
+    friend class Platform;
 };
 
 } // namespace OCC
