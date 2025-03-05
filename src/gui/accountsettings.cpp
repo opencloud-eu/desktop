@@ -95,7 +95,7 @@ AccountSettings::AccountSettings(const AccountStatePtr &accountState, QWidget *p
     });
     ui->stackedWidget->setCurrentWidget(ui->quickWidget);
 
-    auto *notificationsPollTimer = new QTimer(this);
+    auto *notificationsPollTimer = new QTimer(_accountState);
     notificationsPollTimer->setInterval(1min);
     notificationsPollTimer->start();
     connect(notificationsPollTimer, &QTimer::timeout, this, &AccountSettings::updateNotifications);
