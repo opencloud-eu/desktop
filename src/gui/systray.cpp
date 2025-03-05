@@ -68,6 +68,7 @@ Systray::Systray(QObject *parent)
     });
     connect(AccountManager::instance(), &AccountManager::accountAdded, this,
         [this](AccountStatePtr accountState) { connect(accountState.data(), &AccountState::stateChanged, this, &Systray::slotComputeOverallSyncStatus); });
+    connect(FolderMan::instance(), &FolderMan::folderSyncStateChange, this, &Systray::slotComputeOverallSyncStatus);
 
     // init systray
     slotComputeOverallSyncStatus();
