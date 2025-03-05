@@ -12,8 +12,10 @@
  * for more details.
  */
 
-#ifndef SYSTRAY_H
-#define SYSTRAY_H
+#pragma once
+
+#include "libsync/accountfwd.h"
+#include "theme.h"
 
 #include <QSystemTrayIcon>
 
@@ -36,10 +38,17 @@ public:
     void showMessage(const QString &title, const QString &message, const QIcon &icon, int millisecondsTimeoutHint = 10000);
     void setToolTip(const QString &tip);
 
+
+private:
+    void slotTrayMessageIfServerUnsupported(Account *account);
+
+    void slotComputeOverallSyncStatus();
+
+    void computeContextMenu();
+
+
 private:
     void *delegate = nullptr;
 };
 
 } // namespace OCC
-
-#endif //SYSTRAY_H

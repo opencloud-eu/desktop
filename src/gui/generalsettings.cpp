@@ -19,6 +19,7 @@
 #include "common/version.h"
 #include "gui/application.h"
 #include "gui/ignorelisteditor.h"
+#include "gui/logbrowser.h"
 #include "gui/settingsdialog.h"
 #include "gui/translations.h"
 #include "libsync/configfile.h"
@@ -28,6 +29,7 @@
 #include <QOperatingSystemVersion>
 #include <QScopedValueRollback>
 
+Q_LOGGING_CATEGORY(lcGeneralSettings, "gui.generalsettings", QtInfoMsg)
 namespace OCC {
 
 GeneralSettings::GeneralSettings(QWidget *parent)
@@ -71,10 +73,13 @@ GeneralSettings::GeneralSettings(QWidget *parent)
     connect(_ui->ignoredFilesButton, &QAbstractButton::clicked, this, &GeneralSettings::slotIgnoreFilesEditor);
     connect(_ui->logSettingsButton, &QPushButton::clicked, this, [] {
         // only access occApp after things are set up
-        ocApp()->gui()->slotToggleLogBrowser();
+        auto logBrowser = new LogBrowser(ocApp()->settingsDialog());
+        logBrowser->setAttribute(Qt::WA_DeleteOnClose);
+        ocApp()->showSettings();
+        logBrowser->open();
     });
 
-    connect(_ui->about_pushButton, &QPushButton::clicked, this, &GeneralSettings::showAbout);
+    connect(_ui->about_pushButton, &QPushButton::clicked, ocApp(), &Application::showSettings);
 }
 
 GeneralSettings::~GeneralSettings()
@@ -129,9 +134,9 @@ void GeneralSettings::slotToggleOptionalDesktopNotifications(bool enable)
 void GeneralSettings::slotIgnoreFilesEditor()
 {
     if (_ignoreEditor.isNull()) {
-        _ignoreEditor = new IgnoreListEditor(ocApp()->gui()->settingsDialog());
+        _ignoreEditor = new IgnoreListEditor(ocApp()->settingsDialog());
         _ignoreEditor->setAttribute(Qt::WA_DeleteOnClose, true);
-        ownCloudGui::raise();
+        ocApp()->showSettings();
         _ignoreEditor->open();
     }
 }
@@ -174,7 +179,7 @@ void GeneralSettings::loadLanguageNamesIntoDropdown()
         // fallback if there's a locale whose name Qt doesn't know
         // this indicates a broken filename
         if (nativeLanguageName.isEmpty()) {
-            qCDebug(lcApplication()) << "Warning: could not find native language name for locale" << availableLocale;
+            qCDebug(lcGeneralSettings) << "Warning: could not find native language name for locale" << availableLocale;
             nativeLanguageName = tr("unknown (%1)").arg(availableLocale);
         }
 

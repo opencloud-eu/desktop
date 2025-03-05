@@ -20,6 +20,7 @@
 #include "commonstrings.h"
 #include "folder.h"
 #include "folderman.h"
+#include "gui/models/expandingheaderview.h"
 #include "issueswidget.h"
 #include "libsync/configfile.h"
 #include "models/models.h"

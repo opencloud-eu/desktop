@@ -126,7 +126,8 @@ bool FolderWizardPrivate::useVirtualFiles() const
     if (useVirtualFiles) {
         const auto availability = Vfs::checkAvailability(localPath(), mode);
         if (!availability) {
-            auto msg = new QMessageBox(QMessageBox::Warning, FolderWizard::tr("Virtual files are not available for the selected folder"), availability.error(), QMessageBox::Ok, ocApp()->gui()->settingsDialog());
+            auto msg = new QMessageBox(QMessageBox::Warning, FolderWizard::tr("Virtual files are not available for the selected folder"), availability.error(),
+                QMessageBox::Ok, ocApp()->settingsDialog());
             msg->setAttribute(Qt::WA_DeleteOnClose);
             msg->open();
             return false;

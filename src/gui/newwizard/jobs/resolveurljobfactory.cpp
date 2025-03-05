@@ -16,7 +16,6 @@
 
 #include "common/utility.h"
 #include "gui/application.h"
-#include "gui/owncloudgui.h"
 #include "gui/settingsdialog.h"
 #include "gui/tlserrordialog.h"
 #include "gui/updateurldialog.h"
@@ -107,7 +106,7 @@ CoreJob *ResolveUrlJobFactory::startJob(const QUrl &url, QObject *parent)
             }
             setJobError(job, QApplication::translate("ResolveUrlJobFactory", "SSL Error: %1").arg(sslErrorString.join(QLatin1Char('\n'))));
         } else {
-            auto *tlsErrorDialog = new TlsErrorDialog(filtered, job->reply()->url().host(), ocApp()->gui()->settingsDialog());
+            auto *tlsErrorDialog = new TlsErrorDialog(filtered, job->reply()->url().host(), ocApp()->settingsDialog());
 
             job->reply()->setProperty(abortedBySslErrorHandlerC, true);
             job->reply()->abort();
@@ -123,7 +122,7 @@ CoreJob *ResolveUrlJobFactory::startJob(const QUrl &url, QObject *parent)
             QObject::connect(tlsErrorDialog, &TlsErrorDialog::rejected, job,
                 [job]() { setJobError(job, QApplication::translate("ResolveUrlJobFactory", "User rejected invalid SSL certificate")); });
 
-            ownCloudGui::raise();
+            ocApp()->showSettings();
             tlsErrorDialog->open();
         }
     });

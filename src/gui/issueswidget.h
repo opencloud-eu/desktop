@@ -15,15 +15,8 @@
 #ifndef ISSUESWIDGET_H
 #define ISSUESWIDGET_H
 
-#include <QDialog>
-#include <QDateTime>
-#include <QLocale>
-#include <QTimer>
-
-#include "models/expandingheaderview.h"
 #include "models/models.h"
 #include "models/protocolitemmodel.h"
-#include "owncloudgui.h"
 #include "progressdispatcher.h"
 
 class QSortFilterProxyModel;

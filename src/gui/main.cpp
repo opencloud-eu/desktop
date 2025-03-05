@@ -481,7 +481,7 @@ int main(int argc, char **argv)
 
         auto ocApp = Application::createInstance(displayLanguage, options.debugMode);
 
-        QObject::connect(platform.get(), &Platform::requestAttention, ocApp->gui(), &ownCloudGui::slotShowSettings);
+        QObject::connect(platform.get(), &Platform::requestAttention, ocApp.get(), &Application::showSettings);
 
         QObject::connect(&singleApplication, &KDSingleApplication::messageReceived, ocApp.get(), [&](const QByteArray &message) {
             const QString msg = QString::fromUtf8(message);
@@ -490,7 +490,7 @@ int main(int argc, char **argv)
                 const QStringList optionsStrings = msg.mid(msgParseOptionsC().size()).split(QLatin1Char('|'));
                 CommandLineOptions options = parseOptions(optionsStrings);
                 if (options.show) {
-                    ocApp->gui()->slotShowSettings();
+                    ocApp->showSettings();
                 }
                 if (options.quitInstance) {
                     qApp->quit();
@@ -513,13 +513,13 @@ int main(int argc, char **argv)
         folderManager->setSyncEnabled(true);
 
         if (options.show) {
-            ocApp->gui()->slotShowSettings();
+            ocApp->showSettings();
             // The user explicitly requested the settings dialog, so don't start the new-account wizard.
         }
 
         // Display the wizard if we don't have an account yet, and no other UI is showing.
         if (AccountManager::instance()->accounts().isEmpty()) {
-            QTimer::singleShot(0, ocApp->gui(), &ownCloudGui::runNewAccountWizard);
+            QTimer::singleShot(0, ocApp.get(), &Application::runNewAccountWizard);
         }
 
         // Now that everything is up and running, start accepting connections/requests from the shell integration.

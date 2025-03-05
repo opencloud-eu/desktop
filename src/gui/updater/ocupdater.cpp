@@ -53,7 +53,7 @@ UpdaterScheduler::UpdaterScheduler(Application *app, QObject *parent)
             // prevent dialog from being displayed twice (rather unlikely, but it won't hurt)
             if (_updateDownloadedWidget == nullptr) {
                 _updateDownloadedWidget = new UpdateDownloadedWidget(app->gui()->settingsDialog(), updater->statusString());
-                ocApp()->gui()->settingsDialog()->addModalWidget(_updateDownloadedWidget);
+                ocApp()->settingsDialog()->addModalWidget(_updateDownloadedWidget);
 
                 connect(_updateDownloadedWidget, &UpdateDownloadedWidget::accepted, this, []() { Updater::instance()->applyUpdateAndRestart(); });
                 connect(_updateDownloadedWidget, &UpdateDownloadedWidget::finished, this, [this]() { delete _updateDownloadedWidget.data(); });
@@ -381,13 +381,13 @@ void WindowsUpdater::showNewVersionAvailableWidget(const UpdateInfo &info)
                      "<p><b>%2</b> is available for download. The installed version is %3.</p>")
                       .arg(Utility::escape(Theme::instance()->appNameGUI()),
                           Utility::escape(info.versionString()), Utility::escape(Version::versionWithBuildNumber().toString()));
-    auto *widget = new NewVersionAvailableWidget(ocApp()->gui()->settingsDialog(), txt);
+    auto *widget = new NewVersionAvailableWidget(ocApp()->settingsDialog(), txt);
 
     connect(widget, &NewVersionAvailableWidget::versionSkipped, this, &WindowsUpdater::slotSetPreviouslySkippedVersion);
     connect(widget, &NewVersionAvailableWidget::updateNow, this, &WindowsUpdater::slotOpenUpdateUrl);
     connect(widget, &NewVersionAvailableWidget::finished, this, [widget]() { delete widget; });
 
-    ocApp()->gui()->settingsDialog()->addModalWidget(widget);
+    ocApp()->settingsDialog()->addModalWidget(widget);
 }
 
 void WindowsUpdater::showUpdateErrorDialog(const QString &targetVersion)

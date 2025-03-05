@@ -16,7 +16,6 @@
 
 #include "accountstate.h"
 #include "gui/qmlutils.h"
-#include "owncloudgui.h"
 #include "progressdispatcher.h"
 
 #include <QMainWindow>
@@ -49,7 +48,7 @@ class SettingsDialog : public QMainWindow
 public:
     enum class SettingsPage { None, Activity, Settings, Account };
     Q_ENUM(SettingsPage)
-    explicit SettingsDialog(ownCloudGui *gui, QWidget *parent = nullptr);
+    explicit SettingsDialog(QWidget *parent = nullptr);
     ~SettingsDialog() override;
 
     void addModalWidget(QWidget *w);
@@ -86,7 +85,6 @@ private:
     QHash<Account *, AccountSettings *> _widgetForAccount;
 
     ActivitySettings *_activitySettings;
-    ownCloudGui *_gui;
     QList<Account *> _modalStack;
 
     GeneralSettings *_generalSettings;
