@@ -47,8 +47,10 @@ namespace chrono = std::chrono;
 Q_LOGGING_CATEGORY(lcConfigFile, "sync.configfile", QtInfoMsg)
 namespace  {
 const QString logHttpC() { return QStringLiteral("logHttp"); }
-const QString remotePollIntervalC() { return QStringLiteral("remotePollInterval"); }
-//const QString caCertsKeyC() { return QStringLiteral("CaCertificates"); } only used from account.cpp
+const QString remotePollIntervalC()
+{
+    return QStringLiteral("remotePollInterval");
+}
 const QString forceSyncIntervalC() { return QStringLiteral("forceSyncInterval"); }
 const QString fullLocalDiscoveryIntervalC()
 {
