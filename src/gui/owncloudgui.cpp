@@ -124,36 +124,11 @@ ownCloudGui::~ownCloudGui()
     delete _settingsDialog;
 }
 
-// This should rather be in application.... or rather in ConfigFile?
-void ownCloudGui::slotOpenSettingsDialog()
-{
-    // if account is set up, start the configuration wizard.
-    if (!AccountManager::instance()->accounts().isEmpty()) {
-        if (QApplication::activeWindow() != _settingsDialog) {
-            slotShowSettings();
-        } else {
-            _settingsDialog->close();
-        }
-    } else {
-        qCInfo(lcApplication) << "No configured folders yet, starting setup wizard";
-        runNewAccountWizard();
-    }
-}
-
 void ownCloudGui::slotTrayClicked(QSystemTrayIcon::ActivationReason reason)
 {
     // Left click
     if (reason == QSystemTrayIcon::Trigger) {
-#ifdef Q_OS_MAC
-        // on macOS, a left click always opens menu.
-        // However if the settings dialog is already visible but hidden
-        // by other applications, this will bring it to the front.
-        if (_settingsDialog->isVisible()) {
-            raise();
-        }
-#else
-        slotOpenSettingsDialog();
-#endif
+        slotShowSettings();
     }
 }
 
