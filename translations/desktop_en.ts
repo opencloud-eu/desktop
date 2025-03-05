@@ -221,77 +221,77 @@ File synchronization desktop utility.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="71"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="108"/>
         <source>Manage Account</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="77"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="114"/>
         <source>Log in</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="77"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="114"/>
         <source>Log out</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="81"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="118"/>
         <source>Reconnect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="91"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="128"/>
         <source>Remove</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="98"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="135"/>
         <source>Account options Menu</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="330"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="363"/>
         <source>Restart sync</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="330"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="363"/>
         <source>Force sync now</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="337"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="370"/>
         <source>Resume sync</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="337"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="370"/>
         <source>Pause sync</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="344"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="377"/>
         <source>Choose what to sync</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="350"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="383"/>
         <source>Remove folder sync connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="356"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="389"/>
         <source>Sync options menu</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="368"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="401"/>
         <source>Add Space</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="390"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="423"/>
         <source>You are synchronizing %1 out of %2 spaces</source>
         <translation type="unfinished"></translation>
     </message>
@@ -442,6 +442,19 @@ File synchronization desktop utility.</source>
     </message>
 </context>
 <context>
+    <name>Notifications</name>
+    <message>
+        <location filename="../src/gui/qml/Notifications.qml" line="25"/>
+        <source>Notificaitons</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/gui/qml/Notifications.qml" line="38"/>
+        <source>Mark all as read</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>OAuthCredentials</name>
     <message>
         <location filename="../src/gui/qml/credentials/OAuthCredentials.qml" line="32"/>
@@ -584,34 +597,34 @@ File synchronization desktop utility.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="171"/>
-        <location filename="../src/gui/accountsettings.cpp" line="210"/>
-        <location filename="../src/gui/accountsettings.cpp" line="500"/>
+        <location filename="../src/gui/accountsettings.cpp" line="193"/>
+        <location filename="../src/gui/accountsettings.cpp" line="232"/>
+        <location filename="../src/gui/accountsettings.cpp" line="539"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="113"/>
+        <location filename="../src/gui/accountsettings.cpp" line="135"/>
         <source>Choose what to sync</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="164"/>
+        <location filename="../src/gui/accountsettings.cpp" line="186"/>
         <source>Confirm Folder Sync Connection Removal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="170"/>
+        <location filename="../src/gui/accountsettings.cpp" line="192"/>
         <source>Remove Folder Sync Connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="201"/>
+        <location filename="../src/gui/accountsettings.cpp" line="223"/>
         <source>Disable virtual file support?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="202"/>
+        <location filename="../src/gui/accountsettings.cpp" line="224"/>
         <source>This action will disable virtual file support. As a consequence contents of folders that are currently marked as &apos;available online only&apos; will be downloaded.
 
 The only advantage of disabling virtual file support is that the selective sync feature will become available again.
@@ -620,112 +633,112 @@ This action will abort any currently running synchronization.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="209"/>
+        <location filename="../src/gui/accountsettings.cpp" line="231"/>
         <source>Disable support</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="250"/>
+        <location filename="../src/gui/accountsettings.cpp" line="272"/>
         <source>Sync Running</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="250"/>
+        <location filename="../src/gui/accountsettings.cpp" line="272"/>
         <source>The sync operation is running.&lt;br/&gt;Do you want to stop it?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="267"/>
+        <location filename="../src/gui/accountsettings.cpp" line="289"/>
         <source>Sync paused by user</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="282"/>
+        <location filename="../src/gui/accountsettings.cpp" line="304"/>
         <source>Internet connection is metered</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="283"/>
+        <location filename="../src/gui/accountsettings.cpp" line="305"/>
         <source>Synchronization is paused because the Internet connection is a metered connection&lt;p&gt;Do you really want to force a Synchronization now?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="307"/>
+        <location filename="../src/gui/accountsettings.cpp" line="329"/>
         <source>User triggered force sync</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="341"/>
+        <location filename="../src/gui/accountsettings.cpp" line="374"/>
         <source>Connected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="348"/>
+        <location filename="../src/gui/accountsettings.cpp" line="382"/>
         <source>Server is temporarily unavailable</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="351"/>
+        <location filename="../src/gui/accountsettings.cpp" line="385"/>
         <source>Server is currently in maintenance mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="354"/>
+        <location filename="../src/gui/accountsettings.cpp" line="388"/>
         <source>Signed out</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="357"/>
+        <location filename="../src/gui/accountsettings.cpp" line="391"/>
         <source>Updating credentials...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="362"/>
+        <location filename="../src/gui/accountsettings.cpp" line="396"/>
         <source>Captive portal prevents connections to the server.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="364"/>
+        <location filename="../src/gui/accountsettings.cpp" line="398"/>
         <source>Sync is paused due to metered internet connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="366"/>
+        <location filename="../src/gui/accountsettings.cpp" line="400"/>
         <source>Connecting...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="370"/>
+        <location filename="../src/gui/accountsettings.cpp" line="404"/>
         <source>Server configuration error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="376"/>
+        <location filename="../src/gui/accountsettings.cpp" line="410"/>
         <source>Disconnected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="494"/>
+        <location filename="../src/gui/accountsettings.cpp" line="533"/>
         <source>Confirm Account Removal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="495"/>
+        <location filename="../src/gui/accountsettings.cpp" line="534"/>
         <source>&lt;p&gt;Do you really want to remove the connection to the account &lt;i&gt;%1&lt;/i&gt;?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; This will &lt;b&gt;not&lt;/b&gt; delete any files.&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="499"/>
+        <location filename="../src/gui/accountsettings.cpp" line="538"/>
         <source>Remove connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="165"/>
+        <location filename="../src/gui/accountsettings.cpp" line="187"/>
         <source>&lt;p&gt;Do you really want to stop syncing the folder &lt;i&gt;%1&lt;/i&gt;?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; This will &lt;b&gt;not&lt;/b&gt; delete any files.&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="338"/>
+        <location filename="../src/gui/accountsettings.cpp" line="371"/>
         <source>The server version %1 is unsupported! Proceed at your own risk.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3426,12 +3439,12 @@ Are you sure you want to proceed?</source>
 <context>
     <name>account loading</name>
     <message>
-        <location filename="../src/gui/main.cpp" line="465"/>
+        <location filename="../src/gui/main.cpp" line="466"/>
         <source>Error accessing the configuration file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/main.cpp" line="466"/>
+        <location filename="../src/gui/main.cpp" line="467"/>
         <source>There was an error while accessing the configuration file at %1.</source>
         <translation type="unfinished"></translation>
     </message>
