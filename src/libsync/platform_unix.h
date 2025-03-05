@@ -23,12 +23,13 @@ namespace OCC {
 class UnixPlatform : public Platform
 {
 public:
-    UnixPlatform();
-
     ~UnixPlatform() override;
 
 private:
+    UnixPlatform(Type t);
     void setLimitsForCoreDumps();
+
+    friend class Platform;
 };
 
 } // namespace OCC

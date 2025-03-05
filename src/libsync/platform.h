@@ -32,18 +32,23 @@ class OPENCLOUD_SYNC_EXPORT Platform : public QObject
 {
     Q_OBJECT
 public:
-    using QObject::QObject;
-
-    static std::unique_ptr<Platform> create();
-
-    virtual void migrate();
+    enum class Type { Gui, Terminal };
+    static std::unique_ptr<Platform> create(Type t);
 
     virtual void setApplication(QCoreApplication *application);
 
     virtual void startServices();
 
+    Type type() const;
+
 Q_SIGNALS:
     void requestAttention();
+
+protected:
+    Platform(Type t);
+
+private:
+    Type _type;
 };
 
 } // OCC namespace

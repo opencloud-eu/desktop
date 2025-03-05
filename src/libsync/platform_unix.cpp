@@ -25,7 +25,8 @@ namespace OCC {
 
 Q_LOGGING_CATEGORY(lcPlatform, "gui.platform")
 
-UnixPlatform::UnixPlatform()
+UnixPlatform::UnixPlatform(Type t)
+    : Platform(t)
 {
     signal(SIGPIPE, SIG_IGN);
     setLimitsForCoreDumps();

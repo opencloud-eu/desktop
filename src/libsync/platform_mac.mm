@@ -27,8 +27,6 @@
 // defined in platform_mac_deprecated.mm
 namespace OCC {
 
-void migrateLaunchOnStartup();
-
 Q_LOGGING_CATEGORY(lcPlatform, "sync.platform.macos")
 } // OCC namespace
 
@@ -177,25 +175,14 @@ public:
     PowerNotificationsListener listener;
 };
 
-MacPlatform::MacPlatform()
-    : d_ptr(new MacPlatformPrivate)
+MacPlatform::MacPlatform(Type t)
+    : Platform(t)
+    , d_ptr(new MacPlatformPrivate)
 {
     signal(SIGPIPE, SIG_IGN);
-}
 
-MacPlatform::~MacPlatform()
-{
-    Q_D(MacPlatform);
-    if (d->appDelegate) {
-        [d->appDelegate release];
-    }
-}
-
-void MacPlatform::setApplication(QCoreApplication *application)
-{
-    Platform::setApplication(application);
     // only register the delegate resposible for showing up in the dock if we are a core application like the cmd app
-    if (qobject_cast<QApplication *>(application)) {
+    if (t == Type::Gui) {
         Q_D(MacPlatform);
         NSApplicationLoad();
         d->appDelegate = [[OwnAppDelegate alloc] init];
@@ -204,11 +191,12 @@ void MacPlatform::setApplication(QCoreApplication *application)
     }
 }
 
-void MacPlatform::migrate()
+MacPlatform::~MacPlatform()
 {
-    Platform::migrate();
-
-    migrateLaunchOnStartup();
+    Q_D(MacPlatform);
+    if (d->appDelegate) {
+        [d->appDelegate release];
+    }
 }
 
 void MacPlatform::startServices()

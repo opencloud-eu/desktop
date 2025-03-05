@@ -49,7 +49,8 @@ namespace OCC {
 
 Q_LOGGING_CATEGORY(lcPlatform, "sync.platform.windows")
 
-WinPlatform::WinPlatform()
+WinPlatform::WinPlatform(Type t)
+    : Platform(t)
 {
     QGuiApplication::setHighDpiScaleFactorRoundingPolicy(Qt::HighDpiScaleFactorRoundingPolicy::PassThrough);
 }

@@ -22,12 +22,6 @@
 #include "platform.h"
 
 #include <QPointer>
-#include <QQueue>
-#include <QTimer>
-
-class QMessageBox;
-class QSystemTrayIcon;
-class QSocket;
 
 namespace CrashReporter {
 class Handler;
@@ -48,7 +42,7 @@ class OPENCLOUD_GUI_EXPORT Application : public QObject
 {
     Q_OBJECT
 public:
-    static std::unique_ptr<Application> createInstance(Platform *platform, const QString &displayLanguage, bool debugMode);
+    static std::unique_ptr<Application> createInstance(const QString &displayLanguage, bool debugMode);
     ~Application();
 
     bool debugMode();
@@ -66,7 +60,7 @@ protected Q_SLOTS:
     void slotAccountStateRemoved() const;
 
 private:
-    explicit Application(Platform *platform, const QString &displayLanguage, bool debugMode);
+    explicit Application(const QString &displayLanguage, bool debugMode);
 
     QPointer<ownCloudGui> _gui = {};
 

@@ -35,7 +35,8 @@
 
 namespace OCC {
 
-void Platform::migrate()
+Platform::Platform(Type t)
+    : _type(t)
 {
 }
 
@@ -62,21 +63,28 @@ void Platform::setApplication([[maybe_unused]] QCoreApplication *application)
 
 void Platform::startServices() { }
 
-std::unique_ptr<Platform> Platform::create()
+Platform::Type Platform::type() const
+{
+    return _type;
+}
+
+std::unique_ptr<Platform> Platform::create(Type t)
 {
     // we need to make sure the platform class is initialized before a Q(Core)Application has been set up
     // the constructors run some initialization code that affects Qt's initialization
     Q_ASSERT(QCoreApplication::instance() == nullptr);
 
+    return std::unique_ptr<Platform>{
 #if defined(Q_OS_WIN)
-    return std::make_unique<WinPlatform>();
+        new WinPlatform(t)
 #elif defined(Q_OS_LINUX)
-    return std::make_unique<UnixPlatform>();
+        new UnixPlatform(t)
 #elif defined(Q_OS_MAC)
-    return std::make_unique<MacPlatform>();
+        new MacPlatform(t)
 #else
-    Q_UNREACHABLE();
+#error Unsupported platform
 #endif
+    };
 }
 
 } // OCC namespace
