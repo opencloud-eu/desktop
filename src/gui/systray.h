@@ -22,6 +22,7 @@
 class QIcon;
 
 namespace OCC {
+class SnoreToast;
 
 /**
  * @brief The Systray class
@@ -49,6 +50,7 @@ private:
 
 private:
     void *delegate = nullptr;
+    SnoreToast *_snoreToast = nullptr;
 };
 
 } // namespace OCC

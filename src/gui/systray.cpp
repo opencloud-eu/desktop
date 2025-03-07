@@ -21,6 +21,10 @@
 #include "gui/networkinformation.h"
 #include "libsync/theme.h"
 
+#ifdef WITH_SNORE_TOAST
+#include "gui/snoretoast.h"
+#endif
+
 #include <QApplication>
 #include <QDesktopServices>
 #include <QMenu>
@@ -59,6 +63,8 @@ Systray::Systray(QObject *parent)
     : QSystemTrayIcon(parent)
 #ifdef Q_OS_MACOS
     , delegate(createOsXNotificationCenterDelegate())
+#elif defined(WITH_SNORE_TOAST)
+    , _snoreToast(new SnoreToast(this))
 #endif
 {
     connect(this, &QSystemTrayIcon::activated, this, [](QSystemTrayIcon::ActivationReason reason) {
@@ -86,12 +92,9 @@ Systray::~Systray()
 #endif // Q_OS_MACOS
 }
 
-void Systray::showMessage(const QString &title, const QString &message, const QIcon &icon, int millisecondsTimeoutHint)
+void Systray::showMessage(const QString &title, const QString &message, [[maybe_unused]] const QIcon &icon, [[maybe_unused]] int millisecondsTimeoutHint)
 {
 #ifdef Q_OS_MACOS
-    Q_UNUSED(icon)
-    Q_UNUSED(millisecondsTimeoutHint)
-
     sendOsXUserNotification(title, message);
 #else
 #ifdef USE_FDO_NOTIFICATIONS
@@ -102,6 +105,10 @@ void Systray::showMessage(const QString &title, const QString &message, const QI
             QDBusMessage::createMethodCall(NOTIFICATIONS_SERVICE_C(), NOTIFICATIONS_PATH_C(), NOTIFICATIONS_IFACE_C(), QStringLiteral("Notify"));
         method.setArguments(args);
         QDBusConnection::sessionBus().asyncCall(method);
+    } else
+#elif (WITH_SNORE_TOAST)
+    if (_snoreToast->isReady()) {
+        _snoreToast->notify(icon, title, message);
     } else
 #endif
     {
