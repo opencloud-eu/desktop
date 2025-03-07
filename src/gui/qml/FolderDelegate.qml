@@ -80,7 +80,7 @@ Pane {
                     focus: true
 
                     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
-                    standardButtons: StandardButton.Discard | Dialog.Close
+                    standardButtons: Dialog.Close
 
                     contentItem: Frame {
                         anchors.fill: parent
