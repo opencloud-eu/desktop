@@ -22,15 +22,21 @@ public:
     Notification();
     Notification(const QString &title, const QString &message, const QString &id);
 
+    bool operator==(const Notification &other) const;
+
     QString title;
     QString message;
     QString id;
 
     static JsonApiJob *createNotificationsJob(const AccountPtr &account, QObject *parent);
 
-    static QList<Notification> getNotifications(JsonApiJob *job);
+    static QSet<Notification> getNotifications(JsonApiJob *job);
 
-    static JsonApiJob *dismissAllNotifications(const AccountPtr &account, const QList<Notification> &notifications, QObject *parent);
+    static JsonApiJob *dismissAllNotifications(const AccountPtr &account, const QSet<Notification> &notifications, QObject *parent);
 };
 
+inline size_t qHash(const Notification &notification, size_t seed = 0)
+{
+    return qHash(notification.id, seed);
+}
 }

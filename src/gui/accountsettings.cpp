@@ -345,7 +345,13 @@ void AccountSettings::updateNotifications()
     if (_accountState->isConnected()) {
         auto *job = Notification::createNotificationsJob(_accountState->account(), this);
         connect(job, &JsonApiJob::finishedSignal, this, [job, this] {
+            const auto oldNotifications = _notifications;
             _notifications = Notification::getNotifications(job);
+            auto newNotifications = _notifications;
+            newNotifications.subtract(oldNotifications);
+            for (const auto &notification : newNotifications) {
+                ocApp()->slotShowOptionalTrayMessage(notification.title, notification.message, Resources::getCoreIcon(QStringLiteral("bell")));
+            }
             Q_EMIT notificationsChanged();
         });
         job->start();
@@ -521,7 +527,7 @@ QString AccountSettings::accountStateIconName()
     return _accountStateIconName;
 }
 
-const QList<Notification> &AccountSettings::notifications() const
+const QSet<Notification> &AccountSettings::notifications() const
 {
     return _notifications;
 }
