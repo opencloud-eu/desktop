@@ -2,6 +2,15 @@ include(ECMAddAppIcon)
 
 find_package(KDSingleApplication-qt6 1.0.0 REQUIRED)
 
+if (WIN32)
+    find_package(LibSnoreToast)
+    set_package_properties(LibSnoreToast PROPERTIES
+            URL https://invent.kde.org/libraries/snoretoast
+            DESCRIPTION "Command-line application capable of creating Windows Toast notifications"
+            TYPE OPTIONAL
+    )
+endif()
+
 
 add_library(OpenCloudGui SHARED)
 
@@ -135,6 +144,12 @@ elseif( WIN32 )
     target_sources(OpenCloudGui PRIVATE
             guiutility_win.cpp
             folderwatcher_win.cpp)
+    if (TARGET SnoreToast::SnoreToastActions)
+        target_sources(OpenCloudGui PRIVATE
+                snoretoast.cpp)
+        target_compile_definitions(OpenCloudGui PRIVATE WITH_SNORE_TOAST)
+        target_link_libraries(OpenCloudGui PRIVATE SnoreToast::SnoreToastActions)
+    endif()
 elseif(UNIX AND NOT APPLE)
     ## handle DBUS for Fdo notifications
     if (TARGET Qt::DBus)
