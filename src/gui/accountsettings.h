@@ -55,7 +55,7 @@ class OPENCLOUD_GUI_EXPORT AccountSettings : public QWidget
     Q_PROPERTY(uint syncedSpaces READ syncedSpaces NOTIFY syncedSpacesChanged)
     Q_PROPERTY(QString connectionLabel READ connectionLabel NOTIFY connectionLabelChanged)
     Q_PROPERTY(QString accountStateIconName READ accountStateIconName NOTIFY connectionLabelChanged)
-    Q_PROPERTY(QList<Notification> notifications READ notifications NOTIFY notificationsChanged)
+    Q_PROPERTY(QSet<Notification> notifications READ notifications NOTIFY notificationsChanged)
     OC_DECLARE_WIDGET_FOCUS
     QML_ELEMENT
     QML_UNCREATABLE("C++ only")
@@ -80,7 +80,7 @@ public:
     QString connectionLabel();
     QString accountStateIconName();
 
-    const QList<Notification> &notifications() const;
+    const QSet<Notification> &notifications() const;
 
 Q_SIGNALS:
     void showIssuesList();
@@ -126,7 +126,7 @@ private:
     QString _connectionLabel;
     QString _accountStateIconName;
 
-    QList<Notification> _notifications;
+    QSet<Notification> _notifications;
 };
 
 } // namespace OCC

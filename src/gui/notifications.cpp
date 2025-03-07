@@ -17,7 +17,12 @@ Notification::Notification(const QString &title, const QString &message, const Q
 {
 }
 
-JsonApiJob *Notification::dismissAllNotifications(const AccountPtr &account, const QList<Notification> &notifications, QObject *parent)
+bool Notification::operator==(const Notification &other) const
+{
+    return id == other.id;
+}
+
+JsonApiJob *Notification::dismissAllNotifications(const AccountPtr &account, const QSet<Notification> &notifications, QObject *parent)
 {
     QStringList ids;
     for (const Notification &n : notifications) {
@@ -33,16 +38,16 @@ JsonApiJob *Notification::createNotificationsJob(const AccountPtr &account, QObj
     return new JsonApiJob(account, QStringLiteral("ocs/v2.php/apps/notifications/api/v1/notifications"), {}, {}, parent);
 }
 
-QList<Notification> Notification::getNotifications(JsonApiJob *job)
+QSet<Notification> Notification::getNotifications(JsonApiJob *job)
 {
     if (job->ocsSuccess()) {
         const auto data = job->data().value(QLatin1String("ocs")).toObject().value(QLatin1String("data")).toArray();
-        QList<Notification> notifications;
+        QSet<Notification> notifications;
         notifications.reserve(data.size());
         for (const auto &notification : data) {
             const auto n = notification.toObject();
-            notifications.emplace_back(n.value(QLatin1String("subject")).toString(), n.value(QLatin1String("message")).toString(),
-                n.value(QLatin1String("notification_id")).toString());
+            notifications.insert({n.value(QLatin1String("subject")).toString(), n.value(QLatin1String("message")).toString(),
+                n.value(QLatin1String("notification_id")).toString()});
         }
         return notifications;
     }
