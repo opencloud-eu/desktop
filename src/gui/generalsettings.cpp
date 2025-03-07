@@ -79,7 +79,7 @@ GeneralSettings::GeneralSettings(QWidget *parent)
         logBrowser->open();
     });
 
-    connect(_ui->about_pushButton, &QPushButton::clicked, ocApp(), &Application::showSettings);
+    connect(_ui->about_pushButton, &QPushButton::clicked, ocApp(), &Application::showAbout);
 }
 
 GeneralSettings::~GeneralSettings()
