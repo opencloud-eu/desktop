@@ -70,14 +70,17 @@ Pane {
                 id: notificationButton
                 spacing: folderSyncPanel.spacing
 
-                Popup {
+                Dialog {
                     id: notificationPopup
                     width: 300
                     height: 200
                     // kepp some distance to the window corner
                     rightMargin: 10
+                    // set focus, to enablde Popup.CloseOnEscape
+                    focus: true
 
                     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+                    standardButtons: StandardButton.Discard | Dialog.Close
 
                     contentItem: Frame {
                         anchors.fill: parent
