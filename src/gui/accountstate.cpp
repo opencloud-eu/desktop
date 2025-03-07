@@ -24,6 +24,7 @@
 #include "libsync/creds/abstractcredentials.h"
 #include "libsync/creds/httpcredentials.h"
 
+#include "gui/folderman.h"
 #include "gui/networkinformation.h"
 #include "gui/settingsdialog.h"
 #include "gui/tlserrordialog.h"

@@ -21,6 +21,7 @@
 #include "application.h"
 #include "configfile.h"
 #include "generalsettings.h"
+#include "gui/folderman.h"
 #include "gui/qmlutils.h"
 #include "resources/qmlresources.h"
 #include "resources/resources.h"
