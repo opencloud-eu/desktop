@@ -16,10 +16,11 @@
 
 #include "gui/opencloudguilib.h"
 
-#include "clientproxy.h"
-#include "folderman.h"
-#include "platform.h"
+#include "common/asserts.h"
+#include "libsync/accountfwd.h"
 
+#include <QIcon>
+#include <QObject>
 #include <QPointer>
 
 namespace CrashReporter {

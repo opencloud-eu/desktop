@@ -17,6 +17,7 @@
 #include "common/restartmanager.h"
 #include "gui/accountmanager.h"
 #include "gui/application.h"
+#include "gui/folderman.h"
 #include "gui/networkinformation.h"
 #include "libsync/theme.h"
 
