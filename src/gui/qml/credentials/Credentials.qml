@@ -79,7 +79,7 @@ Pane {
         Image {
             Layout.alignment: Qt.AlignHCenter
             fillMode: Image.PreserveAspectFit
-            source: QMLResources.resourcePath("universal", "wizard_logo", true)
+            source: OpenCloud.resourcePath("universal", "wizard_logo", true)
             sourceSize.height: 128
             sourceSize.width: 128
         }

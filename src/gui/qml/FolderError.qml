@@ -27,7 +27,7 @@ ColumnLayout {
         property alias maximumLineCount: label.maximumLineCount
         Image {
             Layout.alignment: Qt.AlignTop
-            source: QMLResources.resourcePath("core", "warning", enabled)
+            source: OpenCloud.resourcePath("fontawesome", "", enabled)
             Layout.maximumHeight: 16
             Layout.maximumWidth: 16
             sourceSize.width: width

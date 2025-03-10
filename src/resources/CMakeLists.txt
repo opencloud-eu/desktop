@@ -6,6 +6,7 @@ add_library(OpenCloudResources SHARED
     qmlresources.cpp
     themewatcher.cpp
     template.cpp
+    fonticon.cpp
 )
 
 generate_theme(OpenCloudResources OPENCLOUD_SIDEBAR_ICONS)

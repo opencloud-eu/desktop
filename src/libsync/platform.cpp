@@ -45,6 +45,8 @@ void Platform::setApplication([[maybe_unused]] QCoreApplication *application)
     if (qobject_cast<QApplication *>(application)) {
         const auto fontID = QFontDatabase::addApplicationFont(QStringLiteral(":/client/OpenCloud/theme/OpenCloud500-Regular.otf"));
         const auto fontBoldID = QFontDatabase::addApplicationFont(QStringLiteral(":/client/OpenCloud/theme/OpenCloud750-Bold.otf"));
+        QFontDatabase::addApplicationFont(QStringLiteral(":/client/font-awesome/Font Awesome 6 Free-Solid-900.otf"));
+        QFontDatabase::addApplicationFont(QStringLiteral(":/client/remixicon/remixicon.ttf"));
         if (fontID != -1) {
             auto font = QApplication::font();
             font.setFamilies(QFontDatabase::applicationFontFamilies(fontID) << QFontDatabase::applicationFontFamilies(fontBoldID));

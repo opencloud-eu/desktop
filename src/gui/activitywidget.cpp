@@ -14,12 +14,12 @@
 
 #include "activitywidget.h"
 
-#include "account.h"
+
 #include "issueswidget.h"
 #include "protocolwidget.h"
+#include "resources/fonticon.h"
 #include "theme.h"
 
-#include <QHBoxLayout>
 #include <QtGui>
 #include <QtWidgets>
 
@@ -41,10 +41,10 @@ ActivitySettings::ActivitySettings(QWidget *parent)
     hbox->addWidget(_tab);
 
     _protocolWidget = new ProtocolWidget(this);
-    _tab->addTab(_protocolWidget, Resources::getCoreIcon(QStringLiteral("states/sync")), tr("Local Activity"));
+    _tab->addTab(_protocolWidget, Resources::FontIcon(u''), tr("Local Activity"));
 
     _issuesWidget = new IssuesWidget(this);
-    const int issueTabId = _tab->addTab(_issuesWidget, Resources::getCoreIcon(QStringLiteral("states/warning")), tr("Not Synced"));
+    const int issueTabId = _tab->addTab(_issuesWidget, Resources::FontIcon(u''), tr("Not Synced"));
     connect(_issuesWidget, &IssuesWidget::issueCountUpdated, this, [issueTabId, this](int issueCount) {
         QString cntText = tr("Not Synced");
         if (issueCount) {

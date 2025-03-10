@@ -1,10 +1,11 @@
 #include "accountconfiguredwizardpage.h"
+
 #include "ui_accountconfiguredwizardpage.h"
 
 #include "gui/application.h"
 #include "libsync/theme.h"
+#include "resources/fonticon.h"
 
-#include "resources/resources.h"
 
 #include <QDir>
 #include <QFileDialog>
@@ -101,8 +102,8 @@ AccountConfiguredWizardPage::AccountConfiguredWizardPage(
     _ui->advancedConfigGroupBox->setChecked(false);
 
     // allows resetting local directory to default value once changed
-    _ui->resetLocalDirectoryButton->setIcon(Resources::getCoreIcon(QStringLiteral("undo")));
-    _ui->chooseLocalDirectoryButton->setIcon(Resources::getCoreIcon(QStringLiteral("more")));
+    _ui->resetLocalDirectoryButton->setIcon(Resources::FontIcon(u''));
+    _ui->chooseLocalDirectoryButton->setIcon(Resources::FontIcon(u''));
     auto enableResetLocalDirectoryButton = [this, defaultSyncTargetDir]() {
         return _ui->localDirectoryLineEdit->text() != QDir::toNativeSeparators(defaultSyncTargetDir);
     };

@@ -15,30 +15,22 @@
 #pragma once
 #include "resources/opencloudresourceslib.h"
 
+#include "resources/fonticon.h"
+
 #include <QIcon>
 #include <QtQml/QtQml>
 
 namespace OCC {
 namespace Resources {
-
-    class OPENCLOUD_RESOURCES_EXPORT QMLResources : public QObject
+    struct Icon
     {
-        Q_OBJECT
-        QML_SINGLETON
-        QML_ELEMENT
-    public:
-        using QObject::QObject;
-        struct Icon
-        {
-            QString theme;
-            QString iconName;
-            bool enabled;
-        };
-        Q_INVOKABLE static QUrl resourcePath(const QString &theme, const QString &icon, bool enabled);
-        Q_INVOKABLE static QUrl resourcePath2(const QString &provider, const QString &icon, bool enabled, const QVariantMap &properies = {});
-
-        static Icon parseIcon(const QString &id);
+        QString theme;
+        QString iconName;
+        FontIcon::Size size;
+        bool enabled;
     };
+
+    Icon OPENCLOUD_RESOURCES_EXPORT parseIcon(const QString &id);
 
     QPixmap OPENCLOUD_RESOURCES_EXPORT pixmap(const QSize &requestedSize, const QIcon &icon, QIcon::Mode mode, QSize *outSize);
 } // Resources

@@ -21,24 +21,13 @@ constexpr QSize minIconSize{16, 16};
 }
 
 using namespace OCC;
-QUrl Resources::QMLResources::resourcePath2(const QString &provider, const QString &icon, bool enabled, const QVariantMap &properies)
-{
-    auto map =
-        QVariantMap{{QStringLiteral("enabled"), enabled}, {QStringLiteral("icon"), icon}, {QStringLiteral("systemtheme"), Resources::isUsingDarkTheme()}};
-    map.insert(properies);
-    const auto data = QJsonDocument::fromVariant(map).toJson();
-    return QUrl(QStringLiteral("image://%1/%2").arg(provider, QString::fromUtf8(data.toBase64())));
-}
 
-QUrl Resources::QMLResources::resourcePath(const QString &theme, const QString &icon, bool enabled)
+Resources::Icon Resources::parseIcon(const QString &id)
 {
-    return resourcePath2(QStringLiteral("OpenCloud"), icon, enabled, {{QStringLiteral("theme"), theme}});
-}
+    const auto data = QUrlQuery(id);
 
-Resources::QMLResources::Icon Resources::QMLResources::parseIcon(const QString &id)
-{
-    const auto data = QJsonDocument::fromJson(QByteArray::fromBase64(id.toUtf8())).object();
-    return Icon{data.value(QLatin1String("theme")).toString(), data.value(QLatin1String("icon")).toString(), data.value(QLatin1String("enabled")).toBool()};
+    return {data.queryItemValue(QLatin1String("theme")), QUrl::fromPercentEncoding(data.queryItemValue(QLatin1String("icon")).toUtf8()),
+        QVariant(data.queryItemValue(QLatin1String("size"))).value<FontIcon::Size>(), QVariant(data.queryItemValue(QLatin1String("enabled"))).toBool()};
 }
 
 QPixmap Resources::pixmap(const QSize &requestedSize, const QIcon &icon, QIcon::Mode mode, QSize *outSize)
