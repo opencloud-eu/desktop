@@ -6,9 +6,8 @@ set( APPLICATION_VENDOR     "OpenCloud" )
 set( APPLICATION_ICON_NAME  "opencloud" )
 
 set( THEME_CLASS            "OpenCloudTheme" )
-set( APPLICATION_REV_DOMAIN "eu.opencloud.desktopclient" )
+set( APPLICATION_REV_DOMAIN "eu.opencloud.desktop" )
 
 set( THEME_INCLUDE          "opencloudtheme.h" )
 
 option( WITH_CRASHREPORTER "Build crashreporter" OFF )
-
