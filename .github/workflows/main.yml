@@ -121,7 +121,7 @@ jobs:
       if: matrix.target  == 'linux-gcc-x86_64'
       run: |
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c libs/qt6/qttools
-        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --run pwsh -c "git ls-files *.qml | %{ qmlformat -i `$_}"
+        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --run pwsh -c "git ls-files "*.qml" "*.js" "*.mjs" | %{ qmlformat -i `$_}"
         $diff = git diff
         if ($diff) {
           $diff
