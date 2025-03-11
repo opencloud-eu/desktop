@@ -54,7 +54,7 @@ class OPENCLOUD_GUI_EXPORT AccountSettings : public QWidget
     Q_PROPERTY(uint unsyncedSpaces READ unsyncedSpaces NOTIFY unsyncedSpacesChanged)
     Q_PROPERTY(uint syncedSpaces READ syncedSpaces NOTIFY syncedSpacesChanged)
     Q_PROPERTY(QString connectionLabel READ connectionLabel NOTIFY connectionLabelChanged)
-    Q_PROPERTY(QString accountStateIconName READ accountStateIconName NOTIFY connectionLabelChanged)
+    Q_PROPERTY(QChar accountStateIconGlype READ accountStateIconGlype NOTIFY connectionLabelChanged)
     Q_PROPERTY(QSet<Notification> notifications READ notifications NOTIFY notificationsChanged)
     OC_DECLARE_WIDGET_FOCUS
     QML_ELEMENT
@@ -78,7 +78,7 @@ public:
     auto model() const;
 
     QString connectionLabel();
-    QString accountStateIconName();
+    QChar accountStateIconGlype();
 
     const QSet<Notification> &notifications() const;
 
@@ -124,7 +124,7 @@ private:
     uint _syncedSpaces = 0;
     uint _unsyncedSpaces = 0;
     QString _connectionLabel;
-    QString _accountStateIconName;
+    QChar _accountStateIconGlype;
 
     QSet<Notification> _notifications;
 };

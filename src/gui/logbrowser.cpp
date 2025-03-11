@@ -14,19 +14,18 @@
 
 #include "logbrowser.h"
 
-#include "stdio.h"
 #include <iostream>
 
 #include <QDesktopServices>
 #include <QDir>
 #include <QLayout>
 #include <QMessageBox>
-#include <QTextStream>
 #include <optional>
 
 #include "configfile.h"
 #include "guiutility.h"
 #include "logger.h"
+#include "resources/fonticon.h"
 #include "ui_logbrowser.h"
 
 #include "resources/resources.h"
@@ -41,7 +40,7 @@ LogBrowser::LogBrowser(QWidget *parent)
 {
     ui->setupUi(this);
 
-    ui->warningIcon->setPixmap(Resources::getCoreIcon(QStringLiteral("warning")).pixmap(ui->warningIcon->size()));
+    ui->warningIcon->setPixmap(Resources::FontIcon(u'').pixmap(ui->warningIcon->size()));
     ui->locationLabel->setText(Logger::instance()->temporaryFolderLogDirPath());
 
     ui->enableLoggingButton->setChecked(ConfigFile().automaticLogDir());

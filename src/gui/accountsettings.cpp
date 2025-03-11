@@ -21,10 +21,8 @@
 #include "accountmanager.h"
 #include "accountstate.h"
 #include "application.h"
-#include "common/utility.h"
 #include "commonstrings.h"
 #include "configfile.h"
-#include "creds/httpcredentialsgui.h"
 #include "folderman.h"
 #include "folderstatusmodel.h"
 #include "folderwizard/folderwizard.h"
@@ -34,15 +32,14 @@
 #include "gui/qmlutils.h"
 #include "gui/selectivesyncwidget.h"
 #include "gui/spaces/spaceimageprovider.h"
-#include "guiutility.h"
 #include "libsync/graphapi/spacesmanager.h"
 #include "libsync/syncresult.h"
 #include "libsync/theme.h"
 #include "networkjobs/jsonjob.h"
+#include "resources/fonticon.h"
 #include "scheduling/syncscheduler.h"
 #include "settingsdialog.h"
 
-#include <QAction>
 #include <QMessageBox>
 #include <QSortFilterProxyModel>
 #include <QtQuickWidgets/QtQuickWidgets>
@@ -254,7 +251,7 @@ void AccountSettings::showConnectionLabel(const QString &message, SyncResult::St
         qCDebug(lcAccountSettings) << msg;
         _connectionLabel = msg;
     }
-    _accountStateIconName = QStringLiteral("states/%1").arg(Theme::instance()->syncStateIconName(SyncResult(status)));
+    _accountStateIconGlype = SyncResult(status).glype();
     Q_EMIT connectionLabelChanged();
 }
 
@@ -350,7 +347,7 @@ void AccountSettings::updateNotifications()
             auto newNotifications = _notifications;
             newNotifications.subtract(oldNotifications);
             for (const auto &notification : newNotifications) {
-                ocApp()->slotShowOptionalTrayMessage(notification.title, notification.message, Resources::getCoreIcon(QStringLiteral("bell")));
+                ocApp()->slotShowOptionalTrayMessage(notification.title, notification.message, Resources::FontIcon(u''));
             }
             Q_EMIT notificationsChanged();
         });
@@ -522,9 +519,9 @@ QString AccountSettings::connectionLabel()
     return _connectionLabel;
 }
 
-QString AccountSettings::accountStateIconName()
+QChar AccountSettings::accountStateIconGlype()
 {
-    return _accountStateIconName;
+    return _accountStateIconGlype;
 }
 
 const QSet<Notification> &AccountSettings::notifications() const

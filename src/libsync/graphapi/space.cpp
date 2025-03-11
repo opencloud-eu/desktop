@@ -14,6 +14,7 @@
 
 #include "space.h"
 
+#include "fonticon.h"
 #include "libsync/account.h"
 #include "libsync/graphapi/spacesmanager.h"
 #include "libsync/networkjobs.h"
@@ -61,12 +62,13 @@ SpaceImage::SpaceImage(Space *space)
 QIcon SpaceImage::image() const
 {
     if (_image.isNull()) {
+        // remix icons is not compatible with nerdfonts so the preview will be broken
         if (_space->drive().getDriveType() == personalC) {
-            return Resources::getCoreIcon(QStringLiteral("folder-sync-small"));
+            return Resources::FontIcon(Resources::FontIcon::FontFamily::RemixIcon, u'', Resources::FontIcon::Size::Half);
         } else if (_space->drive().getId() == sharesIdC) {
-            return Resources::getCoreIcon(QStringLiteral("share"));
+            return Resources::FontIcon(Resources::FontIcon::FontFamily::RemixIcon, u'', Resources::FontIcon::Size::Half);
         }
-        return Resources::getCoreIcon(QStringLiteral("space"));
+        return Resources::FontIcon(Resources::FontIcon::FontFamily::RemixIcon, u'', Resources::FontIcon::Size::Half);
     }
     return _image;
 }

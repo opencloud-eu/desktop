@@ -40,7 +40,7 @@ namespace {
     // minimum delay between progress updates
     constexpr auto progressUpdateTimeOutC = 1s;
 
-    QString statusIconName(Folder *f)
+    QChar statusIconName(Folder *f)
     {
         auto status = f->syncResult();
         if (!f->accountState()->isConnected()) {
@@ -48,7 +48,7 @@ namespace {
         } else if (f->isSyncPaused() || NetworkInformation::instance()->isBehindCaptivePortal() || NetworkInformation::instance()->isMetered()) {
             status.setStatus(SyncResult::Status::Paused);
         }
-        return QStringLiteral("states/%1").arg(Theme::instance()->syncStateIconName(status));
+        return status.glype();
     }
 
     class SubFolderInfo

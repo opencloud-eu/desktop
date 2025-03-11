@@ -170,4 +170,38 @@ int SyncResult::numBlacklistErrors() const
     return _numBlacklistErrors;
 }
 
+QChar SyncResult::glype() const
+{
+    switch (status()) {
+    case NotYetStarted:
+        [[fallthrough]];
+    case SyncRunning:
+        return u'';
+    case SyncAbortRequested:
+        [[fallthrough]];
+    case Paused:
+        return u'';
+    case SyncPrepare:
+        [[fallthrough]];
+    case Success:
+        if (!hasUnresolvedConflicts()) {
+            return u'';
+        }
+        [[fallthrough]];
+    case Problem:
+        [[fallthrough]];
+    case Undefined:
+        // this can happen if no sync connections are configured.
+        return u'';
+    case Offline:
+        return u'';
+    case Error:
+        [[fallthrough]];
+    case SetupError:
+        // FIXME: Use problem once we have an icon.
+        return u'';
+    }
+    Q_UNREACHABLE();
+}
+
 } // ns mirall

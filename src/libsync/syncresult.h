@@ -88,6 +88,9 @@ public:
 
     int numBlacklistErrors() const;
 
+
+    QChar glype() const;
+
 private:
     Status _status = Undefined;
     SyncFileItemSet _syncItems;

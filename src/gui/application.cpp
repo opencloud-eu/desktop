@@ -30,6 +30,7 @@
 #include "gui/newwizard/setupwizardcontroller.h"
 #include "gui/systray.h"
 #include "libsync/graphapi/spacesmanager.h"
+#include "resources/fonticon.h"
 #include "settingsdialog.h"
 #include "socketapi/socketapi.h"
 #include "theme.h"
@@ -265,7 +266,7 @@ void Application::showAbout()
 
 void Application::slotShowTrayMessage(const QString &title, const QString &msg, const QIcon &icon)
 {
-    _systray->showMessage(title, msg, icon.isNull() ? Resources::getCoreIcon(QStringLiteral("states/information")) : icon);
+    _systray->showMessage(title, msg, icon.isNull() ? Resources::FontIcon(u'') : icon);
 }
 
 void Application::slotShowOptionalTrayMessage(const QString &title, const QString &msg, const QIcon &icon)

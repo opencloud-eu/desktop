@@ -20,7 +20,7 @@
 #include <QtQuick/QQuickImageProvider>
 
 namespace OCC::Resources {
-Q_NAMESPACE
+Q_NAMESPACE_EXPORT(OPENCLOUD_RESOURCES_EXPORT)
 /**
  * Wehther we allow a fallback to a vanilla icon
  */
@@ -40,9 +40,9 @@ bool OPENCLOUD_RESOURCES_EXPORT isVanillaTheme();
  */
 bool OPENCLOUD_RESOURCES_EXPORT isUsingDarkTheme();
 
-QIcon OPENCLOUD_RESOURCES_EXPORT getCoreIcon(const QString &icon_name);
-
 QIcon OPENCLOUD_RESOURCES_EXPORT loadIcon(const QString &flavor, const QString &name, IconType iconType);
+
+QColor OPENCLOUD_RESOURCES_EXPORT tint();
 
 /**
  * Returns a universal (non color schema aware) icon.

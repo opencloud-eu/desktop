@@ -15,12 +15,12 @@
 
 #include "account.h"
 #include "accountstate.h"
-#include "models.h"
 #include "gui/folderman.h"
+#include "models.h"
+#include "resources/fonticon.h"
 
 #include "theme.h"
 
-#include <QIcon>
 
 using namespace OCC;
 
@@ -84,12 +84,12 @@ QVariant ProtocolItemModel::data(const QModelIndex &index, int role) const
                 || status == SyncFileItem::FatalError
                 || status == SyncFileItem::DetailError
                 || status == SyncFileItem::BlacklistedError) {
-                return Resources::getCoreIcon(QStringLiteral("states/error"));
+                return Resources::FontIcon(u'');
                 ;
             } else if (Progress::isWarningKind(status) || status == SyncFileItem::Excluded) {
-                return Resources::getCoreIcon(QStringLiteral("states/information"));
+                return Resources::FontIcon(u'');
             } else {
-                return Resources::getCoreIcon(QStringLiteral("states/ok"));
+                return Resources::FontIcon(u'');
             }
         }
         break;

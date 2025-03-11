@@ -13,6 +13,8 @@
  */
 
 #include "resources/resources.h"
+
+#include "fonticon.h"
 #include "resources/qmlresources.h"
 #include "resources/template.h"
 #include "resources/themewatcher.h"
@@ -64,25 +66,6 @@ bool OCC::Resources::isUsingDarkTheme()
     return QPalette().base().color().lightnessF() <= 0.5;
 }
 
-QIcon OCC::Resources::getCoreIcon(const QString &iconName)
-{
-    if (iconName.isEmpty()) {
-        return {};
-    }
-    QIcon &cached = iconCache->_cache[iconName]; // Take reference, this will also "set" the cache entry
-    if (cached.isNull()) {
-        const QString iconPath = QStringLiteral(":/client/resources/core/%1.svg").arg(iconName);
-        Q_ASSERT(QFileInfo::exists(iconPath));
-        const QString color = isUsingDarkTheme() ? QStringLiteral("#E2BAFF") : QStringLiteral("#20434F");
-        QByteArray data = Template::renderTemplateFromFile(iconPath, {{QStringLiteral("color"), color}}).toUtf8();
-        QBuffer buffer(&data);
-        QImageReader iconReader(&buffer, "svg");
-        cached = QPixmap::fromImageReader(&iconReader);
-        OC_ASSERT(!cached.isNull());
-    }
-    return cached;
-}
-
 /*
  * helper to load a icon from either the icon theme the desktop provides or from
  * the apps Qt resources.
@@ -129,6 +112,13 @@ QIcon OCC::Resources::loadIcon(const QString &flavor, const QString &name, IconT
     return cached;
 }
 
+QColor Resources::tint()
+{
+    static QColor lilac{"#E2BAFF"};
+    static QColor petrol{"#20434F"};
+    return isUsingDarkTheme() ? lilac : petrol;
+}
+
 QIcon OCC::Resources::themeUniversalIcon(const QString &name, IconType iconType)
 {
     return loadIcon(QStringLiteral("universal"), name, iconType);
@@ -140,13 +130,20 @@ CoreImageProvider::CoreImageProvider()
 }
 QPixmap CoreImageProvider::requestPixmap(const QString &id, QSize *size, const QSize &requestedSize)
 {
-    const auto qmlIcon = QMLResources::parseIcon(id);
+    const auto qmlIcon = parseIcon(id);
+    if (qmlIcon.iconName.isEmpty()) {
+        return {};
+    }
 
     QIcon icon;
-    if (qmlIcon.theme == QLatin1String("core")) {
-        icon = getCoreIcon(qmlIcon.iconName);
-    } else if (qmlIcon.theme == QLatin1String("universal")) {
+    if (qmlIcon.theme == QLatin1String("universal")) {
         icon = themeUniversalIcon(qmlIcon.iconName);
+    } else if (qmlIcon.theme == QLatin1String("fontawesome")) {
+        Q_ASSERT(qmlIcon.iconName.length() == 1);
+        icon = FontIcon(qmlIcon.iconName.front(), qmlIcon.size);
+    } else if (qmlIcon.theme == QLatin1String("remixicons")) {
+        Q_ASSERT(qmlIcon.iconName.length() == 1);
+        icon = FontIcon(FontIcon::FontFamily::RemixIcon, qmlIcon.iconName.front(), qmlIcon.size);
     }
-    return Resources::pixmap(requestedSize, icon, qmlIcon.enabled ? QIcon::Normal : QIcon::Disabled, size);
+    return pixmap(requestedSize, icon, qmlIcon.enabled ? QIcon::Normal : QIcon::Disabled, size);
 }

@@ -289,6 +289,7 @@ QString Theme::syncStateIconName(const SyncResult &result) const
     Q_UNREACHABLE();
 }
 
+
 QColor Theme::wizardHeaderTitleColor() const
 {
     return qApp->palette().text().color();

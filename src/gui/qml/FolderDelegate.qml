@@ -53,7 +53,7 @@ Pane {
         RowLayout {
             Layout.fillWidth: true
             Image {
-                source: QMLResources.resourcePath("core", accountSettings.accountStateIconName, enabled)
+                source: OpenCloud.resourcePath("fontawesome", accountSettings.accountStateIconGlype, enabled)
                 Layout.preferredHeight: 16
                 Layout.preferredWidth: 16
                 sourceSize.width: width
@@ -94,7 +94,7 @@ Pane {
                 }
 
                 text: accountSettings.notifications.length
-                icon.source: QMLResources.resourcePath("core", "bell", enabled)
+                icon.source: OpenCloud.resourcePath("fontawesome", "", enabled)
                 icon.color: "transparent"
                 icon.height: 16
                 icon.width: 16
@@ -223,8 +223,8 @@ Pane {
                             spacing: folderSyncPanel.spacing
 
                             description: folderDelegate.subtitle
-                            imageSource: folderDelegate.folder.space ? folderDelegate.folder.space.image.qmlImageUrl : QMLResources.resourcePath("core", "space", enabled)
-                            statusSource: QMLResources.resourcePath("core", statusIcon, enabled)
+                            imageSource: folderDelegate.folder.space ? folderDelegate.folder.space.image.qmlImageUrl : OpenCloud.resourcePath("remixicons", "", enabled, FontIcon.Half)
+                            statusSource: OpenCloud.resourcePath("fontawesome", statusIcon, enabled)
                             title: displayName
 
                             Component {
@@ -335,7 +335,7 @@ Pane {
 
                         // this is just a visual hint that we have a context menu
                         Accessible.ignored: true
-                        source: QMLResources.resourcePath("core", "ellipsis-vertical-solid", enabled)
+                        source: OpenCloud.resourcePath("fontawesome", "", enabled)
                         height: 24
                         width: 24
                         sourceSize: Qt.size(height, width)
