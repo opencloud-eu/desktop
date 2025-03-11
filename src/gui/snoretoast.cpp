@@ -22,7 +22,13 @@ namespace {
 
 QString searchSnore()
 {
-    return QStandardPaths::findExecutable(QStringLiteral("SnoreToast.exe"));
+    const auto exe = QStringLiteral("SnoreToast.exe");
+    // look for snoretoast close to our executable, if the file does not exist use one from the path
+    const QString path = QStandardPaths::findExecutable(exe, {qApp->applicationDirPath()});
+    if (!path.isEmpty()) {
+        return path;
+    }
+    return QStandardPaths::findExecutable(exe);
 }
 
 }
@@ -34,47 +40,52 @@ SnoreToast::SnoreToast(QObject *parent)
     , _server(new QLocalServer(this))
     , _temp(new QTemporaryDir)
 {
-    connect(_server, &QLocalServer::newConnection, _server, [this]() {
-        auto *sock = _server->nextPendingConnection();
-        sock->waitForReadyRead();
-        const QByteArray rawData = sock->readAll();
-        sock->deleteLater();
+    if (!_snoreSystemPath.isEmpty()) {
+        qCDebug(lcSnoreToast) << "Located SnoreToast.exe in" << _snoreSystemPath;
+        connect(_server, &QLocalServer::newConnection, _server, [this]() {
+            auto *sock = _server->nextPendingConnection();
+            sock->waitForReadyRead();
+            const QByteArray rawData = sock->readAll();
+            sock->deleteLater();
 
-        const QString data =
-            QString::fromWCharArray(reinterpret_cast<const wchar_t *>(rawData.constData()), rawData.size() / static_cast<int>(sizeof(wchar_t)));
-        qCDebug(lcSnoreToast) << data;
+            const QString data =
+                QString::fromWCharArray(reinterpret_cast<const wchar_t *>(rawData.constData()), rawData.size() / static_cast<int>(sizeof(wchar_t)));
+            qCDebug(lcSnoreToast) << data;
 
-        QMap<QByteArray, QStringView> notificationResponseMap;
-        for (const auto str : QStringView(data).split(QLatin1Char(';'))) {
-            const int equalIndex = str.indexOf(QLatin1Char('='));
-            notificationResponseMap.insert(str.mid(0, equalIndex).toUtf8(), str.mid(equalIndex + 1));
+            QMap<QByteArray, QStringView> notificationResponseMap;
+            for (const auto str : QStringView(data).split(QLatin1Char(';'))) {
+                const int equalIndex = str.indexOf(QLatin1Char('='));
+                notificationResponseMap.insert(str.mid(0, equalIndex).toUtf8(), str.mid(equalIndex + 1));
+            }
+            const QStringView action = notificationResponseMap["action"];
+
+            const auto snoreAction = SnoreToastActions::getAction(action.toString().toStdWString());
+
+            qCInfo(lcSnoreToast) << "Notification" << notificationResponseMap["id"] << "Closed with action:" << SnoreToastActions::getActionString(snoreAction);
+
+            switch (snoreAction) {
+            case SnoreToastActions::Actions::Clicked:
+                ocApp()->showSettings();
+                break;
+            case SnoreToastActions::Actions::Hidden:
+                break;
+            case SnoreToastActions::Actions::Dismissed:
+                break;
+            case SnoreToastActions::Actions::Timedout:
+                break;
+            case SnoreToastActions::Actions::ButtonClicked:
+                break;
+            case SnoreToastActions::Actions::TextEntered:
+                break;
+            case SnoreToastActions::Actions::Error:
+                break;
+            }
+        });
+        if (!_server->listen(QStringLiteral("%1.SnoreToast").arg(Theme::instance()->orgDomainName()))) {
+            qCWarning(lcSnoreToast) << "Failed to listen on the server";
         }
-        const QStringView action = notificationResponseMap["action"];
-
-        const auto snoreAction = SnoreToastActions::getAction(action.toString().toStdWString());
-
-        qCInfo(lcSnoreToast) << "Notification" << notificationResponseMap["id"] << "Closed with action:" << SnoreToastActions::getActionString(snoreAction);
-
-        switch (snoreAction) {
-        case SnoreToastActions::Actions::Clicked:
-            ocApp()->showSettings();
-            break;
-        case SnoreToastActions::Actions::Hidden:
-            break;
-        case SnoreToastActions::Actions::Dismissed:
-            break;
-        case SnoreToastActions::Actions::Timedout:
-            break;
-        case SnoreToastActions::Actions::ButtonClicked:
-            break;
-        case SnoreToastActions::Actions::TextEntered:
-            break;
-        case SnoreToastActions::Actions::Error:
-            break;
-        }
-    });
-    if (!_server->listen(QStringLiteral("%1.SnoreToast").arg(Theme::instance()->orgDomainName()))) {
-        qCWarning(lcSnoreToast) << "Failed to listen on the server";
+    } else {
+        qCWarning(lcSnoreToast) << "Failed to locate SnoreToast.exe";
     }
 }
 
