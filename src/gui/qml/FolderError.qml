@@ -16,7 +16,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
-import eu.OpenCloud.resources 1.0
+import eu.OpenCloud.gui 1.0
 
 ColumnLayout {
     property bool collapsed: true
@@ -25,6 +25,7 @@ ColumnLayout {
     component ErrorItem: RowLayout {
         property alias text: label.text
         property alias maximumLineCount: label.maximumLineCount
+        property alias truncated: label.truncated
         Image {
             Layout.alignment: Qt.AlignTop
             source: OpenCloud.resourcePath("fontawesome", "", enabled)
@@ -36,7 +37,7 @@ ColumnLayout {
         Label {
             id: label
             Layout.fillWidth: true
-            elide: Label.ElideLeft
+            elide: Label.ElideRight
             wrapMode: Label.WordWrap
         }
     }
@@ -46,25 +47,24 @@ ColumnLayout {
         ColumnLayout {
             Layout.fillWidth: true
             ScrollView {
+                id: scrollView
+                clip: true
                 Layout.fillHeight: true
                 Layout.fillWidth: true
-                ColumnLayout {
-                    Layout.fillHeight: true
-                    Layout.fillWidth: true
-                    Repeater {
-                        model: errorMessages
-                        delegate: ErrorItem {
-                            required property string modelData
-                            text: modelData
-                            Layout.fillWidth: true
-                        }
+                contentWidth: availableWidth
+                ListView {
+                    model: errorMessages
+                    delegate: ErrorItem {
+                        width: scrollView.availableWidth
+                        required property string modelData
+                        text: modelData
                     }
                 }
             }
-            Label {
+            Button {
                 Layout.alignment: Qt.AlignHCenter
-                text: "<a href='foo'>" + qsTr("Show less") + "</a>"
-                onLinkActivated: {
+                text: qsTr("Show less")
+                onClicked: {
                     collapsed = true;
                 }
             }
@@ -75,15 +75,18 @@ ColumnLayout {
         id: collapsedError
         ColumnLayout {
             Layout.fillWidth: true
+            // we will show 2 lines of text or one line and a button
             ErrorItem {
+                id: errorItem
                 Layout.fillWidth: true
                 text: errorMessages[0]
-                maximumLineCount: 1
+                maximumLineCount: errorMessages.length > 1 ? 1 : 2
             }
-            Label {
+            Button {
                 Layout.alignment: Qt.AlignHCenter
-                text: "<a href='foo'>" + qsTr("Show more") + "</a>"
-                onLinkActivated: {
+                text: qsTr("Show more")
+                visible: errorMessages.length > 1 || errorItem.truncated
+                onClicked: {
                     collapsed = false;
                 }
             }
