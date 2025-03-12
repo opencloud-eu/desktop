@@ -216,6 +216,20 @@ Pane {
                             contextMenu.popup();
                         }
 
+                        MouseArea {
+                            acceptedButtons: Qt.LeftButton | Qt.RightButton
+                            anchors.fill: parent
+
+                            onClicked: mouse => {
+                                if (mouse.button === Qt.RightButton) {
+                                    contextMenu.popup();
+                                } else {
+                                    folderDelegate.ListView.view.currentIndex = folderDelegate.index;
+                                    folderDelegate.forceActiveFocus(Qt.TabFocusReason);
+                                }
+                            }
+                        }
+
                         SpaceDelegate {
                             anchors.fill: parent
                             Layout.fillHeight: true
@@ -305,20 +319,6 @@ Pane {
                                     } else {
                                         folderDelegate.implicitHeight = normalSize;
                                     }
-                                }
-                            }
-                        }
-
-                        MouseArea {
-                            acceptedButtons: Qt.LeftButton | Qt.RightButton
-                            anchors.fill: parent
-
-                            onClicked: mouse => {
-                                if (mouse.button === Qt.RightButton) {
-                                    contextMenu.popup();
-                                } else {
-                                    folderDelegate.ListView.view.currentIndex = folderDelegate.index;
-                                    folderDelegate.forceActiveFocus(Qt.TabFocusReason);
                                 }
                             }
                         }
