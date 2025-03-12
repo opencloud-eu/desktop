@@ -147,7 +147,9 @@ Pane {
             id: scrollView
             Layout.fillHeight: true
             Layout.fillWidth: true
+            padding: folderSyncPanel.spacing
 
+            contentWidth: availableWidth
             ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
             ScrollBar.vertical.policy: ScrollBar.AlwaysOn
 
@@ -172,7 +174,7 @@ Pane {
                     id: folderDelegate
 
                     implicitHeight: normalSize
-                    width: ListView.view.width - scrollView.ScrollBar.vertical.width - folderSyncPanel.spacing
+                    width: scrollView.availableWidth
 
                     required property string displayName
                     required property var errorMsg
@@ -235,8 +237,6 @@ Pane {
 
                         SpaceDelegate {
                             anchors.fill: parent
-                            Layout.fillHeight: true
-                            Layout.fillWidth: true
                             spacing: folderSyncPanel.spacing
 
                             description: folderDelegate.subtitle
@@ -333,7 +333,6 @@ Pane {
                         // directly position at the top
                         anchors.right: parent.right
                         anchors.top: parent.top
-                        anchors.rightMargin: folderSyncPanel.spacing - paintedWidth
                         anchors.topMargin: folderSyncPanel.spacing
 
                         // this is just a visual hint that we have a context menu

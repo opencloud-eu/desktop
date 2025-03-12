@@ -31,11 +31,12 @@ Pane {
     Accessible.name: qsTr("Spaces")
 
     spacing: 10
-
     ScrollView {
         id: scrollView
         anchors.fill: parent
         clip: true
+        rightPadding: spacesView.spacing * 2
+        contentWidth: availableWidth
         ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
         ScrollBar.vertical.policy: ScrollBar.AlwaysOn
 
@@ -84,7 +85,7 @@ Pane {
 
                 required property int index
 
-                width: ListView.view.width - scrollView.ScrollBar.vertical.width - spacesView.spacing
+                width: scrollView.availableWidth
 
                 implicitHeight: normalSize
 
@@ -114,21 +115,14 @@ Pane {
                     background: Rectangle {
                         color: spaceDelegate.ListView.isCurrentItem ? scrollView.palette.highlight : scrollView.palette.base
                     }
-
-                    RowLayout {
+                    SpaceDelegate {
                         anchors.fill: parent
-
                         spacing: spacesView.spacing
-                        SpaceDelegate {
-                            Layout.fillWidth: true
-                            Layout.fillHeight: true
-                            spacing: spacesView.spacing
 
-                            title: spaceDelegate.name
-                            description: spaceDelegate.subtitle
-                            imageSource: spaceDelegate.space.image.qmlImageUrl
-                            descriptionWrapMode: Label.WordWrap
-                        }
+                        title: spaceDelegate.name
+                        description: spaceDelegate.subtitle
+                        imageSource: spaceDelegate.space.image.qmlImageUrl
+                        descriptionWrapMode: Label.WordWrap
                     }
 
                     MouseArea {
