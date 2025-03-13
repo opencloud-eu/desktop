@@ -246,6 +246,7 @@ QString Theme::about() const
               "<p>For known issues and help, please visit: <a href=\"https://github.com/opencloud-eu/desktop\">GitHub</a></p>"
               "<p>Copyright OpenCloud GmbH<br/>"
               "Copyright ownCloud GmbH</p>"
+              "<p>Distributed by OpenCloud GmbH and licensed under the GNU General Public License (GPL) Version 2.0.<br/>"
               "<p><small>%2</small></p>")
         .arg(Utility::escape(Version::displayString()), aboutVersions(Theme::VersionFormat::RichText));
 }
