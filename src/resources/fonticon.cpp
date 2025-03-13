@@ -16,10 +16,11 @@ namespace {
 class FontIconEngine : public QIconEngine
 {
 public:
-    FontIconEngine(FontIcon::FontFamily family, QChar glyph, FontIcon::Size size)
+    FontIconEngine(FontIcon::FontFamily family, QChar glyph, FontIcon::Size size, const QColor &color = OCC::Resources::tint())
         : _family(family)
         , _glyph(glyph)
         , _size(size)
+        , _color(color)
     {
     }
 
@@ -29,7 +30,7 @@ public:
         painter->setRenderHint(QPainter::Antialiasing);
 
         auto pen = painter->pen();
-        pen.setColor(OCC::Resources::tint());
+        pen.setColor(_color);
         painter->setPen(pen);
 
         auto font = painter->font();
@@ -83,16 +84,17 @@ public:
         return pixmap;
     }
 
-    QIconEngine *clone() const override { return new FontIconEngine(this->_family, this->_glyph, this->_size); }
+    QIconEngine *clone() const override { return new FontIconEngine(this->_family, this->_glyph, this->_size, this->_color); }
 
     QString pixmapKey(const QSize &size, QIcon::Mode mode, QIcon::State state)
     {
-        return QStringLiteral("FontIcon:%1").arg(QString::number(qHashMulti(0, _family, _glyph, _size, size, mode, state), 16));
+        return QStringLiteral("FontIcon:%1").arg(QString::number(qHashMulti(0, _family, _glyph, _size, _color.rgb(), size, mode, state), 16));
     }
 
     const FontIcon::FontFamily _family;
     const QChar _glyph;
     const FontIcon::Size _size;
+    const QColor _color;
 };
 }
 
