@@ -70,6 +70,15 @@ Pane {
                 id: notificationButton
                 spacing: folderSyncPanel.spacing
 
+                text: accountSettings.notifications.length
+                icon.source: OpenCloud.resourcePath("fontawesome", "", enabled)
+                icon.color: "transparent"
+                Layout.preferredHeight: manageAccountButton.implicitHeight
+                // TODO: this is a hack to force our icon engine to not use rediculess dpi scaling
+                // https://github.com/opencloud-eu/desktop/issues/142
+                icon.height: 0
+                icon.width: 0
+
                 Dialog {
                     id: notificationPopup
                     width: 300
@@ -92,12 +101,6 @@ Pane {
                         }
                     }
                 }
-
-                text: accountSettings.notifications.length
-                icon.source: OpenCloud.resourcePath("fontawesome", "", enabled)
-                icon.color: "transparent"
-                icon.height: 16
-                icon.width: 16
 
                 onClicked: notificationPopup.open()
 
