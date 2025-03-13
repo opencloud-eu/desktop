@@ -304,7 +304,7 @@ File synchronization desktop utility.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderError.qml" line="85"/>
+        <location filename="../src/gui/qml/FolderError.qml" line="87"/>
         <source>Show more</source>
         <translation type="unfinished"></translation>
     </message>
