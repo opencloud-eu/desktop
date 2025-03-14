@@ -46,6 +46,11 @@ private:
 TokenCredentials::TokenCredentials(QByteArray &&username, QByteArray &&token)
     : _accessManager(new TokensAccessManager(std::move(username), std::move(token), this))
 {
+    connect(_accessManager, &QNetworkAccessManager::finished, this, [this](QNetworkReply *reply) {
+        if (reply->error() == QNetworkReply::AuthenticationRequiredError) {
+            Q_EMIT authenticationFailed();
+        }
+    });
 }
 
 AccessManager *TokenCredentials::createAM() const

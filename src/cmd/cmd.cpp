@@ -497,6 +497,9 @@ int main(int argc, char **argv)
         ctx.options.server_url = ctx.options.server_url.adjusted(QUrl::RemoveUserInfo);
         ctx.account->setUrl(ctx.options.server_url);
 
+        QObject::connect(ctx.account->credentials(), &AbstractCredentials::authenticationFailed, qApp,
+            [] { qFatal() << "Authentication failed please verify your credentials"; });
+
         auto *checkServerJob = CheckServerJobFactory(ctx.account->accessManager()).startJob(ctx.account->url(), qApp);
 
         QObject::connect(checkServerJob, &CoreJob::finished, qApp, [ctx, checkServerJob] {
