@@ -197,6 +197,17 @@ void sync(const SyncCTX &ctx, const QUrl &spaceUrl)
     });
     QObject::connect(engine, &SyncEngine::syncError, engine,
         [](const QString &error) { qWarning() << "Sync error:" << error; });
+    QObject::connect(engine, &SyncEngine::itemCompleted, engine, [](const SyncFileItemPtr &item) {
+        if (item->hasErrorStatus()) {
+            switch (item->_status) {
+            case SyncFileItem::Excluded:
+                qDebug() << "Sync excluded file:" << item->_errorString;
+                break;
+            default:
+                qWarning() << "Sync error:" << item->_status << item->_errorString;
+            }
+        }
+    });
     engine->setIgnoreHiddenFiles(ctx.options.ignoreHiddenFiles);
     engine->setNetworkLimits(ctx.options.uplimit, ctx.options.downlimit);
 
