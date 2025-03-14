@@ -6,6 +6,8 @@
         <string>NSApplication</string>
         <key>CFBundleDevelopmentRegion</key>
         <string>English</string>
+        <key>CFBundleName</key>
+        <string>${APPLICATION_NAME}</string>
         <key>CFBundleExecutable</key>
         <string>${APPLICATION_EXECUTABLE}</string>
         <key>CFBundleIconFile</key>
