@@ -108,9 +108,16 @@ void SnoreToast::notify(const QIcon &icon, const QString &title, const QString &
         qCDebug(lcSnoreToast) << proc->readAll();
     });
     proc->start(_snoreSystemPath,
-        {QStringLiteral("-t"), title, QStringLiteral("-m"), msg, QStringLiteral("-pipename"), _server->fullServerName(), QStringLiteral("-id"),
-            QString::number(_notificationId++), QStringLiteral("-appId"), Theme::instance()->orgDomainName(), QStringLiteral("-application"),
-            qApp->applicationFilePath(), QStringLiteral("-p"), iconToPath(icon)});
+        {
+            QStringLiteral("-t"), title, //
+            QStringLiteral("-m"), msg, //
+            QStringLiteral("-pipename"), _server->fullServerName(), //
+            QStringLiteral("-id"), QString::number(_notificationId++), //
+            QStringLiteral("-appId"), Theme::instance()->orgDomainName(), //
+            QStringLiteral("-pid"), QString::number(qApp->applicationPid()), //
+            QStringLiteral("-application"), qApp->applicationFilePath(), //
+            QStringLiteral("-p"), iconToPath(icon) //
+        });
 }
 
 QString SnoreToast::iconToPath(const QIcon &icon)
