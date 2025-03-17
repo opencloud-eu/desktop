@@ -41,7 +41,7 @@ OAuthCredentialsSetupWizardState::OAuthCredentialsSetupWizardState(SetupWizardCo
         // bring window up top again, as the browser may have been raised in front of it
         _context->window()->raise();
 
-        auto finish = [=]() {
+        auto finish = [result, token, refreshToken, this] {
             switch (result) {
             case OAuth::Result::LoggedIn: {
                 _context->accountBuilder().setAuthenticationStrategy(new OAuth2AuthenticationStrategy(token, refreshToken));
@@ -64,7 +64,7 @@ OAuthCredentialsSetupWizardState::OAuthCredentialsSetupWizardState(SetupWizardCo
         if (!_context->accountBuilder().webFingerAuthenticationServerUrl().isEmpty()) {
             auto *job = Jobs::WebFingerInstanceLookupJobFactory(_context->accessManager(), token).startJob(_context->accountBuilder().serverUrl(), this);
 
-            connect(job, &CoreJob::finished, this, [=]() {
+            connect(job, &CoreJob::finished, this, [finish, job, this]() {
                 if (!job->success()) {
                     Q_EMIT evaluationFailed(QStringLiteral("Failed to look up instances: %1").arg(job->errorMessage()));
                 } else {

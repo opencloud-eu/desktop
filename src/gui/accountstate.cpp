@@ -64,7 +64,7 @@ UpdateUrlDialog *AccountState::updateUrlDialog(const QUrl &newUrl)
 
     _updateUrlDialog = UpdateUrlDialog::fromAccount(_account, newUrl, ocApp()->settingsDialog());
 
-    connect(_updateUrlDialog, &UpdateUrlDialog::accepted, this, [=]() {
+    connect(_updateUrlDialog, &UpdateUrlDialog::accepted, this, [newUrl, this]() {
         _account->setUrl(newUrl);
         Q_EMIT _account->wantsAccountSaved(_account.data());
         Q_EMIT urlUpdated();
