@@ -1,7 +1,15 @@
-set( APPLICATION_NAME       "OpenCloud Desktop" )
-set( APPLICATION_SHORTNAME  "OpenCloud" )
-set( APPLICATION_EXECUTABLE "opencloud" )
-set( APPLICATION_VENDOR     "OpenCloud" )
+option(CANARY_BUILD "Use a standalone profile" OFF)
+
+if (CANARY_BUILD)
+    set(THEME_SUFFIX " Canary")
+else()
+    set(THEME_SUFFIX "")
+endif()
+
+set( APPLICATION_NAME       "OpenCloud Desktop${THEME_SUFFIX}")
+set( APPLICATION_SHORTNAME  "OpenCloud${THEME_SUFFIX}" )
+set( APPLICATION_EXECUTABLE "opencloud${THEME_SUFFIX}" )
+set( APPLICATION_VENDOR     "OpenCloud${THEME_SUFFIX}" )
 set( APPLICATION_ICON_NAME  "opencloud" )
 
 # TODO: re enable once we got icons
