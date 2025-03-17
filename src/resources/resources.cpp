@@ -58,7 +58,7 @@ QString brandThemePath()
 
 bool Resources::isVanillaTheme()
 {
-    return std::string_view(APPLICATION_SHORTNAME) == "OpenCloud";
+    return std::string_view(APPLICATION_SHORTNAME).starts_with("OpenCloud");
 }
 
 bool OCC::Resources::isUsingDarkTheme()
