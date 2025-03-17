@@ -64,7 +64,7 @@ AccountConfiguredWizardPage::AccountConfiguredWizardPage(
         _ui->useVfsRadioButton->setToolTip(tr("The virtual filesystem feature is not available for this installation."));
     }
 
-    connect(_ui->chooseLocalDirectoryButton, &QToolButton::clicked, this, [=]() {
+    connect(_ui->chooseLocalDirectoryButton, &QToolButton::clicked, this, [this]() {
         auto dialog = new QFileDialog(this, tr("Select the local folder"), _ui->localDirectoryLineEdit->text());
         dialog->setFileMode(QFileDialog::Directory);
         dialog->setOption(QFileDialog::ShowDirsOnly);

@@ -426,7 +426,7 @@ void ProcessDirectoryJob::processFileAnalyzeRemoteInfo(
     item->_modtime = serverEntry.modtime;
     item->_size = serverEntry.size;
 
-    auto postProcessServerNew = [=]() mutable {
+    auto postProcessServerNew = [=, this]() mutable {
         // Turn new remote files into virtual files if the option is enabled.
         // TODO: move the decision to the backend
         const auto &opts = _discoveryData->_syncOptions;
@@ -546,7 +546,7 @@ void ProcessDirectoryJob::processFileAnalyzeRemoteInfo(
             // we need to make a request to the server to know that the original file is deleted on the server
             _pendingAsyncJobs++;
             auto job = new RequestEtagJob(_discoveryData->_account, _discoveryData->_baseUrl, _discoveryData->_remoteFolder + originalPath, this);
-            connect(job, &RequestEtagJob::finishedSignal, this, [=]() mutable {
+            connect(job, &RequestEtagJob::finishedSignal, this, [=, this]() mutable {
                 _pendingAsyncJobs--;
                 QTimer::singleShot(0, _discoveryData, &DiscoveryPhase::scheduleMoreJobs);
                 if (job->httpStatusCode() == 207 ||
