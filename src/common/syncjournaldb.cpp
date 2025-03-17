@@ -2055,6 +2055,11 @@ void SyncJournalDb::markVirtualFileForDownloadRecursively(const QByteArray &path
     query.exec();
 }
 
+SyncJournalDb::PinStateInterface::PinStateInterface(SyncJournalDb *db)
+    : _db(db)
+{
+}
+
 Optional<PinState> SyncJournalDb::PinStateInterface::rawForPath(const QByteArray &path)
 {
     QMutexLocker lock(&_db->_mutex);
