@@ -1,7 +1,7 @@
-option(CANARY_BUILD "Use a standalone profile" OFF)
+option(DEV_BUILD "Use a standalone profile for developement" OFF)
 
-if (CANARY_BUILD)
-    set(THEME_SUFFIX " Canary")
+if (DEV_BUILD)
+    set(THEME_SUFFIX " Dev")
 else()
     set(THEME_SUFFIX "")
 endif()
