@@ -299,10 +299,13 @@ public:
     using QNetworkReply::setAttribute;
     using QNetworkReply::setRawHeader;
 
+    void checkedFinished();
+
     virtual void abort() override;
 };
 
 class FakePropfindReply : public FakeReply
+
 {
     Q_OBJECT
 
