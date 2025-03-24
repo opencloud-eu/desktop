@@ -22,12 +22,12 @@
 
 namespace OCC::Wizard {
 
-AbstractAuthenticationStrategy::~AbstractAuthenticationStrategy() { }
-
-
-OAuth2AuthenticationStrategy::OAuth2AuthenticationStrategy(const QString &token, const QString &refreshToken)
+OAuth2AuthenticationStrategy::OAuth2AuthenticationStrategy(
+    const QString &token, const QString &refreshToken, const QVariantMap &dynamicRegistrationData, const IdToken &idToken)
     : _token(token)
     , _refreshToken(refreshToken)
+    , _dynamicRegistrationData(dynamicRegistrationData)
+    , _idToken(idToken)
 {
 }
 
@@ -47,6 +47,16 @@ FetchUserInfoJobFactory OAuth2AuthenticationStrategy::makeFetchUserInfoJobFactor
     return FetchUserInfoJobFactory::fromOAuth2Credentials(nam, _token);
 }
 
+const QVariantMap &OAuth2AuthenticationStrategy::dynamicRegistrationData() const
+{
+    return _dynamicRegistrationData;
+}
+
+const IdToken &OAuth2AuthenticationStrategy::idToken() const
+{
+    return _idToken;
+}
+
 SetupWizardAccountBuilder::SetupWizardAccountBuilder() = default;
 
 void SetupWizardAccountBuilder::setServerUrl(const QUrl &serverUrl)
@@ -63,7 +73,7 @@ QUrl SetupWizardAccountBuilder::serverUrl() const
     return _serverUrl;
 }
 
-AccountPtr SetupWizardAccountBuilder::build()
+AccountPtr SetupWizardAccountBuilder::build() const
 {
     auto newAccountPtr = Account::create(QUuid::createUuid());
 
@@ -80,6 +90,7 @@ AccountPtr SetupWizardAccountBuilder::build()
     // TODO: perhaps _authenticationStrategy->setUpAccountPtr(...) would be more elegant? no need for getters then
     newAccountPtr->setCredentials(_authenticationStrategy->makeCreds());
     newAccountPtr->credentials()->persist();
+    OAuth::persist(newAccountPtr, _authenticationStrategy->dynamicRegistrationData(), _authenticationStrategy->idToken());
 
     newAccountPtr->setDavDisplayName(_displayName);
 
@@ -115,9 +126,9 @@ void SetupWizardAccountBuilder::setDisplayName(const QString &displayName)
     _displayName = displayName;
 }
 
-void SetupWizardAccountBuilder::setAuthenticationStrategy(AbstractAuthenticationStrategy *strategy)
+void SetupWizardAccountBuilder::setAuthenticationStrategy(std::unique_ptr<OAuth2AuthenticationStrategy> &&strategy)
 {
-    _authenticationStrategy.reset(strategy);
+    _authenticationStrategy = std::move(strategy);
 }
 
 void SetupWizardAccountBuilder::addCustomTrustedCaCertificate(const QSslCertificate &customTrustedCaCertificate)
@@ -130,7 +141,7 @@ void SetupWizardAccountBuilder::clearCustomTrustedCaCertificates()
     _customTrustedCaCertificates.clear();
 }
 
-AbstractAuthenticationStrategy *SetupWizardAccountBuilder::authenticationStrategy() const
+OAuth2AuthenticationStrategy *SetupWizardAccountBuilder::authenticationStrategy() const
 {
     return _authenticationStrategy.get();
 }
@@ -143,16 +154,6 @@ void SetupWizardAccountBuilder::setSyncTargetDir(const QString &syncTargetDir)
 QString SetupWizardAccountBuilder::syncTargetDir() const
 {
     return _defaultSyncTargetDir;
-}
-
-void SetupWizardAccountBuilder::setDynamicRegistrationData(const QVariantMap &dynamicRegistrationData)
-{
-    _dynamicRegistrationData = dynamicRegistrationData;
-}
-
-QVariantMap SetupWizardAccountBuilder::dynamicRegistrationData() const
-{
-    return _dynamicRegistrationData;
 }
 
 void SetupWizardAccountBuilder::setWebFingerAuthenticationServerUrl(const QUrl &url)

@@ -21,45 +21,29 @@
 
 namespace OCC::Wizard {
 
-/**
- * The server can use varying authentication methods, for instance HTTP Basic or OAuth2.
- * Depending on the concrete authentication method the server uses, the account's credentials must be initialized differently.
- * We use the strategy pattern to be able to model multiple methods and allow adding new ones by just adding another strategy implementation.
- */
-class AbstractAuthenticationStrategy
+class OAuth2AuthenticationStrategy
 {
 public:
-    virtual ~AbstractAuthenticationStrategy();
+    explicit OAuth2AuthenticationStrategy(
+        const QString &token, const QString &refreshToken, const QVariantMap &dynamicRegistrationData, const IdToken &idToken);
 
-    /**
-     * Create credentials object for use in the account.
-     * @return credentials
-     */
-    virtual HttpCredentialsGui *makeCreds() = 0;
+    HttpCredentialsGui *makeCreds();
 
-    /**
-     * Checks whether the passed credentials are valid.
-     * @return true if valid, false otherwise
-     */
-    virtual bool isValid() = 0;
+    bool isValid();
 
-    virtual FetchUserInfoJobFactory makeFetchUserInfoJobFactory(QNetworkAccessManager *nam) = 0;
-};
+    FetchUserInfoJobFactory makeFetchUserInfoJobFactory(QNetworkAccessManager *nam);
 
-class OAuth2AuthenticationStrategy : public AbstractAuthenticationStrategy
-{
-public:
-    explicit OAuth2AuthenticationStrategy(const QString &token, const QString &refreshToken);
 
-    HttpCredentialsGui *makeCreds() override;
+    const QVariantMap &dynamicRegistrationData() const;
+    const IdToken &idToken() const;
 
-    bool isValid() override;
-
-    FetchUserInfoJobFactory makeFetchUserInfoJobFactory(QNetworkAccessManager *nam) override;
 
 private:
     QString _token;
     QString _refreshToken;
+
+    const QVariantMap _dynamicRegistrationData;
+    const IdToken _idToken;
 };
 
 /**
@@ -78,8 +62,8 @@ public:
     void setServerUrl(const QUrl &serverUrl);
     QUrl serverUrl() const;
 
-    void setAuthenticationStrategy(AbstractAuthenticationStrategy *strategy);
-    AbstractAuthenticationStrategy *authenticationStrategy() const;
+    void setAuthenticationStrategy(std::unique_ptr<OAuth2AuthenticationStrategy> &&strategy);
+    OAuth2AuthenticationStrategy *authenticationStrategy() const;
 
     /**
      * Check whether credentials passed to the builder so far can be used to create a new account object.
@@ -106,16 +90,10 @@ public:
     void clearCustomTrustedCaCertificates();
 
     /**
-     * Set dynamic registration data. Used by OIDC servers to identify dynamically registered clients.
-     */
-    void setDynamicRegistrationData(const QVariantMap &dynamicRegistrationData);
-    QVariantMap dynamicRegistrationData() const;
-
-    /**
      * Attempt to build an account from the previously entered information.
      * @return built account or null if information is still missing
      */
-    AccountPtr build();
+    AccountPtr build() const;
 
     void setWebFingerAuthenticationServerUrl(const QUrl &url);
     QUrl webFingerAuthenticationServerUrl() const;
@@ -133,9 +111,7 @@ private:
     QVector<QUrl> _webFingerInstances;
     QUrl _webFingerSelectedInstance;
 
-    std::unique_ptr<AbstractAuthenticationStrategy> _authenticationStrategy;
-
-    QVariantMap _dynamicRegistrationData;
+    std::unique_ptr<OAuth2AuthenticationStrategy> _authenticationStrategy;
 
     QString _displayName;
 

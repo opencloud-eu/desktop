@@ -20,7 +20,8 @@ namespace OCC {
 class IdToken
 {
 public:
-    IdToken(const QJsonObject &paylod = {});
+    IdToken();
+    explicit IdToken(const QJsonObject &paylod);
 
     QVariantList aud() const;
 
