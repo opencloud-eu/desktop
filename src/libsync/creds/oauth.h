@@ -75,7 +75,7 @@ public:
     void openBrowser();
     QUrl authorisationLink() const;
 
-    static void saveDynamicRegistrationDataForAccount(const AccountPtr &accountPtr, const QVariantMap &dynamicRegistrationData);
+    static void persist(const AccountPtr &accountPtr, const QVariantMap &dynamicRegistrationData, const IdToken &idToken);
 
 Q_SIGNALS:
     /**
@@ -150,12 +150,18 @@ public:
 Q_SIGNALS:
     void refreshError(QNetworkReply::NetworkError error, const QString &errorString);
     void refreshFinished(const QString &accessToken, const QString &refreshToken);
+    void restored(QPrivateSignal);
+
 
 protected:
     void fetchWellKnown() override;
 
+
+    void restore();
+
 private:
     AccountPtr _account;
+    bool _restored = false;
 };
 
 QString OPENCLOUD_SYNC_EXPORT toString(OAuth::PromptValuesSupportedFlags s);

@@ -18,6 +18,8 @@
 
 using namespace OCC;
 
+IdToken::IdToken() { }
+
 IdToken::IdToken(const QJsonObject &payload)
     : _payload(payload)
 {

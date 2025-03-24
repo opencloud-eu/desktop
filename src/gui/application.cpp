@@ -281,13 +281,13 @@ void Application::runNewAccountWizard()
     // passing the settings dialog as parent makes sure the wizard will be shown above it
     // as the settingsDialog's lifetime spans across the entire application but the dialog will live much shorter,
     // we have to clean it up manually when finished() is emitted
-    auto *wizardController = new Wizard::SetupWizardController(ocApp()->settingsDialog());
+    auto *wizardController = new Wizard::SetupWizardController(this->settingsDialog());
 
     // while the wizard is shown, new syncs are disabled
     FolderMan::instance()->setSyncEnabled(false);
 
-    connect(wizardController, &Wizard::SetupWizardController::finished, ocApp(),
-        [wizardController, this](AccountPtr newAccount, Wizard::SyncMode syncMode, const QVariantMap &dynamicRegistrationData) {
+    connect(
+        wizardController, &Wizard::SetupWizardController::finished, this, [wizardController, this](const AccountPtr &newAccount, Wizard::SyncMode syncMode) {
             // note: while the wizard is shown, we disable the folder synchronization
             // previously we could perform this just here, but now we have to postpone this depending on whether selective sync was chosen
             // see also #9497
@@ -305,7 +305,7 @@ void Application::runNewAccountWizard()
                 auto validator = new ConnectionValidator(accountStatePtr->account(), accountStatePtr->account().data());
 
                 connect(validator, &ConnectionValidator::connectionResult, accountStatePtr.data(),
-                    [accountStatePtr, syncMode, dynamicRegistrationData, this](ConnectionValidator::Status status, const QStringList &) {
+                    [accountStatePtr, syncMode, this](ConnectionValidator::Status status, const QStringList &) {
                         switch (status) {
                         // a server we no longer support but that might work
                         case ConnectionValidator::ServerVersionMismatch:
@@ -315,11 +315,6 @@ void Application::runNewAccountWizard()
                             // this is needed to ensure a consistent state in the config file upon unexpected terminations of the client
                             // (for instance, when running from a debugger and stopping the process from there)
                             AccountManager::instance()->save();
-
-                            // only now, we can store the dynamic registration data in the keychain
-                            if (!dynamicRegistrationData.isEmpty()) {
-                                OAuth::saveDynamicRegistrationDataForAccount(accountStatePtr->account(), dynamicRegistrationData);
-                            }
 
                             // the account is now ready, emulate a normal account loading and Q_EMIT that the credentials are ready
                             Q_EMIT accountStatePtr->account()->credentialsFetched();

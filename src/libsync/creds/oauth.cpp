@@ -360,7 +360,7 @@ void OAuth::startAuthentication()
                     const QString refreshToken = getRequiredField(data, QStringLiteral("refresh_token"), &fieldsError).toString();
                     const QString tokenType = getRequiredField(data, QStringLiteral("token_type"), &fieldsError).toString().toLower();
                     const QUrl messageUrl = QUrl::fromEncoded(data[QStringLiteral("message_url")].toByteArray());
-                    IdToken idToken = JWT(getRequiredField(data, QStringLiteral("id_token"), &fieldsError).toByteArray()).payload();
+                    auto idToken = IdToken(JWT(getRequiredField(data, QStringLiteral("id_token"), &fieldsError).toByteArray()).payload());
 
 
                     auto reportError = [socket, this](const QString &errorReason) {
@@ -482,19 +482,23 @@ QUrl OAuth::authorisationLink() const
     return Utility::concatUrlPath(_authEndpoint, {}, query);
 }
 
-void OAuth::saveDynamicRegistrationDataForAccount(const OCC::AccountPtr &accountPtr, const QVariantMap &dynamicRegistrationData)
+void OAuth::persist(const OCC::AccountPtr &accountPtr, const QVariantMap &dynamicRegistrationData, const IdToken &idToken)
 {
     if (!dynamicRegistrationData.isEmpty()) {
         accountPtr->credentialManager()->set(dynamicRegistrationDataC(), dynamicRegistrationData);
     } else {
         accountPtr->credentialManager()->clear(dynamicRegistrationDataC());
     }
+    if (idToken.isValid()) {
+        accountPtr->credentialManager()->set(idTokenC(), idToken.toJson());
+    } else {
+        accountPtr->credentialManager()->clear(idTokenC());
+    }
 }
 
 void OAuth::updateDynamicRegistration()
 {
     // this slightly complicated construct allows us to log case-specific messages
-    _dynamicRegistrationData.clear();
     if (!Theme::instance()->oidcEnableDynamicRegistration()) {
         qCDebug(lcOauth) << "dynamic registration disabled by theme";
     } else if (!_registrationEndpoint.isValid()) {
@@ -543,7 +547,7 @@ void OAuth::fetchWellKnown()
 
         auto reply = _networkAccessManager->get(req);
 
-        QObject::connect(reply, &QNetworkReply::finished, this, [reply, this] {
+        connect(reply, &QNetworkReply::finished, this, [reply, this] {
             _wellKnownFinished = true;
             if (reply->error() != QNetworkReply::NoError) {
                 qCDebug(lcOauth) << "failed to fetch .well-known reply, error:" << reply->error();
@@ -642,10 +646,7 @@ AccountBasedOAuth::AccountBasedOAuth(AccountPtr account, QObject *parent)
 {
     connect(this, &AccountBasedOAuth::result, this, [account, this](OAuth::Result result, const QString &, const QString &) {
         if (result == OAuth::LoggedIn) {
-            saveDynamicRegistrationDataForAccount(account, dynamicRegistrationData());
-            if (idToken().isValid()) {
-                account->credentialManager()->set(idTokenC(), idToken().toJson());
-            }
+            persist(account, dynamicRegistrationData(), idToken());
         }
     });
 }
@@ -653,30 +654,13 @@ AccountBasedOAuth::AccountBasedOAuth(AccountPtr account, QObject *parent)
 void AccountBasedOAuth::startAuthentication()
 {
     qCDebug(lcOauth) << "fetching dynamic registration data";
-
-    auto idTokenJob = _account->credentialManager()->get(idTokenC());
-    connect(idTokenJob, &CredentialJob::finished, this, [idTokenJob, this] {
-        if (idTokenJob->error() == QKeychain::EntryNotFound) {
-            qCWarning(lcOauth) << "idToken token token credential not found";
-        } else if (idTokenJob->error() != QKeychain::NoError) {
-            Q_EMIT result(Error);
-            return;
-        } else {
-            setIdToken(idTokenJob->data().value<QJsonObject>());
-        }
-
-        auto credentialsJob = _account->credentialManager()->get(dynamicRegistrationDataC());
-        connect(credentialsJob, &CredentialJob::finished, this, [credentialsJob, this] {
-            qCDebug(lcOauth) << "fetched dynamic registration data successfully";
-
-            logCredentialsJobResult(credentialsJob);
-
-            _dynamicRegistrationData = credentialsJob->data().value<QVariantMap>();
-
-            OAuth::startAuthentication();
-        });
+    connect(this, &AccountBasedOAuth::restored, this, [this] {
+        // explicitly call base implementation, this can't be done directly in the connect
+        OAuth::startAuthentication();
     });
+    restore();
 }
+
 void AccountBasedOAuth::fetchWellKnown()
 {
     qCDebug(lcOauth) << "starting CheckServerJob before fetching" << wellKnownPathC;
@@ -697,6 +681,34 @@ void AccountBasedOAuth::fetchWellKnown()
         }
     });
 }
+void AccountBasedOAuth::restore()
+{
+    if (_restored) {
+        Q_EMIT restored(QPrivateSignal());
+        return;
+    }
+    _restored = true;
+    auto idTokenJob = _account->credentialManager()->get(idTokenC());
+    connect(idTokenJob, &CredentialJob::finished, this, [idTokenJob, this] {
+        if (idTokenJob->error() == QKeychain::EntryNotFound) {
+            qCWarning(lcOauth) << "idToken token token credential not found";
+        } else if (idTokenJob->error() != QKeychain::NoError) {
+            Q_EMIT result(Error);
+            return;
+        } else {
+            setIdToken(IdToken(idTokenJob->data().value<QJsonObject>()));
+        }
+
+        auto credentialsJob = _account->credentialManager()->get(dynamicRegistrationDataC());
+        connect(credentialsJob, &CredentialJob::finished, this, [this, credentialsJob] {
+            qCDebug(lcOauth) << "fetched dynamic registration data" << credentialsJob->errorString();
+            logCredentialsJobResult(credentialsJob);
+
+            _dynamicRegistrationData = credentialsJob->data().value<QVariantMap>();
+            Q_EMIT restored(QPrivateSignal());
+        });
+    });
+}
 
 void AccountBasedOAuth::refreshAuthentication(const QString &refreshToken)
 {
@@ -707,28 +719,9 @@ void AccountBasedOAuth::refreshAuthentication(const QString &refreshToken)
 
     _isRefreshingToken = true;
 
-    qCDebug(lcOauth) << "fetching dynamic registration data";
-
-    auto idTokenJob = _account->credentialManager()->get(idTokenC());
-    connect(idTokenJob, &CredentialJob::finished, this, [refreshToken, idTokenJob, this] {
-        if (idTokenJob->error() == QKeychain::EntryNotFound) {
-            qCWarning(lcOauth) << "idToken token token credential not found";
-        } else if (idTokenJob->error() != QKeychain::NoError) {
-            Q_EMIT result(Error);
-            return;
-        } else {
-            setIdToken(idTokenJob->data().value<QJsonObject>());
-        }
-
-        auto credentialsJob = _account->credentialManager()->get(dynamicRegistrationDataC());
-
-        connect(credentialsJob, &CredentialJob::finished, this, [this, credentialsJob, refreshToken] {
-            qCDebug(lcOauth) << "fetched dynamic registration data successfully";
-            logCredentialsJobResult(credentialsJob);
-
-            _dynamicRegistrationData = credentialsJob->data().value<QVariantMap>();
-
-            auto refresh = [this, refreshToken] {
+    connect(this, &AccountBasedOAuth::restored, this, [refreshToken, this] {
+        connect(this, &OAuth::fetchWellKnownFinished, this, [refreshToken, this] {
+            connect(this, &AccountBasedOAuth::dynamicRegistrationDataReceived, this, [refreshToken, this] {
                 auto reply =
                     postTokenRequest({{QStringLiteral("grant_type"), QStringLiteral("refresh_token")}, {QStringLiteral("refresh_token"), refreshToken}});
                 connect(reply, &QNetworkReply::finished, this, [reply, refreshToken, this]() {
@@ -770,15 +763,12 @@ void AccountBasedOAuth::refreshAuthentication(const QString &refreshToken)
                     }
                     Q_EMIT refreshFinished(accessToken, newRefreshToken);
                 });
-            };
-
-            connect(this, &OAuth::fetchWellKnownFinished, this, [refresh, this] {
-                connect(this, &AccountBasedOAuth::dynamicRegistrationDataReceived, this, refresh);
-                updateDynamicRegistration();
             });
-            fetchWellKnown();
+            updateDynamicRegistration();
         });
+        fetchWellKnown();
     });
+    restore();
 }
 
 QString OCC::toString(OAuth::PromptValuesSupportedFlags s)

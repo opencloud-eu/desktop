@@ -13,6 +13,7 @@
  */
 
 #include "oauthcredentialssetupwizardstate.h"
+
 #include "jobs/webfingeruserinfojobfactory.h"
 
 namespace OCC::Wizard {
@@ -29,22 +30,21 @@ OAuthCredentialsSetupWizardState::OAuthCredentialsSetupWizardState(SetupWizardCo
     }();
 
     auto oAuth = new OAuth(authServerUrl, _context->accessManager(), {}, this);
-    connect(oAuth, &OAuth::dynamicRegistrationDataReceived, this,
-        [oAuth, this] { _context->accountBuilder().setDynamicRegistrationData(oAuth->dynamicRegistrationData()); });
-
     _page = new OAuthCredentialsSetupWizardPage(oAuth, authServerUrl);
 
 
-    connect(oAuth, &OAuth::result, this, [this](OAuth::Result result, const QString &token, const QString &refreshToken) {
+    connect(oAuth, &OAuth::result, this, [oAuth, this](OAuth::Result result, const QString &token, const QString &refreshToken) {
         _context->window()->slotStartTransition();
 
         // bring window up top again, as the browser may have been raised in front of it
         _context->window()->raise();
 
-        auto finish = [result, token, refreshToken, this] {
+        auto finish = [result, token, refreshToken, oAuth, this] {
+            oAuth->deleteLater();
             switch (result) {
             case OAuth::Result::LoggedIn: {
-                _context->accountBuilder().setAuthenticationStrategy(new OAuth2AuthenticationStrategy(token, refreshToken));
+                _context->accountBuilder().setAuthenticationStrategy(
+                    std::make_unique<OAuth2AuthenticationStrategy>(token, refreshToken, oAuth->dynamicRegistrationData(), oAuth->idToken()));
                 Q_EMIT evaluationSuccessful();
                 break;
             }
