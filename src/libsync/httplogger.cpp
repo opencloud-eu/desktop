@@ -42,7 +42,7 @@ bool isTextBody(const QString &s)
 struct HttpContext
 {
     HttpContext(const QNetworkRequest &request)
-        : originalUrl(QString::fromUtf8(request.url().toEncoded())) // Encoded URL as it is passed "over the wire"
+        : originalUrl(request.url().toString())
         , lastUrl(request.url())
         , id(QString::fromUtf8(request.rawHeader(QByteArrayLiteral("X-Request-ID"))))
     {
