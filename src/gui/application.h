@@ -19,9 +19,8 @@
 #include "common/asserts.h"
 #include "libsync/accountfwd.h"
 
-#include <QIcon>
-#include <QObject>
 #include <QPointer>
+#include <QSystemTrayIcon>
 
 namespace CrashReporter {
 class Handler;
@@ -32,6 +31,7 @@ namespace OCC {
 class SettingsDialog;
 class AboutDialog;
 class Systray;
+class SystemNotificationManager;
 
 class OPENCLOUD_GUI_EXPORT Application : public QObject
 {
@@ -52,12 +52,16 @@ public:
 
     void showAbout();
 
+    SystemNotificationManager *systemNotificationManager() const;
+
     void slotShowTrayMessage(const QString &title, const QString &msg, const QIcon &icon = {});
 
     void slotShowOptionalTrayMessage(const QString &title, const QString &msg, const QIcon &icon = {});
 
 
     void runNewAccountWizard();
+
+    QSystemTrayIcon *systemTrayIcon() const;
 
 protected Q_SLOTS:
     void slotCleanup();
@@ -71,6 +75,8 @@ private:
 
     QString _displayLanguage;
     Systray *_systray;
+
+    SystemNotificationManager *_systemNotificationManager = nullptr;
 
     // keeping a pointer on those dialogs allows us to make sure they will be shown only once
     QPointer<AboutDialog> _aboutDialog;

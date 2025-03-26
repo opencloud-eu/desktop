@@ -28,6 +28,7 @@
 #include "gui/accountsettings.h"
 #include "gui/folderwizard/folderwizard.h"
 #include "gui/newwizard/setupwizardcontroller.h"
+#include "gui/notifications/systemnotificationmanager.h"
 #include "gui/systray.h"
 #include "libsync/graphapi/spacesmanager.h"
 #include "resources/fonticon.h"
@@ -115,6 +116,7 @@ Application::Application(const QString &displayLanguage, bool debugMode)
         _instance = this;
         _settingsDialog = new SettingsDialog();
         _systray = new Systray(this);
+        _systemNotificationManager = new SystemNotificationManager(this);
     }
     qCInfo(lcApplication) << "Plugin search paths:" << qApp->libraryPaths();
 
@@ -141,6 +143,7 @@ Application::Application(const QString &displayLanguage, bool debugMode)
     for (const auto &ai : AccountManager::instance()->accounts()) {
         slotAccountStateAdded(ai);
     }
+    connect(_systemNotificationManager, &SystemNotificationManager::unknownNotifationClicked, this, &Application::showSettings);
 
 #ifdef WITH_AUTO_UPDATER
     // Update checks
@@ -262,6 +265,11 @@ void Application::showAbout()
         _aboutDialog->setAttribute(Qt::WA_DeleteOnClose);
         _settingsDialog->addModalWidget(_aboutDialog);
     }
+}
+
+SystemNotificationManager *Application::systemNotificationManager() const
+{
+    return _systemNotificationManager;
 }
 
 void Application::slotShowTrayMessage(const QString &title, const QString &msg, const QIcon &icon)
@@ -388,6 +396,11 @@ void Application::runNewAccountWizard()
 
     // all we have to do is show the dialog...
     settingsDialog()->addModalWidget(wizardController->window());
+}
+
+QSystemTrayIcon *Application::systemTrayIcon() const
+{
+    return _systray;
 }
 
 bool Application::debugMode()

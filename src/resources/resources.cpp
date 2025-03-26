@@ -42,6 +42,7 @@ struct IconCache
         QObject::connect(watcher, &ThemeWatcher::themeChanged, qApp, [this]() { _cache.clear(); });
     }
     QMap<QString, QIcon> _cache;
+    QTemporaryDir tmpDir;
 };
 Q_GLOBAL_STATIC(IconCache, iconCache)
 
@@ -146,4 +147,15 @@ QPixmap CoreImageProvider::requestPixmap(const QString &id, QSize *size, const Q
         icon = FontIcon(FontIcon::FontFamily::RemixIcon, qmlIcon.iconName.front(), qmlIcon.size);
     }
     return pixmap(requestedSize, icon, qmlIcon.enabled ? QIcon::Normal : QIcon::Disabled, size);
+}
+
+QString Resources::iconToFileSystemUrl(const QIcon &icon, QAnyStringView type)
+{
+    QFileInfo info(QStringLiteral("%1/%2.%3").arg(iconCache->tmpDir.path(), QString::number(icon.cacheKey()), type.toString()));
+    if (!info.exists()) {
+        if (!icon.pixmap(icon.actualSize({512, 512})).save(info.absoluteFilePath())) {
+            qCWarning(lcResources) << "Failed to save icon to " << info.absoluteFilePath() << info.size();
+        }
+    }
+    return info.absoluteFilePath();
 }
