@@ -102,8 +102,9 @@ SettingsDialog::SettingsDialog(QWidget *parent)
     connect(
         _ui->quickWidget->engine(), &QQmlEngine::quit, QApplication::instance(),
         [this] {
-            auto box = new QMessageBox(QMessageBox::Question, tr("Quit %1").arg(Theme::instance()->appNameGUI()),
+            auto box = new QMessageBox(QMessageBox::NoIcon, tr("Quit %1").arg(Theme::instance()->appNameGUI()),
                 tr("Are you sure you want to quit %1?").arg(Theme::instance()->appNameGUI()), QMessageBox::Yes | QMessageBox::No, this);
+            box->setIconPixmap(Resources::FontIcon(u'').pixmap(64, 64));
             box->setAttribute(Qt::WA_DeleteOnClose);
             connect(box, &QMessageBox::accepted, this, [] {
                 // delay quit to prevent a Qt 6.6 crash in the destructor of the dialog
