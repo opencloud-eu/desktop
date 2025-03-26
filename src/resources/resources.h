@@ -57,4 +57,7 @@ public:
 
     QPixmap requestPixmap(const QString &id, QSize *size, const QSize &requestedSize) override;
 };
+
+
+QString OPENCLOUD_RESOURCES_EXPORT iconToFileSystemUrl(const QIcon &icon, QAnyStringView type = QStringLiteral("png"));
 }

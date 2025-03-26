@@ -29,12 +29,12 @@
 #include "gui/accountmodalwidget.h"
 #include "gui/models/models.h"
 #include "gui/networkinformation.h"
+#include "gui/notifications/systemnotificationmanager.h"
 #include "gui/qmlutils.h"
 #include "gui/selectivesyncwidget.h"
 #include "gui/spaces/spaceimageprovider.h"
 #include "libsync/graphapi/spacesmanager.h"
 #include "libsync/syncresult.h"
-#include "libsync/theme.h"
 #include "networkjobs/jsonjob.h"
 #include "resources/fonticon.h"
 #include "scheduling/syncscheduler.h"
@@ -111,12 +111,7 @@ void AccountSettings::markNotificationsRead()
 {
     if (!_notifications.isEmpty()) {
         auto *job = Notification::dismissAllNotifications(_accountState->account(), _notifications, this);
-        connect(job, &JsonApiJob::finishedSignal, this, [job, this] {
-            if (job->httpStatusCode() == 200) {
-                _notifications.clear();
-                Q_EMIT notificationsChanged();
-            }
-        });
+        connect(job, &JsonApiJob::finishedSignal, this, &AccountSettings::updateNotifications);
         job->start();
     }
 }
@@ -347,7 +342,22 @@ void AccountSettings::updateNotifications()
             auto newNotifications = _notifications;
             newNotifications.subtract(oldNotifications);
             for (const auto &notification : newNotifications) {
-                ocApp()->slotShowOptionalTrayMessage(notification.title, notification.message, Resources::FontIcon(u''));
+                SystemNotificationRequest notificationRequest(notification.title, notification.message, Resources::FontIcon(u''));
+                notificationRequest.setButtons({tr("Mark as read")});
+                if (auto *n = ocApp()->systemNotificationManager()->notify(std::move(notificationRequest))) {
+                    connect(n, &SystemNotification::finished, this, [n](SystemNotification::Result result) {
+                        n->deleteLater();
+                        if (result == SystemNotification::Result::Clicked) {
+                            ocApp()->showSettings();
+                        }
+                    });
+                    connect(n, &SystemNotification::buttonClicked, this, [notification, this](const QString &) {
+                        // we only have one button so we don't need to check which was clicked
+                        auto *job = Notification::dismissAllNotifications(_accountState->account(), {notification}, this);
+                        connect(job, &JsonApiJob::finishedSignal, this, &AccountSettings::updateNotifications);
+                        job->start();
+                    });
+                }
             }
             Q_EMIT notificationsChanged();
         });

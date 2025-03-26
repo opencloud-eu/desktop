@@ -78,6 +78,10 @@ target_sources(OpenCloudGui PRIVATE
     scheduling/syncscheduler.cpp
     scheduling/etagwatcher.cpp
 
+    notifications/systemnotification.cpp
+    notifications/systemnotificationmanager.cpp
+    notifications/systemnotificationbackend.cpp
+
     qmlutils.cpp
 )
 
@@ -148,7 +152,7 @@ elseif( WIN32 )
             folderwatcher_win.cpp)
     if (TARGET SnoreToast::SnoreToastActions)
         target_sources(OpenCloudGui PRIVATE
-                snoretoast.cpp)
+                notifications/snoretoast.cpp)
         target_compile_definitions(OpenCloudGui PRIVATE WITH_SNORE_TOAST)
         target_link_libraries(OpenCloudGui PRIVATE SnoreToast::SnoreToastActions)
     endif()
