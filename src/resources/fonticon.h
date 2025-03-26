@@ -29,8 +29,8 @@ public:
     Q_ENUM(Size);
     FontIcon();
     // defaults to fontawesoem
-    FontIcon(QChar glyphe, Size size = Size::Half);
-    FontIcon(FontFamily family, QChar glyphe, Size size = Size::Half);
+    FontIcon(QChar glyphe, Size size = Size::Normal);
+    FontIcon(FontFamily family, QChar glyphe, Size size = Size::Normal);
 };
 
 // expose the enums to qml
