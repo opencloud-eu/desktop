@@ -18,6 +18,7 @@ SystemNotificationRequest::SystemNotificationRequest(const QString &title, const
     , _icon(icon)
     , _id(nextNotificationId())
 {
+    Q_ASSERT(!icon.isNull());
 }
 
 QString SystemNotificationRequest::title() const

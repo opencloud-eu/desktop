@@ -6,6 +6,7 @@
 
 namespace OCC {
 class SystemNotificationRequest;
+class MacNotificationsPrivate;
 
 class MacNotifications : public SystemNotificationBackend
 {
@@ -18,7 +19,8 @@ public:
     void notify(const SystemNotificationRequest &notificationRequest) override;
 
 private:
-    void *_delegate = nullptr;
+    Q_DECLARE_PRIVATE(MacNotifications)
+    MacNotificationsPrivate *d_ptr;
 };
 
 }
