@@ -176,11 +176,12 @@ void Application::slotAccountStateAdded(AccountStatePtr accountState) const
 {
     connect(accountState->account().data(), &Account::serverVersionChanged, ocApp(), [account = accountState->account().data()] {
         if (account->serverSupportLevel() != Account::ServerSupportLevel::Supported) {
-            ocApp()->slotShowTrayMessage(tr("Unsupported Server Version"),
+            ocApp()->systemNotificationManager()->notify({tr("Unsupported Server Version"),
                 tr("The server on account %1 runs an unsupported version %2. "
                    "Using this client with unsupported server versions is untested and "
                    "potentially dangerous. Proceed at your own risk.")
-                    .arg(account->displayNameWithHost(), account->capabilities().status().versionString()));
+                    .arg(account->displayNameWithHost(), account->capabilities().status().versionString()),
+                Resources::FontIcon(u'')});
         }
     });
 
@@ -270,18 +271,6 @@ void Application::showAbout()
 SystemNotificationManager *Application::systemNotificationManager() const
 {
     return _systemNotificationManager;
-}
-
-void Application::slotShowTrayMessage(const QString &title, const QString &msg, const QIcon &icon)
-{
-    _systray->showMessage(title, msg, icon.isNull() ? Resources::FontIcon(u'') : icon);
-}
-
-void Application::slotShowOptionalTrayMessage(const QString &title, const QString &msg, const QIcon &icon)
-{
-    if (ConfigFile().optionalDesktopNotifications()) {
-        slotShowTrayMessage(title, msg, icon);
-    }
 }
 
 void Application::runNewAccountWizard()
