@@ -54,11 +54,6 @@ public:
 
     SystemNotificationManager *systemNotificationManager() const;
 
-    void slotShowTrayMessage(const QString &title, const QString &msg, const QIcon &icon = {});
-
-    void slotShowOptionalTrayMessage(const QString &title, const QString &msg, const QIcon &icon = {});
-
-
     void runNewAccountWizard();
 
     QSystemTrayIcon *systemTrayIcon() const;

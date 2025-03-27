@@ -46,10 +46,14 @@
 #include "common/utility_win.h"
 #endif
 
-#include <QTimer>
-#include <QUrl>
+#include "fonticon.h"
+#include "notifications/systemnotificationmanager.h"
+
+
 #include <QDir>
 #include <QSettings>
+#include <QTimer>
+#include <QUrl>
 
 #include <QApplication>
 #include <QMessageBox>
@@ -481,7 +485,7 @@ void Folder::createGuiLog(const QString &filename, LogStatus status, int count,
         }
 
         if (!text.isEmpty()) {
-            ocApp()->slotShowOptionalTrayMessage(tr("Sync Activity"), text);
+            ocApp()->systemNotificationManager()->notify({tr("Sync Activity"), text, Resources::FontIcon(u'')});
         }
     }
 }
@@ -1042,6 +1046,13 @@ void Folder::warnOnNewExcludedItem(const SyncJournalFileRecord &record, QStringV
     if (record.isValid())
         return;
 
+    bool ok = false;
+    auto blacklist = _journal.getSelectiveSyncList(SyncJournalDb::SelectiveSyncBlackList, &ok);
+    if (!ok)
+        return;
+    if (!blacklist.contains(path + QLatin1Char('/')))
+        return;
+
     // Don't warn for items that no longer exist.
     // Note: This assumes we're getting file watcher notifications
     // for folders only on creation and deletion - if we got a notification
@@ -1050,22 +1061,14 @@ void Folder::warnOnNewExcludedItem(const SyncJournalFileRecord &record, QStringV
     if (!fi.exists())
         return;
 
-    bool ok = false;
-    auto blacklist = _journal.getSelectiveSyncList(SyncJournalDb::SelectiveSyncBlackList, &ok);
-    if (!ok)
-        return;
-    if (!blacklist.contains(path + QLatin1Char('/')))
-        return;
+    const QString message = fi.isDir() ? tr("The folder %1 was created but was excluded from synchronization previously. "
+                                            "Data inside it will not be synchronized.")
+                                             .arg(fi.filePath())
+                                       : tr("The file %1 was created but was excluded from synchronization previously. "
+                                            "It will not be synchronized.")
+                                             .arg(fi.filePath());
 
-    const auto message = fi.isDir()
-        ? tr("The folder %1 was created but was excluded from synchronization previously. "
-             "Data inside it will not be synchronized.")
-              .arg(fi.filePath())
-        : tr("The file %1 was created but was excluded from synchronization previously. "
-             "It will not be synchronized.")
-              .arg(fi.filePath());
-
-    ocApp()->slotShowOptionalTrayMessage(Theme::instance()->appNameGUI(), message);
+    ocApp()->systemNotificationManager()->notify({tr("%1 is not synchronized").arg(fi.fileName()), message, Resources::FontIcon(u'')});
 }
 
 void Folder::slotWatcherUnreliable(const QString &message)
