@@ -4,6 +4,9 @@
 #include "gui/notifications/macnotifications.h"
 
 #include "gui/notifications/systemnotification.h"
+#include "gui/notifications/systemnotificationmanager.h"
+
+#include <QLoggingCategory>
 
 #import <AppKit/AppKit.h>
 #import <Foundation/Foundation.h>
@@ -11,14 +14,32 @@
 #import <Foundation/NSUserNotification.h>
 #import <dispatch/dispatch.h>
 
+Q_LOGGING_CATEGORY(lcMacNotifications, "gui.notifications.mac", QtInfoMsg)
 
 namespace {
 auto iconSizeC = 64;
 }
 
-@interface OurDelegate : NSObject <NSUserNotificationCenterDelegate>
+Q_FORWARD_DECLARE_OBJC_CLASS(OurDelegate);
 
-- (BOOL)userNotificationCenter:(NSUserNotificationCenter *)center shouldPresentNotification:(NSUserNotification *)notification;
+namespace OCC {
+
+class MacNotificationsPrivate
+{
+public:
+    MacNotificationsPrivate(MacNotifications *q);
+
+    ~MacNotificationsPrivate() { [_delegate release]; }
+
+private:
+    OurDelegate *_delegate;
+
+    Q_DECLARE_PUBLIC(MacNotifications)
+    MacNotifications *q_ptr;
+};
+}
+
+@interface OurDelegate : NSObject <NSUserNotificationCenterDelegate>
 
 @end
 
@@ -33,27 +54,63 @@ auto iconSizeC = 64;
     return YES;
 }
 
+- (void)userNotificationCenter:(NSUserNotificationCenter *)center didDeliverNotification:(NSUserNotification *)notification
+{
+    Q_UNUSED(center);
+    qCDebug(lcMacNotifications) << "Send notification " << [notification.userInfo[@"id"] unsignedLongLongValue];
+}
+
+- (void)userNotificationCenter:(NSUserNotificationCenter *)center didActivateNotification:(NSUserNotification *)notification;
+{
+    Q_UNUSED(center);
+    const auto id = [notification.userInfo[@"id"] unsignedLongLongValue];
+    auto *backend = reinterpret_cast<OCC::MacNotifications *>([notification.userInfo[@"MacNotifications"] unsignedLongLongValue]);
+
+    OCC::SystemNotification *systemNotification = backend->systemNotificationManager()->notification(id);
+
+    if (systemNotification) {
+        OCC::SystemNotification::Result result;
+        switch ([notification activationType]) {
+        case NSUserNotificationActivationTypeContentsClicked:
+            result = OCC::SystemNotification::Result::ButtonClicked;
+            break;
+        case NSUserNotificationActivationTypeActionButtonClicked:
+            result = OCC::SystemNotification::Result::ButtonClicked;
+            Q_EMIT systemNotification->buttonClicked(systemNotification->request().buttons().first());
+            break;
+        case NSUserNotificationActivationTypeAdditionalActionClicked:
+            [[fallthrough]];
+        case NSUserNotificationActivationTypeReplied:
+            Q_UNIMPLEMENTED();
+            break;
+        case NSUserNotificationActivationTypeNone:
+            Q_UNREACHABLE();
+            break;
+        }
+        qCDebug(lcMacNotifications) << "Activated notification " << id << result;
+        Q_EMIT systemNotification->finished(result);
+    } else {
+        qCDebug(lcMacNotifications) << "Unknown notification activated " << id;
+        Q_EMIT backend->systemNotificationManager()->unknownNotifationClicked();
+    }
+}
+
+
 @end
 
 namespace OCC {
-class MacNotificationsPrivate
+MacNotificationsPrivate::MacNotificationsPrivate(MacNotifications *q)
+    : q_ptr(q)
 {
-public:
-    MacNotificationsPrivate(MacNotifications *q)
-        : q_ptr(q)
-    {
-        _delegate = [[OurDelegate alloc] init];
-        [[NSUserNotificationCenter defaultUserNotificationCenter] setDelegate:_delegate];
+    _delegate = [[OurDelegate alloc] init];
+    [[NSUserNotificationCenter defaultUserNotificationCenter] setDelegate:_delegate];
+
+    NSArray<NSUserNotification *> *deliveredNotifications = [NSUserNotificationCenter defaultUserNotificationCenter].deliveredNotifications;
+    for (NSUserNotification *deliveredNotification : deliveredNotifications) {
+        [[NSUserNotificationCenter defaultUserNotificationCenter] removeDeliveredNotification: deliveredNotification];
     }
+}
 
-    ~MacNotificationsPrivate() { [_delegate release]; }
-
-private:
-    OurDelegate *_delegate;
-
-    Q_DECLARE_PUBLIC(MacNotifications)
-    MacNotifications *q_ptr;
-};
 
 MacNotifications::MacNotifications(SystemNotificationManager *parent)
     : SystemNotificationBackend(parent)
@@ -74,12 +131,25 @@ bool MacNotifications::isReady() const
 
 void MacNotifications::notify(const SystemNotificationRequest &notificationRequest)
 {
+    if (notificationRequest.buttons().size() > 1) {
+        qCWarning(lcMacNotifications) << "Displaying more than one action button is currently not implemented";
+    }
+
     @autoreleasepool {
         NSUserNotification *notification = [[[NSUserNotification alloc] init] autorelease];
         [notification setTitle:notificationRequest.title().toNSString()];
         [notification setInformativeText:notificationRequest.text().toNSString()];
+        [notification setUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedLong:notificationRequest.id()], @"id",
+                                                [NSNumber numberWithUnsignedLong:reinterpret_cast<uintptr_t>(this)], @"MacNotifications", nil]];
+
         [notification setContentImage:[[NSImage alloc] initWithCGImage:notificationRequest.icon().pixmap(iconSizeC).toImage().toCGImage()
                                                                   size:NSMakeSize(iconSizeC, iconSizeC)]];
+
+        if (!notificationRequest.buttons().isEmpty()) {
+            [notification setHasActionButton:true];
+            [notification setActionButtonTitle:notificationRequest.buttons().first().toNSString()];
+        }
+
         [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
     }
 }
