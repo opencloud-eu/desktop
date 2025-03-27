@@ -2459,7 +2459,7 @@ Note that using any logging command line options will override the settings.</so
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/settingsdialog.cpp" line="131"/>
+        <location filename="../src/gui/settingsdialog.cpp" line="132"/>
         <source>%1 - %2</source>
         <translation type="unfinished"></translation>
     </message>
