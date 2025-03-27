@@ -72,11 +72,16 @@ private:
         OCC::SystemNotification::Result result;
         switch ([notification activationType]) {
         case NSUserNotificationActivationTypeContentsClicked:
-            result = OCC::SystemNotification::Result::ButtonClicked;
+            result = OCC::SystemNotification::Result::Clicked;
             break;
         case NSUserNotificationActivationTypeActionButtonClicked:
-            result = OCC::SystemNotification::Result::ButtonClicked;
-            Q_EMIT systemNotification->buttonClicked(systemNotification->request().buttons().first());
+            if (!systemNotification->request().buttons().isEmpty()) {
+                result = OCC::SystemNotification::Result::ButtonClicked;
+                Q_EMIT systemNotification->buttonClicked(systemNotification->request().buttons().first());
+            } else {
+                // the show button was clicked
+                result = OCC::SystemNotification::Result::Clicked;
+            }
             break;
         case NSUserNotificationActivationTypeAdditionalActionClicked:
             [[fallthrough]];
