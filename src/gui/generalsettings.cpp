@@ -40,8 +40,6 @@ GeneralSettings::GeneralSettings(QWidget *parent)
 {
     _ui->setupUi(this);
 
-    connect(_ui->desktopNotificationsCheckBox, &QAbstractButton::toggled, this, &GeneralSettings::slotToggleOptionalDesktopNotifications);
-
     reloadConfig();
     loadMiscSettings();
 
@@ -92,7 +90,6 @@ void GeneralSettings::loadMiscSettings()
 {
     QScopedValueRollback<bool> scope(_currentlyLoading, true);
     ConfigFile cfgFile;
-    _ui->desktopNotificationsCheckBox->setChecked(cfgFile.optionalDesktopNotifications());
     _ui->crashreporterCheckBox->setChecked(cfgFile.crashReporter());
 
     // the dropdown has to be populated before we can can pick an entry below based on the stored setting
@@ -124,12 +121,6 @@ void GeneralSettings::slotToggleLaunchOnStartup(bool enable)
 {
     Theme *theme = Theme::instance();
     Utility::setLaunchOnStartup(theme->appName(), theme->appNameGUI(), enable);
-}
-
-void GeneralSettings::slotToggleOptionalDesktopNotifications(bool enable)
-{
-    ConfigFile cfgFile;
-    cfgFile.setOptionalDesktopNotifications(enable);
 }
 
 void GeneralSettings::slotIgnoreFilesEditor()

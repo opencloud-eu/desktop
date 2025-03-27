@@ -45,7 +45,6 @@ Q_SIGNALS:
 private Q_SLOTS:
     void saveMiscSettings();
     void slotToggleLaunchOnStartup(bool);
-    void slotToggleOptionalDesktopNotifications(bool);
     void slotIgnoreFilesEditor();
     void loadMiscSettings();
 

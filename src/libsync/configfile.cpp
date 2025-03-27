@@ -57,10 +57,9 @@ const QString fullLocalDiscoveryIntervalC()
     return QStringLiteral("fullLocalDiscoveryInterval");
 }
 const QString promptDeleteC() { return QStringLiteral("promptDeleteAllFiles"); }
-const QString crashReporterC() { return QStringLiteral("crashReporter"); }
-const QString optionalDesktopNoficationsC()
+const QString crashReporterC()
 {
-    return QStringLiteral("optionalDesktopNotifications");
+    return QStringLiteral("crashReporter");
 }
 const QString skipUpdateCheckC() { return QStringLiteral("skipUpdateCheck"); }
 const QString updateCheckIntervalC() { return QStringLiteral("updateCheckInterval"); }
@@ -148,12 +147,6 @@ bool ConfigFile::setConfDir(const QString &value)
     return false;
 }
 
-bool ConfigFile::optionalDesktopNotifications() const
-{
-    auto settings = makeQSettings();
-    return settings.value(optionalDesktopNoficationsC(), true).toBool();
-}
-
 std::optional<QStringList> ConfigFile::issuesWidgetFilter() const
 {
     auto settings = makeQSettings();
@@ -176,13 +169,6 @@ std::chrono::seconds ConfigFile::timeout() const
     auto settings = makeQSettings();
     const auto val = settings.value(timeoutC()).toInt(); // default to 5 min
     return val ? std::chrono::seconds(val) : 5min;
-}
-
-void ConfigFile::setOptionalDesktopNotifications(bool show)
-{
-    auto settings = makeQSettings();
-    settings.setValue(optionalDesktopNoficationsC(), show);
-    settings.sync();
 }
 
 void ConfigFile::saveGeometry(QWidget *w)
