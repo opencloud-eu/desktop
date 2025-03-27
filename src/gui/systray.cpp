@@ -49,17 +49,9 @@ auto NOTIFICATIONS_IFACE_C()
 
 namespace OCC {
 
-#ifdef Q_OS_MACOS
-void *createOsXNotificationCenterDelegate();
-void releaseOsXNotificationCenterDelegate(void *delegate);
-void sendOsXUserNotification(const QString &title, const QString &message);
-#endif
 
 Systray::Systray(QObject *parent)
     : QSystemTrayIcon(parent)
-#ifdef Q_OS_MACOS
-    , delegate(createOsXNotificationCenterDelegate())
-#endif
 {
     connect(this, &QSystemTrayIcon::activated, this, [](QSystemTrayIcon::ActivationReason reason) {
         // Left click
@@ -77,20 +69,8 @@ Systray::Systray(QObject *parent)
     show();
 }
 
-Systray::~Systray()
-{
-#ifdef Q_OS_MACOS
-    if (delegate) {
-        releaseOsXNotificationCenterDelegate(delegate);
-    }
-#endif // Q_OS_MACOS
-}
-
 void Systray::showMessage(const QString &title, const QString &message, [[maybe_unused]] const QIcon &icon, [[maybe_unused]] int millisecondsTimeoutHint)
 {
-#ifdef Q_OS_MACOS
-    sendOsXUserNotification(title, message);
-#else
 #ifdef USE_FDO_NOTIFICATIONS
     if (QDBusInterface(NOTIFICATIONS_SERVICE_C(), NOTIFICATIONS_PATH_C(), NOTIFICATIONS_IFACE_C()).isValid()) {
         QList<QVariant> args = QList<QVariant>() << Theme::instance()->appNameGUI() << quint32(0) << Theme::instance()->applicationIconName() << title
@@ -104,7 +84,6 @@ void Systray::showMessage(const QString &title, const QString &message, [[maybe_
     {
         QSystemTrayIcon::showMessage(title, message, icon, millisecondsTimeoutHint);
     }
-#endif // Q_OS_MACOS
 }
 
 void Systray::setToolTip(const QString &tip)

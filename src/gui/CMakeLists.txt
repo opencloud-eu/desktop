@@ -141,7 +141,7 @@ target_include_directories(OpenCloudGui PUBLIC
 
 IF( APPLE )
     target_sources(OpenCloudGui PRIVATE
-            systray.mm
+            notifications/macnotifications.mm
             settingsdialog_mac.mm
             guiutility_mac.mm
             folderwatcher_mac.cpp)

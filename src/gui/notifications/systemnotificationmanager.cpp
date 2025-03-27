@@ -6,17 +6,23 @@
 #include "gui/application.h"
 #include "gui/notifications/systemnotificationbackend.h"
 
-#ifdef WITH_SNORE_TOAST
+#if defined(Q_OS_WIN) && defined(WITH_SNORE_TOAST)
 #include "gui/notifications/snoretoast.h"
+#elif defined(Q_OS_MAC)
+#include "gui/notifications/macnotifications.h"
 #endif
 
 using namespace OCC;
 
 SystemNotificationManager::SystemNotificationManager(QObject *parent)
     : QObject(parent)
+    , _backend(
 #if defined(WITH_SNORE_TOAST)
-    , _backend(new SnoreToast(this))
+          new SnoreToast(this)
+#elif defined(Q_OS_MAC)
+          new MacNotifications(this)
 #endif
+      )
 {
 }
 

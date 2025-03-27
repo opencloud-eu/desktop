@@ -34,7 +34,6 @@ class Systray : public QSystemTrayIcon
 
 public:
     Systray(QObject *parent = nullptr);
-    virtual ~Systray();
 
     void showMessage(const QString &title, const QString &message, const QIcon &icon, int millisecondsTimeoutHint = 10000);
     void setToolTip(const QString &tip);
@@ -46,11 +45,6 @@ private:
     void slotComputeOverallSyncStatus();
 
     void computeContextMenu();
-
-
-private:
-    void *delegate = nullptr;
-    SnoreToast *_snoreToast = nullptr;
 };
 
 } // namespace OCC
