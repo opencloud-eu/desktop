@@ -16,7 +16,6 @@
 #include "ui_generalsettings.h"
 
 #include "common/restartmanager.h"
-#include "common/version.h"
 #include "gui/application.h"
 #include "gui/folderman.h"
 #include "gui/ignorelisteditor.h"

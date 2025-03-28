@@ -59,5 +59,5 @@ public:
 };
 
 
-QString OPENCLOUD_RESOURCES_EXPORT iconToFileSystemUrl(const QIcon &icon, QAnyStringView type = QStringLiteral("png"));
+QUrl OPENCLOUD_RESOURCES_EXPORT iconToFileSystemUrl(const QIcon &icon, QAnyStringView type = QStringLiteral("png"));
 }

@@ -10,6 +10,8 @@
 #include "gui/notifications/snoretoast.h"
 #elif defined(Q_OS_MAC)
 #include "gui/notifications/macnotifications.h"
+#elif defined(Q_OS_LINUX)
+#include "gui/notifications/dbusnotifications.h"
 #endif
 
 using namespace OCC;
@@ -21,6 +23,8 @@ SystemNotificationManager::SystemNotificationManager(QObject *parent)
           new SnoreToast(this)
 #elif defined(Q_OS_MAC)
           new MacNotifications(this)
+#elif defined(Q_OS_LINUX)
+          new DBusNotifications(this)
 #endif
       )
 {
