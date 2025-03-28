@@ -45,6 +45,9 @@
 #endif
 
 
+#include "notifications/systemnotification.h"
+
+
 #include <QApplication>
 #include <QDesktopServices>
 #include <QMenuBar>
@@ -144,6 +147,12 @@ Application::Application(const QString &displayLanguage, bool debugMode)
         slotAccountStateAdded(ai);
     }
     connect(_systemNotificationManager, &SystemNotificationManager::unknownNotifationClicked, this, &Application::showSettings);
+    connect(
+        _systemNotificationManager, &SystemNotificationManager::notificationFinished, this, [this](SystemNotification *, SystemNotification::Result result) {
+            if (result == SystemNotification::Result::Clicked) {
+                showSettings();
+            }
+        });
 
 #ifdef WITH_AUTO_UPDATER
     // Update checks

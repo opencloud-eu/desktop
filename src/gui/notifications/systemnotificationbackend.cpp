@@ -22,3 +22,11 @@ SystemNotification *SystemNotificationBackend::activeNotification(quint64 id)
 {
     return systemNotificationManager()->activeNotification(id);
 }
+
+void SystemNotificationBackend::finishNotification(SystemNotification *notification, SystemNotification::Result result)
+{
+    Q_EMIT notification->finished(result);
+    Q_EMIT systemNotificationManager() -> notificationFinished(notification, result);
+    systemNotificationManager()->_activeNotifications.remove(notification->request().id());
+    notification->deleteLater();
+}

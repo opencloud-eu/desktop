@@ -19,11 +19,13 @@ public:
     SystemNotificationManager(QObject *parent);
 
     /**
-     * Returns a SystemNotifcaion or null, the caller hast to take ownership
+     * Returns a SystemNotifcaion or null
      */
     SystemNotification *notify(SystemNotificationRequest &&notification);
 
 Q_SIGNALS:
+    void notificationFinished(SystemNotification *notification, SystemNotification::Result result);
+
     /**
      * A notification we no longer track was clicked.
      * This can be the case when a notification in the action center is clicked, that is already timed out.
