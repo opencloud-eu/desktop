@@ -41,6 +41,7 @@ private:
 
 @interface OurDelegate : NSObject <NSUserNotificationCenterDelegate>
 
+@property OCC::MacNotifications * macNotifications;
 @end
 
 @implementation OurDelegate
@@ -51,22 +52,22 @@ private:
     Q_UNUSED(center)
     Q_UNUSED(notification)
 
+    qCDebug(lcMacNotifications) << "userNotificationCenter" << notification.identifier;
     return YES;
 }
 
 - (void)userNotificationCenter:(NSUserNotificationCenter *)center didDeliverNotification:(NSUserNotification *)notification
 {
     Q_UNUSED(center);
-    qCDebug(lcMacNotifications) << "Send notification " << [notification.userInfo[@"id"] unsignedLongLongValue];
+    qCDebug(lcMacNotifications) << "Send notification " << notification.identifier;
 }
 
 - (void)userNotificationCenter:(NSUserNotificationCenter *)center didActivateNotification:(NSUserNotification *)notification;
 {
     Q_UNUSED(center);
-    const auto id = [notification.userInfo[@"id"] unsignedLongLongValue];
-    auto *backend = reinterpret_cast<OCC::MacNotifications *>([notification.userInfo[@"MacNotifications"] unsignedLongLongValue]);
+    const auto id = QString::fromNSString(notification.identifier).toULongLong();
 
-    OCC::SystemNotification *systemNotification = backend->systemNotificationManager()->notification(id);
+    OCC::SystemNotification *systemNotification = _macNotifications->systemNotificationManager()->notification(id);
 
     if (systemNotification) {
         OCC::SystemNotification::Result result;
@@ -96,7 +97,7 @@ private:
         Q_EMIT systemNotification->finished(result);
     } else {
         qCDebug(lcMacNotifications) << "Unknown notification activated " << id;
-        Q_EMIT backend->systemNotificationManager()->unknownNotifationClicked();
+        Q_EMIT _macNotifications->systemNotificationManager()->unknownNotifationClicked();
     }
 }
 
@@ -108,6 +109,7 @@ MacNotificationsPrivate::MacNotificationsPrivate(MacNotifications *q)
     : q_ptr(q)
 {
     _delegate = [[OurDelegate alloc] init];
+    [_delegate setMacNotifications: q];
     [[NSUserNotificationCenter defaultUserNotificationCenter] setDelegate:_delegate];
 
     NSArray<NSUserNotification *> *deliveredNotifications = [NSUserNotificationCenter defaultUserNotificationCenter].deliveredNotifications;
@@ -144,8 +146,7 @@ void MacNotifications::notify(const SystemNotificationRequest &notificationReque
         NSUserNotification *notification = [[[NSUserNotification alloc] init] autorelease];
         [notification setTitle:notificationRequest.title().toNSString()];
         [notification setInformativeText:notificationRequest.text().toNSString()];
-        [notification setUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedLong:notificationRequest.id()], @"id",
-                                                [NSNumber numberWithUnsignedLong:reinterpret_cast<uintptr_t>(this)], @"MacNotifications", nil]];
+        [notification setIdentifier: QString::number(notificationRequest.id()).toNSString()];
 
         [notification setContentImage:[[NSImage alloc] initWithCGImage:notificationRequest.icon().pixmap(iconSizeC).toImage().toCGImage()
                                                                   size:NSMakeSize(iconSizeC, iconSizeC)]];
