@@ -11,14 +11,6 @@ html, body {
     margin: 0;
 }
 
-@font-face {
-    font-family: OpenCloud;
-    src: url('data:font/woff2;base64,@{FONT}') format('woff2');
-    font-weight: normal;
-    font-style: normal;
-
-}
-
 body {
     background-color: @{BACKGROUND_COLOR};
     color: @{FONT_COLOR};

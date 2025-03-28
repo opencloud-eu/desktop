@@ -23,8 +23,6 @@ Pane {
             Layout.fillWidth: true
             Label {
                 text: qsTr("Notifications")
-
-                font.family: "OpenCloud750"
                 font.bold: true
             }
 
@@ -67,7 +65,6 @@ Pane {
                                 Layout.fillWidth: true
                                 text: title
                                 wrapMode: Label.WordWrap
-                                font.family: "OpenCloud750"
                                 font.bold: true
                             }
                             Label {

@@ -1,8 +1,5 @@
 <RCC>
     <qresource prefix="/client/OpenCloud">
-        <file>theme/OpenCloud500-Regular.otf</file>
-        <file>theme/OpenCloud500-Regular.woff2</file>
-        <file>theme/OpenCloud750-Bold.otf</file>
         <file alias="theme/dark-systray/error.svg">theme/dark-systray/ocl-ui_error-flieder-colour.svg</file>
         <file alias="theme/dark-systray/information.svg">theme/dark-systray/ocl-ui_info-flieder-colour.svg</file>
         <file alias="theme/dark-systray/ok.svg">theme/dark-systray/ocl-ui_logo-flieder.svg</file>

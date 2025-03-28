@@ -77,7 +77,6 @@ QString renderHttpTemplate(const QString &title, const QString &content)
             {"ICON", loadFile(QStringLiteral(":/client/OpenCloud/theme/universal/wizard_logo.svg"))}, //
             {"BACKGROUND_COLOR", Theme::instance()->wizardHeaderBackgroundColor().name()}, //
             {"FONT_COLOR", Theme::instance()->wizardHeaderTitleColor().name()}, //
-            {"FONT", loadFile(QStringLiteral(":/client/OpenCloud/theme/OpenCloud500-Regular.woff2"))} //
         });
 }
 
