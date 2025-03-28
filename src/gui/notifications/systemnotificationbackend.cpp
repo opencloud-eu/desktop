@@ -17,3 +17,8 @@ SystemNotificationManager *SystemNotificationBackend::systemNotificationManager(
 {
     return _parent;
 }
+
+SystemNotification *SystemNotificationBackend::activeNotification(quint64 id)
+{
+    return systemNotificationManager()->activeNotification(id);
+}

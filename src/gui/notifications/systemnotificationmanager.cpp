@@ -42,7 +42,7 @@ SystemNotification *SystemNotificationManager::notify(SystemNotificationRequest 
     }
 }
 
-SystemNotification *SystemNotificationManager::notification(quint64 id)
+SystemNotification *SystemNotificationManager::activeNotification(quint64 id)
 {
     return _activeNotifications.value(id);
 }

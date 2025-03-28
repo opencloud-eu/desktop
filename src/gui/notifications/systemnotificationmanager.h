@@ -23,12 +23,6 @@ public:
      */
     SystemNotification *notify(SystemNotificationRequest &&notification);
 
-    /**
-     *
-     * Returns an active notification or null
-     */
-    SystemNotification *notification(quint64 id);
-
 Q_SIGNALS:
     /**
      * A notification we no longer track was clicked.
@@ -37,7 +31,14 @@ Q_SIGNALS:
     void unknownNotifationClicked();
 
 private:
+    /**
+     *
+     * Returns an active notification or null
+     */
+    SystemNotification *activeNotification(quint64 id);
+
     SystemNotificationBackend *_backend = nullptr;
     QMap<quint64, SystemNotification *> _activeNotifications;
+    friend class SystemNotificationBackend;
 };
 }
