@@ -22,8 +22,6 @@
 class QIcon;
 
 namespace OCC {
-class SnoreToast;
-
 /**
  * @brief The Systray class
  * @ingroup gui
@@ -35,7 +33,6 @@ class Systray : public QSystemTrayIcon
 public:
     Systray(QObject *parent = nullptr);
 
-    void showMessage(const QString &title, const QString &message, const QIcon &icon, int millisecondsTimeoutHint = 10000);
     void setToolTip(const QString &tip);
 
 
