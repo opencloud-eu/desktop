@@ -31,7 +31,6 @@ SystemNotification *SystemNotificationManager::notify(SystemNotificationRequest 
     if (_backend && _backend->isReady()) {
         auto *n = new SystemNotification(std::move(notification), this);
         _activeNotifications.insert(n->request().id(), n);
-        connect(n, &SystemNotification::destroyed, this, [n, this]() { _activeNotifications.remove(n->request().id()); });
         _backend->notify(n->request());
         return n;
     } else {

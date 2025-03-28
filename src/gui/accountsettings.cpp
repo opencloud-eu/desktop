@@ -345,12 +345,6 @@ void AccountSettings::updateNotifications()
                 SystemNotificationRequest notificationRequest(notification.title, notification.message, Resources::FontIcon(u''));
                 notificationRequest.setButtons({tr("Mark as read")});
                 if (auto *n = ocApp()->systemNotificationManager()->notify(std::move(notificationRequest))) {
-                    connect(n, &SystemNotification::finished, this, [n](SystemNotification::Result result) {
-                        n->deleteLater();
-                        if (result == SystemNotification::Result::Clicked) {
-                            ocApp()->showSettings();
-                        }
-                    });
                     connect(n, &SystemNotification::buttonClicked, this, [notification, this](const QString &) {
                         // we only have one button so we don't need to check which was clicked
                         auto *job = Notification::dismissAllNotifications(_accountState->account(), {notification}, this);

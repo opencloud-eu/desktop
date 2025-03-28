@@ -65,23 +65,24 @@ SnoreToast::SnoreToast(SystemNotificationManager *parent)
                 qCInfo(lcSnoreToast) << "Notification" << notificationResponseMap["notificationId"]
                                      << "Closed with action:" << SnoreToastActions::getActionString(snoreAction);
 
-                SystemNotification *notification = systemNotificationManager()->activeNotification(notificationResponseMap["notificationId"].toULongLong());
+                SystemNotification *notification = activeNotification(notificationResponseMap["notificationId"].toULongLong());
+                SystemNotification::Result result;
                 if (notification) {
                     switch (snoreAction) {
                     case SnoreToastActions::Actions::Clicked:
-                        Q_EMIT notification->finished(SystemNotification::Result::Clicked);
+                        result = SystemNotification::Result::Clicked;
                         break;
                     case SnoreToastActions::Actions::Hidden:
-                        Q_EMIT notification->finished(SystemNotification::Result::Hidden);
+                        result = SystemNotification::Result::Hidden;
                         break;
                     case SnoreToastActions::Actions::Dismissed:
-                        Q_EMIT notification->finished(SystemNotification::Result::Dismissed);
+                        result = SystemNotification::Result::Dismissed;
                         break;
                     case SnoreToastActions::Actions::Timedout:
-                        Q_EMIT notification->finished(SystemNotification::Result::TimedOut);
+                        result = SystemNotification::Result::TimedOut;
                         break;
                     case SnoreToastActions::Actions::ButtonClicked:
-                        Q_EMIT notification->finished(SystemNotification::Result::ButtonClicked);
+                        result = SystemNotification::Result::ButtonClicked;
                         Q_EMIT notification->buttonClicked(notificationResponseMap["button"].toString());
                         break;
                     case SnoreToastActions::Actions::TextEntered:
@@ -91,6 +92,7 @@ SnoreToast::SnoreToast(SystemNotificationManager *parent)
                         qCWarning(lcSnoreToast) << "Error:" << data;
                         break;
                     }
+                    finishNotification(notification, result);
                 } else {
                     qCWarning(lcSnoreToast) << "Received notification response for unknown notification with the id:"
                                             << notificationResponseMap["notificationId"];

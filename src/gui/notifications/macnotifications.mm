@@ -43,6 +43,12 @@ public:
         return q->systemNotificationManager();
     }
 
+    inline void finishNotification(SystemNotification *notification, SystemNotification::Result result)
+    {
+        Q_Q(MacNotifications);
+        q->finishNotification(notification, result);
+    }
+
 private:
     OurDelegate *_delegate;
 
@@ -106,7 +112,7 @@ private:
             break;
         }
         qCDebug(lcMacNotifications) << "Activated notification " << id << result;
-        Q_EMIT systemNotification->finished(result);
+        _macNotifications->finishNotification(systemNotification, result);
     } else {
         qCDebug(lcMacNotifications) << "Unknown notification activated " << id;
         Q_EMIT _macNotifications->systemNotificationManager()->unknownNotifationClicked();

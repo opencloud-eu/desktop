@@ -2,13 +2,13 @@
 // SPDX-FileCopyrightText: 2025 Hannah von Reth <h.vonreth@opencloud.eu>
 
 #pragma once
+#include "gui/notifications/systemnotification.h"
 
 #include <QObject>
 
 namespace OCC {
 class SystemNotificationManager;
 class SystemNotificationRequest;
-class SystemNotification;
 
 class SystemNotificationBackend : public QObject
 {
@@ -23,6 +23,8 @@ public:
 
 protected:
     SystemNotification *activeNotification(quint64 id);
+
+    void finishNotification(SystemNotification *notification, SystemNotification::Result result);
 
 private:
     SystemNotificationManager *_parent;
