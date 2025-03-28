@@ -31,6 +31,18 @@ public:
 
     ~MacNotificationsPrivate() { [_delegate release]; }
 
+    inline auto *activeNotification(quint64 id)
+    {
+        Q_Q(MacNotifications);
+        return q->activeNotification(id);
+    }
+
+    inline auto *systemNotificationManager()
+    {
+        Q_Q(MacNotifications);
+        return q->systemNotificationManager();
+    }
+
 private:
     OurDelegate *_delegate;
 
@@ -41,7 +53,7 @@ private:
 
 @interface OurDelegate : NSObject <NSUserNotificationCenterDelegate>
 
-@property OCC::MacNotifications * macNotifications;
+@property OCC::MacNotificationsPrivate *macNotifications;
 @end
 
 @implementation OurDelegate
@@ -67,7 +79,7 @@ private:
     Q_UNUSED(center);
     const auto id = QString::fromNSString(notification.identifier).toULongLong();
 
-    OCC::SystemNotification *systemNotification = _macNotifications->systemNotificationManager()->notification(id);
+    OCC::SystemNotification *systemNotification = _macNotifications->activeNotification(id);
 
     if (systemNotification) {
         OCC::SystemNotification::Result result;
@@ -109,7 +121,7 @@ MacNotificationsPrivate::MacNotificationsPrivate(MacNotifications *q)
     : q_ptr(q)
 {
     _delegate = [[OurDelegate alloc] init];
-    [_delegate setMacNotifications: q];
+    [_delegate setMacNotifications:this];
     [[NSUserNotificationCenter defaultUserNotificationCenter] setDelegate:_delegate];
 
     NSArray<NSUserNotification *> *deliveredNotifications = [NSUserNotificationCenter defaultUserNotificationCenter].deliveredNotifications;

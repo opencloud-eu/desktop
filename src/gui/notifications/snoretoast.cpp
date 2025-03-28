@@ -65,7 +65,7 @@ SnoreToast::SnoreToast(SystemNotificationManager *parent)
                 qCInfo(lcSnoreToast) << "Notification" << notificationResponseMap["notificationId"]
                                      << "Closed with action:" << SnoreToastActions::getActionString(snoreAction);
 
-                SystemNotification *notification = ocApp()->systemNotificationManager()->notification(notificationResponseMap["notificationId"].toULongLong());
+                SystemNotification *notification = systemNotificationManager()->activeNotification(notificationResponseMap["notificationId"].toULongLong());
                 if (notification) {
                     switch (snoreAction) {
                     case SnoreToastActions::Actions::Clicked:

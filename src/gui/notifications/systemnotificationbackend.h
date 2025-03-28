@@ -8,6 +8,7 @@
 namespace OCC {
 class SystemNotificationManager;
 class SystemNotificationRequest;
+class SystemNotification;
 
 class SystemNotificationBackend : public QObject
 {
@@ -19,6 +20,9 @@ public:
 
     virtual void notify(const SystemNotificationRequest &notificationRequest) = 0;
     [[nodiscard]] virtual bool isReady() const = 0;
+
+protected:
+    SystemNotification *activeNotification(quint64 id);
 
 private:
     SystemNotificationManager *_parent;
