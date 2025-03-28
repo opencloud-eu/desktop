@@ -158,13 +158,14 @@ elseif( WIN32 )
     endif()
 elseif(UNIX AND NOT APPLE)
     ## handle DBUS for Fdo notifications
-    if (TARGET Qt::DBus)
-        target_link_libraries(OpenCloudGui PUBLIC Qt::DBus)
-        target_compile_definitions(OpenCloudGui PUBLIC "USE_FDO_NOTIFICATIONS")
-    endif()
+    target_link_libraries(OpenCloudGui PUBLIC Qt::DBus)
     target_sources(OpenCloudGui PRIVATE
             folderwatcher_linux.cpp
-            guiutility_unix.cpp)
+            guiutility_unix.cpp
+            notifications/dbusnotifications.cpp
+    )
+    qt_add_dbus_interface(notifications_dbus_SRCS notifications/org.freedesktop.Notifications.xml dbusnotifications_interface)
+    target_sources(OpenCloudGui PRIVATE ${notifications_dbus_SRCS})
 endif()
 
 if(WITH_AUTO_UPDATER)

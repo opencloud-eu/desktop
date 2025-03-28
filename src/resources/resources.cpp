@@ -149,7 +149,7 @@ QPixmap CoreImageProvider::requestPixmap(const QString &id, QSize *size, const Q
     return pixmap(requestedSize, icon, qmlIcon.enabled ? QIcon::Normal : QIcon::Disabled, size);
 }
 
-QString Resources::iconToFileSystemUrl(const QIcon &icon, QAnyStringView type)
+QUrl Resources::iconToFileSystemUrl(const QIcon &icon, QAnyStringView type)
 {
     QFileInfo info(QStringLiteral("%1/%2.%3").arg(iconCache->tmpDir.path(), QString::number(icon.cacheKey()), type.toString()));
     if (!info.exists()) {
@@ -157,5 +157,5 @@ QString Resources::iconToFileSystemUrl(const QIcon &icon, QAnyStringView type)
             qCWarning(lcResources) << "Failed to save icon to " << info.absoluteFilePath() << info.size();
         }
     }
-    return info.absoluteFilePath();
+    return QUrl::fromLocalFile(info.absoluteFilePath());
 }

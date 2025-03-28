@@ -129,7 +129,7 @@ void SnoreToast::notify(const SystemNotificationRequest &notificationRequest)
         QStringLiteral("-appId"), Theme::instance()->orgDomainName(), //
         QStringLiteral("-pid"), QString::number(qApp->applicationPid()), //
         QStringLiteral("-application"), qApp->applicationFilePath(), //
-        QStringLiteral("-p"), Resources::iconToFileSystemUrl(notificationRequest.icon()) //
+        QStringLiteral("-p"), Resources::iconToFileSystemUrl(notificationRequest.icon()).toLocalFile() //
     };
     if (!notificationRequest.buttons().isEmpty()) {
         args.append({QStringLiteral("-b"), notificationRequest.buttons().join(QLatin1Char(';'))});

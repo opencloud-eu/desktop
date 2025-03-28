@@ -25,28 +25,6 @@
 #include <QDesktopServices>
 #include <QMenu>
 
-#ifdef USE_FDO_NOTIFICATIONS
-#include <QDBusInterface>
-#include <QDBusMessage>
-
-namespace {
-auto NOTIFICATIONS_SERVICE_C()
-{
-    return QStringLiteral("org.freedesktop.Notifications");
-}
-
-auto NOTIFICATIONS_PATH_C()
-{
-    return QStringLiteral("/org/freedesktop/Notifications");
-}
-
-auto NOTIFICATIONS_IFACE_C()
-{
-    return QStringLiteral("org.freedesktop.Notifications");
-}
-}
-#endif
-
 namespace OCC {
 
 
@@ -67,23 +45,6 @@ Systray::Systray(QObject *parent)
     slotComputeOverallSyncStatus();
     computeContextMenu();
     show();
-}
-
-void Systray::showMessage(const QString &title, const QString &message, [[maybe_unused]] const QIcon &icon, [[maybe_unused]] int millisecondsTimeoutHint)
-{
-#ifdef USE_FDO_NOTIFICATIONS
-    if (QDBusInterface(NOTIFICATIONS_SERVICE_C(), NOTIFICATIONS_PATH_C(), NOTIFICATIONS_IFACE_C()).isValid()) {
-        QList<QVariant> args = QList<QVariant>() << Theme::instance()->appNameGUI() << quint32(0) << Theme::instance()->applicationIconName() << title
-                                                 << message << QStringList() << QVariantMap() << qint32(-1);
-        QDBusMessage method =
-            QDBusMessage::createMethodCall(NOTIFICATIONS_SERVICE_C(), NOTIFICATIONS_PATH_C(), NOTIFICATIONS_IFACE_C(), QStringLiteral("Notify"));
-        method.setArguments(args);
-        QDBusConnection::sessionBus().asyncCall(method);
-    } else
-#endif
-    {
-        QSystemTrayIcon::showMessage(title, message, icon, millisecondsTimeoutHint);
-    }
 }
 
 void Systray::setToolTip(const QString &tip)
