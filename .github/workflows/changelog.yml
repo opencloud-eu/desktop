@@ -1,0 +1,34 @@
+name: "Update changelog"
+
+on:
+  push:
+    branches:
+      - main
+
+permissions: {}
+
+defaults:
+  run:
+    shell: pwsh
+
+jobs:
+  update-translations:
+    permissions:
+      # for git push
+      contents: write
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ssh-key: ${{ secrets.DEPLOYMENT_SSH_KEY }}
+
+      - uses: actionhippie/calens@v1
+        with:
+          target: CHANGELOG.md
+
+      - uses: GuillaumeFalourd/git-commit-push@v1.3
+        with:
+          email: devops@opencloud.eu
+          name: OpenCloud
+          commit_message: "Automated changelog update [skip ci]"
