@@ -1359,27 +1359,27 @@ Please consider removing this folder from the account and adding it again.</sour
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/generalsettings.cpp" line="143"/>
+        <location filename="../src/gui/generalsettings.cpp" line="142"/>
         <source>You cannot disable autostart because system-wide autostart is enabled.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/generalsettings.cpp" line="54"/>
+        <location filename="../src/gui/generalsettings.cpp" line="53"/>
         <source>Warning</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/generalsettings.cpp" line="54"/>
+        <location filename="../src/gui/generalsettings.cpp" line="53"/>
         <source>Language changes require a restart of this application to take effect.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/generalsettings.cpp" line="175"/>
+        <location filename="../src/gui/generalsettings.cpp" line="174"/>
         <source>unknown (%1)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/generalsettings.cpp" line="159"/>
+        <location filename="../src/gui/generalsettings.cpp" line="158"/>
         <source>(use default)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2664,77 +2664,77 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::Systray</name>
     <message>
-        <location filename="../src/gui/systray.cpp" line="91"/>
+        <location filename="../src/gui/systray.cpp" line="52"/>
         <source>%1: %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="126"/>
+        <location filename="../src/gui/systray.cpp" line="87"/>
         <source>Disconnected from %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="129"/>
+        <location filename="../src/gui/systray.cpp" line="90"/>
         <source>Disconnected from accounts:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="131"/>
+        <location filename="../src/gui/systray.cpp" line="92"/>
         <source>Account %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="144"/>
+        <location filename="../src/gui/systray.cpp" line="105"/>
         <source>Please sign in</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="148"/>
+        <location filename="../src/gui/systray.cpp" line="109"/>
         <source>Account synchronization is disabled</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="167"/>
+        <location filename="../src/gui/systray.cpp" line="128"/>
         <source>Folder %1: %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="179"/>
+        <location filename="../src/gui/systray.cpp" line="140"/>
         <source>Show %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="182"/>
+        <location filename="../src/gui/systray.cpp" line="143"/>
         <source>Pause synchronizations</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="182"/>
+        <location filename="../src/gui/systray.cpp" line="143"/>
         <source>Resume synchronizations</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="187"/>
+        <location filename="../src/gui/systray.cpp" line="148"/>
         <source>Synchronization paused</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="223"/>
+        <location filename="../src/gui/systray.cpp" line="184"/>
         <source>Help</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="226"/>
+        <location filename="../src/gui/systray.cpp" line="187"/>
         <source>About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="229"/>
+        <location filename="../src/gui/systray.cpp" line="190"/>
         <source>About Qt</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="231"/>
+        <location filename="../src/gui/systray.cpp" line="192"/>
         <source>Quit</source>
         <translation type="unfinished"></translation>
     </message>
