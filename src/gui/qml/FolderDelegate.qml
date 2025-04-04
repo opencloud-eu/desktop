@@ -147,9 +147,8 @@ Pane {
             id: scrollView
             Layout.fillHeight: true
             Layout.fillWidth: true
-            padding: folderSyncPanel.spacing
+            padding: folderSyncPanel.spacing * 2
 
-            contentWidth: availableWidth
             ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
             ScrollBar.vertical.policy: ScrollBar.AlwaysOn
 
@@ -160,6 +159,8 @@ Pane {
                 anchors.fill: parent
                 focus: true
                 boundsBehavior: Flickable.StopAtBounds
+
+                contentWidth: availableWidth
 
                 model: accountSettings.model
                 spacing: folderSyncPanel.spacing
