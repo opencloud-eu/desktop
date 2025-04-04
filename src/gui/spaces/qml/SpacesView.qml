@@ -36,7 +36,6 @@ Pane {
         anchors.fill: parent
         clip: true
         rightPadding: spacesView.spacing * 2
-        contentWidth: availableWidth
         ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
         ScrollBar.vertical.policy: ScrollBar.AlwaysOn
 
@@ -58,6 +57,7 @@ Pane {
             spacing: spacesView.spacing
             focus: true
             boundsBehavior: Flickable.StopAtBounds
+            contentWidth: availableWidth
 
             model: spacesBrowser.model
 
