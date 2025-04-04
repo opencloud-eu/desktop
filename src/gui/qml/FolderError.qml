@@ -51,9 +51,9 @@ ColumnLayout {
                 clip: true
                 Layout.fillHeight: true
                 Layout.fillWidth: true
-                contentWidth: availableWidth
                 ListView {
                     model: errorMessages
+                    contentWidth: availableWidth
                     delegate: ErrorItem {
                         width: scrollView.availableWidth
                         required property string modelData

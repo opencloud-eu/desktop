@@ -147,17 +147,17 @@ Pane {
             id: scrollView
             Layout.fillHeight: true
             Layout.fillWidth: true
-            padding: folderSyncPanel.spacing
+            rightPadding: folderSyncPanel.spacing * 2
 
-            contentWidth: availableWidth
             ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
             ScrollBar.vertical.policy: ScrollBar.AlwaysOn
+
+            contentWidth: availableWidth
 
             clip: true
 
             ListView {
                 id: listView
-                anchors.fill: parent
                 focus: true
                 boundsBehavior: Flickable.StopAtBounds
 

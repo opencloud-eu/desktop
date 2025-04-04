@@ -36,9 +36,10 @@ Pane {
         anchors.fill: parent
         clip: true
         rightPadding: spacesView.spacing * 2
-        contentWidth: availableWidth
         ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
         ScrollBar.vertical.policy: ScrollBar.AlwaysOn
+
+        contentWidth: availableWidth
 
         Connections {
             target: widget
@@ -54,8 +55,12 @@ Pane {
 
         ListView {
             id: listView
+
+            // TODO: why do I need to fill parent here but must not fill parent in FolderDelegate
             anchors.fill: parent
+
             spacing: spacesView.spacing
+
             focus: true
             boundsBehavior: Flickable.StopAtBounds
 
@@ -86,7 +91,6 @@ Pane {
                 required property int index
 
                 width: scrollView.availableWidth
-
                 implicitHeight: normalSize
 
                 Pane {
