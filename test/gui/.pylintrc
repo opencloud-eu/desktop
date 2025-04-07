@@ -1,0 +1,87 @@
+[MASTER]
+init-hook='import sys; sys.path.append("./shared/scripts")'
+
+[MAIN]
+enable=all
+disable=
+    missing-docstring,
+    global-statement,
+    locally-disabled,
+    suppressed-message,
+    unused-variable,
+    too-many-public-methods,
+    bare-except,
+    fixme,
+fail-under=10
+ignore-paths=^tst_.*/test.py$,
+    shared/scripts/names.py,
+    shared/scripts/custom_lib
+ignored-modules=
+    squish,
+    squishinfo,
+    object,
+    objectmaphelper,
+    test,
+    requests,
+    psutil,
+    urllib3,
+    custom_lib.syncstate,
+load-plugins=
+    pylint.extensions.check_elif,
+    pylint.extensions.bad_builtin,
+    pylint.extensions.code_style,
+    pylint.extensions.overlapping_exceptions,
+    pylint.extensions.typing,
+    pylint.extensions.redefined_variable_type,
+py-version=3.10
+unsafe-load-any-extension=no
+
+[BASIC]
+attr-naming-style=snake_case
+; TODO: enable it later
+; class-attribute-naming-style=snake_case
+class-const-naming-style=UPPER_CASE
+class-naming-style=PascalCase
+const-naming-style=UPPER_CASE
+function-naming-style=snake_case
+inlinevar-naming-style=snake_case
+method-naming-style=snake_case
+module-naming-style=any
+variable-naming-style=snake_case
+
+[DESIGN]
+max-args=8
+
+[VARIABLES]
+additional-builtins=
+    squish,
+    squishinfo,
+    test,
+    testSettings,
+    OnFeatureStart,
+    OnFeatureEnd,
+    OnScenarioStart,
+    OnScenarioEnd,
+    QApplication,
+    Given,
+    When,
+    Then,
+    Step,
+allow-global-unused-variables=no
+dummy-variables-rgx=^hook$|^_*$|^step$
+ignored-argument-names=^context$|^_*$
+
+[STRING]
+check-quote-consistency=yes
+
+[FORMAT]
+indent-string='    '
+max-line-length=120
+
+[TYPECHECK]
+ignored-classes=object,test
+
+[SIMILARITIES]
+ignore-comments=yes
+ignore-docstrings=yes
+ignore-imports=yes
