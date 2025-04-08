@@ -66,7 +66,7 @@ SnoreToast::SnoreToast(SystemNotificationManager *parent)
                                      << "Closed with action:" << SnoreToastActions::getActionString(snoreAction);
 
                 SystemNotification *notification = activeNotification(notificationResponseMap["notificationId"].toULongLong());
-                SystemNotification::Result result;
+                SystemNotification::Result result = SystemNotification::Result::Clicked;
                 if (notification) {
                     switch (snoreAction) {
                     case SnoreToastActions::Actions::Clicked:
