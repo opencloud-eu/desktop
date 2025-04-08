@@ -26,7 +26,7 @@ opencloud_add_test(Utility)
 opencloud_add_test(SyncEngine)
 
 opencloud_add_test(SyncMove)
-add_dependencies(SyncMoveTest test_helper)
+add_dependencies(testsyncmove test_helper)
 opencloud_add_test(SyncDelete)
 opencloud_add_test(SyncConflict)
 opencloud_add_test(SyncFileStatusTracker)

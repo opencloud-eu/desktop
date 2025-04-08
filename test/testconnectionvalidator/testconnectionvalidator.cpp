@@ -17,7 +17,6 @@
 #include "gui/connectionvalidator.h"
 #include "libsync/abstractnetworkjob.h"
 #include "libsync/httplogger.h"
-#include "resources/template.h"
 
 #include "testutils/syncenginetestutils.h"
 #include "testutils/testutils.h"
@@ -32,20 +31,6 @@ class TestConnectionValidator : public QObject
 
     enum class FailStage { Invalid, StatusPhp, Capabilities, UserInfo };
 
-    // we can't use QMap direclty with QFETCH
-    using Values = QMap<QAnyStringView, QAnyStringView>;
-    auto getPayload(const QString &payloadName)
-    {
-        QFile f(QStringLiteral(SOURCEDIR "/test/testconnectionvalidator/%1").arg(payloadName));
-        Q_ASSERT(f.open(QIODevice::ReadOnly));
-        return f.readAll();
-    }
-
-    auto getPayloadTemplated(const QString &payloadName, const Values &values)
-    {
-        return Resources::Template::renderTemplate(QString::fromUtf8(getPayload(payloadName)), values).toUtf8();
-    }
-
 private Q_SLOTS:
 
 
@@ -54,11 +39,11 @@ private Q_SLOTS:
     void testStatusPhp_data()
     {
         QTest::addColumn<FailStage>("failStage");
-        QTest::addColumn<Values>("values");
+        QTest::addColumn<TestUtils::Values>("values");
         QTest::addColumn<ConnectionValidator::Status>("status");
 
-        const auto defaultValue = Values{{QStringLiteral("maintenance"), QStringLiteral("false")}, {QStringLiteral("version"), QStringLiteral("10.11.0.0")},
-            {QStringLiteral("productversion"), QStringLiteral("4.0.5")}};
+        const auto defaultValue = TestUtils::Values{{QStringLiteral("maintenance"), QStringLiteral("false")},
+            {QStringLiteral("version"), QStringLiteral("10.11.0.0")}, {QStringLiteral("productversion"), QStringLiteral("4.0.5")}};
 
         QTest::newRow("status.php maintenance") << FailStage::StatusPhp << [value = defaultValue]() mutable {
             value[QStringLiteral("maintenance")] = QStringLiteral("true");
@@ -86,7 +71,7 @@ private Q_SLOTS:
     void testStatusPhp()
     {
         QFETCH(FailStage, failStage);
-        QFETCH(Values, values);
+        QFETCH(TestUtils::Values, values);
         QFETCH(ConnectionValidator::Status, status);
 
         auto reachedStage = FailStage::Invalid;
@@ -107,7 +92,7 @@ private Q_SLOTS:
                             return new FakeErrorReply(op, request, this, 403);
                         }
                     }
-                    return new FakePayloadReply(op, request, getPayloadTemplated(QStringLiteral("status.php.json.in"), values), this);
+                    return new FakePayloadReply(op, request, TestUtils::getPayloadTemplated(QStringLiteral("status.php.json.in"), values), this);
                 } else if (path.endsWith(QLatin1String("capabilities"))) {
                     reachedStage = FailStage::Capabilities;
                     if (failStage == FailStage::Capabilities) {
@@ -121,7 +106,7 @@ private Q_SLOTS:
                             return new FakeHangingReply(op, request, this);
                         }
                     }
-                    return new FakePayloadReply(op, request, getPayloadTemplated(QStringLiteral("capabilities.json.in"), values), this);
+                    return new FakePayloadReply(op, request, TestUtils::getPayloadTemplated(QStringLiteral("capabilities.json.in"), values), this);
                 } else if (path.endsWith(QLatin1String("user"))) {
                     reachedStage = FailStage::UserInfo;
                     if (failStage == FailStage::UserInfo) {
@@ -131,7 +116,7 @@ private Q_SLOTS:
                             return new FakeHangingReply(op, request, this);
                         }
                     }
-                    return new FakePayloadReply(op, request, getPayload(QStringLiteral("user.json")), this);
+                    return new FakePayloadReply(op, request, TestUtils::getPayload(QStringLiteral("user.json")), this);
                 }
             }
             return nullptr;

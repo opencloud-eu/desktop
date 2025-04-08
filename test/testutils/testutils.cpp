@@ -3,9 +3,11 @@
 #include "common/checksums.h"
 #include "gui/accountmanager.h"
 #include "libsync/creds/httpcredentials.h"
+#include "resources/template.h"
 
 #include <QCoreApplication>
 #include <QRandomGenerator>
+#include <QTest>
 
 namespace {
 class HttpCredentialsTest : public OCC::HttpCredentials
@@ -105,6 +107,21 @@ namespace TestUtils {
             {QStringLiteral("files"), QVariantList{}}, {QStringLiteral("dav"), QVariantMap{{QStringLiteral("chunking"), QStringLiteral("1.0")}}},
             {QStringLiteral("checksums"),
                 QVariantMap{{QStringLiteral("preferredUploadType"), Utility::enumToString(algo)}, {QStringLiteral("supportedTypes"), algorithmNames}}}};
+    }
+
+    QByteArray getPayload(QAnyStringView payloadName)
+    {
+        static QFileInfo info(QString::fromUtf8(QTest::currentAppName()));
+        QFile f(QStringLiteral(SOURCEDIR "/test/%1/%2").arg(info.baseName(), payloadName.toString()));
+        if (!f.open(QIODevice::ReadOnly)) {
+            qFatal() << "Failed to open file: " << f.fileName();
+        }
+        return f.readAll();
+    }
+
+    QByteArray getPayloadTemplated(QAnyStringView payloadName, const Values &values)
+    {
+        return Resources::Template::renderTemplate(QString::fromUtf8(getPayload(payloadName)), values).toUtf8();
     }
 
     QUrl dummyDavUrl()

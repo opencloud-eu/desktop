@@ -34,6 +34,13 @@ namespace TestUtils {
 
     const QVariantMap testCapabilities(CheckSums::Algorithm algo = CheckSums::Algorithm::DUMMY_FOR_TESTS);
 
+
+    QByteArray getPayload(QAnyStringView payloadName);
+
+    // we can't use QMap direclty with QFETCH
+    using Values = QMap<QAnyStringView, QAnyStringView>;
+    QByteArray getPayloadTemplated(QAnyStringView payloadName, const Values &values);
+
     QUrl dummyDavUrl();
 }
 }
