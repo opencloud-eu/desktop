@@ -56,7 +56,6 @@ DBusNotifications::DBusNotifications(SystemNotificationManager *parent)
     });
 
     connect(&d->dbusInterface, &org::freedesktop::Notifications::NotificationClosed, this, [this](uint id, uint reason) {
-        qCDebug(lcDbusNotification) << "NotificationClosed" << id << reason;
         if (auto *notification = activeNotification(id)) {
             SystemNotification::Result result;
             switch (reason) {
@@ -71,8 +70,10 @@ DBusNotifications::DBusNotifications(SystemNotificationManager *parent)
                 qCWarning(lcDbusNotification) << "Unsupported close reason" << reason;
                 break;
             }
-            systemNotificationManager()->notificationFinished(notification, result);
+            qCDebug(lcDbusNotification) << "NotificationClosed" << id << reason << result;
+            finishNotification(notification, result);
         } else {
+            qCDebug(lcDbusNotification) << "Unknown NotificationClicked" << id << reason;
             Q_EMIT systemNotificationManager() -> unknownNotifationClicked();
         }
     });
