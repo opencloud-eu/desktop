@@ -296,8 +296,8 @@ OCSYNC_EXPORT Q_DECLARE_LOGGING_CATEGORY(lcUtility)
      * This allows performant access to the container with in a simple if condition.
      * if (auto it = optionalFind("key"))
      */
-    template <typename T>
-    auto optionalFind(const T &container, const QString &key)
+    template <typename T, typename K>
+    auto optionalFind(const T &container, const K &key)
     {
         auto it = container.constFind(key);
         return it == container.cend() ? std::nullopt : std::make_optional(it);

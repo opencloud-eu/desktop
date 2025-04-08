@@ -187,7 +187,11 @@ QList<AccountState *> AccountManager::accountsRaw() const
 
 AccountStatePtr AccountManager::account(const QUuid uuid)
 {
-    return _accounts.value(uuid);
+    const auto acc = Utility::optionalFind(_accounts, uuid);
+    if (OC_ENSURE(acc.has_value())) {
+        return acc->value();
+    }
+    return {};
 }
 
 AccountStatePtr AccountManager::addAccount(const AccountPtr &newAccount)
