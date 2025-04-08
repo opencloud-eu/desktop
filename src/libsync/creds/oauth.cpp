@@ -202,36 +202,16 @@ private:
 
     void registerClientFinished(const QVariantMap &data)
     {
-        {
-            QString error;
-            const auto expireDate = getRequiredField(data, QStringLiteral("client_secret_expires_at"), &error).value<qint64>();
-            if (!error.isEmpty()) {
-                Q_EMIT errorOccured(error);
-                return;
-            }
-            // 0 means it doesn't expire
-            if (expireDate) {
-                const auto qExpireDate = QDateTime::fromSecsSinceEpoch(expireDate);
-                qCInfo(lcOauth) << "Client id issued at:" << QDateTime::fromSecsSinceEpoch(data[QStringLiteral("client_id_issued_at")].value<quint64>())
-                                << "expires at" << qExpireDate;
-                if (QDateTime::currentDateTimeUtc() > qExpireDate) {
-                    qCDebug(lcOauth) << "Client registration expired";
-                    registerClientOnline();
-                    return;
-                }
-            }
-        }
         // extracting these values could be done by the signal receiver, too, but that'd require duplicating the error handling code
         // therefore, we extract the values here and pass them separately in the signal
         // sure, the data will be redundant, but it's worth it
         QString error;
         const auto client_id = getRequiredField(data, QStringLiteral("client_id"), &error).toString();
-        const auto client_secret = getRequiredField(data, QStringLiteral("client_secret"), &error).toString();
         if (!error.isEmpty()) {
             Q_EMIT errorOccured(error);
             return;
         }
-        Q_EMIT finished(client_id, client_secret, data);
+        Q_EMIT finished(client_id, {}, data);
     }
 
 private:
