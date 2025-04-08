@@ -39,7 +39,8 @@ SystemNotification *SystemNotificationManager::notify(SystemNotificationRequest 
         return n;
     } else {
         // the result is not directly connected to a specific notification
-        connect(ocApp()->systemTrayIcon(), &QSystemTrayIcon::messageClicked, this, &SystemNotificationManager::unknownNotifationClicked, Qt::UniqueConnection);
+        connect(
+            ocApp()->systemTrayIcon(), &QSystemTrayIcon::messageClicked, this, &SystemNotificationManager::unknownNotificationClicked, Qt::UniqueConnection);
         ocApp()->systemTrayIcon()->showMessage(notification.title(), notification.text(), notification.icon());
         return nullptr;
     }

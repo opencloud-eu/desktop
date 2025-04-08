@@ -96,7 +96,7 @@ SnoreToast::SnoreToast(SystemNotificationManager *parent)
                 } else {
                     qCWarning(lcSnoreToast) << "Received notification response for unknown notification with the id:"
                                             << notificationResponseMap["notificationId"];
-                    Q_EMIT systemNotificationManager() -> unknownNotifationClicked();
+                    Q_EMIT systemNotificationManager() -> unknownNotificationClicked();
                 }
             });
         });

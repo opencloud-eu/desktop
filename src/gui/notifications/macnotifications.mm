@@ -115,7 +115,7 @@ private:
         _macNotifications->finishNotification(systemNotification, result);
     } else {
         qCDebug(lcMacNotifications) << "Unknown notification activated " << id;
-        Q_EMIT _macNotifications->systemNotificationManager()->unknownNotifationClicked();
+        Q_EMIT _macNotifications->systemNotificationManager()->unknownNotificationClicked();
     }
 }
 

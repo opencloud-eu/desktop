@@ -74,7 +74,7 @@ DBusNotifications::DBusNotifications(SystemNotificationManager *parent)
             finishNotification(notification, result);
         } else {
             qCDebug(lcDbusNotification) << "Unknown NotificationClicked" << id << reason;
-            Q_EMIT systemNotificationManager() -> unknownNotifationClicked();
+            Q_EMIT systemNotificationManager() -> unknownNotificationClicked();
         }
     });
 }

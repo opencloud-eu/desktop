@@ -146,7 +146,7 @@ Application::Application(const QString &displayLanguage, bool debugMode)
     for (const auto &ai : AccountManager::instance()->accounts()) {
         slotAccountStateAdded(ai);
     }
-    connect(_systemNotificationManager, &SystemNotificationManager::unknownNotifationClicked, this, &Application::showSettings);
+    connect(_systemNotificationManager, &SystemNotificationManager::unknownNotificationClicked, this, &Application::showSettings);
     connect(
         _systemNotificationManager, &SystemNotificationManager::notificationFinished, this, [this](SystemNotification *, SystemNotification::Result result) {
             if (result == SystemNotification::Result::Clicked) {

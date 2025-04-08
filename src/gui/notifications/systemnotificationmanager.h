@@ -30,7 +30,7 @@ Q_SIGNALS:
      * A notification we no longer track was clicked.
      * This can be the case when a notification in the action center is clicked, that is already timed out.
      */
-    void unknownNotifationClicked();
+    void unknownNotificationClicked();
 
 private:
     /**
