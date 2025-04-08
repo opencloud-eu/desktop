@@ -299,12 +299,12 @@ File synchronization desktop utility.</source>
 <context>
     <name>FolderError</name>
     <message>
-        <location filename="../src/gui/qml/FolderError.qml" line="66"/>
+        <location filename="../src/gui/qml/FolderError.qml" line="68"/>
         <source>Show less</source>
         <translation>Afficher moins</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderError.qml" line="87"/>
+        <location filename="../src/gui/qml/FolderError.qml" line="89"/>
         <source>Show more</source>
         <translation>Afficher plus</translation>
     </message>
