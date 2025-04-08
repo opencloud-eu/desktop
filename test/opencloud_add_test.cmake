@@ -10,18 +10,16 @@ function(opencloud_add_test test_class)
     if (IS_DIRECTORY  ${CMAKE_CURRENT_SOURCE_DIR}/test${OC_TEST_CLASS_LOWERCASE}/)
         set(SRC_PATH test${OC_TEST_CLASS_LOWERCASE}/${SRC_PATH})
     endif()
-
-    ecm_add_test(${SRC_PATH}
-        ${ARGN}
-        TEST_NAME "${OC_TEST_CLASS}Test"
+    ecm_add_tests(${SRC_PATH}
         LINK_LIBRARIES
         OpenCloudGui syncenginetestutils testutilsloader Qt::Test
+        TARGET_NAMES_VAR _test_target_name
     )
-    apply_common_target_settings(${OC_TEST_CLASS}Test)
-    target_compile_definitions(${OC_TEST_CLASS}Test PRIVATE SOURCEDIR="${PROJECT_SOURCE_DIR}" QT_FORCE_ASSERTS)
+    apply_common_target_settings(${_test_target_name})
+    target_compile_definitions(${_test_target_name} PRIVATE SOURCEDIR="${PROJECT_SOURCE_DIR}" QT_FORCE_ASSERTS)
 
-    target_include_directories(${OC_TEST_CLASS}Test PRIVATE "${CMAKE_SOURCE_DIR}/test/")
+    target_include_directories(${_test_target_name} PRIVATE "${CMAKE_SOURCE_DIR}/test/")
     if (UNIX AND NOT APPLE)
-        set_property(TEST ${OC_TEST_CLASS}Test PROPERTY ENVIRONMENT "QT_QPA_PLATFORM=offscreen")
+        set_property(TEST ${_test_target_name} PROPERTY ENVIRONMENT "QT_QPA_PLATFORM=offscreen")
     endif()
 endfunction()
