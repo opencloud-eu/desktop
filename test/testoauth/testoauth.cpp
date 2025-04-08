@@ -5,13 +5,13 @@
  *
  */
 
-#include <QtTest/QtTest>
 #include <QDesktopServices>
+#include <QtTest/QtTest>
 
+#include "common/asserts.h"
 #include "libsync/creds/oauth.h"
 #include "testutils/syncenginetestutils.h"
 #include "theme.h"
-#include "common/asserts.h"
 
 using namespace std::chrono_literals;
 using namespace OCC;
@@ -38,9 +38,9 @@ public:
     std::unique_ptr<QIODevice> payload;
     bool aborted = false;
 
-    FakePostReply(QNetworkAccessManager::Operation op, const QNetworkRequest &request,
-                  std::unique_ptr<QIODevice> payload_, QObject *parent)
-        : QNetworkReply{parent}, payload{std::move(payload_)}
+    FakePostReply(QNetworkAccessManager::Operation op, const QNetworkRequest &request, std::unique_ptr<QIODevice> payload_, QObject *parent)
+        : QNetworkReply{parent}
+        , payload{std::move(payload_)}
     {
         setRequest(request);
         setUrl(request.url());
@@ -50,7 +50,8 @@ public:
         QMetaObject::invokeMethod(this, &FakePostReply::respond, Qt::QueuedConnection);
     }
 
-    Q_INVOKABLE virtual void respond() {
+    Q_INVOKABLE virtual void respond()
+    {
         if (aborted) {
             setError(OperationCanceledError, QStringLiteral("Operation Canceled"));
             Q_EMIT metaDataChanged();
@@ -65,9 +66,7 @@ public:
         checkedFinished();
     }
 
-    void abort() override {
-        aborted = true;
-    }
+    void abort() override { aborted = true; }
 
     void checkedFinished()
     {
@@ -77,23 +76,24 @@ public:
         }
     }
 
-    qint64 bytesAvailable() const override {
+    qint64 bytesAvailable() const override
+    {
         if (aborted)
             return 0;
         return payload->bytesAvailable();
     }
 
-    qint64 readData(char *data, qint64 maxlen) override {
-        return payload->read(data, maxlen);
-    }
+    qint64 readData(char *data, qint64 maxlen) override { return payload->read(data, maxlen); }
 };
 
 // Reply with a small delay
-class SlowFakePostReply : public FakePostReply {
+class SlowFakePostReply : public FakePostReply
+{
     Q_OBJECT
 public:
     using FakePostReply::FakePostReply;
-    void respond() override {
+    void respond() override
+    {
         // override of FakePostReply::respond, will call the real one with a delay.
         QTimer::singleShot(100ms, this, [this] { this->FakePostReply::respond(); });
     }
@@ -131,7 +131,7 @@ public:
         account->setUrl(sOAuthTestServer);
         // the account seizes ownership over the qnam in account->setCredentials(...) by keeping a shared pointer on it
         // therefore, we should never call fakeAm->setThis(...)
-        account->setCredentials(new FakeCredentials { fakeAm });
+        account->setCredentials(new FakeCredentials{fakeAm});
         fakeAm->setOverride([this](QNetworkAccessManager::Operation op, const QNetworkRequest &req, QIODevice *device) {
             if (req.url().path().endsWith(QLatin1String(".well-known/openid-configuration"))) {
                 return this->wellKnownReply(op, req);
@@ -165,7 +165,8 @@ public:
         QTRY_VERIFY(done());
     }
 
-    virtual void openBrowserHook(const QUrl &url) {
+    virtual void openBrowserHook(const QUrl &url)
+    {
         QCOMPARE(state, StatusPhpState);
         state = BrowserOpened;
         QCOMPARE(url.path(), sOAuthTestServer.path() + QStringLiteral("/index.php/apps/oauth2/authorize"));
@@ -179,7 +180,8 @@ public:
         createBrowserReply(QNetworkRequest(redirectUri));
     }
 
-    virtual QNetworkReply *createBrowserReply(const QNetworkRequest &request) {
+    virtual QNetworkReply *createBrowserReply(const QNetworkRequest &request)
+    {
         auto r = request;
         // don't follow the redirect to opencloud://success
         r.setAttribute(QNetworkRequest::RedirectPolicyAttribute, QNetworkRequest::ManualRedirectPolicy);
@@ -188,7 +190,8 @@ public:
         return browserReply;
     }
 
-    virtual void browserReplyFinished() {
+    virtual void browserReplyFinished()
+    {
         QCOMPARE(sender(), browserReply.data());
         QCOMPARE(state, TokenAsked);
         browserReply->deleteLater();
@@ -238,7 +241,8 @@ public:
         return new FakeErrorReply(op, req, fakeAm, 404, {});
     }
 
-    virtual QByteArray tokenReplyPayload() const {
+    virtual QByteArray tokenReplyPayload() const
+    {
         // the dummy server provides the user admin
         QJsonDocument jsondata(QJsonObject{{QStringLiteral("access_token"), QStringLiteral("123")}, {QStringLiteral("refresh_token"), QStringLiteral("456")},
             {QStringLiteral("message_url"), QStringLiteral("opencloud://success")}, {QStringLiteral("id_token"), idToken()},
@@ -304,7 +308,7 @@ public:
     }
 };
 
-class TestOAuth: public QObject
+class TestOAuth : public QObject
 {
     Q_OBJECT
 
@@ -318,8 +322,10 @@ private Q_SLOTS:
 
     void testWrongUser()
     {
-        struct Test : OAuthTestCase {
-            QByteArray tokenReplyPayload() const override {
+        struct Test : OAuthTestCase
+        {
+            QByteArray tokenReplyPayload() const override
+            {
                 // the dummy server provides the user admin
                 QJsonDocument jsondata(QJsonObject{{QStringLiteral("access_token"), QStringLiteral("123")},
                     {QStringLiteral("refresh_token"), QStringLiteral("456")}, {QStringLiteral("message_url"), QStringLiteral("OpenCloud://success")},
@@ -327,16 +333,15 @@ private Q_SLOTS:
                 return jsondata.toJson();
             }
 
-            void browserReplyFinished() override {
+            void browserReplyFinished() override
+            {
                 QCOMPARE(sender(), browserReply.data());
                 QCOMPARE(state, TokenAsked);
                 browserReply->deleteLater();
                 QCOMPARE(QNetworkReply::AuthenticationRequiredError, browserReply->error());
             }
 
-            bool done() const override{
-                return true;
-            }
+            bool done() const override { return true; }
         };
         Test test;
         test.test();
@@ -345,7 +350,8 @@ private Q_SLOTS:
     // Test for https://github.com/owncloud/client/pull/6057
     void testCloseBrowserDontCrash()
     {
-        struct Test : OAuthTestCase {
+        struct Test : OAuthTestCase
+        {
             QNetworkReply *tokenReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req, [[maybe_unused]] QIODevice *device) override
             {
                 OC_ASSERT(browserReply);
@@ -373,8 +379,10 @@ private Q_SLOTS:
     void testRandomConnections()
     {
         // Test that we can send random garbage to the litening socket and it does not prevent the connection
-        struct Test : OAuthTestCase {
-            QNetworkReply *createBrowserReply(const QNetworkRequest &request) override {
+        struct Test : OAuthTestCase
+        {
+            QNetworkReply *createBrowserReply(const QNetworkRequest &request) override
+            {
                 QTimer::singleShot(0, this, [this, request] {
                     auto port = request.url().port();
                     state = CustomState;
@@ -400,8 +408,8 @@ private Q_SLOTS:
                         state = BrowserOpened;
                         this->OAuthTestCase::createBrowserReply(request);
                     });
-               });
-               return nullptr;
+                });
+                return nullptr;
             }
 
             QNetworkReply *tokenReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req, QIODevice *device) override
@@ -658,10 +666,6 @@ private Q_SLOTS:
                 auto req = request;
                 const auto query = QUrlQuery(QString::fromUtf8(device->peek(device->size())));
                 OC_ASSERT(query.queryItemValue(QStringLiteral("refresh_token")) == QLatin1String("foo"));
-                OC_ASSERT(query.queryItemValue(QStringLiteral("client_id")) == _expectedClientId);
-                // TODO: validate actual behaviour against server supporting dynamic registration
-                // https://github.com/opencloud-eu/desktop/issues/91
-                // OC_ASSERT(query.queryItemValue(QStringLiteral("client_secret")) == _expectedClientSecret);
 
                 qDebug() << request.url() << request.url().query() << device->peek(device->size());
                 req.setUrl(QUrl(request.url().toString().replace(
@@ -675,23 +679,7 @@ private Q_SLOTS:
 
             QNetworkReply *clientRegistrationReply(QNetworkAccessManager::Operation op, const QNetworkRequest &request) override
             {
-                const QByteArray payload(QByteArrayLiteral("{\"redirect_uris\":[\"http://"
-                                                           "127.0.0.1\"],\"token_endpoint_auth_method\":\"client_secret_basic\",\"grant_types\":["
-                                                           "\"authorization_code\",\"refresh_token\"],\"response_types\":[\"code\",\"none\"],\"client_id\":\"")
-                    + _expectedClientId.toUtf8() + QByteArrayLiteral("\",\"client_secret\":\"") + _expectedClientSecret.toUtf8()
-                    + QByteArrayLiteral("\",\"client_name\":\"OpenCloud 3.0.0.0\",\"scope\":\"web-origins address phone offline_access "
-                                        "microprofile-jwt\",\"subject_type\":\"public\",\"request_uris\":[],\"tls_client_certificate_bound_access_tokens\":"
-                                        "false,\"client_id_issued_at\":1663074650,\"client_secret_expires_at\":0,\"registration_client_uri\":\"https://"
-                                        "someserver.de/auth/realms/opencloud/clients-registrations/openid-connect/"
-                                        "3e4ea0f3-59ea-434a-92f2-b0d3b54443e9\",\"registration_access_token\":"
-                                        "\"eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICIzYjQ2YWVkYi00Y2I3LTRiMGItODA5Ny1lNjRmOGQ5ZWY2YjQifQ."
-                                        "eyJleHAiOjAsImlhdCI6MTY2MzA3NDY1MCwianRpIjoiNTlkZWIzNTktNTBmZS00YTUyLWFmNTItZjFjNDg3ZTFlOWRmIiwiaXNzIjoiaHR0cHM6Ly9rZX"
-                                        "ljbG9hay5vd25jbG91ZC5jbG91ZHNwZWljaGVyLWJheWVybi5kZS9hdXRoL3JlYWxtcy9vY2lzIiwiYXVkIjoiaHR0cHM6Ly9rZXljbG9hay5vd25jbG91"
-                                        "ZC5jbG91ZHNwZWljaGVyLWJheWVybi5kZS9hdXRoL3JlYWxtcy9vY2lzIiwidHlwIjoiUmVnaXN0cmF0aW9uQWNjZXNzVG9rZW4iLCJyZWdpc3RyYXRpb2"
-                                        "5fYXV0aCI6ImFub255bW91cyJ9.v1giSvpnKw1hTtBYZaqdp3JqnZ5mvCKYhQDKkT7x8Us\",\"backchannel_logout_session_required\":"
-                                        "false,\"require_pushed_authorization_requests\":false}"));
-
-                auto *out = new FakePayloadReply(op, request, payload, fakeAm);
+                auto *out = new FakePayloadReply(op, request, TestUtils::getPayload("testDynamicTokenRefresh/clientRegistrationReply.json"), fakeAm);
                 out->setAttribute(QNetworkRequest::HttpStatusCodeAttribute, 201);
                 return out;
             }
@@ -701,8 +689,9 @@ private Q_SLOTS:
                 oauth = prepareOauth();
                 QSignalSpy spy(oauth.get(), &OCC::AccountBasedOAuth::refreshFinished);
                 oauth->refreshAuthentication(QStringLiteral("foo"));
-
                 QVERIFY(spy.wait());
+                QCOMPARE(oauth->clientId(), QStringLiteral("d8a5d1f4-dabc-4e6a-a9a9-da729cff8ab0"));
+                QCOMPARE(oauth->clientSecret(), QString());
             }
 
         } test;
