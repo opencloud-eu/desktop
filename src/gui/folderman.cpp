@@ -491,10 +491,11 @@ void FolderMan::removeFolder(Folder *f)
     f->wipeForRemoval();
 
     unloadFolder(f);
-    f->deleteLater();
 
     Q_EMIT folderRemoved(f);
     Q_EMIT folderListChanged();
+
+    f->deleteLater();
     saveFolders();
 }
 
