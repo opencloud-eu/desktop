@@ -461,6 +461,16 @@ QUrl OAuth::authorisationLink() const
     return Utility::concatUrlPath(_authEndpoint, {}, query);
 }
 
+QString OAuth::clientId() const
+{
+    return _clientId;
+}
+
+QString OAuth::clientSecret() const
+{
+    return _clientSecret;
+}
+
 void OAuth::persist(const OCC::AccountPtr &accountPtr, const QVariantMap &dynamicRegistrationData, const IdToken &idToken)
 {
     if (!dynamicRegistrationData.isEmpty()) {
