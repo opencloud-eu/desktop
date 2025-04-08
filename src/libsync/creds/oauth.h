@@ -75,6 +75,10 @@ public:
     void openBrowser();
     QUrl authorisationLink() const;
 
+    // TODO: private api for tests
+    QString clientId() const;
+    QString clientSecret() const;
+
     static void persist(const AccountPtr &accountPtr, const QVariantMap &dynamicRegistrationData, const IdToken &idToken);
 
 Q_SIGNALS:
@@ -126,7 +130,6 @@ private:
 
     IdToken _idToken;
 
-private:
     TokenEndpointAuthMethods _endpointAuthMethod = TokenEndpointAuthMethods::client_secret_basic;
     PromptValuesSupportedFlags _supportedPromtValues = {PromptValuesSupported::consent, PromptValuesSupported::select_account};
 };
