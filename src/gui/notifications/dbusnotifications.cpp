@@ -34,6 +34,8 @@ private:
     DBusNotifications *q_ptr;
 
     org::freedesktop::Notifications dbusInterface;
+
+    QMap<quint32, quint64> _idMap;
 };
 
 
@@ -43,8 +45,10 @@ DBusNotifications::DBusNotifications(SystemNotificationManager *parent)
 
 {
     Q_D(DBusNotifications);
-    connect(&d->dbusInterface, &org::freedesktop::Notifications::ActionInvoked, this, [this](uint id, const QString &actionKey) {
-        qCDebug(lcDbusNotification) << "ActionInvoked" << id << actionKey;
+    connect(&d->dbusInterface, &org::freedesktop::Notifications::ActionInvoked, this, [this](uint systemId, const QString &actionKey) {
+        Q_D(DBusNotifications);
+        const auto id = d->_idMap.value(systemId);
+        qCDebug(lcDbusNotification) << "ActionInvoked" << id << "SystemId" << systemId << actionKey;
         if (auto *notification = activeNotification(id)) {
             const qsizetype index = actionKey.toLongLong();
             if (index < notification->request().buttons().size()) {
@@ -55,7 +59,9 @@ DBusNotifications::DBusNotifications(SystemNotificationManager *parent)
         }
     });
 
-    connect(&d->dbusInterface, &org::freedesktop::Notifications::NotificationClosed, this, [this](uint id, uint reason) {
+    connect(&d->dbusInterface, &org::freedesktop::Notifications::NotificationClosed, this, [this](uint systemId, uint reason) {
+        Q_D(DBusNotifications);
+        const auto id = d->_idMap.take(systemId);
         if (auto *notification = activeNotification(id)) {
             SystemNotification::Result result;
             switch (reason) {
@@ -70,10 +76,10 @@ DBusNotifications::DBusNotifications(SystemNotificationManager *parent)
                 qCWarning(lcDbusNotification) << "Unsupported close reason" << reason;
                 break;
             }
-            qCDebug(lcDbusNotification) << "NotificationClosed" << id << reason << result;
+            qCDebug(lcDbusNotification) << "NotificationClosed" << id << "SystemId" << systemId << reason << result;
             finishNotification(notification, result);
         } else {
-            qCDebug(lcDbusNotification) << "Unknown NotificationClicked" << id << reason;
+            qCDebug(lcDbusNotification) << "Unknown NotificationClicked" << id << "SystemId" << systemId << reason;
             Q_EMIT systemNotificationManager() -> unknownNotificationClicked();
         }
     });
@@ -103,6 +109,15 @@ void DBusNotifications::notify(const SystemNotificationRequest &notificationRequ
         actionList.append(QString::number(id++));
         actionList.append(action);
     }
-    d->dbusInterface.Notify(Theme::instance()->appNameGUI(), notificationRequest.id(), Resources::iconToFileSystemUrl(qGuiApp->windowIcon()).toString(),
+    const auto reply = d->dbusInterface.Notify(Theme::instance()->appNameGUI(), 0, Resources::iconToFileSystemUrl(qGuiApp->windowIcon()).toString(),
         notificationRequest.title(), notificationRequest.text(), actionList, hints, -1);
+
+    auto *watcher = new QDBusPendingCallWatcher(reply, this);
+    connect(watcher, &QDBusPendingCallWatcher::finished, this, [id = notificationRequest.id(), this](QDBusPendingCallWatcher *watcher) {
+        Q_D(DBusNotifications);
+        watcher->deleteLater();
+
+        QDBusPendingReply<uint> reply = *watcher;
+        d->_idMap.insert(reply.argumentAt<0>(), id);
+    });
 }
