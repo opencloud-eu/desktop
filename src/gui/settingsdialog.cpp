@@ -153,10 +153,13 @@ SettingsDialog::SettingsDialog(QWidget *parent)
         auto *widget = accountSettings(accountStatePtr->account().data());
         _ui->stack->removeWidget(widget);
         widget->deleteLater();
-        // go to the settings page if the last account was removed
-        if (_widgetForAccount.isEmpty()) {
-            _ui->stack->setCurrentWidget(_generalSettings);
+
+        if (!AccountManager::instance()->accounts().empty()) {
+            setCurrentAccount(AccountManager::instance()->accounts().first()->account().get());
+        } else {
+            setCurrentAccount(nullptr);
         }
+
     });
 }
 
@@ -242,11 +245,16 @@ SettingsDialog::SettingsPage SettingsDialog::currentPage() const
 void SettingsDialog::setCurrentAccount(Account *account)
 {
     _currentAccount = account;
-    _ui->stack->setCurrentWidget(accountSettings(account));
-    _currentPage = SettingsPage::Account;
+    if (account) {
+        _ui->stack->setCurrentWidget(accountSettings(account));
+        _currentPage = SettingsPage::Account;
 
-    Q_EMIT currentAccountChanged();
-    Q_EMIT currentPageChanged();
+        Q_EMIT currentAccountChanged();
+        Q_EMIT currentPageChanged();
+    } else {
+        // go to the settings page if the last account was removed
+        setCurrentPage(SettingsPage::Settings);
+    }
 }
 
 Account *SettingsDialog::currentAccount() const
