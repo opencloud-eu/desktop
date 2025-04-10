@@ -149,7 +149,9 @@ IF( APPLE )
 elseif( WIN32 )
     target_sources(OpenCloudGui PRIVATE
             guiutility_win.cpp
-            folderwatcher_win.cpp)
+            folderwatcher_win.cpp
+            navigationpanehelper.cpp
+    )
     if (TARGET SnoreToast::SnoreToastActions)
         target_sources(OpenCloudGui PRIVATE
                 notifications/snoretoast.cpp)
