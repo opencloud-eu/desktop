@@ -22,6 +22,7 @@
 
 #ifdef Q_OS_WIN
 #include "common/utility_win.h"
+#include "gui/navigationpanehelper.h"
 #endif
 
 #include <QDir>
@@ -211,6 +212,9 @@ void AccountManager::deleteAccount(AccountStatePtr account)
 
     if (account->account()->hasDefaultSyncRoot()) {
         Utility::unmarkDirectoryAsSyncRoot(account->account()->defaultSyncRoot());
+#ifdef Q_OS_WIN
+        NavigationPaneHelper::updateCloudStorageRegistry();
+#endif
     }
 
     // Forget account credentials, cookies

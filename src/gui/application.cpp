@@ -41,6 +41,7 @@
 #endif
 
 #if defined(Q_OS_WIN)
+#include "gui/navigationpanehelper.h"
 #include <qt_windows.h>
 #endif
 
@@ -60,20 +61,20 @@ namespace {
 
 void setUpInitialSyncFolder(AccountStatePtr accountStatePtr, bool useVfs)
 {
-    auto folderMan = FolderMan::instance();
-
     // saves a bit of duplicate code
-    auto addFolder = [folderMan, accountStatePtr, useVfs](
-                         const QString &localFolder, const QUrl &davUrl, const QString &spaceId = {}, const QString &displayName = {}) {
+    auto addFolder = [accountStatePtr, useVfs](const QString &localFolder, const QUrl &davUrl, const QString &spaceId = {}, const QString &displayName = {}) {
         auto def = FolderDefinition{accountStatePtr->account()->uuid(), davUrl, spaceId, displayName};
         def.setLocalPath(localFolder);
-        return folderMan->addFolderFromWizard(accountStatePtr, std::move(def), useVfs);
+        return FolderMan::instance()->addFolderFromWizard(accountStatePtr, std::move(def), useVfs);
     };
 
     auto finalize = [accountStatePtr] {
         accountStatePtr->checkConnectivity();
         FolderMan::instance()->setSyncEnabled(true);
         FolderMan::instance()->scheduleAllFolders();
+#ifdef Q_OS_WIN
+        NavigationPaneHelper::updateCloudStorageRegistry();
+#endif
     };
 
     QObject::connect(
@@ -171,6 +172,10 @@ Application::Application(const QString &displayLanguage, bool debugMode)
     auto *menu = menuBar->addMenu(QString());
     // the actual name is provided by mac
     menu->addAction(QStringLiteral("About"), this, &Application::showAbout)->setMenuRole(QAction::AboutRole);
+#endif
+#ifdef Q_OS_WIN
+    // update the existing sidebar entries
+    NavigationPaneHelper::updateCloudStorageRegistry();
 #endif
 }
 
