@@ -35,7 +35,7 @@ Pane {
         target: widget
 
         function onFocusFirst() {
-            notificationButton.forceActiveFocus(Qt.TabFocusReason);
+            manageAccountButton.forceActiveFocus(Qt.TabFocusReason);
         }
 
         function onFocusLast() {
@@ -66,48 +66,6 @@ Pane {
             }
             // spacer
             Item {}
-            Button {
-                id: notificationButton
-                spacing: folderSyncPanel.spacing
-
-                text: accountSettings.notifications.length
-                icon.source: OpenCloud.resourcePath("fontawesome", "", enabled)
-                icon.color: "transparent"
-                Layout.preferredHeight: manageAccountButton.implicitHeight
-                // TODO: this is a hack to force our icon engine to not use rediculess dpi scaling
-                // https://github.com/opencloud-eu/desktop/issues/142
-                icon.height: 0
-                icon.width: 0
-
-                Dialog {
-                    id: notificationPopup
-                    width: 300
-                    height: 200
-                    // kepp some distance to the window corner
-                    rightMargin: 10
-                    // set focus, to enablde Popup.CloseOnEscape
-                    focus: true
-
-                    closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
-                    standardButtons: Dialog.Close
-
-                    contentItem: Frame {
-                        anchors.fill: parent
-                        Notifications {
-                            anchors.fill: parent
-                            notifications: accountSettings.notifications
-
-                            onMarkReadClicked: accountSettings.markNotificationsRead()
-                        }
-                    }
-                }
-
-                onClicked: notificationPopup.open()
-
-                Keys.onBacktabPressed: {
-                    widget.parentFocusWidget.focusPrevious();
-                }
-            }
 
             Button {
                 id: manageAccountButton
@@ -139,6 +97,10 @@ Pane {
                 onClicked: {
                     accountMenu.open();
                     Accessible.announce(qsTr("Account options Menu"));
+                }
+
+                Keys.onBacktabPressed: {
+                    widget.parentFocusWidget.focusPrevious();
                 }
             }
         }
