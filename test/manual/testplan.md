@@ -8,12 +8,16 @@ Try everything in `Setup and Configuration` once with Keycloak and once with Lic
 * Add a new account with valid credentials
 * Attempt to add an account with invalid credentials
 * Skip sync folder configuration during setup
-* Configure multiple sync connections for one account
+* Second run: Configure sync folder configuration during setup
 
-### Connection Management
-* Pause and resume synchronization
-* Remove a folder sync connection
+### Sync Connections
+* Pause and resume synchronization on Personal and a project space
+* Force a sync while an Upload to a different space is running
+* Force a sync while a Download from a different space is running
+* Remove a project space sync connection
 * Remove an account
+* Add an account directly after the removal
+* Create a complicated folder tree in a project space and then configure selective sync 
 
 ## Basic Synchronization
 ### Basic File Operations
@@ -55,28 +59,21 @@ Try everything in `Setup and Configuration` once with Keycloak and once with Lic
 * Test with files having spaces in names
 
 ## Sharing
-### Public Link Sharing
-* Create public link for a folder with different roles (Viewer, Editor, Contributor)
-* Verify public link permissions work correctly
-* Test password protection on public links
-* Test expiration date on public links
-
 ### User and Group Sharing
-* Share a folder with another user
-* Modify permissions (read, edit, share) for a shared folder
-* Remove permissions for a shared folder
-* Verify permission changes reflect on server
+* In web: Share a folder from another user, verify local sync
+* In web: Modify permissions (view, edit) for a shared folder, try to modify files locally
+* In web: Remove share and verify local sync
 
 ## Project Spaces
 ### Space Access and Permissions
-* Access a space with Viewer role and verify read-only permissions
-* Access a space with Editor role and verify edit capabilities
-* Access a space with Manager role and verify creation capabilities
+* Gain access to a space with Viewer role (in web) and verify read-only permissions (local)
+* Gain access to a space with Editor role (in web) and verify edit capabilities (local)
+* Gain access to a space with Manager role (in web) and verify edit capabilities (local)
 
 ### File Operations in Spaces
 * Create files in spaces with appropriate permissions
 * Verify restrictions when using spaces with read-only access
-* Test that changes in spaces sync correctly
+* Test that changes in spaces sync correctly (add/delete/rename/duplicate/move)
 
 ## Edge Cases and Error Handling
 ### File System Limitations
