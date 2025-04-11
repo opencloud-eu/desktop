@@ -30,6 +30,8 @@ ToolButton {
     icon.height: 32
     icon.width: 32
     implicitWidth: Math.min(implicitContentWidth + leftPadding + rightPadding, widthHint)
+    // we display both, with a custom content item, but qqc2-desktop-style would still render the text
+    display: AbstractButton.IconOnly
 
     // make the current button pop
     // don't get highlight from our own palette else we create a binding loop
