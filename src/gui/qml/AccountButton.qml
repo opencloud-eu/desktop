@@ -29,6 +29,8 @@ ToolButton {
     clip: true
     icon.height: 32
     icon.width: 32
+    spacing: 5
+    padding: 10
     implicitWidth: Math.min(implicitContentWidth + leftPadding + rightPadding, widthHint)
     // we display both, with a custom content item, but qqc2-desktop-style would still render the text
     display: AbstractButton.IconOnly
