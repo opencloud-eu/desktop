@@ -88,5 +88,5 @@ const QUrl &WebFinger::href() const
 
 QString WebFinger::relId()
 {
-    return QStringLiteral("http://webfinger.opencloud.eu/rel/server-instance");
+    return QStringLiteral("http://webfinger.opencloud/rel/server-instance");
 }
