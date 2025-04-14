@@ -199,7 +199,6 @@ if(NOT APPLE)
         endforeach(_file)
     endif()
 
-    # we may not add MACOSX_BUNDLE here, if not building one
 else()
     target_sources(opencloud PRIVATE ${OPENCLOUD_BUNDLED_RESOURCES})
 
@@ -208,8 +207,7 @@ else()
       PROPERTIES
       MACOSX_PACKAGE_LOCATION Resources
       )
-
-  set_target_properties(opencloud PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/MacOSXBundleInfo.plist)
+  set_target_properties(opencloud PROPERTIES OUTPUT_NAME "${APPLICATION_SHORTNAME}" MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/MacOSXBundleInfo.plist)
 endif()
 
 install(TARGETS opencloud OpenCloudGui ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

@@ -26,7 +26,7 @@
 									<key>GID</key>
 									<integer>80</integer>
 									<key>PATH</key>
-									<string>@APPLICATION_EXECUTABLE@.app</string>
+									<string>@APPLICATION_SHORTNAME@.app</string>
 									<key>PATH_TYPE</key>
 									<integer>3</integer>
 									<key>PERMISSIONS</key>
@@ -541,11 +541,11 @@
 				<key>FOLLOW_SYMBOLIC_LINKS</key>
 				<false/>
 				<key>IDENTIFIER</key>
-				<string>@APPLICATION_REV_DOMAIN_INSTALLER@</string>
+				<string>@APPLICATION_REV_DOMAIN@</string>
 				<key>LOCATION</key>
 				<integer>0</integer>
 				<key>NAME</key>
-				<string>@APPLICATION_NAME_XML_ESCAPED@</string>
+				<string>@APPLICATION_NAME@</string>
 				<key>OVERWRITE_PERMISSIONS</key>
 				<false/>
 				<key>PAYLOAD_SIZE</key>
@@ -771,7 +771,7 @@
 						<key>LANGUAGE</key>
 						<string>English</string>
 						<key>VALUE</key>
-						<string>@APPLICATION_NAME_XML_ESCAPED@ Client</string>
+						<string>@APPLICATION_NAME@</string>
 					</dict>
 				</array>
 			</dict>
@@ -970,7 +970,7 @@
 				</dict>
 			</array>
 			<key>NAME</key>
-			<string>@APPLICATION_NAME_XML_ESCAPED@ Installer</string>
+			<string>@APPLICATION_NAME@ Installer</string>
 			<key>PAYLOAD_ONLY</key>
 			<false/>
 			<key>REFERENCE_FOLDER_PATH</key>
