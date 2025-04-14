@@ -17,6 +17,11 @@
 
 #include <QCoreApplication>
 
+// windows.h mus be included before appmodel.h
+#include <windows.h>
+
+#include <appmodel.h>
+
 namespace OCC {
 
 void Utility::startShellIntegration()
@@ -26,6 +31,12 @@ void Utility::startShellIntegration()
 QString Utility::socketApiSocketPath()
 {
     return QStringLiteral(R"(\\.\pipe\OpenCloud-%1)").arg(qEnvironmentVariable("USERNAME"));
+}
+
+bool Utility::isInstalledByStore()
+{
+    uint32_t length = 0;
+    return GetCurrentPackageFamilyName(&length, nullptr) != APPMODEL_ERROR_NO_PACKAGE;
 }
 
 } // namespace OCC

@@ -28,4 +28,9 @@ QString Utility::socketApiSocketPath()
     return QStringLiteral("%1/OpenCloud/socket").arg(QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation));
 }
 
+bool Utility::isInstalledByStore()
+{
+    return false;
+}
+
 } // namespace OCC

@@ -52,6 +52,8 @@ namespace Utility {
 
     QString socketApiSocketPath();
 
+    bool isInstalledByStore();
+
     OPENCLOUD_GUI_EXPORT void markDirectoryAsSyncRoot(const QString &path, const QUuid &accountUuid);
     std::pair<QString, QUuid> getDirectorySyncRootMarkings(const QString &path);
     void unmarkDirectoryAsSyncRoot(const QString &path);

@@ -58,4 +58,9 @@ QString Utility::socketApiSocketPath()
     return QStringLiteral("%1%2.socketApi").arg(QStringLiteral(SOCKETAPI_TEAM_IDENTIFIER_PREFIX), Theme::instance()->orgDomainName());
 }
 
+bool Utility::isInstalledByStore()
+{
+    return false;
+}
+
 } // namespace OCC
