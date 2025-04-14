@@ -105,7 +105,8 @@
         <location filename="../src/gui/main.cpp" line="98"/>
         <source>%1 version %2<byte value="xd"/>
 File synchronization desktop utility.</source>
-        <translation type="unfinished"/>
+        <translation>%1 version %2&lt;byte value=&quot;xd&quot;/&gt;
+Utilitaire de bureau pour la synchronisation de fichiers.</translation>
     </message>
     <message>
         <location filename="../src/gui/main.cpp" line="106"/>
@@ -248,42 +249,42 @@ File synchronization desktop utility.</source>
     <message>
         <location filename="../src/gui/qml/FolderDelegate.qml" line="99"/>
         <source>Account options Menu</source>
-        <translation type="unfinished"/>
+        <translation>Options du compte Menu</translation>
     </message>
     <message>
         <location filename="../src/gui/qml/FolderDelegate.qml" line="330"/>
         <source>Restart sync</source>
-        <translation type="unfinished"/>
+        <translation>Redémarrer la synchronisation</translation>
     </message>
     <message>
         <location filename="../src/gui/qml/FolderDelegate.qml" line="330"/>
         <source>Force sync now</source>
-        <translation type="unfinished"/>
+        <translation>Forcer la synchronisation maintenant</translation>
     </message>
     <message>
         <location filename="../src/gui/qml/FolderDelegate.qml" line="337"/>
         <source>Resume sync</source>
-        <translation type="unfinished"/>
+        <translation>Reprendre la synchronisation</translation>
     </message>
     <message>
         <location filename="../src/gui/qml/FolderDelegate.qml" line="337"/>
         <source>Pause sync</source>
-        <translation type="unfinished"/>
+        <translation>Suspendre la synchronisation</translation>
     </message>
     <message>
         <location filename="../src/gui/qml/FolderDelegate.qml" line="344"/>
         <source>Choose what to sync</source>
-        <translation type="unfinished"/>
+        <translation>Choisissez ce que vous souhaitez synchroniser</translation>
     </message>
     <message>
         <location filename="../src/gui/qml/FolderDelegate.qml" line="350"/>
         <source>Remove folder sync connection</source>
-        <translation type="unfinished"/>
+        <translation>Supprimer la connexion de synchronisation des dossiers</translation>
     </message>
     <message>
         <location filename="../src/gui/qml/FolderDelegate.qml" line="356"/>
         <source>Sync options menu</source>
-        <translation type="unfinished"/>
+        <translation>Menu des options de synchronisation</translation>
     </message>
     <message>
         <location filename="../src/gui/qml/FolderDelegate.qml" line="368"/>
@@ -293,7 +294,7 @@ File synchronization desktop utility.</source>
     <message>
         <location filename="../src/gui/qml/FolderDelegate.qml" line="390"/>
         <source>You are synchronizing %1 out of %2 spaces</source>
-        <translation type="unfinished"/>
+        <translation>Vous synchronisez %1 sur %2 Espaces</translation>
     </message>
 </context>
 <context>
@@ -320,7 +321,7 @@ File synchronization desktop utility.</source>
         <location filename="../src/gui/folderstatusmodel.cpp" line="119"/>
         <source>Syncing %1</source>
         <extracomment>Example text: &quot;Syncing 'foo.txt', 'bar.txt'&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>Synchronisation %1</translation>
     </message>
     <message>
         <location filename="../src/gui/folderstatusmodel.cpp" line="121"/>
@@ -342,7 +343,7 @@ File synchronization desktop utility.</source>
         <location filename="../src/gui/folderstatusmodel.cpp" line="133"/>
         <source>%1 %2</source>
         <extracomment>Example text: &quot;uploading foobar.png&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 %2</translation>
     </message>
     <message>
         <location filename="../src/gui/folderstatusmodel.cpp" line="150"/>
@@ -354,12 +355,12 @@ File synchronization desktop utility.</source>
         <location filename="../src/gui/folderstatusmodel.cpp" line="158"/>
         <source>%1 of %2, file %3 of %4</source>
         <extracomment>Example text: &quot;12 MB of 345 MB, file 6 of 7&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 de %2, fichier %3 de %4</translation>
     </message>
     <message>
         <location filename="../src/gui/folderstatusmodel.cpp" line="162"/>
         <source>file %1 of %2</source>
-        <translation type="unfinished"/>
+        <translation>fichier %1 de %2</translation>
     </message>
 </context>
 <context>
@@ -367,22 +368,22 @@ File synchronization desktop utility.</source>
     <message>
         <location filename="../src/gui/folderwizard/folderwizard.cpp" line="49"/>
         <source>&lt;b&gt;Error:&lt;/b&gt; %1</source>
-        <translation type="unfinished"/>
+        <translation>&lt;b&gt;Erreur :&lt;/b&gt; %1</translation>
     </message>
     <message>
         <location filename="../src/gui/folderwizard/folderwizard.cpp" line="49"/>
         <source>&lt;b&gt;Warning:&lt;/b&gt; %1</source>
-        <translation type="unfinished"/>
+        <translation>&lt;b&gt;Attention :&lt;/b&gt; %1</translation>
     </message>
     <message>
         <location filename="../src/gui/folderwizard/folderwizard.cpp" line="55"/>
         <source>&lt;b&gt;Error:&lt;/b&gt;&lt;ul&gt;%1&lt;/ul&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;b&gt;Erreur :&lt;/b&gt;&lt;ul&gt;%1&lt;/ul&gt;</translation>
     </message>
     <message>
         <location filename="../src/gui/folderwizard/folderwizard.cpp" line="56"/>
         <source>&lt;b&gt;Warning:&lt;/b&gt;&lt;ul&gt;%1&lt;/ul&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;b&gt;Attention :&lt;/b&gt;&lt;ul&gt;%1&lt;/ul&gt;</translation>
     </message>
 </context>
 <context>
@@ -390,7 +391,7 @@ File synchronization desktop utility.</source>
     <message>
         <location filename="../src/gui/folderwizard/folderwizardsourcepage.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished"/>
+        <translation>Formulaire</translation>
     </message>
     <message>
         <location filename="../src/gui/folderwizard/folderwizardsourcepage.ui" line="20"/>
@@ -410,7 +411,7 @@ File synchronization desktop utility.</source>
     <message>
         <location filename="../src/gui/folderwizard/folderwizardsourcepage.ui" line="42"/>
         <source>&amp;Choose...</source>
-        <translation type="unfinished"/>
+        <translation>&amp;Choose...</translation>
     </message>
 </context>
 <context>
@@ -418,12 +419,12 @@ File synchronization desktop utility.</source>
     <message>
         <location filename="../src/gui/folderwizard/folderwizardtargetpage.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished"/>
+        <translation>Formulaire</translation>
     </message>
     <message>
         <location filename="../src/gui/folderwizard/folderwizardtargetpage.ui" line="20"/>
         <source>Select a remote destination folder</source>
-        <translation type="unfinished"/>
+        <translation>Sélectionnez un dossier de destination distant</translation>
     </message>
     <message>
         <location filename="../src/gui/folderwizard/folderwizardtargetpage.ui" line="49"/>
@@ -433,7 +434,7 @@ File synchronization desktop utility.</source>
     <message>
         <location filename="../src/gui/folderwizard/folderwizardtargetpage.ui" line="56"/>
         <source>Refresh</source>
-        <translation type="unfinished"/>
+        <translation>Refresh</translation>
     </message>
     <message>
         <location filename="../src/gui/folderwizard/folderwizardtargetpage.ui" line="39"/>
@@ -446,17 +447,17 @@ File synchronization desktop utility.</source>
     <message>
         <location filename="../src/gui/qml/credentials/OAuthCredentials.qml" line="32"/>
         <source>Log in with your web browser</source>
-        <translation type="unfinished"/>
+        <translation>Connectez-vous avec votre navigateur Web</translation>
     </message>
     <message>
         <location filename="../src/gui/qml/credentials/OAuthCredentials.qml" line="32"/>
         <source>Login failed, please try it again</source>
-        <translation type="unfinished"/>
+        <translation>La connexion a échoué, veuillez réessayer</translation>
     </message>
     <message>
         <location filename="../src/gui/qml/credentials/OAuthCredentials.qml" line="51"/>
         <source>Reopen web browser</source>
-        <translation type="unfinished"/>
+        <translation>Rouvrir le navigateur Web</translation>
     </message>
     <message>
         <location filename="../src/gui/qml/credentials/OAuthCredentials.qml" line="51"/>
@@ -471,7 +472,7 @@ File synchronization desktop utility.</source>
     <message>
         <location filename="../src/gui/qml/credentials/OAuthCredentials.qml" line="100"/>
         <source>Restart authentication</source>
-        <translation type="unfinished"/>
+        <translation>Redémarrer l&apos;authentification</translation>
     </message>
 </context>
 <context>
@@ -484,12 +485,12 @@ File synchronization desktop utility.</source>
     <message>
         <location filename="../src/gui/aboutdialog.ui" line="108"/>
         <source>&amp;Update Channel</source>
-        <translation type="unfinished"/>
+        <translation>&amp;Update Channel</translation>
     </message>
     <message>
         <location filename="../src/gui/aboutdialog.ui" line="137"/>
         <source>&amp;Restart &amp;&amp; Update</source>
-        <translation type="unfinished"/>
+        <translation>&amp;Restart &amp;&amp; Update</translation>
     </message>
     <message>
         <location filename="../src/gui/aboutdialog.ui" line="148"/>
@@ -499,27 +500,27 @@ File synchronization desktop utility.</source>
     <message>
         <location filename="../src/gui/aboutdialog.cpp" line="90"/>
         <source>beta</source>
-        <translation type="unfinished"/>
+        <translation>beta</translation>
     </message>
     <message>
         <location filename="../src/gui/aboutdialog.cpp" line="158"/>
         <source>Change update channel?</source>
-        <translation type="unfinished"/>
+        <translation>Changer de canal de mise à jour ?</translation>
     </message>
     <message>
         <location filename="../src/gui/aboutdialog.cpp" line="159"/>
         <source>&lt;html&gt;The update channel determines which client updates will be offered for installation.&lt;ul&gt;&lt;li&gt;&quot;stable&quot; contains only upgrades that are considered reliable&lt;/li&gt;%1&lt;/ul&gt;&lt;br&gt;⚠️Downgrades are not supported. If you switch to a stable channel this change will only be applied with the next major release.&lt;/html&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;html&gt;Le canal de mise à jour détermine les mises à jour du client qui seront proposées à l&apos;installation.&lt;ul&gt;&lt;li&gt;« stable » ne contient que des mises à jour considérées comme fiables&lt;/li&gt;%1&lt;/ul&gt;&lt;br&gt;⚠️Downgrades ne sont pas prises en charge. Si vous passez à un canal stable, ce changement ne sera appliqué qu&apos;avec la prochaine version majeure.&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../src/gui/aboutdialog.cpp" line="165"/>
         <source>&lt;li&gt;&quot;beta&quot; may contain newer features and bugfixes, but have not yet been tested thoroughly&lt;/li&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;li&gt;La version « bêta » peut contenir des fonctionnalités plus récentes et des corrections de bogues, mais n&apos;a pas encore fait l&apos;objet de tests approfondis.&lt;/li&gt;</translation>
     </message>
     <message>
         <location filename="../src/gui/aboutdialog.cpp" line="167"/>
         <source>Change update channel</source>
-        <translation type="unfinished"/>
+        <translation>Changer le canal de mise à jour</translation>
     </message>
     <message>
         <location filename="../src/gui/aboutdialog.cpp" line="168"/>
@@ -532,17 +533,17 @@ File synchronization desktop utility.</source>
     <message>
         <location filename="../src/libsync/abstractnetworkjob.cpp" line="250"/>
         <source>Connection timed out</source>
-        <translation type="unfinished"/>
+        <translation>Connexion interrompue</translation>
     </message>
     <message>
         <location filename="../src/libsync/abstractnetworkjob.cpp" line="252"/>
         <source>Unknown error: network reply was deleted</source>
-        <translation type="unfinished"/>
+        <translation>Erreur inconnue : la réponse du réseau a été supprimée</translation>
     </message>
     <message>
         <location filename="../src/libsync/abstractnetworkjob.cpp" line="353"/>
         <source>Server replied &quot;%1 %2&quot; to &quot;%3 %4&quot;</source>
-        <translation type="unfinished"/>
+        <translation>Le serveur a répondu « %1 %2 » à « %3 %4 »</translation>
     </message>
 </context>
 <context>
@@ -550,7 +551,7 @@ File synchronization desktop utility.</source>
     <message>
         <location filename="../src/libsync/account.cpp" line="130"/>
         <source>%1@%2</source>
-        <translation type="unfinished"/>
+        <translation>%1@%2</translation>
     </message>
 </context>
 <context>
@@ -558,12 +559,12 @@ File synchronization desktop utility.</source>
     <message>
         <location filename="../src/gui/accountmodalwidget.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished"/>
+        <translation>Formulaire</translation>
     </message>
     <message>
         <location filename="../src/gui/accountmodalwidget.ui" line="26"/>
         <source>GroupBox</source>
-        <translation type="unfinished"/>
+        <translation>GroupBox</translation>
     </message>
 </context>
 <context>
@@ -571,17 +572,17 @@ File synchronization desktop utility.</source>
     <message>
         <location filename="../src/gui/accountsettings.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished"/>
+        <translation>Formulaire</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.ui" line="46"/>
         <source>Preparing the account</source>
-        <translation type="unfinished"/>
+        <translation>Préparation du compte</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.ui" line="74"/>
         <source>Sync connections</source>
-        <translation type="unfinished"/>
+        <translation>Synchroniser les connexions</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="185"/>
@@ -593,22 +594,22 @@ File synchronization desktop utility.</source>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="127"/>
         <source>Choose what to sync</source>
-        <translation type="unfinished"/>
+        <translation>Choisissez ce que vous souhaitez synchroniser</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="178"/>
         <source>Confirm Folder Sync Connection Removal</source>
-        <translation type="unfinished"/>
+        <translation>Confirmer la suppression de la connexion de synchronisation des dossiers</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="184"/>
         <source>Remove Folder Sync Connection</source>
-        <translation type="unfinished"/>
+        <translation>Supprimer la connexion de synchronisation de dossiers</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="215"/>
         <source>Disable virtual file support?</source>
-        <translation type="unfinished"/>
+        <translation>Désactiver la prise en charge des fichiers virtuels ?</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="216"/>
@@ -626,17 +627,17 @@ Cette action annulera toute synchronisation en cours.</translation>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="223"/>
         <source>Disable support</source>
-        <translation type="unfinished"/>
+        <translation>Désactiver le support</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="264"/>
         <source>Sync Running</source>
-        <translation type="unfinished"/>
+        <translation>Synchronisation en cours d&apos;exécution</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="264"/>
         <source>The sync operation is running.&lt;br/&gt;Do you want to stop it?</source>
-        <translation type="unfinished"/>
+        <translation>L&apos;opération de synchronisation est en cours.&lt;br/&gt;Voulez-vous l&apos;arrêter ?</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="281"/>
@@ -646,12 +647,12 @@ Cette action annulera toute synchronisation en cours.</translation>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="296"/>
         <source>Internet connection is metered</source>
-        <translation type="unfinished"/>
+        <translation>La connexion Internet est mesurée</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="297"/>
         <source>Synchronization is paused because the Internet connection is a metered connection&lt;p&gt;Do you really want to force a Synchronization now?</source>
-        <translation type="unfinished"/>
+        <translation>La synchronisation est interrompue parce que la connexion Internet est une connexion payante&lt;p&gt;Voulez-vous vraiment forcer une synchronisation maintenant ?</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="321"/>
@@ -661,72 +662,72 @@ Cette action annulera toute synchronisation en cours.</translation>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="346"/>
         <source>Mark as read</source>
-        <translation type="unfinished"/>
+        <translation>Marquer comme lu</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="381"/>
         <source>Connected</source>
-        <translation type="unfinished"/>
+        <translation>Connecté</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="389"/>
         <source>Server is temporarily unavailable</source>
-        <translation type="unfinished"/>
+        <translation>Le serveur est temporairement indisponible</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="392"/>
         <source>Server is currently in maintenance mode</source>
-        <translation type="unfinished"/>
+        <translation>Le serveur est actuellement en mode maintenance</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="395"/>
         <source>Signed out</source>
-        <translation type="unfinished"/>
+        <translation>Déconnecté</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="398"/>
         <source>Updating credentials...</source>
-        <translation type="unfinished"/>
+        <translation>Mise à jour des informations d&apos;identification...</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="403"/>
         <source>Captive portal prevents connections to the server.</source>
-        <translation type="unfinished"/>
+        <translation>Le portail captif empêche les connexions au serveur.</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="405"/>
         <source>Sync is paused due to metered internet connection</source>
-        <translation type="unfinished"/>
+        <translation>La synchronisation est interrompue en raison d&apos;une connexion Internet limitée</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="407"/>
         <source>Connecting...</source>
-        <translation type="unfinished"/>
+        <translation>Connexion...</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="411"/>
         <source>Server configuration error</source>
-        <translation type="unfinished"/>
+        <translation>Erreur de configuration du serveur</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="417"/>
         <source>Disconnected</source>
-        <translation type="unfinished"/>
+        <translation>Déconnecté</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="540"/>
         <source>Confirm Account Removal</source>
-        <translation type="unfinished"/>
+        <translation>Confirmer la suppression du compte</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="541"/>
         <source>&lt;p&gt;Do you really want to remove the connection to the account &lt;i&gt;%1&lt;/i&gt;?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; This will &lt;b&gt;not&lt;/b&gt; delete any files.&lt;/p&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;p&gt;Voulez-vous vraiment supprimer la connexion au compte &lt;i&gt;%1&lt;/i&gt;?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; Cette opération &lt;b&gt;ne&lt;/b&gt; supprimera aucun fichier.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="545"/>
         <source>Remove connection</source>
-        <translation type="unfinished"/>
+        <translation>Retirer la connexion</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="179"/>
@@ -736,7 +737,7 @@ Cette action annulera toute synchronisation en cours.</translation>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="378"/>
         <source>The server version %1 is unsupported! Proceed at your own risk.</source>
-        <translation type="unfinished"/>
+        <translation>La version du serveur %1 n&apos;est pas prise en charge ! Poursuivez à vos risques et périls.</translation>
     </message>
 </context>
 <context>
@@ -744,19 +745,19 @@ Cette action annulera toute synchronisation en cours.</translation>
     <message>
         <location filename="../src/gui/activitywidget.cpp" line="44"/>
         <source>Local Activity</source>
-        <translation type="unfinished"/>
+        <translation>Activité locale</translation>
     </message>
     <message>
         <location filename="../src/gui/activitywidget.cpp" line="47"/>
         <location filename="../src/gui/activitywidget.cpp" line="49"/>
         <source>Not Synced</source>
-        <translation type="unfinished"/>
+        <translation>Non synchronisé</translation>
     </message>
     <message>
         <location filename="../src/gui/activitywidget.cpp" line="52"/>
         <source>Not Synced (%1)</source>
         <extracomment>%1 is the number of not synced files.</extracomment>
-        <translation type="unfinished"/>
+        <translation>Non synchronisé (%1)</translation>
     </message>
 </context>
 <context>
@@ -764,19 +765,21 @@ Cette action annulera toute synchronisation en cours.</translation>
     <message>
         <location filename="../src/gui/updater/appimageupdateavailablewidget.cpp" line="35"/>
         <source>Installed version: %1</source>
-        <translation type="unfinished"/>
+        <translation>Version installée : %1</translation>
     </message>
     <message>
         <location filename="../src/gui/updater/appimageupdateavailablewidget.cpp" line="36"/>
         <source>Available update: %1</source>
-        <translation type="unfinished"/>
+        <translation>Mise à jour disponible : %1</translation>
     </message>
     <message>
         <location filename="../src/gui/updater/appimageupdateavailablewidget.cpp" line="37"/>
         <source>An update is available for this AppImage of %1. Do you want to install this update?
 
 The update will be performed in the background, and overwrite the current AppImage file. You need to restart the app to complete the update.</source>
-        <translation type="unfinished"/>
+        <translation>Une mise à jour est disponible pour cette AppImage de %1. Voulez-vous installer cette mise à jour ?
+
+La mise à jour sera effectuée en arrière-plan et écrasera le fichier AppImage actuel. Vous devez redémarrer l&apos;application pour terminer la mise à jour.</translation>
     </message>
 </context>
 <context>
@@ -784,17 +787,17 @@ The update will be performed in the background, and overwrite the current AppIma
     <message>
         <location filename="../src/gui/main.cpp" line="176"/>
         <source>Quit</source>
-        <translation type="unfinished"/>
+        <translation>Quitter</translation>
     </message>
     <message>
         <location filename="../src/gui/application.cpp" line="193"/>
         <source>Unsupported Server Version</source>
-        <translation type="unfinished"/>
+        <translation>Version du serveur non prise en charge</translation>
     </message>
     <message>
         <location filename="../src/gui/application.cpp" line="194"/>
         <source>The server on account %1 runs an unsupported version %2. Using this client with unsupported server versions is untested and potentially dangerous. Proceed at your own risk.</source>
-        <translation type="unfinished"/>
+        <translation>Le serveur du compte %1 utilise une version non prise en charge %2. L&apos;utilisation de ce client avec des versions de serveur non supportées n&apos;a pas été testée et est potentiellement dangereuse. Procédez à vos propres risques.</translation>
     </message>
 </context>
 <context>
@@ -802,27 +805,27 @@ The update will be performed in the background, and overwrite the current AppIma
     <message>
         <location filename="../src/gui/commonstrings.cpp" line="27"/>
         <source>file manager</source>
-        <translation type="unfinished"/>
+        <translation>gestionnaire de fichiers</translation>
     </message>
     <message>
         <location filename="../src/gui/commonstrings.cpp" line="34"/>
         <source>Show in %1</source>
-        <translation type="unfinished"/>
+        <translation>Afficher dans %1</translation>
     </message>
     <message>
         <location filename="../src/gui/commonstrings.cpp" line="36"/>
         <source>Show &quot;%1&quot; in %2</source>
-        <translation type="unfinished"/>
+        <translation>Afficher « %1 » dans %2</translation>
     </message>
     <message>
         <location filename="../src/gui/commonstrings.cpp" line="41"/>
         <source>Show in web browser</source>
-        <translation type="unfinished"/>
+        <translation>Afficher dans le navigateur Web</translation>
     </message>
     <message>
         <location filename="../src/gui/commonstrings.cpp" line="46"/>
         <source>Copy</source>
-        <translation type="unfinished"/>
+        <translation>Copie</translation>
     </message>
     <message numerus="yes">
         <location filename="../src/gui/commonstrings.cpp" line="51"/>
@@ -835,17 +838,17 @@ The update will be performed in the background, and overwrite the current AppIma
     <message>
         <location filename="../src/gui/connectionvalidator.cpp" line="166"/>
         <source>Please update to the latest server and restart the client.</source>
-        <translation type="unfinished"/>
+        <translation>Veuillez mettre à jour le serveur et redémarrer le client.</translation>
     </message>
     <message>
         <location filename="../src/gui/connectionvalidator.cpp" line="114"/>
         <source>timeout</source>
-        <translation type="unfinished"/>
+        <translation>pause</translation>
     </message>
     <message>
         <location filename="../src/gui/connectionvalidator.cpp" line="166"/>
         <source>The configured server for this client is too old.</source>
-        <translation type="unfinished"/>
+        <translation>Le serveur configuré pour ce client est trop ancien.</translation>
     </message>
 </context>
 <context>
@@ -853,7 +856,7 @@ The update will be performed in the background, and overwrite the current AppIma
     <message>
         <location filename="../src/libsync/creds/credentialmanager.cpp" line="222"/>
         <source>Failed to parse credentials %1</source>
-        <translation type="unfinished"/>
+        <translation>Échec de l&apos;analyse des informations d&apos;identification %1</translation>
     </message>
 </context>
 <context>
@@ -862,7 +865,7 @@ The update will be performed in the background, and overwrite the current AppIma
         <location filename="../src/libsync/discoveryphase.cpp" line="300"/>
         <location filename="../src/libsync/discoveryphase.cpp" line="412"/>
         <source>Server error: PROPFIND reply is not XML formatted!</source>
-        <translation type="unfinished"/>
+        <translation>Erreur du serveur : La réponse PROPFIND n&apos;est pas au format XML !</translation>
     </message>
 </context>
 <context>
@@ -870,22 +873,22 @@ The update will be performed in the background, and overwrite the current AppIma
     <message>
         <location filename="../src/libsync/discoveryphase.cpp" line="205"/>
         <source>Error while opening directory %1</source>
-        <translation type="unfinished"/>
+        <translation>Erreur lors de l&apos;ouverture du répertoire %1</translation>
     </message>
     <message>
         <location filename="../src/libsync/discoveryphase.cpp" line="207"/>
         <source>Directory not accessible on client, permission denied</source>
-        <translation type="unfinished"/>
+        <translation>Répertoire non accessible sur le client, permission refusée</translation>
     </message>
     <message>
         <location filename="../src/libsync/discoveryphase.cpp" line="211"/>
         <source>Directory not found: %1</source>
-        <translation type="unfinished"/>
+        <translation>Répertoire non trouvé : %1</translation>
     </message>
     <message>
         <location filename="../src/libsync/discoveryphase.cpp" line="246"/>
         <source>Error while reading directory %1</source>
-        <translation type="unfinished"/>
+        <translation>Erreur lors de la lecture du répertoire %1</translation>
     </message>
 </context>
 <context>
@@ -893,7 +896,7 @@ The update will be performed in the background, and overwrite the current AppIma
     <message>
         <location filename="../src/gui/models/expandingheaderview.cpp" line="102"/>
         <source>Reset column sizes</source>
-        <translation type="unfinished"/>
+        <translation>Réinitialiser la taille des colonnes</translation>
     </message>
 </context>
 <context>
@@ -911,35 +914,35 @@ The update will be performed in the background, and overwrite the current AppIma
     <message>
         <location filename="../src/gui/folder.cpp" line="208"/>
         <source>%1 is not readable.</source>
-        <translation type="unfinished"/>
+        <translation>%1 n&apos;est pas lisible.</translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="440"/>
         <source>%1 has been removed.</source>
         <comment>%1 names a file.</comment>
-        <translation type="unfinished"/>
+        <translation>%1 a été supprimé.</translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="454"/>
         <source>%1 has been updated.</source>
         <comment>%1 names a file.</comment>
-        <translation type="unfinished"/>
+        <translation>%1 a été mis à jour.</translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="461"/>
         <source>%1 has been renamed to %2.</source>
         <comment>%1 and %2 name files.</comment>
-        <translation type="unfinished"/>
+        <translation>%1 a été renommé en %2.</translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="468"/>
         <source>%1 has been moved to %2.</source>
-        <translation type="unfinished"/>
+        <translation>%1 a été déplacé vers %2.</translation>
     </message>
     <message numerus="yes">
         <location filename="../src/gui/folder.cpp" line="438"/>
         <source>%1 and %n other file(s) have been removed.</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>%1 et %n autre fichier a été supprimé.</numerusform><numerusform>%1 et %n autres fichiers ont été supprimés.</numerusform><numerusform>%1 et %n autres fichiers ont été supprimés.</numerusform></translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="156"/>
@@ -1530,7 +1533,8 @@ Since log files can get large, the client will start a new one for each sync run
         <location filename="../src/gui/logbrowser.ui" line="167"/>
         <source>These settings persist across client restarts.
 Note that using any logging command line options will override the settings.</source>
-        <translation type="unfinished"/>
+        <translation>Ces paramètres persistent lors des redémarrages du client.
+Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de commande de journalisation remplacera les paramètres.</translation>
     </message>
     <message>
         <location filename="../src/gui/logbrowser.ui" line="178"/>
