@@ -12,7 +12,7 @@ if is_windows():
     from helpers.WinPipeHelper import WinPipeConnect as SocketConnect
 else:
     # NOTE: 'syncstate.py' was removed from client
-    # and is now available at https://github.com/owncloud/client-desktop-shell-integration-nautilus
+    # and is now available at https://github.com/opencloud-eu/desktop-shell-integration-nautilus
     # check if 'syncstate.py' is available, if not, download it
     custom_lib = get_config('custom_lib')
     syncstate_lib_file = os.path.join(custom_lib, 'syncstate.py')
@@ -20,7 +20,7 @@ else:
 
     if not os.path.exists(syncstate_lib_file):
         urllib.request.urlretrieve(
-            'https://raw.github.com/owncloud/client-desktop-shell-integration-nautilus/master/src/syncstate.py',
+            'https://raw.github.com/opencloud-eu/desktop-shell-integration-nautilus/blob/main/src/syncstate.py',
             os.path.join(custom_lib, 'syncstate.py'),
         )
 

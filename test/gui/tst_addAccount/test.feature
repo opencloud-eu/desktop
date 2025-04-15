@@ -71,7 +71,7 @@ Feature: adding accounts
 
 
     Scenario: Check for suffix when sync path exists (oCIS)
-        Given the user has created folder "openCloud" in the default home path
+        Given the user has created folder "OpenCloud" in the default home path
         And the user has started the client
         And the user has entered the following account information:
             | server | %local_server% |
@@ -79,6 +79,6 @@ Feature: adding accounts
             | user     | Alice |
             | password | 1234  |
         And the user opens the advanced configuration
-        Then the default local sync path should contain "%home%/openCloud (2)" in the configuration wizard
+        Then the default local sync path should contain "%home%/OpenCloud (2)" in the configuration wizard
         When the user selects download everything option in advanced section
         Then the button to open sync connection wizard should be disabled

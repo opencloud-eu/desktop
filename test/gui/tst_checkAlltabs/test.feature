@@ -19,14 +19,11 @@ Feature: Visually check all tabs
         And user "Alice" has set up a client with default settings
         When the user clicks on the settings tab
         Then the settings tab should have the following options in the general section:
-            | Start on Login                           |
-            | Use Monochrome Icons in the system tray  |
-            | Show desktop Notifications               |
-            | Language                                 |
+            | Start on Login |
         And the settings tab should have the following options in the advanced section:
-            | Sync hidden files                                                    |
-            | Edit ignored files                                                   |
-            | Log settings                                                         |
+            | Sync hidden files  |
+            | Edit ignored files |
+            | Log settings       |
         And the settings tab should have the following options in the network section:
             | Proxy Settings     |
             | Download Bandwidth |

@@ -1,4 +1,4 @@
-import uuid
+﻿import uuid
 import os
 import subprocess
 from urllib.parse import urlparse
@@ -7,13 +7,16 @@ from os.path import exists, join
 import test
 import psutil
 import squish
+from PySide6.QtCore import QSettings, QUuid, QUrl, QJsonValue
 
 from helpers.SpaceHelper import get_space_id
 from helpers.ConfigHelper import get_config, set_config, is_windows
 from helpers.SyncHelper import listen_sync_status_for_item
 from helpers.api.utils import url_join
-from helpers.UserHelper import get_displayname_for_user
+from helpers.UserHelper import get_displayname_for_user, get_password_for_user
 from helpers.ReportHelper import is_video_enabled
+from helpers.api import ocis
+
 
 
 def substitute_inline_codes(value):
@@ -74,18 +77,11 @@ def set_current_user_sync_path(sync_path):
 
 def get_resource_path(resource='', user='', space=''):
     sync_path = get_config('currentUserSyncPath')
-    if not sync_path.startswith(get_config('tempFolderPath')):
-        if user:
-            sync_path = user
-        else:
-            user = parse_username_from_sync_path(sync_path)
-        if get_config('ocis'):
-            space = (
-                space
-                or get_config('syncConnectionName')
-                or get_displayname_for_user(user)
-            )
-            sync_path = join(sync_path, space)
+    if user:
+        sync_path = user
+    if get_config('ocis'):
+        space = space or get_config('syncConnectionName')
+        sync_path = join(sync_path, space)
     sync_path = join(get_config('clientRootSyncPath'), sync_path)
     resource = resource.replace(sync_path, '').strip('/').strip('\\')
     if is_windows():
@@ -126,76 +122,69 @@ def start_client():
 
 def get_polling_interval():
     polling_interval = '''
-[ownCloud]
+[OpenCloud]
 remotePollInterval={polling_interval}
 '''
     args = {'polling_interval': 5000}
     polling_interval = polling_interval.format(**args)
     return polling_interval
 
-
 def generate_account_config(users, space='Personal'):
     sync_paths = {}
-    user_setting = ''
+    os.environ['XDG_CONFIG_HOME'] = '/tmp/opencloudtest/.config'
+    settings = QSettings("OpenCloud", "opencloud")
+    users_uuids = {}
+    server_url = get_config('localBackendUrl')
+    capabilities = ocis.get_capabilities()
+    capabilities_variant = QJsonValue(capabilities).toVariant()
+
     for idx, username in enumerate(users):
-        user_setting += '''
-{user_index}/Folders/{uuid_v4}/davUrl={url}
-{user_index}/Folders/{uuid_v4}/ignoreHiddenFiles=true
-{user_index}/Folders/{uuid_v4}/localPath={client_sync_path}
-{user_index}/Folders/{uuid_v4}/displayString={displayString}
-{user_index}/Folders/{uuid_v4}/paused=false
-{user_index}/Folders/{uuid_v4}/targetPath=/
-{user_index}/Folders/{uuid_v4}/version=13
-{user_index}/Folders/{uuid_v4}/virtualFilesMode=off
-{user_index}/dav_user={davUserName}
-{user_index}/display-name={displayUserName}
-{user_index}/http_CredentialVersion=1
-{user_index}/http_oauth={oauth}
-{user_index}/http_user={davUserName}
-{user_index}/url={local_server}
-{user_index}/user={displayUserFirstName}
-{user_index}/supportsSpaces={supportsSpaces}
-{user_index}/version=13
-'''
-        if not idx:
-            user_setting = '[Accounts]' + user_setting
+        users_uuids[username] = QUuid.createUuid()
+        settings.beginGroup("Accounts")
+        settings.beginWriteArray(str(idx+1),len(users))
 
-        sync_path = create_user_sync_path(username)
-        dav_endpoint = url_join('remote.php/dav/files', username)
+        settings.setValue("capabilities", capabilities_variant)
+        settings.setValue("default_sync_root", create_user_sync_path(username))
+        settings.setValue("uuid", users_uuids[username])
+        settings.setValue("display-name", get_displayname_for_user(username))
+        settings.setValue("url", server_url)
+        settings.setValue("userExplicitlySignedOut", 'false')
 
-        server_url = get_config('localBackendUrl')
+        settings.endArray()
+        settings.setValue("size", len(users))
+        settings.endGroup()
 
-        if is_ocis := get_config('ocis'):
-            if space == 'Personal':
-                space = get_displayname_for_user(username)
-            sync_path = create_space_path(space)
-            dav_endpoint = url_join('dav/spaces', get_space_id(space, username))
+    settings.beginGroup("Folders")
+    for idx, username in enumerate(users):
+        user_space = space
+        if space == 'Personal':
+            user_space = get_displayname_for_user(username)
+        settings.beginWriteArray(str(idx+1),len(users))
 
-        args = {
-            'url': url_join(server_url, dav_endpoint, ''),
-            'displayString': get_config('syncConnectionName'),
-            'displayUserName': get_displayname_for_user(username),
-            'davUserName': username if is_ocis else username.lower(),
-            'displayUserFirstName': get_displayname_for_user(username).split()[0],
-            'client_sync_path': sync_path,
-            'local_server': server_url,
-            'oauth': 'true' if is_ocis else 'false',
-            'vfs': 'wincfapi' if is_windows() else 'off',
-            'supportsSpaces': 'true' if is_ocis else 'false',
-            'user_index': idx,
-            'uuid_v4': generate_uuidv4(),
-        }
-        user_setting = user_setting.format(**args)
+        sync_path = create_space_path(user_space)
+        space_id = get_space_id(user_space, username)
+        dav_endpoint = QUrl(url_join(server_url, '/dav/spaces/', space_id))
+        settings.setValue("accountUUID", users_uuids[username])
+        settings.setValue("davUrl", dav_endpoint)
+        settings.setValue("deployed", 'false')
+        settings.setValue("displayString", get_config('syncConnectionName'))
+        settings.setValue("ignoreHiddenFiles", 'true')
+        settings.setValue("localPath", sync_path)
+        settings.setValue("paused", 'false')
+        settings.setValue("priority", '50')
+        settings.setValue("spaceId", space_id)
+        settings.setValue("virtualFilesMode", 'off')
+        settings.setValue("journalPath",".sync_journal.db")
+        settings.endArray()
+        settings.setValue("size", len(users))
         sync_paths.update({username: sync_path})
-    # append extra configs
-    user_setting += 'version=13'
-    user_setting = user_setting + get_polling_interval()
 
-    with open(get_config('clientConfigFile'), 'a+', encoding='utf-8') as config_file:
-        config_file.write(user_setting)
+    settings.endGroup()
 
+
+    settings.sync()
+    os.rename(join(get_config('clientConfigDir'), "opencloud.conf"), get_config('clientConfigFile'))
     return sync_paths
-
 
 def setup_client(username, space=None):
     if not space or space == 'Personal':

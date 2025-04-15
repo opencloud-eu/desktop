@@ -4,16 +4,20 @@ import squish
 
 class AccountSetting:
     MANAGE_ACCOUNT_BUTTON = {
-        "container": names.settings_dialogStack_QStackedWidget,
-        "name": "manageAccountButton",
-        "type": "QToolButton",
+        "container": names.stackedWidget_quickWidget_OCC_QmlUtils_OCQuickWidget,
+        "id": "manageAccountButton",
+        "text": "Manage Account",
+        "type": "Button",
         "visible": 1,
     }
     ACCOUNT_MENU = {
-        "type": "QMenu",
+        "checkable": False,
+        "container": names.quickWidget_Overlay,
+        "text": "",
+        "enabled": True,
+        "type": "MenuItem",
         "unnamed": 1,
-        "visible": 1,
-        "window": names.settings_OCC_SettingsDialog,
+        "visible": True
     }
     CONFIRM_REMOVE_CONNECTION_BUTTON = {
         "container": names.settings_dialogStack_QStackedWidget,
@@ -23,10 +27,9 @@ class AccountSetting:
         "visible": 1,
     }
     ACCOUNT_CONNECTION_LABEL = {
-        "container": names.settings_dialogStack_QStackedWidget,
-        "name": "connectionStatusLabel",
-        "type": "QLabel",
-        "visible": 1,
+        "container": names.stackedWidget_quickWidget_OCC_QmlUtils_OCQuickWidget,
+        "type": "Label",
+        "visible": 1
     }
     LOG_BROWSER_WINDOW = {
         "name": "OCC__LogBrowser",
@@ -49,9 +52,11 @@ class AccountSetting:
 
     @staticmethod
     def account_action(action):
-        squish.clickButton(squish.waitForObject(AccountSetting.MANAGE_ACCOUNT_BUTTON))
-        squish.activateItem(
-            squish.waitForObjectItem(AccountSetting.ACCOUNT_MENU, action)
+        squish.mouseClick(squish.waitForObject(AccountSetting.MANAGE_ACCOUNT_BUTTON))
+        selector = AccountSetting.ACCOUNT_MENU.copy()
+        selector['text'] = action
+        squish.mouseClick(
+            squish.waitForObject(selector)
         )
 
     @staticmethod

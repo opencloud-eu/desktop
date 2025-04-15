@@ -3,6 +3,7 @@ import json
 import helpers.api.http_helper as request
 from helpers.api.utils import url_join
 from helpers.ConfigHelper import get_config
+from PySide6.QtCore import QJsonDocument
 
 
 def get_graph_url():
@@ -81,3 +82,14 @@ def delete_user(user_id):
     url = url_join(get_graph_url(), "users", user_id)
     response = request.delete(url)
     request.assert_http_status(response, 204, "Failed to delete user")
+
+
+def get_capabilities():
+    server_url = get_config('localBackendUrl')
+    url = url_join(server_url, '/ocs/v1.php/cloud/capabilities?format=json')
+    response = request.get(url)
+    response_str = response.text
+    response_doc = QJsonDocument.fromJson(response_str.encode("utf-8"))
+    response_obj = response_doc.object()
+    capabilities = response_obj.get('ocs').get('data').get('capabilities')
+    return capabilities

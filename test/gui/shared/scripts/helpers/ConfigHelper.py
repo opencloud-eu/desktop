@@ -44,16 +44,16 @@ def get_win_user_home():
 
 def get_client_root_path():
     if is_windows():
-        return os.path.join(get_win_user_home(), 'owncloudtest')
-    return os.path.join(gettempdir(), 'owncloudtest')
+        return os.path.join(get_win_user_home(), 'opencloudtest')
+    return os.path.join(gettempdir(), 'opencloudtest')
 
 
 def get_config_home():
     if is_windows():
         # There is no way to set custom config path in windows
         # TODO: set to different path if option is available
-        return os.path.join(get_win_user_home(), 'AppData', 'Roaming', 'ownCloud')
-    return os.path.join(get_config_from_env_file('XDG_CONFIG_HOME'), 'ownCloud')
+        return os.path.join(get_win_user_home(), 'AppData', 'Roaming', 'OpenCloud')
+    return os.path.join(get_config_from_env_file('XDG_CONFIG_HOME'), 'OpenCloud')
 
 
 def get_default_home_dir():
@@ -75,7 +75,7 @@ CONFIG_ENV_MAP = {
     'clientConfigDir': 'CLIENT_CONFIG_DIR',
     'guiTestReportDir': 'GUI_TEST_REPORT_DIR',
     'ocis': 'OCIS',
-    'record_video_on_failure': 'RECORD_VIDEO_ON_FAILURE',
+    'record_video_on_failure': 'RECORD_VIDEO_ON_FAILURE'
 }
 
 DEFAULT_PATH_CONFIG = {
@@ -100,7 +100,7 @@ CONFIG = {
     'ocis': False,
     'record_video_on_failure': False,
     'files_for_upload': os.path.join(CURRENT_DIR.parent.parent, 'files-for-upload'),
-    'syncConnectionName': '',
+    'syncConnectionName': 'Personal'
 }
 CONFIG.update(DEFAULT_PATH_CONFIG)
 

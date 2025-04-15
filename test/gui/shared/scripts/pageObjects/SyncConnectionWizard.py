@@ -42,7 +42,7 @@ class SyncConnectionWizard:
     }
     SYNC_DIALOG_FOLDER_TREE = {
         "column": 0,
-        "container": names.deselect_remote_folders_you_do_not_wish_to_synchronize_ownCloud_QModelIndex,
+        "container": names.deselect_remote_folders_you_do_not_wish_to_synchronize_OpenCloud_QModelIndex,
         "type": "QModelIndex",
     }
     ADD_SYNC_CONNECTION_BUTTON = {
