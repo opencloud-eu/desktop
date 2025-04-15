@@ -110,7 +110,7 @@ def get_current_user_sync_path():
 
 def start_client():
     squish.startApplication(
-        'owncloud -s'
+        'opencloud -s'
         + f' --logfile {get_config("clientLogFile")}'
         + ' --logdebug'
         + ' --logflush'
