@@ -37,6 +37,13 @@ public:
 
     /***
      * ID used to describe our rel attribute
+     * Defined on the server in services/webfinger/pkg/relations/owncloud_instance.go as OpenCloudInstanceRel
+     * The server uses "http://webfinger.opencloud/rel/server-instance" (without .eu)
+     * 
+     * According to RFC 7033 (WebFinger), the "rel" is either a URI or a registered relation type
+     * as specified in RFC 5988 (Web Linking). For custom relation types like this one, 
+     * a URI format is used as described in RFC 7033 section 10.3:
+     * https://datatracker.ietf.org/doc/html/rfc7033#section-10.3
      */
     static QString relId();
 
