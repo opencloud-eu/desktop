@@ -37,7 +37,7 @@ WebFinger::WebFinger(QNetworkAccessManager *nam, QObject *parent)
 
 void WebFinger::start(const QUrl &url, const QString &resourceId)
 {
-    //    GET /.well-known/webfinger?rel=http://webfinger.opencloud.eu/rel/server-instance&resource=acct:test@opencloud.eu HTTP/1.1
+    //    GET /.well-known/webfinger?rel=http://webfinger.opencloud/rel/server-instance&resource=acct:test@opencloud.eu HTTP/1.1
     if (OC_ENSURE(url.scheme() == QLatin1String("https"))) {
         QUrlQuery query;
         query.setQueryItems({ { QStringLiteral("resource"), QString::fromUtf8(QUrl::toPercentEncoding(resourceId)) },
