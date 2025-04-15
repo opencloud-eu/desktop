@@ -16,16 +16,21 @@ class SyncConnection:
         "visible": 1,
     }
     FOLDER_SYNC_CONNECTION_MENU_BUTTON = {
-        "checkable": False,
         "container": names.quickWidget_scrollView_ScrollView,
-        "type": "Button",
+        "id": "moreButton",
+        "source": "image://opencloud?theme=fontawesome&icon=&enabled=true&size=undefined",
+        "type": "Image",
         "unnamed": 1,
-        "visible": True,
+        "visible": True
     }
     MENU = {
-        "type": "QMenu",
-        "window": names.settings_OCC_SettingsDialog,
-        "visible": 1,
+        "checkable": False,
+        "container": names.quickWidget_Overlay,
+        "enabled": True,
+        "text": "",
+        "type": "MenuItem",
+        "unnamed": 1,
+        "visible": True
     }
     DISABLE_VFS_CONFIRMATION_BUTTON = {
         "text": "Disable support",
@@ -64,7 +69,11 @@ class SyncConnection:
     @staticmethod
     def perform_action(action):
         SyncConnection.open_menu()
-        squish.activateItem(squish.waitForObjectItem(SyncConnection.MENU, action))
+        selector = SyncConnection.MENU.copy()
+        selector['text'] = action
+        squish.mouseClick(
+            squish.waitForObject(selector)
+        )
 
     @staticmethod
     def force_sync():

@@ -106,7 +106,6 @@ def step(context):
 @When('the user adds the following account:')
 def step(context):
     account_details = get_client_details(context)
-    set_config('syncConnectionName', get_displayname_for_user(account_details['user']))
     AccountConnectionWizard.add_account(account_details)
     # wait for files to sync
     wait_for_initial_sync_to_complete(get_resource_path('/', account_details['user']))

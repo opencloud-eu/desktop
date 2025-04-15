@@ -53,7 +53,7 @@ class Toolbar:
         "type": "QPushButton",
         "unnamed": 1,
         "visible": 1,
-        "window": QUIT_CONFIRMATION_DIALOG,
+        "window": names.quit_OpenCloud_Desktop_QMessageBox,
     }
 
     TOOLBAR_ITEMS = ["Add Account", "Activity", "Settings", "Quit"]
@@ -119,7 +119,6 @@ class Toolbar:
             if hasattr(obj, "accountState"):
                 account_info = {
                     "displayname": str(obj.accountState.account.davDisplayName),
-                    "username": str(obj.accountState.account.davUser),
                     "hostname": str(obj.accountState.account.hostName),
                     "initials": str(obj.accountState.account.initials),
                     "current": obj.checked,

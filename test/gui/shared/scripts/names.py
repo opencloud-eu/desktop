@@ -4,7 +4,7 @@
 from objectmaphelper import *
 
 settings_OCC_SettingsDialog = {"name": "Settings", "type": "OCC::SettingsDialog", "visible": 1}
-owncloudWizard_OCC_OwncloudWizard = {"name": "owncloudWizard", "type": "OCC::OwncloudWizard", "visible": 1}
+opencloudWizard_OCC_OpencloudWizard = {"name": "opencloudWizard", "type": "OCC::OpencloudWizard", "visible": 1}
 qFileDialog_QFileDialog = {"name": "QFileDialog", "type": "QFileDialog", "visible": 1}
 settings_stack_QStackedWidget = {"name": "stack", "type": "QStackedWidget", "visible": 1, "window": settings_OCC_SettingsDialog}
 settings_dialogStack_QStackedWidget = {"name": "dialogStack", "type": "QStackedWidget", "visible": 1, "window": settings_OCC_SettingsDialog}
@@ -13,7 +13,7 @@ sharingDialog_OCC_ShareDialog = {"name": "SharingDialog", "type": "OCC::ShareDia
 sharingDialog_qt_tabwidget_stackedwidget_QStackedWidget = {"name": "qt_tabwidget_stackedwidget", "type": "QStackedWidget", "visible": 1, "window": sharingDialog_OCC_ShareDialog}
 qt_tabwidget_stackedwidget_SharingDialogUG_OCC_ShareUserGroupWidget = {"container": sharingDialog_qt_tabwidget_stackedwidget_QStackedWidget, "name": "SharingDialogUG", "type": "OCC::ShareUserGroupWidget", "visible": 1}
 sharingDialogUG_scrollArea_QScrollArea = {"container": qt_tabwidget_stackedwidget_SharingDialogUG_OCC_ShareUserGroupWidget, "name": "scrollArea", "type": "QScrollArea", "visible": 1}
-settings_settingsdialog_toolbutton_Quit_ownCloud_QToolButton = {"name": "settingsdialog_toolbutton_Quit ownCloud", "type": "QToolButton", "visible": 1, "window": settings_OCC_SettingsDialog}
+settings_settingsdialog_toolbutton_Quit_OpenCloud_QToolButton = {"name": "settingsdialog_toolbutton_Quit openCloud", "type": "QToolButton", "visible": 1, "window": settings_OCC_SettingsDialog}
 settings_settingsdialog_toolbutton_Settings_QToolButton = {"name": "settingsdialog_toolbutton_Settings", "type": "QToolButton", "visible": 1, "window": settings_OCC_SettingsDialog}
 stack_qt_tabwidget_stackedwidget_QStackedWidget = {"container": settings_stack_QStackedWidget, "name": "qt_tabwidget_stackedwidget", "type": "QStackedWidget", "visible": 1}
 qt_tabwidget_stackedwidget_OCC_IssuesWidget_OCC_IssuesWidget = {"container": stack_qt_tabwidget_stackedwidget_QStackedWidget, "name": "OCC__IssuesWidget", "type": "OCC::IssuesWidget", "visible": 1}
@@ -29,7 +29,7 @@ oCC_ShareLinkWidget_checkBox_expire_QProgressIndicator = {"aboveWidget": oCC_Sha
 settings_settingsdialog_toolbutton_Add_account_QToolButton = {"name": "settingsdialog_toolbutton_Add account", "type": "QToolButton", "visible": 1, "window": settings_OCC_SettingsDialog}
 settings_settingsdialog_toolbutton_Activity_QToolButton = {"name": "settingsdialog_toolbutton_Activity", "type": "QToolButton", "visible": 1, "window": settings_OCC_SettingsDialog}
 disable_virtual_file_support_QMessageBox = {"type": "QMessageBox", "unnamed": 1, "visible": 1, "windowTitle": "Disable virtual file support?"}
-owncloudWizard_urlLabel_QLabel = {"name": "urlLabel", "type": "QLabel", "visible": 1, "window": owncloudWizard_OCC_OwncloudWizard}
+opencloudWizard_urlLabel_QLabel = {"name": "urlLabel", "type": "QLabel", "visible": 1, "window": opencloudWizard_OCC_OpencloudWizard}
 setupWizardWindow_OCC_Wizard_SetupWizardWindow = {"name": "SetupWizardWidget", "type": "OCC::Wizard::SetupWizardWidget", "visible": 1}
 setupWizardWindow_contentWidget_QStackedWidget = {"name": "contentWidget", "type": "QStackedWidget", "visible": 1, "window": setupWizardWindow_OCC_Wizard_SetupWizardWindow}
 insecure_connection_QMessageBox = {"type": "QMessageBox", "unnamed": 1, "visible": 1, "windowTitle": "Insecure connection"}
@@ -40,7 +40,7 @@ add_Folder_Sync_Connection_OCC_FolderWizard = {"type": "OCC::FolderWizard", "unn
 add_Folder_Sync_Connection_groupBox_QGroupBox = {"name": "groupBox", "type": "QGroupBox", "visible": 1, "window": add_Folder_Sync_Connection_OCC_FolderWizard}
 add_Folder_Sync_Connection_Deselect_remote_folders_you_do_not_wish_to_synchronize_QLabel = {"text": "Deselect remote folders you do not wish to synchronize.", "type": "QLabel", "unnamed": 1, "visible": 1, "window": add_Folder_Sync_Connection_OCC_FolderWizard}
 folder_Sync_Connection_Deselect_remote_folders_QTreeWidget = {"aboveWidget": add_Folder_Sync_Connection_Deselect_remote_folders_you_do_not_wish_to_synchronize_QLabel, "type": "QTreeWidget", "unnamed": 1, "visible": 1, "window": add_Folder_Sync_Connection_OCC_FolderWizard}
-deselect_remote_folders_you_do_not_wish_to_synchronize_ownCloud_QModelIndex = {"column": 0, "container": folder_Sync_Connection_Deselect_remote_folders_QTreeWidget, "text": "ownCloud", "type": "QModelIndex"}
+deselect_remote_folders_you_do_not_wish_to_synchronize_OpenCloud_QModelIndex = {"column": 0, "container": folder_Sync_Connection_Deselect_remote_folders_QTreeWidget, "text": "ownCloud", "type": "QModelIndex"}
 loginRequiredDialog_OCC_LoginRequiredDialog = {"name": "LoginRequiredDialog", "type": "OCC::LoginRequiredDialog", "visible": 1}
 loginRequiredDialog_contentWidget_QStackedWidget = {"name": "contentWidget", "type": "QStackedWidget", "visible": 1, "window": loginRequiredDialog_OCC_LoginRequiredDialog}
 contentWidget_contentWidget_QStackedWidget = {"container": setupWizardWindow_contentWidget_QStackedWidget, "name": "contentWidget", "type": "QStackedWidget", "visible": 1}
@@ -64,3 +64,7 @@ contentWidget_OCC_QmlUtils_OCQuickWidget = {"container": contentWidget_contentWi
 stackedWidget_Add_Folder_Sync_Connection_QGroupBox = {"container": stack_stackedWidget_QStackedWidget, "title": "Add Folder Sync Connection", "type": "QGroupBox", "unnamed": 1, "visible": 1}
 stackedWidget_groupBox_QGroupBox = {"container": settings_stack_QStackedWidget, "name": "groupBox", "type": "QGroupBox", "visible": 1}
 groupBox_OCC_QmlUtils_OCQuickWidget = {"container": stackedWidget_groupBox_QGroupBox, "type": "OCC::QmlUtils::OCQuickWidget", "unnamed": 1, "visible": 1}
+quickWidget_Overlay = {"container": stackedWidget_quickWidget_OCC_QmlUtils_OCQuickWidget, "type": "Overlay", "unnamed": 1, "visible": True}
+scrollView_moreButton_Image = {"container": quickWidget_scrollView_ScrollView, "id": "moreButton", "source": "image://opencloud?theme=fontawesome&icon=&enabled=true&size=undefined", "type": "Image", "unnamed": 1, "visible": True}
+pause_sync_MenuItem = {"checkable": False, "container": quickWidget_Overlay, "enabled": True, "text": "Pause sync", "type": "MenuItem", "unnamed": 1, "visible": True}
+quit_OpenCloud_Desktop_QMessageBox = {"type": "QMessageBox", "unnamed": 1, "visible": 1, "windowTitle": "Quit OpenCloud Desktop"}

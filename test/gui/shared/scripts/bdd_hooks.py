@@ -83,7 +83,7 @@ def hook(context):
         # clean previous configs
         shutil.rmtree(config_dir)
     os.makedirs(config_dir, 0o0755)
-    set_config("clientConfigFile", os.path.join(config_dir, "owncloud.cfg"))
+    set_config("clientConfigFile", os.path.join(config_dir, "opencloud.cfg"))
 
     # create reports dir if not exists
     test_report_dir = get_config("guiTestReportDir")
@@ -111,12 +111,6 @@ def hook(context):
     tmp_dir = get_config("tempFolderPath")
     if not os.path.exists(tmp_dir):
         os.makedirs(tmp_dir)
-
-    # sync connection folder display name
-    # For oCIS, it will be the user's display name
-    # and will be set while adding the account or creating resources
-    if not get_config("ocis"):
-        set_config("syncConnectionName", "ownCloud")
 
 
 # determines if the test scenario failed or not
