@@ -82,6 +82,8 @@ Item {
                     id: description
                     Accessible.ignored: true
                     Layout.fillWidth: true
+                    // if we have multiline text, fill the delegate
+                    Layout.fillHeight: descriptionWrapMode !== Label.NoWrap
                     elide: Text.ElideRight
                 }
             }
