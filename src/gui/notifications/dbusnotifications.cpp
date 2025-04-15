@@ -47,40 +47,45 @@ DBusNotifications::DBusNotifications(SystemNotificationManager *parent)
     Q_D(DBusNotifications);
     connect(&d->dbusInterface, &org::freedesktop::Notifications::ActionInvoked, this, [this](uint systemId, const QString &actionKey) {
         Q_D(DBusNotifications);
-        const auto id = d->_idMap.value(systemId);
-        qCDebug(lcDbusNotification) << "ActionInvoked" << id << "SystemId" << systemId << actionKey;
-        if (auto *notification = activeNotification(id)) {
-            const qsizetype index = actionKey.toLongLong();
-            if (index < notification->request().buttons().size()) {
-                Q_EMIT notification->buttonClicked(notification->request().buttons().at(index));
-            } else {
-                qCDebug(lcDbusNotification) << actionKey << "is out of range";
+        // we get called for all global notifications, only handle ours
+        if (auto id = Utility::optionalFind(d->_idMap, systemId)) {
+            qCDebug(lcDbusNotification) << "ActionInvoked" << id->value() << "SystemId" << systemId << actionKey;
+            if (auto *notification = activeNotification(id->value())) {
+                const qsizetype index = actionKey.toLongLong();
+                if (index < notification->request().buttons().size()) {
+                    Q_EMIT notification->buttonClicked(notification->request().buttons().at(index));
+                } else {
+                    qCDebug(lcDbusNotification) << actionKey << "is out of range";
+                }
             }
         }
     });
 
     connect(&d->dbusInterface, &org::freedesktop::Notifications::NotificationClosed, this, [this](uint systemId, uint reason) {
         Q_D(DBusNotifications);
-        const auto id = d->_idMap.take(systemId);
-        if (auto *notification = activeNotification(id)) {
-            SystemNotification::Result result;
-            switch (reason) {
-            case 1:
-                result = SystemNotification::Result::TimedOut;
-                break;
-            case 2:
-                result = SystemNotification::Result::Dismissed;
-                break;
-            default:
-                result = SystemNotification::Result::Dismissed;
-                qCWarning(lcDbusNotification) << "Unsupported close reason" << reason;
-                break;
+        // we get called for all global notifications, only handle ours
+        if (auto id = Utility::optionalFind(d->_idMap, systemId)) {
+            d->_idMap.erase(*id);
+            if (auto *notification = activeNotification(id->value())) {
+                SystemNotification::Result result;
+                switch (reason) {
+                case 1:
+                    result = SystemNotification::Result::TimedOut;
+                    break;
+                case 2:
+                    result = SystemNotification::Result::Dismissed;
+                    break;
+                default:
+                    result = SystemNotification::Result::Dismissed;
+                    qCWarning(lcDbusNotification) << "Unsupported close reason" << reason;
+                    break;
+                }
+                qCDebug(lcDbusNotification) << "NotificationClosed" << id->value() << "SystemId" << systemId << reason << result;
+                finishNotification(notification, result);
+            } else {
+                qCDebug(lcDbusNotification) << "Unknown NotificationClicked" << id->value() << "SystemId" << systemId << reason;
+                Q_EMIT systemNotificationManager() -> unknownNotificationClicked();
             }
-            qCDebug(lcDbusNotification) << "NotificationClosed" << id << "SystemId" << systemId << reason << result;
-            finishNotification(notification, result);
-        } else {
-            qCDebug(lcDbusNotification) << "Unknown NotificationClicked" << id << "SystemId" << systemId << reason;
-            Q_EMIT systemNotificationManager() -> unknownNotificationClicked();
         }
     });
 }
@@ -109,6 +114,8 @@ void DBusNotifications::notify(const SystemNotificationRequest &notificationRequ
         actionList.append(QString::number(id++));
         actionList.append(action);
     }
+
+    qCDebug(lcDbusNotification) << "Creating system notification" << notificationRequest.id();
     const auto reply = d->dbusInterface.Notify(Theme::instance()->appNameGUI(), 0, Resources::iconToFileSystemUrl(qGuiApp->windowIcon()).toString(),
         notificationRequest.title(), notificationRequest.text(), actionList, hints, -1);
 
@@ -117,7 +124,8 @@ void DBusNotifications::notify(const SystemNotificationRequest &notificationRequ
         Q_D(DBusNotifications);
         watcher->deleteLater();
 
-        QDBusPendingReply<uint> reply = *watcher;
-        d->_idMap.insert(reply.argumentAt<0>(), id);
+        const auto systemID = QDBusPendingReply<uint>(*watcher).argumentAt<0>();
+        qCDebug(lcDbusNotification) << "System notification" << id << "was assigned the system notification id" << systemID;
+        d->_idMap.insert(systemID, id);
     });
 }
