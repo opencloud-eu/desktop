@@ -11,7 +11,7 @@ revision = 25d2f4be
 
 [craft/craft-blueprints-opencloud]
 version = main
-revision = 7910cfc
+revision = a8d2ce4fdbdd9ab5ff43ef9c827a980323c3851a
 
 [craft/craft-core]
 version = master
