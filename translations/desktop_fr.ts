@@ -1335,7 +1335,7 @@ Veuillez envisager de supprimer ce dossier du compte et de l&apos;ajouter à nou
         <translation>Paramètres avancés</translation>
     </message>
     <message>
-        <location filename="../src/gui/generalsettings.cpp" line="142"/>
+        <location filename="../src/gui/generalsettings.cpp" line="145"/>
         <source>You cannot disable autostart because system-wide autostart is enabled.</source>
         <translation>Vous ne pouvez pas désactiver le démarrage automatique, car il est activé au niveau du système.</translation>
     </message>
@@ -1350,12 +1350,12 @@ Veuillez envisager de supprimer ce dossier du compte et de l&apos;ajouter à nou
         <translation>La modification de la langue nécessite un redémarrage de l&apos;application pour prendre effet.</translation>
     </message>
     <message>
-        <location filename="../src/gui/generalsettings.cpp" line="174"/>
+        <location filename="../src/gui/generalsettings.cpp" line="178"/>
         <source>unknown (%1)</source>
         <translation>inconnu (%1)</translation>
     </message>
     <message>
-        <location filename="../src/gui/generalsettings.cpp" line="158"/>
+        <location filename="../src/gui/generalsettings.cpp" line="162"/>
         <source>(use default)</source>
         <translation>(utiliser la valeur par défaut)</translation>
     </message>
