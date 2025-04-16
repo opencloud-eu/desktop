@@ -34,6 +34,9 @@ Pane {
 
     palette.window: Theme.brandedBackgoundColor
     palette.windowText: Theme.brandedForegroundColor
+    palette.button: Theme.primaryButtonColor.color
+    palette.buttonText: Theme.primaryButtonColor.textColor
+    palette.disabled.buttonText: Theme.primaryButtonColor.textColorDisabled
 
     Component {
         id: logutButtonComponent
@@ -44,6 +47,10 @@ Pane {
             text: qsTr("Stay logged out")
             onClicked: credentials.logOutRequested()
 
+            palette.button: Theme.secondaryButtonColor.color
+            palette.buttonText: Theme.secondaryButtonColor.textColor
+            palette.disabled.buttonText: Theme.secondaryButtonColor.textColorDisabled
+
             Keys.onTabPressed: event => {
                 if (credentials.isRefresh) {
                     event.accepted = false;
@@ -51,22 +58,6 @@ Pane {
                     widget.parentFocusWidget.focusNext();
                 }
             }
-
-            Component.onCompleted: {
-                if (Theme.secondaryButtonColor.valid) {
-                    palette.button = Theme.secondaryButtonColor.color;
-                    palette.buttonText = Theme.secondaryButtonColor.textColor;
-                    palette.disabled.buttonText = Theme.secondaryButtonColor.textColorDisabled;
-                }
-            }
-        }
-    }
-
-    Component.onCompleted: {
-        if (Theme.primaryButtonColor.valid) {
-            palette.button = Theme.primaryButtonColor.color;
-            palette.buttonText = Theme.primaryButtonColor.textColor;
-            palette.disabled.buttonText = Theme.primaryButtonColor.textColorDisabled;
         }
     }
 
