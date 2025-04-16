@@ -173,15 +173,13 @@ void AccountSettings::slotRemoveCurrentFolder(Folder *folder)
 {
     // TODO: move to qml
     qCInfo(lcAccountSettings) << "Remove Folder " << folder->path();
-    QString shortGuiLocalPath = folder->shortGuiLocalPath();
-
-    auto messageBox = new QMessageBox(QMessageBox::Question, tr("Confirm Folder Sync Connection Removal"),
-        tr("<p>Do you really want to stop syncing the folder <i>%1</i>?</p>"
+    auto messageBox = new QMessageBox(QMessageBox::Question, tr("Confirm removal of Space"),
+        tr("<p>Do you really want to stop syncing the Space <i>\"%1\"</i>?</p>"
            "<p><b>Note:</b> This will <b>not</b> delete any files.</p>")
-            .arg(shortGuiLocalPath),
+            .arg(folder->displayName()),
         QMessageBox::NoButton, ocApp()->settingsDialog());
     messageBox->setAttribute(Qt::WA_DeleteOnClose);
-    QPushButton *yesButton = messageBox->addButton(tr("Remove Folder Sync Connection"), QMessageBox::YesRole);
+    QPushButton *yesButton = messageBox->addButton(tr("Remove Space"), QMessageBox::YesRole);
     messageBox->addButton(tr("Cancel"), QMessageBox::NoRole);
     connect(messageBox, &QMessageBox::finished, this, [messageBox, yesButton, folder, this] {
         if (messageBox->clickedButton() == yesButton) {

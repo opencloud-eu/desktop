@@ -140,9 +140,9 @@ FolderWizard::FolderWizard(const AccountStatePtr &account, QWidget *parent)
     : QWizard(parent)
     , d_ptr(new FolderWizardPrivate(this, account))
 {
-    setWindowTitle(tr("Add Folder Sync Connection"));
+    setWindowTitle(tr("Add Space"));
     setOptions(QWizard::CancelButtonOnLeft);
-    setButtonText(QWizard::FinishButton, tr("Add Sync Connection"));
+    setButtonText(QWizard::FinishButton, tr("Add Space"));
     setWizardStyle(QWizard::ModernStyle);
 }
 
