@@ -28,6 +28,8 @@
     -> ...
   * [ ] 12. Overlay icons
     -> ...
+  * [ ] 13. Context menu
+    -> ...
   ```
 
 - If not stated otherwise each test should be run on every platform win/linux/mac. Record the result as per platform.
@@ -198,3 +200,11 @@ Note: "Via Web" means check files on server in the web browser
 | 6  | warning during sync     | 1. Open the local sync folder<br>3. Add a problematic file (path longer than 255 characters)<br>3. Check the overlay icons                                   | The files that are not synced due to a problem have the yellow warning triangle icons                                                                                                                                                                     | :construction: Win |                               |
 | 7  | fatal error during sync | 1. Open the local sync folder<br>3. Create a sync error<br>3. Check the overlay icons                                                                        | The files/folders that are not synced due to a fatal problem have the red error icons                                                                                                                                                                     | :construction: Win |                               |
 
+### 13. Context menu
+
+| ID | Test Case           | Steps to reproduce                                                                                                                                       | Expected Result                                                                                       | Result                                                             | Related Comment (Squish-test) |
+|----|---------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------|-------------------------------|
+| 1  | Sharing             | 1. Open the context menu of a synced file <br>2. Click on "Share ..."                                                                                    | A browser window opens and takes the user to the sharing page of the file                             | :construction: Win<br>:construction: macOS<br>:construction: Linux |                               |
+| 2  | Private Link        | 1. Open the context menu of a synced file <br>2. Click on "Copy private Link to clipboard"<br>3. Paste the link from the clipboard into a browser window | The browser takes the user to the file                                                                | :construction: Win<br>:construction: macOS<br>:construction: Linux |                               |
+| 3  | Show in web browser | 1. Open the context menu of a synced markdown file <br>2. Click on "Show in web browser"                                                                 | A browser window opens and takes the user to the file, opened in the markdown editor                  | :construction: Win<br>:construction: macOS<br>:construction: Linux |                               |
+| 4  | file versions       | 1. Open the context menu of a synced markdown file <br>2. Click on "Show file versions in web browser"                                                   | A browser window opens and takes the user to the file, with the side bar opened, showind the versions | :construction: Win<br>:construction: macOS<br>:construction: Linux |                               |
