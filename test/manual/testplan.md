@@ -31,7 +31,6 @@
   ```
 
 - If not stated otherwise each test should be run on every platform win/linux/mac. Record the result as per platform.
-- 
 - "Enable logging to temporary folder" and "Log Http traffic" (tab 'Settings', button 'Log Settings') to have log-files available if needed to report an issue.
 - Make sure all automated UI tests run successfully in CI and run them locally on Windows.
 - all tests that are automated are marked with a :robot: in the 'Result' column (for the corresponding platform) and the name of the test in the 'Related Comment' column
