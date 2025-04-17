@@ -347,7 +347,7 @@ Pane {
                             }
 
                             MenuItem {
-                                text: qsTr("Remove folder sync connection")
+                                text: qsTr("Remove Space")
                                 onTriggered: accountSettings.slotRemoveCurrentFolder(folderDelegate.folder)
                                 visible: !folderDelegate.isDeployed
                             }
