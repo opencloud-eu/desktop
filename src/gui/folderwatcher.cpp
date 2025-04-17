@@ -141,7 +141,7 @@ void FolderWatcher::addChanges(QSet<QString> &&paths)
 {
     Q_ASSERT(thread() == QThread::currentThread());
     // the timer must be inactive if we haven't received changes yet
-    Q_ASSERT(!_timer.isActive() && _changeSet.isEmpty() || !_changeSet.isEmpty());
+    Q_ASSERT((!_timer.isActive() && _changeSet.isEmpty()) || !_changeSet.isEmpty());
     Q_ASSERT(!paths.isEmpty());
     // ------- handle ignores:
     auto it = paths.cbegin();

@@ -33,9 +33,8 @@ Q_DECLARE_LOGGING_CATEGORY(lcFolderStatus)
 
 class Folder;
 class PropfindJob;
-namespace {
-    class SubFolderInfo;
-}
+class FolderStatusModelPrivate;
+
 /**
  * @brief The FolderStatusModel class
  * @ingroup gui
@@ -81,8 +80,8 @@ private Q_SLOTS:
 private:
     int indexOf(Folder *f) const;
 
-    AccountStatePtr _accountState;
-    std::vector<std::unique_ptr<SubFolderInfo>> _folders;
+    Q_DECLARE_PRIVATE(FolderStatusModel)
+    FolderStatusModelPrivate *d_ptr;
 };
 
 

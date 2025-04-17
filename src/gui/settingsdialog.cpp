@@ -70,7 +70,7 @@ public:
     {
     }
 
-    QPixmap requestPixmap(const QString &id, QSize *size, const QSize &requestedSize)
+    QPixmap requestPixmap(const QString &id, QSize *size, const QSize &requestedSize) override
     {
         const auto qmlIcon = OCC::Resources::parseIcon(id);
         const auto accountState = OCC::AccountManager::instance()->account(QUuid::fromString(qmlIcon.iconName));
