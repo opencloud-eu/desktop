@@ -173,30 +173,43 @@ namespace {
     }
 }
 
+class FolderStatusModelPrivate
+{
+public:
+    AccountStatePtr _accountState;
+    std::vector<std::unique_ptr<SubFolderInfo>> _folders;
+};
 
 FolderStatusModel::FolderStatusModel(QObject *parent)
     : QAbstractListModel(parent)
-    , _accountState(nullptr)
+    , d_ptr(new FolderStatusModelPrivate)
+
 {
 }
 
-FolderStatusModel::~FolderStatusModel() { }
+FolderStatusModel::~FolderStatusModel()
+{
+    Q_D(FolderStatusModel);
+    delete d;
+}
 
 void FolderStatusModel::setAccountState(const AccountStatePtr &accountState)
 {
+    Q_D(FolderStatusModel);
     beginResetModel();
-    _folders.clear();
-    if (_accountState != accountState) {
-        Q_ASSERT(!_accountState);
-        _accountState = accountState;
+    d->_folders.clear();
+    if (d->_accountState != accountState) {
+        Q_ASSERT(!d->_accountState);
+        d->_accountState = accountState;
 
         connect(FolderMan::instance(), &FolderMan::folderSyncStateChange, this, &FolderStatusModel::slotFolderSyncStateChange);
 
         connect(accountState->account()->spacesManager(), &GraphApi::SpacesManager::updated, this,
             [this] { Q_EMIT dataChanged(index(0, 0), index(rowCount() - 1, 0)); });
         connect(accountState->account()->spacesManager(), &GraphApi::SpacesManager::spaceChanged, this, [this](auto *space) {
+            Q_D(FolderStatusModel);
             for (int i = 0; i < rowCount(); ++i) {
-                if (_folders[i]->_folder->space() == space) {
+                if (d->_folders[i]->_folder->space() == space) {
                     Q_EMIT dataChanged(index(i, 0), index(i, 0));
                     break;
                 }
@@ -209,7 +222,7 @@ void FolderStatusModel::setAccountState(const AccountStatePtr &accountState)
         if (f->accountState() != accountState)
             continue;
 
-        _folders.push_back(std::make_unique<SubFolderInfo>(f));
+        d->_folders.push_back(std::make_unique<SubFolderInfo>(f));
 
         connect(ProgressDispatcher::instance(), &ProgressDispatcher::progressInfo, this, [f, this](Folder *folder, const ProgressInfo &progress) {
             if (folder == f) {
@@ -223,13 +236,14 @@ void FolderStatusModel::setAccountState(const AccountStatePtr &accountState)
 
 QVariant FolderStatusModel::data(const QModelIndex &index, int role) const
 {
+    Q_D(const FolderStatusModel);
     if (!index.isValid())
         return QVariant();
 
     if (role == Qt::EditRole)
         return QVariant();
 
-    const auto &folderInfo = _folders.at(index.row());
+    const auto &folderInfo = d->_folders.at(index.row());
     auto f = folderInfo->_folder;
     if (!f)
         return QVariant();
@@ -305,14 +319,16 @@ QVariant FolderStatusModel::data(const QModelIndex &index, int role) const
 
 Folder *FolderStatusModel::folder(const QModelIndex &index) const
 {
+    Q_D(const FolderStatusModel);
     Q_ASSERT(checkIndex(index, QAbstractItemModel::CheckIndexOption::IndexIsValid));
-    return _folders.at(index.row())->_folder;
+    return d->_folders.at(index.row())->_folder;
 }
 
 int FolderStatusModel::rowCount(const QModelIndex &parent) const
 {
+    Q_D(const FolderStatusModel);
     Q_ASSERT(!parent.isValid());
-    return static_cast<int>(_folders.size());
+    return static_cast<int>(d->_folders.size());
 }
 
 QHash<int, QByteArray> FolderStatusModel::roleNames() const
@@ -344,6 +360,7 @@ void FolderStatusModel::slotUpdateFolderState(Folder *folder)
 
 void FolderStatusModel::slotSetProgress(const ProgressInfo &progress, Folder *f)
 {
+    Q_D(FolderStatusModel);
     if (!qobject_cast<QWidget *>(QObject::parent())->isVisible()) {
         return; // for https://github.com/owncloud/client/issues/2648#issuecomment-71377909
     }
@@ -352,7 +369,7 @@ void FolderStatusModel::slotSetProgress(const ProgressInfo &progress, Folder *f)
     if (folderIndex < 0) {
         return;
     }
-    const auto &folder = _folders.at(folderIndex);
+    const auto &folder = d->_folders.at(folderIndex);
 
     auto *pi = &folder->_progress;
     // depending on the use of virtual files or small files this slot might be called very often.
@@ -386,15 +403,17 @@ void FolderStatusModel::slotSetProgress(const ProgressInfo &progress, Folder *f)
 
 int FolderStatusModel::indexOf(Folder *f) const
 {
-    const auto found = std::find_if(_folders.cbegin(), _folders.cend(), [f](const auto &it) { return it->_folder == f; });
-    if (found == _folders.cend()) {
+    Q_D(const FolderStatusModel);
+    const auto found = std::find_if(d->_folders.cbegin(), d->_folders.cend(), [f](const auto &it) { return it->_folder == f; });
+    if (found == d->_folders.cend()) {
         return -1;
     }
-    return std::distance(_folders.cbegin(), found);
+    return std::distance(d->_folders.cbegin(), found);
 }
 
 void FolderStatusModel::slotFolderSyncStateChange(Folder *f)
 {
+    Q_D(FolderStatusModel);
     if (!f) {
         return;
     }
@@ -404,7 +423,7 @@ void FolderStatusModel::slotFolderSyncStateChange(Folder *f)
         return;
     }
 
-    auto &pi = _folders.at(folderIndex)->_progress;
+    auto &pi = d->_folders.at(folderIndex)->_progress;
 
     SyncResult::Status state = f->syncResult().status();
     if (!f->canSync()) {
@@ -447,7 +466,8 @@ void FolderStatusModel::slotFolderSyncStateChange(Folder *f)
 
 void FolderStatusModel::resetFolders()
 {
-    setAccountState(_accountState);
+    Q_D(FolderStatusModel);
+    setAccountState(d->_accountState);
 }
 
 } // namespace OCC
