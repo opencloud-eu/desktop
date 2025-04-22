@@ -10,6 +10,7 @@
 #include <QLabel>
 #include <QMessageBox>
 #include <QStyleFactory>
+#include <QKeyEvent>
 
 using namespace std::chrono_literals;
 
@@ -83,6 +84,15 @@ SetupWizardWidget::SetupWizardWidget(SettingsDialog *parent)
 
     _ui->transitionProgressIndicator->setFixedSize(32, 32);
     _ui->transitionProgressIndicator->setColor(Theme::instance()->wizardHeaderTitleColor());
+    
+    // Install event filter on navigation controls to capture key events
+    _ui->nextButton->installEventFilter(this);
+    _ui->backButton->installEventFilter(this);
+    _ui->cancelButton->installEventFilter(this);
+    _ui->contentWidget->installEventFilter(this);
+    
+    // Set strong focus policy to ensure key events are captured
+    setFocusPolicy(Qt::StrongFocus);
 }
 
 void SetupWizardWidget::loadStylesheet()
@@ -118,6 +128,9 @@ void SetupWizardWidget::displayPage(AbstractSetupWizardPage *page, SetupWizardSt
 
     _ui->navigation->setActiveState(state);
     _ui->navigation->setEnabled(true);
+    
+    // Install event filter on the new page to capture key events
+    _currentPage->installEventFilter(this);
 
     connect(_ui->errorMessageDismissButton, &QPushButton::clicked, this, &SetupWizardWidget::slotHideErrorMessageWidget);
 
@@ -202,4 +215,50 @@ void SetupWizardWidget::slotMoveToNextPage()
         Q_EMIT nextButtonClicked();
     }
 }
+
+bool SetupWizardWidget::eventFilter(QObject *obj, QEvent *event)
+{
+    // Pass key events from child widgets to the main widget
+    if (event->type() == QEvent::KeyPress) {
+        QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
+        if (keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Enter || keyEvent->key() == Qt::Key_Escape) {
+            keyPressEvent(keyEvent);
+            return true;
+        }
+    }
+    
+    return QWidget::eventFilter(obj, event);
+}
+
+void SetupWizardWidget::keyPressEvent(QKeyEvent *event)
+{
+    // Skip during transitions
+    if (_transitioning) {
+        QWidget::keyPressEvent(event);
+        return;
+    }
+
+    // Handle Enter/Return key
+    if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter) {
+        // If next button is enabled and visible, click it
+        if (_ui->nextButton->isEnabled() && _ui->nextButton->isVisible()) {
+            slotMoveToNextPage();
+            event->accept();
+            return;
+        }
+    }
+    
+    // Handle Escape key
+    if (event->key() == Qt::Key_Escape) {
+        // Cancel wizard by triggering cancel button
+        if (_ui->cancelButton->isEnabled() && _ui->cancelButton->isVisible()) {
+            _ui->cancelButton->click();
+            event->accept();
+            return;
+        }
+    }
+    
+    QWidget::keyPressEvent(event);
+}
+
 }
