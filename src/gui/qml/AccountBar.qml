@@ -29,7 +29,8 @@ Pane {
     Component.onCompleted: {
         // TODO: Re enable with Qt 6.6.3
         // https://github.com/opencloud-eu/desktop/issues/222
-        if (Qt.platform.os !== "linux") {
+        // Disabled on all platforms due to macOS crashes (issue #224)
+        if (false) { // Disabled on all platforms instead of just Linux
             if ('popupType' in ToolTip.toolTip) {
                 ToolTip.toolTip.popupType = Popup.Native;
             }
