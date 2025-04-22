@@ -250,9 +250,19 @@ void SetupWizardWidget::keyPressEvent(QKeyEvent *event)
     
     // Handle Escape key
     if (event->key() == Qt::Key_Escape) {
-        // Cancel wizard by triggering cancel button
+        // Cancel wizard with same warning dialog as cancel button
         if (_ui->cancelButton->isEnabled() && _ui->cancelButton->isVisible()) {
-            _ui->cancelButton->click();
+            // Don't directly click the button, use the same logic instead
+            auto messageBox = new QMessageBox(QMessageBox::Warning, tr("Cancel Setup"), tr("Do you really want to cancel the account setup?"),
+                QMessageBox::Yes | QMessageBox::No, ocApp()->settingsDialog());
+            messageBox->setAttribute(Qt::WA_DeleteOnClose);
+            connect(messageBox, &QMessageBox::accepted, this, [this] {
+                // call the base implementation
+                Q_EMIT rejected();
+            });
+            ocApp()->showSettings();
+            messageBox->open();
+            
             event->accept();
             return;
         }
