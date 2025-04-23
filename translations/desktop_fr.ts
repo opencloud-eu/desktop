@@ -7,22 +7,22 @@
         <translation>Barre de navigation</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/AccountBar.qml" line="114"/>
+        <location filename="../src/gui/qml/AccountBar.qml" line="118"/>
         <source>Add Account</source>
         <translation>Ajouter un compte</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/AccountBar.qml" line="141"/>
+        <location filename="../src/gui/qml/AccountBar.qml" line="145"/>
         <source>Activity</source>
         <translation>Activité</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/AccountBar.qml" line="155"/>
+        <location filename="../src/gui/qml/AccountBar.qml" line="159"/>
         <source>Settings</source>
         <translation>Paramètres</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/AccountBar.qml" line="184"/>
+        <location filename="../src/gui/qml/AccountBar.qml" line="188"/>
         <source>Quit</source>
         <translation>Quitter</translation>
     </message>
@@ -1159,32 +1159,32 @@ Veuillez envisager de supprimer ce dossier du compte et de l&apos;ajouter à nou
 <context>
     <name>OCC::FolderStatusModel</name>
     <message>
-        <location filename="../src/gui/folderstatusmodel.cpp" line="244"/>
+        <location filename="../src/gui/folderstatusmodel.cpp" line="258"/>
         <source>There are unresolved conflicts.</source>
         <translation>Il y a des conflits non résolus.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderstatusmodel.cpp" line="289"/>
+        <location filename="../src/gui/folderstatusmodel.cpp" line="303"/>
         <source>%1 of %2 used</source>
         <translation>%1 sur %2 utilisés</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderstatusmodel.cpp" line="369"/>
+        <location filename="../src/gui/folderstatusmodel.cpp" line="386"/>
         <source>Checking for changes in remote &apos;%1&apos;</source>
         <translation>Vérification des modifications dans le dossier distant &apos;%1&apos;</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderstatusmodel.cpp" line="371"/>
+        <location filename="../src/gui/folderstatusmodel.cpp" line="388"/>
         <source>Checking for changes in local &apos;%1&apos;</source>
         <translation>Vérification des modifications dans le dossier local &apos;%1&apos;</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderstatusmodel.cpp" line="375"/>
+        <location filename="../src/gui/folderstatusmodel.cpp" line="392"/>
         <source>Reconciling changes</source>
         <translation>Réconciliation des modifications</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderstatusmodel.cpp" line="255"/>
+        <location filename="../src/gui/folderstatusmodel.cpp" line="269"/>
         <source>Local folder: %1</source>
         <translation>Dossier local : %1</translation>
     </message>
