@@ -1,12 +1,6 @@
 from helpers.api import provisioning, sharing_helper, webdav_helper as webdav
-import helpers.api.oc10 as oc
 
 from pageObjects.Toolbar import Toolbar
-
-
-@Given('app "|any|" has been "|any|" in the server')
-def step(context, app_name, action):
-    oc.setup_app(app_name, action)
 
 
 @Then(
@@ -151,15 +145,6 @@ def step(context, user, group_name):
 @Given('user "|any|" has been created in the server with default attributes')
 def step(context, user):
     provisioning.create_user(user)
-
-
-@Given(
-    # pylint: disable=line-too-long
-    r'user "([^"].*)" has shared (?:file|folder) "([^"].*)" in the server with (user|group) "([^"].*)" with "([^"].*)" permission(?:s)?',
-    regexp=True,
-)
-def step(context, user, resource, receiver_type, receiver, permissions):
-    sharing_helper.share_resource(user, resource, receiver, permissions, receiver_type)
 
 
 @Given('user "|any|" has created the following public link share in the server')

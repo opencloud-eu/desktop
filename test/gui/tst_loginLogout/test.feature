@@ -22,15 +22,6 @@ Feature:  Logout users
         And the user starts the client
         Then user "Alice" should be connected to the server
 
-    @skipOnOCIS
-    Scenario: login with incorrect and correct password after log out
-        Given user "Alice" has set up a client with default settings
-        And user "Alice" has logged out from the client-UI
-        When user "ALice" opens login dialog
-        And user "ALice" enters the password "invalid"
-        And user "Alice" logs out from the login required dialog
-        And user "Alice" logs in using the client-UI
-        Then user "Alice" should be connected to the server
 
     @skipOnOCIS @issue-11619
     Scenario: login, logout and restart with oauth2 authentication
