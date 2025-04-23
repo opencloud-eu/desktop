@@ -103,8 +103,5 @@ class EnterPassword:
         else:
             self.enter_password(password)
 
-    def logout(self):
-        squish.mouseClick(squish.waitForObject(self.LOGOUT_BUTTON))
-
     def accept_certificate(self):
         squish.clickButton(squish.waitForObject(self.ACCEPT_CERTIFICATE_YES))
