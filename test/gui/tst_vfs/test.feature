@@ -7,7 +7,7 @@ Feature: Enable/disable virtual file support
 
     Scenario: Disable/Enable VFS
         Given user "Alice" has been created in the server with default attributes
-        And user "Alice" has uploaded file with content "ownCloud" to "testFile.txt" in the server
+        And user "Alice" has uploaded file with content "openCloud" to "testFile.txt" in the server
         And user "Alice" has created folder "folder1" in the server
         And user "Alice" has uploaded file with content "some contents" to "folder1/lorem.txt" in the server
         And user "Alice" has created folder "folder2" in the server

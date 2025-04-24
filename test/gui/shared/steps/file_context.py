@@ -72,6 +72,14 @@ def wait_and_write_file(path, content):
     write_file(path, content)
 
 
+def wait_and_try_to_write_file(resource, content):
+    wait_for_client_to_be_ready()
+    try:
+        write_file(resource, content)
+    except:
+        pass
+
+
 def create_zip(resources, zip_file_name, cwd=''):
     os.chdir(cwd)
     with zipfile.ZipFile(zip_file_name, 'w') as zipped_file:
@@ -216,6 +224,18 @@ def step(context, filename):
 def step(context, resource, content):
     resource = get_resource_path(resource)
     wait_and_write_file(resource, content)
+
+
+@When('the user tries to overwrite the file "|any|" with content "|any|"')
+def step(context, resource, content):
+    resource = get_resource_path(resource)
+    wait_and_try_to_write_file(resource, content)
+
+
+@When('user "|any|" tries to overwrite the file "|any|" with content "|any|"')
+def step(context, user, resource, content):
+    resource = get_resource_path(resource, user)
+    wait_and_try_to_write_file(resource, content)
 
 
 @When(r'the user deletes the (file|folder) "([^"]*)"', regexp=True)

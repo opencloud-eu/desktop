@@ -9,6 +9,7 @@ from pageObjects.Settings import Settings
 from helpers.ConfigHelper import get_config, is_windows, set_config
 from helpers.SyncHelper import (
     wait_for_resource_to_sync,
+    wait_for_resource_to_have_sync_error,
 )
 from helpers.SetupClientHelper import (
     get_temp_resource_path,
@@ -42,6 +43,20 @@ def step(context):
 def step(context, resource_type, resource):
     resource = get_resource_path(resource)
     wait_for_resource_to_sync(resource, resource_type)
+
+
+@When(r'the user waits for (file|folder) "([^"]*)" to have sync error', regexp=True)
+def step(context, resource_type, resource):
+    resource = get_resource_path(resource)
+    wait_for_resource_to_have_sync_error(resource, resource_type)
+
+
+@When(
+    r'user "([^"]*)" waits for (file|folder) "([^"]*)" to have sync error', regexp=True
+)
+def step(context, username, resource_type, resource):
+    resource = get_resource_path(resource, username)
+    wait_for_resource_to_have_sync_error(resource, resource_type)
 
 
 @When('the user enables virtual file support')
@@ -293,6 +308,11 @@ def step(context):
 @Then('the file "|any|" should have status "|any|" in the activity tab')
 def step(context, file_name, status):
     Activity.has_sync_status(file_name, status)
+
+
+@When('the user opens the sync connection wizard')
+def step(context):
+    SyncConnectionWizard.open_sync_connection_wizard()
 
 
 @Then('the button to open sync connection wizard should be disabled')

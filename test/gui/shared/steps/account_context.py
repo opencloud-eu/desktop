@@ -154,6 +154,11 @@ def step(context, username):
     wait_for_initial_sync_to_complete(get_resource_path('/', username))
 
 
+@When('user "|any|" opens login dialog')
+def step(context, _):
+    AccountSetting.login()
+
+
 @Then('user "|any|" should be connected to the server')
 def step(context, _):
     AccountSetting.wait_until_account_is_connected()
