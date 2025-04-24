@@ -14,12 +14,12 @@ Feature: move file and folder
 
     Scenario: Move folder and file from level 5 sub-folder to sync root
         Given user "Alice" has created folder "folder1/folder2/folder3/folder4/folder5/test-folder" in the server
-        And user "Alice" has uploaded file with content "ownCloud" to "folder1/folder2/folder3/folder4/folder5/lorem.txt" in the server
+        And user "Alice" has uploaded file with content "openCloud" to "folder1/folder2/folder3/folder4/folder5/lorem.txt" in the server
         And user "Alice" has set up a client with default settings
         When user "Alice" moves file "folder1/folder2/folder3/folder4/folder5/lorem.txt" to "/" in the sync folder
         And user "Alice" moves folder "folder1/folder2/folder3/folder4/folder5/test-folder" to "/" in the sync folder
         And the user waits for the files to sync
-        Then as "Alice" the file "lorem.txt" should have the content "ownCloud" in the server
+        Then as "Alice" the file "lorem.txt" should have the content "openCloud" in the server
         And as "Alice" folder "test-folder" should exist in the server
         And as "Alice" file "folder1/folder2/folder3/folder4/folder5/lorem.txt" should not exist in the server
         And as "Alice" folder "folder1/folder2/folder3/folder4/folder5/test-folder" should not exist in the server
@@ -28,13 +28,13 @@ Feature: move file and folder
     Scenario: Move two folders and a file down to the level 5 sub-folder
         And user "Alice" has created folder "test-folder1" in the server
         And user "Alice" has created folder "test-folder2" in the server
-        And user "Alice" has uploaded file with content "ownCloud test" to "testFile.txt" in the server
+        And user "Alice" has uploaded file with content "openCloud test" to "testFile.txt" in the server
         And user "Alice" has set up a client with default settings
         When user "Alice" moves folder "test-folder1" to "folder1/folder2/folder3/folder4/folder5" in the sync folder
         And user "Alice" moves folder "test-folder2" to "folder1/folder2/folder3/folder4/folder5" in the sync folder
         And user "Alice" moves file "testFile.txt" to "folder1/folder2/folder3/folder4/folder5" in the sync folder
         And the user waits for the files to sync
-        Then as "Alice" the file "folder1/folder2/folder3/folder4/folder5/testFile.txt" should have the content "ownCloud test" in the server
+        Then as "Alice" the file "folder1/folder2/folder3/folder4/folder5/testFile.txt" should have the content "openCloud test" in the server
         And as "Alice" folder "folder1/folder2/folder3/folder4/folder5/test-folder1" should exist in the server
         And as "Alice" folder "folder1/folder2/folder3/folder4/folder5/test-folder2" should exist in the server
         And as "Alice" file "testFile.txt" should not exist in the server

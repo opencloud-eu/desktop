@@ -1,6 +1,6 @@
 Feature: Syncing files
     As a user
-    I want to be able to sync my local folders to to my owncloud server
+    I want to be able to sync my local folders to to my opencloud server
     so that I dont have to upload and download files manually
 
     Background:
@@ -76,7 +76,7 @@ Feature: Syncing files
         Then the folder "test-folder" should be present in the remote destination wizard
         When the user refreshes the remote destination in the sync connection wizard
         Then the folder "test-folder" should be present in the remote destination wizard
-        When the user selects "ownCloud" as a remote destination folder
+        When the user selects "openCloud" as a remote destination folder
         And the user disables VFS support for Windows
         Then the sync all checkbox should be checked
         When user unselects all the remote folders
@@ -99,7 +99,7 @@ Feature: Syncing files
         When the user selects manual sync folder option in advanced section
         And the user selects "Alice Hansen" space in sync connection wizard
         And the user sets the sync path in sync connection wizard
-        And the user selects "ownCloud" as a remote destination folder
+        And the user selects "openCloud" as a remote destination folder
         And the user disables VFS support for Windows
         And the user selects the following folders to sync:
             | folder        |
@@ -107,7 +107,7 @@ Feature: Syncing files
         Then the folder "simple-folder" should exist on the file system
         But the folder "large-folder" should not exist on the file system
         When user "Alice" uploads file with content "some content" to "simple-folder/lorem.txt" in the server
-        And user "Alice" uploads file with content "ownCloud" to "large-folder/lorem.txt" in the server
+        And user "Alice" uploads file with content "openCloud" to "large-folder/lorem.txt" in the server
         And user "Alice" creates a file "simple-folder/localFile.txt" with the following content inside the sync folder
             """
             test content
@@ -135,7 +135,7 @@ Feature: Syncing files
         When the user selects manual sync folder option in advanced section
         And the user selects "Alice Hansen" space in sync connection wizard
         And the user sets the sync path in sync connection wizard
-        And the user selects "ownCloud" as a remote destination folder
+        And the user selects "openCloud" as a remote destination folder
         And the user disables VFS support for Windows
         # folders are sorted by name in ascending order by default
         Then the folders should be in the following order:
@@ -459,7 +459,7 @@ Feature: Syncing files
         When the user selects manual sync folder option in advanced section
         And the user selects "Alice Hansen" space in sync connection wizard
         And the user sets the temp folder "~`!@#$^&()-_=+{[}];',)PRN%" as local sync path in sync connection wizard
-        And the user selects "ownCloud" as a remote destination folder
+        And the user selects "openCloud" as a remote destination folder
         And the user disables VFS support for Windows
         And the user selects the following folders to sync:
             | folder                  |
