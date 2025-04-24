@@ -279,39 +279,6 @@ def has_sync_status(item_name, status):
     return False
 
 
-# useful for checking sync status such as 'error', 'ignore'
-# but not quite so reliable for checking 'ok' sync status
-def wait_for_resource_to_have_sync_status(
-    resource, resource_type, status=SYNC_STATUS['OK'], timeout=None
-):
-    resource = sanitize_path(resource)
-
-    listen_sync_status_for_item(resource, resource_type)
-
-    if not timeout:
-        timeout = get_config('maxSyncTimeout') * 1000
-
-    result = squish.waitFor(
-        lambda: has_sync_status(resource, status),
-        timeout,
-    )
-
-    if not result:
-        if status == SYNC_STATUS['ERROR']:
-            expected = 'have sync error'
-        elif status == SYNC_STATUS['IGNORE']:
-            expected = 'be sync ignored'
-        else:
-            expected = 'be synced'
-        raise ValueError(
-            f'Expected {resource_type} "{resource}" to {expected}, but not.'
-        )
-
-
-def wait_for_resource_to_have_sync_error(resource, resource_type):
-    wait_for_resource_to_have_sync_status(resource, resource_type, SYNC_STATUS['ERROR'])
-
-
 # performing actions immediately after completing the sync from the server does not work
 # The test should wait for a while before performing the action
 # issue: https://github.com/owncloud/client/issues/8832
