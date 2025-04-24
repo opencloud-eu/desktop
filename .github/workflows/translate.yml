@@ -19,14 +19,14 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      TX_TOKEN: ${{ secrets.TX_TOKEN }}
+      TRANSLATIONS_BRANCH: "stable-1.0"
 
     steps:
       - uses: actions/checkout@v4
         with:
           ssh-key: ${{ secrets.DEPLOYMENT_SSH_KEY }}
           submodules: recursive
-          ref: "stable-1.0"
+          ref: ${{ env.TRANSLATIONS_BRANCH }}
 
       - name: install-deps
         run: sudo apt install -y qt6-l10n-tools
@@ -59,3 +59,4 @@ jobs:
           email: devops@opencloud.eu
           name: OpenCloud
           commit_message: "[tx] updated translations from transifex"
+          target_branch: ${{ env.TRANSLATIONS_BRANCH }}
