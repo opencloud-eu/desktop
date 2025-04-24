@@ -380,20 +380,6 @@ Feature: Syncing files
             | filename                                                                                                                                                                                                                     |
             | thisIsAVeryLongFileNameToCheckThatItWorks-thisIsAVeryLongFileNameToCheckThatItWorks-thisIsAVeryLongFileNameToCheckThatItWorks-thisIsAVeryLongFileNameToCheckThatItWorks-thisIsAVeryLongFileNameToCheckThatItWorks-thisIs.txt |
 
-    @skipOnOCIS @issue-11104
-    Scenario Outline: File with long name (233 characters) is blacklisted (oC10)
-        Given user "Alice" has set up a client with default settings
-        When user "Alice" creates a file "<filename>" with the following content inside the sync folder
-            """
-            test contents
-            """
-        And the user clicks on the activity tab
-        And the user selects "Not Synced" tab in the activity
-        Then the file "<filename>" should be blacklisted
-        Examples:
-            | filename                                                                                                                                                                                                                                  |
-            | aQuickBrownFoxJumpsOverAVeryLazyDog-aQuickBrownFoxJumpsOverAVeryLazyDog-aQuickBrownFoxJumpsOverAVeryLazyDog-aQuickBrownFoxJumpsOverAVeryLazyDog-aQuickBrownFoxJumpsOverAVeryLazyDog-aQuickBrownFoxJumpsOverAVeryLazyDog-aQuickBrownFo.txt |
-
 
     Scenario: Syncing file of 1 GB size
         Given user "Alice" has set up a client with default settings

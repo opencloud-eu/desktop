@@ -70,7 +70,6 @@ Feature: adding accounts
         Then the folder "simple-folder" should exist on the file system
 
 
-    @skipOnOC10
     Scenario: Check for suffix when sync path exists (oCIS)
         Given the user has created folder "ownCloud" in the default home path
         And the user has started the client

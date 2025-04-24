@@ -21,22 +21,3 @@ Feature:  Logout users
         When the user quits the client
         And the user starts the client
         Then user "Alice" should be connected to the server
-
-
-    @skipOnOCIS @issue-11619
-    Scenario: login, logout and restart with oauth2 authentication
-        Given app "oauth2" has been "enabled" in the server
-        And the user has started the client
-        When the user adds the following oauth2 account:
-            | server   | %local_server% |
-            | user     | Alice          |
-            | password | 1234           |
-        Then the account with displayname "Alice Hansen" and host "%local_server_hostname%" should be displayed
-        And user "Alice" should be connected to the server
-        When the user "Alice" logs out using the client-UI
-        Then user "Alice" should be signed out
-        When user "Alice" logs in using the client-UI with oauth2
-        Then user "Alice" should be connected to the server
-        When the user quits the client
-        And the user starts the client
-        Then user "Alice" should be connected to the server

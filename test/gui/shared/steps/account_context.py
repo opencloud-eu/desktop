@@ -20,6 +20,15 @@ from helpers.SyncHelper import (
 from helpers.ConfigHelper import get_config, set_config, is_windows, is_linux
 
 
+@When('the user adds the following user credentials:')
+def step(context):
+    account_details = get_client_details(context)
+    set_config('syncConnectionName', get_displayname_for_user(account_details['user']))
+    AccountConnectionWizard.add_user_credentials(
+        account_details['user'], account_details['password']
+    )
+
+
 @Then('the account with displayname "|any|" and host "|any|" should be displayed')
 def step(context, displayname, _):
     displayname = substitute_inline_codes(displayname)
@@ -140,17 +149,6 @@ def step(context, username):
     password = get_password_for_user(username)
     enter_password = EnterPassword()
     enter_password.relogin(username, password)
-
-    # wait for files to sync
-    wait_for_initial_sync_to_complete(get_resource_path('/', username))
-
-
-@When('user "|any|" logs in using the client-UI with oauth2')
-def step(context, username):
-    AccountSetting.login()
-    password = get_password_for_user(username)
-    enter_password = EnterPassword()
-    enter_password.relogin(username, password, True)
 
     # wait for files to sync
     wait_for_initial_sync_to_complete(get_resource_path('/', username))
