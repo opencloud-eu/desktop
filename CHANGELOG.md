@@ -6,4 +6,6 @@
 
 @TheOneRing
 
+### 🐛 Bug Fixes
 
+- Properly handle `server_error` response from IDP [[#236](https://github.com/opencloud-eu/desktop/pull/236)]
