@@ -1,6 +1,6 @@
 when:
   event: push
-  branch: ${CI_REPO_DEFAULT_BRANCH}
+  branch: stable-1.0
 
 steps:
   release-helper:
@@ -10,3 +10,4 @@ steps:
       forge_type: github
       forge_token:
         from_secret: github_token
+      release_branch: stable-1.0
