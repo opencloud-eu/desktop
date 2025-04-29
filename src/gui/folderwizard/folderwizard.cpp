@@ -153,11 +153,10 @@ FolderWizard::~FolderWizard()
 FolderMan::SyncConnectionDescription FolderWizard::result()
 {
     Q_D(FolderWizard);
-    const QString localPath = d->localPath();
-
     if (d->_folderWizardSourcePage) {
         d->_account->account()->setDefaultSyncRoot(d->_folderWizardSourcePage->localPath());
     }
+    const QString localPath = d->localPath();
     // the local path must be a child of defaultSyncRoot
     Q_ASSERT(FileSystem::isChildPathOf(localPath, d->defaultSyncRoot()));
 
