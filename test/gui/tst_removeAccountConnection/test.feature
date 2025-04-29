@@ -19,4 +19,5 @@ Feature: remove account connection
         Given user "Alice" has been created in the server with default attributes
         And user "Alice" has set up a client with default settings
         When the user removes the connection for user "Alice" and host %local_server_hostname%
-        Then connection wizard should be visible
+        Then the settings tab should have the following options in the general section:
+            | Start on Login |
