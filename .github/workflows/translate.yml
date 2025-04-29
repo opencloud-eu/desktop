@@ -26,7 +26,7 @@ jobs:
         with:
           ssh-key: ${{ secrets.DEPLOYMENT_SSH_KEY }}
           submodules: recursive
-          ref: "stable-1.0"
+          ref: "main"
 
       - name: install-deps
         run: sudo apt install -y qt6-l10n-tools
