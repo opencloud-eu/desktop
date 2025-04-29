@@ -279,7 +279,7 @@ Utilitaire de bureau pour la synchronisation de fichiers.</translation>
     <message>
         <location filename="../src/gui/qml/FolderDelegate.qml" line="350"/>
         <source>Remove Space</source>
-        <translation type="unfinished"/>
+        <translation>Supprimer l&apos;Espace</translation>
     </message>
     <message>
         <location filename="../src/gui/qml/FolderDelegate.qml" line="356"/>
@@ -599,17 +599,17 @@ Utilitaire de bureau pour la synchronisation de fichiers.</translation>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="176"/>
         <source>Confirm removal of Space</source>
-        <translation type="unfinished"/>
+        <translation>Confirmer la suppression de l&apos;Espace</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="177"/>
         <source>&lt;p&gt;Do you really want to stop syncing the Space &lt;i&gt;&quot;%1&quot;&lt;/i&gt;?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; This will &lt;b&gt;not&lt;/b&gt; delete any files.&lt;/p&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;p&gt;Voulez-vous vraiment arrêter la synchronisation de l&apos;Espace &lt;i&gt;&quot;%1&quot;&lt;/i&gt;?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Note :&lt;/b&gt; Cette opération &lt;b&gt;ne&lt;/b&gt; supprime aucun fichier.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="182"/>
         <source>Remove Space</source>
-        <translation type="unfinished"/>
+        <translation>Supprimer l&apos;Espace</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="213"/>
@@ -1216,7 +1216,7 @@ Veuillez envisager de supprimer ce dossier du compte et de l&apos;ajouter à nou
         <location filename="../src/gui/folderwizard/folderwizard.cpp" line="143"/>
         <location filename="../src/gui/folderwizard/folderwizard.cpp" line="145"/>
         <source>Add Space</source>
-        <translation type="unfinished"/>
+        <translation>Ajouter un Espace</translation>
     </message>
 </context>
 <context>
@@ -3176,7 +3176,7 @@ Are you sure you want to proceed?</source>
     <message>
         <location filename="../src/gui/folderwizard/spacespage.ui" line="17"/>
         <source>Choose a Space to sync</source>
-        <translation type="unfinished"/>
+        <translation>Choisir un Espace à synchroniser</translation>
     </message>
     <message>
         <location filename="../src/gui/folderwizard/spacespage.ui" line="33"/>
