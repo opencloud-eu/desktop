@@ -434,7 +434,7 @@ Utilitaire de bureau pour la synchronisation de fichiers.</translation>
     <message>
         <location filename="../src/gui/folderwizard/folderwizardtargetpage.ui" line="56"/>
         <source>Refresh</source>
-        <translation>Refresh</translation>
+        <translation>Rafraîchir</translation>
     </message>
     <message>
         <location filename="../src/gui/folderwizard/folderwizardtargetpage.ui" line="39"/>
@@ -614,7 +614,7 @@ Utilitaire de bureau pour la synchronisation de fichiers.</translation>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="213"/>
         <source>Disable virtual file support?</source>
-        <translation>Désactiver la prise en charge des fichiers virtuels ?</translation>
+        <translation>Désactiver la prise en charge des fichiers virtuels ?</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="214"/>
