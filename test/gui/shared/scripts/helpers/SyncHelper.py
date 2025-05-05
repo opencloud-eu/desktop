@@ -20,7 +20,7 @@ else:
 
     if not os.path.exists(syncstate_lib_file):
         urllib.request.urlretrieve(
-            'https://raw.github.com/opencloud-eu/desktop-shell-integration-nautilus/blob/main/src/syncstate.py',
+            'https://raw.githubusercontent.com/opencloud-eu/desktop-shell-integration-nautilus/refs/heads/main/src/syncstate.py',
             os.path.join(custom_lib, 'syncstate.py'),
         )
 
