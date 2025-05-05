@@ -831,9 +831,10 @@ void SyncEngine::slotInsufficientLocalStorage()
 
 void SyncEngine::slotInsufficientRemoteStorage()
 {
-    auto msg = tr("There is insufficient space available on the server for some uploads.");
-    if (_uniqueErrors.contains(msg))
+    const QString msg = tr("Space quota exceeded. Please contact the Administrator of this space.");
+    if (_uniqueErrors.contains(msg)) {
         return;
+    }
 
     _uniqueErrors.insert(msg);
     Q_EMIT syncError(msg, ErrorCategory::InsufficientRemoteStorage);
