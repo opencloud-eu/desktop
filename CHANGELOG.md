@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.0.1](https://github.com/opencloud-eu/desktop/releases/tag/v1.0.1) - 2025-05-05
+## [1.0.1](https://github.com/opencloud-eu/desktop/releases/tag/v1.0.1) - 2025-05-06
 
 ### ❤️ Thanks to all contributors! ❤️
 
