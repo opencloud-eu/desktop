@@ -68,7 +68,7 @@ Feature: Syncing files
             | user     | Alice          |
             | password | 1234           |
         When the user selects manual sync folder option in advanced section
-        And the user selects "Alice Hansen" space in sync connection wizard
+        And the user selects "Personal" space in sync connection wizard
         And the user sets the sync path in sync connection wizard
         And the user navigates back in the sync connection wizard
         And the user sets the temp folder "localSyncFolder" as local sync path in sync connection wizard

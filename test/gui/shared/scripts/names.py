@@ -40,7 +40,7 @@ add_Folder_Sync_Connection_OCC_FolderWizard = {"type": "OCC::FolderWizard", "unn
 add_Folder_Sync_Connection_groupBox_QGroupBox = {"name": "groupBox", "type": "QGroupBox", "visible": 1, "window": add_Folder_Sync_Connection_OCC_FolderWizard}
 add_Folder_Sync_Connection_Deselect_remote_folders_you_do_not_wish_to_synchronize_QLabel = {"text": "Deselect remote folders you do not wish to synchronize.", "type": "QLabel", "unnamed": 1, "visible": 1, "window": add_Folder_Sync_Connection_OCC_FolderWizard}
 folder_Sync_Connection_Deselect_remote_folders_QTreeWidget = {"aboveWidget": add_Folder_Sync_Connection_Deselect_remote_folders_you_do_not_wish_to_synchronize_QLabel, "type": "QTreeWidget", "unnamed": 1, "visible": 1, "window": add_Folder_Sync_Connection_OCC_FolderWizard}
-deselect_remote_folders_you_do_not_wish_to_synchronize_OpenCloud_QModelIndex = {"column": 0, "container": folder_Sync_Connection_Deselect_remote_folders_QTreeWidget, "text": "ownCloud", "type": "QModelIndex"}
+deselect_remote_folders_you_do_not_wish_to_synchronize_OpenCloud_QModelIndex = {"column": 0, "container": folder_Sync_Connection_Deselect_remote_folders_QTreeWidget, "text": "Personal", "type": "QModelIndex"}
 loginRequiredDialog_OCC_LoginRequiredDialog = {"name": "LoginRequiredDialog", "type": "OCC::LoginRequiredDialog", "visible": 1}
 loginRequiredDialog_contentWidget_QStackedWidget = {"name": "contentWidget", "type": "QStackedWidget", "visible": 1, "window": loginRequiredDialog_OCC_LoginRequiredDialog}
 contentWidget_contentWidget_QStackedWidget = {"container": setupWizardWindow_contentWidget_QStackedWidget, "name": "contentWidget", "type": "QStackedWidget", "visible": 1}
@@ -68,3 +68,4 @@ quickWidget_Overlay = {"container": stackedWidget_quickWidget_OCC_QmlUtils_OCQui
 scrollView_moreButton_Image = {"container": quickWidget_scrollView_ScrollView, "id": "moreButton", "source": "image://opencloud?theme=fontawesome&icon=&enabled=true&size=undefined", "type": "Image", "unnamed": 1, "visible": True}
 pause_sync_MenuItem = {"checkable": False, "container": quickWidget_Overlay, "enabled": True, "text": "Pause sync", "type": "MenuItem", "unnamed": 1, "visible": True}
 quit_OpenCloud_Desktop_QMessageBox = {"type": "QMessageBox", "unnamed": 1, "visible": 1, "windowTitle": "Quit OpenCloud Desktop"}
+stackedWidget_Add_Space_QGroupBox = {"container": stack_stackedWidget_QStackedWidget, "title": "Add Space", "type": "QGroupBox", "unnamed": 1, "visible": 1}
