@@ -2606,7 +2606,7 @@ Note that using any logging command line options will override the settings.</so
     </message>
     <message>
         <location filename="../src/libsync/syncengine.cpp" line="834"/>
-        <source>There is insufficient space available on the server for some uploads.</source>
+        <source>Space quota exceeded. Please contact the Administrator of this space.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
