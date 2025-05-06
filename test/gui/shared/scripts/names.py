@@ -69,3 +69,4 @@ scrollView_moreButton_Image = {"container": quickWidget_scrollView_ScrollView, "
 pause_sync_MenuItem = {"checkable": False, "container": quickWidget_Overlay, "enabled": True, "text": "Pause sync", "type": "MenuItem", "unnamed": 1, "visible": True}
 quit_OpenCloud_Desktop_QMessageBox = {"type": "QMessageBox", "unnamed": 1, "visible": 1, "windowTitle": "Quit OpenCloud Desktop"}
 stackedWidget_Add_Space_QGroupBox = {"container": stack_stackedWidget_QStackedWidget, "title": "Add Space", "type": "QGroupBox", "unnamed": 1, "visible": 1}
+add_Space_label_QLabel = {"container": stackedWidget_Add_Space_QGroupBox, "name": "label", "type": "QLabel", "visible": 1}
