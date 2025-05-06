@@ -23,9 +23,9 @@ class SyncConnectionWizard:
         "visible": 1
     }
     BACK_BUTTON = {
-        "window": names.add_Folder_Sync_Connection_OCC_FolderWizard,
+        "window": names.stackedWidget_Add_Space_QGroupBox,
+        "name": "__qt__passive_wizardbutton0",
         "type": "QPushButton",
-        "text": "< &Back",
         "visible": 1,
     }
     NEXT_BUTTON = {
