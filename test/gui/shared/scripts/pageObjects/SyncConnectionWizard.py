@@ -49,7 +49,7 @@ class SyncConnectionWizard:
         "name": "qt_wizard_finish",
         "type": "QPushButton",
         "visible": 1,
-        "window": names.add_Folder_Sync_Connection_OCC_FolderWizard,
+        "window": names.stackedWidget_Add_Space_QGroupBox,
     }
     REMOTE_FOLDER_TREE = {
         "container": names.add_Folder_Sync_Connection_groupBox_QGroupBox,
