@@ -145,9 +145,7 @@ class SyncConnectionWizard:
     @staticmethod
     def set_sync_path_ocis(sync_path):
         if not sync_path:
-            sync_path = path.join(
-                get_current_user_sync_path()
-            )
+            sync_path = get_config("syncConnectionName")
         squish.type(
             squish.waitForObject(SyncConnectionWizard.CHOOSE_LOCAL_SYNC_FOLDER),
             "<Ctrl+A>",

@@ -64,8 +64,9 @@ def create_user_sync_path(username):
     return user_sync_path.replace('\\', '/')
 
 
-def create_space_path(space='Personal'):
-    space_path = join(get_config('currentUserSyncPath'), space, '')
+def create_space_path(username, space='Personal'):
+    user_sync_path = create_user_sync_path(username)
+    space_path = join(user_sync_path, space, '')
     if not exists(space_path):
         makedirs(space_path)
     return space_path.replace('\\', '/')
@@ -156,14 +157,20 @@ def generate_account_config(users, space='Personal'):
 
     settings.beginGroup("Folders")
     for idx, username in enumerate(users):
-        user_space = space
         if space == 'Personal':
+            user_space = 'Personal'
+            sync_path = create_space_path(username, user_space)
+        else:
             user_space = get_displayname_for_user(username)
+            sync_path = create_space_path(username, user_space)
         settings.beginWriteArray(str(idx+1),len(users))
 
-        sync_path = create_space_path(user_space)
-        space_id = get_space_id(user_space, username)
-        dav_endpoint = QUrl(url_join(server_url, '/dav/spaces/', space_id))
+        if space == 'Personal':
+            dav_endpoint = QUrl(url_join(server_url, '/dav/files', username))
+        else:
+            space_id = get_space_id(user_space, username)
+            dav_endpoint = QUrl(url_join(server_url, '/dav/spaces/', space_id))
+            settings.setValue("spaceId", space_id)
         settings.setValue("accountUUID", users_uuids[username])
         settings.setValue("davUrl", dav_endpoint)
         settings.setValue("deployed", 'false')
@@ -172,7 +179,6 @@ def generate_account_config(users, space='Personal'):
         settings.setValue("localPath", sync_path)
         settings.setValue("paused", 'false')
         settings.setValue("priority", '50')
-        settings.setValue("spaceId", space_id)
         settings.setValue("virtualFilesMode", 'off')
         settings.setValue("journalPath",".sync_journal.db")
         settings.endArray()
@@ -186,10 +192,10 @@ def generate_account_config(users, space='Personal'):
     os.rename(join(get_config('clientConfigDir'), "opencloud.conf"), get_config('clientConfigFile'))
     return sync_paths
 
-def setup_client(username, space=None):
-    if not space or space == 'Personal':
+def setup_client(username, space='Personal'):
+    if space and space != 'Personal':
         space = get_displayname_for_user(username)
-        set_config('syncConnectionName', space)
+    set_config('syncConnectionName', space)
     sync_paths = generate_account_config([username], space)
     start_client()
     for _, sync_path in sync_paths.items():
