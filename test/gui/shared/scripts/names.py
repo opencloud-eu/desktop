@@ -68,9 +68,9 @@ quickWidget_Overlay = {"container": stackedWidget_quickWidget_OCC_QmlUtils_OCQui
 scrollView_moreButton_Image = {"container": quickWidget_scrollView_ScrollView, "id": "moreButton", "source": "image://opencloud?theme=fontawesome&icon=&enabled=true&size=undefined", "type": "Image", "unnamed": 1, "visible": True}
 pause_sync_MenuItem = {"checkable": False, "container": quickWidget_Overlay, "enabled": True, "text": "Pause sync", "type": "MenuItem", "unnamed": 1, "visible": True}
 quit_OpenCloud_Desktop_QMessageBox = {"type": "QMessageBox", "unnamed": 1, "visible": 1, "windowTitle": "Quit OpenCloud Desktop"}
-add_Space_qt_passive_wizardbutton1_QPushButton = {"container": stackedWidget_Add_Space_QGroupBox, "name": "__qt__passive_wizardbutton1", "type": "QPushButton", "visible": 1}
 stackedWidget_Add_Space_QGroupBox = {"container": stack_stackedWidget_QStackedWidget, "title": "Add Space", "type": "QGroupBox", "unnamed": 1, "visible": 1}
 add_Space_label_QLabel = {"container": stackedWidget_Add_Space_QGroupBox, "name": "label", "type": "QLabel", "visible": 1}
 add_Space_qt_passive_wizardbutton0_QPushButton = {"container": stackedWidget_Add_Space_QGroupBox, "name": "__qt__passive_wizardbutton0", "type": "QPushButton", "visible": 1}
 add_Space_Deselect_remote_folders_you_do_not_wish_to_synchronize_QLabel = {"container": stackedWidget_Add_Space_QGroupBox, "text": "Deselect remote folders you do not wish to synchronize.", "type": "QLabel", "unnamed": 1, "visible": 1}
 add_Space_Deselect_remote_folders_you_do_not_wish_to_synchronize_QTreeWidget = {"aboveWidget": add_Space_Deselect_remote_folders_you_do_not_wish_to_synchronize_QLabel, "container": stackedWidget_Add_Space_QGroupBox, "type": "QTreeWidget", "unnamed": 1, "visible": 1}
+add_Space_qt_passive_wizardbutton1_QPushButton = {"container": stackedWidget_Add_Space_QGroupBox, "name": "__qt__passive_wizardbutton1", "type": "QPushButton", "visible": 1}
