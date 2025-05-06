@@ -29,9 +29,9 @@ class SyncConnectionWizard:
         "visible": 1,
     }
     NEXT_BUTTON = {
-        "window": names.add_Folder_Sync_Connection_OCC_FolderWizard,
+        "window": names.stackedWidget_Add_Space_QGroupBox,
+        "name": "__qt__passive_wizardbutton1",
         "type": "QPushButton",
-        "text": "&Next >",
         "visible": 1,
     }
     SELECTIVE_SYNC_ROOT_FOLDER = {
@@ -146,7 +146,7 @@ class SyncConnectionWizard:
     def set_sync_path_ocis(sync_path):
         if not sync_path:
             sync_path = path.join(
-                get_current_user_sync_path(), get_config("syncConnectionName")
+                get_current_user_sync_path()
             )
         squish.type(
             squish.waitForObject(SyncConnectionWizard.CHOOSE_LOCAL_SYNC_FOLDER),
