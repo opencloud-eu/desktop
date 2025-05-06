@@ -114,10 +114,6 @@ def step(context):
 @Given('the user has entered the following account information:')
 def step(context):
     account_details = get_client_details(context)
-    if account_details['user']:
-        set_config(
-            'syncConnectionName', get_displayname_for_user(account_details['user'])
-        )
     AccountConnectionWizard.add_account_information(account_details)
 
 
