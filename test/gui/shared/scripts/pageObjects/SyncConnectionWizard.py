@@ -17,10 +17,10 @@ class SyncConnectionWizard:
         "window": names.add_Folder_Sync_Connection_OCC_FolderWizard,
     }
     CHOOSE_LOCAL_SYNC_FOLDER = {
+        "buddy": names.add_Space_label_QLabel,
         "name": "localFolderLineEdit",
         "type": "QLineEdit",
-        "visible": 1,
-        "window": names.add_Folder_Sync_Connection_OCC_FolderWizard,
+        "visible": 1
     }
     BACK_BUTTON = {
         "window": names.add_Folder_Sync_Connection_OCC_FolderWizard,
