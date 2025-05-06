@@ -36,8 +36,8 @@ class SyncConnectionWizard:
     }
     SELECTIVE_SYNC_ROOT_FOLDER = {
         "column": 0,
-        "container": names.folder_Sync_Connection_Deselect_remote_folders_QTreeWidget,
-        "text": "ownCloud",
+        "container": names.add_Space_Deselect_remote_folders_you_do_not_wish_to_synchronize_QTreeWidget,
+        "text": "Personal",
         "type": "QModelIndex",
     }
     SYNC_DIALOG_FOLDER_TREE = {
