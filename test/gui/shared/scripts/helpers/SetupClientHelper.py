@@ -157,18 +157,13 @@ def generate_account_config(users, space='Personal'):
 
     settings.beginGroup("Folders")
     for idx, username in enumerate(users):
-        if space == 'Personal':
-            user_space = 'Personal'
-            sync_path = create_space_path(username, user_space)
-        else:
-            user_space = space
-            sync_path = create_space_path(username, user_space)
+        sync_path = create_space_path(username, space)
         settings.beginWriteArray(str(idx+1),len(users))
 
         if space == 'Personal':
             dav_endpoint = QUrl(url_join(server_url, '/dav/files', username))
         else:
-            space_id = get_space_id(user_space, username)
+            space_id = get_space_id(space, username)
             dav_endpoint = QUrl(url_join(server_url, '/dav/spaces/', space_id))
             settings.setValue("spaceId", space_id)
         settings.setValue("accountUUID", users_uuids[username])
