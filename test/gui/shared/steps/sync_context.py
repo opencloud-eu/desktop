@@ -186,8 +186,6 @@ def step(context, folder_name):
     sync_path = get_temp_resource_path(folder_name)
     SyncConnectionWizard.set_sync_path(sync_path)
     if get_config('ocis'):
-        # empty connection name when using temporary locations
-        set_config('syncConnectionName', '')
         set_current_user_sync_path(sync_path)
 
 
