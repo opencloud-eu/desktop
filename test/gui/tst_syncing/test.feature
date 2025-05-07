@@ -97,7 +97,7 @@ Feature: Syncing files
             | user     | Alice          |
             | password | 1234           |
         When the user selects manual sync folder option in advanced section
-        And the user selects "Alice Hansen" space in sync connection wizard
+        And the user selects "Personal" space in sync connection wizard
         And the user sets the sync path in sync connection wizard
         And the user selects "openCloud" as a remote destination folder
         And the user disables VFS support for Windows
@@ -133,7 +133,7 @@ Feature: Syncing files
             | user     | Alice          |
             | password | 1234           |
         When the user selects manual sync folder option in advanced section
-        And the user selects "Alice Hansen" space in sync connection wizard
+        And the user selects "Personal" space in sync connection wizard
         And the user sets the sync path in sync connection wizard
         And the user selects "openCloud" as a remote destination folder
         And the user disables VFS support for Windows
@@ -457,7 +457,7 @@ Feature: Syncing files
             | user     | Alice          |
             | password | 1234           |
         When the user selects manual sync folder option in advanced section
-        And the user selects "Alice Hansen" space in sync connection wizard
+        And the user selects "Personal" space in sync connection wizard
         And the user sets the temp folder "~`!@#$^&()-_=+{[}];',)PRN%" as local sync path in sync connection wizard
         And the user selects "openCloud" as a remote destination folder
         And the user disables VFS support for Windows
