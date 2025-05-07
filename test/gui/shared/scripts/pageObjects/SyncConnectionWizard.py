@@ -65,7 +65,7 @@ class SyncConnectionWizard:
         "window": names.add_Folder_Sync_Connection_OCC_FolderWizard,
     }
     SELECTIVE_SYNC_TREE_HEADER = {
-        "container": names.folder_Sync_Connection_Deselect_remote_folders_QTreeWidget,
+        "container": names.add_Space_Deselect_remote_folders_you_do_not_wish_to_synchronize_QTreeWidget,
         "orientation": 1,
         "type": "QHeaderView",
         "unnamed": 1,
