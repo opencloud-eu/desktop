@@ -161,7 +161,7 @@ def generate_account_config(users, space='Personal'):
             user_space = 'Personal'
             sync_path = create_space_path(username, user_space)
         else:
-            user_space = get_displayname_for_user(username)
+            user_space = space
             sync_path = create_space_path(username, user_space)
         settings.beginWriteArray(str(idx+1),len(users))
 
@@ -193,8 +193,6 @@ def generate_account_config(users, space='Personal'):
     return sync_paths
 
 def setup_client(username, space='Personal'):
-    if space and space != 'Personal':
-        space = get_displayname_for_user(username)
     set_config('syncConnectionName', space)
     sync_paths = generate_account_config([username], space)
     start_client()
