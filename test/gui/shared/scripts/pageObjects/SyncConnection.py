@@ -52,11 +52,11 @@ class SyncConnection:
         "window": names.confirm_Folder_Sync_Connection_Removal_QMessageBox,
     }
     REMOVE_FOLDER_SYNC_CONNECTION_BUTTON = {
-        "text": "Remove Folder Sync Connection",
+        "text": "Remove Space",
         "type": "QPushButton",
         "unnamed": 1,
         "visible": 1,
-        "window": names.confirm_Folder_Sync_Connection_Removal_QMessageBox,
+        "window": names.confirm_removal_of_Space_QMessageBox,
     }
 
     @staticmethod
@@ -148,7 +148,7 @@ class SyncConnection:
 
     @staticmethod
     def remove_folder_sync_connection():
-        SyncConnection.perform_action("Remove folder sync connection")
+        SyncConnection.perform_action("Remove Space")
 
     @staticmethod
     def cancel_folder_sync_connection_removal():

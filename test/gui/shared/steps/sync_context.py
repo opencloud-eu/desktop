@@ -287,16 +287,6 @@ def step(context, folder_name):
         test.compare(True, has_folder, 'Folder should be in the remote list')
 
 
-@When('the user selects remove folder sync connection option')
-def step(context):
-    SyncConnection.remove_folder_sync_connection()
-
-
-@When('the user cancels the folder sync connection removal dialog')
-def step(context):
-    SyncConnection.cancel_folder_sync_connection_removal()
-
-
 @When('the user removes the folder sync connection')
 def step(context):
     SyncConnection.remove_folder_sync_connection()
