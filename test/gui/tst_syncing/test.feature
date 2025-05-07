@@ -479,9 +479,7 @@ Feature: Syncing files
     Scenario: remove folder sync connection
         Given user "Alice" has created folder "simple-folder" in the server
         And user "Alice" has set up a client with default settings
-        When the user selects remove folder sync connection option
-        And the user cancels the folder sync connection removal dialog
-        And the user removes the folder sync connection
+        When the user removes the folder sync connection
         Then the sync folder list should be empty
         And the folder "simple-folder" should exist on the file system
         And as "Alice" folder "simple-folder" should exist in the server
