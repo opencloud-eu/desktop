@@ -159,7 +159,6 @@ private:
 Q_SIGNALS:
     void stateChanged(State state);
     void isConnectedChanged();
-    void urlUpdated();
     void isSettingUpChanged();
 
 protected Q_SLOTS:
