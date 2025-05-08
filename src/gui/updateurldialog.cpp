@@ -31,12 +31,13 @@ UpdateUrlDialog::UpdateUrlDialog(const QString &title, const QString &content, c
         // need to show the dialog before accepting the change
         // hence using a timer to run the code on the main loop
         QTimer::singleShot(0, [this]() {
-            accept();
+            Q_EMIT unchanged();
+            close();
         });
         return;
     }
 
-    addButton(tr("Change URL permanently to %1").arg(_newUrl.toString()), QMessageBox::AcceptRole);
+    addButton(tr("Change URL permanently to %1, this will cause the application to restart.").arg(_newUrl.toString()), QMessageBox::AcceptRole);
     addButton(tr("Reject"), QMessageBox::RejectRole);
 }
 
