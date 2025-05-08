@@ -32,8 +32,6 @@ public:
     ETagWatcher(FolderMan *folderMan, QObject *parent);
 
 private:
-    void updateEtag(Folder *f, const QString &etag);
-
     FolderMan *_folderMan;
 
     std::unordered_map<Folder *, QString> _lastEtagJob;
