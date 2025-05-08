@@ -36,6 +36,10 @@ public:
 
     explicit UpdateUrlDialog(const QString &title, const QString &content, const QUrl &oldUrl, const QUrl &newUrl, QWidget *parent = nullptr);
 
+Q_SIGNALS:
+    // this is emitted if the urls where equal
+    void unchanged();
+
 private:
     QUrl _oldUrl;
     QUrl _newUrl;

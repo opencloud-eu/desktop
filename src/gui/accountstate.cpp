@@ -29,6 +29,7 @@
 #include "gui/settingsdialog.h"
 #include "gui/tlserrordialog.h"
 
+#include "common/restartmanager.h"
 #include "logger.h"
 #include "socketapi/socketapi.h"
 #include "theme.h"
@@ -64,10 +65,15 @@ UpdateUrlDialog *AccountState::updateUrlDialog(const QUrl &newUrl)
 
     _updateUrlDialog = UpdateUrlDialog::fromAccount(_account, newUrl, ocApp()->settingsDialog());
 
+    connect(_updateUrlDialog, &UpdateUrlDialog::unchanged, this, [newUrl, this]() {
+        _account->setUrl(newUrl);
+        Q_EMIT _account->wantsAccountSaved(_account.data());
+    });
     connect(_updateUrlDialog, &UpdateUrlDialog::accepted, this, [newUrl, this]() {
         _account->setUrl(newUrl);
         Q_EMIT _account->wantsAccountSaved(_account.data());
-        Q_EMIT urlUpdated();
+        // reload the spaces
+        RestartManager::requestRestart();
     });
 
     ocApp()->showSettings();
@@ -97,16 +103,8 @@ AccountState::AccountState(AccountPtr account)
         this, [this] {
             checkConnectivity(true);
         });
-    connect(account.data(), &Account::requestUrlUpdate, this, &AccountState::updateUrlDialog);
-    connect(this, &AccountState::urlUpdated, this, [this] {
-        checkConnectivity(false);
-    });
+
     connect(account.data(), &Account::requestUrlUpdate, this, &AccountState::updateUrlDialog, Qt::QueuedConnection);
-    connect(
-        this, &AccountState::urlUpdated, this, [this] {
-            checkConnectivity(false);
-        },
-        Qt::QueuedConnection);
 
     connect(NetworkInformation::instance(), &NetworkInformation::reachabilityChanged, this, [this](NetworkInformation::Reachability reachability) {
         switch (reachability) {
