@@ -27,12 +27,8 @@ Pane {
     Accessible.name: qsTr("Navigation bar")
 
     Component.onCompleted: {
-        // TODO: Re enable with Qt 6.6.3
-        // https://github.com/opencloud-eu/desktop/issues/222
-        if (Qt.platform.os !== "linux") {
-            if ('popupType' in ToolTip.toolTip) {
-                ToolTip.toolTip.popupType = Popup.Native;
-            }
+        if ('popupType' in ToolTip.toolTip) {
+            ToolTip.toolTip.popupType = Popup.Native;
         }
     }
 
