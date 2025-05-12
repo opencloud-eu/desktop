@@ -63,4 +63,19 @@ protected:
 private:
     QWidget *_parentFocusWidget;
 };
+
+
+class OCUtils : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(QString qVersion READ qVersion CONSTANT)
+    QML_SINGLETON
+    QML_ELEMENT
+public:
+    using QObject::QObject;
+
+    QString qVersion() const;
+
+    Q_INVOKABLE int compareQVersion(int major, int minor, int patch) const;
+};
 }
