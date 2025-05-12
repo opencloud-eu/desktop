@@ -80,3 +80,13 @@ bool OCC::QmlUtils::OCQuickWidget::event(QEvent *event)
     }
     return QQuickWidget::event(event);
 }
+
+QString OCC::QmlUtils::OCUtils::qVersion() const
+{
+    return QString::fromUtf8(::qVersion());
+}
+
+int OCC::QmlUtils::OCUtils::compareQVersion(int major, int minor, int patch) const
+{
+    return QVersionNumber::compare(QVersionNumber(QT_VERSION_MAJOR, QT_VERSION_MINOR, QT_VERSION_PATCH), QVersionNumber(major, minor, patch));
+}
