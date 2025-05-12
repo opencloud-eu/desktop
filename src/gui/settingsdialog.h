@@ -29,7 +29,6 @@ namespace Ui {
 class AccountSettings;
 class Application;
 class FolderMan;
-class ownCloudGui;
 class ActivitySettings;
 class GeneralSettings;
 
