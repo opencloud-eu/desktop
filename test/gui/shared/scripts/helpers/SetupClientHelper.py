@@ -15,7 +15,7 @@ from helpers.SyncHelper import listen_sync_status_for_item
 from helpers.api.utils import url_join
 from helpers.UserHelper import get_displayname_for_user, get_password_for_user
 from helpers.ReportHelper import is_video_enabled
-from helpers.api import ocis
+from helpers.api import provisioning
 
 
 
@@ -80,9 +80,8 @@ def get_resource_path(resource='', user='', space=''):
     sync_path = get_config('currentUserSyncPath')
     if user:
         sync_path = user
-    if get_config('ocis'):
-        space = space or get_config('syncConnectionName')
-        sync_path = join(sync_path, space)
+    space = space or get_config('syncConnectionName')
+    sync_path = join(sync_path, space)
     sync_path = join(get_config('clientRootSyncPath'), sync_path)
     resource = resource.replace(sync_path, '').strip('/').strip('\\')
     if is_windows():
@@ -136,7 +135,7 @@ def generate_account_config(users, space='Personal'):
     settings = QSettings("OpenCloud", "opencloud")
     users_uuids = {}
     server_url = get_config('localBackendUrl')
-    capabilities = ocis.get_capabilities()
+    capabilities = provisioning.get_capabilities()
     capabilities_variant = QJsonValue(capabilities).toVariant()
 
     for idx, username in enumerate(users):

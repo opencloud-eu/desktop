@@ -40,12 +40,6 @@ class AccountConnectionWizard:
         "type": "TextField",
         "visible": True,
     }
-    PASSWORD_BOX = {
-        "container": names.contentWidget_OCC_QmlUtils_OCQuickWidget,
-        "id": "passwordField",
-        "type": "TextField",
-        "visible": True,
-    }
     SELECT_LOCAL_FOLDER = {
         "container": names.advancedConfigGroupBox_localDirectoryGroupBox_QGroupBox,
         "name": "localDirectoryLineEdit",
@@ -70,11 +64,6 @@ class AccountConnectionWizard:
         "type": "QLabel",
         "visible": 1,
         "window": names.setupWizardWindow_OCC_Wizard_SetupWizardWindow,
-    }
-    BASIC_CREDENTIAL_PAGE = {
-        "container": names.contentWidget_contentWidget_QStackedWidget,
-        "type": "OCC::Wizard::BasicCredentialsSetupWizardPage",
-        "visible": 1,
     }
     OAUTH_CREDENTIAL_PAGE = {
         "container": names.contentWidget_contentWidget_QStackedWidget,
@@ -129,44 +118,17 @@ class AccountConnectionWizard:
         )
         AccountConnectionWizard.next_step()
 
-        if not get_config("ocis"):
-            try:
-                squish.clickButton(
-                    squish.waitForObject(
-                        AccountConnectionWizard.CONFIRM_INSECURE_CONNECTION_BUTTON, 1000
-                    )
-                )
-            except:
-                test.log("No insecure connection warning for server " + server_url)
-
     @staticmethod
     def accept_certificate():
         squish.clickButton(squish.waitForObject(EnterPassword.ACCEPT_CERTIFICATE_YES))
 
     @staticmethod
-    def add_user_credentials(username, password, oauth=False):
-        if get_config("ocis"):
-            AccountConnectionWizard.oidc_login(username, password)
-        elif oauth:
-            AccountConnectionWizard.oauth_login(username, password)
-        else:
-            AccountConnectionWizard.basic_login(username, password)
-
-    @staticmethod
-    def basic_login(username, password):
-        squish.mouseClick(squish.waitForObject(AccountConnectionWizard.USERNAME_BOX))
-        squish.nativeType(username)
-        squish.mouseClick(squish.waitForObject(AccountConnectionWizard.PASSWORD_BOX))
-        squish.nativeType(password)
-        AccountConnectionWizard.next_step()
+    def add_user_credentials(username, password):
+        AccountConnectionWizard.oidc_login(username, password)
 
     @staticmethod
     def oidc_login(username, password):
         AccountConnectionWizard.browser_login(username, password, "oidc")
-
-    @staticmethod
-    def oauth_login(username, password):
-        AccountConnectionWizard.browser_login(username, password, "oauth")
 
     @staticmethod
     def browser_login(username, password, login_type=None):
@@ -226,13 +188,11 @@ class AccountConnectionWizard:
     def add_account_information(account_details):
         if account_details["server"]:
             AccountConnectionWizard.add_server(account_details["server"])
-            if get_config("ocis"):
-                AccountConnectionWizard.accept_certificate()
+            AccountConnectionWizard.accept_certificate()
         if account_details["user"]:
             AccountConnectionWizard.add_user_credentials(
                 account_details["user"],
                 account_details["password"],
-                account_details["oauth"],
             )
         sync_path = ""
         if account_details["sync_folder"]:
@@ -286,10 +246,7 @@ class AccountConnectionWizard:
     def is_credential_window_visible():
         visible = False
         try:
-            if get_config("ocis"):
-                squish.waitForObject(AccountConnectionWizard.OAUTH_CREDENTIAL_PAGE)
-            else:
-                squish.waitForObject(AccountConnectionWizard.BASIC_CREDENTIAL_PAGE)
+            squish.waitForObject(AccountConnectionWizard.OAUTH_CREDENTIAL_PAGE)
             visible = True
         except:
             pass

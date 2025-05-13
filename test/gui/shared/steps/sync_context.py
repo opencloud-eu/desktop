@@ -168,10 +168,9 @@ def step(context):
 
 @When('the user selects "|any|" space in sync connection wizard')
 def step(context, space_name):
-    if get_config('ocis'):
-        SyncConnectionWizard.select_space(space_name)
-        SyncConnectionWizard.next_step()
-        set_config('syncConnectionName', space_name)
+    SyncConnectionWizard.select_space(space_name)
+    SyncConnectionWizard.next_step()
+    set_config('syncConnectionName', space_name)
 
 
 @When('the user sets the sync path in sync connection wizard')
@@ -185,15 +184,7 @@ def step(context):
 def step(context, folder_name):
     sync_path = get_temp_resource_path(folder_name)
     SyncConnectionWizard.set_sync_path(sync_path)
-    if get_config('ocis'):
-        set_current_user_sync_path(sync_path)
-
-
-@When('the user selects "|any|" as a remote destination folder')
-def step(context, folder_name):
-    # There's no remote destination section with oCIS server
-    if not get_config('ocis'):
-        SyncConnectionWizard.select_remote_destination_folder(folder_name)
+    set_current_user_sync_path(sync_path)
 
 
 @When('the user syncs the "|any|" space')
@@ -264,27 +255,6 @@ def step(context):
 @When('the user navigates back in the sync connection wizard')
 def step(context):
     SyncConnectionWizard.back()
-
-
-@When('the user creates a folder "|any|" in the remote destination wizard')
-def step(context, folder_name):
-    if not get_config('ocis'):
-        SyncConnectionWizard.create_folder_in_remote_destination(folder_name)
-
-
-@When('the user refreshes the remote destination in the sync connection wizard')
-def step(context):
-    if not get_config('ocis'):
-        SyncConnectionWizard.refresh_remote()
-
-
-@Then('the folder "|any|" should be present in the remote destination wizard')
-def step(context, folder_name):
-    if not get_config('ocis'):
-        has_folder, folder_selector = SyncConnectionWizard.has_remote_folder(
-            folder_name
-        )
-        test.compare(True, has_folder, 'Folder should be in the remote list')
 
 
 @When('the user removes the folder sync connection')

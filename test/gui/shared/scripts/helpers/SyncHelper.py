@@ -143,8 +143,7 @@ def get_initial_sync_patterns():
 def get_synced_pattern(resource=''):
     # get only the resource path
     sync_path = get_config('currentUserSyncPath')
-    if get_config('ocis'):
-        sync_path = os.path.join(sync_path, get_config('syncConnectionName'))
+    sync_path = os.path.join(sync_path, get_config('syncConnectionName'))
 
     if resource := resource.replace(sync_path, '').strip('\\').strip('/'):
         return SYNC_PATTERNS['single_synced']

@@ -23,18 +23,6 @@ class EnterPassword:
         "visible": 1,
         "window": LOGIN_CONTAINER,
     }
-    PASSWORD_BOX = {
-        "container": names.groupBox_OCC_QmlUtils_OCQuickWidget,
-        "id": "passwordField",
-        "type": "TextField",
-        "visible": True,
-    }
-    LOGIN_BUTTON = {
-        "container": names.groupBox_OCC_QmlUtils_OCQuickWidget,
-        "id": "loginButton",
-        "type": "Button",
-        "visible": True,
-    }
     LOGOUT_BUTTON = {
         "container": names.groupBox_OCC_QmlUtils_OCQuickWidget,
         "id": "logOutButton",
@@ -60,7 +48,7 @@ class EnterPassword:
     }
 
     def __init__(self, occurrence=1):
-        if occurrence > 1 and get_config("ocis"):
+        if occurrence > 1:
             self.TLS_CERT_WINDOW.update({"occurrence": occurrence})
 
     def get_username(self):
@@ -69,39 +57,17 @@ class EnterPassword:
         username = label.split(" ", maxsplit=2)[1]
         return username.capitalize()
 
-    def enter_password(self, password):
-        squish.waitForObjectExists(
-            self.PASSWORD_BOX, get_config("minSyncTimeout") * 1000
-        )
-        squish.mouseClick(squish.waitForObjectExists(self.PASSWORD_BOX))
-        squish.nativeType(password)
-        squish.mouseClick(squish.waitForObjectExists(self.LOGIN_BUTTON))
-
     def oidc_relogin(self, username, password):
         # wait 500ms for copy button to fully load
         squish.snooze(1 / 2)
         squish.mouseClick(squish.waitForObject(self.COPY_URL_TO_CLIPBOARD_BUTTON))
         authorize_via_webui(username, password)
 
-    def oauth_relogin(self, username, password):
-        # wait 500ms for copy button to fully load
-        squish.snooze(1 / 2)
-        squish.mouseClick(squish.waitForObject(self.COPY_URL_TO_CLIPBOARD_BUTTON))
-        authorize_via_webui(username, password, "oauth")
-
     def relogin(self, username, password, oauth=False):
-        if get_config("ocis"):
-            self.oidc_relogin(username, password)
-        elif oauth:
-            self.oauth_relogin(username, password)
-        else:
-            self.enter_password(password)
+        self.oidc_relogin(username, password)
 
     def login_after_setup(self, username, password):
-        if get_config("ocis"):
-            self.oidc_relogin(username, password)
-        else:
-            self.enter_password(password)
+        self.oidc_relogin(username, password)
 
     def accept_certificate(self):
         squish.clickButton(squish.waitForObject(self.ACCEPT_CERTIFICATE_YES))
