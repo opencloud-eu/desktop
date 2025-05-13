@@ -42,8 +42,7 @@ def step(context, user, space_name):
     password = get_password_for_user(user)
     setup_client(user, space_name)
     enter_password = EnterPassword()
-    if get_config('ocis'):
-        enter_password.accept_certificate()
+    enter_password.accept_certificate()
     enter_password.login_after_setup(user, password)
     # wait for files to sync
     wait_for_initial_sync_to_complete(get_resource_path('/', user, space_name))

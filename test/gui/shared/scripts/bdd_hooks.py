@@ -22,7 +22,7 @@ from datetime import datetime
 from helpers.StacktraceHelper import get_core_dumps, generate_stacktrace
 from helpers.SyncHelper import close_socket_connection, clear_waited_after_sync
 from helpers.SpaceHelper import delete_project_spaces
-from helpers.api.provisioning import delete_created_groups, delete_created_users
+from helpers.api.provisioning import delete_created_users
 from helpers.SetupClientHelper import wait_until_app_killed, unlock_keyring
 from helpers.ConfigHelper import (
     init_config,
@@ -34,7 +34,6 @@ from helpers.ConfigHelper import (
 )
 from helpers.FilesHelper import prefix_path_namespace, cleanup_created_paths
 from helpers.ReportHelper import save_video_recording, take_screenshot, is_video_enabled
-import helpers.api.oc10 as oc
 
 from pageObjects.Toolbar import Toolbar
 from pageObjects.AccountSetting import AccountSetting
@@ -70,7 +69,7 @@ def hook(context):
 # Order: 2
 @OnScenarioStart
 def hook(context):
-    # set owncloud config file path
+    # set opencloud config file path
     config_dir = get_config("clientConfigDir")
     if os.path.exists(config_dir):
         if len(os.listdir(config_dir)) and is_windows():
@@ -170,11 +169,7 @@ def hook(context):
 # server cleanup
 @OnScenarioEnd
 def hook(context):
-    if get_config("ocis"):
-        delete_project_spaces()
-    else:
-        oc.restore_apps_state()
-    delete_created_groups()
+    delete_project_spaces()
     delete_created_users()
 
 

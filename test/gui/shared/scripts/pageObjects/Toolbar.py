@@ -42,12 +42,6 @@ class Toolbar:
         "type": "AccountButton",
         "visible": True,
     }
-    QUIT_CONFIRMATION_DIALOG = {
-        "type": "QMessageBox",
-        "unnamed": 1,
-        "visible": 1,
-        "windowTitle": "Quit ownCloud",
-    }
     CONFIRM_QUIT_BUTTON = {
         "text": "Yes",
         "type": "QPushButton",
@@ -101,7 +95,7 @@ class Toolbar:
         squish.mouseClick(squish.waitForObject(Toolbar.SETTINGS_BUTTON))
 
     @staticmethod
-    def quit_owncloud():
+    def quit_opencloud():
         squish.mouseClick(squish.waitForObject(Toolbar.QUIT_BUTTON))
         squish.clickButton(squish.waitForObject(Toolbar.CONFIRM_QUIT_BUTTON))
         for ctx in squish.applicationContextList():

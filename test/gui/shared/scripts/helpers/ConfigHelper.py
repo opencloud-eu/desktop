@@ -74,7 +74,6 @@ CONFIG_ENV_MAP = {
     'tempFolderPath': 'TEMP_FOLDER_PATH',
     'clientConfigDir': 'CLIENT_CONFIG_DIR',
     'guiTestReportDir': 'GUI_TEST_REPORT_DIR',
-    'ocis': 'OCIS',
     'record_video_on_failure': 'RECORD_VIDEO_ON_FAILURE'
 }
 
@@ -97,7 +96,6 @@ CONFIG = {
     'tempFolderPath': os.path.join(get_client_root_path(), 'temp'),
     'clientConfigDir': get_config_home(),
     'guiTestReportDir': os.path.abspath('../reports'),
-    'ocis': False,
     'record_video_on_failure': False,
     'files_for_upload': os.path.join(CURRENT_DIR.parent.parent, 'files-for-upload'),
     'syncConnectionName': 'Personal'
@@ -115,7 +113,7 @@ def read_cfg_file(cfg_path):
         for key, _ in CONFIG.items():
             if key in CONFIG_ENV_MAP:
                 if value := cfg.get('DEFAULT', CONFIG_ENV_MAP[key]):
-                    if key in ('ocis', 'record_video_on_failure'):
+                    if key == 'record_video_on_failure':
                         CONFIG[key] = value == 'true'
                     else:
                         CONFIG[key] = value
@@ -135,7 +133,7 @@ def init_config():
     # read and override configs from environment variables
     for key, value in CONFIG_ENV_MAP.items():
         if os.environ.get(value):
-            if key in ('ocis', 'record_video_on_failure'):
+            if key == 'record_video_on_failure':
                 CONFIG[key] = os.environ.get(value) == 'true'
             else:
                 CONFIG[key] = os.environ.get(value)

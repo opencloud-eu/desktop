@@ -54,8 +54,7 @@ def step(context, username):
     password = get_password_for_user(username)
     setup_client(username)
     enter_password = EnterPassword()
-    if get_config('ocis'):
-        enter_password.accept_certificate()
+    enter_password.accept_certificate()
 
     enter_password.login_after_setup(username, password)
 
@@ -70,11 +69,10 @@ def step(context):
         users.append(row[0])
     sync_paths = generate_account_config(users)
     start_client()
-    if get_config('ocis'):
-        # accept certificate for each user
-        for idx, _ in enumerate(users):
-            enter_password = EnterPassword(len(users) - idx)
-            enter_password.accept_certificate()
+    # accept certificate for each user
+    for idx, _ in enumerate(users):
+        enter_password = EnterPassword(len(users) - idx)
+        enter_password.accept_certificate()
 
     for idx, _ in enumerate(sync_paths.values()):
         # login from last dialog
@@ -263,7 +261,7 @@ def step(context):
 
 @When('the user quits the client')
 def step(context):
-    Toolbar.quit_owncloud()
+    Toolbar.quit_opencloud()
 
 
 @Then('"|any|" account should be opened')

@@ -10,12 +10,6 @@ from helpers.ConfigHelper import get_config
 
 
 class SyncConnectionWizard:
-    ADD_FOLDER_SYNC_CONNECTION_WIZARD = {
-        "name": "FolderWizardSourcePage",
-        "type": "OCC::FolderWizardLocalPath",
-        "visible": 1,
-        "window": names.add_Folder_Sync_Connection_OCC_FolderWizard,
-    }
     CHOOSE_LOCAL_SYNC_FOLDER = {
         "buddy": names.add_Space_label_QLabel,
         "name": "localFolderLineEdit",
