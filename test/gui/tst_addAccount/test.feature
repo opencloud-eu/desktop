@@ -70,7 +70,7 @@ Feature: adding accounts
         Then the folder "simple-folder" should exist on the file system
 
 
-    Scenario: Check for suffix when sync path exists (oCIS)
+    Scenario: Check for suffix when sync path exists
         Given the user has created folder "OpenCloud" in the default home path
         And the user has started the client
         And the user has entered the following account information:

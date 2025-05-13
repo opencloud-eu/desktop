@@ -29,7 +29,7 @@ test.beforeEach(async ({ page }) => {
   await page.goto(config.auth_url);
 });
 
-test("oCIS login @oidc", async ({ page }) => {
+test("oc login @oidc", async ({ page }) => {
   // login
   await page.fill("#oc-login-username", config.username);
   await page.fill("#oc-login-password", config.password);
@@ -38,17 +38,4 @@ test("oCIS login @oidc", async ({ page }) => {
   await page.click("button >> text=Allow");
   // confirm successful login
   await page.waitForSelector("text=Login Successful");
-});
-
-test("oC10 login @oauth", async ({ page }) => {
-  // login
-  await page.fill("#user", config.username);
-  await page.fill("#password", config.password);
-  await page.click("button[type=submit]");
-  // authorize
-  await page.click("button >> text=Authorize");
-  // confirm successful login
-  await expect(page.locator("span.error")).toContainText(
-    "The application was authorized successfully"
-  );
 });
