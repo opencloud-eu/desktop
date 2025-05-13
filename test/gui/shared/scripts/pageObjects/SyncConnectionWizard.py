@@ -123,7 +123,7 @@ class SyncConnectionWizard:
     }
 
     @staticmethod
-    def set_sync_path_ocis(sync_path):
+    def set_sync_path_oc(sync_path):
         if not sync_path:
             sync_path = get_current_user_sync_path()
         squish.type(
@@ -138,7 +138,7 @@ class SyncConnectionWizard:
 
     @staticmethod
     def set_sync_path(sync_path=""):
-        SyncConnectionWizard.set_sync_path_ocis(sync_path)
+        SyncConnectionWizard.set_sync_path_oc(sync_path)
 
     @staticmethod
     def next_step():
@@ -286,40 +286,6 @@ class SyncConnectionWizard:
     @staticmethod
     def refresh_remote():
         squish.clickButton(squish.waitForObject(SyncConnectionWizard.REFRESH_BUTTON))
-
-    @staticmethod
-    def generate_remote_folder_selector(folder_name, parent_container=None):
-        if not parent_container:
-            parent_container = {
-                "container": names.groupBox_folderTreeWidget_QTreeWidget,
-                "text": "ownCloud",
-                "type": "QModelIndex",
-            }
-        return {
-            "container": parent_container,
-            "text": folder_name,
-            "type": "QModelIndex",
-        }
-
-    @staticmethod
-    def has_remote_folder(folder_name):
-        folder_tree = folder_name.strip("/").split("/")
-        parent_container = None
-
-        for folder in folder_tree:
-            folder_selector = SyncConnectionWizard.generate_remote_folder_selector(
-                folder, parent_container
-            )
-            try:
-                if parent_container:
-                    squish.doubleClick(parent_container)
-
-                squish.waitForObject(folder_selector)
-
-                parent_container = folder_selector
-            except:
-                return False, None
-        return True, parent_container
 
     @staticmethod
     def is_remote_folder_selected(folder_selector):
