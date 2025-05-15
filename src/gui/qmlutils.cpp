@@ -40,16 +40,18 @@ void OCC::QmlUtils::OCQuickWidget::setOCContext(const QUrl &src, QWidget *parent
     setResizeMode(QQuickWidget::SizeRootObjectToView);
 
     // Ensure the parent widget used OC_DECLARE_WIDGET_FOCUS
-    Q_ASSERT(parentFocusWidget->metaObject()->indexOfMethod("focusNext()") != -1);
-    Q_ASSERT(parentFocusWidget->metaObject()->indexOfMethod("focusPrevious()") != -1);
-    _parentFocusWidget = parentFocusWidget;
+    if (parentFocusWidget) {
+        Q_ASSERT(parentFocusWidget->metaObject()->indexOfMethod("focusNext()") != -1);
+        Q_ASSERT(parentFocusWidget->metaObject()->indexOfMethod("focusPrevious()") != -1);
+        _parentFocusWidget = parentFocusWidget;
+    }
 
     setSource(src);
     if (!errors().isEmpty()) {
         auto box = new QMessageBox(QMessageBox::Critical, QStringLiteral("QML Error"), QDebug::toString(errors()));
         box->setAttribute(Qt::WA_DeleteOnClose);
         box->exec();
-        qFatal("A qml error occured %s", qPrintable(QDebug::toString(errors())));
+        qFatal("A qml error occurred %s", qPrintable(QDebug::toString(errors())));
     }
 }
 

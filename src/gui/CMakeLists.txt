@@ -115,6 +115,8 @@ ecm_add_qml_module(OpenCloudGui
             qml/FolderDelegate.qml
             qml/FolderError.qml
 
+            qml/UpdateUrlDialog.qml
+
             qml/credentials/Credentials.qml
             qml/credentials/OAuthCredentials.qml
 

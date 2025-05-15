@@ -15,10 +15,10 @@
 
 #include "accountstate.h"
 #include "account.h"
-#include "accountmanager.h"
 #include "application.h"
 #include "configfile.h"
 #include "fetchserversettings.h"
+#include "fonticon.h"
 #include "guiutility.h"
 
 #include "libsync/creds/abstractcredentials.h"
@@ -29,12 +29,11 @@
 #include "gui/settingsdialog.h"
 #include "gui/tlserrordialog.h"
 
-#include "common/restartmanager.h"
 #include "logger.h"
 #include "socketapi/socketapi.h"
 #include "theme.h"
 
-#include <QFontMetrics>
+#include <QMessageBox>
 #include <QRandomGenerator>
 #include <QSettings>
 #include <QTimer>
@@ -54,33 +53,6 @@ namespace OCC {
 
 Q_LOGGING_CATEGORY(lcAccountState, "gui.account.state", QtInfoMsg)
 
-// Returns the dialog when one is shown, so callers can attach to signals. If no dialog is shown
-// (because there is one already, or the new URL matches the current URL), a nullptr is returned.
-UpdateUrlDialog *AccountState::updateUrlDialog(const QUrl &newUrl)
-{
-    // guard to prevent multiple dialogs
-    if (_updateUrlDialog) {
-        return nullptr;
-    }
-
-    _updateUrlDialog = UpdateUrlDialog::fromAccount(_account, newUrl, ocApp()->settingsDialog());
-
-    connect(_updateUrlDialog, &UpdateUrlDialog::unchanged, this, [newUrl, this]() {
-        _account->setUrl(newUrl);
-        Q_EMIT _account->wantsAccountSaved(_account.data());
-    });
-    connect(_updateUrlDialog, &UpdateUrlDialog::accepted, this, [newUrl, this]() {
-        _account->setUrl(newUrl);
-        Q_EMIT _account->wantsAccountSaved(_account.data());
-        // reload the spaces
-        RestartManager::requestRestart();
-    });
-
-    ocApp()->showSettings();
-    _updateUrlDialog->open();
-
-    return _updateUrlDialog;
-}
 
 AccountState::AccountState(AccountPtr account)
     : QObject()
@@ -104,7 +76,6 @@ AccountState::AccountState(AccountPtr account)
             checkConnectivity(true);
         });
 
-    connect(account.data(), &Account::requestUrlUpdate, this, &AccountState::updateUrlDialog, Qt::QueuedConnection);
 
     connect(NetworkInformation::instance(), &NetworkInformation::reachabilityChanged, this, [this](NetworkInformation::Reachability reachability) {
         switch (reachability) {

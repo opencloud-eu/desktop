@@ -18,6 +18,7 @@
 #include "gui/connectionvalidator.h"
 #include "gui/networkinformation.h"
 
+#include "libsync/account.h"
 #include "libsync/networkjobs/jsonjob.h"
 
 

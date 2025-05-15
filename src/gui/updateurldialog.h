@@ -16,33 +16,40 @@
 
 #include "account.h"
 
-#include <QMessageBox>
-#include <QUrl>
-#include <QWidget>
+#include "gui/accountmodalwidget.h"
 
 namespace OCC {
 
 /**
  * Compares two given URLs.
  * In case they differ, it asks the user whether they want to accept the change.
- * Otherwise, no dialog will be shown, and accept() will be emitted.
- * This special dialog cleans itself up one hidden.
  */
-class UpdateUrlDialog : public QMessageBox
+class UpdateUrlDialog : public QmlUtils::OCQuickWidget
 {
     Q_OBJECT
+    Q_PROPERTY(QUrl oldUrl MEMBER _oldUrl CONSTANT)
+    Q_PROPERTY(QUrl newUrl MEMBER _newUrl CONSTANT)
+    Q_PROPERTY(QString content MEMBER _content CONSTANT)
+    Q_PROPERTY(bool requiresRestart MEMBER _requiresRestart NOTIFY requiresRestartChanged)
+    QML_ELEMENT
+    QML_UNCREATABLE("C++ only")
 public:
     static UpdateUrlDialog *fromAccount(AccountPtr account, const QUrl &newUrl, QWidget *parent = nullptr);
 
     explicit UpdateUrlDialog(const QString &title, const QString &content, const QUrl &oldUrl, const QUrl &newUrl, QWidget *parent = nullptr);
 
 Q_SIGNALS:
-    // this is emitted if the urls where equal
-    void unchanged();
+    void accepted();
+    void rejected();
+
+    void requiresRestartChanged();
+
 
 private:
     QUrl _oldUrl;
     QUrl _newUrl;
+    QString _content;
+    bool _requiresRestart = false;
 };
 
 }

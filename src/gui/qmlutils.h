@@ -29,10 +29,6 @@ public:                                                                         
         focusPreviousChild();                                                                                                                                  \
     }                                                                                                                                                          \
                                                                                                                                                                \
-Q_SIGNALS:                                                                                                                                                     \
-    void focusFirst();                                                                                                                                         \
-    void focusLast();                                                                                                                                          \
-                                                                                                                                                               \
 private:
 
 namespace OCC::QmlUtils {
@@ -61,6 +57,6 @@ protected:
     bool event(QEvent *event) override;
 
 private:
-    QWidget *_parentFocusWidget;
+    QWidget *_parentFocusWidget = nullptr;
 };
 }
