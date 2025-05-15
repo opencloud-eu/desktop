@@ -22,6 +22,7 @@
 
 #include <QApplication>
 #include <QNetworkReply>
+#include <QVBoxLayout>
 
 namespace {
 Q_LOGGING_CATEGORY(lcResolveUrl, "gui.wizard.resolveurl")
@@ -44,8 +45,8 @@ CoreJob *ResolveUrlJobFactory::startJob(const QUrl &url, QObject *parent)
 
     auto *job = new CoreJob(nam()->get(req), parent);
 
-    auto makeFinishedHandler = [=](QNetworkReply *reply) {
-        return [oldUrl = url, reply, job] {
+    auto makeFinishedHandler = [oldUrl = url, job](QNetworkReply *reply) {
+        return [oldUrl, reply, job] {
             if (reply->error() != QNetworkReply::NoError) {
                 if (reply->property(abortedBySslErrorHandlerC).toBool()) {
                     return;
@@ -67,25 +68,36 @@ CoreJob *ResolveUrlJobFactory::startJob(const QUrl &url, QObject *parent)
                     qCInfo(lcResolveUrl()) << "redirect accepted automatically";
                     setJobResult(job, newUrl);
                 } else {
-                    auto *dialog = new UpdateUrlDialog(
-                        QStringLiteral("Confirm new URL"),
-                        QStringLiteral(
-                            "While accessing the server, we were redirected from %1 to another URL: %2\n\n"
-                            "Do you wish to permanently use the new URL?")
-                            .arg(oldUrl.toString(), newUrl.toString()),
-                        oldUrl,
-                        newUrl,
-                        nullptr);
-
-                    QObject::connect(dialog, &UpdateUrlDialog::accepted, job, [=]() {
+                    if (Utility::urlEqual(oldUrl, newUrl)) {
+                        // URLs are equal, no need to show a dialog
                         setJobResult(job, newUrl);
-                    });
+                    } else {
+                        auto *dialog = new UpdateUrlDialog(QStringLiteral("Confirm new URL"),
+                            QStringLiteral("While accessing the server, we were redirected from<br><b>%1</b> to another URL:<br><b>%2</b>.<br><br>"
+                                           "Do you wish to permanently use the new URL?")
+                                .arg(oldUrl.toString(), newUrl.toString()),
+                            oldUrl, newUrl, nullptr);
 
-                    QObject::connect(dialog, &UpdateUrlDialog::rejected, job, [=]() {
-                        setJobError(job, QApplication::translate("ResolveUrlJobFactory", "User rejected redirect from %1 to %2").arg(oldUrl.toDisplayString(), newUrl.toDisplayString()));
-                    });
+                        // create a modal dialog
+                        auto *dialogWrapper = new QDialog(ocApp()->settingsDialog());
+                        dialogWrapper->setModal(true);
+                        auto *layout = new QVBoxLayout(dialogWrapper);
+                        layout->addWidget(dialog);
 
-                    dialog->show();
+                        QObject::connect(dialog, &UpdateUrlDialog::accepted, job, [dialogWrapper, job, newUrl]() {
+                            dialogWrapper->deleteLater();
+                            setJobResult(job, newUrl);
+                        });
+
+                        QObject::connect(dialog, &UpdateUrlDialog::rejected, job, [dialogWrapper, job, newUrl, oldUrl]() {
+                            dialogWrapper->deleteLater();
+                            setJobError(job,
+                                QApplication::translate("ResolveUrlJobFactory", "User rejected redirect from %1 to %2")
+                                    .arg(oldUrl.toDisplayString(), newUrl.toDisplayString()));
+                        });
+
+                        dialogWrapper->show();
+                    }
                 }
             } else {
                 setJobResult(job, newUrl);

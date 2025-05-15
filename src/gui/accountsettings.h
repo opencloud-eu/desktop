@@ -127,6 +127,8 @@ private:
     QChar _accountStateIconGlype;
 
     QSet<Notification> _notifications;
+
+    QPointer<QWidget> _updateUrlDialog;
 };
 
 } // namespace OCC
