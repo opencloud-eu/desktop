@@ -151,12 +151,12 @@ File synchronization desktop utility.</source>
     <message>
         <location filename="../src/gui/main.cpp" line="135"/>
         <source>Forward all arguments to the cmd client. This argument must be the first.</source>
-        <translation type="unfinished"/>
+        <translation>Übergebe alle Argumente an den CMD-Client. Dieses Argument muss als erstes angegeben werden.</translation>
     </message>
     <message>
         <location filename="../src/gui/main.cpp" line="151"/>
         <source>--logfile and --logdir are mutually exclusive</source>
-        <translation type="unfinished"/>
+        <translation>--logfile und --logdir schließen sich gegenseitig aus.</translation>
     </message>
 </context>
 <context>
@@ -205,7 +205,7 @@ File synchronization desktop utility.</source>
         <location filename="../src/common/filesystembase.cpp" line="231"/>
         <location filename="../src/common/filesystembase.cpp" line="236"/>
         <source>Can&apos;t rename %1, the file is currently in use</source>
-        <translation type="unfinished"/>
+        <translation>%1 kann nicht umbenannt werden, da die Datei derzeit verwendet wird</translation>
     </message>
     <message>
         <location filename="../src/libsync/filesystem.cpp" line="192"/>
@@ -395,17 +395,17 @@ File synchronization desktop utility.</source>
     <message>
         <location filename="../src/gui/folderwizard/folderwizardsourcepage.ui" line="20"/>
         <source>Select a local folder to synchronize your Spaces to:</source>
-        <translation type="unfinished"/>
+        <translation>Wählen Sie einen lokalen Ordner aus, mit dem Ihre Spaces synchronisiert werden sollen:</translation>
     </message>
     <message>
         <location filename="../src/gui/folderwizard/folderwizardsourcepage.ui" line="32"/>
         <source>Enter the path to the Spaces root folder. This folder will contain all your synchronized Spaces.</source>
-        <translation type="unfinished"/>
+        <translation>Geben Sie den Pfad zum Stammordner der Spaces ein. Dieser Ordner wird alle Ihre synchronisierten Spaces enthalten.</translation>
     </message>
     <message>
         <location filename="../src/gui/folderwizard/folderwizardsourcepage.ui" line="39"/>
         <source>Click to select a the Spaces root folder.</source>
-        <translation type="unfinished"/>
+        <translation>Klicken Sie, um den Stammordner der Spaces auszuwählen.</translation>
     </message>
     <message>
         <location filename="../src/gui/folderwizard/folderwizardsourcepage.ui" line="42"/>
