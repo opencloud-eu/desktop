@@ -141,10 +141,10 @@ QPixmap CoreImageProvider::requestPixmap(const QString &id, QSize *size, const Q
         icon = themeUniversalIcon(qmlIcon.iconName);
     } else if (qmlIcon.theme == QLatin1String("fontawesome")) {
         Q_ASSERT(qmlIcon.iconName.length() == 1);
-        icon = FontIcon(qmlIcon.iconName.front(), qmlIcon.size);
+        icon = FontIcon(qmlIcon.iconName.front(), qmlIcon.size, qmlIcon.color);
     } else if (qmlIcon.theme == QLatin1String("remixicons")) {
         Q_ASSERT(qmlIcon.iconName.length() == 1);
-        icon = FontIcon(FontIcon::FontFamily::RemixIcon, qmlIcon.iconName.front(), qmlIcon.size);
+        icon = FontIcon(FontIcon::FontFamily::RemixIcon, qmlIcon.iconName.front(), qmlIcon.size, qmlIcon.color);
     }
     return pixmap(requestedSize, icon, qmlIcon.enabled ? QIcon::Normal : QIcon::Disabled, size);
 }

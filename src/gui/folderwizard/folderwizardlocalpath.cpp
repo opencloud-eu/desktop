@@ -23,6 +23,7 @@
 #include "folderwizard_p.h"
 
 #include "gui/folderman.h"
+#include "libsync/account.h"
 
 #include <QDir>
 #include <QFileDialog>

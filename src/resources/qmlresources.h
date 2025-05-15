@@ -28,6 +28,7 @@ namespace Resources {
         QString iconName;
         FontIcon::Size size;
         bool enabled;
+        QColor color;
     };
 
     Icon OPENCLOUD_RESOURCES_EXPORT parseIcon(const QString &id);

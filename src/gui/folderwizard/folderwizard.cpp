@@ -21,7 +21,6 @@
 #include "spacespage.h"
 
 #include "account.h"
-#include "common/asserts.h"
 #include "gui/application.h"
 #include "gui/settingsdialog.h"
 #include "theme.h"
@@ -32,8 +31,7 @@
 #include "libsync/graphapi/space.h"
 
 #include <QDesktopServices>
-#include <QDir>
-#include <QFileInfo>
+#include <QMessageBox>
 #include <QUrl>
 
 #include <stdlib.h>

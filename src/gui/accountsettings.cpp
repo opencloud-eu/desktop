@@ -21,6 +21,7 @@
 #include "accountmanager.h"
 #include "accountstate.h"
 #include "application.h"
+#include "common/restartmanager.h"
 #include "commonstrings.h"
 #include "configfile.h"
 #include "folderman.h"
@@ -33,6 +34,7 @@
 #include "gui/qmlutils.h"
 #include "gui/selectivesyncwidget.h"
 #include "gui/spaces/spaceimageprovider.h"
+#include "gui/updateurldialog.h"
 #include "libsync/graphapi/spacesmanager.h"
 #include "libsync/syncresult.h"
 #include "networkjobs/jsonjob.h"
@@ -40,7 +42,6 @@
 #include "scheduling/syncscheduler.h"
 #include "settingsdialog.h"
 
-#include <QMessageBox>
 #include <QSortFilterProxyModel>
 #include <QtQuickWidgets/QtQuickWidgets>
 
@@ -77,6 +78,25 @@ AccountSettings::AccountSettings(const AccountStatePtr &accountState, QWidget *p
 
     connect(FolderMan::instance(), &FolderMan::folderListChanged, _model, &FolderStatusModel::resetFolders);
 
+
+    connect(_accountState->account().data(), &Account::requestUrlUpdate, this, [this](const QUrl &newUrl) {
+        if (_updateUrlDialog) {
+            return;
+        }
+        auto *updateUrlDialog = UpdateUrlDialog::fromAccount(_accountState->account(), newUrl, ocApp()->settingsDialog());
+        _updateUrlDialog = updateUrlDialog;
+
+        connect(updateUrlDialog, &UpdateUrlDialog::accepted, this, [newUrl, this]() {
+            _accountState->account()->setUrl(newUrl);
+            Q_EMIT _accountState->account()->wantsAccountSaved(_accountState->account().data());
+            // reload the spaces
+            RestartManager::requestRestart();
+        });
+        auto *modalWidget = new AccountModalWidget(updateUrlDialog->windowTitle(), updateUrlDialog, ocApp()->settingsDialog());
+        connect(updateUrlDialog, &UpdateUrlDialog::accepted, modalWidget, &AccountModalWidget::accept);
+        connect(updateUrlDialog, &UpdateUrlDialog::rejected, modalWidget, &AccountModalWidget::reject);
+        addModalWidget(modalWidget);
+    });
 
     connect(_accountState.data(), &AccountState::stateChanged, this, &AccountSettings::slotAccountStateChanged);
     slotAccountStateChanged();

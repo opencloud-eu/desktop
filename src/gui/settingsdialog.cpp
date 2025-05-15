@@ -28,6 +28,7 @@
 #include "theme.h"
 
 #include <QMenuBar>
+#include <QMessageBox>
 #include <QScreen>
 #include <QWindow>
 
