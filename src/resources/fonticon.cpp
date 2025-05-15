@@ -16,11 +16,11 @@ namespace {
 class FontIconEngine : public QIconEngine
 {
 public:
-    FontIconEngine(FontIcon::FontFamily family, QChar glyph, FontIcon::Size size, const QColor &color = OCC::Resources::tint())
+    FontIconEngine(FontIcon::FontFamily family, QChar glyph, FontIcon::Size size, const QColor &color)
         : _family(family)
         , _glyph(glyph)
         , _size(size)
-        , _color(color)
+        , _color(color.isValid() ? color : OCC::Resources::tint())
     {
     }
 
@@ -101,12 +101,12 @@ public:
 
 FontIcon::FontIcon() { }
 
-FontIcon::FontIcon(QChar glyphe, Size size)
-    : QIcon(new FontIconEngine(FontFamily::FontAwesome, glyphe, size))
+FontIcon::FontIcon(QChar glyphe, Size size, const QColor &color)
+    : QIcon(new FontIconEngine(FontFamily::FontAwesome, glyphe, size, color))
 {
 }
 
-FontIcon::FontIcon(FontFamily family, QChar glyphe, Size size)
-    : QIcon(new FontIconEngine(family, glyphe, size))
+FontIcon::FontIcon(FontFamily family, QChar glyphe, Size size, const QColor &color)
+    : QIcon(new FontIconEngine(family, glyphe, size, color))
 {
 }
