@@ -37,8 +37,7 @@ public:
 private:
     // doesn't concern users of the job factory
     // we just need a place to maintain these variables, but the factory is likely deleted before the job has finished
-    bool _redirectDistinct;
-    bool _firstTry;
+    bool _redirectDistinct = true;
 };
 
 }
@@ -98,10 +97,7 @@ CoreJob *CheckServerJobFactory::startJob(const QUrl &url, QObject *parent)
         }
     });
 
-    QObject::connect(job->reply(), &QNetworkReply::finished, job, [url, job] {
-        // need a mutable copy
-        auto serverUrl = url;
-
+    QObject::connect(job->reply(), &QNetworkReply::finished, job, [serverUrl = url, job]() mutable {
         const QUrl targetUrl = job->reply()->url().adjusted(QUrl::RemoveFilename);
 
         // TODO: still needed?
@@ -115,16 +111,9 @@ CoreJob *CheckServerJobFactory::startJob(const QUrl &url, QObject *parent)
             if (job->_redirectDistinct) {
                 serverUrl = targetUrl;
             } else {
-                if (job->_firstTry) {
-                    qCWarning(lcCheckServerJob) << "Server might have moved, retry";
-                    job->_firstTry = false;
-                    job->_redirectDistinct = true;
-
-                    // FIXME
-                } else {
-                    qCWarning(lcCheckServerJob) << "We got a temporary moved server aborting";
-                    setJobError(job, QStringLiteral("Illegal redirect by server"));
-                }
+                qCWarning(lcCheckServerJob) << "We got a temporary moved server aborting";
+                setJobError(job, QStringLiteral("Illegal redirect by server"));
+                return;
             }
         }
 
