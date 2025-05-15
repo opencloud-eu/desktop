@@ -127,8 +127,6 @@ CoreJob *ResolveUrlJobFactory::startJob(const QUrl &url, QObject *parent)
         }
     });
 
-    makeRequest();
-
     return job;
 }
 }

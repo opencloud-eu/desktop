@@ -131,7 +131,7 @@ protected:
      * Factory to create QNetworkRequests with properly set timeout.
      */
     template <typename... Params>
-    static QNetworkRequest makeRequest(Params... params)
+    [[nodiscard]] static QNetworkRequest makeRequest(Params... params)
     {
         auto request = QNetworkRequest(params...);
 
