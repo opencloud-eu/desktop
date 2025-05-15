@@ -85,6 +85,7 @@ CoreJob::CoreJob(QNetworkReply *reply, QObject *parent)
     , _reply(reply)
 {
     _reply->setParent(this);
+    connect(this, &CoreJob::finished, this, &CoreJob::deleteLater, Qt::QueuedConnection);
 }
 
 bool CoreJob::assertNotFinished() const
