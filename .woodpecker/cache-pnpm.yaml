@@ -17,6 +17,15 @@ steps:
   - commands:
       - . ./.woodpecker.env
       - if $BROWSER_CACHE_FOUND; then exit 0; fi
+      - cd test/gui/
+      - npm i -s -g -f "$(jq -r ".packageManager" < webUI/package.json)"
+      - pnpm config set store-dir ./.pnpm-store
+      - make pnpm-install
+    image: owncloudci/nodejs:20
+    name: pnpm-install
+  - commands:
+      - . ./.woodpecker.env
+      - if $BROWSER_CACHE_FOUND; then exit 0; fi
       - pnpm exec playwright install chromium --with-deps
       - tar -czvf /woodpecker/src/github.com/opencloud-eu/desktop/desktop/playwright-browsers.tar.gz .playwright
     environment:
