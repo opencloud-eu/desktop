@@ -14,8 +14,6 @@
 
 #include "resources/qmlresources.h"
 
-#include "resources/resources.h"
-
 namespace {
 constexpr QSize minIconSize{16, 16};
 }
@@ -27,7 +25,8 @@ Resources::Icon Resources::parseIcon(const QString &id)
     const auto data = QUrlQuery(id);
 
     return {data.queryItemValue(QLatin1String("theme")), QUrl::fromPercentEncoding(data.queryItemValue(QLatin1String("icon")).toUtf8()),
-        QVariant(data.queryItemValue(QLatin1String("size"))).value<FontIcon::Size>(), QVariant(data.queryItemValue(QLatin1String("enabled"))).toBool()};
+        QVariant(data.queryItemValue(QLatin1String("size"))).value<FontIcon::Size>(), QVariant(data.queryItemValue(QLatin1String("enabled"))).toBool(),
+        QVariant(data.queryItemValue(QLatin1String("color"))).value<QColor>()};
 }
 
 QPixmap Resources::pixmap(const QSize &requestedSize, const QIcon &icon, QIcon::Mode mode, QSize *outSize)

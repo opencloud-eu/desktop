@@ -14,37 +14,28 @@
 
 #include "updateurldialog.h"
 
-#include <QMessageBox>
-#include <QTimer>
 
 namespace OCC {
 
 UpdateUrlDialog::UpdateUrlDialog(const QString &title, const QString &content, const QUrl &oldUrl, const QUrl &newUrl, QWidget *parent)
-    : QMessageBox(QMessageBox::Warning, title, content, QMessageBox::NoButton, parent)
+    : OCQuickWidget(parent)
     , _oldUrl(oldUrl)
     , _newUrl(newUrl)
+    , _content(content)
 {
-    // this special dialog deletes itself after use
-    setAttribute(Qt::WA_DeleteOnClose);
-
-    if (Utility::urlEqual(_oldUrl, _newUrl)) {
-        // need to show the dialog before accepting the change
-        // hence using a timer to run the code on the main loop
-        QTimer::singleShot(0, [this]() {
-            accept();
-        });
-        return;
-    }
-
-    addButton(tr("Change URL permanently to %1").arg(_newUrl.toString()), QMessageBox::AcceptRole);
-    addButton(tr("Reject"), QMessageBox::RejectRole);
+    setWindowTitle(title);
+    setOCContext(QUrl(QStringLiteral("qrc:/qt/qml/eu/OpenCloud/gui/qml/UpdateUrlDialog.qml")), parent, this, QJSEngine::CppOwnership);
 }
 
 UpdateUrlDialog *UpdateUrlDialog::fromAccount(AccountPtr account, const QUrl &newUrl, QWidget *parent)
 {
-    return new UpdateUrlDialog(tr("Url update requested for %1").arg(account->displayNameWithHost()),
-        tr("The URL for %1 changed from %2 to %3, do you want to accept the changed URL?")
+    auto *dialog = new UpdateUrlDialog(tr("Url update requested for %1").arg(account->displayNameWithHost()),
+        tr("The URL for <b>%1</b> changed from:<br><b>%2</b> to:<br> <b>%3</b>.<br><br>Do you want to accept the new URL permanently?<br>"
+           "This will cause an application restart.")
             .arg(account->displayNameWithHost(), account->url().toString(), newUrl.toString()),
         account->url(), newUrl, parent);
+    dialog->_requiresRestart = true;
+    Q_EMIT dialog->requiresRestartChanged();
+    return dialog;
 }
 }

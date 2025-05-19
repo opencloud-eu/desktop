@@ -20,10 +20,12 @@
 #include "connectionvalidator.h"
 #include "creds/abstractcredentials.h"
 #include "jobqueue.h"
-#include "updateurldialog.h"
+
 #include <QByteArray>
 #include <QElapsedTimer>
 #include <QPointer>
+#include <QtQmlIntegration/QtQmlIntegration>
+
 #include <memory>
 
 class QDialog;
@@ -136,7 +138,6 @@ public:
      *  was not so long ago.
      */
     void tagLastSuccessfullETagRequest(const QDateTime &tp);
-    UpdateUrlDialog *updateUrlDialog(const QUrl &newUrl);
 
     /***
      * The account is setup for the first time, this may take some time
@@ -159,7 +160,6 @@ private:
 Q_SIGNALS:
     void stateChanged(State state);
     void isConnectedChanged();
-    void urlUpdated();
     void isSettingUpChanged();
 
 protected Q_SLOTS:
@@ -178,7 +178,6 @@ private:
     bool _waitingForNewCredentials;
     QDateTime _timeOfLastETagCheck;
     QPointer<ConnectionValidator> _connectionValidator;
-    QPointer<UpdateUrlDialog> _updateUrlDialog;
     QPointer<TlsErrorDialog> _tlsDialog;
 
     bool _settingUp = false;

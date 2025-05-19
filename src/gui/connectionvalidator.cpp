@@ -137,14 +137,19 @@ void ConnectionValidator::slotCheckServerAndAuth()
 void ConnectionValidator::slotStatusFound(const QUrl &url, const QJsonObject &info)
 {
     // status.php was found.
-    qCInfo(lcConnectionValidator) << "** Application: OpenCloud found: " << url << " with version " << info.value(QLatin1String("versionstring")).toString();
+    qCInfo(lcConnectionValidator) << "** Application: OpenCloud found: " << url << " with version " << info.value(QLatin1String("productversion")).toString();
 
     // Update server URL in case of redirection
     if (_account->url() != url) {
-        qCInfo(lcConnectionValidator()) << "status.php was redirected to" << url.toString() << "asking user to accept and abort for now";
-        Q_EMIT _account->requestUrlUpdate(url);
-        reportResult(StatusNotFound);
-        return;
+        if (Utility::urlEqual(_account->url(), url)) {
+            qCInfo(lcConnectionValidator()) << "status.php was redirected to" << url.toString() << "updating the account url";
+            _account->setUrl(url);
+        } else {
+            qCInfo(lcConnectionValidator()) << "status.php was redirected to" << url.toString() << "asking user to accept and abort for now";
+            Q_EMIT _account->requestUrlUpdate(url);
+            reportResult(StatusNotFound);
+            return;
+        }
     }
 
     // Check for maintenance mode: Servers send "true", so go through QVariant
