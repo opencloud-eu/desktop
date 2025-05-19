@@ -408,21 +408,19 @@ void ConfigFile::setProxyType(QNetworkProxy::ProxyType proxyType, const QString 
 
 QVariant ConfigFile::getValue(const QString &param, const QVariant &defaultValue) const
 {
-    QVariant systemSetting;
-    if (Utility::isMac()) {
-        QSettings systemSettings(QStringLiteral("/Library/Preferences/%1.plist").arg(Theme::instance()->orgDomainName()), QSettings::NativeFormat);
-        systemSetting = systemSettings.value(param, defaultValue);
-    } else if (Utility::isUnix()) {
-        QSettings systemSettings(QStringLiteral("/etc/%1/%1.conf").arg(Theme::instance()->appName()), QSettings::NativeFormat);
-        systemSetting = systemSettings.value(param, defaultValue);
-    } else { // Windows
-        QSettings systemSettings(
-            QStringLiteral("HKEY_LOCAL_MACHINE\\Software\\%1\\%2").arg(Theme::instance()->vendor(), Theme::instance()->appNameGUI()), QSettings::NativeFormat);
-        systemSetting = systemSettings.value(param, defaultValue);
-    }
+    const QSettings systemSettings = []() -> QSettings {
+        if (Utility::isMac()) {
+            return {QStringLiteral("/Library/Preferences/%1.plist").arg(Theme::instance()->orgDomainName()), QSettings::NativeFormat};
+        } else if (Utility::isUnix()) {
+            return {QStringLiteral("/etc/%1/%1.conf").arg(Theme::instance()->appName()), QSettings::NativeFormat};
+        } else { // Windows
+            return {QStringLiteral("HKEY_LOCAL_MACHINE\\Software\\%1\\%2").arg(Theme::instance()->vendor(), Theme::instance()->appNameGUI()),
+                QSettings::NativeFormat};
+        }
+    }();
 
     auto settings = makeQSettings();
-    return settings.value(param, systemSetting);
+    return settings.value(param, systemSettings.value(param, defaultValue));
 }
 
 void ConfigFile::setValue(const QString &key, const QVariant &value)
