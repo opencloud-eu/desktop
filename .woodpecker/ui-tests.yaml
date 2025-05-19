@@ -1,8 +1,6 @@
-#---
-#variables:
-#  - &squish_image 'arturneumann/squish'
-#
-
+---
+variables:
+  - &squish_image 'arturneumann/squish'
 
 depends_on:
   - cache-opencloud
@@ -90,15 +88,16 @@ steps:
       - timeout 300 bash -c 'while [ $(curl -sk -uadmin:admin https://opencloud:9200/graph/v1.0/users/admin -w %{http_code} -o /dev/null) != 200 ]; do sleep 1; done'
     image: owncloudci/alpine:latest
     name: wait-for-opencloud
-#  test:
-#    image: *squish_image
-#    environment:
-#      LICENSEKEY:
-#        from_secret: squish_license_key
-#      BACKEND_HOST: https://cloud.opencloud.test
-#    commands:
-#      - apt-get update -qq && apt-get install -y inotify-tools
-#      - make test
+  - name: UI-tests
+    image: *squish_image
+    environment:
+      LICENSEKEY:
+        from_secret: squish_license_key
+      BACKEND_HOST: https://opencloud:9200
+      GUI_TEST_REPORT_DIR: /woodpecker/src/github.com/opencloud-eu/desktop/desktop/test/gui/guiReportUpload
+      SERVER_INI: /woodpecker/src/github.com/opencloud-eu/desktop/desktop/test/gui/woodpecker/server.ini
+      SQUISH_PARAMETERS: "--testsuite /desktop/test/gui --reportgen html,/desktop/test/gui/guiReportUpload --envvar QT_LOGGING_RULES=sync.httplogger=true;gui.socketapi=false --tags ~@skip --tags ~@skipOnLinux"
+
 when:
   - branch:
       - main
