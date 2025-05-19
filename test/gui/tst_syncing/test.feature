@@ -332,6 +332,9 @@ Feature: Syncing files
         And user "Alice" has uploaded file "testimage.mp3" to "simple-folder/testimage.mp3" in the server
         And user "Alice" has uploaded file "test_video.mp4" to "simple-folder/test_video.mp4" in the server
         And user "Alice" has uploaded file "simple.pdf" to "simple-folder/simple.pdf" in the server
+        And user "Alice" has uploaded file "simple.docx" to "simple-folder/simple.docx" in the server
+        And user "Alice" has uploaded file "simple.pptx" to "simple-folder/simple.pptx" in the server
+        And user "Alice" has uploaded file "simple.xlsx" to "simple-folder/simple.xlsx" in the server
         And user "Alice" has set up a client with default settings
         Then the folder "simple-folder" should exist on the file system
         And the file "simple-folder/testavatar.png" should exist on the file system
@@ -340,6 +343,9 @@ Feature: Syncing files
         And the file "simple-folder/testimage.mp3" should exist on the file system
         And the file "simple-folder/test_video.mp4" should exist on the file system
         And the file "simple-folder/simple.pdf" should exist on the file system
+        And the file "simple-folder/simple.docx" should exist on the file system
+        And the file "simple-folder/simple.pptx" should exist on the file system
+        And the file "simple-folder/simple.xlsx" should exist on the file system
 
 
     Scenario: various types of files can be synced from client to server
@@ -352,6 +358,9 @@ Feature: Syncing files
             | /testaudio.mp3   |
             | /test_video.mp4  |
             | /simple.txt      |
+            | /simple.docx     |
+            | /simple.pptx     |
+            | /simple.xlsx     |
         And the user waits for the files to sync
         Then as "Alice" file "testavatar.png" should exist in the server
         And as "Alice" file "testavatar.jpg" should exist in the server
@@ -359,6 +368,9 @@ Feature: Syncing files
         And as "Alice" file "testaudio.mp3" should exist in the server
         And as "Alice" file "test_video.mp4" should exist in the server
         And as "Alice" file "simple.txt" should exist in the server
+        And as "Alice" file "simple.docx" should exist in the server
+        And as "Alice" file "simple.pptx" should exist in the server
+        And as "Alice" file "simple.xlsx" should exist in the server
 
 
     Scenario Outline: File with long name can be synced
