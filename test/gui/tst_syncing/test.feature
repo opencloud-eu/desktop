@@ -485,6 +485,13 @@ Feature: Syncing files
         And the folder "test-folder/sub-folder2" should exist on the file system
         And the folder "test-folder/sub-folder1" should not exist on the file system
 
+
+    Scenario: Syncing a local folder having special characters to the server
+        Given user "Alice" has set up a client with default settings
+        When user "Alice" creates a folder "~`!@#$^&()-_=+{[}];',)💥🫨❤️‍🔥" inside the sync folder
+        And the user waits for folder "~`!@#$^&()-_=+{[}];',)💥🫨❤️‍🔥" to be synced
+        Then as "Alice" folder "~`!@#$^&()-_=+{[}];',)💥🫨❤️‍🔥" should exist in the server
+
     @issue-11814
     Scenario: remove folder sync connection
         Given user "Alice" has created folder "simple-folder" in the server
