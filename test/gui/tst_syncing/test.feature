@@ -241,10 +241,16 @@ Feature: Syncing files
     Scenario: Both original and copied folders can be synced
         Given user "Alice" has set up a client with default settings
         When user "Alice" creates a folder "original" inside the sync folder
+        And user "Alice" creates a file "original/localFile.txt" with the following content inside the sync folder
+            """
+            test content
+            """
         And the user copies the folder "original" to "copied"
         And the user waits for folder "copied" to be synced
         Then as "Alice" folder "original" should exist in the server
+        And as "Alice" the file "original/localFile.txt" should have the content "test content" in the server
         And as "Alice" folder "copied" should exist in the server
+        And as "Alice" the file "copied/localFile.txt" should have the content "test content" in the server
 
     @issue-9281
     Scenario: Verify that you can create a subfolder with long name(~220 characters)
