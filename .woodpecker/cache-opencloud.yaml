@@ -6,8 +6,6 @@ steps:
       - . ./.woodpecker.env
       - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
       - mc ls --recursive s3/$CACHE_BUCKET/opencloud-build
-      - pwd
-      - ls -lha
       - bash script.sh check_opencloud_cache
     environment:
       AWS_ACCESS_KEY_ID:
