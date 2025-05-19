@@ -26,6 +26,12 @@ Pane {
 
     Accessible.name: qsTr("Navigation bar")
 
+    Component.onCompleted: {
+        if (OCUtils.compareQVersion(6, 8, 3) >= 0) {
+            ToolTip.toolTip.popupType = Popup.Native;
+        }
+    }
+
     Connections {
         target: widget
 
