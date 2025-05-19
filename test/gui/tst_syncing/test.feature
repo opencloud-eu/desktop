@@ -247,13 +247,13 @@ Feature: Syncing files
         And as "Alice" folder "copied" should exist in the server
 
     @issue-9281
-    Scenario: Verify that you can create a subfolder with long name
-        Given user "Alice" has created folder "Folder1" in the server
+    Scenario: Verify that you can create a subfolder with long name(~220 characters)
+        Given user "Alice" has created a folder "Folder1" inside the sync folder
         And user "Alice" has set up a client with default settings
-        When user "Alice" creates a folder "Folder1/really long folder name with some spaces and special char such as $%ñ&" inside the sync folder
-        And the user waits for folder "Folder1/really long folder name with some spaces and special char such as $%ñ&" to be synced
-        Then the folder "Folder1/really long folder name with some spaces and special char such as $%ñ&" should exist on the file system
-        And as "Alice" folder "Folder1/really long folder name with some spaces and special char such as $%ñ&" should exist in the server
+        When user "Alice" creates a folder "Folder1/thisIsAVeryLongFolderNameToCheckThatItWorks-thisIsAVeryLongFolderNameToCheckThatItWorks-thisIsAVeryLongFolderNameToCheckThatItWorks-thisIsAVeryLongFolderNameToCheckThatItWorks" inside the sync folder
+        And the user waits for folder "Folder1/thisIsAVeryLongFolderNameToCheckThatItWorks-thisIsAVeryLongFolderNameToCheckThatItWorks-thisIsAVeryLongFolderNameToCheckThatItWorks-thisIsAVeryLongFolderNameToCheckThatItWorks" to be synced
+        Then the folder "Folder1/thisIsAVeryLongFolderNameToCheckThatItWorks-thisIsAVeryLongFolderNameToCheckThatItWorks-thisIsAVeryLongFolderNameToCheckThatItWorks-thisIsAVeryLongFolderNameToCheckThatItWorks" should exist on the file system
+        And as "Alice" folder "Folder1/thisIsAVeryLongFolderNameToCheckThatItWorks-thisIsAVeryLongFolderNameToCheckThatItWorks-thisIsAVeryLongFolderNameToCheckThatItWorks-thisIsAVeryLongFolderNameToCheckThatItWorks" should exist in the server
 
 
     Scenario: Verify pre existing folders in local (Desktop client) are copied over to the server
