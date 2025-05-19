@@ -26,7 +26,8 @@ steps:
   - commands:
       - . ./.woodpecker.env
       - if $BROWSER_CACHE_FOUND; then exit 0; fi
-      - pnpm exec playwright install chromium --with-deps
+      - cd test/gui/
+      - make pnpm-install-chromium
       - tar -czvf /woodpecker/src/github.com/opencloud-eu/desktop/desktop/playwright-browsers.tar.gz .playwright
     environment:
       PLAYWRIGHT_BROWSERS_PATH: .playwright
