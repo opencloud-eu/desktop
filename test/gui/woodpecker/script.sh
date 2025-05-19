@@ -33,11 +33,12 @@ check_opencloud_cache() {
 
 # get playwright version from package.json
 get_playwright_version() {
-    if [[ ! -f "package.json" ]]; then
+    PACKAGE_JSON_PATH="test/gui/webUI/package.json"
+    if [[ ! -f "$PACKAGE_JSON_PATH" ]]; then
         echo "Error: package.json file not found."
     fi
 
-    playwright_version=$(grep '"@playwright/test":' "package.json" | cut -d':' -f2 | tr -d '", ')
+    playwright_version=$(grep '"@playwright/test":' "$PACKAGE_JSON_PATH" | cut -d':' -f2 | tr -d '", ')
     if [[ -z "$playwright_version" ]]; then
         echo "Error: Playwright package not found in package.json." >&2
         exit 78
