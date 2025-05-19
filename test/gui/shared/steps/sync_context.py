@@ -59,14 +59,6 @@ def step(context, username, resource_type, resource):
     wait_for_resource_to_have_sync_error(resource, resource_type)
 
 
-@When('the user enables virtual file support')
-def step(context):
-    SyncConnection.enable_vfs()
-    # TODO: remove snooze with proper wait
-    # let the client re-sync
-    squish.snooze(get_config('minSyncTimeout'))
-
-
 @Then('the "|any|" button should be available')
 def step(context, item):
     SyncConnection.open_menu()
@@ -81,14 +73,6 @@ def step(context, item):
         False,
         f'Menu item "{item}" does not exist.',
     )
-
-
-@When('the user disables virtual file support')
-def step(context):
-    SyncConnection.disable_vfs()
-    # TODO: remove snooze with proper wait
-    # let the client re-sync
-    squish.snooze(get_config('minSyncTimeout'))
 
 
 @When('the user clicks on the activity tab')
@@ -228,13 +212,6 @@ def step(context):
 @When('user unselects all the remote folders')
 def step(context):
     SyncConnectionWizard.deselect_all_remote_folders()
-
-
-@When('the user |word| VFS support for Windows')
-def step(context, action):
-    if is_windows():
-        action = action.rstrip('s')
-        SyncConnectionWizard.enable_disable_vfs_support(action)
 
 
 @When('user unselects a folder "|any|" in selective sync')
