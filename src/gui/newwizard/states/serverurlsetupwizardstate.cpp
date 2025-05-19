@@ -12,20 +12,11 @@
  * for more details.
  */
 
-#include "serverurlsetupwizardstate.h"
-#include "jobs/discoverwebfingerservicejobfactory.h"
-#include "jobs/resolveurljobfactory.h"
-#include "theme.h"
+#include "gui/newwizard/states/serverurlsetupwizardstate.h"
 
-#include <QDebug>
-#include <QMessageBox>
-
-namespace {
-
-const QString defaultUrlSchemeC = QStringLiteral("https://");
-const QStringList supportedUrlSchemesC({ defaultUrlSchemeC, QStringLiteral("http://") });
-
-}
+#include "gui/newwizard/jobs/discoverwebfingerservicejobfactory.h"
+#include "gui/newwizard/jobs/resolveurljobfactory.h"
+#include "libsync/theme.h"
 
 namespace OCC::Wizard {
 
@@ -52,22 +43,12 @@ void ServerUrlSetupWizardState::evaluatePage()
     Q_ASSERT(serverUrlSetupWizardPage != nullptr);
 
     const QUrl serverUrl = [serverUrlSetupWizardPage]() {
-        QString userProvidedUrl = serverUrlSetupWizardPage->userProvidedUrl();
-
-        // fix scheme if necessary
-        // using HTTPS as a default is a real ly good idea nowadays, users can still enter http:// explicitly if they wish to
-        if (!std::any_of(supportedUrlSchemesC.begin(), supportedUrlSchemesC.end(), [userProvidedUrl](const QString &scheme) {
-                return userProvidedUrl.startsWith(scheme);
-            })) {
-            qInfo(lcSetupWizardServerUrlState) << "no URL scheme provided, prepending default URL scheme" << defaultUrlSchemeC;
-            userProvidedUrl.prepend(defaultUrlSchemeC);
-        }
-
-        return QUrl::fromUserInput(userProvidedUrl).adjusted(QUrl::RemoveUserInfo);
+        auto url = QUrl::fromUserInput(serverUrlSetupWizardPage->userProvidedUrl())
+                       .adjusted(QUrl::RemoveUserInfo | QUrl::StripTrailingSlash | QUrl::RemoveQuery | QUrl::RemoveFragment);
+        url.setScheme(QLatin1String("https"));
+        return url;
     }();
 
-    // (ab)use the account builder as temporary storage for the URL we are about to probe (after sanitation)
-    // in case of errors, the user can just edit the previous value
     _context->accountBuilder().setServerUrl(serverUrl);
 
     // TODO: perform some better validation
@@ -76,23 +57,6 @@ void ServerUrlSetupWizardState::evaluatePage()
         return;
     }
 
-    auto *messageBox = new QMessageBox(
-        QMessageBox::Warning,
-        tr("Insecure connection"),
-        tr("The connection to %1 is insecure.\nAre you sure you want to proceed?").arg(serverUrl.toString()),
-        QMessageBox::NoButton,
-        _context->window());
-
-    messageBox->setAttribute(Qt::WA_DeleteOnClose);
-
-    messageBox->addButton(QMessageBox::Cancel);
-    messageBox->addButton(tr("Confirm"), QMessageBox::YesRole);
-
-    connect(messageBox, &QMessageBox::rejected, this, [this]() {
-        Q_EMIT evaluationFailed(tr("Insecure server rejected by user"));
-    });
-
-    connect(messageBox, &QMessageBox::accepted, this, [this]() {
         // when moving back to this page (or retrying a failed credentials check), we need to make sure existing cookies
         // and certificates are deleted from the access manager
         _context->resetAccessManager();
@@ -132,15 +96,6 @@ void ServerUrlSetupWizardState::evaluatePage()
                 _context->accountBuilder().addCustomTrustedCaCertificate(caCertificate);
             },
             Qt::DirectConnection);
-    });
-
-    // instead of defining a lambda that we could call from here as well as the message box, we can put the
-    // handler into the accepted() signal handler, and Q_EMIT that signal here
-    if (serverUrl.scheme() == QStringLiteral("https")) {
-        Q_EMIT messageBox->accepted();
-    } else {
-        messageBox->show();
-    }
 }
 
 } // OCC::Wizard
