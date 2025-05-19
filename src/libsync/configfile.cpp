@@ -51,12 +51,12 @@ const QString remotePollIntervalC()
 {
     return QStringLiteral("remotePollInterval");
 }
-const QString forceSyncIntervalC() { return QStringLiteral("forceSyncInterval"); }
+
 const QString fullLocalDiscoveryIntervalC()
 {
     return QStringLiteral("fullLocalDiscoveryInterval");
 }
-const QString promptDeleteC() { return QStringLiteral("promptDeleteAllFiles"); }
+
 const QString crashReporterC()
 {
     return QStringLiteral("crashReporter");
@@ -182,7 +182,7 @@ void ConfigFile::saveGeometry(QWidget *w)
 
 void ConfigFile::restoreGeometry(QWidget *w)
 {
-    w->restoreGeometry(getValue(geometryC(), w->objectName()).toByteArray());
+    w->restoreGeometry(getValue(QStringLiteral("%1/%2").arg(geometryC(), w->objectName())).toByteArray());
 }
 
 void ConfigFile::saveGeometryHeader(QHeaderView *header)
@@ -346,47 +346,10 @@ bool ConfigFile::exists()
     return QFileInfo::exists(configFile());
 }
 
-QString ConfigFile::defaultConnection() const
-{
-    return Theme::instance()->appName();
-}
 
-void ConfigFile::storeData(const QString &group, const QString &key, const QVariant &value)
+chrono::milliseconds ConfigFile::remotePollInterval(std::chrono::seconds defaultVal) const
 {
-    const QString con(group.isEmpty() ? defaultConnection() : group);
     auto settings = makeQSettings();
-
-    settings.beginGroup(con);
-    settings.setValue(key, value);
-    settings.sync();
-}
-
-void ConfigFile::removeData(const QString &group, const QString &key)
-{
-    const QString con(group.isEmpty() ? defaultConnection() : group);
-    auto settings = makeQSettings();
-
-    settings.beginGroup(con);
-    settings.remove(key);
-}
-
-bool ConfigFile::dataExists(const QString &group, const QString &key) const
-{
-    const QString con(group.isEmpty() ? defaultConnection() : group);
-    auto settings = makeQSettings();
-
-    settings.beginGroup(con);
-    return settings.contains(key);
-}
-
-chrono::milliseconds ConfigFile::remotePollInterval(std::chrono::seconds defaultVal, const QString &connection) const
-{
-    QString con(connection);
-    if (connection.isEmpty())
-        con = defaultConnection();
-
-    auto settings = makeQSettings();
-    settings.beginGroup(con);
 
     auto defaultPollInterval { DefaultRemotePollInterval };
 
@@ -406,55 +369,15 @@ chrono::milliseconds ConfigFile::remotePollInterval(std::chrono::seconds default
     return remoteInterval;
 }
 
-void ConfigFile::setRemotePollInterval(chrono::milliseconds interval, const QString &connection)
-{
-    QString con(connection);
-    if (connection.isEmpty())
-        con = defaultConnection();
-
-    if (interval < chrono::seconds(5)) {
-        qCWarning(lcConfigFile) << "Remote Poll interval of " << interval.count() << " is below five seconds.";
-        return;
-    }
-    auto settings = makeQSettings();
-    settings.beginGroup(con);
-    settings.setValue(remotePollIntervalC(), qlonglong(interval.count()));
-    settings.sync();
-}
-
-chrono::milliseconds ConfigFile::forceSyncInterval(std::chrono::seconds remoteFromCapabilities, const QString &connection) const
-{
-    auto pollInterval = remotePollInterval(remoteFromCapabilities, connection);
-
-    QString con(connection);
-    if (connection.isEmpty())
-        con = defaultConnection();
-    auto settings = makeQSettings();
-    settings.beginGroup(con);
-
-    auto defaultInterval = chrono::hours(2);
-    auto interval = millisecondsValue(settings, forceSyncIntervalC(), defaultInterval);
-    if (interval < pollInterval) {
-        qCWarning(lcConfigFile) << "Force sync interval is less than the remote poll inteval, reverting to" << pollInterval.count();
-        interval = pollInterval;
-    }
-    return interval;
-}
-
 chrono::milliseconds OCC::ConfigFile::fullLocalDiscoveryInterval() const
 {
     auto settings = makeQSettings();
-    settings.beginGroup(defaultConnection());
     return millisecondsValue(settings, fullLocalDiscoveryIntervalC(), 1h);
 }
 
-chrono::milliseconds ConfigFile::updateCheckInterval(const QString &connection) const
+chrono::milliseconds ConfigFile::updateCheckInterval() const
 {
-    QString con(connection);
-    if (connection.isEmpty())
-        con = defaultConnection();
     auto settings = makeQSettings();
-    settings.beginGroup(con);
 
     auto defaultInterval = chrono::hours(10);
     auto interval = millisecondsValue(settings, updateCheckIntervalC(), defaultInterval);
@@ -467,28 +390,16 @@ chrono::milliseconds ConfigFile::updateCheckInterval(const QString &connection) 
     return interval;
 }
 
-bool ConfigFile::skipUpdateCheck(const QString &connection) const
+bool ConfigFile::skipUpdateCheck() const
 {
-    QString con(connection);
-    if (connection.isEmpty())
-        con = defaultConnection();
-
-    QVariant fallback = getValue(skipUpdateCheckC(), con, false);
-    fallback = getValue(skipUpdateCheckC(), QString(), fallback);
-
+    const auto fallback = getValue(skipUpdateCheckC(), false);
     QVariant value = getPolicySetting(skipUpdateCheckC(), fallback);
     return value.toBool();
 }
 
-void ConfigFile::setSkipUpdateCheck(bool skip, const QString &connection)
+void ConfigFile::setSkipUpdateCheck(bool skip)
 {
-    QString con(connection);
-    if (connection.isEmpty())
-        con = defaultConnection();
-
     auto settings = makeQSettings();
-    settings.beginGroup(con);
-
     settings.setValue(skipUpdateCheckC(), QVariant(skip));
     settings.sync();
 }
@@ -542,35 +453,22 @@ void ConfigFile::setProxyType(QNetworkProxy::ProxyType proxyType, const QString 
     settings.sync();
 }
 
-QVariant ConfigFile::getValue(const QString &param, const QString &group,
-    const QVariant &defaultValue) const
+QVariant ConfigFile::getValue(const QString &param, const QVariant &defaultValue) const
 {
     QVariant systemSetting;
     if (Utility::isMac()) {
         QSettings systemSettings(QStringLiteral("/Library/Preferences/%1.plist").arg(Theme::instance()->orgDomainName()), QSettings::NativeFormat);
-        if (!group.isEmpty()) {
-            systemSettings.beginGroup(group);
-        }
         systemSetting = systemSettings.value(param, defaultValue);
     } else if (Utility::isUnix()) {
         QSettings systemSettings(QStringLiteral(SYSCONFDIR "/%1/%1.conf").arg(Theme::instance()->appName()), QSettings::NativeFormat);
-        if (!group.isEmpty()) {
-            systemSettings.beginGroup(group);
-        }
         systemSetting = systemSettings.value(param, defaultValue);
     } else { // Windows
         QSettings systemSettings(
             QStringLiteral("HKEY_LOCAL_MACHINE\\Software\\%1\\%2").arg(Theme::instance()->vendor(), Theme::instance()->appNameGUI()), QSettings::NativeFormat);
-        if (!group.isEmpty()) {
-            systemSettings.beginGroup(group);
-        }
         systemSetting = systemSettings.value(param, defaultValue);
     }
 
     auto settings = makeQSettings();
-    if (!group.isEmpty())
-        settings.beginGroup(group);
-
     return settings.value(param, systemSetting);
 }
 
@@ -611,12 +509,12 @@ QString ConfigFile::proxyUser() const
 
 int ConfigFile::useUploadLimit() const
 {
-    return getValue(useUploadLimitC(), QString(), 0).toInt();
+    return getValue(useUploadLimitC(), 0).toInt();
 }
 
 int ConfigFile::useDownloadLimit() const
 {
-    return getValue(useDownloadLimitC(), QString(), 0).toInt();
+    return getValue(useDownloadLimitC(), 0).toInt();
 }
 
 void ConfigFile::setUseUploadLimit(int val)
@@ -631,12 +529,12 @@ void ConfigFile::setUseDownloadLimit(int val)
 
 int ConfigFile::uploadLimit() const
 {
-    return getValue(uploadLimitC(), QString(), 10).toInt();
+    return getValue(uploadLimitC(), 10).toInt();
 }
 
 int ConfigFile::downloadLimit() const
 {
-    return getValue(downloadLimitC(), QString(), 80).toInt();
+    return getValue(downloadLimitC(), 80).toInt();
 }
 
 void ConfigFile::setUploadLimit(int kbytes)
@@ -651,7 +549,7 @@ void ConfigFile::setDownloadLimit(int kbytes)
 
 bool ConfigFile::pauseSyncWhenMetered() const
 {
-    return getValue(pauseSyncWhenMeteredC(), {}, false).toBool();
+    return getValue(pauseSyncWhenMeteredC(), false).toBool();
 }
 
 void ConfigFile::setPauseSyncWhenMetered(bool isChecked)
@@ -662,7 +560,7 @@ void ConfigFile::setPauseSyncWhenMetered(bool isChecked)
 bool ConfigFile::moveToTrash() const
 {
     if (Theme::instance()->enableMoveToTrash()) {
-        return getValue(moveToTrashC(), QString(), false).toBool();
+        return getValue(moveToTrashC(), false).toBool();
     }
 
     return false;
@@ -671,18 +569,6 @@ bool ConfigFile::moveToTrash() const
 void ConfigFile::setMoveToTrash(bool isChecked)
 {
     setValue(moveToTrashC(), isChecked);
-}
-
-bool ConfigFile::promptDeleteFiles() const
-{
-    auto settings = makeQSettings();
-    return settings.value(promptDeleteC(), true).toBool();
-}
-
-void ConfigFile::setPromptDeleteFiles(bool promptDeleteFiles)
-{
-    auto settings = makeQSettings();
-    settings.setValue(promptDeleteC(), promptDeleteFiles);
 }
 
 bool ConfigFile::crashReporter() const
