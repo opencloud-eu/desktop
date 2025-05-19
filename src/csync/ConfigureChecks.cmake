@@ -1,8 +1,6 @@
 include(CheckFunctionExists)
 include(CheckLibraryExists)
 
-set(SYSCONFDIR ${KDE_INSTALL_SYSCONFDIR})
-
 # FUNCTIONS
 if (NOT LINUX)
     # librt
