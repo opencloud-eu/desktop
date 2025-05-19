@@ -1,0 +1,25 @@
+---
+variables:
+  - &squish_image 'arturneumann/squish'
+
+steps:
+  - name: UI-tests
+    image: *squish_image
+    commands:
+      - mkdir -p /woodpecker/src/github.com/opencloud-eu/desktop/desktop/build
+      - cd /woodpecker/src/github.com/opencloud-eu/desktop/desktop/build
+      - cmake %s -S .. -GNinja  -DCMAKE_BUILD_TYPE=Debug  -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
+      - ninja
+
+when:
+  - branch:
+      - main
+      - stable-*
+    event:
+      - push
+      - manual
+  - event: pull_request
+  - event: tag
+workspace:
+  base: /woodpecker/src/github.com/opencloud-eu/desktop
+  path: desktop

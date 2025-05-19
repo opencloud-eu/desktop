@@ -5,6 +5,7 @@ variables:
 depends_on:
   - cache-opencloud
   - cache-pnpm
+  - build
 steps:
   - commands:
       - cd test/gui/
