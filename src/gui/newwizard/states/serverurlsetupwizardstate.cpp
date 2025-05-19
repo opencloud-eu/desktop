@@ -92,47 +92,46 @@ void ServerUrlSetupWizardState::evaluatePage()
         Q_EMIT evaluationFailed(tr("Insecure server rejected by user"));
     });
 
-    connect(messageBox, &QMessageBox::accepted, this, [this, serverUrl]() {
+    connect(messageBox, &QMessageBox::accepted, this, [this]() {
         // when moving back to this page (or retrying a failed credentials check), we need to make sure existing cookies
         // and certificates are deleted from the access manager
         _context->resetAccessManager();
 
-        // check whether WebFinger is available
-        // therefore, we run the corresponding discovery job
-        auto checkWebFingerAuthJob = Jobs::DiscoverWebFingerServiceJobFactory(_context->accessManager()).startJob(serverUrl, this);
+        // first, we must resolve the actual server URL
+        auto *resolveJob = Jobs::ResolveUrlJobFactory(_context->accessManager()).startJob(_context->accountBuilder().serverUrl(), this);
 
-        connect(checkWebFingerAuthJob, &CoreJob::finished, this, [job = checkWebFingerAuthJob, serverUrl, this]() {
-            // in case any kind of error occurs, we assume the WebFinger service is not available
-            if (!job->success()) {
-                // first, we must resolve the actual server URL
-                auto resolveJob = Jobs::ResolveUrlJobFactory(_context->accessManager()).startJob(serverUrl, this);
-
-                connect(resolveJob, &CoreJob::finished, resolveJob, [this, resolveJob]() {
-                    resolveJob->deleteLater();
-
-                    if (!resolveJob->success()) {
-                        Q_EMIT evaluationFailed(resolveJob->errorMessage());
-                        return;
-                    }
-                    _context->accountBuilder().setServerUrl(resolveJob->result().toUrl());
-                    Q_EMIT evaluationSuccessful();
-                });
-
-                connect(
-                    resolveJob, &CoreJob::caCertificateAccepted, this,
-                    [this](const QSslCertificate &caCertificate) {
-                        // future requests made through this access manager should accept the certificate
-                        _context->accessManager()->addCustomTrustedCaCertificates({caCertificate});
-
-                        // the account maintains a list, too, which is also saved in the config file
-                        _context->accountBuilder().addCustomTrustedCaCertificate(caCertificate);
-                    },
-                    Qt::DirectConnection);
-            } else {
-                _context->accountBuilder().setWebFingerAuthenticationServerUrl(job->result().toUrl());
-                Q_EMIT evaluationSuccessful();
+        connect(resolveJob, &CoreJob::finished, resolveJob, [this, resolveJob]() {
+            if (!resolveJob->success()) {
+                Q_EMIT evaluationFailed(resolveJob->errorMessage());
+                return;
             }
+            _context->accountBuilder().setServerUrl(resolveJob->result().toUrl());
+
+            // check whether WebFinger is available
+            // therefore, we run the corresponding discovery job
+            auto *checkWebFingerAuthJob =
+                Jobs::DiscoverWebFingerServiceJobFactory(_context->accessManager()).startJob(_context->accountBuilder().serverUrl(), this);
+            connect(checkWebFingerAuthJob, &CoreJob::finished, this, [checkWebFingerAuthJob, this]() {
+                // in case any kind of error occurs, we assume the WebFinger service is not available
+                if (!checkWebFingerAuthJob->success()) {
+                    Q_EMIT evaluationSuccessful();
+                } else {
+                    _context->accountBuilder().setWebFingerAuthenticationServerUrl(checkWebFingerAuthJob->result().toUrl());
+                    Q_EMIT evaluationSuccessful();
+                }
+            });
         });
+
+        connect(
+            resolveJob, &CoreJob::caCertificateAccepted, this,
+            [this](const QSslCertificate &caCertificate) {
+                // future requests made through this access manager should accept the certificate
+                _context->accessManager()->addCustomTrustedCaCertificates({caCertificate});
+
+                // the account maintains a list, too, which is also saved in the config file
+                _context->accountBuilder().addCustomTrustedCaCertificate(caCertificate);
+            },
+            Qt::DirectConnection);
     });
 
     // instead of defining a lambda that we could call from here as well as the message box, we can put the
