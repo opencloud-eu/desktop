@@ -126,5 +126,5 @@ when:
   - event: pull_request
   - event: tag
 workspace:
-  base: /woodpecker/src/github.com/opencloud-eu/web
-  path: web
+  base: /woodpecker/src/github.com/opencloud-eu/desktop
+  path: desktop
