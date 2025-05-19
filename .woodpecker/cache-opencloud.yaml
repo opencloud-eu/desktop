@@ -2,7 +2,7 @@ skip_clone: true
 steps:
   - commands:
       - curl -o .woodpecker.env https://raw.githubusercontent.com/opencloud-eu/desktop/$CI_COMMIT_SHA/.woodpecker.env
-      - curl -o script.sh https://raw.githubusercontent.com/opencloud-eu/web/$CI_COMMIT_SHA/test/gui/woodpecker/script.sh
+      - curl -o script.sh https://raw.githubusercontent.com/opencloud-eu/desktop/$CI_COMMIT_SHA/test/gui/woodpecker/script.sh
       - . ./.woodpecker.env
       - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
       - mc ls --recursive s3/$CACHE_BUCKET/opencloud-build
