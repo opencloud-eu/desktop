@@ -3,8 +3,9 @@ variables:
   - &squish_image 'arturneumann/squish'
 
 steps:
-  - name: UI-tests
+  - name: build-client-for-ui-tests
     image: *squish_image
+    user: "0:0"
     commands:
       - mkdir -p /woodpecker/src/github.com/opencloud-eu/desktop/desktop/build
       - cd /woodpecker/src/github.com/opencloud-eu/desktop/desktop/build
