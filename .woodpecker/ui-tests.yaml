@@ -1,0 +1,130 @@
+#---
+#variables:
+#  - &squish_image 'arturneumann/squish'
+#
+
+
+depends_on:
+  - cache-opencloud
+steps:
+  - image: plugins/s3-cache:1
+    name: restore_pnpm_build_artifact_cache
+    settings:
+      access_key:
+        from_secret: cache_s3_access_key
+      endpoint:
+        from_secret: cache_s3_server
+      fallback_path: cache/opencloud-eu/desktop/${CI_COMMIT_SHA}-${CI_PIPELINE_NUMBER}
+      filename: pnpm_build_artifact_cache.tar
+      mount:
+        - .pnpm-store
+      path: cache/opencloud-eu/desktop/${CI_COMMIT_SHA}-${CI_PIPELINE_NUMBER}
+      rebuild: false
+      restore: true
+      secret_key:
+        from_secret: cache_s3_secret_key
+  - commands:
+      - cd test/gui/
+      - pwd
+      - ls -la
+      - npm i -s -g -f "$(jq -r ".packageManager" < webUI/package.json)"
+      - pnpm config set store-dir ./.pnpm-store
+      - make pnpm-install
+    image: owncloudci/nodejs:20
+    name: pnpm-install
+  - commands:
+      - playwright_version=$(bash tests/woodpecker/script.sh get_playwright_version)
+      - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
+      - mc cp -r -a s3/$CACHE_BUCKET/desktop/browsers-cache/$playwright_version/playwright-browsers.tar.gz /woodpecker/src/github.com/opencloud-eu/desktop/desktop
+    environment:
+      AWS_ACCESS_KEY_ID:
+        from_secret: cache_s3_access_key
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: cache_s3_secret_key
+      CACHE_BUCKET:
+        from_secret: cache_s3_bucket
+      MC_HOST:
+        from_secret: cache_s3_server
+    image: minio/mc:RELEASE.2021-10-07T04-19-58Z
+    name: restore-browsers-cache
+  - commands:
+      - tar -xvf /woodpecker/src/github.com/opencloud-eu/desktop/desktop/playwright-browsers.tar.gz -C .
+    image: owncloud/ubuntu:20.04
+    name: unzip-browsers-cache
+  - image: plugins/s3-cache:1
+    name: restore_desktop-dist_build_artifact_cache
+    settings:
+      access_key:
+        from_secret: cache_s3_access_key
+      endpoint:
+        from_secret: cache_s3_server
+      fallback_path: cache/opencloud-eu/desktop/${CI_COMMIT_SHA}-${CI_PIPELINE_NUMBER}
+      filename: desktop-dist_build_artifact_cache.tar
+      mount:
+        - dist
+      path: cache/opencloud-eu/desktop/${CI_COMMIT_SHA}-${CI_PIPELINE_NUMBER}
+      rebuild: false
+      restore: true
+      secret_key:
+        from_secret: cache_s3_secret_key
+  - commands:
+      - . ./.woodpecker.env
+      - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
+      - mc cp -r -a s3/$CACHE_BUCKET/opencloud-build/$OPENCLOUD_COMMITID/opencloud /woodpecker/src/github.com/opencloud-eu/desktop/desktop
+    environment:
+      AWS_ACCESS_KEY_ID:
+        from_secret: cache_s3_access_key
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: cache_s3_secret_key
+      CACHE_BUCKET:
+        from_secret: cache_s3_bucket
+      MC_HOST:
+        from_secret: cache_s3_server
+    image: minio/mc:RELEASE.2021-10-07T04-19-58Z
+    name: restore-opencloud-cache
+  - commands:
+      - mkdir -p /srv/app/tmp/opencloud/opencloud/data/
+      - mkdir -p /srv/app/tmp/opencloud/storage/users/
+      - ./opencloud init
+      - ./opencloud server
+    detach: true
+    environment:
+      FRONTEND_SEARCH_MIN_LENGTH: "2"
+      GRAPH_AVAILABLE_ROLES: b1e2218d-eef8-4d4c-b82d-0f1a1b48f3b5,a8d5fe5e-96e3-418d-825b-534dbdf22b99,fb6c3e19-e378-47e5-b277-9732f9de6e21,58c63c02-1d89-4572-916a-870abc5a1b7d,2d00ce52-1fc2-4dbc-8b95-a73b73395f5a,1c996275-f1c9-4e71-abdf-a42f6495e960,312c0871-5ef7-4b3a-85b6-0e4074c64049,aa97fe03-7980-45ac-9e50-b325749fd7e6,63e64e19-8d43-42ec-a738-2b6af2610efa
+      IDM_ADMIN_PASSWORD: admin
+      LDAP_GROUP_SUBSTRING_FILTER_TYPE: any
+      LDAP_USER_SUBSTRING_FILTER_TYPE: any
+      OC_INSECURE: true
+      OC_JWT_SECRET: some-opencloud-jwt-secret
+      OC_LOG_LEVEL: error
+      OC_SHOW_USER_EMAIL_IN_RESULTS: true
+      OC_URL: https://opencloud:9200
+      PROXY_ENABLE_BASIC_AUTH: true
+      WEB_UI_CONFIG_FILE: /woodpecker/src/github.com/opencloud-eu/desktop/desktop/test/gui/woodpecker/config-opencloud.json
+    image: docker.io/golang:1.24
+    name: opencloud
+  - commands:
+      - timeout 300 bash -c 'while [ $(curl -sk -uadmin:admin https://opencloud:9200/graph/v1.0/users/admin -w %{http_code} -o /dev/null) != 200 ]; do sleep 1; done'
+    image: owncloudci/alpine:latest
+    name: wait-for-opencloud
+#  test:
+#    image: *squish_image
+#    environment:
+#      LICENSEKEY:
+#        from_secret: squish_license_key
+#      BACKEND_HOST: https://cloud.opencloud.test
+#    commands:
+#      - apt-get update -qq && apt-get install -y inotify-tools
+#      - make test
+when:
+  - branch:
+      - main
+      - stable-*
+    event:
+      - push
+      - manual
+  - event: pull_request
+  - event: tag
+workspace:
+  base: /woodpecker/src/github.com/opencloud-eu/web
+  path: web
