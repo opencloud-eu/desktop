@@ -58,7 +58,7 @@ public:
     };
 
     QString excludeFile(Scope scope) const;
-    static QString excludeFileFromSystem(); // doesn't access config dir
+    static QString defaultExcludeFile(); // doesn't access config dir
 
     /**
      * Creates a backup of the file

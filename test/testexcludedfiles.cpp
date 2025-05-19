@@ -5,17 +5,15 @@
  *
  */
 
+#include "libsync/configfile.h"
+
 #include <QtTest>
-#include <QTemporaryDir>
 
 #include "csync_exclude.h"
 #include "testutils.h"
 
 using namespace OCC;
 
-namespace {
-const QString excludeListFileC = QStringLiteral(SOURCEDIR "/sync-exclude.lst");
-}
 // The tests were converted from the old CMocka framework, that's why there is a global
 static QScopedPointer<ExcludedFiles> excludedFiles;
 
@@ -27,7 +25,7 @@ static void setup() {
 static void setup_init() {
     setup();
 
-    excludedFiles->addExcludeFilePath(excludeListFileC);
+    excludedFiles->addExcludeFilePath(ConfigFile::defaultExcludeFile());
     QVERIFY(excludedFiles->reloadExcludeFiles());
 
     /* and add some unicode stuff */
@@ -90,7 +88,7 @@ private Q_SLOTS:
         QVERIFY(!check_isExcluded(QStringLiteral("/a/.b"), keepHidden));
         QVERIFY(check_isExcluded(QStringLiteral("/a/.b"), excludeHidden));
 
-        excluded.addExcludeFilePath(excludeListFileC);
+        excluded.addExcludeFilePath(ConfigFile::defaultExcludeFile());
         excluded.reloadExcludeFiles();
 
         QVERIFY(!check_isExcluded(QStringLiteral("/a/b"), keepHidden));

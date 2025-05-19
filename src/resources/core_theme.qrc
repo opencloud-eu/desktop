@@ -20,5 +20,6 @@
         <file alias="theme/mask-systray/sync.svg">theme/mask-systray/ocl-ui_sync-hex#000.svg</file>
         <file>theme/universal/opencloud-icon.svg</file>
         <file>theme/universal/wizard_logo.svg</file>
+        <file>theme/universal/sync-exclude.lst</file>
     </qresource>
 </RCC>
