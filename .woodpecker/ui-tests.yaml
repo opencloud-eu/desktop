@@ -91,8 +91,8 @@ steps:
   - name: UI-tests
     image: *squish_image
     environment:
-      LICENSEKEY:
-        from_secret: squish_license_key
+#      LICENSEKEY:
+#        from_secret: squish_license_key
       BACKEND_HOST: https://opencloud:9200
       GUI_TEST_REPORT_DIR: /woodpecker/src/github.com/opencloud-eu/desktop/desktop/test/gui/guiReportUpload
       SERVER_INI: /woodpecker/src/github.com/opencloud-eu/desktop/desktop/test/gui/woodpecker/server.ini
