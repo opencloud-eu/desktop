@@ -1,0 +1,78 @@
+steps:
+  - commands:
+      - cd test/gui/
+      - npm i -s -g -f "$(jq -r ".packageManager" < webUI/package.json)"
+      - pnpm config set store-dir ./.pnpm-store
+      - make pnpm-install
+    image: owncloudci/nodejs:20
+    name: pnpm-install
+  - image: plugins/s3-cache:1
+    name: rebuild_pnpm_build_artifact_cache
+    settings:
+      access_key:
+        from_secret: cache_s3_access_key
+      endpoint:
+        from_secret: cache_s3_server
+      fallback_path: cache/opencloud-eu/desktop/${CI_COMMIT_SHA}-${CI_PIPELINE_NUMBER}
+      filename: pnpm_build_artifact_cache.tar
+      mount:
+        - .pnpm-store
+      path: cache/opencloud-eu/desktop/${CI_COMMIT_SHA}-${CI_PIPELINE_NUMBER}
+      rebuild: true
+      restore: false
+      secret_key:
+        from_secret: cache_s3_secret_key
+  - commands:
+      - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
+      - mc ls --recursive s3/$CACHE_BUCKET/desktop
+      - bash test/gui/woodpecker/script.sh check_browsers_cache
+    environment:
+      AWS_ACCESS_KEY_ID:
+        from_secret: cache_s3_access_key
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: cache_s3_secret_key
+      CACHE_BUCKET:
+        from_secret: cache_s3_bucket
+      MC_HOST:
+        from_secret: cache_s3_server
+    image: minio/mc:RELEASE.2021-10-07T04-19-58Z
+    name: check-browsers-cache
+  - commands:
+      - . ./.woodpecker.env
+      - if $BROWSER_CACHE_FOUND; then exit 0; fi
+      - pnpm exec playwright install chromium --with-deps
+      - tar -czvf /woodpecker/src/github.com/opencloud-eu/desktop/desktop/playwright-browsers.tar.gz .playwright
+    environment:
+      PLAYWRIGHT_BROWSERS_PATH: .playwright
+    image: owncloudci/nodejs:20
+    name: install-browsers
+  - commands:
+      - . ./.woodpecker.env
+      - if $BROWSER_CACHE_FOUND; then exit 0; fi
+      - playwright_version=$(bash tests/woodpecker/script.sh get_playwright_version)
+      - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
+      - mc cp -r -a /woodpecker/src/github.com/opencloud-eu/desktop/desktop/playwright-browsers.tar.gz s3/$CACHE_BUCKET/desktop/browsers-cache/$playwright_version/
+      - mc ls --recursive s3/$CACHE_BUCKET/desktop
+    environment:
+      AWS_ACCESS_KEY_ID:
+        from_secret: cache_s3_access_key
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: cache_s3_secret_key
+      CACHE_BUCKET:
+        from_secret: cache_s3_bucket
+      MC_HOST:
+        from_secret: cache_s3_server
+    image: minio/mc:RELEASE.2021-10-07T04-19-58Z
+    name: upload-browsers-cache
+when:
+  - branch:
+      - main
+      - stable-*
+    event:
+      - push
+      - manual
+  - event: tag
+  - event: pull_request
+workspace:
+  base: /woodpecker/src/github.com/opencloud-eu/desktop
+  path: desktop

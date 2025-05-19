@@ -6,6 +6,7 @@
 
 depends_on:
   - cache-opencloud
+  - cache-pnpm
 steps:
   - image: plugins/s3-cache:1
     name: restore_pnpm_build_artifact_cache
