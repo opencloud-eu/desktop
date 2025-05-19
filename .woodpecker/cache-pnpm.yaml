@@ -30,6 +30,8 @@ steps:
       - make pnpm-install-chromium
       - cd webUI
       - tar -czvf /woodpecker/src/github.com/opencloud-eu/desktop/desktop/playwright-browsers.tar.gz .playwright
+    environment:
+      PLAYWRIGHT_BROWSERS_PATH: .playwright
     image: owncloudci/nodejs:20
     name: install-browsers
   - commands:
