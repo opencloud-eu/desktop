@@ -96,7 +96,7 @@ steps:
       BACKEND_HOST: https://opencloud:9200
       GUI_TEST_REPORT_DIR: /woodpecker/src/github.com/opencloud-eu/desktop/desktop/test/gui/guiReportUpload
       SERVER_INI: /woodpecker/src/github.com/opencloud-eu/desktop/desktop/test/gui/woodpecker/server.ini
-      SQUISH_PARAMETERS: "--testsuite /desktop/test/gui --reportgen html,/desktop/test/gui/guiReportUpload --envvar QT_LOGGING_RULES=sync.httplogger=true;gui.socketapi=false --tags ~@skip --tags ~@skipOnLinux"
+      SQUISH_PARAMETERS: --testsuite /desktop/test/gui --reportgen html,/desktop/test/gui/guiReportUpload --envvar QT_LOGGING_RULES=sync.httplogger=true;gui.socketapi=false --tags ~@skip --tags ~@skipOnLinux
 
 when:
   - branch:
