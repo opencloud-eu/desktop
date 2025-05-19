@@ -1,7 +1,7 @@
 include(CheckFunctionExists)
 include(CheckLibraryExists)
 
-set(SYSCONFDIR ${CMAKE_INSTALL_SYSCONFDIR})
+set(SYSCONFDIR ${KDE_INSTALL_SYSCONFDIR})
 
 # FUNCTIONS
 if (NOT LINUX)
