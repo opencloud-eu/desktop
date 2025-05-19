@@ -202,12 +202,6 @@ def step(context):
     )
 
 
-@When('the user selects vfs option in advanced section')
-def step(context):
-    AccountConnectionWizard.select_vfs_option()
-    AccountConnectionWizard.next_step()
-
-
 @When('the user selects download everything option in advanced section')
 def step(context):
     AccountConnectionWizard.select_download_everything_option()
@@ -232,17 +226,6 @@ def step(context):
             AccountConnectionWizard.is_sync_everything_option_checked(),
             'Sync everything option is checked',
         )
-
-
-@Then('the VFS option should be selected by default for Windows')
-def step(context):
-    if is_windows():
-        test.compare(
-            True,
-            AccountConnectionWizard.is_vfs_option_checked(),
-            'VFS option is checked',
-        )
-
 
 @When(r'^the user presses the "([^"]*)" key(?:s)?', regexp=True)
 def step(context, key):
