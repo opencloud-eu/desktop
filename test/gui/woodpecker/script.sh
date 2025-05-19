@@ -32,7 +32,7 @@ check_opencloud_cache() {
 }
 
 # get playwright version from package.json
-get_playwright_version($1) {
+get_playwright_version() {
     if [[ ! -f "package.json" ]]; then
         echo "Error: package.json file not found."
     fi
