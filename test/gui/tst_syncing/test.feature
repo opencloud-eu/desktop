@@ -241,19 +241,25 @@ Feature: Syncing files
     Scenario: Both original and copied folders can be synced
         Given user "Alice" has set up a client with default settings
         When user "Alice" creates a folder "original" inside the sync folder
+        And user "Alice" creates a file "original/localFile.txt" with the following content inside the sync folder
+            """
+            test content
+            """
         And the user copies the folder "original" to "copied"
         And the user waits for folder "copied" to be synced
         Then as "Alice" folder "original" should exist in the server
+        And as "Alice" the file "original/localFile.txt" should have the content "test content" in the server
         And as "Alice" folder "copied" should exist in the server
+        And as "Alice" the file "copied/localFile.txt" should have the content "test content" in the server
 
     @issue-9281
-    Scenario: Verify that you can create a subfolder with long name
-        Given user "Alice" has created folder "Folder1" in the server
+    Scenario: Verify that you can create a subfolder with long name(~220 characters)
+        Given user "Alice" has created a folder "Folder1" inside the sync folder
         And user "Alice" has set up a client with default settings
-        When user "Alice" creates a folder "Folder1/really long folder name with some spaces and special char such as $%ñ&" inside the sync folder
-        And the user waits for folder "Folder1/really long folder name with some spaces and special char such as $%ñ&" to be synced
-        Then the folder "Folder1/really long folder name with some spaces and special char such as $%ñ&" should exist on the file system
-        And as "Alice" folder "Folder1/really long folder name with some spaces and special char such as $%ñ&" should exist in the server
+        When user "Alice" creates a folder "Folder1/thisIsAVeryLongFolderNameToCheckThatItWorks-thisIsAVeryLongFolderNameToCheckThatItWorks-thisIsAVeryLongFolderNameToCheckThatItWorks-thisIsAVeryLongFolderNameToCheckThatItWorks" inside the sync folder
+        And the user waits for folder "Folder1/thisIsAVeryLongFolderNameToCheckThatItWorks-thisIsAVeryLongFolderNameToCheckThatItWorks-thisIsAVeryLongFolderNameToCheckThatItWorks-thisIsAVeryLongFolderNameToCheckThatItWorks" to be synced
+        Then the folder "Folder1/thisIsAVeryLongFolderNameToCheckThatItWorks-thisIsAVeryLongFolderNameToCheckThatItWorks-thisIsAVeryLongFolderNameToCheckThatItWorks-thisIsAVeryLongFolderNameToCheckThatItWorks" should exist on the file system
+        And as "Alice" folder "Folder1/thisIsAVeryLongFolderNameToCheckThatItWorks-thisIsAVeryLongFolderNameToCheckThatItWorks-thisIsAVeryLongFolderNameToCheckThatItWorks-thisIsAVeryLongFolderNameToCheckThatItWorks" should exist in the server
 
 
     Scenario: Verify pre existing folders in local (Desktop client) are copied over to the server
@@ -332,6 +338,9 @@ Feature: Syncing files
         And user "Alice" has uploaded file "testimage.mp3" to "simple-folder/testimage.mp3" in the server
         And user "Alice" has uploaded file "test_video.mp4" to "simple-folder/test_video.mp4" in the server
         And user "Alice" has uploaded file "simple.pdf" to "simple-folder/simple.pdf" in the server
+        And user "Alice" has uploaded file "simple.docx" to "simple-folder/simple.docx" in the server
+        And user "Alice" has uploaded file "simple.pptx" to "simple-folder/simple.pptx" in the server
+        And user "Alice" has uploaded file "simple.xlsx" to "simple-folder/simple.xlsx" in the server
         And user "Alice" has set up a client with default settings
         Then the folder "simple-folder" should exist on the file system
         And the file "simple-folder/testavatar.png" should exist on the file system
@@ -340,6 +349,9 @@ Feature: Syncing files
         And the file "simple-folder/testimage.mp3" should exist on the file system
         And the file "simple-folder/test_video.mp4" should exist on the file system
         And the file "simple-folder/simple.pdf" should exist on the file system
+        And the file "simple-folder/simple.docx" should exist on the file system
+        And the file "simple-folder/simple.pptx" should exist on the file system
+        And the file "simple-folder/simple.xlsx" should exist on the file system
 
 
     Scenario: various types of files can be synced from client to server
@@ -352,6 +364,9 @@ Feature: Syncing files
             | /testaudio.mp3   |
             | /test_video.mp4  |
             | /simple.txt      |
+            | /simple.docx     |
+            | /simple.pptx     |
+            | /simple.xlsx     |
         And the user waits for the files to sync
         Then as "Alice" file "testavatar.png" should exist in the server
         And as "Alice" file "testavatar.jpg" should exist in the server
@@ -359,6 +374,9 @@ Feature: Syncing files
         And as "Alice" file "testaudio.mp3" should exist in the server
         And as "Alice" file "test_video.mp4" should exist in the server
         And as "Alice" file "simple.txt" should exist in the server
+        And as "Alice" file "simple.docx" should exist in the server
+        And as "Alice" file "simple.pptx" should exist in the server
+        And as "Alice" file "simple.xlsx" should exist in the server
 
 
     Scenario Outline: File with long name can be synced

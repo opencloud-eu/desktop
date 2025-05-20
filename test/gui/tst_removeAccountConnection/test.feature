@@ -17,7 +17,11 @@ Feature: remove account connection
 
     Scenario: remove the only account connection
         Given user "Alice" has been created in the server with default attributes
+        And user "Alice" has created folder "large-folder" in the server
+        And user "Alice" has uploaded file with content "test content" to "testFile.txt" in the server
         And user "Alice" has set up a client with default settings
         When the user removes the connection for user "Alice" and host %local_server_hostname%
         Then the settings tab should have the following options in the general section:
             | Start on Login |
+        And the folder "large-folder" should exist on the file system
+        And the file "testFile.txt" should exist on the file system
