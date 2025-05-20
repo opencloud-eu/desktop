@@ -153,13 +153,6 @@ QUrl Theme::helpUrl() const
     return QUrl(QStringLiteral("https://docs.opencloud.eu/docs/category/opencloud-desktop-1"));
 }
 
-
-QUrl Theme::overrideServerUrl() const
-{
-    static const auto serverOverride = qEnvironmentVariable("OPENCLOUD_OVERRIDE_SERVER_URL");
-    return QUrl{serverOverride};
-}
-
 QUrl Theme::updateCheckUrl() const
 {
 #ifdef APPLICATION_UPDATE_URL

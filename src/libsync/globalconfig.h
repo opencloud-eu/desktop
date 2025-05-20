@@ -12,6 +12,7 @@ namespace OCC {
 class OPENCLOUD_SYNC_EXPORT GlobalConfig : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QUrl serverUrl READ serverUrl CONSTANT)
     QML_ELEMENT
     QML_SINGLETON
 public:
@@ -22,5 +23,7 @@ public:
 #ifdef Q_OS_WIN
     static QVariant getPolicySetting(QAnyStringView policy, const QVariant &defaultValue = {});
 #endif
+
+    static QUrl serverUrl();
 };
 }
