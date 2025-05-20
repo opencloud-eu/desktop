@@ -41,7 +41,7 @@ void ChronoElapsedTimer::reset()
 
 void ChronoElapsedTimer::stop()
 {
-    Q_ASSERT(_end == std::chrono::steady_clock::time_point {});
+    Q_ASSERT(_end == std::chrono::steady_clock::time_point{});
     Q_ASSERT(_started);
     _end = std::chrono::steady_clock::now();
     _started = false;
@@ -52,7 +52,7 @@ std::chrono::nanoseconds ChronoElapsedTimer::duration() const
     if (!_started) {
         return std::chrono::nanoseconds::max();
     }
-    if (_end != std::chrono::steady_clock::time_point {}) {
+    if (_end != std::chrono::steady_clock::time_point{}) {
         return _end - _start;
     }
     return std::chrono::steady_clock::now() - _start;

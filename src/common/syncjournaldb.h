@@ -19,11 +19,11 @@
 #ifndef SYNCJOURNALDB_H
 #define SYNCJOURNALDB_H
 
-#include <QObject>
-#include <qmutex.h>
 #include <QDateTime>
 #include <QHash>
+#include <QObject>
 #include <functional>
+#include <qmutex.h>
 
 #include "common/checksumalgorithms.h"
 #include "common/ownsql.h"
@@ -50,8 +50,7 @@ public:
     ~SyncJournalDb() override;
 
     /// Create a journal path for a specific configuration
-    static QString makeDbName(const QString &localPath,
-        const QString &infix = QStringLiteral("journal"));
+    static QString makeDbName(const QString &localPath, const QString &infix = QStringLiteral("journal"));
 
     static bool dbIsTooNewForClient(const QString &dbFilePath);
 
@@ -60,15 +59,13 @@ public:
     bool getFileRecord(const QByteArray &filename, SyncJournalFileRecord *rec);
     bool getFileRecordByInode(quint64 inode, SyncJournalFileRecord *rec);
     bool getFileRecordsByFileId(const QByteArray &fileId, const std::function<void(const SyncJournalFileRecord &)> &rowCallback);
-    bool getFilesBelowPath(const QByteArray &path, const std::function<void(const SyncJournalFileRecord&)> &rowCallback);
-    bool listFilesInPath(const QByteArray &path, const std::function<void(const SyncJournalFileRecord&)> &rowCallback);
+    bool getFilesBelowPath(const QByteArray &path, const std::function<void(const SyncJournalFileRecord &)> &rowCallback);
+    bool listFilesInPath(const QByteArray &path, const std::function<void(const SyncJournalFileRecord &)> &rowCallback);
     const QVector<SyncJournalFileRecord> getFileRecordsWithDirtyPlaceholders() const;
     Result<void, QString> setFileRecord(const SyncJournalFileRecord &record);
 
     bool deleteFileRecord(const QString &filename, bool recursively = false);
-    bool updateFileRecordChecksum(const QString &filename,
-        const QByteArray &contentChecksum,
-        CheckSums::Algorithm contentChecksumType);
+    bool updateFileRecordChecksum(const QString &filename, const QByteArray &contentChecksum, CheckSums::Algorithm contentChecksumType);
 
     /// Return value for hasHydratedOrDehydratedFiles()
     struct HasHydratedDehydrated
@@ -435,12 +432,8 @@ private:
     bool _closed = false;
 };
 
-bool OCSYNC_EXPORT
-operator==(const SyncJournalDb::DownloadInfo &lhs,
-    const SyncJournalDb::DownloadInfo &rhs);
-bool OCSYNC_EXPORT
-operator==(const SyncJournalDb::UploadInfo &lhs,
-    const SyncJournalDb::UploadInfo &rhs);
+bool OCSYNC_EXPORT operator==(const SyncJournalDb::DownloadInfo &lhs, const SyncJournalDb::DownloadInfo &rhs);
+bool OCSYNC_EXPORT operator==(const SyncJournalDb::UploadInfo &lhs, const SyncJournalDb::UploadInfo &rhs);
 
 } // namespace OCC
 #endif // SYNCJOURNALDB_H

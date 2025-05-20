@@ -21,8 +21,8 @@
 
 #include <QLoggingCategory>
 #include <QObject>
-#include <QVariant>
 #include <QSet>
+#include <QVariant>
 
 #include "ocsynclib.h"
 
@@ -32,7 +32,7 @@ struct sqlite3_stmt;
 namespace OCC {
 OCSYNC_EXPORT Q_DECLARE_LOGGING_CATEGORY(lcSql)
 
-class SqlQuery;
+    class SqlQuery;
 
 /**
  * @brief The SqlDatabase class

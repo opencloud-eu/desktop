@@ -45,8 +45,8 @@ class SyncJournal;
 OCSYNC_EXPORT Q_DECLARE_LOGGING_CATEGORY(lcUtility)
 
     /** \addtogroup libsync
- *  @{
- */
+     *  @{
+     */
     namespace Utility
 {
     OCSYNC_EXPORT void setupFavLink(const QString &folder);
@@ -54,13 +54,13 @@ OCSYNC_EXPORT Q_DECLARE_LOGGING_CATEGORY(lcUtility)
     OCSYNC_EXPORT QByteArray userAgentString();
 
     /**
-      * @brief Return whether launch on startup is enabled system wide.
-      *
-      * If this returns true, the checkbox for user specific launch
-      * on startup will be hidden.
-      *
-      * Currently only implemented on Windows.
-      */
+     * @brief Return whether launch on startup is enabled system wide.
+     *
+     * If this returns true, the checkbox for user specific launch
+     * on startup will be hidden.
+     *
+     * Currently only implemented on Windows.
+     */
     OCSYNC_EXPORT bool hasSystemLaunchOnStartup(const QString &appName);
 
     /**
@@ -194,7 +194,7 @@ OCSYNC_EXPORT Q_DECLARE_LOGGING_CATEGORY(lcUtility)
     /**
      * @brief Sort a QStringList in a way that's appropriate for filenames
      */
-    OCSYNC_EXPORT void sortFilenames(QStringList &fileNames);
+    OCSYNC_EXPORT void sortFilenames(QStringList & fileNames);
 
     /**
      * Concatenate parts of a URL path with a given delimiter, eliminating duplicate
@@ -202,9 +202,7 @@ OCSYNC_EXPORT Q_DECLARE_LOGGING_CATEGORY(lcUtility)
     OCSYNC_EXPORT QString concatUrlPathItems(QStringList && items, const QLatin1Char delimiter = QLatin1Char('/'));
 
     /** Appends concatPath and queryItems to the url */
-    OCSYNC_EXPORT QUrl concatUrlPath(
-        const QUrl &url, const QString &concatPath,
-        const QUrlQuery &queryItems = {});
+    OCSYNC_EXPORT QUrl concatUrlPath(const QUrl &url, const QString &concatPath, const QUrlQuery &queryItems = {});
 
     /** Compares two urls and ignores whether thei end wit / */
     OCSYNC_EXPORT bool urlEqual(QUrl a, QUrl b);
@@ -229,8 +227,7 @@ OCSYNC_EXPORT Q_DECLARE_LOGGING_CATEGORY(lcUtility)
 
     /** Returns a file name based on \a fn that's suitable for a conflict.
      */
-    OCSYNC_EXPORT QString makeConflictFileName(
-        const QString &fn, const QDateTime &dt, const QString &user);
+    OCSYNC_EXPORT QString makeConflictFileName(const QString &fn, const QDateTime &dt, const QString &user);
 
     /** Returns whether a file name indicates a conflict file
      */

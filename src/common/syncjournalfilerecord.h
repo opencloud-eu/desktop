@@ -19,13 +19,13 @@
 #ifndef SYNCJOURNALFILERECORD_H
 #define SYNCJOURNALFILERECORD_H
 
-#include <QString>
 #include <QDateTime>
+#include <QString>
 
+#include "common/utility.h"
 #include "csync.h"
 #include "ocsynclib.h"
 #include "remotepermissions.h"
-#include "common/utility.h"
 
 namespace OCC {
 
@@ -38,10 +38,7 @@ class SyncFileItem;
 class OCSYNC_EXPORT SyncJournalFileRecord
 {
 public:
-    bool isValid() const
-    {
-        return !_path.isEmpty();
-    }
+    bool isValid() const { return !_path.isEmpty(); }
 
     QDateTime modDateTime() const { return Utility::qDateTimeFromTime_t(_modtime); }
 
@@ -62,9 +59,7 @@ public:
     QByteArray _checksumHeader;
 };
 
-bool OCSYNC_EXPORT
-operator==(const SyncJournalFileRecord &lhs,
-    const SyncJournalFileRecord &rhs);
+bool OCSYNC_EXPORT operator==(const SyncJournalFileRecord &lhs, const SyncJournalFileRecord &rhs);
 
 class OCSYNC_EXPORT SyncJournalErrorBlacklistRecord
 {

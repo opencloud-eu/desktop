@@ -137,7 +137,9 @@ public:
 };
 
 namespace detail {
-    struct NoResultData{};
+    struct NoResultData
+    {
+    };
 }
 
 template <typename Error>
@@ -145,11 +147,16 @@ class Result<void, Error> : public Result<detail::NoResultData, Error>
 {
 public:
     using Result<detail::NoResultData, Error>::Result;
-    Result() : Result(detail::NoResultData{}) {}
+    Result()
+        : Result(detail::NoResultData{})
+    {
+    }
 };
 
 namespace detail {
-struct OptionalNoErrorData{};
+    struct OptionalNoErrorData
+    {
+    };
 }
 
 template <typename T>
