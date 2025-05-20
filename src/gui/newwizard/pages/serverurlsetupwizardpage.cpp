@@ -1,9 +1,8 @@
 #include "serverurlsetupwizardpage.h"
 #include "ui_serverurlsetupwizardpage.h"
 
-#include "theme.h"
-
-#include <QIcon>
+#include "libsync/globalconfig.h"
+#include "libsync/theme.h"
 
 
 namespace OCC::Wizard {
@@ -14,9 +13,9 @@ ServerUrlSetupWizardPage::ServerUrlSetupWizardPage(const QUrl &serverUrl)
     _ui->setupUi(this);
 
     // not the best style, but we hacked such branding into the pages elsewhere, too
-    if (!Theme::instance()->overrideServerUrl().isEmpty()) {
+    if (GlobalConfig::serverUrl().isValid()) {
         // note that the text should be set before the page is displayed, this way validateInput() will enable the next button
-        _ui->urlLineEdit->setText(Theme::instance()->overrideServerUrl().toString());
+        _ui->urlLineEdit->setText(GlobalConfig::serverUrl().toString());
 
         _ui->urlLineEdit->hide();
         _ui->serverUrlLabel->hide();

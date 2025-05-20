@@ -9,6 +9,11 @@
 
 using namespace OCC;
 
+QUrl GlobalConfig::serverUrl()
+{
+    return getValue("Wizard/ServerUrl").toUrl();
+}
+
 QVariant GlobalConfig::getValue(QAnyStringView param, const QVariant &defaultValue)
 {
     static const QSettings systemSettings = {

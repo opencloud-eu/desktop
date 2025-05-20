@@ -12,9 +12,10 @@
 * for more details.
 */
 
-// just a stub so the MOC file can be included somewhere
-#include "moc_enums.cpp"
-#include "theme.h"
+#include "enums.h"
+
+#include "libsync/globalconfig.h"
+#include "libsync/theme.h"
 
 #include <QApplication>
 
@@ -25,7 +26,7 @@ QString OCC::Utility::enumToDisplayName(SetupWizardState state)
 {
     switch (state) {
     case SetupWizardState::ServerUrlState:
-        if (Theme::instance()->overrideServerUrl().isEmpty()) {
+        if (GlobalConfig::serverUrl().isValid()) {
             return QApplication::translate("SetupWizardState", "Server URL");
         } else {
             return QApplication::translate("SetupWizardState", "Welcome");
@@ -38,3 +39,5 @@ QString OCC::Utility::enumToDisplayName(SetupWizardState state)
         Q_UNREACHABLE();
     }
 }
+
+#include "moc_enums.cpp"
