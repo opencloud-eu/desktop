@@ -9,22 +9,22 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/AccountBar.qml" line="108"/>
+        <location filename="../src/gui/qml/AccountBar.qml" line="114"/>
         <source>Add Account</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/AccountBar.qml" line="135"/>
+        <location filename="../src/gui/qml/AccountBar.qml" line="141"/>
         <source>Activity</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/AccountBar.qml" line="149"/>
+        <location filename="../src/gui/qml/AccountBar.qml" line="155"/>
         <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/AccountBar.qml" line="178"/>
+        <location filename="../src/gui/qml/AccountBar.qml" line="184"/>
         <source>Quit</source>
         <translation type="unfinished"></translation>
     </message>
@@ -365,22 +365,22 @@ File synchronization desktop utility.</source>
 <context>
     <name>FolderWizard</name>
     <message>
-        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="49"/>
+        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="47"/>
         <source>&lt;b&gt;Error:&lt;/b&gt; %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="49"/>
+        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="47"/>
         <source>&lt;b&gt;Warning:&lt;/b&gt; %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="55"/>
+        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="53"/>
         <source>&lt;b&gt;Error:&lt;/b&gt;&lt;ul&gt;%1&lt;/ul&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="56"/>
+        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="54"/>
         <source>&lt;b&gt;Warning:&lt;/b&gt;&lt;ul&gt;%1&lt;/ul&gt;</source>
         <translation type="unfinished"></translation>
     </message>
@@ -584,39 +584,39 @@ File synchronization desktop utility.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="183"/>
-        <location filename="../src/gui/accountsettings.cpp" line="222"/>
-        <location filename="../src/gui/accountsettings.cpp" line="544"/>
+        <location filename="../src/gui/accountsettings.cpp" line="203"/>
+        <location filename="../src/gui/accountsettings.cpp" line="242"/>
+        <location filename="../src/gui/accountsettings.cpp" line="564"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="127"/>
+        <location filename="../src/gui/accountsettings.cpp" line="147"/>
         <source>Choose what to sync</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="176"/>
+        <location filename="../src/gui/accountsettings.cpp" line="196"/>
         <source>Confirm removal of Space</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="177"/>
+        <location filename="../src/gui/accountsettings.cpp" line="197"/>
         <source>&lt;p&gt;Do you really want to stop syncing the Space &lt;i&gt;&quot;%1&quot;&lt;/i&gt;?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; This will &lt;b&gt;not&lt;/b&gt; delete any files.&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="182"/>
+        <location filename="../src/gui/accountsettings.cpp" line="202"/>
         <source>Remove Space</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="213"/>
+        <location filename="../src/gui/accountsettings.cpp" line="233"/>
         <source>Disable virtual file support?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="214"/>
+        <location filename="../src/gui/accountsettings.cpp" line="234"/>
         <source>This action will disable virtual file support. As a consequence contents of folders that are currently marked as &apos;available online only&apos; will be downloaded.
 
 The only advantage of disabling virtual file support is that the selective sync feature will become available again.
@@ -625,112 +625,112 @@ This action will abort any currently running synchronization.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="221"/>
+        <location filename="../src/gui/accountsettings.cpp" line="241"/>
         <source>Disable support</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="262"/>
+        <location filename="../src/gui/accountsettings.cpp" line="282"/>
         <source>Sync Running</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="262"/>
+        <location filename="../src/gui/accountsettings.cpp" line="282"/>
         <source>The sync operation is running.&lt;br/&gt;Do you want to stop it?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="279"/>
+        <location filename="../src/gui/accountsettings.cpp" line="299"/>
         <source>Sync paused by user</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="294"/>
+        <location filename="../src/gui/accountsettings.cpp" line="314"/>
         <source>Internet connection is metered</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="295"/>
+        <location filename="../src/gui/accountsettings.cpp" line="315"/>
         <source>Synchronization is paused because the Internet connection is a metered connection&lt;p&gt;Do you really want to force a Synchronization now?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="319"/>
+        <location filename="../src/gui/accountsettings.cpp" line="339"/>
         <source>User triggered force sync</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="344"/>
+        <location filename="../src/gui/accountsettings.cpp" line="364"/>
         <source>Mark as read</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="379"/>
+        <location filename="../src/gui/accountsettings.cpp" line="399"/>
         <source>Connected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="387"/>
+        <location filename="../src/gui/accountsettings.cpp" line="407"/>
         <source>Server is temporarily unavailable</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="390"/>
+        <location filename="../src/gui/accountsettings.cpp" line="410"/>
         <source>Server is currently in maintenance mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="393"/>
+        <location filename="../src/gui/accountsettings.cpp" line="413"/>
         <source>Signed out</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="396"/>
+        <location filename="../src/gui/accountsettings.cpp" line="416"/>
         <source>Updating credentials...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="401"/>
+        <location filename="../src/gui/accountsettings.cpp" line="421"/>
         <source>Captive portal prevents connections to the server.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="403"/>
+        <location filename="../src/gui/accountsettings.cpp" line="423"/>
         <source>Sync is paused due to metered internet connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="405"/>
+        <location filename="../src/gui/accountsettings.cpp" line="425"/>
         <source>Connecting...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="409"/>
+        <location filename="../src/gui/accountsettings.cpp" line="429"/>
         <source>Server configuration error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="415"/>
+        <location filename="../src/gui/accountsettings.cpp" line="435"/>
         <source>Disconnected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="538"/>
+        <location filename="../src/gui/accountsettings.cpp" line="558"/>
         <source>Confirm Account Removal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="539"/>
+        <location filename="../src/gui/accountsettings.cpp" line="559"/>
         <source>&lt;p&gt;Do you really want to remove the connection to the account &lt;i&gt;%1&lt;/i&gt;?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; This will &lt;b&gt;not&lt;/b&gt; delete any files.&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="543"/>
+        <location filename="../src/gui/accountsettings.cpp" line="563"/>
         <source>Remove connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="376"/>
+        <location filename="../src/gui/accountsettings.cpp" line="396"/>
         <source>The server version %1 is unsupported! Proceed at your own risk.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -832,7 +832,7 @@ The update will be performed in the background, and overwrite the current AppIma
 <context>
     <name>OCC::ConnectionValidator</name>
     <message>
-        <location filename="../src/gui/connectionvalidator.cpp" line="166"/>
+        <location filename="../src/gui/connectionvalidator.cpp" line="171"/>
         <source>Please update to the latest server and restart the client.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -842,7 +842,7 @@ The update will be performed in the background, and overwrite the current AppIma
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/connectionvalidator.cpp" line="166"/>
+        <location filename="../src/gui/connectionvalidator.cpp" line="171"/>
         <source>The configured server for this client is too old.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1219,13 +1219,13 @@ Please consider removing this folder from the account and adding it again.</sour
 <context>
     <name>OCC::FolderWizard</name>
     <message>
-        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="129"/>
+        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="127"/>
         <source>Virtual files are not available for the selected folder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="141"/>
         <location filename="../src/gui/folderwizard/folderwizard.cpp" line="143"/>
-        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="145"/>
         <source>Add Space</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1233,7 +1233,7 @@ Please consider removing this folder from the account and adding it again.</sour
 <context>
     <name>OCC::FolderWizardLocalPath</name>
     <message>
-        <location filename="../src/gui/folderwizard/folderwizardlocalpath.cpp" line="96"/>
+        <location filename="../src/gui/folderwizard/folderwizardlocalpath.cpp" line="97"/>
         <source>Select the Spaces root folder</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2432,22 +2432,22 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::SettingsDialog</name>
     <message>
-        <location filename="../src/gui/settingsdialog.cpp" line="96"/>
+        <location filename="../src/gui/settingsdialog.cpp" line="97"/>
         <source>Hide</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/settingsdialog.cpp" line="105"/>
+        <location filename="../src/gui/settingsdialog.cpp" line="106"/>
         <source>Quit %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/settingsdialog.cpp" line="106"/>
+        <location filename="../src/gui/settingsdialog.cpp" line="107"/>
         <source>Are you sure you want to quit %1?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/settingsdialog.cpp" line="132"/>
+        <location filename="../src/gui/settingsdialog.cpp" line="133"/>
         <source>%1 - %2</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2774,23 +2774,13 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::UpdateUrlDialog</name>
     <message>
-        <location filename="../src/gui/updateurldialog.cpp" line="39"/>
-        <source>Change URL permanently to %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/gui/updateurldialog.cpp" line="40"/>
-        <source>Reject</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/gui/updateurldialog.cpp" line="45"/>
+        <location filename="../src/gui/updateurldialog.cpp" line="32"/>
         <source>Url update requested for %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/updateurldialog.cpp" line="46"/>
-        <source>The URL for %1 changed from %2 to %3, do you want to accept the changed URL?</source>
+        <location filename="../src/gui/updateurldialog.cpp" line="33"/>
+        <source>The URL for &lt;b&gt;%1&lt;/b&gt; changed from:&lt;br&gt;&lt;b&gt;%2&lt;/b&gt; to:&lt;br&gt; &lt;b&gt;%3&lt;/b&gt;.&lt;br&gt;&lt;br&gt;Do you want to accept the new URL permanently?&lt;br&gt;This will cause an application restart.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2916,35 +2906,6 @@ Note that using any logging command line options will override the settings.</so
         <location filename="../src/gui/newwizard/pages/serverurlsetupwizardpage.cpp" line="34"/>
         <source>%1 logo</source>
         <extracomment>This is the accessibility text for the logo in the setup wizard page. The parameter is the name for the (branded) application.</extracomment>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>OCC::Wizard::ServerUrlSetupWizardState</name>
-    <message>
-        <location filename="../src/gui/newwizard/states/serverurlsetupwizardstate.cpp" line="75"/>
-        <source>Invalid server URL</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/gui/newwizard/states/serverurlsetupwizardstate.cpp" line="81"/>
-        <source>Insecure connection</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/gui/newwizard/states/serverurlsetupwizardstate.cpp" line="82"/>
-        <source>The connection to %1 is insecure.
-Are you sure you want to proceed?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/gui/newwizard/states/serverurlsetupwizardstate.cpp" line="89"/>
-        <source>Confirm</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/gui/newwizard/states/serverurlsetupwizardstate.cpp" line="92"/>
-        <source>Insecure server rejected by user</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3092,22 +3053,22 @@ Are you sure you want to proceed?</source>
 <context>
     <name>ResolveUrlJobFactory</name>
     <message>
-        <location filename="../src/gui/newwizard/jobs/resolveurljobfactory.cpp" line="56"/>
+        <location filename="../src/gui/newwizard/jobs/resolveurljobfactory.cpp" line="57"/>
         <source>Could not detect compatible server at %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/newwizard/jobs/resolveurljobfactory.cpp" line="85"/>
+        <location filename="../src/gui/newwizard/jobs/resolveurljobfactory.cpp" line="95"/>
         <source>User rejected redirect from %1 to %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/newwizard/jobs/resolveurljobfactory.cpp" line="107"/>
+        <location filename="../src/gui/newwizard/jobs/resolveurljobfactory.cpp" line="119"/>
         <source>SSL Error: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/newwizard/jobs/resolveurljobfactory.cpp" line="123"/>
+        <location filename="../src/gui/newwizard/jobs/resolveurljobfactory.cpp" line="135"/>
         <source>User rejected invalid SSL certificate</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3127,6 +3088,14 @@ Are you sure you want to proceed?</source>
     <message>
         <location filename="../src/gui/newwizard/pages/serverurlsetupwizardpage.ui" line="85"/>
         <source>What is your server&apos;s address?</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ServerUrlSetupWizardState</name>
+    <message>
+        <location filename="../src/gui/newwizard/states/serverurlsetupwizardstate.cpp" line="56"/>
+        <source>Invalid server URL</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3332,6 +3301,24 @@ Are you sure you want to proceed?</source>
     <message>
         <location filename="../src/gui/updater/updatedownloadedwidget.ui" line="74"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt; font-weight:700;&quot;&gt;Restart required&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>UpdateUrlDialog</name>
+    <message>
+        <location filename="../src/gui/qml/UpdateUrlDialog.qml" line="46"/>
+        <source>Cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/gui/qml/UpdateUrlDialog.qml" line="50"/>
+        <source>Accept and Restart</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/gui/qml/UpdateUrlDialog.qml" line="50"/>
+        <source>Accept</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
