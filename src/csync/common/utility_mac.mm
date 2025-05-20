@@ -49,9 +49,8 @@ void Utility::setupFavLink(const QString &folder)
     QScopeGuard freePlaces([placesItems]() { CFRelease(placesItems); });
 
     if (placesItems) {
-        //Insert an item to the list.
-        if (LSSharedFileListItemRef item = LSSharedFileListInsertItemURL(placesItems,
-                kLSSharedFileListItemLast, nullptr, nullptr, urlRef, nullptr, nullptr)) {
+        // Insert an item to the list.
+        if (LSSharedFileListItemRef item = LSSharedFileListInsertItemURL(placesItems, kLSSharedFileListItemLast, nullptr, nullptr, urlRef, nullptr, nullptr)) {
             CFRelease(item);
         }
     }
@@ -79,13 +78,16 @@ static Result<void, QString> writePlistToFile(NSString *plistFile, NSDictionary 
         // Note: the Permission enum documentation states that on unix the owner permissions are
         // returned, but: "This behavior might change in a future Qt version." So we play it safe,
         // and set both the user and the owner permissions to rwx.
-        if (!QFile(plistDir.path()).setPermissions(QFileDevice::ReadOwner | QFileDevice::ReadUser | QFileDevice::WriteOwner | QFileDevice::WriteUser | QFileDevice::ExeOwner | QFileDevice::ExeUser)) {
+        if (!QFile(plistDir.path())
+                 .setPermissions(QFileDevice::ReadOwner | QFileDevice::ReadUser | QFileDevice::WriteOwner | QFileDevice::WriteUser | QFileDevice::ExeOwner
+                     | QFileDevice::ExeUser)) {
             qCInfo(lcUtility()) << "Failed to set directory permmissions for" << plistDir.path();
         }
     }
 
     // Now write the file.
-    qCInfo(lcUtility()) << "Writing plist file" << QString::fromNSString(plistFile); // Especially for branded clients: log the file name, so it can be found when debugging.
+    qCInfo(lcUtility()) << "Writing plist file"
+                        << QString::fromNSString(plistFile); // Especially for branded clients: log the file name, so it can be found when debugging.
     if (![plist writeToURL:[NSURL fileURLWithPath:plistFile isDirectory:NO] error:&error]) {
         return QString::fromNSString(error.localizedDescription);
     }
@@ -115,8 +117,7 @@ bool Utility::hasLaunchOnStartup(const QString &appName)
         if ([fileManager fileExistsAtPath:plistFile]) {
             auto maybePlist = readPlistFromFile(plistFile);
             if (!maybePlist) {
-                qCInfo(lcUtility()).nospace() << "Cannot read '" << QString::fromNSString(plistFile)
-                                              << "', probably not a valid plist file";
+                qCInfo(lcUtility()).nospace() << "Cannot read '" << QString::fromNSString(plistFile) << "', probably not a valid plist file";
                 return false;
             }
 
@@ -148,12 +149,11 @@ bool Utility::hasLaunchOnStartup(const QString &appName)
 
 static Result<void, QString> writeNewPlistFile(NSString *plistFile, NSString *fullPath, bool enable)
 {
-    NSDictionary *plistTemplate = @{
-        @"Label" : QCoreApplication::organizationDomain().toNSString(),
-        @"KeepAlive" : @NO,
-        @"Program" : fullPath,
-        @"RunAtLoad" : enable ? @YES : @NO
-    };
+    NSDictionary *plistTemplate =
+        @{@"Label" : QCoreApplication::organizationDomain().toNSString(),
+            @"KeepAlive" : @NO,
+            @"Program" : fullPath,
+            @"RunAtLoad" : enable ? @YES : @NO};
 
     return writePlistToFile(plistFile, plistTemplate);
 }
@@ -212,7 +212,8 @@ void Utility::setLaunchOnStartup(const QString &appName, const QString &guiName,
                 if (!result) {
                     qCWarning(lcUtility) << result.error();
                 }
-            } else if ([fullPath compare:programValue options:NSCaseInsensitiveSearch] == NSOrderedSame) { // (Note: case insensitive compare, because most fs setups on mac are case insensitive)
+            } else if ([fullPath compare:programValue options:NSCaseInsensitiveSearch]
+                == NSOrderedSame) { // (Note: case insensitive compare, because most fs setups on mac are case insensitive)
                 // Wohoo, it's ours! Now carefully change only the RunAtLoad entry. If any value for
                 // e.g. KeepAlive was changed, we leave it as-is.
                 auto result = modifyPlist(plistFile, plist, enable);
