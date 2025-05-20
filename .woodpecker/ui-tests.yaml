@@ -89,6 +89,22 @@ steps:
       - timeout 300 bash -c 'while [ $(curl -sk -uadmin:admin https://opencloud:9200/graph/v1.0/users/admin -w %{http_code} -o /dev/null) != 200 ]; do sleep 1; done'
     image: owncloudci/alpine:latest
     name: wait-for-opencloud
+  - name: restore-desktop-client
+    commands:
+      - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
+      - mc cp -ar s3/$CACHE_BUCKET/desktop-build/${CI_COMMIT_SHA}/ /woodpecker/src/github.com/opencloud-eu/desktop/desktop/build
+      - find /woodpecker/src/github.com/opencloud-eu/desktop/desktop/build
+    environment:
+      AWS_ACCESS_KEY_ID:
+        from_secret: cache_s3_access_key
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: cache_s3_secret_key
+      CACHE_BUCKET:
+        from_secret: cache_s3_bucket
+      MC_HOST:
+        from_secret: cache_s3_server
+    image: minio/mc:RELEASE.2021-10-07T04-19-58Z
+
   - name: UI-tests
     image: *squish_image
     environment:
