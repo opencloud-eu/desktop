@@ -10,7 +10,7 @@ import squish
 from PySide6.QtCore import QSettings, QUuid, QUrl, QJsonValue
 
 from helpers.SpaceHelper import get_space_id
-from helpers.ConfigHelper import get_config, set_config, is_windows
+from helpers.ConfigHelper import get_config, set_config, is_windows, is_linux
 from helpers.SyncHelper import listen_sync_status_for_item
 from helpers.api.utils import url_join
 from helpers.UserHelper import get_displayname_for_user, get_password_for_user
@@ -182,7 +182,8 @@ def generate_account_config(users, space='Personal'):
 
 
     settings.sync()
-    os.rename(join(get_config('clientConfigDir'), "opencloud.conf"), get_config('clientConfigFile'))
+    if is_linux():
+        os.rename(join(get_config('clientConfigDir'), "opencloud.conf"), get_config('clientConfigFile'))
     return sync_paths
 
 def setup_client(username, space='Personal'):
