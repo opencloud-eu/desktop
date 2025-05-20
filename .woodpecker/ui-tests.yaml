@@ -76,7 +76,7 @@ steps:
   - name: restore-desktop-client
     commands:
       - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-      - mc cp -a -r s3/$CACHE_BUCKET/desktop-build/${CI_COMMIT_SHA}/ /woodpecker/src/github.com/opencloud-eu/desktop/desktop/build/bin
+      - mc cp -a -r s3/$CACHE_BUCKET/desktop-build/${CI_COMMIT_SHA}/ /woodpecker/src/github.com/opencloud-eu/desktop/desktop/build
       - ls -lh /woodpecker/src/github.com/opencloud-eu/desktop/desktop/build/bin
     environment:
       AWS_ACCESS_KEY_ID:
