@@ -8,6 +8,7 @@
 
 ### 🐛 Bug Fixes
 
+- Fix casing of Spaces [[#272](https://github.com/opencloud-eu/desktop/pull/272)]
 - Restart the client if the server url changed [[#254](https://github.com/opencloud-eu/desktop/pull/254)]
 - Directly schedule sync once the etag changed [[#253](https://github.com/opencloud-eu/desktop/pull/253)]
 - Update quota exeeded message [[#248](https://github.com/opencloud-eu/desktop/pull/248)]
