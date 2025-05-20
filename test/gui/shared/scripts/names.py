@@ -28,7 +28,6 @@ oCC_ShareLinkWidget_checkBox_expire_QCheckBox = {"container": qt_tabwidget_stack
 oCC_ShareLinkWidget_checkBox_expire_QProgressIndicator = {"aboveWidget": oCC_ShareLinkWidget_lineEdit_password_QLineEdit, "container": qt_tabwidget_stackedwidget_OCC_ShareLinkWidget_OCC_ShareLinkWidget, "leftWidget": oCC_ShareLinkWidget_checkBox_expire_QCheckBox, "type": "QProgressIndicator", "unnamed": 1, "visible": 1}
 settings_settingsdialog_toolbutton_Add_account_QToolButton = {"name": "settingsdialog_toolbutton_Add account", "type": "QToolButton", "visible": 1, "window": settings_OCC_SettingsDialog}
 settings_settingsdialog_toolbutton_Activity_QToolButton = {"name": "settingsdialog_toolbutton_Activity", "type": "QToolButton", "visible": 1, "window": settings_OCC_SettingsDialog}
-disable_virtual_file_support_QMessageBox = {"type": "QMessageBox", "unnamed": 1, "visible": 1, "windowTitle": "Disable virtual file support?"}
 opencloudWizard_urlLabel_QLabel = {"name": "urlLabel", "type": "QLabel", "visible": 1, "window": opencloudWizard_OCC_OpencloudWizard}
 setupWizardWindow_OCC_Wizard_SetupWizardWindow = {"name": "SetupWizardWidget", "type": "OCC::Wizard::SetupWizardWidget", "visible": 1}
 setupWizardWindow_contentWidget_QStackedWidget = {"name": "contentWidget", "type": "QStackedWidget", "visible": 1, "window": setupWizardWindow_OCC_Wizard_SetupWizardWindow}
