@@ -67,18 +67,10 @@ public:
      */
     QString backup() const;
 
-
-    QString defaultConnection() const;
-
-    bool passwordStorageAllowed(const QString &connection = QString());
-
     /* Server poll interval in milliseconds */
-    std::chrono::milliseconds remotePollInterval(std::chrono::seconds defaultVal, const QString &connection = QString()) const;
+    std::chrono::milliseconds remotePollInterval(std::chrono::seconds defaultVal) const;
     /* Set poll interval. Value in milliseconds has to be larger than 5000 */
-    void setRemotePollInterval(std::chrono::milliseconds interval, const QString &connection = QString());
-
-    /* Force sync interval, in milliseconds */
-    std::chrono::milliseconds forceSyncInterval(std::chrono::seconds remoteFromCapabilities, const QString &connection = QString()) const;
+    void setRemotePollInterval(std::chrono::milliseconds interval);
 
     /**
      * Interval in milliseconds within which full local discovery is required
@@ -86,9 +78,6 @@ public:
      * Use -1 to disable regular full local discoveries.
      */
     std::chrono::milliseconds fullLocalDiscoveryInterval() const;
-
-    bool promptDeleteFiles() const;
-    void setPromptDeleteFiles(bool promptDeleteFiles);
 
     bool crashReporter() const;
     void setCrashReporter(bool enabled);
@@ -153,10 +142,10 @@ public:
     void restoreGeometry(QWidget *w);
 
     // how often the check about new versions runs
-    std::chrono::milliseconds updateCheckInterval(const QString &connection = QString()) const;
+    std::chrono::milliseconds updateCheckInterval() const;
 
-    bool skipUpdateCheck(const QString &connection = QString()) const;
-    void setSkipUpdateCheck(bool, const QString &);
+    bool skipUpdateCheck() const;
+    void setSkipUpdateCheck(bool);
 
     QString updateChannel() const;
     void setUpdateChannel(const QString &channel);
@@ -177,19 +166,11 @@ public:
 
 protected:
     QVariant getPolicySetting(const QString &policy, const QVariant &defaultValue = QVariant()) const;
-    void storeData(const QString &group, const QString &key, const QVariant &value);
-    void removeData(const QString &group, const QString &key);
-    bool dataExists(const QString &group, const QString &key) const;
 
 private:
-    QVariant getValue(const QString &param, const QString &group = QString(),
-        const QVariant &defaultValue = QVariant()) const;
+    QVariant getValue(const QString &param, const QVariant &defaultValue = QVariant()) const;
     void setValue(const QString &key, const QVariant &value);
 
-private:
-    typedef QSharedPointer<AbstractCredentials> SharedCreds;
-
-    static QString _oCVersion;
     static QString _confDir;
 };
 }
