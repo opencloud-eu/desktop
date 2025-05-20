@@ -387,7 +387,7 @@ Pane {
                 Layout.fillWidth: true
             }
             Label {
-                text: qsTr("You are synchronizing %1 out of %2 spaces").arg(accountSettings.syncedSpaces).arg(accountSettings.syncedSpaces + accountSettings.unsyncedSpaces)
+                text: qsTr("You are synchronizing %1 out of %2 Spaces").arg(accountSettings.syncedSpaces).arg(accountSettings.syncedSpaces + accountSettings.unsyncedSpaces)
                 visible: accountSettings.accountState.state === AccountState.Connected
             }
         }
