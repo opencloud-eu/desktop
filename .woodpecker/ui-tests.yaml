@@ -33,22 +33,6 @@ steps:
       - tar -xvf /woodpecker/src/github.com/opencloud-eu/desktop/desktop/playwright-browsers.tar.gz -C .
     image: owncloud/ubuntu:20.04
     name: unzip-browsers-cache
-  - image: plugins/s3-cache:1
-    name: restore_desktop-dist_build_artifact_cache
-    settings:
-      access_key:
-        from_secret: cache_s3_access_key
-      endpoint:
-        from_secret: cache_s3_server
-      fallback_path: cache/opencloud-eu/desktop/${CI_COMMIT_SHA}-${CI_PIPELINE_NUMBER}
-      filename: desktop-dist_build_artifact_cache.tar
-      mount:
-        - dist
-      path: cache/opencloud-eu/desktop/${CI_COMMIT_SHA}-${CI_PIPELINE_NUMBER}
-      rebuild: false
-      restore: true
-      secret_key:
-        from_secret: cache_s3_secret_key
   - commands:
       - . ./.woodpecker.env
       - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
@@ -92,8 +76,8 @@ steps:
   - name: restore-desktop-client
     commands:
       - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-      - mc cp -a -r s3/$CACHE_BUCKET/desktop-build/${CI_COMMIT_SHA}/ /woodpecker/src/github.com/opencloud-eu/desktop/desktop/build
-      - find /woodpecker/src/github.com/opencloud-eu/desktop/desktop/build
+      - mc cp -a -r s3/$CACHE_BUCKET/desktop-build/${CI_COMMIT_SHA}/ /woodpecker/src/github.com/opencloud-eu/desktop/desktop/build/bin
+      - ls -lh /woodpecker/src/github.com/opencloud-eu/desktop/desktop/build/bin
     environment:
       AWS_ACCESS_KEY_ID:
         from_secret: cache_s3_access_key
