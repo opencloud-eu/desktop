@@ -36,23 +36,23 @@ namespace OCC {
 
 OCSYNC_EXPORT Q_DECLARE_LOGGING_CATEGORY(lcFileSystem)
 
-/**
- *  \addtogroup libsync
- *  @{
- */
+    /**
+     *  \addtogroup libsync
+     *  @{
+     */
 
-/**
- * @brief This file contains file system helper
- */
-namespace FileSystem {
+    /**
+     * @brief This file contains file system helper
+     */
+    namespace FileSystem
+{
     OCSYNC_EXPORT Q_NAMESPACE;
 
     /**
      * List of characters not allowd in filenames on Windows
      */
     constexpr_list auto IllegalFilenameCharsWindows = {
-        QLatin1Char('\\'), QLatin1Char(':'), QLatin1Char('?'), QLatin1Char('*'), QLatin1Char('"'), QLatin1Char('>'), QLatin1Char('<'), QLatin1Char('|')
-    };
+        QLatin1Char('\\'), QLatin1Char(':'), QLatin1Char('?'), QLatin1Char('*'), QLatin1Char('"'), QLatin1Char('>'), QLatin1Char('<'), QLatin1Char('|')};
 
     /**
      * @brief Mark the file as hidden  (only has effects on windows)
@@ -110,17 +110,13 @@ namespace FileSystem {
      *
      * It behaves as QFile::rename() but handles .lnk files correctly on Windows.
      */
-    bool OCSYNC_EXPORT rename(const QString &originFileName,
-        const QString &destinationFileName,
-        QString *errorString = nullptr);
+    bool OCSYNC_EXPORT rename(const QString &originFileName, const QString &destinationFileName, QString *errorString = nullptr);
 
     /**
      * Rename the file \a originFileName to \a destinationFileName, and
      * overwrite the destination if it already exists - without extra checks.
      */
-    bool OCSYNC_EXPORT uncheckedRenameReplace(const QString &originFileName,
-        const QString &destinationFileName,
-        QString *errorString);
+    bool OCSYNC_EXPORT uncheckedRenameReplace(const QString &originFileName, const QString &destinationFileName, QString *errorString);
 
     /**
      * Removes a file.
@@ -139,11 +135,7 @@ namespace FileSystem {
      */
     bool OCSYNC_EXPORT openAndSeekFileSharedRead(QFile * file, QString * error, qint64 seek);
 
-    enum class LockMode {
-        Shared,
-        Exclusive,
-        SharedRead
-    };
+    enum class LockMode { Shared, Exclusive, SharedRead };
     Q_ENUM_NS(LockMode);
     /**
      * Returns true when a file is locked. (Windows only)

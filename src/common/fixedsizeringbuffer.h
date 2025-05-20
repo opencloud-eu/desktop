@@ -33,47 +33,23 @@ public:
     {
     }
 
-    constexpr size_t capacity() const
-    {
-        return _data.size();
-    }
+    constexpr size_t capacity() const { return _data.size(); }
 
-    constexpr bool isFull() const
-    {
-        return size() >= _data.size();
-    }
+    constexpr bool isFull() const { return size() >= _data.size(); }
 
-    constexpr size_t size() const
-    {
-        return _end - _start;
-    }
+    constexpr size_t size() const { return _end - _start; }
 
-    constexpr bool empty() const
-    {
-        return size() == 0;
-    }
+    constexpr bool empty() const { return size() == 0; }
 
     // iterators pointing to the raw data, the range might be smaller than _Size
     // if ever needed we could implement a iterator for the data window
-    auto begin()
-    {
-        return _data.begin();
-    }
+    auto begin() { return _data.begin(); }
 
-    auto end()
-    {
-        return isFull() ? _data.end() : _data.begin() + size();
-    }
+    auto end() { return isFull() ? _data.end() : _data.begin() + size(); }
 
-    auto cbegin() const
-    {
-        return _data.cbegin();
-    }
+    auto cbegin() const { return _data.cbegin(); }
 
-    auto cend() const
-    {
-        return isFull() ? _data.cend() : _data.cbegin() + size();
-    }
+    auto cend() const { return isFull() ? _data.cend() : _data.cbegin() + size(); }
 
     void pop_front()
     {
@@ -93,10 +69,7 @@ public:
         _end++;
     }
 
-    const TYPE &at(size_t index) const
-    {
-        return _data.at(convertToIndex(index));
-    }
+    const TYPE &at(size_t index) const { return _data.at(convertToIndex(index)); }
 
     /*
      * Remove items if f returns true
@@ -136,10 +109,7 @@ private:
     size_t _end = 0;
 
     // converts an array index to the underlying array index
-    constexpr size_t convertToIndex(size_t i) const
-    {
-        return (_start + i) % _data.size();
-    }
+    constexpr size_t convertToIndex(size_t i) const { return (_start + i) % _data.size(); }
 };
 
 }

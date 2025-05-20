@@ -17,9 +17,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
+#include "common/utility.h"
 #include "common/asserts.h"
 #include "common/filesystembase.h"
-#include "common/utility.h"
 #include "common/version.h"
 
 // Note:  This file must compile without QtGui
@@ -336,8 +336,7 @@ QString Utility::concatUrlPathItems(QStringList &&items, const QLatin1Char delim
     return items.join(delimiter);
 }
 
-QUrl Utility::concatUrlPath(const QUrl &url, const QString &concatPath,
-    const QUrlQuery &queryItems)
+QUrl Utility::concatUrlPath(const QUrl &url, const QString &concatPath, const QUrlQuery &queryItems)
 {
     QString path = url.path();
     if (!concatPath.isEmpty()) {
@@ -372,8 +371,7 @@ bool Utility::urlEqual(QUrl url1, QUrl url2)
     return url1.matches(url2, QUrl::StripTrailingSlash | QUrl::NormalizePathSegments);
 }
 
-QString Utility::makeConflictFileName(
-    const QString &fn, const QDateTime &dt, const QString &user)
+QString Utility::makeConflictFileName(const QString &fn, const QDateTime &dt, const QString &user)
 {
     QString conflictFileName(fn);
     // Add conflict tag before the extension.
@@ -387,7 +385,8 @@ QString Utility::makeConflictFileName(
     if (!user.isEmpty()) {
         // Don't allow parens in the user name, to ensure
         // we can find the beginning and end of the conflict tag.
-        const auto userName = sanitizeForFileName(user).replace(QLatin1Char('('), QLatin1Char('_')).replace(QLatin1Char(')'), QLatin1Char('_'));;
+        const auto userName = sanitizeForFileName(user).replace(QLatin1Char('('), QLatin1Char('_')).replace(QLatin1Char(')'), QLatin1Char('_'));
+        ;
         conflictMarker += userName + QLatin1Char(' ');
     }
     conflictMarker += dt.toString(QStringLiteral("yyyy-MM-dd hhmmss")) + QLatin1Char(')');
@@ -505,9 +504,5 @@ QDebug operator<<(QDebug debug, nanoseconds in)
     const auto min = duration_cast<minutes>(in -= h);
     const auto s = duration_cast<seconds>(in -= min);
     const auto ms = duration_cast<milliseconds>(in -= s);
-    return debug << "duration("
-                 << h.count() << "h, "
-                 << min.count() << "min, "
-                 << s.count() << "s, "
-                 << ms.count() << "ms)";
+    return debug << "duration(" << h.count() << "h, " << min.count() << "min, " << s.count() << "s, " << ms.count() << "ms)";
 }

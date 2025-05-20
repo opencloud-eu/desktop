@@ -79,31 +79,16 @@ namespace CheckSums {
 
     constexpr_list auto All = {
         // Sorted by priority
-        pair(Algorithm::SHA3_256),
-        pair(Algorithm::SHA256),
-        pair(Algorithm::SHA1),
-        pair(Algorithm::MD5),
-        pair(Algorithm::ADLER32),
-        pair(Algorithm::DUMMY_FOR_TESTS)
-    };
+        pair(Algorithm::SHA3_256), pair(Algorithm::SHA256), pair(Algorithm::SHA1), pair(Algorithm::MD5), pair(Algorithm::ADLER32),
+        pair(Algorithm::DUMMY_FOR_TESTS)};
 
-    constexpr_list auto UnsafeAlgorithms = {
-        pair(Algorithm::ADLER32),
-        pair(Algorithm::DUMMY_FOR_TESTS)
-    };
+    constexpr_list auto UnsafeAlgorithms = {pair(Algorithm::ADLER32), pair(Algorithm::DUMMY_FOR_TESTS)};
 
-    constexpr_list auto SafeAlgorithms = {
-        pair(Algorithm::SHA3_256),
-        pair(Algorithm::SHA256),
-        pair(Algorithm::SHA1),
-        pair(Algorithm::MD5)
-    };
+    constexpr_list auto SafeAlgorithms = {pair(Algorithm::SHA3_256), pair(Algorithm::SHA256), pair(Algorithm::SHA1), pair(Algorithm::MD5)};
 
     inline Algorithm fromName(std::string_view s)
     {
-        auto it = std::find_if(All.begin(), All.end(), [s](const auto &it) {
-            return it.second == s;
-        });
+        auto it = std::find_if(All.begin(), All.end(), [s](const auto &it) { return it.second == s; });
         if (it != All.end()) {
             return it->first;
         }

@@ -66,15 +66,9 @@ struct OCSYNC_EXPORT VfsSetupParams
      */
     bool multipleAccountsRegistered = false;
 
-    const QUrl &baseUrl() const
-    {
-        return _baseUrl;
-    }
+    const QUrl &baseUrl() const { return _baseUrl; }
 
-    bool groupInSidebar() const
-    {
-        return _groupInSidebar;
-    }
+    bool groupInSidebar() const { return _groupInSidebar; }
 
     SyncEngine *syncEngine() const;
 
@@ -107,18 +101,14 @@ public:
      */
     enum Mode { Off, WindowsCfApi };
     Q_ENUM(Mode)
-    enum class ConvertToPlaceholderResult {
-        Ok,
-        Locked
-    };
+    enum class ConvertToPlaceholderResult { Ok, Locked };
     Q_ENUM(ConvertToPlaceholderResult)
 
     static Optional<Mode> modeFromString(const QString &str);
 
     static Result<void, QString> checkAvailability(const QString &path, OCC::Vfs::Mode mode);
 
-    enum class AvailabilityError
-    {
+    enum class AvailabilityError {
         // Availability can't be retrieved due to db error
         DbError,
         // Availability not available since the item doesn't exist
@@ -127,7 +117,7 @@ public:
     using AvailabilityResult = Result<VfsItemAvailability, AvailabilityError>;
 
 public:
-    explicit Vfs(QObject* parent = nullptr);
+    explicit Vfs(QObject *parent = nullptr);
     ~Vfs() override;
 
     virtual Mode mode() const = 0;
@@ -240,7 +230,8 @@ protected:
      * If the remote metadata changes, the local placeholder's metadata should possibly
      * change as well.
      */
-    [[nodiscard]] virtual Result<ConvertToPlaceholderResult, QString> updateMetadata(const SyncFileItem &item, const QString &filePath, const QString &replacesFile) = 0;
+    [[nodiscard]] virtual Result<ConvertToPlaceholderResult, QString> updateMetadata(
+        const SyncFileItem &item, const QString &filePath, const QString &replacesFile) = 0;
 
     /** Setup the plugin for the folder.
      *

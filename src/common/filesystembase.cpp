@@ -17,8 +17,8 @@
  */
 
 #include "filesystembase.h"
-#include "utility.h"
 #include "common/asserts.h"
+#include "utility.h"
 
 #include <QCoreApplication>
 #include <QDateTime>
@@ -117,8 +117,7 @@ void FileSystem::setFileReadOnly(const QString &filename, bool readonly)
     QFile file(filename);
     QFile::Permissions permissions = file.permissions();
 
-    QFile::Permissions allWritePermissions =
-        QFile::WriteUser | QFile::WriteGroup | QFile::WriteOther | QFile::WriteOwner;
+    QFile::Permissions allWritePermissions = QFile::WriteUser | QFile::WriteGroup | QFile::WriteOther | QFile::WriteOwner;
     static QFile::Permissions defaultWritePermissions = getDefaultWritePermissions();
 
     permissions &= ~allWritePermissions;
@@ -153,9 +152,7 @@ void FileSystem::setFileReadOnlyWeak(const QString &filename, bool readonly)
     setFileReadOnly(filename, readonly);
 }
 
-bool FileSystem::rename(const QString &originFileName,
-    const QString &destinationFileName,
-    QString *errorString)
+bool FileSystem::rename(const QString &originFileName, const QString &destinationFileName, QString *errorString)
 {
     bool success = false;
     QString error;
@@ -182,9 +179,7 @@ bool FileSystem::rename(const QString &originFileName,
     }
 
     if (!success) {
-        qCWarning(lcFileSystem) << "Error renaming file" << originFileName
-                                << "to" << destinationFileName
-                                << "failed: " << error;
+        qCWarning(lcFileSystem) << "Error renaming file" << originFileName << "to" << destinationFileName << "failed: " << error;
         if (errorString) {
             *errorString = error;
         }
@@ -192,9 +187,7 @@ bool FileSystem::rename(const QString &originFileName,
     return success;
 }
 
-bool FileSystem::uncheckedRenameReplace(const QString &originFileName,
-    const QString &destinationFileName,
-    QString *errorString)
+bool FileSystem::uncheckedRenameReplace(const QString &originFileName, const QString &destinationFileName, QString *errorString)
 {
     Q_ASSERT(errorString);
 #ifndef Q_OS_WIN
@@ -219,7 +212,7 @@ bool FileSystem::uncheckedRenameReplace(const QString &originFileName,
         return false;
     }
 
-#else //Q_OS_WIN
+#else // Q_OS_WIN
     // You can not overwrite a read-only file on windows.
 
     if (!QFileInfo(destinationFileName).isWritable()) {
@@ -237,8 +230,7 @@ bool FileSystem::uncheckedRenameReplace(const QString &originFileName,
         qCWarning(lcFileSystem) << "Renaming failed: " << *errorString;
         return false;
     }
-    const BOOL ok = MoveFileEx(reinterpret_cast<const wchar_t *>(orig.utf16()),
-        reinterpret_cast<const wchar_t *>(dest.utf16()),
+    const BOOL ok = MoveFileEx(reinterpret_cast<const wchar_t *>(orig.utf16()), reinterpret_cast<const wchar_t *>(dest.utf16()),
         MOVEFILE_REPLACE_EXISTING | MOVEFILE_COPY_ALLOWED | MOVEFILE_WRITE_THROUGH);
     if (!ok) {
         *errorString = Utility::formatWinError(GetLastError());
@@ -490,8 +482,7 @@ bool FileSystem::isJunction(const QString &filename)
         FindClose(hFind);
         return false;
     }
-    return findData.dwFileAttributes != INVALID_FILE_ATTRIBUTES
-        && findData.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT
+    return findData.dwFileAttributes != INVALID_FILE_ATTRIBUTES && findData.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT
         && findData.dwReserved0 == IO_REPARSE_TAG_MOUNT_POINT;
 #else
     Q_UNUSED(filename);

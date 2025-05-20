@@ -125,7 +125,8 @@ ChecksumHeader ChecksumHeader::parseChecksumHeader(const QByteArray &header)
     } else {
         out._checksumType = CheckSums::fromByteArray(header.left(idx));
         if (out._checksumType == CheckSums::Algorithm::PARSE_ERROR) {
-            out._error = QCoreApplication::translate("ChecksumHeader", "The checksum header contained an unknown checksum type '%1'").arg(QString::fromUtf8(header.left(idx)));
+            out._error = QCoreApplication::translate("ChecksumHeader", "The checksum header contained an unknown checksum type '%1'")
+                             .arg(QString::fromUtf8(header.left(idx)));
         }
         out._checksum = header.mid(idx + 1);
     }
@@ -215,9 +216,7 @@ ComputeChecksum::ComputeChecksum(QObject *parent)
 {
 }
 
-ComputeChecksum::~ComputeChecksum()
-{
-}
+ComputeChecksum::~ComputeChecksum() { }
 
 void ComputeChecksum::setChecksumType(CheckSums::Algorithm type)
 {
@@ -247,9 +246,7 @@ void ComputeChecksum::start(std::unique_ptr<QIODevice> device)
 
 void ComputeChecksum::startImpl(std::unique_ptr<QIODevice> device)
 {
-    connect(&_watcher, &QFutureWatcherBase::finished,
-        this, &ComputeChecksum::slotCalculationDone,
-        Qt::UniqueConnection);
+    connect(&_watcher, &QFutureWatcherBase::finished, this, &ComputeChecksum::slotCalculationDone, Qt::UniqueConnection);
 
     // We'd prefer to move the unique_ptr into the lambda, but that's
     // awkward with the C++ standard we're on
@@ -260,11 +257,9 @@ void ComputeChecksum::startImpl(std::unique_ptr<QIODevice> device)
     _watcher.setFuture(QtConcurrent::run([sharedDevice, type]() {
         if (!sharedDevice->open(QIODevice::ReadOnly)) {
             if (auto file = qobject_cast<QFile *>(sharedDevice.data())) {
-                qCWarning(lcChecksums) << "Could not open file" << file->fileName()
-                        << "for reading to compute a checksum" << file->errorString();
+                qCWarning(lcChecksums) << "Could not open file" << file->fileName() << "for reading to compute a checksum" << file->errorString();
             } else {
-                qCWarning(lcChecksums) << "Could not open device" << sharedDevice.data()
-                        << "for reading to compute a checksum" << sharedDevice->errorString();
+                qCWarning(lcChecksums) << "Could not open device" << sharedDevice.data() << "for reading to compute a checksum" << sharedDevice->errorString();
             }
             return QByteArray();
         }
@@ -354,8 +349,7 @@ ComputeChecksum *ValidateChecksumHeader::prepareStart(const QByteArray &checksum
 
     auto calculator = new ComputeChecksum(this);
     calculator->setChecksumType(_expectedChecksum.type());
-    connect(calculator, &ComputeChecksum::done,
-        this, &ValidateChecksumHeader::slotChecksumCalculated);
+    connect(calculator, &ComputeChecksum::done, this, &ValidateChecksumHeader::slotChecksumCalculated);
     return calculator;
 }
 
@@ -371,8 +365,7 @@ void ValidateChecksumHeader::start(std::unique_ptr<QIODevice> device, const QByt
         calculator->start(std::move(device));
 }
 
-void ValidateChecksumHeader::slotChecksumCalculated(CheckSums::Algorithm checksumType,
-    const QByteArray &checksum)
+void ValidateChecksumHeader::slotChecksumCalculated(CheckSums::Algorithm checksumType, const QByteArray &checksum)
 {
     if (_expectedChecksum.type() == CheckSums::Algorithm::PARSE_ERROR) {
         Q_EMIT validationFailed(_expectedChecksum.error());

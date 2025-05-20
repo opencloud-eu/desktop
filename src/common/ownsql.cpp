@@ -39,12 +39,12 @@ constexpr int SQLITE_REPEAT_COUNT = 20;
 
 }
 
-#define SQLITE_DO(A)                                                                \
-    if (1) {                                                                        \
-        _errId = (A);                                                               \
-        if (_errId != SQLITE_OK && _errId != SQLITE_DONE && _errId != SQLITE_ROW) { \
-            _error = QString::fromUtf8(sqlite3_errmsg(_db));                        \
-        }                                                                           \
+#define SQLITE_DO(A)                                                                                                                                           \
+    if (1) {                                                                                                                                                   \
+        _errId = (A);                                                                                                                                          \
+        if (_errId != SQLITE_OK && _errId != SQLITE_DONE && _errId != SQLITE_ROW) {                                                                            \
+            _error = QString::fromUtf8(sqlite3_errmsg(_db));                                                                                                   \
+        }                                                                                                                                                      \
     }
 
 namespace OCC {
@@ -484,8 +484,7 @@ quint64 SqlQuery::int64Value(int index)
 
 QByteArray SqlQuery::baValue(int index)
 {
-    return QByteArray(static_cast<const char *>(sqlite3_column_blob(_stmt, index)),
-        sqlite3_column_bytes(_stmt, index));
+    return QByteArray(static_cast<const char *>(sqlite3_column_blob(_stmt, index)), sqlite3_column_bytes(_stmt, index));
 }
 
 QString SqlQuery::error() const

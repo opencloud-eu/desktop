@@ -37,11 +37,13 @@
 extern Q_CORE_EXPORT int qt_ntfs_permission_lookup;
 
 namespace {
-const QString systemRunPathC() {
+const QString systemRunPathC()
+{
     return QStringLiteral("HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Run");
 }
 
-const QString runPathC() {
+const QString runPathC()
+{
     return QStringLiteral("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run");
 }
 
@@ -54,9 +56,7 @@ const QString systemThemesC()
 
 namespace OCC {
 
-void Utility::setupFavLink(const QString &)
-{
-}
+void Utility::setupFavLink(const QString &) { }
 
 bool Utility::hasSystemLaunchOnStartup(const QString &appName)
 {
@@ -90,8 +90,8 @@ bool Utility::hasDarkSystray()
 void Utility::UnixTimeToFiletime(time_t t, FILETIME *filetime)
 {
     LONGLONG ll = (t * 10000000LL) + 116444736000000000LL;
-    filetime->dwLowDateTime = (DWORD) ll;
-    filetime->dwHighDateTime = ll >>32;
+    filetime->dwLowDateTime = (DWORD)ll;
+    filetime->dwHighDateTime = ll >> 32;
 }
 
 void Utility::FiletimeToLargeIntegerFiletime(const FILETIME *filetime, LARGE_INTEGER *hundredNSecs)

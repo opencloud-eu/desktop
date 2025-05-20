@@ -35,7 +35,7 @@ using namespace OCC;
 Q_LOGGING_CATEGORY(lcVfs, "sync.vfs", QtInfoMsg)
 
 
-Vfs::Vfs(QObject* parent)
+Vfs::Vfs(QObject *parent)
     : QObject(parent)
 {
 }
