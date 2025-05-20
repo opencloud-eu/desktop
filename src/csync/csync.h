@@ -34,15 +34,8 @@
 
 #include "ocsynclib.h"
 
-#include <sys/stat.h>
-#include <stdbool.h>
-#include <stdint.h>
-#include <sys/types.h>
-#include <config_csync.h>
-#include <functional>
-#include <memory>
-#include <QByteArray>
-#include "common/remotepermissions.h"
+#include <QObject>
+
 
 namespace OCC {
 class SyncJournalFileRecord;

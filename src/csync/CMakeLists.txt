@@ -1,41 +1,39 @@
-# global needed variables
+include(CheckFunctionExists)
 
-include(ConfigureChecks.cmake)
-include(../common/common.cmake)
+add_library(csync SHARED
+        csync.cpp
+        csync_exclude.cpp
 
-set(csync_SRCS
-  csync.cpp
-  csync_exclude.cpp
-
-  std/c_time.cpp
-
+        std/c_time.cpp
 )
-
-if (WIN32)
-    list(APPEND csync_SRCS
-        vio/csync_vio_local_win.cpp
-    )
-else()
-    list(APPEND csync_SRCS
-        vio/csync_vio_local_unix.cpp
-    )
-endif()
-
-configure_file(csync_version.h.in ${CMAKE_CURRENT_BINARY_DIR}/csync_version.h)
-
-add_library(csync SHARED ${common_SOURCES} ${csync_SRCS})
 set_target_properties(csync PROPERTIES EXPORT_NAME CSync)
+
+check_function_exists(utimes HAVE_UTIMES)
+
+if(HAVE_UTIMES)
+    set_source_files_properties(std/c_time.cpp PROPERTIES COMPILE_DEFINITIONS HAVE_UTIMES=1)
+endif()
 
 target_include_directories(csync
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/std
     PUBLIC
-        # include root source dir in order to make src/common available to the targets
-        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/..>
         $<INSTALL_INTERFACE:include>
 )
 
 apply_common_target_settings(csync)
+
+if (WIN32)
+    target_sources(csync PRIVATE
+            vio/csync_vio_local_win.cpp
+    )
+else()
+    target_sources(csync PRIVATE
+            vio/csync_vio_local_unix.cpp
+    )
+endif()
 
 if(NO_MSG_HANDLER)
     target_compile_definitions(csync PUBLIC -DNO_MSG_HANDLER=1)
@@ -46,14 +44,14 @@ if(MINGWS)
 endif()
 
 generate_export_header(csync
-  EXPORT_MACRO_NAME OCSYNC_EXPORT
-  EXPORT_FILE_NAME ocsynclib.h
+        EXPORT_MACRO_NAME OCSYNC_EXPORT
+        EXPORT_FILE_NAME ocsynclib.h
 )
 
 target_link_libraries(csync
-    PUBLIC
+        PUBLIC
         Qt::Core
-    PRIVATE
+        PRIVATE
         Qt::Concurrent
         SQLite::SQLite3
         ZLIB::ZLIB
@@ -79,17 +77,17 @@ set_target_properties(
         "0"
 )
 
+add_subdirectory(common)
+
 INSTALL(
     FILES
         ${CMAKE_CURRENT_BINARY_DIR}/ocsynclib.h
-        ../common/filesystembase.h
-        ../common/utility.h
+        common/filesystembase.h
+        common/utility.h
     DESTINATION
         ${KDE_INSTALL_INCLUDEDIR}/${APPLICATION_SHORTNAME}/common
 )
 
 INSTALL(TARGETS csync EXPORT ${APPLICATION_SHORTNAME}Config ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
-
-configure_file(config_csync.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config_csync.h)
 
 configure_file(config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
