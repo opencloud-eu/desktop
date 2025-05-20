@@ -18,9 +18,9 @@
 
 #pragma once
 
+#include "common/asserts.h"
 #include "ocsynclib.h"
 #include "ownsql.h"
-#include "common/asserts.h"
 
 namespace OCC {
 
