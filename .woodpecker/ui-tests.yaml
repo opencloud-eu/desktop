@@ -93,7 +93,7 @@ steps:
     image: owncloud/ubuntu:20.04
     commands:
       - mkdir /woodpecker/src/github.com/opencloud-eu/desktop/desktop/test/gui/guiReportUpload/screenshots -p
-        chmod 777 /woodpecker/src/github.com/opencloud-eu/desktop/desktop/test/gui/ -R"
+      - chmod 777 /woodpecker/src/github.com/opencloud-eu/desktop/desktop/test/gui/ -R
 
   - name: UI-tests
     image: *squish_image
