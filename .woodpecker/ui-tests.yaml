@@ -17,6 +17,8 @@ steps:
   - commands:
       - make -C test/gui/ pip-install
     image: *squish_image
+    environment:
+      PYTHONUSERBASE: /woodpecker/src/github.com/opencloud-eu/desktop/desktop/
     name: install-python-modules
   - commands:
       - playwright_version=$(bash test/gui/woodpecker/script.sh get_playwright_version)
@@ -110,6 +112,7 @@ steps:
   - name: UI-tests
     image: *squish_image
     environment:
+      PYTHONUSERBASE: /woodpecker/src/github.com/opencloud-eu/desktop/desktop/
       LICENSEKEY:
         from_secret: squish_license_key
       BACKEND_HOST: https://opencloud:9200
