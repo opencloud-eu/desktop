@@ -309,16 +309,6 @@ QIcon Theme::wizardHeaderLogo() const
     return applicationIcon();
 }
 
-bool Theme::linkSharing() const
-{
-    return true;
-}
-
-bool Theme::userGroupSharing() const
-{
-    return true;
-}
-
 bool Theme::forceSystemNetworkProxy() const
 {
     return false;
