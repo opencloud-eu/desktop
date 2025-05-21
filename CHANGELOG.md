@@ -8,6 +8,7 @@
 
 ### 💥 Breaking changes
 
+- Remove Theme::linkSharing and Theme::userGroupSharing [[#279](https://github.com/opencloud-eu/desktop/pull/279)]
 - Remove unsupported solid avatar color branding [[#280](https://github.com/opencloud-eu/desktop/pull/280)]
 - Remove Theme::wizardUrlPostfix [[#278](https://github.com/opencloud-eu/desktop/pull/278)]
 - Read preconfigured server urls [[#275](https://github.com/opencloud-eu/desktop/pull/275)]
