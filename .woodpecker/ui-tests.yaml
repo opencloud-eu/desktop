@@ -114,6 +114,7 @@ steps:
     image: *squish_image
     environment:
       PYTHONUSERBASE: /woodpecker/src/github.com/opencloud-eu/desktop/desktop/
+      PLAYWRIGHT_BROWSERS_PATH: /woodpecker/src/github.com/opencloud-eu/desktop/desktop/.playwright
       LICENSEKEY:
         from_secret: squish_license_key
       BACKEND_HOST: https://opencloud:9200
