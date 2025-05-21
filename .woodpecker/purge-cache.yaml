@@ -1,0 +1,40 @@
+---
+variables:
+  - &s3_cache_image 'plugins/s3-cache:1'
+
+when:
+  - event: [ push , manual ]
+    branch: ${CI_REPO_DEFAULT_BRANCH}
+  - event: [ pull_request ]
+
+skip_clone: true
+steps:
+  purge-opencloud-build:
+    image: *s3_cache_image
+    settings:
+      access_key:
+        from_secret: cache_s3_access_key
+      endpoint:
+        from_secret: cache_s3_server
+      CACHE_BUCKET:
+        from_secret: cache_s3_bucket
+      flush: true
+      flush_age: 1
+      flush_path: $CACHE_BUCKET/opencloud-build/
+      secret_key:
+        from_secret: cache_s3_secret_key
+
+  purge-desktop-build:
+    image: *s3_cache_image
+    settings:
+      access_key:
+        from_secret: cache_s3_access_key
+      endpoint:
+        from_secret: cache_s3_server
+      CACHE_BUCKET:
+        from_secret: cache_s3_bucket
+      flush: true
+      flush_age: 1
+      flush_path: $CACHE_BUCKET/desktop-build/
+      secret_key:
+        from_secret: cache_s3_secret_key
