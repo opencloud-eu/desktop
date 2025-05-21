@@ -200,14 +200,6 @@ public:
     virtual bool wizardSkipAdvancedPage() const;
 
     /**
-     * @brief Sharing options
-     *
-     * Allow link sharing and or user/group sharing
-     */
-    virtual bool linkSharing() const;
-    virtual bool userGroupSharing() const;
-
-    /**
      * If this returns true, the user cannot configure the proxy in the network settings.
      * The proxy settings will be disabled in the configuration dialog.
      * Default returns false.
