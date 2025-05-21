@@ -107,8 +107,7 @@ const QString issuesWidgetFilterC()
 
 QString excludeFileNameC()
 {
-    static_assert(!std::string_view(EXCLUDE_FILE_NAME).empty());
-    return QStringLiteral(EXCLUDE_FILE_NAME);
+    return QStringLiteral("sync-exclude.lst");
 }
 
 } // anonymous namespace
@@ -246,64 +245,18 @@ QString ConfigFile::configPath()
 
 QString ConfigFile::excludeFile(Scope scope) const
 {
-#ifdef Q_OS_WIN
-    Utility::NtfsPermissionLookupRAII ntfs_perm;
-#endif
-    // prefer sync-exclude.lst, but if it does not exist, check for
-    // exclude.lst for compatibility reasons in the user writeable
-    // directories.
-    QFileInfo fi;
-
     switch (scope) {
     case UserScope:
-        fi.setFile(configPath(), excludeFileNameC());
-
-        if (!fi.isReadable()) {
-            fi.setFile(configPath(), QStringLiteral("exclude.lst"));
-        }
-        if (!fi.isReadable()) {
-            fi.setFile(configPath(), excludeFileNameC());
-        }
-        return fi.absoluteFilePath();
+        return configPath() + excludeFileNameC();
     case SystemScope:
-        return ConfigFile::excludeFileFromSystem();
+        return ConfigFile::defaultExcludeFile();
     }
-
-    OC_ASSERT(false);
-    return {};
+    Q_UNREACHABLE();
 }
 
-QString ConfigFile::excludeFileFromSystem()
+QString ConfigFile::defaultExcludeFile()
 {
-    QFileInfo fi;
-#ifdef Q_OS_WIN
-    fi.setFile(QCoreApplication::applicationDirPath(), excludeFileNameC());
-#endif
-#ifdef Q_OS_UNIX
-    fi.setFile(QStringLiteral(SYSCONFDIR "/%1").arg(Theme::instance()->appName()), excludeFileNameC());
-    if (!fi.exists()) {
-        // Prefer to return the preferred path! Only use the fallback location
-        // if the other path does not exist and the fallback is valid.
-        QFileInfo nextToBinary(QCoreApplication::applicationDirPath(), excludeFileNameC());
-        if (nextToBinary.exists()) {
-            fi = nextToBinary;
-        } else {
-            // use from install tree (e.g., AppImage, local dev installation)
-            // for example, if the binary is in .../AppDir/usr/bin/<binary>, the exclude file will be in .../AppDir/usr/etc/<appname>/
-            QFileInfo relativeToBinary(
-                QStringLiteral("%1/../etc/%2/%3").arg(QCoreApplication::applicationDirPath(), Theme::instance()->appName(), excludeFileNameC()));
-            if (relativeToBinary.exists()) {
-                fi = relativeToBinary;
-            }
-        }
-    }
-#endif
-#ifdef Q_OS_MAC
-    // exec path is inside the bundle
-    fi.setFile(QCoreApplication::applicationDirPath(), QLatin1String("../Resources/") + excludeFileNameC());
-#endif
-
-    return fi.absoluteFilePath();
+    return QStringLiteral(":/client/OpenCloud/theme/universal/%1").arg(excludeFileNameC());
 }
 
 QString ConfigFile::backup() const
@@ -455,21 +408,19 @@ void ConfigFile::setProxyType(QNetworkProxy::ProxyType proxyType, const QString 
 
 QVariant ConfigFile::getValue(const QString &param, const QVariant &defaultValue) const
 {
-    QVariant systemSetting;
-    if (Utility::isMac()) {
-        QSettings systemSettings(QStringLiteral("/Library/Preferences/%1.plist").arg(Theme::instance()->orgDomainName()), QSettings::NativeFormat);
-        systemSetting = systemSettings.value(param, defaultValue);
-    } else if (Utility::isUnix()) {
-        QSettings systemSettings(QStringLiteral(SYSCONFDIR "/%1/%1.conf").arg(Theme::instance()->appName()), QSettings::NativeFormat);
-        systemSetting = systemSettings.value(param, defaultValue);
-    } else { // Windows
-        QSettings systemSettings(
-            QStringLiteral("HKEY_LOCAL_MACHINE\\Software\\%1\\%2").arg(Theme::instance()->vendor(), Theme::instance()->appNameGUI()), QSettings::NativeFormat);
-        systemSetting = systemSettings.value(param, defaultValue);
-    }
+    const QSettings systemSettings = []() -> QSettings {
+        if (Utility::isMac()) {
+            return {QStringLiteral("/Library/Preferences/%1.plist").arg(Theme::instance()->orgDomainName()), QSettings::NativeFormat};
+        } else if (Utility::isUnix()) {
+            return {QStringLiteral("/etc/%1/%1.conf").arg(Theme::instance()->appName()), QSettings::NativeFormat};
+        } else { // Windows
+            return {QStringLiteral("HKEY_LOCAL_MACHINE\\Software\\%1\\%2").arg(Theme::instance()->vendor(), Theme::instance()->appNameGUI()),
+                QSettings::NativeFormat};
+        }
+    }();
 
     auto settings = makeQSettings();
-    return settings.value(param, systemSetting);
+    return settings.value(param, systemSettings.value(param, defaultValue));
 }
 
 void ConfigFile::setValue(const QString &key, const QVariant &value)

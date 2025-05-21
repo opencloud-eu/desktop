@@ -1,5 +1,4 @@
-#ifndef CONFIG_H
-#define CONFIG_H
+#pragma once
 
 #cmakedefine USE_INOTIFY 1
 #cmakedefine WITH_QTKEYCHAIN 1
@@ -16,7 +15,3 @@
 #cmakedefine APPLICATION_EXECUTABLE "@APPLICATION_EXECUTABLE@"
 #cmakedefine APPLICATION_UPDATE_URL "@APPLICATION_UPDATE_URL@"
 #cmakedefine APPLICATION_ICON_NAME "@APPLICATION_ICON_NAME@"
-
-#cmakedefine SYSCONFDIR "@SYSCONFDIR@"
-
-#endif

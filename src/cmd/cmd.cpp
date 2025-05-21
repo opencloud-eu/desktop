@@ -212,18 +212,11 @@ void sync(const SyncCTX &ctx, const QUrl &spaceUrl)
     engine->setNetworkLimits(ctx.options.uplimit, ctx.options.downlimit);
 
 
-    // Exclude lists
-
-    bool hasUserExcludeFile = !ctx.options.exclude.isEmpty();
-    QString systemExcludeFile = ConfigFile::excludeFileFromSystem();
-
     // Always try to load the user-provided exclude list if one is specified
-    if (hasUserExcludeFile) {
+    if (!ctx.options.exclude.isEmpty()) {
         engine->addExcludeList(ctx.options.exclude);
-    }
-    // Load the system list if available, or if there's no user-provided list
-    if (!hasUserExcludeFile || QFile::exists(systemExcludeFile)) {
-        engine->addExcludeList(systemExcludeFile);
+    } else {
+        engine->addExcludeList(ConfigFile::defaultExcludeFile());
     }
 
     if (!engine->reloadExcludes()) {

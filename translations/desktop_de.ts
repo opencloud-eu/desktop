@@ -292,8 +292,8 @@ File synchronization desktop utility.</source>
     </message>
     <message>
         <location filename="../src/gui/qml/FolderDelegate.qml" line="390"/>
-        <source>You are synchronizing %1 out of %2 spaces</source>
-        <translation>Sie synchronisieren %1 von %n Spaces</translation>
+        <source>You are synchronizing %1 out of %2 Spaces</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
