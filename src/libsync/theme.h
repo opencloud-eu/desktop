@@ -72,8 +72,6 @@ class OPENCLOUD_SYNC_EXPORT Theme : public QObject
     Q_OBJECT
     Q_PROPERTY(bool multiAccount READ multiAccount FINAL CONSTANT)
     Q_PROPERTY(QList<QmlUrlButton> urlButtons READ qmlUrlButtons FINAL CONSTANT)
-    Q_PROPERTY(QColor avatarColor READ avatarColor NOTIFY themeChanged)
-    Q_PROPERTY(QColor avatarColorChecked READ avatarColorChecked NOTIFY themeChanged)
     Q_PROPERTY(QColor brandedBackgoundColor READ wizardHeaderBackgroundColor CONSTANT)
     Q_PROPERTY(QColor brandedForegroundColor READ wizardHeaderTitleColor CONSTANT)
     Q_PROPERTY(QmlButtonColor primaryButtonColor READ primaryButtonColor CONSTANT)
@@ -173,10 +171,6 @@ public:
 
     /** @return logo for the setup wizard. */
     virtual QIcon wizardHeaderLogo() const;
-
-    virtual QColor avatarColor() const;
-
-    virtual QColor avatarColorChecked() const;
 
     /**
      * The SHA sum of the released git commit
