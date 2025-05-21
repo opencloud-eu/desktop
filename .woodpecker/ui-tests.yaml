@@ -16,6 +16,7 @@ steps:
     name: pnpm-install
   - commands:
       - make -C test/gui/ pip-install
+      - python3.10 -m pip list -v
     image: *squish_image
     environment:
       PYTHONUSERBASE: /woodpecker/src/github.com/opencloud-eu/desktop/desktop/
