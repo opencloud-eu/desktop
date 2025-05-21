@@ -21,3 +21,11 @@ Feature:  Logout users
         When the user quits the client
         And the user starts the client
         Then user "Alice" should be connected to the server
+
+
+    Scenario: login with incorrect after log out
+      Given user "Alice" has set up a client with default settings
+      And user "Alice" has logged out from the client-UI
+      When user "ALice" opens login dialog
+      And user "ALice" enters the password "invalid"
+      Then the account with displayname "Alice Hansen" and host "%local_server_hostname%" should not be displayed
