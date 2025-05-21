@@ -1,6 +1,6 @@
 ---
 variables:
-  - &squish_image 'arturneumann/squish'
+  - &squish_image 'opencloudeu/squish'
 
 depends_on:
   - cache-opencloud
