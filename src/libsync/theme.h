@@ -222,15 +222,6 @@ public:
 
 
     /**
-     * @brief Postfix that will be enforced in a URL. e.g.
-     *        ".myhosting.com".
-     *
-     * @return An empty string, unless reimplemented
-     */
-    virtual QString wizardUrlPostfix() const;
-
-
-    /**
      * The OAuth client_id, secret pair.
      * Note that client that change these value cannot connect to un-branded OpenCloud.
      */
