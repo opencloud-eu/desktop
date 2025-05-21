@@ -33,22 +33,12 @@ ServerUrlSetupWizardPage::ServerUrlSetupWizardPage(const QUrl &serverUrl)
     //: This is the accessibility text for the logo in the setup wizard page. The parameter is the name for the (branded) application.
     _ui->logoLabel->setAccessibleName(tr("%1 logo").arg(Theme::instance()->appNameGUI()));
 
-    if (!Theme::instance()->wizardUrlPostfix().isEmpty()) {
-        _ui->urlLineEdit->setPostfix(Theme::instance()->wizardUrlPostfix());
-    }
-
     connect(_ui->urlLineEdit, &QLineEdit::textChanged, this, &AbstractSetupWizardPage::contentChanged);
 }
 
 QString ServerUrlSetupWizardPage::userProvidedUrl() const
 {
-    QString url = _ui->urlLineEdit->text().simplified();
-
-    if (!Theme::instance()->wizardUrlPostfix().isEmpty()) {
-        url += Theme::instance()->wizardUrlPostfix();
-    }
-
-    return url;
+    return _ui->urlLineEdit->text().simplified();
 }
 
 ServerUrlSetupWizardPage::~ServerUrlSetupWizardPage()

@@ -341,11 +341,6 @@ bool Theme::forceSystemNetworkProxy() const
     return false;
 }
 
-QString Theme::wizardUrlPostfix() const
-{
-    return QString();
-}
-
 QString Theme::oauthClientId() const
 {
     return QStringLiteral("OpenCloudDesktop");
