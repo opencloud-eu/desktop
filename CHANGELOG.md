@@ -8,6 +8,7 @@
 
 ### 💥 Breaking changes
 
+- Remove unsupported solid avatar color branding [[#280](https://github.com/opencloud-eu/desktop/pull/280)]
 - Remove Theme::wizardUrlPostfix [[#278](https://github.com/opencloud-eu/desktop/pull/278)]
 - Read preconfigured server urls [[#275](https://github.com/opencloud-eu/desktop/pull/275)]
 - Require global settings to always be located in /etc/ [[#268](https://github.com/opencloud-eu/desktop/pull/268)]
