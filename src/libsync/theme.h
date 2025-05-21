@@ -163,14 +163,6 @@ public:
      */
     virtual QUrl helpUrl() const;
 
-    /**
-     * Setting a value here will pre-define the server url.
-     *
-     * The respective UI controls will be disabled
-     *  setting $OPENCLOUD_OVERRIDE_SERVER_URL
-     */
-    virtual QUrl overrideServerUrl() const;
-
     /** @return color for the setup wizard */
     virtual QColor wizardHeaderTitleColor() const;
 
@@ -227,15 +219,6 @@ public:
      * Default returns false.
      */
     virtual bool forceSystemNetworkProxy() const;
-
-
-    /**
-     * @brief Postfix that will be enforced in a URL. e.g.
-     *        ".myhosting.com".
-     *
-     * @return An empty string, unless reimplemented
-     */
-    virtual QString wizardUrlPostfix() const;
 
 
     /**

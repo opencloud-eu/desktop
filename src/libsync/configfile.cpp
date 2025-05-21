@@ -12,13 +12,11 @@
  * for more details.
  */
 
+#include "configfile.h"
 #include "common/asserts.h"
 #include "common/utility.h"
 #include "common/version.h"
-#ifdef Q_OS_WIN
-#include "common/utility_win.h"
-#endif
-#include "configfile.h"
+#include "libsync/globalconfig.h"
 #include "logger.h"
 #include "theme.h"
 
@@ -26,15 +24,14 @@
 
 #include "csync_exclude.h"
 
-#include <QHeaderView>
-#include <QCoreApplication>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
+#include <QHeaderView>
 #include <QLoggingCategory>
-#include <QSettings>
 #include <QNetworkProxy>
 #include <QOperatingSystemVersion>
+#include <QSettings>
 #include <QStandardPaths>
 
 #include <chrono>
@@ -209,26 +206,6 @@ bool ConfigFile::restoreGeometryHeader(QHeaderView *header)
     return false;
 }
 
-QVariant ConfigFile::getPolicySetting(const QString &setting, const QVariant &defaultValue) const
-{
-    if (Utility::isWindows()) {
-        // check for policies first and return immediately if a value is found.
-        QSettings userPolicy(QStringLiteral("HKEY_CURRENT_USER\\Software\\Policies\\%1\\%2").arg(Theme::instance()->vendor(), Theme::instance()->appNameGUI()),
-            QSettings::NativeFormat);
-        if (userPolicy.contains(setting)) {
-            return userPolicy.value(setting);
-        }
-
-        QSettings machinePolicy(
-            QStringLiteral("HKEY_LOCAL_MACHINE\\Software\\Policies\\%1\\%2").arg(Theme::instance()->vendor(), Theme::instance()->appNameGUI()),
-            QSettings::NativeFormat);
-        if (machinePolicy.contains(setting)) {
-            return machinePolicy.value(setting);
-        }
-    }
-    return defaultValue;
-}
-
 QString ConfigFile::configPath()
 {
     if (_confDir.isEmpty()) {
@@ -346,8 +323,11 @@ chrono::milliseconds ConfigFile::updateCheckInterval() const
 bool ConfigFile::skipUpdateCheck() const
 {
     const auto fallback = getValue(skipUpdateCheckC(), false);
-    QVariant value = getPolicySetting(skipUpdateCheckC(), fallback);
-    return value.toBool();
+#ifdef Q_OS_WIN
+    return GlobalConfig::getPolicySetting(skipUpdateCheckC(), fallback).toBool();
+#else
+    return fallback.toBool();
+#endif
 }
 
 void ConfigFile::setSkipUpdateCheck(bool skip)
@@ -408,19 +388,11 @@ void ConfigFile::setProxyType(QNetworkProxy::ProxyType proxyType, const QString 
 
 QVariant ConfigFile::getValue(const QString &param, const QVariant &defaultValue) const
 {
-    const QSettings systemSettings = []() -> QSettings {
-        if (Utility::isMac()) {
-            return {QStringLiteral("/Library/Preferences/%1.plist").arg(Theme::instance()->orgDomainName()), QSettings::NativeFormat};
-        } else if (Utility::isUnix()) {
-            return {QStringLiteral("/etc/%1/%1.conf").arg(Theme::instance()->appName()), QSettings::NativeFormat};
-        } else { // Windows
-            return {QStringLiteral("HKEY_LOCAL_MACHINE\\Software\\%1\\%2").arg(Theme::instance()->vendor(), Theme::instance()->appNameGUI()),
-                QSettings::NativeFormat};
-        }
-    }();
-
-    auto settings = makeQSettings();
-    return settings.value(param, systemSettings.value(param, defaultValue));
+    auto setting = makeQSettings().value(param);
+    if (!setting.isValid()) {
+        return GlobalConfig::getValue(param, defaultValue);
+    }
+    return setting;
 }
 
 void ConfigFile::setValue(const QString &key, const QVariant &value)

@@ -15,12 +15,10 @@
 #ifndef CONFIGFILE_H
 #define CONFIGFILE_H
 
-#include "common/result.h"
 #include "opencloudsynclib.h"
 
 #include <QNetworkProxy>
 #include <QSettings>
-#include <QSharedPointer>
 #include <QString>
 #include <QVariant>
 
@@ -163,9 +161,6 @@ public:
 
     /// Add the system and user exclude file path to the ExcludedFiles instance.
     static void setupDefaultExcludeFilePaths(ExcludedFiles &excludedFiles);
-
-protected:
-    QVariant getPolicySetting(const QString &policy, const QVariant &defaultValue = QVariant()) const;
 
 private:
     QVariant getValue(const QString &param, const QVariant &defaultValue = QVariant()) const;
