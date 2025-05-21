@@ -15,6 +15,10 @@ steps:
     image: owncloudci/nodejs:20
     name: pnpm-install
   - commands:
+      - make -C test/gui/ pip-install
+    image: *squish_image
+    name: install-python-modules
+  - commands:
       - playwright_version=$(bash test/gui/woodpecker/script.sh get_playwright_version)
       - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
       - mc cp -r -a s3/$CACHE_BUCKET/desktop/browsers-cache/$playwright_version/playwright-browsers.tar.gz /woodpecker/src/github.com/opencloud-eu/desktop/desktop
