@@ -1,6 +1,4 @@
 ---
-variables:
-  - &s3_cache_image 'plugins/s3-cache:1'
 
 when:
   - event: [ push , manual ]
@@ -10,27 +8,17 @@ when:
 skip_clone: true
 steps:
   purge-opencloud-build:
-    image: *s3_cache_image
-    settings:
-      access_key:
+    image: minio/mc:RELEASE.2021-10-07T04-19-58Z
+    commands:
+      - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
+      - mc find s3/$CACHE_BUCKET/desktop-build/ --older-than 1d0hh0mm0ss
+    environment:
+      AWS_ACCESS_KEY_ID:
         from_secret: cache_s3_access_key
-      endpoint:
-        from_secret: cache_s3_server
-      flush: true
-      flush_age: 1
-      flush_path: cache/opencloud-build/
-      secret_key:
+      AWS_SECRET_ACCESS_KEY:
         from_secret: cache_s3_secret_key
+      CACHE_BUCKET:
+        from_secret: cache_s3_bucket
+      MC_HOST:
+        from_secret: cache_s3_server
 
-  purge-desktop-build:
-    image: *s3_cache_image
-    settings:
-      access_key:
-        from_secret: cache_s3_access_key
-      endpoint:
-        from_secret: cache_s3_server
-      flush: true
-      flush_age: 1
-      flush_path: cache/desktop/
-      secret_key:
-        from_secret: cache_s3_secret_key
