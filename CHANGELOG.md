@@ -1,10 +1,17 @@
 # Changelog
 
-## [1.1.0](https://github.com/opencloud-eu/desktop/releases/tag/v1.1.0) - 2025-05-21
+## [2.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v2.0.0) - 2025-05-21
 
 ### ❤️ Thanks to all contributors! ❤️
 
 @TheOneRing, @anon-pradip, @individual-it, @prashant-gurung899
+
+### 💥 Breaking changes
+
+- Remove Theme::wizardUrlPostfix [[#278](https://github.com/opencloud-eu/desktop/pull/278)]
+- Read preconfigured server urls [[#275](https://github.com/opencloud-eu/desktop/pull/275)]
+- Require global settings to always be located in /etc/ [[#268](https://github.com/opencloud-eu/desktop/pull/268)]
+- Move default exclude file to a resource [[#266](https://github.com/opencloud-eu/desktop/pull/266)]
 
 ### 🐛 Bug Fixes
 
