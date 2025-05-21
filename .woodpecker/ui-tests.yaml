@@ -89,6 +89,12 @@ steps:
         from_secret: cache_s3_server
     image: minio/mc:RELEASE.2021-10-07T04-19-58Z
 
+  - name: create-gui-test-report-directory
+    image: owncloud/ubuntu:20.04
+    commands:
+      - mkdir /woodpecker/src/github.com/opencloud-eu/desktop/desktop/test/gui/guiReportUpload/screenshots -p
+        chmod 777 /woodpecker/src/github.com/opencloud-eu/desktop/desktop/test/gui/ -R"
+
   - name: UI-tests
     image: *squish_image
     environment:
