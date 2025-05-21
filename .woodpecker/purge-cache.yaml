@@ -8,7 +8,7 @@ when:
 skip_clone: true
 steps:
   purge-opencloud-build:
-    image: minio/mc:RELEASE.2021-10-07T04-19-58Z
+    image: minio/mc:RELEASE.2025-04-16T18-13-26Z
     commands:
       - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
       - mc find s3/$CACHE_BUCKET/desktop-build/ --older-than 1d0hh0mm0ss
