@@ -1,7 +1,7 @@
 steps:
   - commands:
       - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-      - mc ls --recursive s3/$CACHE_BUCKET/desktop
+      - mc ls --recursive s3/$CACHE_BUCKET/web
       - bash test/gui/woodpecker/script.sh check_browsers_cache
     environment:
       AWS_ACCESS_KEY_ID:
@@ -39,8 +39,8 @@ steps:
       - if $BROWSER_CACHE_FOUND; then exit 0; fi
       - playwright_version=$(bash test/gui/woodpecker/script.sh get_playwright_version)
       - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-      - mc cp -r -a /woodpecker/src/github.com/opencloud-eu/desktop/desktop/playwright-browsers.tar.gz s3/$CACHE_BUCKET/desktop/browsers-cache/$playwright_version/
-      - mc ls --recursive s3/$CACHE_BUCKET/desktop
+      - mc cp -r -a /woodpecker/src/github.com/opencloud-eu/desktop/desktop/playwright-browsers.tar.gz s3/$CACHE_BUCKET/web/browsers-cache/$playwright_version/
+      - mc ls --recursive s3/$CACHE_BUCKET/web
     environment:
       AWS_ACCESS_KEY_ID:
         from_secret: cache_s3_access_key
