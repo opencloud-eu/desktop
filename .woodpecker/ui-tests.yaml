@@ -99,6 +99,13 @@ steps:
       - mkdir /woodpecker/src/github.com/opencloud-eu/desktop/desktop/test/gui/guiReportUpload/screenshots -p
       - chmod 777 /woodpecker/src/github.com/opencloud-eu/desktop/desktop/test/gui/ -R
 
+  - name: monitor-server-logs
+    image: owncloud/ubuntu:20.04
+    detach: true
+    commands:
+      - touch /woodpecker/src/github.com/opencloud-eu/desktop/desktop/test/gui/guiReportUpload/serverlog.log
+      - tail -f /woodpecker/src/github.com/opencloud-eu/desktop/desktop/test/gui/guiReportUpload/serverlog.log
+
   - name: UI-tests
     image: *squish_image
     environment:
