@@ -23,8 +23,6 @@ ToolButton {
 
     property string altText: ""
     property int gradient: Gradient.AfricanField
-    property color solidColor: null
-    property color solidColorChecked: null
 
     clip: true
     icon.height: 32
@@ -56,8 +54,7 @@ ToolButton {
 
         Rectangle {
             radius: 180
-            gradient: control.solidColor.valid ? undefined : control.gradient
-            color: control.solidColor.valid ? (control.checked ? control.solidColorChecked : control.solidColor) : null
+            gradient: control.gradient
             Label {
                 anchors.fill: parent
                 horizontalAlignment: Text.AlignHCenter

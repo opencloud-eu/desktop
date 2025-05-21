@@ -309,16 +309,6 @@ QIcon Theme::wizardHeaderLogo() const
     return applicationIcon();
 }
 
-QColor Theme::avatarColor() const
-{
-    return {};
-}
-
-QColor Theme::avatarColorChecked() const
-{
-    return {};
-}
-
 bool Theme::linkSharing() const
 {
     return true;
