@@ -118,6 +118,7 @@ steps:
       LICENSEKEY:
         from_secret: squish_license_key
       BACKEND_HOST: https://opencloud:9200
+      SECURE_BACKEND_HOST: https://opencloud:9200
       GUI_TEST_REPORT_DIR: /woodpecker/src/github.com/opencloud-eu/desktop/desktop/test/gui/guiReportUpload
       SERVER_INI: /woodpecker/src/github.com/opencloud-eu/desktop/desktop/test/gui/woodpecker/server.ini
       SQUISH_PARAMETERS: --testsuite /woodpecker/src/github.com/opencloud-eu/desktop/desktop/test/gui --reportgen html,/woodpecker/src/github.com/opencloud-eu/desktop/desktop/test/gui/guiReportUpload --envvar QT_LOGGING_RULES=sync.httplogger=true;gui.socketapi=false --tags ~@skip --tags ~@skipOnLinux
