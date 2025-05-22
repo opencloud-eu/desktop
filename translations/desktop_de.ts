@@ -7,22 +7,22 @@
         <translation>Navigationsleiste</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/AccountBar.qml" line="114"/>
+        <location filename="../src/gui/qml/AccountBar.qml" line="112"/>
         <source>Add Account</source>
         <translation>Konto hinzufügen</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/AccountBar.qml" line="141"/>
+        <location filename="../src/gui/qml/AccountBar.qml" line="139"/>
         <source>Activity</source>
         <translation>Aktivität</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/AccountBar.qml" line="155"/>
+        <location filename="../src/gui/qml/AccountBar.qml" line="153"/>
         <source>Settings</source>
         <translation>Einstellungen</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/AccountBar.qml" line="184"/>
+        <location filename="../src/gui/qml/AccountBar.qml" line="182"/>
         <source>Quit</source>
         <translation>Beenden</translation>
     </message>
@@ -293,7 +293,7 @@ File synchronization desktop utility.</source>
     <message>
         <location filename="../src/gui/qml/FolderDelegate.qml" line="390"/>
         <source>You are synchronizing %1 out of %2 Spaces</source>
-        <translation type="unfinished"/>
+        <translation>Du synchronisierst %1 von %2 Spaces</translation>
     </message>
 </context>
 <context>
@@ -509,12 +509,12 @@ File synchronization desktop utility.</source>
     <message>
         <location filename="../src/gui/aboutdialog.cpp" line="159"/>
         <source>&lt;html&gt;The update channel determines which client updates will be offered for installation.&lt;ul&gt;&lt;li&gt;&quot;stable&quot; contains only upgrades that are considered reliable&lt;/li&gt;%1&lt;/ul&gt;&lt;br&gt;⚠️Downgrades are not supported. If you switch to a stable channel this change will only be applied with the next major release.&lt;/html&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;html&gt;Der Update Kanal bestimmt, welche Client Aktualisierungen zur Installation angeboten werden.&lt;ul&gt;&lt;li&gt;&quot;stable&quot; enthält nur als zuverlässig gekennzeichnete Aktualisierungen.&lt;/li&gt;%1&lt;/ul&gt;&lt;br&gt;⚠️Aktualisierungen können nicht zurückgenommen werden. Wenn du zu einem zuverlässigeren Update Kanal zurückkehren möchtest, kann diese Änderung erst mit der nächsten Hauptveröffentlichung übernommen werden.&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../src/gui/aboutdialog.cpp" line="165"/>
         <source>&lt;li&gt;&quot;beta&quot; may contain newer features and bugfixes, but have not yet been tested thoroughly&lt;/li&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;li&gt;&quot;beta&quot; kann neuere Features und Problembehebungen enthalten, die aber noch nicht vollständig getestet wurden&lt;/li&gt;</translation>
     </message>
     <message>
         <location filename="../src/gui/aboutdialog.cpp" line="167"/>
@@ -603,7 +603,7 @@ File synchronization desktop utility.</source>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="197"/>
         <source>&lt;p&gt;Do you really want to stop syncing the Space &lt;i&gt;&quot;%1&quot;&lt;/i&gt;?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; This will &lt;b&gt;not&lt;/b&gt; delete any files.&lt;/p&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;p&gt;Möchtest du wirklich die Synchronisation des Spaces &lt;i&gt;&quot;%1&quot;&lt;/i&gt; beenden?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Anmerkung:&lt;/b&gt; Dadurch werden &lt;b&gt;keine&lt;/b&gt; Dateien gelöscht.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="202"/>
@@ -776,7 +776,9 @@ Diese Aktion wird alle aktuell laufenden Synchronisierungen abbrechen.</translat
         <source>An update is available for this AppImage of %1. Do you want to install this update?
 
 The update will be performed in the background, and overwrite the current AppImage file. You need to restart the app to complete the update.</source>
-        <translation type="unfinished"/>
+        <translation>Ein Update für das AppImage von %1 ist verfügbar. Möchtest du es installieren?
+
+Das Update wird im Hintergrund ausgeführt und überschreibt die aktuelle AppImage Datei. Du musst die Anwendung neustarten, um das Update abzuschließen.</translation>
     </message>
 </context>
 <context>
@@ -835,7 +837,7 @@ The update will be performed in the background, and overwrite the current AppIma
     <message>
         <location filename="../src/gui/connectionvalidator.cpp" line="171"/>
         <source>Please update to the latest server and restart the client.</source>
-        <translation type="unfinished"/>
+        <translation>Bitte aktualisiere auf die neueste Server Version und starte den Client neu.</translation>
     </message>
     <message>
         <location filename="../src/gui/connectionvalidator.cpp" line="114"/>
@@ -870,12 +872,12 @@ The update will be performed in the background, and overwrite the current AppIma
     <message>
         <location filename="../src/libsync/discoveryphase.cpp" line="205"/>
         <source>Error while opening directory %1</source>
-        <translation type="unfinished"/>
+        <translation>Fehler beim Öffnen des Verzeichnisses %1</translation>
     </message>
     <message>
         <location filename="../src/libsync/discoveryphase.cpp" line="207"/>
         <source>Directory not accessible on client, permission denied</source>
-        <translation type="unfinished"/>
+        <translation>Das Verzeichnis ist nicht zugänglich vom Client, Zugriff verweigert</translation>
     </message>
     <message>
         <location filename="../src/libsync/discoveryphase.cpp" line="211"/>
@@ -906,7 +908,7 @@ The update will be performed in the background, and overwrite the current AppIma
     <message>
         <location filename="../src/gui/folder.cpp" line="206"/>
         <source>%1 should be a folder but is not.</source>
-        <translation type="unfinished"/>
+        <translation>%1 sollte ein Ordner sein, ist es aber nicht.</translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="208"/>
@@ -939,7 +941,7 @@ The update will be performed in the background, and overwrite the current AppIma
     <message numerus="yes">
         <location filename="../src/gui/folder.cpp" line="438"/>
         <source>%1 and %n other file(s) have been removed.</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>%1 und %n andere Dateien wurden entfernt.</numerusform><numerusform>%1 und %n andere Dateien wurden entfernt.</numerusform></translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="156"/>
@@ -2441,38 +2443,38 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
 <context>
     <name>OCC::SocketApi</name>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="495"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="490"/>
         <source>Share with %1</source>
         <comment>parameter is OpenCloud</comment>
         <translation>Teile mit %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="593"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="588"/>
         <source>Confirm deletion</source>
         <translation>Löschung bestätigen</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="595"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="590"/>
         <source>Do you want to delete the directory &lt;i&gt;%1&lt;/i&gt; and all its contents permanently?</source>
         <translation>Soll der Ordner &lt;i&gt;%1&lt;/i&gt;  mit gesamtem Inhalt dauerhaft gelöscht werden?</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="596"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="591"/>
         <source>Do you want to delete the file &lt;i&gt;%1&lt;/i&gt; permanently?</source>
         <translation>Soll die Datei &lt;i&gt;%1&lt;/i&gt; dauerhaft gelöscht werden?</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="638"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="633"/>
         <source>Select new location...</source>
         <translation>Wähle neuen Ort...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="648"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="643"/>
         <source>Error</source>
         <translation>Fehler</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="649"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="644"/>
         <source>Moving file failed:
 
 %1</source>
@@ -2481,80 +2483,80 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
 %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="722"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="717"/>
         <source>I shared something with you</source>
         <translation>Ich habe etwas mit Ihnen geteilt</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="735"/>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="765"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="730"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="760"/>
         <source>Share...</source>
         <translation>Teilen ...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="737"/>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="769"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="732"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="764"/>
         <source>Copy private link to clipboard</source>
         <translation>Kopiere privaten Link in Zwischenablage</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="738"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="733"/>
         <source>Send private link by email...</source>
         <translation>Sende privaten Link via E-Mail...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="763"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="758"/>
         <source>Resharing this file is not allowed</source>
         <translation>Weiteres Teilen dieser Datei ist nicht erlaubt</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="763"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="758"/>
         <source>Resharing this folder is not allowed</source>
         <translation>Weiteres Teilen des Ordners ist nicht erlaubt</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="841"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="836"/>
         <source>Open in %1</source>
         <translation>Öffne in %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="852"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="847"/>
         <source>Show file versions in web browser</source>
         <translation>Zeige Dateiversionen im Web-Browser</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="874"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="869"/>
         <source>Rename...</source>
         <translation>Umbenennen ...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="877"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="872"/>
         <source>Rename and upload...</source>
         <translation>Umbenennen und hochladen</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="882"/>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="886"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="877"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="881"/>
         <source>Move and rename...</source>
         <translation>Verschieben und umbennen...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="889"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="884"/>
         <source>Move, rename and upload...</source>
         <translation>Verschieben, umbenennen und hochladen...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="892"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="887"/>
         <source>Delete local changes</source>
         <translation>Lösche lokale Änderungen</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="897"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="892"/>
         <source>Move and upload...</source>
         <translation>Verschieben und hochladen...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="898"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="893"/>
         <source>Delete</source>
         <translation>Löschen</translation>
     </message>
@@ -2708,7 +2710,7 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
 <context>
     <name>OCC::Theme</name>
     <message>
-        <location filename="../src/libsync/theme.cpp" line="245"/>
+        <location filename="../src/libsync/theme.cpp" line="238"/>
         <source>&lt;p&gt;Version %1. For more information visit &lt;a href=&quot;https://opencloud.eu/&quot;&gt;https://opencloud.eu/&lt;/a&gt;&lt;/p&gt;&lt;p&gt;For known issues and help, please visit: &lt;a href=&quot;https://github.com/opencloud-eu/desktop&quot;&gt;GitHub&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Copyright OpenCloud GmbH&lt;br/&gt;Copyright ownCloud GmbH&lt;/p&gt;&lt;p&gt;Distributed by OpenCloud GmbH and licensed under the GNU General Public License (GPL) Version 2.0.&lt;br/&gt;&lt;p&gt;&lt;small&gt;%2&lt;/small&gt;&lt;/p&gt;</source>
         <translation type="unfinished"/>
     </message>
@@ -2886,7 +2888,7 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
 <context>
     <name>OCC::Wizard::ServerUrlSetupWizardPage</name>
     <message>
-        <location filename="../src/gui/newwizard/pages/serverurlsetupwizardpage.cpp" line="34"/>
+        <location filename="../src/gui/newwizard/pages/serverurlsetupwizardpage.cpp" line="33"/>
         <source>%1 logo</source>
         <extracomment>This is the accessibility text for the logo in the setup wizard page. The parameter is the name for the (branded) application.</extracomment>
         <translation>%1 Logo</translation>
@@ -2964,7 +2966,7 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
 <context>
     <name>OpenCloudTheme::aboutVersions()</name>
     <message>
-        <location filename="../src/libsync/theme.cpp" line="232"/>
+        <location filename="../src/libsync/theme.cpp" line="225"/>
         <source>%1 %2%7%8Libraries Qt %3, %4%7Using virtual files plugin: %5%7%6</source>
         <translation>%1 %2%7%8Qt Bibliotheken %3, %4%7Verwendete Erweiterung für virtuelle Dateien: %5%7%6</translation>
     </message>
@@ -2972,7 +2974,7 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
 <context>
     <name>OpenCloudTheme::qtVer</name>
     <message>
-        <location filename="../src/libsync/theme.cpp" line="215"/>
+        <location filename="../src/libsync/theme.cpp" line="208"/>
         <source>%1 (Built against Qt %2)</source>
         <translation>%1 (Gebaut mit Qt %2)</translation>
     </message>
@@ -2980,7 +2982,7 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
 <context>
     <name>OpenCloudTheme::versionWithSha</name>
     <message>
-        <location filename="../src/libsync/theme.cpp" line="220"/>
+        <location filename="../src/libsync/theme.cpp" line="213"/>
         <source>%1 %2</source>
         <translation>%1 %2</translation>
     </message>
@@ -3076,22 +3078,22 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
 <context>
     <name>SetupWizardState</name>
     <message>
-        <location filename="../src/gui/newwizard/enums.cpp" line="29"/>
+        <location filename="../src/gui/newwizard/enums.cpp" line="30"/>
         <source>Server URL</source>
         <translation>Server URL</translation>
     </message>
     <message>
-        <location filename="../src/gui/newwizard/enums.cpp" line="31"/>
+        <location filename="../src/gui/newwizard/enums.cpp" line="32"/>
         <source>Welcome</source>
         <translation>Wilkommen</translation>
     </message>
     <message>
-        <location filename="../src/gui/newwizard/enums.cpp" line="34"/>
+        <location filename="../src/gui/newwizard/enums.cpp" line="35"/>
         <source>Login</source>
         <translation>Anmelden</translation>
     </message>
     <message>
-        <location filename="../src/gui/newwizard/enums.cpp" line="36"/>
+        <location filename="../src/gui/newwizard/enums.cpp" line="37"/>
         <source>Sync Options</source>
         <translation>Synchronisierungseinstellungen</translation>
     </message>
