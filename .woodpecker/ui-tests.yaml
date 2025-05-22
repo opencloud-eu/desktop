@@ -1,6 +1,6 @@
 ---
 variables:
-  - &squish_image 'arturneumann/squish'
+  - &squish_image 'opencloudeu/squish'
   - &minio_image 'minio/mc:RELEASE.2021-10-07T04-19-58Z'
   - &minio_environment
     AWS_ACCESS_KEY_ID:
@@ -104,8 +104,10 @@ steps:
     environment:
       PYTHONUSERBASE: /woodpecker/desktop/
       PLAYWRIGHT_BROWSERS_PATH: /woodpecker/desktop/.playwright
-      LICENSEKEY:
+      SQUISH_LICENSE_SERVER:
         from_secret: squish_license_key
+      SQUISH_LICENSE_SERVER_API: squish.jankari.tech:49346
+      SQUISH_LICENSE_SERVER_API_TOKEN: phzq4o1tJIVebL1kgSTAeKqZ5AoIDJfci
       BACKEND_HOST: https://opencloud:9200
       SECURE_BACKEND_HOST: https://opencloud:9200
       GUI_TEST_REPORT_DIR: /woodpecker/desktop/test/gui/guiReportUpload
