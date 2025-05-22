@@ -29,7 +29,7 @@ steps:
       - cd test/gui/
       - make pnpm-install-chromium
       - cd webUI
-      - tar -czvf /woodpecker/src/github.com/opencloud-eu/desktop/desktop/playwright-browsers.tar.gz .playwright
+      - tar -czvf /woodpecker/desktop/playwright-browsers.tar.gz .playwright
     environment:
       PLAYWRIGHT_BROWSERS_PATH: .playwright
     image: owncloudci/nodejs:20
@@ -39,7 +39,7 @@ steps:
       - if $BROWSER_CACHE_FOUND; then exit 0; fi
       - playwright_version=$(bash test/gui/woodpecker/script.sh get_playwright_version)
       - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-      - mc cp -r -a /woodpecker/src/github.com/opencloud-eu/desktop/desktop/playwright-browsers.tar.gz s3/$CACHE_BUCKET/web/browsers-cache/$playwright_version/
+      - mc cp -r -a /woodpecker/desktop/playwright-browsers.tar.gz s3/$CACHE_BUCKET/web/browsers-cache/$playwright_version/
       - mc ls --recursive s3/$CACHE_BUCKET/web
     environment:
       AWS_ACCESS_KEY_ID:
@@ -62,5 +62,5 @@ when:
   - event: tag
   - event: pull_request
 workspace:
-  base: /woodpecker/src/github.com/opencloud-eu/desktop
+  base: /woodpecker/
   path: desktop

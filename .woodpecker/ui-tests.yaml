@@ -19,12 +19,12 @@ steps:
       - python3.10 -m pip list -v
     image: *squish_image
     environment:
-      PYTHONUSERBASE: /woodpecker/src/github.com/opencloud-eu/desktop/desktop/
+      PYTHONUSERBASE: /woodpecker/desktop/
     name: install-python-modules
   - commands:
       - playwright_version=$(bash test/gui/woodpecker/script.sh get_playwright_version)
       - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-      - mc cp -r -a s3/$CACHE_BUCKET/desktop/browsers-cache/$playwright_version/playwright-browsers.tar.gz /woodpecker/src/github.com/opencloud-eu/desktop/desktop
+      - mc cp -r -a s3/$CACHE_BUCKET/desktop/browsers-cache/$playwright_version/playwright-browsers.tar.gz /woodpecker/desktop
     environment:
       AWS_ACCESS_KEY_ID:
         from_secret: cache_s3_access_key
@@ -37,13 +37,13 @@ steps:
     image: minio/mc:RELEASE.2021-10-07T04-19-58Z
     name: restore-browsers-cache
   - commands:
-      - tar -xvf /woodpecker/src/github.com/opencloud-eu/desktop/desktop/playwright-browsers.tar.gz -C .
+      - tar -xvf /woodpecker/desktop/playwright-browsers.tar.gz -C .
     image: owncloud/ubuntu:20.04
     name: unzip-browsers-cache
   - commands:
       - . ./.woodpecker.env
       - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-      - mc cp -r -a s3/$CACHE_BUCKET/opencloud-build/$OPENCLOUD_COMMITID/opencloud /woodpecker/src/github.com/opencloud-eu/desktop/desktop
+      - mc cp -r -a s3/$CACHE_BUCKET/opencloud-build/$OPENCLOUD_COMMITID/opencloud /woodpecker/desktop
     environment:
       AWS_ACCESS_KEY_ID:
         from_secret: cache_s3_access_key
@@ -73,7 +73,7 @@ steps:
       OC_SHOW_USER_EMAIL_IN_RESULTS: true
       OC_URL: https://opencloud:9200
       PROXY_ENABLE_BASIC_AUTH: true
-      WEB_UI_CONFIG_FILE: /woodpecker/src/github.com/opencloud-eu/desktop/desktop/test/gui/woodpecker/config-opencloud.json
+      WEB_UI_CONFIG_FILE: /woodpecker/desktop/test/gui/woodpecker/config-opencloud.json
     image: docker.io/golang:1.24
     name: opencloud
   - commands:
@@ -83,8 +83,8 @@ steps:
   - name: restore-desktop-client
     commands:
       - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-      - mc cp -a -r s3/$CACHE_BUCKET/desktop-build/${CI_COMMIT_SHA}/ /woodpecker/src/github.com/opencloud-eu/desktop/desktop/build
-      - ls -lh /woodpecker/src/github.com/opencloud-eu/desktop/desktop/build/bin
+      - mc cp -a -r s3/$CACHE_BUCKET/desktop-build/${CI_COMMIT_SHA}/ /woodpecker/desktop/build
+      - ls -lh /woodpecker/desktop/build/bin
     environment:
       AWS_ACCESS_KEY_ID:
         from_secret: cache_s3_access_key
@@ -99,29 +99,29 @@ steps:
   - name: create-gui-test-report-directory
     image: owncloud/ubuntu:20.04
     commands:
-      - mkdir /woodpecker/src/github.com/opencloud-eu/desktop/desktop/test/gui/guiReportUpload/screenshots -p
-      - chmod 777 /woodpecker/src/github.com/opencloud-eu/desktop/desktop/test/gui/ -R
+      - mkdir /woodpecker/desktop/test/gui/guiReportUpload/screenshots -p
+      - chmod 777 /woodpecker/desktop/test/gui/ -R
 
   - name: monitor-server-logs
     image: owncloud/ubuntu:20.04
     detach: true
     commands:
-      - touch /woodpecker/src/github.com/opencloud-eu/desktop/desktop/test/gui/guiReportUpload/serverlog.log
-      - chmod 777 /woodpecker/src/github.com/opencloud-eu/desktop/desktop/test/gui/guiReportUpload/serverlog.log
-      - tail -f /woodpecker/src/github.com/opencloud-eu/desktop/desktop/test/gui/guiReportUpload/serverlog.log
+      - touch /woodpecker/desktop/test/gui/guiReportUpload/serverlog.log
+      - chmod 777 /woodpecker/desktop/test/gui/guiReportUpload/serverlog.log
+      - tail -f /woodpecker/desktop/test/gui/guiReportUpload/serverlog.log
 
   - name: UI-tests
     image: *squish_image
     environment:
-      PYTHONUSERBASE: /woodpecker/src/github.com/opencloud-eu/desktop/desktop/
-      PLAYWRIGHT_BROWSERS_PATH: /woodpecker/src/github.com/opencloud-eu/desktop/desktop/.playwright
+      PYTHONUSERBASE: /woodpecker/desktop/
+      PLAYWRIGHT_BROWSERS_PATH: /woodpecker/desktop/.playwright
       LICENSEKEY:
         from_secret: squish_license_key
       BACKEND_HOST: https://opencloud:9200
       SECURE_BACKEND_HOST: https://opencloud:9200
-      GUI_TEST_REPORT_DIR: /woodpecker/src/github.com/opencloud-eu/desktop/desktop/test/gui/guiReportUpload
-      SERVER_INI: /woodpecker/src/github.com/opencloud-eu/desktop/desktop/test/gui/woodpecker/server.ini
-      SQUISH_PARAMETERS: --testsuite /woodpecker/src/github.com/opencloud-eu/desktop/desktop/test/gui --reportgen html,/woodpecker/src/github.com/opencloud-eu/desktop/desktop/test/gui/guiReportUpload --envvar QT_LOGGING_RULES=sync.httplogger=true;gui.socketapi=false --tags ~@skip --tags ~@skipOnLinux
+      GUI_TEST_REPORT_DIR: /woodpecker/desktop/test/gui/guiReportUpload
+      SERVER_INI: /woodpecker/desktop/test/gui/woodpecker/server.ini
+      SQUISH_PARAMETERS: --testsuite /woodpecker/desktop/test/gui --reportgen html,/woodpecker/desktop/test/gui/guiReportUpload --envvar QT_LOGGING_RULES=sync.httplogger=true;gui.socketapi=false --tags ~@skip --tags ~@skipOnLinux
 
 when:
   - branch:
@@ -133,5 +133,5 @@ when:
   - event: pull_request
   - event: tag
 workspace:
-  base: /woodpecker/src/github.com/opencloud-eu/desktop
+  base: /woodpecker
   path: desktop
