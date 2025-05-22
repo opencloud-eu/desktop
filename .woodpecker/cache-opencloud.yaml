@@ -44,14 +44,13 @@ steps:
       - if $OPENCLOUD_CACHE_FOUND; then exit 0; fi
       - cd repo_opencloud
       - for i in $(seq 3); do make -C opencloud build && break || sleep 1; done
-      - cp opencloud/bin/opencloud /woodpecker/src/github.com/opencloud-eu/web/
     image: docker.io/golang:1.24
     name: build-opencloud
   - commands:
       - . ./.woodpecker.env
       - if $OPENCLOUD_CACHE_FOUND; then exit 0; fi
       - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-      - mc cp -a /woodpecker/src/github.com/opencloud-eu/web/opencloud s3/$CACHE_BUCKET/opencloud-build/$OPENCLOUD_COMMITID/
+      - mc cp -a repo_opencloud/opencloud/bin/opencloud s3/$CACHE_BUCKET/opencloud-build/$OPENCLOUD_COMMITID/
       - mc ls --recursive s3/$CACHE_BUCKET/opencloud-build
     environment:
       <<: *minio_environment
