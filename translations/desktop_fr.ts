@@ -7,22 +7,22 @@
         <translation>Barre de navigation</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/AccountBar.qml" line="114"/>
+        <location filename="../src/gui/qml/AccountBar.qml" line="112"/>
         <source>Add Account</source>
         <translation>Ajouter un compte</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/AccountBar.qml" line="141"/>
+        <location filename="../src/gui/qml/AccountBar.qml" line="139"/>
         <source>Activity</source>
         <translation>Activité</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/AccountBar.qml" line="155"/>
+        <location filename="../src/gui/qml/AccountBar.qml" line="153"/>
         <source>Settings</source>
         <translation>Paramètres</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/AccountBar.qml" line="184"/>
+        <location filename="../src/gui/qml/AccountBar.qml" line="182"/>
         <source>Quit</source>
         <translation>Quitter</translation>
     </message>
@@ -2453,38 +2453,38 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
 <context>
     <name>OCC::SocketApi</name>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="495"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="490"/>
         <source>Share with %1</source>
         <comment>parameter is OpenCloud</comment>
         <translation>Partager avec %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="593"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="588"/>
         <source>Confirm deletion</source>
         <translation>Confirmer la suppression</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="595"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="590"/>
         <source>Do you want to delete the directory &lt;i&gt;%1&lt;/i&gt; and all its contents permanently?</source>
         <translation>Voulez-vous supprimer définitivement le répertoire &lt;i&gt;%1&lt;/i&gt; et tout son contenu ?</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="596"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="591"/>
         <source>Do you want to delete the file &lt;i&gt;%1&lt;/i&gt; permanently?</source>
         <translation>Voulez-vous supprimer définitivement le fichier &lt;i&gt;%1&lt;/i&gt; ?</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="638"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="633"/>
         <source>Select new location...</source>
         <translation>Sélectionner un nouvel emplacement…</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="648"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="643"/>
         <source>Error</source>
         <translation>Erreur</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="649"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="644"/>
         <source>Moving file failed:
 
 %1</source>
@@ -2493,80 +2493,80 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
 %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="722"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="717"/>
         <source>I shared something with you</source>
         <translation>J&apos;ai partagé quelque chose avec vous</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="735"/>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="765"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="730"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="760"/>
         <source>Share...</source>
         <translation>Partage...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="737"/>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="769"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="732"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="764"/>
         <source>Copy private link to clipboard</source>
         <translation>Copier le lien privé dans le presse-papiers</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="738"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="733"/>
         <source>Send private link by email...</source>
         <translation>Envoyer un lien privé par e-mail…</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="763"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="758"/>
         <source>Resharing this file is not allowed</source>
         <translation>Le repartage de ce fichier n&apos;est pas autorisé</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="763"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="758"/>
         <source>Resharing this folder is not allowed</source>
         <translation>Le repartage de ce dossier n&apos;est pas autorisé</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="841"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="836"/>
         <source>Open in %1</source>
         <translation>Ouvrir dans %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="852"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="847"/>
         <source>Show file versions in web browser</source>
         <translation>Afficher les versions des fichiers dans le navigateur Web</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="874"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="869"/>
         <source>Rename...</source>
         <translation>Renommer...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="877"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="872"/>
         <source>Rename and upload...</source>
         <translation>Renommer et télécharger…</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="882"/>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="886"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="877"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="881"/>
         <source>Move and rename...</source>
         <translation>Déplacer et renommer…</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="889"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="884"/>
         <source>Move, rename and upload...</source>
         <translation>Déplacer, renommer et télécharger…</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="892"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="887"/>
         <source>Delete local changes</source>
         <translation>Supprimer les modifications locales</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="897"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="892"/>
         <source>Move and upload...</source>
         <translation>Déplacer et télécharger...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="898"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="893"/>
         <source>Delete</source>
         <translation>Supprimer</translation>
     </message>
@@ -2720,7 +2720,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
 <context>
     <name>OCC::Theme</name>
     <message>
-        <location filename="../src/libsync/theme.cpp" line="245"/>
+        <location filename="../src/libsync/theme.cpp" line="238"/>
         <source>&lt;p&gt;Version %1. For more information visit &lt;a href=&quot;https://opencloud.eu/&quot;&gt;https://opencloud.eu/&lt;/a&gt;&lt;/p&gt;&lt;p&gt;For known issues and help, please visit: &lt;a href=&quot;https://github.com/opencloud-eu/desktop&quot;&gt;GitHub&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Copyright OpenCloud GmbH&lt;br/&gt;Copyright ownCloud GmbH&lt;/p&gt;&lt;p&gt;Distributed by OpenCloud GmbH and licensed under the GNU General Public License (GPL) Version 2.0.&lt;br/&gt;&lt;p&gt;&lt;small&gt;%2&lt;/small&gt;&lt;/p&gt;</source>
         <translation>&lt;p&gt;Version %1. Pour plus d’informations, visitez &lt;a href=&quot;https://opencloud.eu/&quot;&gt;https://opencloud.eu/&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Pour les problèmes connus et l’aide, veuillez consulter GitHub : &lt;a href=&quot;https://github.com/opencloud-eu/desktop&quot;&gt;GitHub&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Copyright OpenCloud GmbH&lt;br/&gt;Copyright ownCloud GmbH&lt;/p&gt;&lt;p&gt;Distribué par OpenCloud GmbH et sous licence GNU General Public License (GPL) Version 2.0.&lt;br/&gt;&lt;p&gt;&lt;small&gt;%2&lt;/small&gt;&lt;/p&gt; </translation>
     </message>
@@ -2898,7 +2898,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
 <context>
     <name>OCC::Wizard::ServerUrlSetupWizardPage</name>
     <message>
-        <location filename="../src/gui/newwizard/pages/serverurlsetupwizardpage.cpp" line="34"/>
+        <location filename="../src/gui/newwizard/pages/serverurlsetupwizardpage.cpp" line="33"/>
         <source>%1 logo</source>
         <extracomment>This is the accessibility text for the logo in the setup wizard page. The parameter is the name for the (branded) application.</extracomment>
         <translation>%1 logo</translation>
@@ -2976,7 +2976,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
 <context>
     <name>OpenCloudTheme::aboutVersions()</name>
     <message>
-        <location filename="../src/libsync/theme.cpp" line="232"/>
+        <location filename="../src/libsync/theme.cpp" line="225"/>
         <source>%1 %2%7%8Libraries Qt %3, %4%7Using virtual files plugin: %5%7%6</source>
         <translation>%1 %2%7%8Bibliothèques Qt %3, %4%7Utilisation du plugin de fichiers virtuels : %5%7%6</translation>
     </message>
@@ -2984,7 +2984,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
 <context>
     <name>OpenCloudTheme::qtVer</name>
     <message>
-        <location filename="../src/libsync/theme.cpp" line="215"/>
+        <location filename="../src/libsync/theme.cpp" line="208"/>
         <source>%1 (Built against Qt %2)</source>
         <translation>%1 (Construit avec Qt %2)</translation>
     </message>
@@ -2992,7 +2992,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
 <context>
     <name>OpenCloudTheme::versionWithSha</name>
     <message>
-        <location filename="../src/libsync/theme.cpp" line="220"/>
+        <location filename="../src/libsync/theme.cpp" line="213"/>
         <source>%1 %2</source>
         <translation>%1 %2</translation>
     </message>
@@ -3088,22 +3088,22 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
 <context>
     <name>SetupWizardState</name>
     <message>
-        <location filename="../src/gui/newwizard/enums.cpp" line="29"/>
+        <location filename="../src/gui/newwizard/enums.cpp" line="30"/>
         <source>Server URL</source>
         <translation>URL du serveur</translation>
     </message>
     <message>
-        <location filename="../src/gui/newwizard/enums.cpp" line="31"/>
+        <location filename="../src/gui/newwizard/enums.cpp" line="32"/>
         <source>Welcome</source>
         <translation>Bienvenue</translation>
     </message>
     <message>
-        <location filename="../src/gui/newwizard/enums.cpp" line="34"/>
+        <location filename="../src/gui/newwizard/enums.cpp" line="35"/>
         <source>Login</source>
         <translation>Connexion</translation>
     </message>
     <message>
-        <location filename="../src/gui/newwizard/enums.cpp" line="36"/>
+        <location filename="../src/gui/newwizard/enums.cpp" line="37"/>
         <source>Sync Options</source>
         <translation>Options de synchronisation</translation>
     </message>
