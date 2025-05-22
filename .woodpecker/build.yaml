@@ -1,6 +1,16 @@
 ---
 variables:
   - &squish_image 'arturneumann/squish'
+  - &minio_image 'minio/mc:RELEASE.2021-10-07T04-19-58Z'
+  - &minio_environment
+    AWS_ACCESS_KEY_ID:
+      from_secret: cache_s3_access_key
+    AWS_SECRET_ACCESS_KEY:
+      from_secret: cache_s3_secret_key
+    CACHE_BUCKET:
+      from_secret: cache_s3_bucket
+    MC_HOST:
+      from_secret: cache_s3_server
 
 steps:
   - name: fix-permissions
@@ -20,15 +30,8 @@ steps:
       - mc cp -a -r /woodpecker/desktop/build/bin s3/$CACHE_BUCKET/desktop-build/${CI_COMMIT_SHA}/
       - mc ls --recursive s3/$CACHE_BUCKET/desktop-build
     environment:
-      AWS_ACCESS_KEY_ID:
-        from_secret: cache_s3_access_key
-      AWS_SECRET_ACCESS_KEY:
-        from_secret: cache_s3_secret_key
-      CACHE_BUCKET:
-        from_secret: cache_s3_bucket
-      MC_HOST:
-        from_secret: cache_s3_server
-    image: minio/mc:RELEASE.2021-10-07T04-19-58Z
+      <<: *minio_environment
+    image: *minio_image
 
 when:
   - branch:

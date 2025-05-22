@@ -1,3 +1,16 @@
+---
+variables:
+  - &minio_image 'minio/mc:RELEASE.2021-10-07T04-19-58Z'
+  - &minio_environment
+    AWS_ACCESS_KEY_ID:
+      from_secret: cache_s3_access_key
+    AWS_SECRET_ACCESS_KEY:
+      from_secret: cache_s3_secret_key
+    CACHE_BUCKET:
+      from_secret: cache_s3_bucket
+    MC_HOST:
+      from_secret: cache_s3_server
+
 skip_clone: true
 steps:
   - commands:
@@ -8,15 +21,8 @@ steps:
       - mc ls --recursive s3/$CACHE_BUCKET/opencloud-build
       - bash script.sh check_opencloud_cache
     environment:
-      AWS_ACCESS_KEY_ID:
-        from_secret: cache_s3_access_key
-      AWS_SECRET_ACCESS_KEY:
-        from_secret: cache_s3_secret_key
-      CACHE_BUCKET:
-        from_secret: cache_s3_bucket
-      MC_HOST:
-        from_secret: cache_s3_server
-    image: minio/mc:RELEASE.2021-10-07T04-19-58Z
+      <<: *minio_environment
+    image: *minio_image
     name: check-for-existing-cache
   - commands:
       - . ./.woodpecker.env
@@ -48,15 +54,8 @@ steps:
       - mc cp -a /woodpecker/src/github.com/opencloud-eu/web/opencloud s3/$CACHE_BUCKET/opencloud-build/$OPENCLOUD_COMMITID/
       - mc ls --recursive s3/$CACHE_BUCKET/opencloud-build
     environment:
-      AWS_ACCESS_KEY_ID:
-        from_secret: cache_s3_access_key
-      AWS_SECRET_ACCESS_KEY:
-        from_secret: cache_s3_secret_key
-      CACHE_BUCKET:
-        from_secret: cache_s3_bucket
-      MC_HOST:
-        from_secret: cache_s3_server
-    image: minio/mc:RELEASE.2021-10-07T04-19-58Z
+      <<: *minio_environment
+    image: *minio_image
     name: upload-opencloud-cache
 when:
   - branch:

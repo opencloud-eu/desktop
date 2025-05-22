@@ -1,18 +1,24 @@
+---
+variables:
+  - &minio_image 'minio/mc:RELEASE.2021-10-07T04-19-58Z'
+  - &minio_environment
+    AWS_ACCESS_KEY_ID:
+      from_secret: cache_s3_access_key
+    AWS_SECRET_ACCESS_KEY:
+      from_secret: cache_s3_secret_key
+    CACHE_BUCKET:
+      from_secret: cache_s3_bucket
+    MC_HOST:
+      from_secret: cache_s3_server
+
 steps:
   - commands:
       - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
       - mc ls --recursive s3/$CACHE_BUCKET/web
       - bash test/gui/woodpecker/script.sh check_browsers_cache
     environment:
-      AWS_ACCESS_KEY_ID:
-        from_secret: cache_s3_access_key
-      AWS_SECRET_ACCESS_KEY:
-        from_secret: cache_s3_secret_key
-      CACHE_BUCKET:
-        from_secret: cache_s3_bucket
-      MC_HOST:
-        from_secret: cache_s3_server
-    image: minio/mc:RELEASE.2021-10-07T04-19-58Z
+      <<: *minio_environment
+    image: *minio_image
     name: check-browsers-cache
   - commands:
       - . ./.woodpecker.env
@@ -42,15 +48,8 @@ steps:
       - mc cp -r -a /woodpecker/desktop/playwright-browsers.tar.gz s3/$CACHE_BUCKET/web/browsers-cache/$playwright_version/
       - mc ls --recursive s3/$CACHE_BUCKET/web
     environment:
-      AWS_ACCESS_KEY_ID:
-        from_secret: cache_s3_access_key
-      AWS_SECRET_ACCESS_KEY:
-        from_secret: cache_s3_secret_key
-      CACHE_BUCKET:
-        from_secret: cache_s3_bucket
-      MC_HOST:
-        from_secret: cache_s3_server
-    image: minio/mc:RELEASE.2021-10-07T04-19-58Z
+      <<: *minio_environment
+    image: *minio_image
     name: upload-browsers-cache
 when:
   - branch:
