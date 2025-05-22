@@ -25,7 +25,7 @@ def authorize_via_webui(username, password, login_type='oidc'):
         'OC_AUTH_URL': get_clipboard_text(),
     }
     proc = subprocess.run(
-         f"{'pnpm.exe' if is_windows() else 'pnpm'} run {login_type}-login",
+        f"{'pnpm.exe' if is_windows() else 'pnpm'} run {login_type}-login",
         capture_output=True,
         shell=True,
         env={**os.environ, **envs},
