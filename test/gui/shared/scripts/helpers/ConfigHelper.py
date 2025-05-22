@@ -71,7 +71,6 @@ CONFIG_ENV_MAP = {
     'clientLogFile': 'CLIENT_LOG_FILE',
     'clientRootSyncPath': 'CLIENT_ROOT_SYNC_PATH',
     'tempFolderPath': 'TEMP_FOLDER_PATH',
-    'clientConfigDir': 'CLIENT_CONFIG_DIR',
     'guiTestReportDir': 'GUI_TEST_REPORT_DIR',
     'record_video_on_failure': 'RECORD_VIDEO_ON_FAILURE'
 }
@@ -93,6 +92,7 @@ CONFIG = {
     'clientRootSyncPath': get_client_root_path(),
     'tempFolderPath': os.path.join(get_client_root_path(), 'temp'),
     'clientConfigDir': get_config_home(),
+    'clientConfigFile': os.path.join(get_config_home(), "opencloud.cfg"),
     'guiTestReportDir': os.path.abspath('../reports'),
     'record_video_on_failure': False,
     'files_for_upload': os.path.join(CURRENT_DIR.parent.parent, 'files-for-upload'),

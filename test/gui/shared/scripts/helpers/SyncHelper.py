@@ -164,7 +164,7 @@ def generate_sync_pattern_from_messages(messages):
         # E.g; from "STATUS:OK:/tmp/client-bdd/Alice/"
         # excludes ":/tmp/client-bdd/Alice/"
         # adds only "STATUS:OK" to the pattern list
-        if match := re.search(':(/|[A-Z]{1}:\\\\).*', message):
+        if match := re.search(':(/|[A-Z]{1}:\\\\|[A-Z]{1}:\/).*', message):
             (end, _) = match.span()
             # shared resources will have status like "STATUS:OK+SWM"
             status = message[:end].replace('+SWM', '')
@@ -183,7 +183,7 @@ def filter_sync_messages(messages):
 def filter_messages_for_item(messages, item):
     filtered_messages = []
     for msg in messages:
-        msg = msg.rstrip('/').rstrip('\\')
+        msg = msg.rstrip('/').rstrip('\\').replace('\\', '/')
         item = item.rstrip('/').rstrip('\\')
         if msg.endswith(item):
             filtered_messages.append(msg)
