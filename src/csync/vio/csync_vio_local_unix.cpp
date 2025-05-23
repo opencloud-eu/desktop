@@ -26,7 +26,7 @@
 #include <dirent.h>
 #include <stdio.h>
 
-#include "csync.h"
+#include "csync/csync.h"
 
 #include "vio/csync_vio_local.h"
 #include "common/vfs.h"
