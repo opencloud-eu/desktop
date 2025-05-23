@@ -1,6 +1,6 @@
 ---
 variables:
-  - &squish_image 'opencloudeu/squish'
+  - &squish_image 'opencloudeu/squish@sha256:6eaecc218044020f49f24fd29b6bdc052e8170699a762687b10398b353e5fcda'
   - &minio_image 'minio/mc:RELEASE.2021-10-07T04-19-58Z'
   - &minio_environment
     AWS_ACCESS_KEY_ID:
