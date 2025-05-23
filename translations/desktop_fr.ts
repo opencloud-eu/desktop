@@ -294,7 +294,7 @@ Utilitaire de bureau pour la synchronisation de fichiers.</translation>
     <message>
         <location filename="../src/gui/qml/FolderDelegate.qml" line="390"/>
         <source>You are synchronizing %1 out of %2 Spaces</source>
-        <translation type="unfinished"/>
+        <translation>Vous synchronisez %1 sur %2 Espaces</translation>
     </message>
 </context>
 <context>
@@ -2602,7 +2602,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
     <message>
         <location filename="../src/libsync/syncengine.cpp" line="834"/>
         <source>Space quota exceeded. Please contact the Administrator of this space.</source>
-        <translation type="unfinished"/>
+        <translation>Le quota d&apos;Espace est dépassé. Veuillez contacter l&apos;administrateur de cet Espace.</translation>
     </message>
     <message>
         <location filename="../src/libsync/syncengine.cpp" line="267"/>
@@ -2776,7 +2776,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
     <message>
         <location filename="../src/gui/updateurldialog.cpp" line="33"/>
         <source>The URL for &lt;b&gt;%1&lt;/b&gt; changed from:&lt;br&gt;&lt;b&gt;%2&lt;/b&gt; to:&lt;br&gt; &lt;b&gt;%3&lt;/b&gt;.&lt;br&gt;&lt;br&gt;Do you want to accept the new URL permanently?&lt;br&gt;This will cause an application restart.</source>
-        <translation type="unfinished"/>
+        <translation>L&apos;URL pour &lt;b&gt;%1&lt;/b&gt; a changé de :&lt;br&gt;&lt;b&gt;%2&lt;/b&gt; à :&lt;br&gt; &lt;b&gt;%3&lt;/b&gt;.&lt;br&gt;&lt;br&gt;Voulez-vous accepter la nouvelle URL de façon permanente&lt;br&gt;Cela provoquera un redémarrage de l&apos;application.</translation>
     </message>
 </context>
 <context>
@@ -3082,7 +3082,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
     <message>
         <location filename="../src/gui/newwizard/states/serverurlsetupwizardstate.cpp" line="56"/>
         <source>Invalid server URL</source>
-        <translation type="unfinished"/>
+        <translation>URL du serveur non valide</translation>
     </message>
 </context>
 <context>
@@ -3295,17 +3295,17 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
     <message>
         <location filename="../src/gui/qml/UpdateUrlDialog.qml" line="46"/>
         <source>Cancel</source>
-        <translation type="unfinished"/>
+        <translation>Annuler</translation>
     </message>
     <message>
         <location filename="../src/gui/qml/UpdateUrlDialog.qml" line="50"/>
         <source>Accept and Restart</source>
-        <translation type="unfinished"/>
+        <translation>Accepter et redémarrer</translation>
     </message>
     <message>
         <location filename="../src/gui/qml/UpdateUrlDialog.qml" line="50"/>
         <source>Accept</source>
-        <translation type="unfinished"/>
+        <translation>Accepter</translation>
     </message>
 </context>
 <context>
