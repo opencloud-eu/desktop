@@ -13,14 +13,14 @@ variables:
       from_secret: cache_s3_server
 
 steps:
-  - commands:
+  - name: check-python-cache
+    commands:
       - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-      - mc ls --recursive s3/$CACHE_BUCKET/desktop-build
+      - mc ls s3/$CACHE_BUCKET/desktop-build
       - bash test/gui/woodpecker/script.sh check_python_cache
     environment:
       <<: *minio_environment
     image: *minio_image
-    name: check-python-cache
   - name: install-python-modules
     commands:
       - . ./.woodpecker.env
@@ -28,10 +28,10 @@ steps:
       - make -C test/gui/ pip-install
       - python3.10 -m pip list -v
       - requirements_sha=$(sha1sum test/gui/requirements.txt | cut -d" " -f1)
-      - tar -czvf /woodpecker/desktop/python-cache-$requirements_sha.tar.gz $PYTHONUSERBASE/lib/python3.10/site-packages
+      - tar -czvf /woodpecker/desktop/python-cache-$requirements_sha.tar.gz lib/python3.10/site-packages
     image: *squish_image
     environment:
-      PYTHONUSERBASE: /woodpecker/desktop/
+      PYTHONUSERBASE: /woodpecker/desktop
   - name: upload-python-cache
     commands:
       - . ./.woodpecker.env
