@@ -67,7 +67,7 @@ check_python_cache() {
     requirements_sha=$(sha1sum test/gui/requirements.txt | cut -d" " -f1)
     python_cache=$(mc find s3/$CACHE_BUCKET/desktop-build/python-cache-$requirements_sha.tar.gz 2>&1 | grep 'Object does not exist')
 
-    if [[ "python_cache" != "" ]]
+    if [[ "$python_cache" != "" ]]
     then
         echo "Python cache of requirements with hash $requirements_sha doesn't exist in cache."
         ENV="PYTHON_CACHE_FOUND=false\n"
