@@ -63,6 +63,19 @@ check_browsers_cache() {
     fi
 }
 
+check_python_cache() {
+    requirements_sha=$(sha1sum test/gui/requirements.txt | cut -d" " -f1)
+    python_cache=$(mc find s3/$CACHE_BUCKET/desktop-build/python_cache_$requirements_sha.tar.gz 2>&1 | grep 'Object does not exist')
+
+    if [[ "python_cache" != "" ]]
+    then
+        echo "Python cache of requirements with hash $requirements_sha doesn't exist in cache."
+        ENV="PYTHON_CACHE_FOUND=false\n"
+    else
+      echo "Python cache of requirements with hash $requirements_sha found in cache."
+      ENV="PYTHON_CACHE_FOUND=true\n"
+    fi
+}
 
 if [[ "$1" == "" ]]; then
     echo "Usage: $0 [COMMAND]"
@@ -71,6 +84,7 @@ if [[ "$1" == "" ]]; then
     echo -e "  check_opencloud_cache \t\t check if the cache exists for the given commit ID"
     echo -e "  get_playwright_version \t get the playwright version from package.json"
     echo -e "  check_browsers_cache \t check if the browsers cache exists for the given playwright version"
+    echo -e "  check_python_cache \t check if a cache for the current requirements.txt exists"
     exit 1
 fi
 

@@ -1,0 +1,57 @@
+---
+variables:
+  - &squish_image 'opencloudeu/squish'
+  - &minio_image 'minio/mc:RELEASE.2021-10-07T04-19-58Z'
+  - &minio_environment
+    AWS_ACCESS_KEY_ID:
+      from_secret: cache_s3_access_key
+    AWS_SECRET_ACCESS_KEY:
+      from_secret: cache_s3_secret_key
+    CACHE_BUCKET:
+      from_secret: cache_s3_bucket
+    MC_HOST:
+      from_secret: cache_s3_server
+
+steps:
+  - commands:
+      - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
+      - mc ls --recursive s3/$CACHE_BUCKET/desktop-build
+      - bash test/gui/woodpecker/script.sh check_python-cache
+    environment:
+      <<: *minio_environment
+    image: *minio_image
+    name: check-browsers-cache
+  - name: install-python-modules
+    commands:
+      - . ./.woodpecker.env
+      - if $PYTHON_CACHE_FOUND; then exit 0; fi
+      - make -C test/gui/ pip-install
+      - python3.10 -m pip list -v
+      - requirements_sha=$(sha1sum test/gui/requirements.txt | cut -d" " -f1)
+      - tar -czvf /woodpecker/desktop/python-cache-$requirements_sha.tar.gz $PYTHONUSERBASE/lib/python3.10/site-packages
+    image: *squish_image
+    environment:
+      PYTHONUSERBASE: /woodpecker/desktop/
+  - name: upload-python-cache
+    commands:
+      - . ./.woodpecker.env
+      - if $PYTHON_CACHE_FOUND; then exit 0; fi
+      - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
+      - mc cp -r -a /woodpecker/desktop/python-cache*.tar.gz s3/$CACHE_BUCKET/desktop-build/
+      - mc ls s3/$CACHE_BUCKET/desktop-build
+    environment:
+      <<: *minio_environment
+    image: *minio_image
+
+when:
+  - branch:
+      - main
+      - stable-*
+    event:
+      - push
+      - manual
+  - event: tag
+  - event: pull_request
+workspace:
+  base: /woodpecker/
+  path: desktop

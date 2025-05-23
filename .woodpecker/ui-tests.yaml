@@ -24,7 +24,16 @@ steps:
       - make pnpm-install
     image: owncloudci/nodejs:20
     name: pnpm-install
+  - name: restore-python-cache
+    commands:
+      - requirements_sha=$(sha1sum test/gui/requirements.txt | cut -d" " -f1)
+      - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
+      - mc cp -r -a s3/$CACHE_BUCKET/desktop-build/python-cache-$requirements_sha.tar.gz /woodpecker/desktop
+    environment:
+      <<: *minio_environment
+    image: *minio_image
   - commands:
+      - tar -xvf python-cache-*.tar.gz -C .
       - make -C test/gui/ pip-install
       - python3.10 -m pip list -v
     image: *squish_image
