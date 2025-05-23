@@ -6,7 +6,7 @@ settings:
 
 devDependencies:
   '@playwright/test':
-    specifier: ^1.43.0
+    specifier: 1.45.0
     version: 1.45.0
 
 packages:
