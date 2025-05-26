@@ -59,8 +59,12 @@ OAuthCredentialsSetupWizardState::OAuthCredentialsSetupWizardState(SetupWizardCo
             }
         };
 
-        // we run this job here so that it runs during the transition state
-        // sure, it's not the cleanest ever approach, but currently it's good enough
+        // SECOND WEBFINGER CALL (authenticated):
+        // This discovers which OpenCloud instance(s) the authenticated user has access to.
+        // Uses the OAuth bearer token and resource="acct:me@{host}".
+        // Looking for: rel="http://webfinger.opencloud/rel/server-instance"
+        // See issue #271 for why we perform WebFinger twice.
+        // Backend WebFinger docs: https://github.com/opencloud-eu/opencloud/blob/main/services/webfinger/README.md
         if (!_context->accountBuilder().webFingerAuthenticationServerUrl().isEmpty()) {
             auto *job = Jobs::WebFingerInstanceLookupJobFactory(_context->accessManager(), token).startJob(_context->accountBuilder().serverUrl(), this);
 

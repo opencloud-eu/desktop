@@ -67,8 +67,12 @@ void ServerUrlSetupWizardState::evaluatePage()
             }
             _context->accountBuilder().setServerUrl(resolveJob->result().toUrl());
 
-            // check whether WebFinger is available
-            // therefore, we run the corresponding discovery job
+            // FIRST WEBFINGER CALL (unauthenticated):
+            // This discovers if the server supports WebFinger-based authentication
+            // and finds the IdP URL. The resource parameter is the server URL itself.
+            // Looking for: rel="http://openid.net/specs/connect/1.0/issuer"
+            // See issue #271 for why we perform WebFinger twice.
+            // Backend WebFinger docs: https://github.com/opencloud-eu/opencloud/blob/main/services/webfinger/README.md
             auto *checkWebFingerAuthJob =
                 Jobs::DiscoverWebFingerServiceJobFactory(_context->accessManager()).startJob(_context->accountBuilder().serverUrl(), this);
             connect(checkWebFingerAuthJob, &CoreJob::finished, this, [checkWebFingerAuthJob, this]() {
