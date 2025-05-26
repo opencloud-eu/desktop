@@ -1,6 +1,6 @@
 # Changelog
 
-## [2.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v2.0.0) - 2025-05-25
+## [2.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v2.0.0) - 2025-05-26
 
 ### ❤️ Thanks to all contributors! ❤️
 
@@ -17,6 +17,7 @@
 
 ### 🐛 Bug Fixes
 
+- Update KDSingleApplication to 1.2.0 [[#293](https://github.com/opencloud-eu/desktop/pull/293)]
 - Fix casing of Spaces [[#272](https://github.com/opencloud-eu/desktop/pull/272)]
 - Restart the client if the server url changed [[#254](https://github.com/opencloud-eu/desktop/pull/254)]
 - Directly schedule sync once the etag changed [[#253](https://github.com/opencloud-eu/desktop/pull/253)]
