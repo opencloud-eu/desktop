@@ -7,7 +7,7 @@ version = 2023-12-12
 
 [craft/craft-blueprints-kde]
 version = master
-revision = e9479b8f
+revision = 432cc82994437abfe73c52de412abb4ddecffdeb
 
 [craft/craft-blueprints-opencloud]
 version = main
@@ -81,7 +81,7 @@ version = 2.7.2
 version = 76.1
 
 [libs/kdsingleapplication]
-version = 1.1.0
+version = 1.2.0
 
 [libs/libb2]
 version = 0.98.1
