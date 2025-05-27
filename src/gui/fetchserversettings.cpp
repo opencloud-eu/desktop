@@ -21,6 +21,8 @@
 #include "libsync/account.h"
 #include "libsync/networkjobs/jsonjob.h"
 
+#include <OAIUser.h>
+
 #include <QImageReader>
 
 using namespace std::chrono_literals;
@@ -76,7 +78,7 @@ void FetchServerSettingsJob::start()
                 Q_EMIT finishedSignal(ConnectionValidator::ServerVersionMismatch);
                 return;
             }
-            auto *userJob = new JsonApiJob(_account, QStringLiteral("ocs/v2.php/cloud/user"), SimpleNetworkJob::UrlQuery{}, QNetworkRequest{}, this);
+            auto *userJob = new JsonJob(_account, _account->url(), u"graph/v1.0/me"_s, "GET");
             userJob->setAuthenticationJob(isAuthJob());
             userJob->setTimeout(fetchSettingsTimeout());
             connect(userJob, &JsonApiJob::finishedSignal, this, [userJob, this] {
@@ -84,12 +86,10 @@ void FetchServerSettingsJob::start()
                     Q_EMIT finishedSignal(ConnectionValidator::Timeout);
                 } else if (userJob->httpStatusCode() == 401) {
                     Q_EMIT finishedSignal(ConnectionValidator::CredentialsWrong);
-                } else if (userJob->ocsSuccess()) {
-                    const auto userData = userJob->data().value(QStringLiteral("ocs")).toObject().value(QStringLiteral("data")).toObject();
-                    const QString displayName = userData.value(QStringLiteral("display-name")).toString();
-                    if (!displayName.isEmpty()) {
-                        _account->setDavDisplayName(displayName);
-                    }
+                } else if (userJob->httpStatusCode() == 200) {
+                    OpenAPI::OAIUser me;
+                    me.fromJsonObject(userJob->data());
+                    _account->setDavDisplayName(me.getDisplayName());
                     runAsyncUpdates();
                     Q_EMIT finishedSignal(ConnectionValidator::Connected);
                 } else {
@@ -134,7 +134,7 @@ void FetchServerSettingsJob::runAsyncUpdates()
         jsonJob->start();
     }
 
-    auto *avatarJob = new SimpleNetworkJob(_account, _account->url(), u"/graph/v1.0/me/photo/$value"_s, "GET");
+    auto *avatarJob = new SimpleNetworkJob(_account, _account->url(), u"graph/v1.0/me/photo/$value"_s, "GET");
     connect(avatarJob, &SimpleNetworkJob::finishedSignal, this, [avatarJob, this] {
         if (avatarJob->httpStatusCode() == 200) {
             QImageReader reader(avatarJob->reply());
