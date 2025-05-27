@@ -21,8 +21,11 @@
 #include "libsync/account.h"
 #include "libsync/networkjobs/jsonjob.h"
 
+#include <QImageReader>
 
 using namespace std::chrono_literals;
+
+using namespace Qt::Literals::StringLiterals;
 
 using namespace OCC;
 
@@ -130,6 +133,20 @@ void FetchServerSettingsJob::runAsyncUpdates()
         connect(jsonJob, &JsonJob::finishedSignal, this, [jsonJob, this] { _account->setAppProvider(AppProvider{jsonJob->data()}); });
         jsonJob->start();
     }
+
+    auto *avatarJob = new SimpleNetworkJob(_account, _account->url(), u"/graph/v1.0/me/photo/$value"_s, "GET");
+    connect(avatarJob, &SimpleNetworkJob::finishedSignal, this, [avatarJob, this] {
+        if (avatarJob->httpStatusCode() == 200) {
+            QImageReader reader(avatarJob->reply());
+            const auto image = reader.read();
+            if (!image.isNull()) {
+                _account->setAvatar(QPixmap::fromImage(image));
+            } else {
+                qCWarning(lcfetchserversettings) << "Failed to read avatar image:" << reader.errorString();
+            }
+        }
+    });
+    avatarJob->start();
 }
 
 bool FetchServerSettingsJob::isAuthJob() const

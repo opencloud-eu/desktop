@@ -67,7 +67,7 @@ Pane {
                 Layout.maximumWidth: widthHint
                 Accessible.role: Accessible.PageTab
                 checked: settingsDialog.currentAccount === accountState.account
-                icon.source: accountState.account.hasAvatar ? OpenCloud.resourcePath2("avatar", accountState.account.uid, enabled) : undefined
+                icon.source: accountState.account.hasAvatar ? OpenCloud.avatarPath(accountState.account.uid, enabled) : undefined
                 icon.cache: false
                 altText: accountState.account.initials
                 text: accountState.account.hostName
@@ -85,7 +85,7 @@ Pane {
                     function onAvatarChanged() {
                         icon.source = undefined;
                         if (accountState.account.hasAvatar) {
-                            icon.source = OpenCloud.resourcePath2("avatar", accountState.account.uid, enabled);
+                            icon.source = OpenCloud.avatarPath(accountState.account.uid, enabled);
                         }
                     }
                 }
