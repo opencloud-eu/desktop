@@ -2426,22 +2426,22 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
 <context>
     <name>OCC::SettingsDialog</name>
     <message>
-        <location filename="../src/gui/settingsdialog.cpp" line="97"/>
+        <location filename="../src/gui/settingsdialog.cpp" line="111"/>
         <source>Hide</source>
         <translation>Ausblenden</translation>
     </message>
     <message>
-        <location filename="../src/gui/settingsdialog.cpp" line="106"/>
+        <location filename="../src/gui/settingsdialog.cpp" line="120"/>
         <source>Quit %1</source>
         <translation>Beenden %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/settingsdialog.cpp" line="107"/>
+        <location filename="../src/gui/settingsdialog.cpp" line="121"/>
         <source>Are you sure you want to quit %1?</source>
         <translation>Sicher, dass %1 verlassen werden soll?</translation>
     </message>
     <message>
-        <location filename="../src/gui/settingsdialog.cpp" line="133"/>
+        <location filename="../src/gui/settingsdialog.cpp" line="147"/>
         <source>%1 - %2</source>
         <translation>%1 - %2</translation>
     </message>

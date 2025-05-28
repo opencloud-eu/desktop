@@ -11,3 +11,7 @@ function resourcePath(theme, icon, enabled, size, color) {
 function resourcePath2(provider, theme, icon, enabled, size, color) {
     return `image://${provider}?theme=${theme}&icon=${encodeURIComponent(icon)}&enabled=${enabled}&size=${size}&color=${color}`;
 }
+
+function avatarPath(accountID, enabled, size) {
+    return resourcePath2("avatar", undefined, accountID, enabled, size);
+}

@@ -29,6 +29,8 @@
 
 #include <QMenuBar>
 #include <QMessageBox>
+#include <QPainter>
+#include <QPainterPath>
 #include <QScreen>
 #include <QWindow>
 
@@ -75,7 +77,19 @@ public:
     {
         const auto qmlIcon = OCC::Resources::parseIcon(id);
         const auto accountState = OCC::AccountManager::instance()->account(QUuid::fromString(qmlIcon.iconName));
-        return OCC::Resources::pixmap(requestedSize, accountState->account()->avatar(), qmlIcon.enabled ? QIcon::Normal : QIcon::Disabled, size);
+        const auto avatar = OCC::Resources::pixmap(requestedSize, accountState->account()->avatar(), qmlIcon.enabled ? QIcon::Normal : QIcon::Disabled, size);
+
+        const int minDimension = std::min(avatar.width(), avatar.height());
+        QPixmap roundAvatar(minDimension, minDimension);
+        roundAvatar.fill(Qt::transparent);
+        QPainter painter(&roundAvatar);
+        painter.setRenderHint(QPainter::Antialiasing);
+        QPainterPath path;
+        path.addEllipse(0, 0, minDimension, minDimension);
+        painter.setClipPath(path);
+        painter.drawPixmap(0, 0, avatar.scaled(minDimension, minDimension, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        painter.end();
+        return roundAvatar;
     }
 };
 }
