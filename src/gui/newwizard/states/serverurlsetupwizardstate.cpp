@@ -26,6 +26,7 @@ ServerUrlSetupWizardState::ServerUrlSetupWizardState(SetupWizardContext *context
     : AbstractSetupWizardState(context)
 {
     _page = new ServerUrlSetupWizardPage(_context->accountBuilder().serverUrl());
+    connect(_page, &AbstractSetupWizardPage::requestNext, context->window(), &SetupWizardWidget::nextButtonClicked);
 }
 
 SetupWizardState ServerUrlSetupWizardState::state() const

@@ -9,6 +9,15 @@
 using namespace Qt::Literals::StringLiterals;
 
 namespace {
+QString fixupUrl(const QString &input)
+{
+    auto url = QUrl::fromUserInput(input);
+    if (url.scheme() == "http"_L1) {
+        url.setScheme("https"_L1);
+    }
+    return url.toString();
+}
+
 class UrlValidator : public QValidator
 {
     Q_OBJECT
@@ -26,14 +35,7 @@ public:
         return Acceptable;
     }
 
-    void fixup(QString &input) const override
-    {
-        auto url = QUrl::fromUserInput(input);
-        if (url.scheme() == "http"_L1) {
-            url.setScheme("https"_L1);
-        }
-        input = url.toString();
-    }
+    void fixup(QString &input) const override { input = fixupUrl(input); }
 };
 }
 namespace OCC::Wizard {
@@ -70,9 +72,7 @@ ServerUrlSetupWizardPage::ServerUrlSetupWizardPage(const QUrl &serverUrl)
 
 QUrl ServerUrlSetupWizardPage::userProvidedUrl() const
 {
-    QString url = _ui->urlLineEdit->text();
-    _ui->urlLineEdit->validator()->fixup(url);
-    return QUrl(url);
+    return QUrl::fromUserInput(fixupUrl(_ui->urlLineEdit->text()));
 }
 
 ServerUrlSetupWizardPage::~ServerUrlSetupWizardPage()
@@ -83,6 +83,16 @@ ServerUrlSetupWizardPage::~ServerUrlSetupWizardPage()
 bool ServerUrlSetupWizardPage::validateInput() const
 {
     return _ui->urlLineEdit->hasAcceptableInput();
+}
+
+void ServerUrlSetupWizardPage::keyPressEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter) {
+        if (validateInput()) {
+            Q_EMIT requestNext();
+        }
+    }
+    AbstractSetupWizardPage::keyPressEvent(event);
 }
 }
 

@@ -32,6 +32,8 @@ public:
 
     bool validateInput() const override;
 
+    void keyPressEvent(QKeyEvent *event) override;
+
 private:
     ::Ui::ServerUrlSetupWizardPage *_ui;
 
