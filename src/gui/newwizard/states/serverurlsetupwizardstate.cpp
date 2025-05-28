@@ -26,6 +26,7 @@ ServerUrlSetupWizardState::ServerUrlSetupWizardState(SetupWizardContext *context
     : AbstractSetupWizardState(context)
 {
     _page = new ServerUrlSetupWizardPage(_context->accountBuilder().serverUrl());
+    connect(_page, &AbstractSetupWizardPage::requestNext, context->window(), &SetupWizardWidget::nextButtonClicked);
 }
 
 SetupWizardState ServerUrlSetupWizardState::state() const
@@ -42,12 +43,7 @@ void ServerUrlSetupWizardState::evaluatePage()
     auto serverUrlSetupWizardPage = qobject_cast<ServerUrlSetupWizardPage *>(_page);
     Q_ASSERT(serverUrlSetupWizardPage != nullptr);
 
-    const QUrl serverUrl = [serverUrlSetupWizardPage]() {
-        auto url = QUrl::fromUserInput(serverUrlSetupWizardPage->userProvidedUrl())
-                       .adjusted(QUrl::RemoveUserInfo | QUrl::StripTrailingSlash | QUrl::RemoveQuery | QUrl::RemoveFragment);
-        url.setScheme(QLatin1String("https"));
-        return url;
-    }();
+    const QUrl serverUrl = serverUrlSetupWizardPage->userProvidedUrl();
 
     _context->accountBuilder().setServerUrl(serverUrl);
 

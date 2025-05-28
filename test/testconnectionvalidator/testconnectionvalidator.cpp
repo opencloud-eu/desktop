@@ -22,6 +22,7 @@
 #include "testutils/testutils.h"
 
 using namespace std::chrono_literals;
+using namespace Qt::Literals::StringLiterals;
 
 using namespace OCC;
 
@@ -107,7 +108,7 @@ private Q_SLOTS:
                         }
                     }
                     return new FakePayloadReply(op, request, TestUtils::getPayloadTemplated(QStringLiteral("capabilities.json.in"), values), this);
-                } else if (path.endsWith(QLatin1String("user"))) {
+                } else if (path.endsWith("graph/v1.0/me"_L1)) {
                     reachedStage = FailStage::UserInfo;
                     if (failStage == FailStage::UserInfo) {
                         if (status == ConnectionValidator::CredentialsWrong) {

@@ -37,7 +37,7 @@ add_library(newwizard STATIC
     jobs/webfingeruserinfojobfactory.cpp
     jobs/webfingeruserinfojobfactory.h
 
-    postfixlineedit.cpp
+
 
     states/abstractsetupwizardstate.cpp
     states/serverurlsetupwizardstate.cpp

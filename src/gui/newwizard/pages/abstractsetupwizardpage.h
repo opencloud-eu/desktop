@@ -30,9 +30,10 @@ public:
      * A minimal check for instance is to check whether all required line edits have got data.
      * In case a page does not have user input to be validated, this function may always return true.
      */
-    virtual bool validateInput() = 0;
+    virtual bool validateInput() const = 0;
 
 Q_SIGNALS:
+    // TODO: this is a hack
     /**
      * Emitted after a page has been displayed within the wizard.
      * Can be used to, e.g., set the focus on widgets in order to make navigation with the keyboard easier.
@@ -44,6 +45,11 @@ Q_SIGNALS:
      * cannot just be detected with an event filter, e.g., when a user pastes data using the context menu.
      */
     void contentChanged();
+
+    /**
+     * The signal is emitted if a page requests to continue the wizard.
+     */
+    void requestNext();
 };
 
 }

@@ -28,9 +28,11 @@ class ServerUrlSetupWizardPage : public AbstractSetupWizardPage
 public:
     ServerUrlSetupWizardPage(const QUrl &serverUrl);
 
-    QString userProvidedUrl() const;
+    QUrl userProvidedUrl() const;
 
-    bool validateInput() override;
+    bool validateInput() const override;
+
+    void keyPressEvent(QKeyEvent *event) override;
 
 private:
     ::Ui::ServerUrlSetupWizardPage *_ui;
