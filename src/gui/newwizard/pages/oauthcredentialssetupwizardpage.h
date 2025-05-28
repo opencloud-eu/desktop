@@ -29,7 +29,7 @@ namespace Wizard {
     public:
         explicit OAuthCredentialsSetupWizardPage(OAuth *oauth, const QUrl &serverUrl, QWidget *parent = nullptr);
 
-        bool validateInput() override;
+        bool validateInput() const override;
 
     Q_SIGNALS:
         void openBrowserButtonPushed(const QUrl &url);

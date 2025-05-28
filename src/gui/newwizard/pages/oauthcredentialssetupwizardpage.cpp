@@ -35,7 +35,7 @@ OAuthCredentialsSetupWizardPage::OAuthCredentialsSetupWizardPage(OAuth *oauth, c
         QUrl(QStringLiteral("qrc:/qt/qml/eu/OpenCloud/gui/qml/credentials/OAuthCredentials.qml")), this, oauthCredentials, QJSEngine::JavaScriptOwnership);
 }
 
-bool OAuthCredentialsSetupWizardPage::validateInput()
+bool OAuthCredentialsSetupWizardPage::validateInput() const
 {
     // in this special case, the input may never be validated, i.e., the next button also never needs to be enabled
     // an external system set up by the controller will move to the next page in the background

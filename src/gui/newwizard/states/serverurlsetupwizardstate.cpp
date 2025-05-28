@@ -42,12 +42,7 @@ void ServerUrlSetupWizardState::evaluatePage()
     auto serverUrlSetupWizardPage = qobject_cast<ServerUrlSetupWizardPage *>(_page);
     Q_ASSERT(serverUrlSetupWizardPage != nullptr);
 
-    const QUrl serverUrl = [serverUrlSetupWizardPage]() {
-        auto url = QUrl::fromUserInput(serverUrlSetupWizardPage->userProvidedUrl())
-                       .adjusted(QUrl::RemoveUserInfo | QUrl::StripTrailingSlash | QUrl::RemoveQuery | QUrl::RemoveFragment);
-        url.setScheme(QLatin1String("https"));
-        return url;
-    }();
+    const QUrl serverUrl = serverUrlSetupWizardPage->userProvidedUrl();
 
     _context->accountBuilder().setServerUrl(serverUrl);
 
