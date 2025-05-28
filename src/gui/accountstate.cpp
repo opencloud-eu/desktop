@@ -43,7 +43,10 @@ using namespace std::chrono_literals;
 
 namespace {
 
-inline const QLatin1String userExplicitlySignedOutC()
+// How often we check the server for changed settings
+auto fetchSettingsTimeout = 1h;
+
+const QLatin1String userExplicitlySignedOutC()
 {
     return QLatin1String("userExplicitlySignedOut");
 }
@@ -75,6 +78,11 @@ AccountState::AccountState(AccountPtr account)
         this, [this] {
             checkConnectivity(true);
         });
+    connect(account.data(), &Account::serverVersionChanged, this, [this] {
+        if (_account->serverSupportLevel() == Account::ServerSupportLevel::Unsupported) {
+            setState(ConfigurationError);
+        }
+    });
 
 
     connect(NetworkInformation::instance(), &NetworkInformation::reachabilityChanged, this, [this](NetworkInformation::Reachability reachability) {
@@ -239,15 +247,20 @@ void AccountState::setState(State state)
         QTimer::singleShot(0, this, [this, oldState] {
             // ensure the connection validator is done
             _queueGuard.unblock();
-            // update capabilites and fetch relevant settings
-            _fetchCapabilitiesJob = new FetchServerSettingsJob(account(), this);
-            connect(_fetchCapabilitiesJob.get(), &FetchServerSettingsJob::finishedSignal, this, [oldState, this] {
+            if (fetchServerSettings()) {
+                connect(
+                    this, &AccountState::serverSettingsChanged, this,
+                    [this, oldState] {
+                        if (oldState == Connected || _state == Connected) {
+                            Q_EMIT isConnectedChanged();
+                        }
+                    },
+                    Qt::SingleShotConnection);
+            } else {
                 if (oldState == Connected || _state == Connected) {
-                    _fetchCapabilitiesJob.clear();
                     Q_EMIT isConnectedChanged();
                 }
-            });
-            _fetchCapabilitiesJob->start();
+            }
         });
     }
     // don't anounce a state change from connected to connected
@@ -428,15 +441,14 @@ void AccountState::slotConnectionValidatorResult(ConnectionValidator::Status sta
     if (status == ConnectionValidator::Connected
         && (_connectionStatus == ConnectionValidator::ServiceUnavailable
                || _connectionStatus == ConnectionValidator::MaintenanceMode)) {
-        if (!_timeSinceMaintenanceOver.isValid()) {
+        if (!_timeSinceMaintenanceOver.isStarted()) {
             qCInfo(lcAccountState) << "AccountState reconnection: delaying for"
                                    << _maintenanceToConnectedDelay.count() << "ms";
-            _timeSinceMaintenanceOver.start();
+            _timeSinceMaintenanceOver.reset();
             QTimer::singleShot(_maintenanceToConnectedDelay + 100ms, this, [this] { AccountState::checkConnectivity(false); });
             return;
-        } else if (_timeSinceMaintenanceOver.elapsed() < _maintenanceToConnectedDelay.count()) {
-            qCInfo(lcAccountState) << "AccountState reconnection: only"
-                                   << _timeSinceMaintenanceOver.elapsed() << "ms have passed";
+        } else if (_timeSinceMaintenanceOver.duration() < _maintenanceToConnectedDelay) {
+            qCInfo(lcAccountState) << "AccountState reconnection: only" << _timeSinceMaintenanceOver.duration() << "ms have passed";
             return;
         }
     }
@@ -459,9 +471,6 @@ void AccountState::slotConnectionValidatorResult(ConnectionValidator::Status sta
         break;
     case ConnectionValidator::ClientUnsupported:
         [[fallthrough]];
-    case ConnectionValidator::ServerVersionMismatch:
-        setState(ConfigurationError);
-        break;
     case ConnectionValidator::StatusNotFound:
         // This can happen either because the server does not exist
         // or because we are having network issues. The latter one is
@@ -477,11 +486,11 @@ void AccountState::slotConnectionValidatorResult(ConnectionValidator::Status sta
         // handled with the tlsDialog
         break;
     case ConnectionValidator::ServiceUnavailable:
-        _timeSinceMaintenanceOver.invalidate();
+        _timeSinceMaintenanceOver.stop();
         setState(ServiceUnavailable);
         break;
     case ConnectionValidator::MaintenanceMode:
-        _timeSinceMaintenanceOver.invalidate();
+        _timeSinceMaintenanceOver.stop();
         setState(MaintenanceMode);
         break;
     case ConnectionValidator::Timeout:
@@ -547,6 +556,20 @@ void AccountState::slotCredentialsAsked()
 
     checkConnectivity();
 }
+bool AccountState::fetchServerSettings()
+{
+    // update capabilites and fetch relevant settings
+    if (!_fetchCapabilitiesElapsedTimer.isStarted() || _fetchCapabilitiesElapsedTimer.duration() > fetchSettingsTimeout) {
+        auto *fetchCapabilitiesJob = new FetchServerSettingsJob(account(), this);
+        connect(fetchCapabilitiesJob, &FetchServerSettingsJob::finishedSignal, this, [this] {
+            Q_EMIT serverSettingsChanged(AccountState::QPrivateSignal());
+            _fetchCapabilitiesElapsedTimer.reset();
+        });
+        fetchCapabilitiesJob->start();
+        return true;
+    }
+    return false;
+}
 
 Account *AccountState::accountForQml() const
 {
@@ -567,7 +590,8 @@ void AccountState::setSettingUp(bool settingUp)
 }
 bool AccountState::readyForSync() const
 {
-    return !_fetchCapabilitiesJob && isConnected();
+    // the _fetchCapabilitiesElapsedTimer is started one we fetch the server settings
+    return !_fetchCapabilitiesElapsedTimer.isStarted() && isConnected();
 }
 
 } // namespace OCC
