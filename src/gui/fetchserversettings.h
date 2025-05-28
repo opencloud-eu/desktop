@@ -31,13 +31,10 @@ public:
     void start();
 
 Q_SIGNALS:
-    void finishedSignal(ConnectionValidator::Status, QString errorMessage = {});
+    void finishedSignal();
 
 private:
     void runAsyncUpdates();
-
-    // returns whether the started jobs should be excluded from the retry queue
-    bool isAuthJob() const;
 
     const AccountPtr _account;
 };
