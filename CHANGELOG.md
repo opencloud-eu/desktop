@@ -17,6 +17,7 @@
 
 ### 📈 Enhancement
 
+- Handle return key for the url wizard page [[#300](https://github.com/opencloud-eu/desktop/pull/300)]
 - Show profile images in Desktop Client [[#297](https://github.com/opencloud-eu/desktop/pull/297)]
 - Enable native tooltips for the accounts on Qt >= 6.8.3 [[#255](https://github.com/opencloud-eu/desktop/pull/255)]
 - Update dependencies to Qt 6.8.3 and OpenSSL 3.4.1 [[#252](https://github.com/opencloud-eu/desktop/pull/252)]
