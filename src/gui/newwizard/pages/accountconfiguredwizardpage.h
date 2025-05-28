@@ -36,7 +36,7 @@ public:
 
     SyncMode syncMode() const;
 
-    bool validateInput() override;
+    bool validateInput() const override;
 
     void setShowAdvancedSettings(bool showAdvancedSettings);
 

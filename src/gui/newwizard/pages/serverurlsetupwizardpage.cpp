@@ -4,7 +4,38 @@
 #include "libsync/globalconfig.h"
 #include "libsync/theme.h"
 
+#include <QValidator>
 
+using namespace Qt::Literals::StringLiterals;
+
+namespace {
+class UrlValidator : public QValidator
+{
+    Q_OBJECT
+public:
+    using QValidator::QValidator;
+    State validate(QString &input, int &) const override
+    {
+        if (input.isEmpty()) {
+            return Intermediate;
+        }
+        const auto url = QUrl::fromUserInput(input);
+        if (!url.isValid() || url.host().isEmpty()) {
+            return Intermediate;
+        }
+        return Acceptable;
+    }
+
+    void fixup(QString &input) const override
+    {
+        auto url = QUrl::fromUserInput(input);
+        if (url.scheme() == "http"_L1) {
+            url.setScheme("https"_L1);
+        }
+        input = url.toString();
+    }
+};
+}
 namespace OCC::Wizard {
 
 ServerUrlSetupWizardPage::ServerUrlSetupWizardPage(const QUrl &serverUrl)
@@ -32,12 +63,16 @@ ServerUrlSetupWizardPage::ServerUrlSetupWizardPage(const QUrl &serverUrl)
     //: This is the accessibility text for the logo in the setup wizard page. The parameter is the name for the (branded) application.
     _ui->logoLabel->setAccessibleName(tr("%1 logo").arg(Theme::instance()->appNameGUI()));
 
+    auto *validator = new UrlValidator(_ui->urlLineEdit);
+    _ui->urlLineEdit->setValidator(validator);
     connect(_ui->urlLineEdit, &QLineEdit::textChanged, this, &AbstractSetupWizardPage::contentChanged);
 }
 
-QString ServerUrlSetupWizardPage::userProvidedUrl() const
+QUrl ServerUrlSetupWizardPage::userProvidedUrl() const
 {
-    return _ui->urlLineEdit->text().simplified();
+    QString url = _ui->urlLineEdit->text();
+    _ui->urlLineEdit->validator()->fixup(url);
+    return QUrl(url);
 }
 
 ServerUrlSetupWizardPage::~ServerUrlSetupWizardPage()
@@ -45,8 +80,10 @@ ServerUrlSetupWizardPage::~ServerUrlSetupWizardPage()
     delete _ui;
 }
 
-bool ServerUrlSetupWizardPage::validateInput()
+bool ServerUrlSetupWizardPage::validateInput() const
 {
-    return !_ui->urlLineEdit->text().isEmpty();
+    return _ui->urlLineEdit->hasAcceptableInput();
 }
 }
+
+#include "serverurlsetupwizardpage.moc"
