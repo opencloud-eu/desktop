@@ -53,7 +53,6 @@ void FetchServerSettingsJob::start()
 {
     // The main flow now needs the capabilities
     auto *job = new JsonApiJob(_account, QStringLiteral("ocs/v2.php/cloud/capabilities"), {}, {}, this);
-    job->setAuthenticationJob(isAuthJob());
     job->setTimeout(fetchSettingsTimeout());
 
     connect(job, &JsonApiJob::finishedSignal, this, [job, this] {
@@ -68,50 +67,9 @@ void FetchServerSettingsJob::start()
                 _account->setHttp2Supported(reply->attribute(QNetworkRequest::Http2WasUsedAttribute).toBool());
             }
             _account->setCapabilities({_account->url(), caps.toVariantMap()});
+            runAsyncUpdates();
 
-            switch (_account->serverSupportLevel()) {
-            case Account::ServerSupportLevel::Unknown:
-                [[fallthrough]];
-            case Account::ServerSupportLevel::Supported:
-                break;
-            case Account::ServerSupportLevel::Unsupported:
-                Q_EMIT finishedSignal(ConnectionValidator::ServerVersionMismatch);
-                return;
-            }
-            auto *userJob = new JsonJob(_account, _account->url(), u"graph/v1.0/me"_s, "GET");
-            userJob->setAuthenticationJob(isAuthJob());
-            userJob->setTimeout(fetchSettingsTimeout());
-            connect(userJob, &JsonApiJob::finishedSignal, this, [userJob, this] {
-                if (userJob->timedOut()) {
-                    Q_EMIT finishedSignal(ConnectionValidator::Timeout);
-                } else if (userJob->httpStatusCode() == 401) {
-                    Q_EMIT finishedSignal(ConnectionValidator::CredentialsWrong);
-                } else if (userJob->httpStatusCode() == 200) {
-                    OpenAPI::OAIUser me;
-                    me.fromJsonObject(userJob->data());
-                    _account->setDavDisplayName(me.getDisplayName());
-                    runAsyncUpdates();
-                    Q_EMIT finishedSignal(ConnectionValidator::Connected);
-                } else {
-                    Q_EMIT finishedSignal(ConnectionValidator::Undefined);
-                }
-            });
-            userJob->start();
-        } else {
-            if (job->reply()->error() == QNetworkReply::ContentAccessDenied) {
-                Q_EMIT finishedSignal(ConnectionValidator::ClientUnsupported, extractErrorMessage(job->reply()->readAll()));
-            } else if (job->reply()->error() == QNetworkReply::SslHandshakeFailedError) {
-                Q_EMIT finishedSignal(
-                    NetworkInformation::instance()->isBehindCaptivePortal() ? ConnectionValidator::CaptivePortal : ConnectionValidator::SslError);
-            } else if (job->timedOut()) {
-                Q_EMIT finishedSignal(ConnectionValidator::Timeout);
-            } else if (job->httpStatusCode() == 401) {
-                Q_EMIT finishedSignal(ConnectionValidator::CredentialsWrong);
-            } else if (job->httpStatusCode() == 503) {
-                Q_EMIT finishedSignal(ConnectionValidator::ServiceUnavailable);
-            } else {
-                Q_EMIT finishedSignal(ConnectionValidator::Undefined);
-            }
+            Q_EMIT finishedSignal();
         }
     });
     job->start();
@@ -127,6 +85,17 @@ void FetchServerSettingsJob::runAsyncUpdates()
 
     // ideally we would parent them to the account, but as things are messed up by the shared pointer stuff we can't at the moment
     // so we just set them free
+
+    auto *userJob = new JsonJob(_account, _account->url(), u"graph/v1.0/me"_s, "GET");
+    userJob->setTimeout(fetchSettingsTimeout());
+    connect(userJob, &JsonApiJob::finishedSignal, this, [userJob, this] {
+        if (userJob->httpStatusCode() == 200) {
+            OpenAPI::OAIUser me;
+            me.fromJsonObject(userJob->data());
+            _account->setDavDisplayName(me.getDisplayName());
+        }
+    });
+    userJob->start();
 
     if (_account->capabilities().appProviders().enabled) {
         auto *jsonJob = new JsonJob(_account, _account->capabilities().appProviders().appsUrl, {}, "GET");
@@ -147,9 +116,4 @@ void FetchServerSettingsJob::runAsyncUpdates()
         }
     });
     avatarJob->start();
-}
-
-bool FetchServerSettingsJob::isAuthJob() const
-{
-    return qobject_cast<ConnectionValidator *>(parent());
 }

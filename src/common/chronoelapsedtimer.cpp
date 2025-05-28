@@ -21,21 +21,30 @@
 
 using namespace OCC::Utility;
 
-ChronoElapsedTimer::ChronoElapsedTimer()
+ChronoElapsedTimer::ChronoElapsedTimer(bool start)
     : _start(std::chrono::steady_clock::now())
+    , _started(start)
 {
+}
+
+bool ChronoElapsedTimer::isStarted() const
+{
+    return _started;
 }
 
 void ChronoElapsedTimer::reset()
 {
     _start = std::chrono::steady_clock::now();
     _end = {};
+    _started = true;
 }
 
 void ChronoElapsedTimer::stop()
 {
     Q_ASSERT(_end == std::chrono::steady_clock::time_point {});
+    Q_ASSERT(_started);
     _end = std::chrono::steady_clock::now();
+    _started = false;
 }
 
 std::chrono::nanoseconds ChronoElapsedTimer::duration() const
