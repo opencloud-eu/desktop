@@ -318,9 +318,6 @@ void Application::runNewAccountWizard()
                 connect(validator, &ConnectionValidator::connectionResult, accountStatePtr.data(),
                     [accountStatePtr, syncMode, this](ConnectionValidator::Status status, const QStringList &) {
                         switch (status) {
-                        // a server we no longer support but that might work
-                        case ConnectionValidator::ServerVersionMismatch:
-                            [[fallthrough]];
                         case ConnectionValidator::Connected: {
                             // saving once after adding makes sure the account is stored in the config in a working state
                             // this is needed to ensure a consistent state in the config file upon unexpected terminations of the client

@@ -42,7 +42,6 @@ public:
         Undefined,
         Connected,
         NotConfigured,
-        ServerVersionMismatch, // The server version is too old
         CredentialsNotReady, // Credentials aren't ready
         CredentialsWrong, // AuthenticationRequiredError
         SslError, // SSL handshake error, certificate rejected by user?
