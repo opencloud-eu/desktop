@@ -131,8 +131,7 @@ remotePollInterval={polling_interval}
 
 def generate_account_config(users, space='Personal'):
     sync_paths = {}
-    os.environ['XDG_CONFIG_HOME'] = '/tmp/opencloudtest/.config'
-    settings = QSettings("OpenCloud", "opencloud")
+    settings = QSettings(get_config('clientConfigFile'), QSettings.Format.IniFormat)
     users_uuids = {}
     server_url = get_config('localBackendUrl')
     capabilities = provisioning.get_capabilities()
@@ -183,7 +182,6 @@ def generate_account_config(users, space='Personal'):
 
 
     settings.sync()
-    os.rename(join(get_config('clientConfigDir'), "opencloud.conf"), get_config('clientConfigFile'))
     return sync_paths
 
 def setup_client(username, space='Personal'):
