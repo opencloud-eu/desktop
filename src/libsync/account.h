@@ -179,7 +179,7 @@ public:
 
     CredentialManager *credentialManager() const;
 
-    GraphApi::SpacesManager *spacesManager() const { return _spacesManager; }
+    GraphApi::SpacesManager *spacesManager() const;
 
     /**
      * We encountered an authentication error.
