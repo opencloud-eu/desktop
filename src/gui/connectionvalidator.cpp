@@ -128,9 +128,6 @@ void ConnectionValidator::slotCheckServerAndAuth()
             case QNetworkReply::TooManyRedirectsError:
                 reportResult(MaintenanceMode);
                 return;
-            case QNetworkReply::ContentAccessDenied:
-                reportResult(ClientUnsupported);
-                return;
             default:
                 break;
             }
@@ -185,8 +182,6 @@ void ConnectionValidator::slotStatusFound(const QUrl &url, const QJsonObject &in
                 reportResult(ConnectionValidator::Connected);
             } else if (userJob->httpStatusCode() == 401) {
                 reportResult(ConnectionValidator::CredentialsWrong);
-            } else if (userJob->httpStatusCode() == 403) {
-                reportResult(ConnectionValidator::ClientUnsupported);
             } else if (userJob->httpStatusCode() == 503) {
                 reportResult(ConnectionValidator::ServiceUnavailable);
             } else if (userJob->reply()->error() == QNetworkReply::SslHandshakeFailedError) {
