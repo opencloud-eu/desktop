@@ -469,8 +469,6 @@ void AccountState::slotConnectionValidatorResult(ConnectionValidator::Status sta
     case ConnectionValidator::NotConfigured:
         setState(Disconnected);
         break;
-    case ConnectionValidator::ClientUnsupported:
-        [[fallthrough]];
     case ConnectionValidator::StatusNotFound:
         // This can happen either because the server does not exist
         // or because we are having network issues. The latter one is

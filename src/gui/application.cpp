@@ -377,8 +377,6 @@ void Application::runNewAccountWizard()
                                 Q_UNREACHABLE();
                             }
                         }
-                        case ConnectionValidator::ClientUnsupported:
-                            break;
                         default:
                             Q_UNREACHABLE();
                         }
