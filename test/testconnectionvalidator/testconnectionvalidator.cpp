@@ -51,18 +51,6 @@ private Q_SLOTS:
             return value;
         }() << ConnectionValidator::MaintenanceMode;
         QTest::newRow("status.php ServiceUnavailable") << FailStage::StatusPhp << defaultValue << ConnectionValidator::StatusNotFound;
-        QTest::newRow("status.php UnsupportedClient") << FailStage::StatusPhp << defaultValue << ConnectionValidator::ClientUnsupported;
-
-        QTest::newRow("capabilites timeout") << FailStage::Capabilities << defaultValue << ConnectionValidator::CredentialsWrong;
-        QTest::newRow("capabilites 401") << FailStage::Capabilities << defaultValue << ConnectionValidator::Timeout;
-        QTest::newRow("capabilites ServiceUnavailable") << FailStage::Capabilities << defaultValue << ConnectionValidator::ServiceUnavailable;
-        QTest::newRow("capabilites UnsupportedClient") << FailStage::Capabilities << defaultValue << ConnectionValidator::ClientUnsupported;
-        QTest::newRow("capabilites unsupported server") << FailStage::Capabilities << [value = defaultValue]() mutable {
-            value[QStringLiteral("version")] = QStringLiteral("7.0");
-            value[QStringLiteral("productversion")] = QString();
-            return value;
-        }() << ConnectionValidator::ServerVersionMismatch;
-
 
         QTest::newRow("user info timeout") << FailStage::UserInfo << defaultValue << ConnectionValidator::Timeout;
         QTest::newRow("user info 401") << FailStage::UserInfo << defaultValue << ConnectionValidator::CredentialsWrong;
@@ -89,8 +77,6 @@ private Q_SLOTS:
                             return new FakeHangingReply(op, request, this);
                         } else if (status == ConnectionValidator::StatusNotFound) {
                             return new FakeErrorReply(op, request, this, 500);
-                        } else if (status == ConnectionValidator::ClientUnsupported) {
-                            return new FakeErrorReply(op, request, this, 403);
                         }
                     }
                     return new FakePayloadReply(op, request, TestUtils::getPayloadTemplated(QStringLiteral("status.php.json.in"), values), this);
@@ -99,8 +85,6 @@ private Q_SLOTS:
                     if (failStage == FailStage::Capabilities) {
                         if (status == ConnectionValidator::CredentialsWrong) {
                             return new FakeErrorReply(op, request, this, 401);
-                        } else if (status == ConnectionValidator::ClientUnsupported) {
-                            return new FakeErrorReply(op, request, this, 403);
                         } else if (status == ConnectionValidator::ServiceUnavailable) {
                             return new FakeErrorReply(op, request, this, 503);
                         } else if (status == ConnectionValidator::Timeout) {

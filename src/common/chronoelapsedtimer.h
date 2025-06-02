@@ -28,10 +28,11 @@ namespace OCC::Utility {
 class OCSYNC_EXPORT ChronoElapsedTimer
 {
 public:
-    ChronoElapsedTimer();
+    ChronoElapsedTimer(bool start = true);
 
+    bool isStarted() const;
     /**
-     * Resets the timer
+     * Resets and start the timer
      */
     void reset();
     /**
@@ -47,6 +48,7 @@ public:
 private:
     std::chrono::steady_clock::time_point _start = {};
     std::chrono::steady_clock::time_point _end = {};
+    bool _started = false;
 };
 
 }

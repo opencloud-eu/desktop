@@ -15,11 +15,11 @@
 #include "gui/clientproxy.h"
 #include "gui/fetchserversettings.h"
 #include "gui/networkinformation.h"
-#include "gui/tlserrordialog.h"
 #include "libsync/account.h"
 #include "libsync/creds/abstractcredentials.h"
 #include "libsync/networkjobs.h"
 #include "libsync/networkjobs/checkserverjobfactory.h"
+#include "libsync/networkjobs/jsonjob.h"
 #include "libsync/theme.h"
 
 #include <QJsonObject>
@@ -28,7 +28,15 @@
 #include <QNetworkReply>
 
 using namespace std::chrono_literals;
+using namespace Qt::Literals::StringLiterals;
 
+namespace {
+
+auto fetchSettingsTimeout()
+{
+    return std::min(20s, OCC::AbstractNetworkJob::httpTimeout);
+}
+}
 namespace OCC {
 
 Q_LOGGING_CATEGORY(lcConnectionValidator, "sync.connectionvalidator", QtInfoMsg)
@@ -120,9 +128,6 @@ void ConnectionValidator::slotCheckServerAndAuth()
             case QNetworkReply::TooManyRedirectsError:
                 reportResult(MaintenanceMode);
                 return;
-            case QNetworkReply::ContentAccessDenied:
-                reportResult(ClientUnsupported);
-                return;
             default:
                 break;
             }
@@ -166,32 +171,26 @@ void ConnectionValidator::slotStatusFound(const QUrl &url, const QJsonObject &in
     }
     // now check the authentication
     if (_mode != ConnectionValidator::ValidationMode::ValidateServer) {
-        auto *fetchSetting = new FetchServerSettingsJob(_account, this);
-        const auto unsupportedServerError = [this] {
-            _errors.append({tr("The configured server for this client is too old."), tr("Please update to the latest server and restart the client.")});
-        };
-        connect(fetchSetting, &FetchServerSettingsJob::finishedSignal, this,
-            [unsupportedServerError, this](ConnectionValidator::Status result, const QString &error) {
-                if (!error.isEmpty()) {
-                    _errors.append(error);
-                }
-                switch (result) {
-                case ServerVersionMismatch:
-                    unsupportedServerError();
-                    reportResult(ServerVersionMismatch);
-                    break;
-                case Connected:
-                    if (_account->serverSupportLevel() == Account::ServerSupportLevel::Unknown) {
-                        unsupportedServerError();
-                    }
-                    [[fallthrough]];
-                default:
-                    reportResult(result);
-                    break;
-                }
-            });
-
-        fetchSetting->start();
+        // the endpoint requires authentication
+        auto *userJob = new JsonJob(_account, _account->url(), u"graph/v1.0/me"_s, "GET");
+        userJob->setAuthenticationJob(true);
+        userJob->setTimeout(fetchSettingsTimeout());
+        connect(userJob, &JsonApiJob::finishedSignal, this, [userJob, this] {
+            if (userJob->timedOut()) {
+                reportResult(ConnectionValidator::Timeout);
+            } else if (userJob->httpStatusCode() == 200) {
+                reportResult(ConnectionValidator::Connected);
+            } else if (userJob->httpStatusCode() == 401) {
+                reportResult(ConnectionValidator::CredentialsWrong);
+            } else if (userJob->httpStatusCode() == 503) {
+                reportResult(ConnectionValidator::ServiceUnavailable);
+            } else if (userJob->reply()->error() == QNetworkReply::SslHandshakeFailedError) {
+                reportResult(NetworkInformation::instance()->isBehindCaptivePortal() ? ConnectionValidator::CaptivePortal : ConnectionValidator::SslError);
+            } else {
+                reportResult(ConnectionValidator::Undefined);
+            }
+        });
+        userJob->start();
         return;
     } else {
         reportResult(Connected);

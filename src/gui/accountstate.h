@@ -22,7 +22,6 @@
 #include "jobqueue.h"
 
 #include <QByteArray>
-#include <QElapsedTimer>
 #include <QPointer>
 #include <QtQmlIntegration/QtQmlIntegration>
 
@@ -162,6 +161,8 @@ Q_SIGNALS:
     void isConnectedChanged();
     void isSettingUpChanged();
 
+    void serverSettingsChanged(QPrivateSignal);
+
 protected Q_SLOTS:
     void slotConnectionValidatorResult(ConnectionValidator::Status status, const QStringList &errors);
     void slotInvalidCredentials();
@@ -169,6 +170,7 @@ protected Q_SLOTS:
     void slotCredentialsAsked();
 
 private:
+    bool fetchServerSettings();
     Account *accountForQml() const;
     AccountPtr _account;
     JobQueueGuard _queueGuard;
@@ -187,14 +189,14 @@ private:
      * maintenance mode. The account will only become connected once this
      * timer exceeds the _maintenanceToConnectedDelay value.
      */
-    QElapsedTimer _timeSinceMaintenanceOver;
+    Utility::ChronoElapsedTimer _timeSinceMaintenanceOver = {false};
 
     /**
      * Milliseconds for which to delay reconnection after 503/maintenance.
      */
     std::chrono::milliseconds _maintenanceToConnectedDelay;
 
-    QPointer<FetchServerSettingsJob> _fetchCapabilitiesJob;
+    Utility::ChronoElapsedTimer _fetchCapabilitiesElapsedTimer = {false};
 };
 }
 

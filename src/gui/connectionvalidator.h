@@ -42,7 +42,6 @@ public:
         Undefined,
         Connected,
         NotConfigured,
-        ServerVersionMismatch, // The server version is too old
         CredentialsNotReady, // Credentials aren't ready
         CredentialsWrong, // AuthenticationRequiredError
         SslError, // SSL handshake error, certificate rejected by user?
@@ -50,7 +49,6 @@ public:
         ServiceUnavailable, // 503 on authed request
         MaintenanceMode, // maintenance enabled in status.php
         Timeout, // actually also used for other errors on the authed request
-        ClientUnsupported, // The server blocks us as an unsupported client
         CaptivePortal, // We're stuck behind a captive portal and (will) get SSL certificate problems
     };
     Q_ENUM(Status)
