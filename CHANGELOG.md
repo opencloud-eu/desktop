@@ -17,6 +17,7 @@
 
 ### 📈 Enhancement
 
+-  Remove settings update from connection validator, update settings only oce per hour [[#301](https://github.com/opencloud-eu/desktop/pull/301)]
 - Handle return key for the url wizard page [[#300](https://github.com/opencloud-eu/desktop/pull/300)]
 - Show profile images in Desktop Client [[#297](https://github.com/opencloud-eu/desktop/pull/297)]
 - Enable native tooltips for the accounts on Qt >= 6.8.3 [[#255](https://github.com/opencloud-eu/desktop/pull/255)]
