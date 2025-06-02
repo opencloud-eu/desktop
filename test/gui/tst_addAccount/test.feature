@@ -42,7 +42,7 @@ Feature: adding accounts
 
     Scenario: Adding account with self signed certificate for the first time
         Given the user has started the client
-        When the user adds the server "%secure_local_server%"
+        When the user adds the server "%local_server%"
         And the user accepts the certificate
         Then credentials wizard should be visible
 
