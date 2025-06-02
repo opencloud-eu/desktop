@@ -65,7 +65,6 @@ def get_default_home_dir():
 # map environment variables to config keys
 CONFIG_ENV_MAP = {
     'localBackendUrl': 'BACKEND_HOST',
-    'secureLocalBackendUrl': 'SECURE_BACKEND_HOST',
     'maxSyncTimeout': 'MAX_SYNC_TIMEOUT',
     'minSyncTimeout': 'MIN_SYNC_TIMEOUT',
     'lowestSyncTimeout': 'LOWEST_SYNC_TIMEOUT',
@@ -87,7 +86,6 @@ DEFAULT_PATH_CONFIG = {
 # default config values
 CONFIG = {
     'localBackendUrl': 'https://localhost:9200/',
-    'secureLocalBackendUrl': 'https://localhost:9200/',
     'maxSyncTimeout': 60,
     'minSyncTimeout': 5,
     'lowestSyncTimeout': 1,
@@ -142,7 +140,7 @@ def init_config():
     for key, value in CONFIG.items():
         if key in ('maxSyncTimeout', 'minSyncTimeout'):
             CONFIG[key] = builtins.int(value)
-        elif key in ('localBackendUrl', 'secureLocalBackendUrl'):
+        elif key == 'localBackendUrl':
             # make sure there is always one trailing slash
             CONFIG[key] = value.rstrip('/') + '/'
         elif key in (
