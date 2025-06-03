@@ -8,6 +8,7 @@
 
 #include "common/pinstate.h"
 #include "common/result.h"
+#include "common/utility_win.h"
 #include "common/vfs.h"
 
 struct CF_PLACEHOLDER_BASIC_INFO;
@@ -23,21 +24,6 @@ namespace CfApiWrapper {
     public:
         ConnectionKey();
         inline void *get() const { return _data.get(); }
-
-    private:
-        std::unique_ptr<void, void (*)(void *)> _data;
-    };
-
-    class FileHandle
-    {
-    public:
-        using Deleter = void (*)(void *);
-
-        FileHandle();
-        FileHandle(void *data, Deleter deleter);
-
-        inline void *get() const { return _data.get(); }
-        inline explicit operator bool() const noexcept { return static_cast<bool>(_data); }
 
     private:
         std::unique_ptr<void, void (*)(void *)> _data;
@@ -72,7 +58,7 @@ namespace CfApiWrapper {
 
     bool isSparseFile(const QString &path);
 
-    FileHandle handleForPath(const QString &path);
+    OCC::Utility::Handle handleForPath(const QString &path);
 
     PlaceHolderInfo findPlaceholderInfo(const QString &path);
 
