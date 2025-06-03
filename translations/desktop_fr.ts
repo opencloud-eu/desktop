@@ -549,7 +549,7 @@ Utilitaire de bureau pour la synchronisation de fichiers.</translation>
 <context>
     <name>OCC::Account</name>
     <message>
-        <location filename="../src/libsync/account.cpp" line="130"/>
+        <location filename="../src/libsync/account.cpp" line="136"/>
         <source>%1@%2</source>
         <translation>%1@%2</translation>
     </message>
@@ -790,12 +790,12 @@ La mise à jour sera effectuée en arrière-plan et écrasera le fichier AppImag
         <translation>Quitter</translation>
     </message>
     <message>
-        <location filename="../src/gui/application.cpp" line="193"/>
+        <location filename="../src/gui/application.cpp" line="191"/>
         <source>Unsupported Server Version</source>
         <translation>Version du serveur non prise en charge</translation>
     </message>
     <message>
-        <location filename="../src/gui/application.cpp" line="194"/>
+        <location filename="../src/gui/application.cpp" line="192"/>
         <source>The server on account %1 runs an unsupported version %2. Using this client with unsupported server versions is untested and potentially dangerous. Proceed at your own risk.</source>
         <translation>Le serveur du compte %1 utilise une version non prise en charge %2. L&apos;utilisation de ce client avec des versions de serveur non supportées n&apos;a pas été testée et est potentiellement dangereuse. Procédez à vos propres risques.</translation>
     </message>
@@ -836,19 +836,9 @@ La mise à jour sera effectuée en arrière-plan et écrasera le fichier AppImag
 <context>
     <name>OCC::ConnectionValidator</name>
     <message>
-        <location filename="../src/gui/connectionvalidator.cpp" line="171"/>
-        <source>Please update to the latest server and restart the client.</source>
-        <translation>Veuillez mettre à jour le serveur et redémarrer le client.</translation>
-    </message>
-    <message>
-        <location filename="../src/gui/connectionvalidator.cpp" line="114"/>
+        <location filename="../src/gui/connectionvalidator.cpp" line="122"/>
         <source>timeout</source>
         <translation>pause</translation>
-    </message>
-    <message>
-        <location filename="../src/gui/connectionvalidator.cpp" line="171"/>
-        <source>The configured server for this client is too old.</source>
-        <translation>Le serveur configuré pour ce client est trop ancien.</translation>
     </message>
 </context>
 <context>
