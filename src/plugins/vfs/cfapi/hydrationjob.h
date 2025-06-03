@@ -12,14 +12,9 @@ class QLocalServer;
 class QLocalSocket;
 
 namespace OCC {
-class EncryptedFolderMetadataHandler;
 class GETFileJob;
 class SyncJournalDb;
 class VfsCfApi;
-
-namespace EncryptionHelper {
-    class StreamingDecryptor;
-};
 
 class HydrationJob : public QObject
 {
@@ -39,8 +34,8 @@ public:
     AccountPtr account() const;
     void setAccount(const AccountPtr &account);
 
-    [[nodiscard]] QString remoteSyncRootPath() const;
-    void setRemoteSyncRootPath(const QString &path);
+    [[nodiscard]] QUrl remoteSyncRootPath() const;
+    void setRemoteSyncRootPath(const QUrl &path);
 
     QString localPath() const;
     void setLocalPath(const QString &localPath);
@@ -53,12 +48,6 @@ public:
 
     QString folderPath() const;
     void setFolderPath(const QString &folderPath);
-
-    bool isEncryptedFile() const;
-    void setIsEncryptedFile(bool isEncrypted);
-
-    QString e2eMangledName() const;
-    void setE2eMangledName(const QString &e2eMangledName);
 
     qint64 fileTotalSize() const;
     void setFileTotalSize(qint64 totalSize);
@@ -73,11 +62,8 @@ public:
     void cancel();
     void finalize(OCC::VfsCfApi *vfs);
 
-signals:
+Q_SIGNALS:
     void finished(HydrationJob *job);
-
-private slots:
-    void slotFetchMetadataJobFinished(int statusCode, const QString &message);
 
 private:
     void emitFinished(Status status);
@@ -92,7 +78,7 @@ private:
     void startServerAndWaitForConnections();
 
     AccountPtr _account;
-    QString _remoteSyncRootPath;
+    QUrl _remoteSyncRootPath;
     QString _localPath;
     SyncJournalDb *_journal = nullptr;
     bool _isCancelled = false;
@@ -100,8 +86,6 @@ private:
     QString _requestId;
     QString _folderPath;
 
-    bool _isEncryptedFile = false;
-    QString _e2eMangledName;
 
     QLocalServer *_transferDataServer = nullptr;
     QLocalServer *_signalServer = nullptr;
@@ -113,8 +97,6 @@ private:
     int _statusCode = 0;
     QString _errorString;
     QString _remoteParentPath;
-
-    QScopedPointer<EncryptedFolderMetadataHandler> _encryptedFolderMetadataHandler;
 };
 
 } // namespace OCC
