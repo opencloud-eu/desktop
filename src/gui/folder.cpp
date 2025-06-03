@@ -503,7 +503,7 @@ void Folder::startVfs()
         return;
     }
 
-    VfsSetupParams vfsParams(_accountState->account(), webDavUrl(), groupInSidebar(), _engine.get());
+    VfsSetupParams vfsParams(_accountState->account(), displayName(), webDavUrl(), groupInSidebar(), _engine.get());
     vfsParams.filesystemPath = path();
     vfsParams.journal = &_journal;
     vfsParams.providerDisplayName = Theme::instance()->appNameGUI();

@@ -24,24 +24,13 @@ public:
     ~VfsCfApi();
 
     Mode mode() const override;
-    QString fileSuffix() const override;
 
     void stop() override;
     void unregisterFolder() override;
 
     bool socketApiPinStateActionsShown() const override;
-    bool isHydrating() const override;
-
-    Result<void, QString> updateMetadata(const QString &filePath, time_t modtime, qint64 size, const QByteArray &fileId) override;
-
-    Result<Vfs::ConvertToPlaceholderResult, QString> updatePlaceholderMarkInSync(const QString &filePath, const QByteArray &fileId) override;
-
-    [[nodiscard]] bool isPlaceHolderInSync(const QString &filePath) const override;
 
     Result<void, QString> createPlaceholder(const SyncFileItem &item) override;
-    Result<void, QString> dehydratePlaceholder(const SyncFileItem &item) override;
-    Result<Vfs::ConvertToPlaceholderResult, QString> convertToPlaceholder(
-        const QString &filename, const SyncFileItem &item, const QString &replacesFile, UpdateMetadataTypes updateType) override;
 
     bool needsMetadataUpdate(const SyncFileItem &) override;
     bool isDehydratedPlaceholder(const QString &filePath) override;
@@ -49,26 +38,27 @@ public:
 
     bool setPinState(const QString &folderPath, PinState state) override;
     Optional<PinState> pinState(const QString &folderPath) override;
-    AvailabilityResult availability(const QString &folderPath, const AvailabilityRecursivity recursiveCheck) override;
+    AvailabilityResult availability(const QString &folderPath) override;
 
     void cancelHydration(const QString &requestId, const QString &path);
 
     int finalizeHydrationJob(const QString &requestId);
 
-public slots:
+public Q_SLOTS:
     void requestHydration(const QString &requestId, const QString &path);
     void fileStatusChanged(const QString &systemFileName, OCC::SyncFileStatus fileStatus) override;
 
-signals:
+Q_SIGNALS:
     void hydrationRequestReady(const QString &requestId);
     void hydrationRequestFailed(const QString &requestId);
     void hydrationRequestFinished(const QString &requestId);
 
 protected:
+    Result<ConvertToPlaceholderResult, QString> updateMetadata(const SyncFileItem &, const QString &, const QString &) override;
     void startImpl(const VfsSetupParams &params) override;
 
 private:
-    void scheduleHydrationJob(const QString &requestId, const QString &folderPath, const SyncJournalFileRecord &record);
+    void scheduleHydrationJob(const QString &requestId, const QString &folderPath);
     void onHydrationJobFinished(HydrationJob *job);
     HydrationJob *findHydrationJob(const QString &requestId) const;
 
@@ -93,7 +83,7 @@ private:
 class CfApiVfsPluginFactory : public QObject, public DefaultPluginFactory<VfsCfApi>
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID "org.owncloud.PluginFactory" FILE "vfspluginmetadata.json")
+    Q_PLUGIN_METADATA(IID "eu.opencloud.PluginFactory" FILE "csync/common/vfspluginmetadata.json")
     Q_INTERFACES(OCC::PluginFactory)
 };
 

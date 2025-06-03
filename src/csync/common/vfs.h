@@ -23,7 +23,6 @@
 #include "utility.h"
 
 #include <QObject>
-#include <QScopedPointer>
 #include <QSharedPointer>
 #include <QUrl>
 #include <QVersionNumber>
@@ -40,7 +39,7 @@ class SyncEngine;
 /** Collection of parameters for initializing a Vfs instance. */
 struct OCSYNC_EXPORT VfsSetupParams
 {
-    explicit VfsSetupParams(const AccountPtr &account, const QUrl &baseUrl, bool groupInSidebar, SyncEngine *syncEngine);
+    explicit VfsSetupParams(const AccountPtr &account, const QString &folderDisplayName, const QUrl &baseUrl, bool groupInSidebar, SyncEngine *syncEngine);
     /** The full path to the folder on the local filesystem
      *
      * Always ends with /.
@@ -72,8 +71,11 @@ struct OCSYNC_EXPORT VfsSetupParams
 
     SyncEngine *syncEngine() const;
 
+    QString folderDisplayName() const { return _folderDisplayName; }
+
 private:
     QUrl _baseUrl;
+    QString _folderDisplayName;
     bool _groupInSidebar = false;
     SyncEngine *_syncEngine;
 };
