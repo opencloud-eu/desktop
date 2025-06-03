@@ -37,14 +37,8 @@ QVariantList CustomStateProviderIpc::fetchCustomStatesForFile(const QString &fil
         return {};
     }
 
-    auto messageRequestCustomStatesForFile = QVariantMap {
-        {
-            VfsShellExtensions::Protocol::CustomStateProviderRequestKey,
-            QVariantMap {
-                { VfsShellExtensions::Protocol::FilePathKey, filePath }
-            }
-        }
-    };
+    auto messageRequestCustomStatesForFile =
+        QVariantMap{{VfsShellExtensions::Protocol::CustomStateProviderRequestKey, QVariantMap{{VfsShellExtensions::Protocol::FilePathKey, filePath}}}};
 
     // #2 Request custom states for a 'filePath'
     if (!sendMessageAndReadyRead(messageRequestCustomStatesForFile)) {
@@ -56,7 +50,8 @@ QVariantList CustomStateProviderIpc::fetchCustomStatesForFile(const QString &fil
     if (!VfsShellExtensions::Protocol::validateProtocolVersion(message) || !message.contains(VfsShellExtensions::Protocol::CustomStateDataKey)) {
         return {};
     }
-    const auto customStates = message.value(VfsShellExtensions::Protocol::CustomStateDataKey).toMap().value(VfsShellExtensions::Protocol::CustomStateStatesKey).toList();
+    const auto customStates =
+        message.value(VfsShellExtensions::Protocol::CustomStateDataKey).toMap().value(VfsShellExtensions::Protocol::CustomStateStatesKey).toList();
     disconnectSocketFromServer();
 
     return customStates;

@@ -35,9 +35,9 @@
 #undef byte
 
 #include "thumbnailprovider.h"
-#include <vector>
-#include <shlwapi.h>
 #include <QSize>
+#include <shlwapi.h>
+#include <vector>
 
 extern long dllObjectsCount;
 

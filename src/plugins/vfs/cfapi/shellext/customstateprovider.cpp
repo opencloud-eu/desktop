@@ -21,8 +21,8 @@ CustomStateProvider::~CustomStateProvider()
     InterlockedDecrement(&dllObjectsCount);
 }
 
-winrt::Windows::Foundation::Collections::IIterable<winrt::Windows::Storage::Provider::StorageProviderItemProperty>
-CustomStateProvider::GetItemProperties(hstring const &itemPath)
+winrt::Windows::Foundation::Collections::IIterable<winrt::Windows::Storage::Provider::StorageProviderItemProperty> CustomStateProvider::GetItemProperties(
+    hstring const &itemPath)
 {
     std::vector<winrt::Windows::Storage::Provider::StorageProviderItemProperty> properties;
 
@@ -64,7 +64,7 @@ CustomStateProvider::GetItemProperties(hstring const &itemPath)
                 const auto hIcon = ExtractIcon(NULL, _dllFilePath.toStdWString().c_str(), stateValue);
                 _stateIconsAvailibility[stateValue] = hIcon != NULL;
                 if (hIcon) {
-                    DestroyIcon(hIcon); 
+                    DestroyIcon(hIcon);
                 }
                 foundAvalability = _stateIconsAvailibility.constFind(stateValue);
             }

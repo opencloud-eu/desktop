@@ -6,20 +6,18 @@
 #pragma once
 #include "Generated/CfApiShellExtensions/customstateprovider.g.h"
 #include "config.h"
-#include <winrt/windows.foundation.collections.h>
-#include <windows.storage.provider.h>
-#include <QString>
 #include <QMap>
+#include <QString>
+#include <windows.storage.provider.h>
+#include <winrt/windows.foundation.collections.h>
 
 namespace winrt::CfApiShellExtensions::implementation {
-class __declspec(uuid(CFAPI_SHELLEXT_CUSTOM_STATE_HANDLER_CLASS_ID)) CustomStateProvider
-    : public CustomStateProviderT<CustomStateProvider>
+class __declspec(uuid(CFAPI_SHELLEXT_CUSTOM_STATE_HANDLER_CLASS_ID)) CustomStateProvider : public CustomStateProviderT<CustomStateProvider>
 {
 public:
     CustomStateProvider();
     virtual ~CustomStateProvider();
-    Windows::Foundation::Collections::IIterable<Windows::Storage::Provider::StorageProviderItemProperty>
-    GetItemProperties(_In_ hstring const &itemPath);
+    Windows::Foundation::Collections::IIterable<Windows::Storage::Provider::StorageProviderItemProperty> GetItemProperties(_In_ hstring const &itemPath);
 
     static void setDllFilePath(LPCTSTR dllFilePath);
 

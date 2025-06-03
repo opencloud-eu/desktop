@@ -6,10 +6,10 @@
 #include "thumbnailprovideripc.h"
 #include "common/shellextensionutils.h"
 #include "ipccommon.h"
-#include <QString>
-#include <QSize>
-#include <QtNetwork/QLocalSocket>
 #include <QJsonDocument>
+#include <QSize>
+#include <QString>
+#include <QtNetwork/QLocalSocket>
 namespace {
 // we don't want to block the Explorer for too long (default is 30K, so we'd keep it at 10K, except QLocalSocket::waitForDisconnected())
 constexpr auto socketTimeoutMs = 10000;
@@ -45,15 +45,10 @@ QByteArray ThumbnailProviderIpc::fetchThumbnailForFile(const QString &filePath, 
         return result;
     }
 
-    auto messageRequestThumbnailForFile = QVariantMap {
-        {
-            VfsShellExtensions::Protocol::ThumbnailProviderRequestKey,
-            QVariantMap {
-                {VfsShellExtensions::Protocol::FilePathKey, filePath},
-                {VfsShellExtensions::Protocol::ThumbnailProviderRequestFileSizeKey, QVariantMap{{QStringLiteral("width"), size.width()}, {QStringLiteral("height"), size.height()}}}
-            }
-        }
-    };
+    auto messageRequestThumbnailForFile = QVariantMap{{VfsShellExtensions::Protocol::ThumbnailProviderRequestKey,
+        QVariantMap{{VfsShellExtensions::Protocol::FilePathKey, filePath},
+            {VfsShellExtensions::Protocol::ThumbnailProviderRequestFileSizeKey,
+                QVariantMap{{QStringLiteral("width"), size.width()}, {QStringLiteral("height"), size.height()}}}}}};
 
     // #2 Request a thumbnail of a 'size' for a 'filePath'
     if (!sendMessageAndReadyRead(messageRequestThumbnailForFile)) {

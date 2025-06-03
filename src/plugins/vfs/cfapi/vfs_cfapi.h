@@ -7,8 +7,8 @@
 #include <QObject>
 #include <QScopedPointer>
 
-#include "common/vfs.h"
 #include "common/plugin.h"
+#include "common/vfs.h"
 
 namespace OCC {
 class HydrationJob;
@@ -40,7 +40,8 @@ public:
 
     Result<void, QString> createPlaceholder(const SyncFileItem &item) override;
     Result<void, QString> dehydratePlaceholder(const SyncFileItem &item) override;
-    Result<Vfs::ConvertToPlaceholderResult, QString> convertToPlaceholder(const QString &filename, const SyncFileItem &item, const QString &replacesFile, UpdateMetadataTypes updateType) override;
+    Result<Vfs::ConvertToPlaceholderResult, QString> convertToPlaceholder(
+        const QString &filename, const SyncFileItem &item, const QString &replacesFile, UpdateMetadataTypes updateType) override;
 
     bool needsMetadataUpdate(const SyncFileItem &) override;
     bool isDehydratedPlaceholder(const QString &filePath) override;
@@ -74,11 +75,13 @@ private:
     bool setPinStateLocal(const QString &localPath, PinState state);
     [[nodiscard]] Optional<PinState> pinStateLocal(const QString &localPath) const;
 
-    struct HasHydratedDehydrated {
+    struct HasHydratedDehydrated
+    {
         bool hasHydrated = false;
         bool hasDehydrated = false;
     };
-    struct HydratationAndPinStates {
+    struct HydratationAndPinStates
+    {
         Optional<PinState> pinState;
         HasHydratedDehydrated hydrationStatus;
     };

@@ -9,16 +9,16 @@
 #include <QFile>
 
 #include "cfapiwrapper.h"
-#include "hydrationjob.h"
-#include "syncfileitem.h"
-#include "filesystem.h"
 #include "common/filesystembase.h"
 #include "common/syncjournaldb.h"
 #include "config.h"
+#include "filesystem.h"
+#include "hydrationjob.h"
+#include "syncfileitem.h"
 
-#include <ntstatus.h>
 #include <cfapi.h>
 #include <comdef.h>
+#include <ntstatus.h>
 
 #include <QCoreApplication>
 
@@ -33,13 +33,12 @@ const auto rootKey = HKEY_CURRENT_USER;
 
 bool registerShellExtension()
 {
-    const QList<QPair<QString, QString>> listExtensions = {
-        {CFAPI_SHELLEXT_THUMBNAIL_HANDLER_DISPLAY_NAME, CFAPI_SHELLEXT_THUMBNAIL_HANDLER_CLASS_ID_REG},
-        {CFAPI_SHELLEXT_CUSTOM_STATE_HANDLER_DISPLAY_NAME, CFAPI_SHELLEXT_CUSTOM_STATE_HANDLER_CLASS_ID_REG}
-    };
+    const QList<QPair<QString, QString>> listExtensions = {{CFAPI_SHELLEXT_THUMBNAIL_HANDLER_DISPLAY_NAME, CFAPI_SHELLEXT_THUMBNAIL_HANDLER_CLASS_ID_REG},
+        {CFAPI_SHELLEXT_CUSTOM_STATE_HANDLER_DISPLAY_NAME, CFAPI_SHELLEXT_CUSTOM_STATE_HANDLER_CLASS_ID_REG}};
     // assume CFAPI_SHELL_EXTENSIONS_LIB_NAME is always in the same folder as the main executable
     // assume CFAPI_SHELL_EXTENSIONS_LIB_NAME is always in the same folder as the main executable
-    const auto shellExtensionDllPath = QDir::toNativeSeparators(QString(QCoreApplication::applicationDirPath() + QStringLiteral("/") + CFAPI_SHELL_EXTENSIONS_LIB_NAME + QStringLiteral(".dll")));
+    const auto shellExtensionDllPath = QDir::toNativeSeparators(
+        QString(QCoreApplication::applicationDirPath() + QStringLiteral("/") + CFAPI_SHELL_EXTENSIONS_LIB_NAME + QStringLiteral(".dll")));
     if (!OCC::FileSystem::fileExists(shellExtensionDllPath)) {
         Q_ASSERT(false);
         qCWarning(lcCfApi) << "Register CfAPI shell extensions failed. Dll does not exist in " << QCoreApplication::applicationDirPath();
@@ -82,10 +81,7 @@ void unregisterShellExtensions()
         OCC::Utility::registryDeleteKeyTree(rootKey, appIdPath);
     }
 
-    const QStringList listExtensions = {
-        CFAPI_SHELLEXT_CUSTOM_STATE_HANDLER_CLASS_ID_REG,
-        CFAPI_SHELLEXT_THUMBNAIL_HANDLER_CLASS_ID_REG
-    };
+    const QStringList listExtensions = {CFAPI_SHELLEXT_CUSTOM_STATE_HANDLER_CLASS_ID_REG, CFAPI_SHELLEXT_THUMBNAIL_HANDLER_CLASS_ID_REG};
 
     for (const auto extension : listExtensions) {
         const QString clsidPath = QString() % clsIdRegKey % extension;
@@ -129,7 +125,8 @@ void VfsCfApi::startImpl(const VfsSetupParams &params)
     cfapi::registerShellExtension();
     const auto localPath = QDir::toNativeSeparators(params.filesystemPath);
 
-    const auto registerResult = cfapi::registerSyncRoot(localPath, params.providerName, params.providerVersion, params.alias, params.navigationPaneClsid, params.displayName, params.account->displayName());
+    const auto registerResult = cfapi::registerSyncRoot(
+        localPath, params.providerName, params.providerVersion, params.alias, params.navigationPaneClsid, params.displayName, params.account->displayName());
     if (!registerResult) {
         qCCritical(lcCfApi) << "Initialization failed, couldn't register sync root:" << registerResult.error();
         return;
@@ -225,7 +222,8 @@ Result<void, QString> VfsCfApi::dehydratePlaceholder(const SyncFileItem &item)
     }
 }
 
-Result<Vfs::ConvertToPlaceholderResult, QString> VfsCfApi::convertToPlaceholder(const QString &filename, const SyncFileItem &item, const QString &replacesFile, UpdateMetadataTypes updateType)
+Result<Vfs::ConvertToPlaceholderResult, QString> VfsCfApi::convertToPlaceholder(
+    const QString &filename, const SyncFileItem &item, const QString &replacesFile, UpdateMetadataTypes updateType)
 {
     const auto localPath = QDir::toNativeSeparators(filename);
     const auto replacesPath = QDir::toNativeSeparators(replacesFile);
@@ -329,8 +327,7 @@ Vfs::AvailabilityResult VfsCfApi::availability(const QString &folderPath, const 
 {
     const auto basePinState = pinState(folderPath);
     if (basePinState && recursiveCheck == Vfs::AvailabilityRecursivity::NotRecursiveAvailability) {
-        switch (*basePinState)
-        {
+        switch (*basePinState) {
         case OCC::PinState::AlwaysLocal:
             return VfsItemAvailability::AlwaysLocal;
             break;
@@ -381,9 +378,8 @@ Vfs::AvailabilityResult VfsCfApi::availability(const QString &folderPath, const 
 HydrationJob *VfsCfApi::findHydrationJob(const QString &requestId) const
 {
     // Find matching hydration job for request id
-    const auto hydrationJobsIter = std::find_if(d->hydrationJobs.cbegin(), d->hydrationJobs.cend(), [&](const HydrationJob *job) {
-        return job->requestId() == requestId;
-    });
+    const auto hydrationJobsIter =
+        std::find_if(d->hydrationJobs.cbegin(), d->hydrationJobs.cend(), [&](const HydrationJob *job) { return job->requestId() == requestId; });
 
     if (hydrationJobsIter != d->hydrationJobs.cend()) {
         return *hydrationJobsIter;
@@ -449,9 +445,8 @@ void VfsCfApi::fileStatusChanged(const QString &systemFileName, SyncFileStatus f
 
 void VfsCfApi::scheduleHydrationJob(const QString &requestId, const QString &folderPath, const SyncJournalFileRecord &record)
 {
-    const auto jobAlreadyScheduled = std::any_of(std::cbegin(d->hydrationJobs), std::cend(d->hydrationJobs), [=](HydrationJob *job) {
-        return job->requestId() == requestId || job->folderPath() == folderPath;
-    });
+    const auto jobAlreadyScheduled = std::any_of(std::cbegin(d->hydrationJobs), std::cend(d->hydrationJobs),
+        [=](HydrationJob *job) { return job->requestId() == requestId || job->folderPath() == folderPath; });
 
     if (jobAlreadyScheduled) {
         qCWarning(lcCfApi) << "The OS submitted again a hydration request which is already on-going" << requestId << folderPath;
@@ -520,15 +515,12 @@ VfsCfApi::HydratationAndPinStates VfsCfApi::computeRecursiveHydrationAndPinState
     }
     const auto effectivePin = pinState(folderPath);
     const auto pinResult = (!effectivePin && !basePinState) ? Optional<PinState>()
-                         : (!effectivePin || !basePinState) ? PinState::Inherited
-                         : (*effectivePin == *basePinState) ? *effectivePin
-                         : PinState::Inherited;
+        : (!effectivePin || !basePinState)                  ? PinState::Inherited
+        : (*effectivePin == *basePinState)                  ? *effectivePin
+                                                            : PinState::Inherited;
 
     if (FileSystem::isDir(fullPath)) {
-        const auto dirState = HydratationAndPinStates {
-            pinResult,
-            {}
-        };
+        const auto dirState = HydratationAndPinStates{pinResult, {}};
         const auto dir = QDir(info.absoluteFilePath());
         Q_ASSERT(dir.exists());
         const auto children = dir.entryList();
@@ -537,26 +529,19 @@ VfsCfApi::HydratationAndPinStates VfsCfApi::computeRecursiveHydrationAndPinState
                 return currentState;
             }
 
-            // if the folderPath.isEmpty() we don't want to end up having path "/example.file" because this will lead to double slash later, when appending to "SyncFolder/"
+            // if the folderPath.isEmpty() we don't want to end up having path "/example.file" because this will lead to double slash later, when appending to
+            // "SyncFolder/"
             const auto path = folderPath.isEmpty() ? name : folderPath + '/' + name;
             const auto states = computeRecursiveHydrationAndPinStates(path, currentState.pinState);
-            return HydratationAndPinStates {
-                states.pinState,
+            return HydratationAndPinStates{states.pinState,
                 {
                     states.hydrationStatus.hasHydrated || currentState.hydrationStatus.hasHydrated,
                     states.hydrationStatus.hasDehydrated || currentState.hydrationStatus.hasDehydrated,
-                }
-            };
+                }};
         });
     } else { // file case
         const auto isDehydrated = isDehydratedPlaceholder(info.absoluteFilePath());
-        return {
-            pinResult,
-            {
-                !isDehydrated,
-                isDehydrated
-            }
-        };
+        return {pinResult, {!isDehydrated, isDehydrated}};
     }
 }
 

@@ -15,8 +15,7 @@ HRESULT CfApiShellIntegrationClassFactory::CreateInstance(
 {
     for (size_t i = 0; i < classObjectInitsCount; ++i) {
         if (clsid == *classObjectInits[i].clsid) {
-            IClassFactory *classFactory =
-                new (std::nothrow) CfApiShellIntegrationClassFactory(classObjectInits[i].pfnCreate);
+            IClassFactory *classFactory = new (std::nothrow) CfApiShellIntegrationClassFactory(classObjectInits[i].pfnCreate);
             if (!classFactory) {
                 return E_OUTOFMEMORY;
             }

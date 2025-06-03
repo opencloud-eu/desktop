@@ -18,8 +18,7 @@ HRESULT ThumbnailProvider_CreateInstance(REFIID riid, void **ppv);
 
 const VfsShellExtensions::ClassObjectInit listClassesSupported[] = {
     {&__uuidof(winrt::CfApiShellExtensions::implementation::CustomStateProvider), CustomStateProvider_CreateInstance},
-    {&__uuidof(VfsShellExtensions::ThumbnailProvider), ThumbnailProvider_CreateInstance}
-};
+    {&__uuidof(VfsShellExtensions::ThumbnailProvider), ThumbnailProvider_CreateInstance}};
 
 STDAPI_(BOOL) DllMain(HINSTANCE hInstance, DWORD dwReason, void *)
 {
