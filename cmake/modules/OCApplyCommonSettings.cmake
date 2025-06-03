@@ -31,9 +31,9 @@ function(apply_common_target_settings targetName)
     if(WIN32)
         target_compile_definitions(${targetName}
             PRIVATE
-                # Get APIs from from Win8 onwards.
-                _WIN32_WINNT=_WIN32_WINNT_WIN8
-                WINVER=_WIN32_WINNT_WIN8
+                # Get APIs from from Win10 onwards.
+                _WIN32_WINNT=_WIN32_WINNT_WIN10
+                WINVER=_WIN32_WINNT_WIN10
                 NTDDI_VERSION=NTDDI_WIN10_RS2
         )
     endif()

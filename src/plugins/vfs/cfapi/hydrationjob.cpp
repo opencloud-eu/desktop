@@ -6,16 +6,15 @@
 #include "hydrationjob.h"
 
 #include "common/syncjournaldb.h"
-#include "encryptedfoldermetadatahandler.h"
-#include "foldermetadata.h"
+#include "plugins/vfs/cfapi/vfs_cfapi.h"
 #include "propagatedownload.h"
-#include "vfs/cfapi/vfs_cfapi.h"
-#include <clientsideencryptionjobs.h>
 
 #include "filesystem.h"
 
 #include <QLocalServer>
 #include <QLocalSocket>
+
+using namespace Qt::Literals::StringLiterals;
 
 Q_LOGGING_CATEGORY(lcHydration, "nextcloud.sync.vfs.hydrationjob", QtInfoMsg)
 
@@ -36,14 +35,14 @@ void OCC::HydrationJob::setAccount(const AccountPtr &account)
     _account = account;
 }
 
-QString OCC::HydrationJob::remoteSyncRootPath() const
+QUrl OCC::HydrationJob::remoteSyncRootPath() const
 {
     return _remoteSyncRootPath;
 }
 
-void OCC::HydrationJob::setRemoteSyncRootPath(const QString &path)
+void OCC::HydrationJob::setRemoteSyncRootPath(const QUrl &url)
 {
-    _remoteSyncRootPath = Utility::noLeadingSlashPath(path);
+    _remoteSyncRootPath = url;
 }
 
 QString OCC::HydrationJob::localPath() const
@@ -86,26 +85,6 @@ void OCC::HydrationJob::setFolderPath(const QString &folderPath)
     _folderPath = folderPath;
 }
 
-bool OCC::HydrationJob::isEncryptedFile() const
-{
-    return _isEncryptedFile;
-}
-
-void OCC::HydrationJob::setIsEncryptedFile(bool isEncrypted)
-{
-    _isEncryptedFile = isEncrypted;
-}
-
-QString OCC::HydrationJob::e2eMangledName() const
-{
-    return _e2eMangledName;
-}
-
-void OCC::HydrationJob::setE2eMangledName(const QString &e2eMangledName)
-{
-    _e2eMangledName = e2eMangledName;
-}
-
 OCC::HydrationJob::Status OCC::HydrationJob::status() const
 {
     return _status;
@@ -133,9 +112,8 @@ void OCC::HydrationJob::start()
     Q_ASSERT(!_remoteSyncRootPath.isEmpty() && !_localPath.isEmpty());
     Q_ASSERT(!_requestId.isEmpty() && !_folderPath.isEmpty());
 
-    Q_ASSERT(_remoteSyncRootPath.endsWith('/'));
-    Q_ASSERT(_localPath.endsWith('/'));
-    Q_ASSERT(!_folderPath.startsWith('/'));
+    Q_ASSERT(_localPath.endsWith('/'_L1));
+    Q_ASSERT(!_folderPath.startsWith('/'_L1));
 
     const auto startServer = [this](const QString &serverName) -> QLocalServer * {
         const auto server = new QLocalServer(this);
@@ -152,7 +130,7 @@ void OCC::HydrationJob::start()
     };
 
     // Start cancellation server
-    _signalServer = startServer(_requestId + ":cancellation");
+    _signalServer = startServer(_requestId + u":cancellation"_s);
     Q_ASSERT(_signalServer);
     if (!_signalServer) {
         return;
@@ -172,7 +150,7 @@ void OCC::HydrationJob::cancel()
 {
     _isCancelled = true;
     if (_job) {
-        _job->cancel();
+        _job->abort();
     }
 
     if (_signalSocket) {
@@ -196,7 +174,7 @@ void OCC::HydrationJob::emitFinished(Status status)
     if (status == Success) {
         connect(_transferDataSocket, &QLocalSocket::disconnected, this, [=, this] {
             _transferDataSocket->close();
-            emit finished(this);
+            Q_EMIT finished(this);
         });
         _transferDataSocket->disconnectFromServer();
         return;
@@ -206,7 +184,7 @@ void OCC::HydrationJob::emitFinished(Status status)
         _transferDataSocket->close();
     }
 
-    emit finished(this);
+    Q_EMIT finished(this);
 }
 
 void OCC::HydrationJob::onCancellationServerNewConnection()
@@ -221,12 +199,7 @@ void OCC::HydrationJob::onNewConnection()
 {
     Q_ASSERT(!_transferDataSocket);
     Q_ASSERT(!_job);
-
-    if (isEncryptedFile()) {
-        handleNewConnectionForEncryptedFile();
-    } else {
-        handleNewConnection();
-    }
+    handleNewConnection();
 }
 
 void OCC::HydrationJob::finalize(OCC::VfsCfApi *vfs)
@@ -265,44 +238,11 @@ void OCC::HydrationJob::finalize(OCC::VfsCfApi *vfs)
     };
 
     // store the actual size of a file that has been decrypted as we will need its actual size when dehydrating it if requested
-    record._fileSize = FileSystem::getSize(localPath() + folderPath());
+    record._fileSize = FileSystem::getSize(QFileInfo{localPath() + folderPath()});
 
     const auto result = _journal->setFileRecord(record);
     if (!result) {
         qCWarning(lcHydration) << "Error when setting the file record to the database" << record._path << result.error();
-    }
-}
-
-void OCC::HydrationJob::slotFetchMetadataJobFinished(int statusCode, const QString &message)
-{
-    if (statusCode != 200) {
-        qCCritical(lcHydration) << "Failed to find encrypted metadata information of remote file" << e2eMangledName() << message;
-        emitFinished(Error);
-        return;
-    }
-
-    // TODO: the following code is borrowed from PropagateDownloadEncrypted (see HydrationJob::onNewConnection() for explanation of next steps)
-    qCDebug(lcHydration) << "Metadata Received reading" << e2eMangledName();
-    const auto metadata = _encryptedFolderMetadataHandler->folderMetadata();
-    if (!metadata->isValid()) {
-        qCCritical(lcHydration) << "Failed to find encrypted metadata information of a remote file" << e2eMangledName();
-        emitFinished(Error);
-        return;
-    }
-
-    const auto files = metadata->files();
-    const QString encryptedFileExactName = e2eMangledName().section(QLatin1Char('/'), -1);
-    for (const FolderMetadata::EncryptedFile &file : files) {
-        if (encryptedFileExactName == file.encryptedFilename) {
-            qCDebug(lcHydration) << "Found matching encrypted metadata for file, starting download" << _requestId << _folderPath;
-            _transferDataSocket = _transferDataServer->nextPendingConnection();
-            _job = new GETEncryptedFileJob(
-                _account, Utility::trailingSlashPath(_remoteSyncRootPath) + e2eMangledName(), _transferDataSocket, {}, {}, 0, file, this);
-
-            connect(qobject_cast<GETEncryptedFileJob *>(_job), &GETEncryptedFileJob::finishedSignal, this, &HydrationJob::onGetFinished);
-            _job->start();
-            return;
-        }
     }
 }
 
@@ -339,28 +279,7 @@ void OCC::HydrationJob::handleNewConnection()
 {
     qCInfo(lcHydration) << "Got new connection starting GETFileJob" << _requestId << _folderPath;
     _transferDataSocket = _transferDataServer->nextPendingConnection();
-    _job = new GETFileJob(_account, Utility::trailingSlashPath(_remoteSyncRootPath) + _folderPath, _transferDataSocket, {}, {}, 0, this);
+    _job = new GETFileJob(_account, _remoteSyncRootPath, _folderPath, _transferDataSocket, {}, {}, 0, this);
     connect(_job, &GETFileJob::finishedSignal, this, &HydrationJob::onGetFinished);
     _job->start();
-}
-
-void OCC::HydrationJob::handleNewConnectionForEncryptedFile()
-{
-    // TODO: the following code is borrowed from PropagateDownloadEncrypted (should we factor it out and reuse? YES! Should we do it now? Probably not, as, this
-    // would imply modifying PropagateDownloadEncrypted, so we need a separate PR)
-    qCInfo(lcHydration) << "Got new connection for encrypted file. Getting required info for decryption...";
-    const auto remoteFilename = e2eMangledName();
-    const QString fullRemotePath = Utility::trailingSlashPath(_remoteSyncRootPath) + remoteFilename;
-    const auto containingFolderFullRemotePath = fullRemotePath.left(fullRemotePath.lastIndexOf('/'));
-
-    SyncJournalFileRecord rec;
-    if (!_journal->getRootE2eFolderRecord(Utility::fullRemotePathToRemoteSyncRootRelative(containingFolderFullRemotePath, _remoteSyncRootPath), &rec)
-        || !rec.isValid()) {
-        emitFinished(Error);
-        return;
-    }
-    _encryptedFolderMetadataHandler.reset(
-        new EncryptedFolderMetadataHandler(_account, containingFolderFullRemotePath, _remoteSyncRootPath, _journal, rec.path()));
-    connect(_encryptedFolderMetadataHandler.data(), &EncryptedFolderMetadataHandler::fetchFinished, this, &HydrationJob::slotFetchMetadataJobFinished);
-    _encryptedFolderMetadataHandler->fetchMetadata();
 }
