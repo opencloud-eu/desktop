@@ -589,7 +589,7 @@ void AccountState::setSettingUp(bool settingUp)
 bool AccountState::readyForSync() const
 {
     // the _fetchCapabilitiesElapsedTimer is started one we fetch the server settings
-    return !_fetchCapabilitiesElapsedTimer.isStarted() && isConnected();
+    return _fetchCapabilitiesElapsedTimer.isStarted() && isConnected();
 }
 
 } // namespace OCC

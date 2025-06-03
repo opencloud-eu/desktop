@@ -60,6 +60,7 @@ Account::Account(const QUuid &uuid, QObject *parent)
     , _jobQueue(this)
     , _queueGuard(&_jobQueue)
     , _credentialManager(new CredentialManager(this))
+    , _spacesManager(new GraphApi::SpacesManager(this))
 {
     qRegisterMetaType<AccountPtr>("AccountPtr");
 
@@ -91,6 +92,11 @@ void Account::setSharedThis(AccountPtr sharedThis)
 CredentialManager *Account::credentialManager() const
 {
     return _credentialManager;
+}
+
+GraphApi::SpacesManager *Account::spacesManager() const
+{
+    return _spacesManager;
 }
 
 QUuid Account::uuid() const
@@ -290,9 +296,6 @@ void Account::setCapabilities(const Capabilities &caps)
     _capabilities = caps;
     if (versionChanged) {
         Q_EMIT serverVersionChanged();
-    }
-    if (!_spacesManager && _capabilities.spacesSupport().enabled) {
-        _spacesManager = new GraphApi::SpacesManager(this);
     }
 }
 

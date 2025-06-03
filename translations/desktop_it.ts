@@ -550,7 +550,7 @@ Utilità desktop per la sincronizazione dei file.</translation>
 <context>
     <name>OCC::Account</name>
     <message>
-        <location filename="../src/libsync/account.cpp" line="130"/>
+        <location filename="../src/libsync/account.cpp" line="136"/>
         <source>%1@%2</source>
         <translation>%1@%2</translation>
     </message>
@@ -792,12 +792,12 @@ L&apos;aggiornamento verrà eseguito in background e sovrascriverà il file AppI
         <translation>Chiudi</translation>
     </message>
     <message>
-        <location filename="../src/gui/application.cpp" line="193"/>
+        <location filename="../src/gui/application.cpp" line="191"/>
         <source>Unsupported Server Version</source>
         <translation>Versione del server non supportata</translation>
     </message>
     <message>
-        <location filename="../src/gui/application.cpp" line="194"/>
+        <location filename="../src/gui/application.cpp" line="192"/>
         <source>The server on account %1 runs an unsupported version %2. Using this client with unsupported server versions is untested and potentially dangerous. Proceed at your own risk.</source>
         <translation>Il server sull&apos;account %1 esegue una versione non supportata %2. L&apos;utilizzo di questo client con versioni del server non supportate non è testato ed è potenzialmente pericoloso. Procedere a proprio rischio e pericolo.</translation>
     </message>
@@ -838,19 +838,9 @@ L&apos;aggiornamento verrà eseguito in background e sovrascriverà il file AppI
 <context>
     <name>OCC::ConnectionValidator</name>
     <message>
-        <location filename="../src/gui/connectionvalidator.cpp" line="171"/>
-        <source>Please update to the latest server and restart the client.</source>
-        <translation>Aggiornare il server all&apos;ultima versione e riavviare il client.</translation>
-    </message>
-    <message>
-        <location filename="../src/gui/connectionvalidator.cpp" line="114"/>
+        <location filename="../src/gui/connectionvalidator.cpp" line="122"/>
         <source>timeout</source>
         <translation>tempo scaduto</translation>
-    </message>
-    <message>
-        <location filename="../src/gui/connectionvalidator.cpp" line="171"/>
-        <source>The configured server for this client is too old.</source>
-        <translation>Il server configurato per questo client è troppo vecchio.</translation>
     </message>
 </context>
 <context>

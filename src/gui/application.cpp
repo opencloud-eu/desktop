@@ -26,8 +26,10 @@
 #include "folderman.h"
 #include "gui/aboutdialog.h"
 #include "gui/accountsettings.h"
+#include "gui/fetchserversettings.h"
 #include "gui/folderwizard/folderwizard.h"
 #include "gui/newwizard/setupwizardcontroller.h"
+#include "gui/notifications/systemnotification.h"
 #include "gui/notifications/systemnotificationmanager.h"
 #include "gui/systray.h"
 #include "libsync/graphapi/spacesmanager.h"
@@ -44,10 +46,6 @@
 #include "gui/navigationpanehelper.h"
 #include <qt_windows.h>
 #endif
-
-
-#include "notifications/systemnotification.h"
-
 
 #include <QApplication>
 #include <QDesktopServices>
@@ -312,78 +310,69 @@ void Application::runNewAccountWizard()
 
                 _settingsDialog->setCurrentAccount(accountStatePtr->account().data());
 
-                // ensure we are connected and fetch the capabilities
-                auto validator = new ConnectionValidator(accountStatePtr->account(), accountStatePtr->account().data());
+                // fetch server settings
+                auto fetchServerSettings = new FetchServerSettingsJob(accountStatePtr->account(), accountStatePtr->account().data());
 
-                connect(validator, &ConnectionValidator::connectionResult, accountStatePtr.data(),
-                    [accountStatePtr, syncMode, this](ConnectionValidator::Status status, const QStringList &) {
-                        switch (status) {
-                        case ConnectionValidator::Connected: {
-                            // saving once after adding makes sure the account is stored in the config in a working state
-                            // this is needed to ensure a consistent state in the config file upon unexpected terminations of the client
-                            // (for instance, when running from a debugger and stopping the process from there)
-                            AccountManager::instance()->save();
+                connect(fetchServerSettings, &FetchServerSettingsJob::finishedSignal, accountStatePtr.data(), [accountStatePtr, syncMode, this] {
+                    // saving once after adding makes sure the account is stored in the config in a working state
+                    // this is needed to ensure a consistent state in the config file upon unexpected terminations of the client
+                    // (for instance, when running from a debugger and stopping the process from there)
+                    AccountManager::instance()->save();
 
-                            // the account is now ready, emulate a normal account loading and Q_EMIT that the credentials are ready
-                            Q_EMIT accountStatePtr->account()->credentialsFetched();
+                    // the account is now ready, emulate a normal account loading and Q_EMIT that the credentials are ready
+                    Q_EMIT accountStatePtr->account()->credentialsFetched();
 
-                            switch (syncMode) {
-                            case Wizard::SyncMode::SyncEverything:
-                            case Wizard::SyncMode::UseVfs: {
-                                bool useVfs = syncMode == Wizard::SyncMode::UseVfs;
-                                setUpInitialSyncFolder(accountStatePtr, useVfs);
-                                accountStatePtr->setSettingUp(false);
-                                break;
+                    switch (syncMode) {
+                    case Wizard::SyncMode::SyncEverything:
+                    case Wizard::SyncMode::UseVfs: {
+                        bool useVfs = syncMode == Wizard::SyncMode::UseVfs;
+                        setUpInitialSyncFolder(accountStatePtr, useVfs);
+                        accountStatePtr->setSettingUp(false);
+                        break;
+                    }
+                    case Wizard::SyncMode::ConfigureUsingFolderWizard: {
+                        Q_ASSERT(!accountStatePtr->account()->hasDefaultSyncRoot());
+
+                        auto *folderWizard = new FolderWizard(accountStatePtr, ocApp()->settingsDialog());
+                        folderWizard->setAttribute(Qt::WA_DeleteOnClose);
+
+                        // TODO: duplication of AccountSettings
+                        // adapted from AccountSettings::slotFolderWizardAccepted()
+                        connect(folderWizard, &QDialog::accepted, accountStatePtr.data(), [accountStatePtr, folderWizard]() {
+                            FolderMan *folderMan = FolderMan::instance();
+
+                            qCInfo(lcApplication) << "Folder wizard completed";
+                            const auto config = folderWizard->result();
+
+                            auto folder = folderMan->addFolderFromFolderWizardResult(accountStatePtr, config);
+
+                            if (!config.selectiveSyncBlackList.isEmpty() && OC_ENSURE(folder && !config.useVirtualFiles)) {
+                                folder->journalDb()->setSelectiveSyncList(SyncJournalDb::SelectiveSyncBlackList, config.selectiveSyncBlackList);
+
+                                // The user already accepted the selective sync dialog. everything is in the white list
+                                folder->journalDb()->setSelectiveSyncList(SyncJournalDb::SelectiveSyncWhiteList, {QLatin1String("/")});
                             }
-                            case Wizard::SyncMode::ConfigureUsingFolderWizard: {
-                                Q_ASSERT(!accountStatePtr->account()->hasDefaultSyncRoot());
 
-                                auto *folderWizard = new FolderWizard(accountStatePtr, ocApp()->settingsDialog());
-                                folderWizard->setAttribute(Qt::WA_DeleteOnClose);
+                            folderMan->setSyncEnabled(true);
+                            folderMan->scheduleAllFolders();
+                            accountStatePtr->setSettingUp(false);
+                        });
 
-                                // TODO: duplication of AccountSettings
-                                // adapted from AccountSettings::slotFolderWizardAccepted()
-                                connect(folderWizard, &QDialog::accepted, accountStatePtr.data(), [accountStatePtr, folderWizard]() {
-                                    FolderMan *folderMan = FolderMan::instance();
+                        connect(folderWizard, &QDialog::rejected, accountStatePtr.data(), [accountStatePtr]() {
+                            qCInfo(lcApplication) << "Folder wizard cancelled";
+                            FolderMan::instance()->setSyncEnabled(true);
+                            accountStatePtr->setSettingUp(false);
+                        });
 
-                                    qCInfo(lcApplication) << "Folder wizard completed";
-                                    const auto config = folderWizard->result();
-
-                                    auto folder = folderMan->addFolderFromFolderWizardResult(accountStatePtr, config);
-
-                                    if (!config.selectiveSyncBlackList.isEmpty() && OC_ENSURE(folder && !config.useVirtualFiles)) {
-                                        folder->journalDb()->setSelectiveSyncList(SyncJournalDb::SelectiveSyncBlackList, config.selectiveSyncBlackList);
-
-                                        // The user already accepted the selective sync dialog. everything is in the white list
-                                        folder->journalDb()->setSelectiveSyncList(SyncJournalDb::SelectiveSyncWhiteList, {QLatin1String("/")});
-                                    }
-
-                                    folderMan->setSyncEnabled(true);
-                                    folderMan->scheduleAllFolders();
-                                    accountStatePtr->setSettingUp(false);
-                                });
-
-                                connect(folderWizard, &QDialog::rejected, accountStatePtr.data(), [accountStatePtr]() {
-                                    qCInfo(lcApplication) << "Folder wizard cancelled";
-                                    FolderMan::instance()->setSyncEnabled(true);
-                                    accountStatePtr->setSettingUp(false);
-                                });
-
-                                _settingsDialog->accountSettings(accountStatePtr->account().get())
-                                    ->addModalLegacyDialog(folderWizard, AccountSettings::ModalWidgetSizePolicy::Expanding);
-                                break;
-                            }
-                            case OCC::Wizard::SyncMode::Invalid:
-                                Q_UNREACHABLE();
-                            }
-                        }
-                        default:
-                            Q_UNREACHABLE();
-                        }
-                    });
-
-
-                validator->checkServer();
+                        _settingsDialog->accountSettings(accountStatePtr->account().get())
+                            ->addModalLegacyDialog(folderWizard, AccountSettings::ModalWidgetSizePolicy::Expanding);
+                        break;
+                    }
+                    case OCC::Wizard::SyncMode::Invalid:
+                        Q_UNREACHABLE();
+                    }
+                });
+                fetchServerSettings->start();
             } else {
                 FolderMan::instance()->setSyncEnabled(true);
             }
