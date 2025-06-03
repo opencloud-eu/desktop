@@ -310,7 +310,7 @@ OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> updatePlaceholderStat
 
     qCInfo(lcCfApiWrapper) << "updatePlaceholderState" << path << modtime;
     const qint64 result =
-        CfUpdatePlaceholder(OCC::CfApiWrapper::handleForPath(path).get(), updateType == CfApiUpdateMetadataType::AllMetadata ? &metadata : nullptr,
+        CfUpdatePlaceholder(OCC::CfApiWrapper::handleForPath(path).handle(), updateType == CfApiUpdateMetadataType::AllMetadata ? &metadata : nullptr,
             fileIdentity.data(), static_cast<DWORD>(fileIdentitySize), nullptr, 0, CF_UPDATE_FLAG_MARK_IN_SYNC, nullptr, nullptr);
 
     if (result != S_OK) {
@@ -399,10 +399,10 @@ void deletePlaceholderInfo(CF_PLACEHOLDER_BASIC_INFO *info)
     delete[] byte;
 }
 
-std::wstring pathForHandle(const OCC::CfApiWrapper::FileHandle &handle)
+std::wstring pathForHandle(const OCC::Utility::Handle &handle)
 {
     wchar_t buffer[MAX_PATH];
-    const qint64 result = GetFinalPathNameByHandle(handle.get(), buffer, MAX_PATH, VOLUME_NAME_DOS);
+    const qint64 result = GetFinalPathNameByHandle(handle, buffer, MAX_PATH, VOLUME_NAME_DOS);
     Q_ASSERT(result < MAX_PATH);
     return std::wstring(buffer);
 }
@@ -437,16 +437,6 @@ CF_SET_PIN_FLAGS pinRecurseModeToCfSetPinFlags(OCC::CfApiWrapper::SetPinRecurseM
 
 OCC::CfApiWrapper::ConnectionKey::ConnectionKey()
     : _data(new CF_CONNECTION_KEY, [](void *p) { delete reinterpret_cast<CF_CONNECTION_KEY *>(p); })
-{
-}
-
-OCC::CfApiWrapper::FileHandle::FileHandle()
-    : _data(nullptr, [](void *) {})
-{
-}
-
-OCC::CfApiWrapper::FileHandle::FileHandle(void *data, Deleter deleter)
-    : _data(data, deleter)
 {
 }
 
@@ -743,7 +733,7 @@ bool OCC::CfApiWrapper::isSparseFile(const QString &path)
     return (attributes & FILE_ATTRIBUTE_SPARSE_FILE) != 0;
 }
 
-OCC::CfApiWrapper::FileHandle OCC::CfApiWrapper::handleForPath(const QString &path)
+OCC::Utility::Handle OCC::CfApiWrapper::handleForPath(const QString &path)
 {
     if (path.isEmpty()) {
         qCWarning(lcCfApiWrapper) << "empty path";
@@ -761,7 +751,7 @@ OCC::CfApiWrapper::FileHandle OCC::CfApiWrapper::handleForPath(const QString &pa
         HANDLE handle = nullptr;
         const qint64 openResult = CfOpenFileWithOplock(path.toStdWString().data(), CF_OPEN_FILE_FLAG_NONE, &handle);
         if (openResult == S_OK) {
-            return {handle, [](HANDLE h) { CfCloseHandle(h); }};
+            return OCC::Utility::Handle{handle, [](HANDLE h) { CfCloseHandle(h); }};
         } else {
             qCWarning(lcCfApiWrapper) << "Could not open handle for " << path << " result: " << QString::fromWCharArray(_com_error(openResult).ErrorMessage());
         }
@@ -769,7 +759,7 @@ OCC::CfApiWrapper::FileHandle OCC::CfApiWrapper::handleForPath(const QString &pa
         const auto longpath = OCC::FileSystem::longWinPath(path);
         const auto handle = CreateFile(longpath.toStdWString().data(), 0, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
         if (handle != INVALID_HANDLE_VALUE) {
-            return {handle, [](HANDLE h) { CloseHandle(h); }};
+            return OCC::Utility::Handle{handle, [](HANDLE h) { CloseHandle(h); }};
         } else {
             qCCritical(lcCfApiWrapper) << "Could not CreateFile for longpath:" << longpath << "with error:" << GetLastError();
         }
@@ -786,7 +776,7 @@ OCC::CfApiWrapper::PlaceHolderInfo OCC::CfApiWrapper::findPlaceholderInfo(const 
     auto info = PlaceHolderInfo(reinterpret_cast<CF_PLACEHOLDER_BASIC_INFO *>(new char[infoSize]), deletePlaceholderInfo);
     auto handle = handleForPath(path);
     if (handle) {
-        const qint64 result = CfGetPlaceholderInfo(handle.get(), CF_PLACEHOLDER_INFO_BASIC, info.get(), static_cast<DWORD>(infoSize), nullptr);
+        const qint64 result = CfGetPlaceholderInfo(handle.handle(), CF_PLACEHOLDER_INFO_BASIC, info.get(), static_cast<DWORD>(infoSize), nullptr);
 
         if (result == S_OK) {
             return info;
@@ -800,7 +790,7 @@ OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> OCC::CfApiWrapper::se
     const auto cfState = pinStateToCfPinState(state);
     const auto flags = pinRecurseModeToCfSetPinFlags(mode);
 
-    const qint64 result = CfSetPinState(handleForPath(path).get(), cfState, flags, nullptr);
+    const qint64 result = CfSetPinState(handleForPath(path).handle(), cfState, flags, nullptr);
     if (result == S_OK) {
         return OCC::Vfs::ConvertToPlaceholderResult::Ok;
     } else {
@@ -883,7 +873,7 @@ OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> OCC::CfApiWrapper::de
         dehydrationRange.StartingOffset.QuadPart = 0;
         dehydrationRange.Length.QuadPart = size;
 
-        const qint64 result = CfUpdatePlaceholder(handleForPath(path).get(), nullptr, fileIdentity.data(), static_cast<DWORD>(fileIdentitySize),
+        const qint64 result = CfUpdatePlaceholder(handleForPath(path).handle(), nullptr, fileIdentity.data(), static_cast<DWORD>(fileIdentitySize),
             &dehydrationRange, 1, CF_UPDATE_FLAG_MARK_IN_SYNC | CF_UPDATE_FLAG_DEHYDRATE, nullptr, nullptr);
         if (result != S_OK) {
             const auto errorMessage = createErrorMessageForPlaceholderUpdateAndCreate(path, u"Couldn't update placeholder info"_s);
@@ -891,7 +881,7 @@ OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> OCC::CfApiWrapper::de
             return errorMessage;
         }
     } else {
-        const qint64 result = CfConvertToPlaceholder(handleForPath(path).get(), fileIdentity.data(), static_cast<DWORD>(fileIdentitySize),
+        const qint64 result = CfConvertToPlaceholder(handleForPath(path).handle(), fileIdentity.data(), static_cast<DWORD>(fileIdentitySize),
             CF_CONVERT_FLAG_MARK_IN_SYNC | CF_CONVERT_FLAG_DEHYDRATE, nullptr, nullptr);
 
         if (result != S_OK) {
@@ -913,7 +903,7 @@ OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> OCC::CfApiWrapper::co
     const auto fileIdentity = QString::fromUtf8(fileId).toStdWString();
     const auto fileIdentitySize = (fileIdentity.length() + 1) * sizeof(wchar_t);
     const qint64 result = CfConvertToPlaceholder(
-        handleForPath(path).get(), fileIdentity.data(), static_cast<DWORD>(fileIdentitySize), CF_CONVERT_FLAG_MARK_IN_SYNC, nullptr, nullptr);
+        handleForPath(path).handle(), fileIdentity.data(), static_cast<DWORD>(fileIdentitySize), CF_CONVERT_FLAG_MARK_IN_SYNC, nullptr, nullptr);
     Q_ASSERT(result == S_OK);
     if (result != S_OK) {
         const auto errorMessage = createErrorMessageForPlaceholderUpdateAndCreate(path, u"Couldn't convert to placeholder"_s);
