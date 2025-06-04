@@ -26,15 +26,6 @@ class VfsCfApi;
 
 namespace CfApiWrapper {
 
-    class ConnectionKey
-    {
-    public:
-        ConnectionKey();
-        inline void *get() const { return _data.get(); }
-
-    private:
-        std::unique_ptr<void, void (*)(void *)> _data;
-    };
 
     class PlaceHolderInfo
     {
@@ -58,8 +49,8 @@ namespace CfApiWrapper {
     // void unregisterSyncRootShellExtensions(const QString &providerName, const QString &folderAlias, const QString &accountDisplayName);
     Result<void, QString> unregisterSyncRoot(const QString &path, const QString &providerName, const QUuid &accountId);
 
-    Result<ConnectionKey, QString> connectSyncRoot(const QString &path, VfsCfApi *context);
-    Result<void, QString> disconnectSyncRoot(ConnectionKey &&key);
+    Result<CF_CONNECTION_KEY, QString> connectSyncRoot(const QString &path, VfsCfApi *context);
+    Result<void, QString> disconnectSyncRoot(CF_CONNECTION_KEY &&key);
     bool isAnySyncRoot(const QString &providerName, const QString &accountDisplayName);
 
     bool isSparseFile(const QString &path);

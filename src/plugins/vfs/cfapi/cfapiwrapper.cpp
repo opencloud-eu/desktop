@@ -423,10 +423,6 @@ CF_SET_PIN_FLAGS pinRecurseModeToCfSetPinFlags(OCC::CfApiWrapper::SetPinRecurseM
     Q_UNREACHABLE();
 }
 
-OCC::CfApiWrapper::ConnectionKey::ConnectionKey()
-    : _data(new CF_CONNECTION_KEY, [](void *p) { delete reinterpret_cast<CF_CONNECTION_KEY *>(p); })
-{
-}
 
 OCC::CfApiWrapper::PlaceHolderInfo::PlaceHolderInfo(std::vector<char> &&buffer)
     : _data(buffer)
@@ -658,13 +654,12 @@ OCC::Result<void, QString> OCC::CfApiWrapper::unregisterSyncRoot(const QString &
     }
 }
 
-OCC::Result<OCC::CfApiWrapper::ConnectionKey, QString> OCC::CfApiWrapper::connectSyncRoot(const QString &path, OCC::VfsCfApi *context)
+OCC::Result<CF_CONNECTION_KEY, QString> OCC::CfApiWrapper::connectSyncRoot(const QString &path, OCC::VfsCfApi *context)
 {
-    auto key = ConnectionKey();
+    CF_CONNECTION_KEY key;
     const auto p = path.toStdWString();
-    const qint64 result = CfConnectSyncRoot(p.data(), cfApiCallbacks, context,
-        CF_CONNECT_FLAG_REQUIRE_PROCESS_INFO | CF_CONNECT_FLAG_REQUIRE_FULL_FILE_PATH | CF_CONNECT_FLAG_BLOCK_SELF_IMPLICIT_HYDRATION,
-        static_cast<CF_CONNECTION_KEY *>(key.get()));
+    const qint64 result =
+        CfConnectSyncRoot(p.data(), cfApiCallbacks, context, CF_CONNECT_FLAG_REQUIRE_PROCESS_INFO | CF_CONNECT_FLAG_REQUIRE_FULL_FILE_PATH | CF_CONNECT_FLAG_BLOCK_SELF_IMPLICIT_HYDRATION, &key);
     Q_ASSERT(result == S_OK);
     if (result != S_OK) {
         return OCC::Utility::formatWinError(result);
@@ -673,11 +668,12 @@ OCC::Result<OCC::CfApiWrapper::ConnectionKey, QString> OCC::CfApiWrapper::connec
     }
 }
 
-OCC::Result<void, QString> OCC::CfApiWrapper::disconnectSyncRoot(ConnectionKey &&key)
+OCC::Result<void, QString> OCC::CfApiWrapper::disconnectSyncRoot(CF_CONNECTION_KEY &&key)
 {
-    const qint64 result = CfDisconnectSyncRoot(*static_cast<CF_CONNECTION_KEY *>(key.get()));
-    Q_ASSERT(result == S_OK);
+    const qint64 result = CfDisconnectSyncRoot(key);
     if (result != S_OK) {
+        qCWarning(lcCfApiWrapper) << "Disconnecting sync root failed" << OCC::Utility::formatWinError(result);
+        Q_ASSERT(result == S_OK);
         return OCC::Utility::formatWinError(result);
     } else {
         return {};

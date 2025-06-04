@@ -107,7 +107,7 @@ class VfsCfApiPrivate
 {
 public:
     QList<HydrationJob *> hydrationJobs;
-    cfapi::ConnectionKey connectionKey;
+    CF_CONNECTION_KEY connectionKey = {};
 };
 
 VfsCfApi::VfsCfApi(QObject *parent)
@@ -149,9 +149,11 @@ void VfsCfApi::startImpl(const VfsSetupParams &params)
 
 void VfsCfApi::stop()
 {
-    const auto result = cfapi::disconnectSyncRoot(std::move(d->connectionKey));
-    if (!result) {
-        qCCritical(lcCfApi) << "Disconnect failed for" << QDir::toNativeSeparators(params().filesystemPath) << ":" << result.error();
+    if (d->connectionKey.Internal != 0) {
+        const auto result = cfapi::disconnectSyncRoot(std::move(d->connectionKey));
+        if (!result) {
+            qCCritical(lcCfApi) << "Disconnect failed for" << QDir::toNativeSeparators(params().filesystemPath) << ":" << result.error();
+        }
     }
 }
 
