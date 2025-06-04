@@ -18,7 +18,6 @@ class SyncConnection:
     FOLDER_SYNC_CONNECTION_MENU_BUTTON = {
         "container": names.quickWidget_scrollView_ScrollView,
         "id": "moreButton",
-        "source": "image://opencloud?theme=fontawesome&icon=&enabled=true&size=undefined",
         "type": "Image",
         "unnamed": 1,
         "visible": True
