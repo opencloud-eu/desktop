@@ -187,7 +187,7 @@ def teardown_client():
             squish.mouseClick(squish.waitForObject(account_objects[display_name]))
             AccountSetting.remove_account_connection()
 
-        #re-fetch accounts after removing from UI
+        # re-fetch accounts after removing from UI
         accounts, _ = Toolbar.get_accounts()
         if accounts:
             squish.waitForObject(AccountConnectionWizard.SERVER_ADDRESS_BOX)
