@@ -182,10 +182,14 @@ Result<Vfs::ConvertToPlaceholderResult, QString> VfsCfApi::updateMetadata(const 
     const auto localPath = QDir::toNativeSeparators(filePath);
     const auto replacesPath = QDir::toNativeSeparators(replacesFile);
 
-    if (cfapi::findPlaceholderInfo(localPath)) {
-        return cfapi::updatePlaceholderInfo(localPath, syncItem._modtime, syncItem._size, syncItem._fileId, replacesPath);
+    if (syncItem._type == ItemTypeVirtualFileDehydration) {
+        return cfapi::dehydratePlaceholder(localPath, syncItem._modtime, syncItem._size, syncItem._fileId);
     } else {
-        return cfapi::convertToPlaceholder(localPath, syncItem._modtime, syncItem._size, syncItem._fileId, replacesPath);
+        if (cfapi::findPlaceholderInfo(localPath)) {
+            return cfapi::updatePlaceholderInfo(localPath, syncItem._modtime, syncItem._size, syncItem._fileId, replacesPath);
+        } else {
+            return cfapi::convertToPlaceholder(localPath, syncItem._modtime, syncItem._size, syncItem._fileId, replacesPath);
+        }
     }
 }
 
