@@ -56,7 +56,6 @@ Feature: Syncing files
             client content
             """
 
-
     Scenario: Sync all is selected by default
         Given user "Alice" has created folder "simple-folder" in the server
         And user "Alice" has created folder "large-folder" in the server
@@ -81,7 +80,6 @@ Feature: Syncing files
         But the folder "simple-folder" should not exist on the file system
         And the folder "large-folder" should not exist on the file system
 
-
     Scenario: Sync only one folder from the server
         Given user "Alice" has created folder "simple-folder" in the server
         And user "Alice" has created folder "large-folder" in the server
@@ -92,6 +90,7 @@ Feature: Syncing files
             | password | 1234           |
         When the user selects manual sync folder option in advanced section
         And the user selects "Personal" space in sync connection wizard
+        And the user sets the sync path in sync connection wizard
         And the user selects the following folders to sync:
             | folder        |
             | simple-folder |
