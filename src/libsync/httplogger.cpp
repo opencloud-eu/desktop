@@ -27,6 +27,7 @@
 #include <memory>
 
 using namespace std::chrono;
+using namespace Qt::Literals::StringLiterals;
 
 namespace {
 Q_LOGGING_CATEGORY(lcNetworkHttp, "sync.httplogger", QtWarningMsg)
@@ -70,7 +71,7 @@ void logHttp(const QByteArray &verb, HttpContext *ctx, QJsonObject &&header, QIO
     const auto contentLength = device ? device->size() : 0;
 
     if (redact) {
-        const QString authKey = QStringLiteral("Authorization");
+        const auto authKey = "authorization"_L1;
         const QString auth = header.value(authKey).toString();
         if (!auth.isEmpty()) {
             header.insert(authKey, auth.startsWith(QStringLiteral("Bearer ")) ? QStringLiteral("Bearer [redacted]") : QStringLiteral("Basic [redacted]"));
@@ -104,7 +105,7 @@ void logHttp(const QByteArray &verb, HttpContext *ctx, QJsonObject &&header, QIO
 
     QJsonObject body = {{QStringLiteral("length"), contentLength}};
     if (contentLength > 0) {
-        const QString contentType = header.value(QStringLiteral("Content-Type")).toString();
+        const QString contentType = header.value("content-type"_L1).toString();
         if (isTextBody(contentType)) {
             if (!device->isOpen()) {
                 Q_ASSERT(dynamic_cast<QBuffer *>(device));
