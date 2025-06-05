@@ -97,6 +97,9 @@ Q_SIGNALS:
 
     void dynamicRegistrationDataReceived();
 
+    void refreshError(QNetworkReply::NetworkError error, const QString &errorString);
+
+
 protected:
     void updateDynamicRegistration();
 
@@ -151,7 +154,6 @@ public:
     void refreshAuthentication(const QString &refreshToken);
 
 Q_SIGNALS:
-    void refreshError(QNetworkReply::NetworkError error, const QString &errorString);
     void refreshFinished(const QString &accessToken, const QString &refreshToken);
     void restored(QPrivateSignal);
 

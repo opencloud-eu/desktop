@@ -247,19 +247,20 @@ void AccountState::setState(State state)
         QTimer::singleShot(0, this, [this, oldState] {
             // ensure the connection validator is done
             _queueGuard.unblock();
-            if (fetchServerSettings()) {
-                connect(
-                    this, &AccountState::serverSettingsChanged, this,
-                    [this, oldState] {
-                        if (oldState == Connected || _state == Connected) {
-                            Q_EMIT isConnectedChanged();
-                        }
-                    },
-                    Qt::SingleShotConnection);
-            } else {
-                if (oldState == Connected || _state == Connected) {
-                    Q_EMIT isConnectedChanged();
-                }
+
+            // update capabilites and fetch relevant settings
+            if (!_fetchServerSettingsJob || _fetchCapabilitiesElapsedTimer.duration() > fetchSettingsTimeout) {
+                _fetchServerSettingsJob = new FetchServerSettingsJob(account(), this);
+                connect(_fetchServerSettingsJob, &FetchServerSettingsJob::finishedSignal, this, [oldState, this] {
+                    _fetchServerSettingsJob->deleteLater();
+                    // clear the guard to make readyForSync return true
+                    _fetchServerSettingsJob.clear();
+                    _fetchCapabilitiesElapsedTimer.reset();
+                    if (oldState == Connected || _state == Connected) {
+                        Q_EMIT isConnectedChanged();
+                    }
+                });
+                _fetchServerSettingsJob->start();
             }
         });
     }
@@ -554,20 +555,6 @@ void AccountState::slotCredentialsAsked()
 
     checkConnectivity();
 }
-bool AccountState::fetchServerSettings()
-{
-    // update capabilites and fetch relevant settings
-    if (!_fetchCapabilitiesElapsedTimer.isStarted() || _fetchCapabilitiesElapsedTimer.duration() > fetchSettingsTimeout) {
-        auto *fetchCapabilitiesJob = new FetchServerSettingsJob(account(), this);
-        connect(fetchCapabilitiesJob, &FetchServerSettingsJob::finishedSignal, this, [this] {
-            Q_EMIT serverSettingsChanged(AccountState::QPrivateSignal());
-            _fetchCapabilitiesElapsedTimer.reset();
-        });
-        fetchCapabilitiesJob->start();
-        return true;
-    }
-    return false;
-}
 
 Account *AccountState::accountForQml() const
 {
@@ -588,8 +575,7 @@ void AccountState::setSettingUp(bool settingUp)
 }
 bool AccountState::readyForSync() const
 {
-    // the _fetchCapabilitiesElapsedTimer is started one we fetch the server settings
-    return _fetchCapabilitiesElapsedTimer.isStarted() && isConnected();
+    return !_fetchServerSettingsJob && isConnected();
 }
 
 } // namespace OCC
