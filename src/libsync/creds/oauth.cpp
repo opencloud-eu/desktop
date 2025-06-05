@@ -540,7 +540,11 @@ void OAuth::fetchWellKnown()
             _wellKnownFinished = true;
             if (reply->error() != QNetworkReply::NoError) {
                 qCDebug(lcOauth) << "failed to fetch .well-known reply, error:" << reply->error();
-                Q_EMIT result(Error);
+                if (_isRefreshingToken) {
+                    Q_EMIT refreshError(reply->error(), reply->errorString());
+                } else {
+                    Q_EMIT result(Error);
+                }
                 return;
             }
             QJsonParseError err = {};
