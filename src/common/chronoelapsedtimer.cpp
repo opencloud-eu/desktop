@@ -49,6 +49,9 @@ void ChronoElapsedTimer::stop()
 
 std::chrono::nanoseconds ChronoElapsedTimer::duration() const
 {
+    if (!_started) {
+        return {};
+    }
     if (_end != std::chrono::steady_clock::time_point {}) {
         return _end - _start;
     }
