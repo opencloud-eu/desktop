@@ -61,7 +61,7 @@ QString FolderWizardLocalPath::localPath() const
 bool FolderWizardLocalPath::isComplete() const
 {
     auto accountUuid = folderWizardPrivate()->accountState()->account()->uuid();
-    QString errorStr = FolderMan::instance()->checkPathValidityForNewFolder(localPath(), FolderMan::NewFolderType::SpacesFolder, accountUuid);
+    QString errorStr = FolderMan::instance()->checkPathValidityForNewFolder(localPath(), FolderMan::NewFolderType::SpacesSyncRoot, accountUuid);
 
     bool isOk = errorStr.isEmpty();
     QStringList warnStrings;
