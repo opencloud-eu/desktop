@@ -742,6 +742,7 @@ QString FolderMan::findGoodPathForNewSyncFolder(
         }
     }
     // we failed to find a non existing path
+    Q_ASSERT(false);
     return canonicalPath(normalisedPath);
 }
 
