@@ -58,8 +58,10 @@ def step(context, username):
 
     enter_password.login_after_setup(username, password)
 
+    sync_paths = generate_account_config([username])
+
     # wait for files to sync
-    wait_for_initial_sync_to_complete(get_resource_path('/', username))
+    wait_for_initial_sync_to_complete(sync_paths[username])
 
 
 @Given('the user has set up the following accounts with default settings:')

@@ -123,7 +123,7 @@ class Toolbar:
                 account_locator.update({"text": account_info["hostname"]})
 
                 accounts[account_info["displayname"]] = account_info
-                selectors[account_info["displayname"]] = account_locator
+                selectors[account_info["displayname"]] = obj
                 account_idx += 1
         return accounts, selectors
 
@@ -143,7 +143,7 @@ class Toolbar:
     @staticmethod
     def account_has_focus(display_name):
         account, selector = Toolbar.get_account(display_name)
-        return account["current"] and squish.waitForObjectExists(selector).checked
+        return account["current"] and squish.waitForObject(selector).checked
 
     @staticmethod
     def account_exists(display_name):
@@ -154,4 +154,4 @@ class Toolbar:
             and account["displayname"] != display_name
         ):
             raise LookupError(f'Account "{display_name}" does not exist')
-        squish.waitForObjectExists(selector)
+        squish.waitForObject(selector)

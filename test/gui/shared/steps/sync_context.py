@@ -278,15 +278,16 @@ def step(context):
         )
 
 
-@Then('the following activities should be displayed in not synced table')
-def step(context):
+@Then(r'the following activities (should|should not) be displayed in not synced table', regexp=True)
+def step(context, should_or_should_not):
+    expected = should_or_should_not == "should"
     for row in context.table[1:]:
         resource = row[0]
         status = row[1]
         account = substitute_inline_codes(row[2])
         test.compare(
             Activity.check_not_synced_table(resource, status, account),
-            True,
+            expected,
             'Resource should be displayed in the not synced table',
         )
 
