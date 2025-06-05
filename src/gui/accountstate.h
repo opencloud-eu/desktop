@@ -161,8 +161,6 @@ Q_SIGNALS:
     void isConnectedChanged();
     void isSettingUpChanged();
 
-    void serverSettingsChanged(QPrivateSignal);
-
 protected Q_SLOTS:
     void slotConnectionValidatorResult(ConnectionValidator::Status status, const QStringList &errors);
     void slotInvalidCredentials();
@@ -170,7 +168,6 @@ protected Q_SLOTS:
     void slotCredentialsAsked();
 
 private:
-    bool fetchServerSettings();
     Account *accountForQml() const;
     AccountPtr _account;
     JobQueueGuard _queueGuard;
@@ -197,6 +194,8 @@ private:
     std::chrono::milliseconds _maintenanceToConnectedDelay;
 
     Utility::ChronoElapsedTimer _fetchCapabilitiesElapsedTimer = {false};
+    // guard against multiple fetches
+    QPointer<FetchServerSettingsJob> _fetchServerSettingsJob;
 };
 }
 
