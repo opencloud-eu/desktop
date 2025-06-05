@@ -35,7 +35,6 @@ steps:
   - commands:
       - tar -xvf python-cache-*.tar.gz -C .
       - make -C test/gui/ pip-install
-      - python3.10 -m pip list -v
     image: *squish_image
     environment:
       PYTHONUSERBASE: /woodpecker/desktop/
