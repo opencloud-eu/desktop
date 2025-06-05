@@ -17,6 +17,7 @@
 
 ### 🐛 Bug Fixes
 
+- Fix reuse of existing Space folders [[#311](https://github.com/opencloud-eu/desktop/pull/311)]
 - Retry oauth refresh if wellknown request failed [[#310](https://github.com/opencloud-eu/desktop/pull/310)]
 - Update KDSingleApplication to 1.2.0 [[#293](https://github.com/opencloud-eu/desktop/pull/293)]
 - Fix casing of Spaces [[#272](https://github.com/opencloud-eu/desktop/pull/272)]
