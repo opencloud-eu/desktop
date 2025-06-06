@@ -1137,7 +1137,7 @@ Cela signifie que le client de synchronisation peut ne pas télécharger immédi
         <translation>Il y a déjà une synchronisation du serveur vers ce dossier local. Veuillez choisir un autre dossier local !</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="772"/>
+        <location filename="../src/gui/folderman.cpp" line="773"/>
         <source>Multiple accounts are sharing the folder %1.
 This configuration is know to lead to dataloss and is no longer supported.
 Please consider removing this folder from the account and adding it again.</source>
