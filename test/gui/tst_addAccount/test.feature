@@ -45,6 +45,10 @@ Feature: adding accounts
         When the user adds the server "%local_server%"
         And the user accepts the certificate
         Then credentials wizard should be visible
+        When the user adds the following account:
+            | user     | Alice |
+            | password | 1234  |
+        Then "Alice Hansen" account should be opened
 
 
     Scenario: Add space manually from sync connection window
