@@ -262,6 +262,9 @@ def step(context, sync_path, wizard):
     sync_path = substitute_inline_codes(sync_path)
 
     actual_sync_path = ''
+    if is_windows():
+        sync_path = sync_path.replace('/', '\\')
+        
     if wizard == 'configuration':
         actual_sync_path = AccountConnectionWizard.get_local_sync_path()
     else:
