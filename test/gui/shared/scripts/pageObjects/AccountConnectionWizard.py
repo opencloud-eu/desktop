@@ -1,6 +1,7 @@
 import test
 import names
 import squish
+import os
 
 from pageObjects.EnterPassword import EnterPassword
 
@@ -153,7 +154,7 @@ class AccountConnectionWizard:
             sync_path,
         )
         squish.clickButton(squish.waitForObject(AccountConnectionWizard.CHOOSE_BUTTON))
-        return sync_path
+        return os.path.join(sync_path, get_config('syncConnectionName'))
 
     @staticmethod
     def set_temp_folder_as_sync_folder(folder_name):

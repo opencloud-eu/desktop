@@ -183,7 +183,7 @@ def filter_sync_messages(messages):
 def filter_messages_for_item(messages, item):
     filtered_messages = []
     for msg in messages:
-        msg = msg.rstrip('/').rstrip('\\').replace('\\', '/')
+        msg = msg.rstrip('/').rstrip('\\')
         item = item.rstrip('/').rstrip('\\')
         if msg.endswith(item):
             filtered_messages.append(msg)
