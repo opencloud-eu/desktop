@@ -1,6 +1,6 @@
 # Changelog
 
-## [2.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v2.0.0) - 2025-06-06
+## [2.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v2.0.0) - 2025-06-12
 
 ### ❤️ Thanks to all contributors! ❤️
 
@@ -15,6 +15,10 @@
 - Read preconfigured server urls [[#275](https://github.com/opencloud-eu/desktop/pull/275)]
 - Require global settings to always be located in /etc/ [[#268](https://github.com/opencloud-eu/desktop/pull/268)]
 - Move default exclude file to a resource [[#266](https://github.com/opencloud-eu/desktop/pull/266)]
+
+### ✅ Tests
+
+- Test(refactor): fix sync path in windows [[#282](https://github.com/opencloud-eu/desktop/pull/282)]
 
 ### 🐛 Bug Fixes
 
