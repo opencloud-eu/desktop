@@ -82,7 +82,6 @@ def hook(context):
         # clean previous configs
         shutil.rmtree(config_dir)
     os.makedirs(config_dir, 0o0755)
-    set_config("clientConfigFile", os.path.join(config_dir, "opencloud.cfg"))
 
     # create reports dir if not exists
     test_report_dir = get_config("guiTestReportDir")
@@ -131,6 +130,15 @@ def scenario_title_to_filename(title):
 
 # runs after every scenario
 # Order: 1
+# server cleanup
+@OnScenarioEnd
+def hook(context):
+    delete_project_spaces()
+    delete_created_users()
+
+
+# runs after every scenario
+# Order: 2
 @OnScenarioEnd
 def hook(context):
     clear_waited_after_sync()
@@ -164,15 +172,6 @@ def hook(context):
     PREVIOUS_ERROR_RESULT_COUNT = test.resultCount("errors")
 
 
-# runs after every scenario
-# Order: 2
-# server cleanup
-@OnScenarioEnd
-def hook(context):
-    delete_project_spaces()
-    delete_created_users()
-
-
 def teardown_client():
     # Cleanup user accounts from UI for Windows platform
     # It is not needed for Linux so skipping it in order to save CI time
@@ -182,10 +181,14 @@ def teardown_client():
         # so to work around that, remove the account connection
         close_dialogs()
         close_widgets()
-        accounts, _ = Toolbar.get_accounts()
-        for account in accounts:
-            Toolbar.open_account(account["displayname"])
+        accounts, selectors = Toolbar.get_accounts()
+        for display_name in selectors:
+            _, account_objects = Toolbar.get_accounts()
+            squish.mouseClick(squish.waitForObject(account_objects[display_name]))
             AccountSetting.remove_account_connection()
+
+        # re-fetch accounts after removing from UI
+        accounts, _ = Toolbar.get_accounts()
         if accounts:
             squish.waitForObject(AccountConnectionWizard.SERVER_ADDRESS_BOX)
 
