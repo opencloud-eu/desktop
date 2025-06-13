@@ -9,8 +9,7 @@ variables:
       from_secret: cache_s3_secret_key
     CACHE_BUCKET:
       from_secret: cache_s3_bucket
-    MC_HOST:
-      from_secret: cache_s3_server
+    MC_HOST: "https://s3.ci.opencloud.eu"
 
 steps:
   - name: check-python-cache
