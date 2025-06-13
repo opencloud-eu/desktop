@@ -60,7 +60,7 @@ def create_user_sync_path(username):
         makedirs(user_sync_path)
 
     set_current_user_sync_path(user_sync_path)
-    return user_sync_path.replace('\\', '/')
+    return user_sync_path
 
 
 def create_space_path(username, space='Personal'):
@@ -68,7 +68,7 @@ def create_space_path(username, space='Personal'):
     space_path = join(user_sync_path, space, '')
     if not exists(space_path):
         makedirs(space_path)
-    return space_path.replace('\\', '/')
+    return space_path
 
 
 def set_current_user_sync_path(sync_path):
@@ -83,8 +83,6 @@ def get_resource_path(resource='', user='', space=''):
     sync_path = join(sync_path, space)
     sync_path = join(get_config('clientRootSyncPath'), sync_path)
     resource = resource.replace(sync_path, '').strip('/').strip('\\')
-    if is_windows():
-        resource = resource.replace('/', '\\')
     return join(
         sync_path,
         resource,
