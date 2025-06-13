@@ -59,8 +59,6 @@ class WinPipeConnect:
 
             self.connected = True
 
-            self.sendCommand('VERSION:\n')
-            self.sendCommand('GET_STRINGS:\n')
         except Exception as e:  # pylint: disable=broad-except
             print(f'Could not connect to named pipe {pipename}\n' + str(e))
             win32file.CloseHandle(self._pipe)
