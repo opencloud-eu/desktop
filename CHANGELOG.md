@@ -18,6 +18,7 @@
 
 ### ✅ Tests
 
+- Tests Only: fix add accounts step [[#317](https://github.com/opencloud-eu/desktop/pull/317)]
 - Test(refactor): Decouple initial command sending from pipe connection [[#324](https://github.com/opencloud-eu/desktop/pull/324)]
 - Test(refactor): fix sync path in windows [[#282](https://github.com/opencloud-eu/desktop/pull/282)]
 
