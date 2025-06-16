@@ -43,6 +43,8 @@ def create_folder(foldername, username=None, is_temp_folder=False):
         folder_path = join(get_config('tempFolderPath'), foldername)
     else:
         folder_path = get_resource_path(foldername, username)
+    if is_windows:
+        folder_path = folder_path.replace('/', '\\')
     os.makedirs(prefix_path_namespace(folder_path))
 
 
@@ -105,6 +107,8 @@ def add_copy_suffix(resource_path, resource_type):
 def step(context, username, filename):
     file_content = '\n'.join(context.multiLineText)
     file = get_resource_path(filename, username)
+    if is_windows:
+        file = file.replace('/', '\\')
     wait_and_write_file(file, file_content)
 
 

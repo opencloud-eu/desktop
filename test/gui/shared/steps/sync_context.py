@@ -42,6 +42,8 @@ def step(context):
 @When(r'the user waits for (file|folder) "([^"]*)" to be synced', regexp=True)
 def step(context, resource_type, resource):
     resource = get_resource_path(resource)
+    if is_windows:
+        resource = resource.replace('/', '\\')
     wait_for_resource_to_sync(resource, resource_type)
 
 
