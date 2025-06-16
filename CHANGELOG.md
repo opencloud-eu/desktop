@@ -1,6 +1,6 @@
 # Changelog
 
-## [2.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v2.0.0) - 2025-06-12
+## [2.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v2.0.0) - 2025-06-16
 
 ### ❤️ Thanks to all contributors! ❤️
 
@@ -18,6 +18,7 @@
 
 ### ✅ Tests
 
+- Test(refactor): Decouple initial command sending from pipe connection [[#324](https://github.com/opencloud-eu/desktop/pull/324)]
 - Test(refactor): fix sync path in windows [[#282](https://github.com/opencloud-eu/desktop/pull/282)]
 
 ### 🐛 Bug Fixes
