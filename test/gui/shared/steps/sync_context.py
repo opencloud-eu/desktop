@@ -17,6 +17,7 @@ from helpers.SetupClientHelper import (
     substitute_inline_codes,
     get_resource_path,
 )
+from helpers.FilesHelper import convert_path_separators_for_os
 
 
 @Given('the user has paused the file sync')
@@ -42,9 +43,7 @@ def step(context):
 @When(r'the user waits for (file|folder) "([^"]*)" to be synced', regexp=True)
 def step(context, resource_type, resource):
     resource = get_resource_path(resource)
-    if is_windows:
-        resource = resource.replace('/', '\\')
-    wait_for_resource_to_sync(resource, resource_type)
+    wait_for_resource_to_sync(convert_path_separators_for_os(resource), resource_type)
 
 
 @When(r'the user waits for (file|folder) "([^"]*)" to have sync error', regexp=True)

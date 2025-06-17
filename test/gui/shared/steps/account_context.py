@@ -17,7 +17,8 @@ from helpers.SyncHelper import (
     wait_for_initial_sync_to_complete,
     listen_sync_status_for_item,
 )
-from helpers.ConfigHelper import get_config, set_config, is_windows, is_linux
+from helpers.ConfigHelper import get_config, set_config, is_linux
+from helpers.FilesHelper import convert_path_separators_for_os
 
 
 @When('the user adds the following user credentials:')
@@ -262,8 +263,6 @@ def step(context, sync_path, wizard):
     sync_path = substitute_inline_codes(sync_path)
 
     actual_sync_path = ''
-    if is_windows():
-        sync_path = sync_path.replace('/', '\\')
         
     if wizard == 'configuration':
         actual_sync_path = AccountConnectionWizard.get_local_sync_path()
@@ -272,7 +271,7 @@ def step(context, sync_path, wizard):
 
     test.compare(
         actual_sync_path,
-        sync_path,
+        convert_path_separators_for_os(sync_path),
         'Compare sync path contains the expected path',
     )
 
