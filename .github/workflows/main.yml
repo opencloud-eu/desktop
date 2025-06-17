@@ -181,6 +181,11 @@ jobs:
     - name: Prepare artifacts
       run: |
         Copy-Item "${home}/craft/binaries/*" "${env:GITHUB_WORKSPACE}/binaries/" -ErrorAction SilentlyContinue
+        if ("${{ github.ref_type }}" -eq "tag"  ) {
+          Get-ChildItem "${env:GITHUB_WORKSPACE}/binaries/" | ForEach-Object {
+            Move-Item $_ $($_.Name -replace "opencloud-desktop-HEAD-\d*-", "OpenCloud_Desktop-${{ github.ref_name }}-") -Force
+          }
+        }
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
