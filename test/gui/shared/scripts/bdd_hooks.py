@@ -173,25 +173,6 @@ def hook(context):
 
 
 def teardown_client():
-    # Cleanup user accounts from UI for Windows platform
-    # It is not needed for Linux so skipping it in order to save CI time
-    if is_windows():
-        # remove account from UI
-        # In Windows, removing only config and sync folders won't help
-        # so to work around that, remove the account connection
-        close_dialogs()
-        close_widgets()
-        accounts, selectors = Toolbar.get_accounts()
-        for display_name in selectors:
-            _, account_objects = Toolbar.get_accounts()
-            squish.mouseClick(squish.waitForObject(account_objects[display_name]))
-            AccountSetting.remove_account_connection()
-
-        # re-fetch accounts after removing from UI
-        accounts, _ = Toolbar.get_accounts()
-        if accounts:
-            squish.waitForObject(AccountConnectionWizard.SERVER_ADDRESS_BOX)
-
     # Detach (i.e. potentially terminate) all AUTs at the end of a scenario
     for ctx in squish.applicationContextList():
         # get pid before detaching
