@@ -249,7 +249,7 @@ void AccountState::setState(State state)
             _queueGuard.unblock();
 
             // update capabilites and fetch relevant settings
-            if (!_fetchServerSettingsJob || _fetchCapabilitiesElapsedTimer.duration() > fetchSettingsTimeout) {
+            if (!_fetchServerSettingsJob && _fetchCapabilitiesElapsedTimer.duration() > fetchSettingsTimeout) {
                 _fetchServerSettingsJob = new FetchServerSettingsJob(account(), this);
                 connect(_fetchServerSettingsJob, &FetchServerSettingsJob::finishedSignal, this, [oldState, this] {
                     _fetchServerSettingsJob->deleteLater();
