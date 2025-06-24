@@ -76,7 +76,7 @@ int OwncloudPropagator::maximumActiveTransferJob()
         // disable parallelism when there is a network limit.
         return 1;
     }
-    return qMin(3, qCeil(_syncOptions._parallelNetworkJobs / 2.));
+    return std::max(3, qCeil(_syncOptions._parallelNetworkJobs() / 2.));
 }
 
 /* The maximum number of active jobs in parallel  */
