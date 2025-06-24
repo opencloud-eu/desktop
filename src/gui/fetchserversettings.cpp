@@ -86,34 +86,37 @@ void FetchServerSettingsJob::runAsyncUpdates()
     // ideally we would parent them to the account, but as things are messed up by the shared pointer stuff we can't at the moment
     // so we just set them free
 
-    auto *userJob = new JsonJob(_account, _account->url(), u"graph/v1.0/me"_s, "GET");
-    userJob->setTimeout(fetchSettingsTimeout());
-    connect(userJob, &JsonApiJob::finishedSignal, this, [userJob, this] {
-        if (userJob->httpStatusCode() == 200) {
-            OpenAPI::OAIUser me;
-            me.fromJsonObject(userJob->data());
-            _account->setDavDisplayName(me.getDisplayName());
-        }
-    });
-    userJob->start();
-
-    if (_account->capabilities().appProviders().enabled) {
-        auto *jsonJob = new JsonJob(_account, _account->capabilities().appProviders().appsUrl, {}, "GET");
-        connect(jsonJob, &JsonJob::finishedSignal, this, [jsonJob, this] { _account->setAppProvider(AppProvider{jsonJob->data()}); });
-        jsonJob->start();
-    }
-
-    auto *avatarJob = new SimpleNetworkJob(_account, _account->url(), u"graph/v1.0/me/photo/$value"_s, "GET");
-    connect(avatarJob, &SimpleNetworkJob::finishedSignal, this, [avatarJob, this] {
-        if (avatarJob->httpStatusCode() == 200) {
-            QImageReader reader(avatarJob->reply());
-            const auto image = reader.read();
-            if (!image.isNull()) {
-                _account->setAvatar(QPixmap::fromImage(image));
-            } else {
-                qCWarning(lcfetchserversettings) << "Failed to read avatar image:" << reader.errorString();
+    // this must not be passed to the lambda
+    [account = _account] {
+        auto *userJob = new JsonJob(account, account->url(), u"graph/v1.0/me"_s, "GET");
+        userJob->setTimeout(fetchSettingsTimeout());
+        connect(userJob, &JsonApiJob::finishedSignal, account.data(), [userJob, account] {
+            if (userJob->httpStatusCode() == 200) {
+                OpenAPI::OAIUser me;
+                me.fromJsonObject(userJob->data());
+                account->setDavDisplayName(me.getDisplayName());
             }
+        });
+        userJob->start();
+
+        if (account->capabilities().appProviders().enabled) {
+            auto *jsonJob = new JsonJob(account, account->capabilities().appProviders().appsUrl, {}, "GET");
+            connect(jsonJob, &JsonJob::finishedSignal, account.data(), [jsonJob, account] { account->setAppProvider(AppProvider{jsonJob->data()}); });
+            jsonJob->start();
         }
-    });
-    avatarJob->start();
+
+        auto *avatarJob = new SimpleNetworkJob(account, account->url(), u"graph/v1.0/me/photo/$value"_s, "GET");
+        connect(avatarJob, &SimpleNetworkJob::finishedSignal, account.data(), [avatarJob, account] {
+            if (avatarJob->httpStatusCode() == 200) {
+                QImageReader reader(avatarJob->reply());
+                const auto image = reader.read();
+                if (!image.isNull()) {
+                    account->setAvatar(QPixmap::fromImage(image));
+                } else {
+                    qCWarning(lcfetchserversettings) << "Failed to read avatar image:" << reader.errorString();
+                }
+            }
+        });
+        avatarJob->start();
+    }();
 }
