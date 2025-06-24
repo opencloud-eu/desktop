@@ -102,7 +102,7 @@ private Q_SLOTS:
         // that order becomes effectively random, but we want to make sure to test
         // all cases and thus disable threading.
         auto syncOpts = fakeFolder.syncEngine().syncOptions();
-        syncOpts._parallelNetworkJobs = 1;
+        syncOpts._parallelNetworkJobs = [] { return 1; };
         fakeFolder.syncEngine().setSyncOptions(syncOpts);
 
         const auto cannotBeModifiedSize = 133_B;
@@ -392,7 +392,7 @@ private Q_SLOTS:
         // that order becomes effectively random, but we want to make sure to test
         // all cases and thus disable threading.
         auto syncOpts = fakeFolder.syncEngine().syncOptions();
-        syncOpts._parallelNetworkJobs = 1;
+        syncOpts._parallelNetworkJobs = [] { return 1; };
         fakeFolder.syncEngine().setSyncOptions(syncOpts);
 
         auto &lm = fakeFolder.localModifier();
@@ -519,7 +519,7 @@ private Q_SLOTS:
         // that order becomes effectively random, but we want to make sure to test
         // all cases and thus disable threading.
         auto syncOpts = fakeFolder.syncEngine().syncOptions();
-        syncOpts._parallelNetworkJobs = 1;
+        syncOpts._parallelNetworkJobs = [] { return 1; };
         fakeFolder.syncEngine().setSyncOptions(syncOpts);
 
         auto &lm = fakeFolder.localModifier();

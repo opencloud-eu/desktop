@@ -546,7 +546,7 @@ private Q_SLOTS:
 
         // Disable parallel uploads
         SyncOptions syncOptions = fakeFolder.syncEngine().syncOptions();
-        syncOptions._parallelNetworkJobs = 0;
+        syncOptions._parallelNetworkJobs = [] { return 0; };
         fakeFolder.syncEngine().setSyncOptions(syncOptions);
 
         // Produce an error based on upload size

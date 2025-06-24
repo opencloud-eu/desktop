@@ -166,8 +166,8 @@ public:
     ServerSupportLevel serverSupportLevel() const;
 
     /** True when the server connection is using HTTP2  */
-    bool isHttp2Supported() { return _http2Supported; }
-    void setHttp2Supported(bool value) { _http2Supported = value; }
+    bool isHttp2Supported() const;
+    void setHttp2Supported(bool value);
 
     void clearCookieJar();
 
@@ -238,7 +238,7 @@ private:
     QPointer<QNetworkDiskCache> _networkCache = nullptr;
     QPointer<ResourcesCache> _resourcesCache;
     QScopedPointer<AbstractCredentials> _credentials;
-    bool _http2Supported = false;
+    bool _http2Supported = true;
 
     JobQueue _jobQueue;
     JobQueueGuard _queueGuard;
