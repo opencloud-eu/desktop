@@ -177,7 +177,7 @@ void DiscoveryPhase::setSelectiveSyncWhiteList(const QSet<QString> &list)
 
 void DiscoveryPhase::scheduleMoreJobs()
 {
-    auto limit = qMax(1, _syncOptions._parallelNetworkJobs);
+    auto limit = std::max(1, _syncOptions._parallelNetworkJobs());
     if (_currentRootJob && _currentlyActiveJobs < limit) {
         _currentRootJob->processSubJobs(limit - _currentlyActiveJobs);
     }

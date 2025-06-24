@@ -226,7 +226,8 @@ SyncOptions Folder::loadSyncOptions()
 
     opt._moveFilesToTrash = cfgFile.moveToTrash();
     opt._vfs = _vfs;
-    opt._parallelNetworkJobs = _accountState->account()->isHttp2Supported() ? 20 : 6;
+    // account is currently a shared ptr and thus the lifetime of the account object is guaranteed
+    opt._parallelNetworkJobs = [account = _accountState->account()] { return account->isHttp2Supported() ? 20 : 6; };
 
     return opt;
 }

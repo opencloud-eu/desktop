@@ -80,11 +80,10 @@ QNetworkReply *AccessManager::createRequest(QNetworkAccessManager::Operation op,
         newRequest.setRawHeader(originalIdKey, requestId);
     }
 
-    if (newRequest.url().scheme() == QLatin1String("https")) { // Not for "http": QTBUG-61397
-        // http2 seems to cause issues, as with our recommended server setup we don't support http2, disable it by default for now
-        static const bool http2EnabledEnv = qEnvironmentVariableIntValue("OPENCLOUD_HTTP2_ENABLED") == 1;
 
-        newRequest.setAttribute(QNetworkRequest::Http2AllowedAttribute, http2EnabledEnv);
+    static const bool http2DisabledEnv = qEnvironmentVariableIntValue("OPENCLOUD_HTTP2_DISABLED") == 1;
+    if (http2DisabledEnv) {
+        newRequest.setAttribute(QNetworkRequest::Http2AllowedAttribute, false);
     }
 
     // allow http pipelining

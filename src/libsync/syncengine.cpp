@@ -656,7 +656,7 @@ void SyncEngine::slotPropagationFinished(bool success)
 
 void SyncEngine::finalize(bool success)
 {
-    qCInfo(lcEngine) << "Sync run took" << _duration.duration();
+    qCInfo(lcEngine) << "Sync run for" << _localPath << "took" << _duration.duration();
     _duration.stop();
 
     if (_discoveryPhase) {

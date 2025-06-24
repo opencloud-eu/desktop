@@ -23,6 +23,7 @@
 #include <QString>
 
 #include <chrono>
+#include <functional>
 
 
 namespace OCC {
@@ -43,7 +44,7 @@ public:
     QSharedPointer<Vfs> _vfs;
 
     /** The maximum number of active jobs in parallel  */
-    int _parallelNetworkJobs = 6;
+    std::function<int()> _parallelNetworkJobs = [] { return 6; };
 
     /** A regular expression to match file names
      * If no pattern is provided the default is an invalid regular expression.

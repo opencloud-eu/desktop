@@ -72,7 +72,7 @@ OwncloudPropagator::~OwncloudPropagator()
 
 int OwncloudPropagator::maximumActiveTransferJob()
 {
-    if (_bandwidthManager || !_syncOptions._parallelNetworkJobs) {
+    if (_bandwidthManager || !_syncOptions._parallelNetworkJobs()) {
         // disable parallelism when there is a network limit.
         return 1;
     }
@@ -82,9 +82,9 @@ int OwncloudPropagator::maximumActiveTransferJob()
 /* The maximum number of active jobs in parallel  */
 int OwncloudPropagator::hardMaximumActiveJob()
 {
-    if (!_syncOptions._parallelNetworkJobs)
+    if (!_syncOptions._parallelNetworkJobs())
         return 1;
-    return _syncOptions._parallelNetworkJobs;
+    return _syncOptions._parallelNetworkJobs();
 }
 
 PropagateItemJob::~PropagateItemJob()
