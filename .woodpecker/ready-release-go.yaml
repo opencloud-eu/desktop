@@ -10,3 +10,4 @@ steps:
       forge_type: github
       forge_token:
         from_secret: github_token
+      release_branch: stable-2.0
