@@ -6,10 +6,6 @@
 
 @TheOneRing, @anon-pradip, @individual-it
 
-### 🐛 Bug Fixes
-
-- Fix settings not fetched [[#337](https://github.com/opencloud-eu/desktop/pull/337)]
-
 ### ✅ Tests
 
 - Test(refactor): Refactor the resources path for windows [[#325](https://github.com/opencloud-eu/desktop/pull/325)]
