@@ -62,7 +62,6 @@ target_sources(OpenCloudGui PRIVATE
     tlserrordialog.cpp
     syncrunfilelog.cpp
     systray.cpp
-    thumbnailjob.cpp
     accountstate.cpp
     guiutility.cpp
     elidedlabel.cpp
