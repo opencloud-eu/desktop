@@ -171,7 +171,7 @@ void showDowngradeDialog()
 {
     QMessageBox box(QMessageBox::Warning, Theme::instance()->appNameGUI(),
         QCoreApplication::translate("version check",
-            "Some settings were configured in newer versions of this client "
+            "Some settings were configured in different versions of this client "
             "and use features that are not available in this version"));
     box.addButton(OCC::Application::tr("Quit"), QMessageBox::AcceptRole);
     box.exec();
