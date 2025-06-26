@@ -186,7 +186,7 @@ jobs:
           Get-ChildItem "${env:GITHUB_WORKSPACE}/binaries/" | ForEach-Object {
             $newName = $_.Name -replace "opencloud-desktop-HEAD-\d*-", "OpenCloud_Desktop-${{ github.ref_name }}-"
             if ($newName -ne $_.Name) {
-              Move-Item -Path $_ -Destination "$($_.Directory)/${newName}" -Force
+              Move-Item -Path $_ -Destination (Join-Path $_.Directory $newName) -Force
             }
           }
         }
