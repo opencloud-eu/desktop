@@ -184,7 +184,10 @@ jobs:
         Copy-Item "${home}/craft/binaries/*" "${env:GITHUB_WORKSPACE}/binaries/" -ErrorAction SilentlyContinue
         if ("${{ github.ref_type }}" -eq "tag"  ) {
           Get-ChildItem "${env:GITHUB_WORKSPACE}/binaries/" | ForEach-Object {
-            Move-Item $_ $($_.Name -replace "opencloud-desktop-HEAD-\d*-", "OpenCloud_Desktop-${{ github.ref_name }}-") -Force
+            $newName = $_.Name -replace "opencloud-desktop-HEAD-\d*-", "OpenCloud_Desktop-${{ github.ref_name }}-"
+            if ($newName -ne $_.Name) {
+              Move-Item -Path $_ -Destination "$($_.Directory)/${newName}" -Force
+            }
           }
         }
 
