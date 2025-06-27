@@ -1763,7 +1763,7 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="397"/>
         <source>&lt;h1&gt;Login successful&lt;/h1&gt;&lt;p&gt;You can close this window.&lt;/p&gt;</source>
-        <translation>&lt;h1&gt;Anmeldung erfolgreich&lt;/h1&gt;&lt;p&gt;Das Fesnter kann geschlossen werden.&lt;/p&gt;</translation>
+        <translation>&lt;h1&gt;Anmeldung erfolgreich&lt;/h1&gt;&lt;p&gt;Das Fenster kann geschlossen werden.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="398"/>
@@ -1927,12 +1927,12 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
     <message>
         <location filename="../src/libsync/discovery.cpp" line="1129"/>
         <source>Moved to invalid target, restoring</source>
-        <translation>Auf ungültiges Ziel verschoben, Wiederherstellung</translation>
+        <translation>Auf ungültiges Ziel verschoben, wird wiederhergestellt</translation>
     </message>
     <message>
         <location filename="../src/libsync/discovery.cpp" line="1142"/>
         <source>Not allowed to remove, restoring</source>
-        <translation>Entfernen nicht erlaubt, Wiederherstellung</translation>
+        <translation>Entfernen nicht erlaubt, wird wiederhergestellt</translation>
     </message>
     <message>
         <location filename="../src/libsync/discovery.cpp" line="1088"/>
@@ -1952,7 +1952,7 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
     <message>
         <location filename="../src/libsync/discovery.cpp" line="1106"/>
         <source>Not allowed to upload this file because it is read-only on the server, restoring</source>
-        <translation>Diese Datei darf nicht hochgeladen werden, da sie auf dem Server schreibgeschützt ist, Wiederherstellung</translation>
+        <translation>Diese Datei darf nicht hochgeladen werden, da sie auf dem Server schreibgeschützt ist, wird wiederhergestellt</translation>
     </message>
     <message>
         <location filename="../src/libsync/discovery.cpp" line="1252"/>
@@ -2102,13 +2102,13 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="123"/>
         <source>Could not move &apos;%1&apos; to the trash bin</source>
-        <translation>Konnte &apos;%1&apos; nicht in den Mülleimer verschieben</translation>
+        <translation>Konnte &apos;%1&apos; nicht in den Papierkorb verschieben</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="87"/>
         <location filename="../src/libsync/propagatorjobs.cpp" line="114"/>
         <source>%1 the file is currently in use</source>
-        <translation>%1 die Datei ist aktuell in Benutzung</translation>
+        <translation>%1 die Datei ist momentan in Benutzung</translation>
     </message>
 </context>
 <context>
@@ -2261,7 +2261,7 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
     <message>
         <location filename="../src/libsync/propagateuploadtus.cpp" line="116"/>
         <source>Checksum computation failed</source>
-        <translation>Berechnung der Prüfsumme fehlgeschlagen</translation>
+        <translation>Berechnung der Prüfsumme ist fehlgeschlagen</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagateuploadtus.cpp" line="222"/>
@@ -2452,12 +2452,12 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
     <message>
         <location filename="../src/gui/socketapi/socketapi.cpp" line="588"/>
         <source>Confirm deletion</source>
-        <translation>Löschung bestätigen</translation>
+        <translation>Löschen bestätigen</translation>
     </message>
     <message>
         <location filename="../src/gui/socketapi/socketapi.cpp" line="590"/>
         <source>Do you want to delete the directory &lt;i&gt;%1&lt;/i&gt; and all its contents permanently?</source>
-        <translation>Soll der Ordner &lt;i&gt;%1&lt;/i&gt;  mit gesamtem Inhalt dauerhaft gelöscht werden?</translation>
+        <translation>Soll der Ordner &lt;i&gt;%1&lt;/i&gt;  mit dem gesamtem Inhalt dauerhaft gelöscht werden?</translation>
     </message>
     <message>
         <location filename="../src/gui/socketapi/socketapi.cpp" line="591"/>
@@ -2486,13 +2486,13 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
     <message>
         <location filename="../src/gui/socketapi/socketapi.cpp" line="717"/>
         <source>I shared something with you</source>
-        <translation>Ich habe etwas mit Ihnen geteilt</translation>
+        <translation>Ich habe etwas mit Dir geteilt</translation>
     </message>
     <message>
         <location filename="../src/gui/socketapi/socketapi.cpp" line="730"/>
         <location filename="../src/gui/socketapi/socketapi.cpp" line="760"/>
         <source>Share...</source>
-        <translation>Teilen ...</translation>
+        <translation>Teilen...</translation>
     </message>
     <message>
         <location filename="../src/gui/socketapi/socketapi.cpp" line="732"/>
@@ -2627,7 +2627,7 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
     <message>
         <location filename="../src/common/syncjournaldb.cpp" line="888"/>
         <source>Failed to connect database.</source>
-        <translation>Verbindung zu Datenbank fehlgeschlagen</translation>
+        <translation>Verbindung zur Datenbank fehlgeschlagen</translation>
     </message>
 </context>
 <context>
@@ -2726,7 +2726,7 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
     <message>
         <location filename="../src/gui/tlserrordialog.ui" line="42"/>
         <source>Do you want to trust this certificate anyway?</source>
-        <translation>Möchten Sie dem Zertifikat trotzdem vertrauen?</translation>
+        <translation>Möchtest Du dem Zertifikat trotzdem vertrauen?</translation>
     </message>
     <message>
         <location filename="../src/gui/tlserrordialog.cpp" line="28"/>
@@ -2865,7 +2865,7 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
     <message>
         <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.cpp" line="64"/>
         <source>The virtual filesystem feature is not available for this installation.</source>
-        <translation>Die virtuelle Dateisystem Funktion ist nicht verfügbar für diese Installation.</translation>
+        <translation>Das virtuelle Dateisystem ist nicht verfügbar für diese Installation.</translation>
     </message>
     <message>
         <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.cpp" line="68"/>
@@ -2883,7 +2883,7 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
     <message>
         <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="56"/>
         <source>Oauth2 authentication requires a secured connection.</source>
-        <translation>Oauth2 Authentifizierung benötigt eine gesicherte Verbindung.</translation>
+        <translation>OAuth2 Authentifizierung benötigt eine gesicherte Verbindung.</translation>
     </message>
 </context>
 <context>
@@ -3003,7 +3003,7 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
     <message numerus="yes">
         <location filename="../src/common/utility.cpp" line="306"/>
         <source>%n hour(s) ago</source>
-        <translation><numerusform>Vor einer Stunden</numerusform><numerusform>Vor %n Stunden</numerusform></translation>
+        <translation><numerusform>Vor einer Stunde</numerusform><numerusform>Vor %n Stunden</numerusform></translation>
     </message>
     <message>
         <location filename="../src/common/utility.cpp" line="312"/>
@@ -3018,7 +3018,7 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
     <message numerus="yes">
         <location filename="../src/common/utility.cpp" line="318"/>
         <source>%n minute(s) ago</source>
-        <translation><numerusform>Vor einer Minuten</numerusform><numerusform>Vor %n Minuten</numerusform></translation>
+        <translation><numerusform>Vor einer Minute</numerusform><numerusform>Vor %n Minuten</numerusform></translation>
     </message>
     <message>
         <location filename="../src/libsync/syncresult.cpp" line="116"/>
@@ -3500,7 +3500,7 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
     <message>
         <location filename="../src/gui/guiutility.cpp" line="77"/>
         <source>There was an error when launching the email client to create a new message. Maybe no default email client is configured?</source>
-        <translation>Fehler beim Aufrufen des Email-Clienten. Ist eventuell kein Standard-Email-Client konfiguriert?</translation>
+        <translation>Fehler beim Aufrufen des Email-Client. Ist eventuell kein Standard-Email-Client konfiguriert?</translation>
     </message>
     <message>
         <location filename="../src/gui/guiutility.cpp" line="90"/>
