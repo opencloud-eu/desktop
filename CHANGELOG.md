@@ -1,6 +1,6 @@
 # Changelog
 
-## [2.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v2.0.0) - 2025-06-06
+## [2.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v2.0.0) - 2025-06-28
 
 ### ❤️ Thanks to all contributors! ❤️
 
@@ -8,6 +8,7 @@
 
 ### 💥 Breaking changes
 
+- Enable http2 support by default [[#333](https://github.com/opencloud-eu/desktop/pull/333)]
 - Since Qt 6.8 network headers are normalized to lowercase [[#308](https://github.com/opencloud-eu/desktop/pull/308)]
 - Remove Theme::linkSharing and Theme::userGroupSharing [[#279](https://github.com/opencloud-eu/desktop/pull/279)]
 - Remove unsupported solid avatar color branding [[#280](https://github.com/opencloud-eu/desktop/pull/280)]
@@ -15,6 +16,15 @@
 - Read preconfigured server urls [[#275](https://github.com/opencloud-eu/desktop/pull/275)]
 - Require global settings to always be located in /etc/ [[#268](https://github.com/opencloud-eu/desktop/pull/268)]
 - Move default exclude file to a resource [[#266](https://github.com/opencloud-eu/desktop/pull/266)]
+
+### ✅ Tests
+
+- Test(refactor): Clean user in windows [[#328](https://github.com/opencloud-eu/desktop/pull/328)]
+- Test(refactor): Refactor the resources path for windows [[#325](https://github.com/opencloud-eu/desktop/pull/325)]
+- test(refactor): remove unexpected scenario [[#327](https://github.com/opencloud-eu/desktop/pull/327)]
+- Tests Only: fix add accounts step [[#317](https://github.com/opencloud-eu/desktop/pull/317)]
+- Test(refactor): Decouple initial command sending from pipe connection [[#324](https://github.com/opencloud-eu/desktop/pull/324)]
+- Test(refactor): fix sync path in windows [[#282](https://github.com/opencloud-eu/desktop/pull/282)]
 
 ### 🐛 Bug Fixes
 
