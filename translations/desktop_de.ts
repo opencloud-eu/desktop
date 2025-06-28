@@ -963,7 +963,7 @@ Das Update wird im Hintergrund ausgeführt und überschreibt die aktuelle AppIma
     <message numerus="yes">
         <location filename="../src/gui/folder.cpp" line="453"/>
         <source>%1 and %n other file(s) have been updated.</source>
-        <translation><numerusform>%1 und %n andere Datei wurden geupdatet.</numerusform><numerusform>%1 und %n andere Dateien wurden geupdatet.</numerusform></translation>
+        <translation><numerusform>%1 und %n andere Datei wurden geupdatet.</numerusform><numerusform>%1 und %n andere Dateien wurden aktualisiert.</numerusform></translation>
     </message>
     <message numerus="yes">
         <location filename="../src/gui/folder.cpp" line="460"/>
@@ -1763,7 +1763,7 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="397"/>
         <source>&lt;h1&gt;Login successful&lt;/h1&gt;&lt;p&gt;You can close this window.&lt;/p&gt;</source>
-        <translation>&lt;h1&gt;Anmeldung erfolgreich&lt;/h1&gt;&lt;p&gt;Das Fesnter kann geschlossen werden.&lt;/p&gt;</translation>
+        <translation>&lt;h1&gt;Anmeldung erfolgreich&lt;/h1&gt;&lt;p&gt;Das Fenster kann geschlossen werden.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="398"/>
