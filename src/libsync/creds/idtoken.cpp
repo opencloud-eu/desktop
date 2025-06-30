@@ -16,6 +16,8 @@
 
 #include <QJsonArray>
 
+using namespace Qt::Literals::StringLiterals;
+
 using namespace OCC;
 
 IdToken::IdToken() { }
@@ -27,7 +29,7 @@ IdToken::IdToken(const QJsonObject &payload)
 
 QVariantList IdToken::aud() const
 {
-    const auto aud = _payload.value(QLatin1String("aud"));
+    const auto aud = _payload.value("aud"_L1);
     if (aud.isArray()) {
         return aud.toArray().toVariantList();
     }
@@ -36,12 +38,17 @@ QVariantList IdToken::aud() const
 
 QString IdToken::sub() const
 {
-    return _payload.value(QLatin1String("sub")).toString();
+    return _payload.value("sub"_L1).toString();
 }
 
 QString IdToken::preferred_username() const
 {
-    return _payload.value(QLatin1String("preferred_username")).toString();
+    return _payload.value("preferred_username"_L1).toString();
+}
+
+QString IdToken::name() const
+{
+    return _payload.value("name"_L1).toString();
 }
 
 bool IdToken::isValid() const
