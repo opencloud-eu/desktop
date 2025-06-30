@@ -374,12 +374,21 @@ void OAuth::startAuthentication()
                         reportError(tr("The audience of the id_token did not contain \"%1\"").arg(_clientId));
                     } else if (_idToken.isValid() && _idToken.sub() != idToken.sub()) {
                         // Connected with the wrong user
-                        qCWarning(lcOauth) << "We expected the user" << _idToken.preferred_username() << "but the server answered with user"
-                                           << idToken.preferred_username();
-                        const QString message = tr("<h1>Incorrect user</h1>"
-                                                   "<p>You logged-in with user <em>%1</em>, but must login with user <em>%2</em>.<br>"
-                                                   "Please return to the %3 and restart the authentication.</p>")
-                                                    .arg(idToken.preferred_username(), _idToken.preferred_username(), Theme::instance()->appNameGUI());
+                        qCWarning(lcOauth) << "We expected the user" << _idToken.toJson() << "but the server answered with user" << idToken.toJson();
+                        const QString expectedName = !_idToken.preferred_username().isEmpty() ? _idToken.preferred_username() : _idToken.name();
+                        const QString actualName = !idToken.preferred_username().isEmpty() ? idToken.preferred_username() : idToken.name();
+                        QString message;
+                        if (!expectedName.isEmpty() && !actualName.isEmpty() && expectedName != actualName) {
+                            message = tr("<h1>Incorrect user</h1>"
+                                         "<p>You logged-in as user <em>%1</em>, but must login with user <em>%2</em>.<br>"
+                                         "Please return to the %3 and restart the authentication.</p>")
+                                          .arg(actualName, expectedName, Theme::instance()->appNameGUI());
+                        } else {
+                            message = tr("<h1>Incorrect user</h1>"
+                                         "<p>You logged-in as a different user than is associated with this account.<br>"
+                                         "Please return to the %1 and restart the authentication.</p>")
+                                          .arg(Theme::instance()->appNameGUI());
+                        }
                         httpReplyAndClose(socket, QStringLiteral("403 Forbidden"), tr("Incorrect user"), message);
                         Q_EMIT result(Error);
                     } else {

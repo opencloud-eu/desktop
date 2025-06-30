@@ -28,6 +28,7 @@ public:
     QString sub() const;
 
     QString preferred_username() const;
+    QString name() const;
 
     bool isValid() const;
 
