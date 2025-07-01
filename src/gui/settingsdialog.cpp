@@ -77,9 +77,11 @@ public:
     {
         const auto qmlIcon = OCC::Resources::parseIcon(id);
         const auto accountState = OCC::AccountManager::instance()->account(QUuid::fromString(qmlIcon.iconName));
-        const auto avatar = OCC::Resources::pixmap(requestedSize, accountState->account()->avatar(), qmlIcon.enabled ? QIcon::Normal : QIcon::Disabled, size);
 
-        const int minDimension = std::min(avatar.width(), avatar.height());
+        const int minDimension = std::min(requestedSize.width(), requestedSize.height());
+        const auto avatar =
+            OCC::Resources::pixmap({minDimension, minDimension}, accountState->account()->avatar(), qmlIcon.enabled ? QIcon::Normal : QIcon::Disabled, size);
+
         QPixmap roundAvatar(minDimension, minDimension);
         roundAvatar.fill(Qt::transparent);
         QPainter painter(&roundAvatar);
@@ -87,7 +89,7 @@ public:
         QPainterPath path;
         path.addEllipse(0, 0, minDimension, minDimension);
         painter.setClipPath(path);
-        painter.drawPixmap(0, 0, avatar.scaled(minDimension, minDimension, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        painter.drawPixmap(0, 0, avatar);
         painter.end();
         return roundAvatar;
     }
