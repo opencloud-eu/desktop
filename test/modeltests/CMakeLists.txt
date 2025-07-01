@@ -1,0 +1,1 @@
+opencloud_add_test(ProtocolModel)

@@ -1,0 +1,9 @@
+[main]
+host = https://www.transifex.com
+
+[o:opencloud-eu:p:opencloud-eu:r:desktop]
+source_file = translations/desktop_en.ts
+source_lang = en
+file_filter = translations/desktop_<lang>.ts
+type = TS
+minimum_perc = 75

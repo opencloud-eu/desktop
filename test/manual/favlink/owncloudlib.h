@@ -1,0 +1,1 @@
+#define OPENCLOUD_SYNC_EXPORT

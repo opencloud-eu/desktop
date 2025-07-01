@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>OCC::NetworkSettings</class>
+ <widget class="QWidget" name="OCC::NetworkSettings">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>623</width>
+    <height>581</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_5">
+   <item>
+    <widget class="QCheckBox" name="pauseSyncWhenMeteredCheckbox">
+     <property name="text">
+      <string>Pause synchronization when the Internet connection is metered</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="proxyGroupBox">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="title">
+      <string>Proxy Settings</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_4">
+      <item>
+       <widget class="QRadioButton" name="noProxyRadioButton">
+        <property name="text">
+         <string>No Proxy</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">proxyButtonGroup</string>
+        </attribute>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="systemProxyRadioButton">
+        <property name="text">
+         <string>Use system proxy</string>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">proxyButtonGroup</string>
+        </attribute>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="manualProxyRadioButton">
+        <property name="text">
+         <string>Specify proxy manually</string>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">proxyButtonGroup</string>
+        </attribute>
+       </widget>
+      </item>
+      <item>
+       <widget class="QWidget" name="manualSettings" native="true">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_3">
+           <item>
+            <widget class="QLabel" name="label_2">
+             <property name="text">
+              <string>Proxy type</string>
+             </property>
+             <property name="buddy">
+              <cstring>typeComboBox</cstring>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="typeComboBox">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <item>
+            <widget class="QLabel" name="hostLabel">
+             <property name="text">
+              <string>Host</string>
+             </property>
+             <property name="buddy">
+              <cstring>hostLineEdit</cstring>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="hostLineEdit">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="accessibleName">
+              <string>Proxy Hostname</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label">
+             <property name="text">
+              <string>:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSpinBox" name="portSpinBox">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="accessibleName">
+              <string>Proxy Port Number</string>
+             </property>
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>65535</number>
+             </property>
+             <property name="value">
+              <number>8080</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="authRequiredcheckBox">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>Proxy server requires authentication</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QWidget" name="authWidgets" native="true">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QLineEdit" name="userLineEdit">
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="passwordLineEdit">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="echoMode">
+               <enum>QLineEdit::Password</enum>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="labelLocalhost">
+           <property name="text">
+            <string>Note: proxy settings have no effects for accounts on localhost</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_5">
+     <item>
+      <widget class="QGroupBox" name="downloadBox">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="title">
+        <string>Download Bandwidth</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QRadioButton" name="noDownloadLimitRadioButton">
+          <property name="text">
+           <string>No limit</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="autoDownloadLimitRadioButton">
+          <property name="toolTip">
+           <string>Limit to 3/4 of estimated bandwidth</string>
+          </property>
+          <property name="text">
+           <string>Limit automatically</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_6">
+          <item>
+           <widget class="QRadioButton" name="downloadLimitRadioButton">
+            <property name="text">
+             <string>Manual limit</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSpinBox" name="downloadSpinBox">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="accessibleName">
+             <string>Download bandwidth in kilobytes per second</string>
+            </property>
+            <property name="maximum">
+             <number>9999</number>
+            </property>
+            <property name="value">
+             <number>80</number>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_3">
+            <property name="text">
+             <string>KBytes/s</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>147</width>
+            <height>25</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="uploadBox">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="title">
+        <string>Upload Bandwidth</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <widget class="QRadioButton" name="noUploadLimitRadioButton">
+          <property name="text">
+           <string>No limit</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="autoUploadLimitRadioButton">
+          <property name="toolTip">
+           <string>Limit to 3/4 of estimated bandwidth</string>
+          </property>
+          <property name="text">
+           <string>Limit automatically</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_4">
+          <item>
+           <widget class="QRadioButton" name="uploadLimitRadioButton">
+            <property name="text">
+             <string>Manual limit</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSpinBox" name="uploadSpinBox">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="accessibleName">
+             <string>Upload bandwidth in kilobytes per second</string>
+            </property>
+            <property name="minimum">
+             <number>1</number>
+            </property>
+            <property name="maximum">
+             <number>9999</number>
+            </property>
+            <property name="value">
+             <number>10</number>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_4">
+            <property name="text">
+             <string>KBytes/s</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>0</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>pauseSyncWhenMeteredCheckbox</tabstop>
+  <tabstop>noProxyRadioButton</tabstop>
+  <tabstop>systemProxyRadioButton</tabstop>
+  <tabstop>manualProxyRadioButton</tabstop>
+  <tabstop>typeComboBox</tabstop>
+  <tabstop>hostLineEdit</tabstop>
+  <tabstop>portSpinBox</tabstop>
+  <tabstop>authRequiredcheckBox</tabstop>
+  <tabstop>userLineEdit</tabstop>
+  <tabstop>passwordLineEdit</tabstop>
+  <tabstop>noDownloadLimitRadioButton</tabstop>
+  <tabstop>autoDownloadLimitRadioButton</tabstop>
+  <tabstop>downloadLimitRadioButton</tabstop>
+  <tabstop>downloadSpinBox</tabstop>
+  <tabstop>noUploadLimitRadioButton</tabstop>
+  <tabstop>autoUploadLimitRadioButton</tabstop>
+  <tabstop>uploadLimitRadioButton</tabstop>
+  <tabstop>uploadSpinBox</tabstop>
+ </tabstops>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>downloadLimitRadioButton</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>downloadSpinBox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>73</x>
+     <y>69</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>131</x>
+     <y>78</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>uploadLimitRadioButton</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>uploadSpinBox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>322</x>
+     <y>101</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>411</x>
+     <y>106</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <buttongroups>
+  <buttongroup name="proxyButtonGroup"/>
+ </buttongroups>
+</ui>

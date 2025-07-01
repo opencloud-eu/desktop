@@ -1,0 +1,205 @@
+name: OpenCloud Desktop CI
+
+on:
+  push:
+    branches:
+      - main
+      - 'stable-[0-9]+.[0-9]+'
+      - 'stable-[0-9]+.[0-9]+.[0-9]+'
+  pull_request:
+  workflow_dispatch:
+
+concurrency: 
+  group: ${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+permissions: {}
+
+defaults:
+  run:
+    shell: pwsh
+
+jobs:
+# ------------------------------------------------------------------------------------------------------------------------------------------
+  build:
+    permissions:
+      # actions/upload-artifact doesn't need contents: write
+      contents: read
+    strategy:
+        fail-fast: true
+        matrix:
+            include:
+            - target: windows-cl-msvc2022-x86_64
+              os: windows-latest
+              container:
+            - target: macos-clang-arm64
+              os: macos-latest
+              container:
+            - target: linux-gcc-x86_64
+              os: ubuntu-latest
+              container: ghcr.io/opencloud-eu/ci-docker-desktop/appimage:latest
+
+    name: ${{ matrix.target }}
+
+    runs-on: ${{ matrix.os }}
+
+    env:
+      CRAFT_TARGET: ${{ matrix.target }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      CRAFT_PACKAGE_SYMBOLS: ${{  github.event_name != 'pull_request' }}
+
+    container: ${{ matrix.container }}
+
+    steps:
+    - name: Check out full source code for tooling
+      if: ${{ matrix.target  == 'linux-gcc-x86_64' }}
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Check out latest commit
+      if: ${{ matrix.target  != 'linux-gcc-x86_64' }}
+      uses: actions/checkout@v4
+
+    - name: Restore and update cache
+      if: github.event_name != 'pull_request'
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/ccache
+        key: ${{ runner.os }}-${{ matrix.target }}-${{ github.run_id }} # generate a new key every time to trigger an update
+        restore-keys: ${{ runner.os }}-${{ matrix.target }}
+
+    - name: Restore cache
+      if: github.event_name == 'pull_request'
+      uses: actions/cache/restore@v4
+      with:
+        path: |
+          ~/ccache
+        key: ${{ runner.os }}-${{ matrix.target }}
+
+
+    - name: Clone CraftMaster
+      run: |
+        git clone --depth=1 https://invent.kde.org/kde/craftmaster.git "${home}/craft/CraftMaster/CraftMaster"
+
+    - name: Craft setup
+      run: |
+        New-Item -Path ~/cache -ItemType Directory -ErrorAction SilentlyContinue
+        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" --setup
+
+    - name: Craft unshelve
+      run: |
+        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --unshelve "${env:GITHUB_WORKSPACE}/.craft.shelf"
+        # bootsrtap in case the shelf was empty
+        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c craft
+        # ccache
+        if (-not $IsWindows) {
+          & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c dev-utils/ccache
+          & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --run "ccache -M500MB"
+          & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --run "ccache -s"
+        }
+
+    - name: Prepare
+      run: |
+        New-Item -ItemType Directory "${env:GITHUB_WORKSPACE}/binaries/"
+        # settings
+        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --set "forceAsserts=${{ github.ref_type == 'branch' }}" opencloud/opencloud-desktop
+        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --set "srcDir=${env:GITHUB_WORKSPACE}" opencloud/opencloud-desktop
+        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --set "buildNumber=${{ github.run_number }}" opencloud/opencloud-desktop
+        # optional deployment dependencies
+        if ($IsWindows) {
+            & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c dev-utils/nsis
+        } elseif($IsLinux) {
+            & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c dev-utils/linuxdeploy
+        }
+
+    - name: Install dependencies
+      run: |
+          & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --install-deps opencloud/opencloud-desktop
+
+    - name: QML format lint
+      if: matrix.target  == 'linux-gcc-x86_64'
+      run: |
+        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c libs/qt6/qttools
+        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --run pwsh -c "git ls-files "*.qml" "*.js" "*.mjs" | %{ qmlformat -i `$_}"
+        $diff = git diff
+        if ($diff) {
+          $diff
+          exit 1
+        }
+
+    - name: clang-format format lint
+      if: matrix.target  == 'linux-gcc-x86_64'
+      run: |
+        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c libs/llvm
+        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --run git clang-format --force  ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}
+        $diff = git diff
+        if ($diff) {
+          $diff
+          exit 1
+        }
+
+    - name: Update Shelf
+      run: |
+        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --shelve "${env:GITHUB_WORKSPACE}/.craft.shelf"
+        Copy-Item "${env:GITHUB_WORKSPACE}/.craft.shelf" "${env:GITHUB_WORKSPACE}/binaries/craft.shelf"
+
+    - name: Build
+      run: |
+        if ("${{ matrix.target }}" -eq "macos-64-clang-debug" ) {
+            # https://api.kde.org/ecm/module/ECMEnableSanitizers.html
+            # address;leak;undefined
+            # clang: error: unsupported option '-fsanitize=leak' for target 'x86_64-apple-darwin21.6.0'
+            & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --set args="-DECM_ENABLE_SANITIZERS='address;undefined'" opencloud/opencloud-desktop
+        }
+        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --no-cache opencloud/opencloud-desktop
+
+    - name: Run tests
+      run: |
+        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --no-cache --test opencloud/opencloud-desktop
+
+    - name: Clang tidy
+      # disable for now
+      if: ${{ false && github.event_name != 'pull_request' }}
+      run: |
+        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c libs/llvm python-modules/pip
+        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --run python3 -m pip install clang-html
+        $env:BUILD_DIR = $(& "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --get buildDir -q opencloud/opencloud-desktop)
+        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --run pwsh "${env:GITHUB_WORKSPACE}/.github/workflows/.run-clang-tidy.ps1"
+        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --run python3 -m clang_html "$([System.IO.Path]::GetTempPath())/clang-tidy.log" -o "${env:GITHUB_WORKSPACE}/binaries/clang-tidy.html"
+
+    - name: Package
+      if: matrix.target  != 'macos-clang-arm64'
+      run: |
+        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --no-cache --package opencloud/opencloud-desktop
+
+    - name: Package Appx
+      if: ${{ matrix.os  == 'windows-latest' && github.event_name != 'pull_request' }}
+      run: |
+        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --no-cache --package --options "[Packager]PackageType=AppxPackager" --options "[Packager]Destination=${{ github.workspace }}/appx/" opencloud/opencloud-desktop
+
+    - name: Prepare artifacts
+      run: |
+        Copy-Item "${home}/craft/binaries/*" "${env:GITHUB_WORKSPACE}/binaries/" -ErrorAction SilentlyContinue
+        if ("${{ github.ref_type }}" -eq "tag"  ) {
+          Get-ChildItem "${env:GITHUB_WORKSPACE}/binaries/" | ForEach-Object {
+            $newName = $_.Name -replace "opencloud-desktop-HEAD-\d*-", "OpenCloud_Desktop-${{ github.ref_name }}-"
+            if ($newName -ne $_.Name) {
+              Move-Item -Path $_ -Destination (Join-Path $_.Directory $newName) -Force
+            }
+          }
+        }
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ matrix.target }}-${{ github.run_number }}
+        path: ${{ github.workspace }}/binaries/*
+
+    - name: Upload appx
+      if: ${{ matrix.os  == 'windows-latest' && github.event_name != 'pull_request' }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ matrix.target }}-appx-${{ github.run_number }}
+        path: ${{ github.workspace }}/appx/*

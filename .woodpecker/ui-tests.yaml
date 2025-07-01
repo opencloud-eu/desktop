@@ -1,0 +1,136 @@
+---
+variables:
+  - &squish_image 'opencloudeu/squish@sha256:6eaecc218044020f49f24fd29b6bdc052e8170699a762687b10398b353e5fcda'
+  - &minio_image 'minio/mc:RELEASE.2021-10-07T04-19-58Z'
+  - &minio_environment
+    AWS_ACCESS_KEY_ID:
+      from_secret: cache_s3_access_key
+    AWS_SECRET_ACCESS_KEY:
+      from_secret: cache_s3_secret_key
+    CACHE_BUCKET:
+      from_secret: cache_s3_bucket
+    MC_HOST: "https://s3.ci.opencloud.eu"
+
+depends_on:
+  - cache-opencloud
+  - cache-pnpm
+  - build
+steps:
+  - commands:
+      - cd test/gui/
+      - npm i -s -g -f "$(jq -r ".packageManager" < webUI/package.json)"
+      - pnpm config set store-dir ./.pnpm-store
+      - make pnpm-install
+    image: owncloudci/nodejs:20
+    name: pnpm-install
+  - name: restore-python-cache
+    commands:
+      - requirements_sha=$(sha1sum test/gui/requirements.txt | cut -d" " -f1)
+      - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
+      - mc cp -r -a s3/$CACHE_BUCKET/desktop-build/python-cache-$requirements_sha.tar.gz /woodpecker/desktop
+    environment:
+      <<: *minio_environment
+    image: *minio_image
+  - commands:
+      - tar -xvf python-cache-*.tar.gz -C .
+      - make -C test/gui/ pip-install
+      - python3.10 -m pip list -v
+    image: *squish_image
+    environment:
+      PYTHONUSERBASE: /woodpecker/desktop/
+    name: install-python-modules
+  - commands:
+      - playwright_version=$(bash test/gui/woodpecker/script.sh get_playwright_version)
+      - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
+      - mc cp -r -a s3/$CACHE_BUCKET/web/browsers-cache/$playwright_version/playwright-browsers.tar.gz /woodpecker/desktop
+    environment:
+      <<: *minio_environment
+    image: *minio_image
+    name: restore-browsers-cache
+  - commands:
+      - tar -xvf /woodpecker/desktop/playwright-browsers.tar.gz -C .
+    image: owncloud/ubuntu:20.04
+    name: unzip-browsers-cache
+  - commands:
+      - . ./.woodpecker.env
+      - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
+      - mc cp -r -a s3/$CACHE_BUCKET/opencloud-build/$OPENCLOUD_COMMITID/opencloud /woodpecker/desktop
+    environment:
+      <<: *minio_environment
+    image: *minio_image
+    name: restore-opencloud-cache
+  - commands:
+      - mkdir -p /srv/app/tmp/opencloud/opencloud/data/
+      - mkdir -p /srv/app/tmp/opencloud/storage/users/
+      - ./opencloud init
+      - ./opencloud server
+    detach: true
+    environment:
+      FRONTEND_SEARCH_MIN_LENGTH: "2"
+      GRAPH_AVAILABLE_ROLES: b1e2218d-eef8-4d4c-b82d-0f1a1b48f3b5,a8d5fe5e-96e3-418d-825b-534dbdf22b99,fb6c3e19-e378-47e5-b277-9732f9de6e21,58c63c02-1d89-4572-916a-870abc5a1b7d,2d00ce52-1fc2-4dbc-8b95-a73b73395f5a,1c996275-f1c9-4e71-abdf-a42f6495e960,312c0871-5ef7-4b3a-85b6-0e4074c64049,aa97fe03-7980-45ac-9e50-b325749fd7e6,63e64e19-8d43-42ec-a738-2b6af2610efa
+      IDM_ADMIN_PASSWORD: admin
+      LDAP_GROUP_SUBSTRING_FILTER_TYPE: any
+      LDAP_USER_SUBSTRING_FILTER_TYPE: any
+      OC_INSECURE: true
+      OC_JWT_SECRET: some-opencloud-jwt-secret
+      OC_LOG_LEVEL: error
+      OC_SHOW_USER_EMAIL_IN_RESULTS: true
+      OC_URL: https://opencloud:9200
+      PROXY_ENABLE_BASIC_AUTH: true
+      WEB_UI_CONFIG_FILE: /woodpecker/desktop/test/gui/woodpecker/config-opencloud.json
+    image: docker.io/golang:1.24
+    name: opencloud
+  - commands:
+      - timeout 300 bash -c 'while [ $(curl -sk -uadmin:admin https://opencloud:9200/graph/v1.0/users/admin -w %{http_code} -o /dev/null) != 200 ]; do sleep 1; done'
+    image: owncloudci/alpine:latest
+    name: wait-for-opencloud
+  - name: restore-desktop-client
+    commands:
+      - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
+      - mc cp -a -r s3/$CACHE_BUCKET/desktop-build/${CI_COMMIT_SHA}/ /woodpecker/desktop/build
+      - ls -lh /woodpecker/desktop/build/bin
+    environment:
+      <<: *minio_environment
+    image: *minio_image
+
+  - name: create-gui-test-report-directory
+    image: owncloud/ubuntu:20.04
+    commands:
+      - mkdir /woodpecker/desktop/test/gui/guiReportUpload/screenshots -p
+      - chmod 777 /woodpecker/desktop/test/gui/ -R
+
+  - name: monitor-server-logs
+    image: owncloud/ubuntu:20.04
+    detach: true
+    commands:
+      - touch /woodpecker/desktop/test/gui/guiReportUpload/serverlog.log
+      - chmod 777 /woodpecker/desktop/test/gui/guiReportUpload/serverlog.log
+      - tail -f /woodpecker/desktop/test/gui/guiReportUpload/serverlog.log
+
+  - name: UI-tests
+    image: *squish_image
+    environment:
+      PYTHONUSERBASE: /woodpecker/desktop/
+      PLAYWRIGHT_BROWSERS_PATH: /woodpecker/desktop/.playwright
+      SQUISH_LICENSE_SERVER:
+        from_secret: squish_license_key
+      SQUISH_LICENSE_SERVER_API: squish.jankari.tech:49346
+      SQUISH_LICENSE_SERVER_API_TOKEN: phzq4o1tJIVebL1kgSTAeKqZ5AoIDJfci
+      BACKEND_HOST: https://opencloud:9200
+      SECURE_BACKEND_HOST: https://opencloud:9200
+      GUI_TEST_REPORT_DIR: /woodpecker/desktop/test/gui/guiReportUpload
+      SERVER_INI: /woodpecker/desktop/test/gui/woodpecker/server.ini
+      SQUISH_PARAMETERS: --testsuite /woodpecker/desktop/test/gui --reportgen html,/woodpecker/desktop/test/gui/guiReportUpload --envvar QT_LOGGING_RULES=sync.httplogger=true;gui.socketapi=false --tags ~@skip --tags ~@skipOnLinux
+
+when:
+  - branch:
+      - main
+      - stable-*
+    event:
+      - push
+      - manual
+  - event: pull_request
+  - event: tag
+workspace:
+  base: /woodpecker
+  path: desktop
