@@ -30,15 +30,6 @@
 - Fix sync location with manual setup [[#243](https://github.com/opencloud-eu/desktop/pull/243)]
 - Properly handle `server_error` response from IDP [[#231](https://github.com/opencloud-eu/desktop/pull/231)]
 
-### ✅ Tests
-
-- Test(refactor): Clean user in windows [[#328](https://github.com/opencloud-eu/desktop/pull/328)]
-- Test(refactor): Refactor the resources path for windows [[#325](https://github.com/opencloud-eu/desktop/pull/325)]
-- test(refactor): remove unexpected scenario [[#327](https://github.com/opencloud-eu/desktop/pull/327)]
-- Tests Only: fix add accounts step [[#317](https://github.com/opencloud-eu/desktop/pull/317)]
-- Test(refactor): Decouple initial command sending from pipe connection [[#324](https://github.com/opencloud-eu/desktop/pull/324)]
-- Test(refactor): fix sync path in windows [[#282](https://github.com/opencloud-eu/desktop/pull/282)]
-
 ### 📈 Enhancement
 
 -  Remove settings update from connection validator, update settings only oce per hour [[#301](https://github.com/opencloud-eu/desktop/pull/301)]
