@@ -29,16 +29,6 @@ export default {
       bump: 'patch'
     },
     {
-      title: '📚 Documentation',
-      labels: ['docs', 'documentation', 'Type:Documentation'],
-      bump: 'patch'
-    },
-    {
-      title: '✅ Tests',
-      labels: ['test', 'tests', 'Type:Test'],
-      bump: 'patch'
-    },
-    {
       title: '📦️ Dependencies',
       labels: ['dependency', 'dependencies', 'Type:Dependencies'],
       bump: 'patch',
