@@ -11,16 +11,15 @@
 
 #include <QString>
 
-#include <ntstatus.h>
 #include <comdef.h>
+#include <ntstatus.h>
 
 namespace VfsShellExtensions {
 std::pair<HBITMAP, WTS_ALPHATYPE> hBitmapAndAlphaTypeFromData(const QByteArray &thumbnailData);
 
 _COM_SMARTPTR_TYPEDEF(IShellItem2, IID_IShellItem2);
 
-class __declspec(uuid(CFAPI_SHELLEXT_THUMBNAIL_HANDLER_CLASS_ID)) ThumbnailProvider : public IInitializeWithItem,
-                                                                                      public IThumbnailProvider
+class __declspec(uuid(CFAPI_SHELLEXT_THUMBNAIL_HANDLER_CLASS_ID)) ThumbnailProvider : public IInitializeWithItem, public IThumbnailProvider
 {
 public:
     ThumbnailProvider();

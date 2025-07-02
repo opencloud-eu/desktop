@@ -6,11 +6,11 @@
 #include "hydrationjob.h"
 
 #include "common/syncjournaldb.h"
+#include "encryptedfoldermetadatahandler.h"
+#include "foldermetadata.h"
 #include "propagatedownload.h"
 #include "vfs/cfapi/vfs_cfapi.h"
 #include <clientsideencryptionjobs.h>
-#include "encryptedfoldermetadatahandler.h"
-#include "foldermetadata.h"
 
 #include "filesystem.h"
 
@@ -141,15 +141,13 @@ void OCC::HydrationJob::start()
         const auto server = new QLocalServer(this);
         const auto listenResult = server->listen(serverName);
         if (!listenResult) {
-            qCCritical(lcHydration) << "Couldn't get server to listen" << serverName
-                                    << _localPath << _folderPath;
+            qCCritical(lcHydration) << "Couldn't get server to listen" << serverName << _localPath << _folderPath;
             if (!_isCancelled) {
                 emitFinished(Error);
             }
             return nullptr;
         }
-        qCInfo(lcHydration) << "Server ready, waiting for connections" << serverName
-                            << _localPath << _folderPath;
+        qCInfo(lcHydration) << "Server ready, waiting for connections" << serverName << _localPath << _folderPath;
         return server;
     };
 
@@ -256,7 +254,7 @@ void OCC::HydrationJob::finalize(OCC::VfsCfApi *vfs)
         return;
     }
 
-    switch(_status) {
+    switch (_status) {
     case Success:
         record._type = ItemTypeFile;
         break;
@@ -298,7 +296,8 @@ void OCC::HydrationJob::slotFetchMetadataJobFinished(int statusCode, const QStri
         if (encryptedFileExactName == file.encryptedFilename) {
             qCDebug(lcHydration) << "Found matching encrypted metadata for file, starting download" << _requestId << _folderPath;
             _transferDataSocket = _transferDataServer->nextPendingConnection();
-            _job = new GETEncryptedFileJob(_account, Utility::trailingSlashPath(_remoteSyncRootPath) + e2eMangledName(), _transferDataSocket, {}, {}, 0, file, this);
+            _job = new GETEncryptedFileJob(
+                _account, Utility::trailingSlashPath(_remoteSyncRootPath) + e2eMangledName(), _transferDataSocket, {}, {}, 0, file, this);
 
             connect(qobject_cast<GETEncryptedFileJob *>(_job), &GETEncryptedFileJob::finishedSignal, this, &HydrationJob::onGetFinished);
             _job->start();
@@ -314,7 +313,7 @@ void OCC::HydrationJob::onGetFinished()
     if (_errorCode != 0 || (_statusCode != 200 && _statusCode != 204)) {
         _errorString = _job->reply()->errorString();
     }
-    
+
     if (!_errorString.isEmpty()) {
         qCInfo(lcHydration) << "GETFileJob finished" << _requestId << _folderPath << _errorCode << _statusCode << _errorString;
     } else {
@@ -347,22 +346,21 @@ void OCC::HydrationJob::handleNewConnection()
 
 void OCC::HydrationJob::handleNewConnectionForEncryptedFile()
 {
-    // TODO: the following code is borrowed from PropagateDownloadEncrypted (should we factor it out and reuse? YES! Should we do it now? Probably not, as, this would imply modifying PropagateDownloadEncrypted, so we need a separate PR)
+    // TODO: the following code is borrowed from PropagateDownloadEncrypted (should we factor it out and reuse? YES! Should we do it now? Probably not, as, this
+    // would imply modifying PropagateDownloadEncrypted, so we need a separate PR)
     qCInfo(lcHydration) << "Got new connection for encrypted file. Getting required info for decryption...";
     const auto remoteFilename = e2eMangledName();
     const QString fullRemotePath = Utility::trailingSlashPath(_remoteSyncRootPath) + remoteFilename;
     const auto containingFolderFullRemotePath = fullRemotePath.left(fullRemotePath.lastIndexOf('/'));
 
     SyncJournalFileRecord rec;
-    if (!_journal->getRootE2eFolderRecord(Utility::fullRemotePathToRemoteSyncRootRelative(containingFolderFullRemotePath, _remoteSyncRootPath), &rec) || !rec.isValid()) {
+    if (!_journal->getRootE2eFolderRecord(Utility::fullRemotePathToRemoteSyncRootRelative(containingFolderFullRemotePath, _remoteSyncRootPath), &rec)
+        || !rec.isValid()) {
         emitFinished(Error);
         return;
     }
     _encryptedFolderMetadataHandler.reset(
         new EncryptedFolderMetadataHandler(_account, containingFolderFullRemotePath, _remoteSyncRootPath, _journal, rec.path()));
-    connect(_encryptedFolderMetadataHandler.data(),
-            &EncryptedFolderMetadataHandler::fetchFinished,
-            this,
-            &HydrationJob::slotFetchMetadataJobFinished);
+    connect(_encryptedFolderMetadataHandler.data(), &EncryptedFolderMetadataHandler::fetchFinished, this, &HydrationJob::slotFetchMetadataJobFinished);
     _encryptedFolderMetadataHandler->fetchMetadata();
 }

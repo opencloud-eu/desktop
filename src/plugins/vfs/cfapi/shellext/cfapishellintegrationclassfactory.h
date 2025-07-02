@@ -23,8 +23,7 @@ public:
     IFACEMETHODIMP_(ULONG) AddRef();
     IFACEMETHODIMP CreateInstance(IUnknown *pUnkOuter, REFIID riid, void **ppv);
 
-    static HRESULT CreateInstance(
-        REFCLSID clsid, const ClassObjectInit *classObjectInits, size_t classObjectInitsCount, REFIID riid, void **ppv);
+    static HRESULT CreateInstance(REFCLSID clsid, const ClassObjectInit *classObjectInits, size_t classObjectInitsCount, REFIID riid, void **ppv);
 
     IFACEMETHODIMP LockServer(BOOL fLock);
     IFACEMETHODIMP QueryInterface(REFIID riid, void **ppv);

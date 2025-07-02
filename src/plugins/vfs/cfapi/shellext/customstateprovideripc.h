@@ -5,9 +5,9 @@
 
 #pragma once
 
-#include <QtNetwork/QLocalSocket>
 #include <QString>
 #include <QVariant>
+#include <QtNetwork/QLocalSocket>
 
 namespace VfsShellExtensions {
 class CustomStateProviderIpc
