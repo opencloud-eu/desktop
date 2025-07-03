@@ -201,10 +201,13 @@ Result<void, QString> VfsCfApi::createPlaceholder(const SyncFileItem &item)
     return result;
 }
 
-bool VfsCfApi::needsMetadataUpdate(const SyncFileItem &)
+bool VfsCfApi::needsMetadataUpdate(const SyncFileItem &item)
 {
-    // TODO: check for pin state
-    return false;
+    const QString path = params().filesystemPath + item.localName();
+    if (!QFileInfo::exists(path)) {
+        return false;
+    }
+    return !cfapi::findPlaceholderInfo(path).isValid();
 }
 
 bool VfsCfApi::isDehydratedPlaceholder(const QString &filePath)
