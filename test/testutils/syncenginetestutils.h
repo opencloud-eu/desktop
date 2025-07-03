@@ -691,23 +691,29 @@ struct OperationCounter
     void operator=(OperationCounter const &) = delete;
     void operator=(OperationCounter &&) = delete;
 
+    // for debugging, a list of requests by operator
+    QMap<QByteArray, QList<QUrl>> requests;
+
     void reset()
     {
         nGET = 0;
         nPUT = 0;
         nMOVE = 0;
         nDELETE = 0;
+        requests.clear();
     }
 
     QNetworkReply *serverOverride(QNetworkAccessManager::Operation op, const QNetworkRequest &req, QIODevice *)
     {
+        const auto customVerb = req.attribute(QNetworkRequest::CustomVerbAttribute).toByteArray();
+        requests[customVerb].append(req.url());
         if (op == QNetworkAccessManager::GetOperation) {
             ++nGET;
         } else if (op == QNetworkAccessManager::PutOperation) {
             ++nPUT;
         } else if (op == QNetworkAccessManager::DeleteOperation) {
             ++nDELETE;
-        } else if (req.attribute(QNetworkRequest::CustomVerbAttribute).toByteArray() == QByteArrayLiteral("MOVE")) {
+        } else if (customVerb == QByteArrayLiteral("MOVE")) {
             ++nMOVE;
         }
         return nullptr;
