@@ -16,7 +16,7 @@
 
 using namespace Qt::Literals::StringLiterals;
 
-Q_LOGGING_CATEGORY(lcHydration, "nextcloud.sync.vfs.hydrationjob", QtInfoMsg)
+Q_LOGGING_CATEGORY(lcHydration, "sync.vfs.hydrationjob", QtDebugMsg)
 
 OCC::HydrationJob::HydrationJob(QObject *parent)
     : QObject(parent)
