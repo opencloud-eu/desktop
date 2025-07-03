@@ -26,7 +26,7 @@
 
 #include <QCoreApplication>
 
-Q_LOGGING_CATEGORY(lcCfApi, "nextcloud.sync.vfs.cfapi", QtInfoMsg)
+Q_LOGGING_CATEGORY(lcCfApi, "sync.vfs.cfapi", QtInfoMsg)
 
 using namespace Qt::Literals::StringLiterals;
 

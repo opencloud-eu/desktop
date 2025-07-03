@@ -25,7 +25,7 @@
 #include <ntstatus.h>
 #include <sddl.h>
 
-Q_LOGGING_CATEGORY(lcCfApiWrapper, "nextcloud.sync.vfs.cfapi.wrapper", QtDebugMsg)
+Q_LOGGING_CATEGORY(lcCfApiWrapper, "sync.vfs.cfapi.wrapper", QtDebugMsg)
 using namespace Qt::Literals::StringLiterals;
 
 #define FIELD_SIZE(type, field) (sizeof(((type *)0)->field))
