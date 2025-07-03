@@ -48,7 +48,7 @@ Optional<Vfs::Mode> Vfs::modeFromString(const QString &str)
     // keep in sync with: QString Utility::enumToString(Vfs::Mode mode)
     if (str == QLatin1String("off")) {
         return Off;
-    } else if (str == QLatin1String("wincfapi")) {
+    } else if (str == QLatin1String("cfapi")) {
         return WindowsCfApi;
     }
     return {};
@@ -61,7 +61,7 @@ QString Utility::enumToString(Vfs::Mode mode)
     // keep in sync with: Optional<Vfs::Mode> Vfs::modeFromString(const QString &str)
     switch (mode) {
     case Vfs::Mode::WindowsCfApi:
-        return QStringLiteral("wincfapi");
+        return QStringLiteral("cfapi");
     case Vfs::Mode::Off:
         return QStringLiteral("off");
     }
@@ -277,9 +277,10 @@ const VfsPluginManager &VfsPluginManager::instance()
     return *_instance;
 }
 
-VfsSetupParams::VfsSetupParams(const AccountPtr &account, const QUrl &baseUrl, bool groupInSidebar, SyncEngine *syncEngine)
+VfsSetupParams::VfsSetupParams(const AccountPtr &account, const QString &folderDisplayName, const QUrl &baseUrl, bool groupInSidebar, SyncEngine *syncEngine)
     : account(account)
     , _baseUrl(baseUrl)
+    , _folderDisplayName(folderDisplayName)
     , _groupInSidebar(groupInSidebar)
     , _syncEngine(syncEngine)
 {
