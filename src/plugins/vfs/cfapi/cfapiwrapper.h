@@ -34,7 +34,8 @@ namespace CfApiWrapper {
 
         inline auto *get() const noexcept { return reinterpret_cast<CF_PLACEHOLDER_BASIC_INFO *>(const_cast<char *>(_data.data())); }
         inline auto *operator->() const noexcept { return get(); }
-        inline explicit operator bool() const noexcept { return !_data.empty(); }
+        inline explicit operator bool() const noexcept { return isValid(); }
+        inline bool isValid() const noexcept { return !_data.empty(); };
 
         inline auto size() const { return _data.size(); }
 
