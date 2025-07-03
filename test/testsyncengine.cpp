@@ -360,40 +360,45 @@ private Q_SLOTS:
         QTest::addColumn<int>("expectedGEThydrated");
         QTest::addColumn<int>("expectedGETdehydrated");
 
+        // if the files are dehydrated the count is always 1 bigger as we have to download them
+
         QTest::newRow("Same mtime, but no server checksum -> ignored in reconcile")
             << true << QByteArray()
             << 0 // hydrated
             << 1; // dehydrated
 
-        QTest::newRow("Same mtime, weak server checksum differ -> downloaded")
-            << true << QByteArray("Adler32:bad")
+        QTest::newRow("Same mtime, weak server checksum differ -> downloaded") //
+            << true //
+            << QByteArray("Adler32:bad") //
             << 1 // hydrated
-            << 1; // dehydrated;
+            << 2; // dehydrated;
 
         QTest::newRow("Same mtime, matching weak checksum -> skipped")
             << true << QByteArray("Adler32:2a2010d")
             << 0 // hydrated
             << 1; // dehydrated;
 
-        QTest::newRow("Same mtime, strong server checksum differ -> downloaded")
-            << true << QByteArray("SHA1:bad")
-            << 1 // hydrated
-            << 1; // dehydrated;
+        QTest::newRow("Same mtime, strong server checksum differ -> downloaded") //
+            << true //
+            << QByteArray("SHA1:bad") << 1 // hydrated
+            << 2; // dehydrated;
 
         QTest::newRow("Same mtime, matching strong checksum -> skipped")
             << true << QByteArray("SHA1:56900fb1d337cf7237ff766276b9c1e8ce507427")
             << 0 // hydrated
             << 1; // dehydrated;
 
-        QTest::newRow("mtime changed, but no server checksum -> download")
-            << false << QByteArray()
+        QTest::newRow("mtime changed, but no server checksum -> download") //
+            << false //
+            << QByteArray() //
             << 1 // hydrated
-            << 1; // dehydrated;
+            << 2; // dehydrated;
 
-        QTest::newRow("mtime changed, weak checksum match -> download anyway")
-            << false << QByteArray("Adler32:2a2010d")
+        QTest::newRow("mtime changed, weak checksum match -> download anyway") //
+            << false //
+            << QByteArray("Adler32:2a2010d") //
             << 1 // hydrated
-            << 1; // dehydrated;
+            << 2; // dehydrated;
 
         QTest::newRow("mtime changed, strong checksum match -> skip")
             << false << QByteArray("SHA1:56900fb1d337cf7237ff766276b9c1e8ce507427")
@@ -426,6 +431,8 @@ private Q_SLOTS:
 
         // In the dehydrated case, executing this `setContents` will cause a hydration of the file, so there will always be 1 GET request.
         fakeFolder.localModifier().setContents(QStringLiteral("A/a1"), a1size, 'C');
+        // nothing happend yet
+        QCOMPARE(counter.nGET, 0);
 
         fakeFolder.localModifier().setModTime(QStringLiteral("A/a1"), mtime);
         fakeFolder.remoteModifier().setContents(QStringLiteral("A/a1"), a1size, 'C');
