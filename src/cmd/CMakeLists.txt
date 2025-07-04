@@ -5,7 +5,7 @@ add_executable(cmd
 set_target_properties(cmd PROPERTIES OUTPUT_NAME "${APPLICATION_EXECUTABLE}cmd")
 ecm_mark_nongui_executable(cmd)
 
-target_link_libraries(cmd csync libsync Qt::Core Qt::Network ZLIB::ZLIB)
+target_link_libraries(cmd libsync Qt::Core Qt::Network ZLIB::ZLIB)
 apply_common_target_settings(cmd)
 
 if(APPLE)

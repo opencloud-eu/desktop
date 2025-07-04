@@ -4,6 +4,9 @@ set_package_properties(LibreGraphAPI PROPERTIES
         DESCRIPTION "Libre Graph is a free API for cloud collaboration inspired by the MS Graph API."
         TYPE OPTIONAL
 )
+include(CheckFunctionExists)
+
+configure_file(config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
 set(libsync_SRCS
     account.cpp
@@ -83,7 +86,6 @@ set_target_properties(libsync PROPERTIES EXPORT_NAME SyncCore)
 
 target_link_libraries(libsync
     PUBLIC
-        csync
         OpenCloudResources
         Qt::Core
         Qt::Network
@@ -94,6 +96,7 @@ target_link_libraries(libsync
         Qt::Concurrent
         ZLIB::ZLIB
         Qt6Keychain::Qt6Keychain
+        SQLite::SQLite3
 )
 
 apply_common_target_settings(libsync)
@@ -153,5 +156,29 @@ if(WITH_CRASHREPORTER)
     endif()
 endif()
 
+target_sources(libsync PRIVATE
+    csync.cpp
+    csync_exclude.cpp
+
+    std/c_time.cpp
+)
+
+check_function_exists(utimes HAVE_UTIMES)
+
+if(HAVE_UTIMES)
+    set_source_files_properties(std/c_time.cpp PROPERTIES COMPILE_DEFINITIONS HAVE_UTIMES=1)
+endif()
+
+if (WIN32)
+    target_sources(libsync PRIVATE
+        vio/csync_vio_local_win.cpp
+    )
+else()
+    target_sources(libsync PRIVATE
+        vio/csync_vio_local_unix.cpp
+    )
+endif()
+
+add_subdirectory(common)
 
 install(TARGETS libsync EXPORT ${APPLICATION_SHORTNAME}Config ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

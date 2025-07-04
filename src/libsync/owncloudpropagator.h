@@ -23,11 +23,11 @@
 #include <QIODevice>
 #include <QMutex>
 
+#include "accountfwd.h"
+#include "bandwidthmanager.h"
+#include "common/syncjournaldb.h"
 #include "csync.h"
 #include "syncfileitem.h"
-#include "common/syncjournaldb.h"
-#include "bandwidthmanager.h"
-#include "accountfwd.h"
 #include "syncoptions.h"
 
 namespace OCC {

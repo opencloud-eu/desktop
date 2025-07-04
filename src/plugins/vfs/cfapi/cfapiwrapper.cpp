@@ -24,7 +24,6 @@
 #include <ntstatus.h>
 #include <sddl.h>
 
-#include "config.h"
 
 Q_LOGGING_CATEGORY(lcCfApiWrapper, "nextcloud.sync.vfs.cfapi.wrapper", QtInfoMsg)
 

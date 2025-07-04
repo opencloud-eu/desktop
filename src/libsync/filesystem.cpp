@@ -22,8 +22,8 @@
 #include <QFileInfo>
 
 #include "csync.h"
-#include "vio/csync_vio_local.h"
 #include "std/c_time.h"
+#include "vio/csync_vio_local.h"
 
 #if defined(Q_OS_MAC) || defined(Q_OS_LINUX)
 #include <sys/xattr.h>
