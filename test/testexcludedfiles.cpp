@@ -9,7 +9,7 @@
 
 #include <QtTest>
 
-#include "csync_exclude.h"
+#include "libsync/csync_exclude.h"
 #include "testutils.h"
 
 using namespace OCC;

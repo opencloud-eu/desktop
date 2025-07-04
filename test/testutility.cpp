@@ -21,7 +21,7 @@ using namespace std::chrono_literals;
 using namespace OCC::Utility;
 
 namespace OCC {
-OCSYNC_EXPORT extern bool fsCasePreserving_override;
+OPENCLOUD_SYNC_EXPORT extern bool fsCasePreserving_override;
 }
 
 class TestUtility : public QObject

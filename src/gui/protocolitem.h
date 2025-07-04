@@ -17,7 +17,6 @@
 
 #include "gui/folder.h"
 
-#include "csync/csync.h"
 #include "libsync/syncfileitem.h"
 
 #include "common/fixedsizeringbuffer.h"

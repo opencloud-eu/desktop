@@ -4,8 +4,8 @@
  */
 #pragma once
 
-#include "csync/common/syncjournalfilerecord.h"
 #include "libsync/account.h"
+#include "libsync/common/syncjournalfilerecord.h"
 
 #include <QNetworkReply>
 
