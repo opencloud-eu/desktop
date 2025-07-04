@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 #include "common/filesystembase.h"
-#include "csync/csync.h"
-#include "csync/vio/csync_vio_local.h"
+#include "libsync/csync.h"
+#include "libsync/vio/csync_vio_local.h"
 #include "testutils/testutils.h"
 
 #include <QTemporaryFile>

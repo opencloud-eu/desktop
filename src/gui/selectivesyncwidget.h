@@ -18,7 +18,7 @@
 #include <QTreeWidget>
 #include <QUrl>
 
-#include "csync_exclude.h"
+#include "libsync/csync_exclude.h"
 
 class QTreeWidgetItem;
 class QTreeWidget;

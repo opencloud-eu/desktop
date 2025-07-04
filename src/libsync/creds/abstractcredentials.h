@@ -20,7 +20,7 @@
 #include "accessmanager.h"
 #include "accountfwd.h"
 #include "opencloudsynclib.h"
-#include <csync.h>
+#include <../csync.h>
 
 class QNetworkAccessManager;
 class QNetworkReply;

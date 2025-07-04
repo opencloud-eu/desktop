@@ -35,7 +35,6 @@ elseif(UNIX AND NOT APPLE)
 endif()
 
 add_subdirectory(resources)
-add_subdirectory(csync)
 add_subdirectory(libsync)
 add_subdirectory(gui)
 add_subdirectory(cmd)
