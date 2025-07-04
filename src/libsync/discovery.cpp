@@ -17,8 +17,8 @@
 #include "owncloudpropagator.h"
 #include "syncfileitem.h"
 
-#include "csync/csync_exclude.h"
-#include "csync/vio/csync_vio_local.h"
+#include "csync_exclude.h"
+#include "libsync/vio/csync_vio_local.h"
 
 #include "common/checksums.h"
 #include "common/syncjournaldb.h"

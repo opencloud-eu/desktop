@@ -5,9 +5,9 @@
  *
  */
 
-#include <QtTest>
+#include "libsync/csync_exclude.h"
 #include "testutils/syncenginetestutils.h"
-#include "csync_exclude.h"
+#include <QtTest>
 
 using namespace OCC;
 

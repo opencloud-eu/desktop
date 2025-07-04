@@ -14,19 +14,15 @@
 
 #pragma once
 
-#include <QObject>
-#include <QElapsedTimer>
-#include <QStringList>
-#include <csync.h>
-#include <QMap>
-#include <QSet>
+#include "libsync/csync.h"
 #include "networkjobs.h"
-#include <QMutex>
-#include <QWaitCondition>
-#include <QRunnable>
-#include <deque>
-#include "syncoptions.h"
 #include "syncfileitem.h"
+#include "syncoptions.h"
+
+#include <QMap>
+#include <QObject>
+#include <QRunnable>
+#include <QStringList>
 
 class ExcludedFiles;
 

@@ -19,7 +19,7 @@
 #include <QNetworkReply>
 
 #include "abstractnetworkjob.h"
-#include "opencloudsynclib.h"
+#include "libsync/opencloudsynclib.h"
 
 namespace OCC {
 
