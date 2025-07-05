@@ -89,12 +89,12 @@
 <context>
     <name>ChecksumHeader</name>
     <message>
-        <location filename="../src/common/checksums.cpp" line="124"/>
+        <location filename="../src/csync/common/checksums.cpp" line="124"/>
         <source>The checksum header is malformed: %1</source>
         <translation>Il &apos;checksum header&apos; ha un errore nella sua formazione: %1</translation>
     </message>
     <message>
-        <location filename="../src/common/checksums.cpp" line="128"/>
+        <location filename="../src/csync/common/checksums.cpp" line="128"/>
         <source>The checksum header contained an unknown checksum type &apos;%1&apos;</source>
         <translation>L&apos;header checksum contiene un tipo di checksum sconosciuto: &apos;%1&apos;</translation>
     </message>
@@ -200,10 +200,10 @@ Utilità desktop per la sincronizazione dei file.</translation>
 <context>
     <name>FileSystem</name>
     <message>
-        <location filename="../src/common/filesystembase.cpp" line="166"/>
-        <location filename="../src/common/filesystembase.cpp" line="168"/>
-        <location filename="../src/common/filesystembase.cpp" line="231"/>
-        <location filename="../src/common/filesystembase.cpp" line="236"/>
+        <location filename="../src/csync/common/filesystembase.cpp" line="163"/>
+        <location filename="../src/csync/common/filesystembase.cpp" line="165"/>
+        <location filename="../src/csync/common/filesystembase.cpp" line="224"/>
+        <location filename="../src/csync/common/filesystembase.cpp" line="229"/>
         <source>Can&apos;t rename %1, the file is currently in use</source>
         <translation>Inpossibili rinominare %1, il file è attualmente in uso.</translation>
     </message>
@@ -2632,7 +2632,7 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::SyncJournalDb</name>
     <message>
-        <location filename="../src/common/syncjournaldb.cpp" line="888"/>
+        <location filename="../src/csync/common/syncjournaldb.cpp" line="889"/>
         <source>Failed to connect database.</source>
         <translation>Impossibile connettersi al database.</translation>
     </message>
@@ -2789,7 +2789,7 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::ValidateChecksumHeader</name>
     <message>
-        <location filename="../src/common/checksums.cpp" line="382"/>
+        <location filename="../src/csync/common/checksums.cpp" line="375"/>
         <source>The downloaded file does not match the checksum, it will be resumed. &apos;%1&apos; != &apos;%2&apos;</source>
         <translation>Il file scaricato non corrisponde al checksum, verrà ripreso. &apos;%1&apos; != &apos;%2&apos;</translation>
     </message>
@@ -2797,17 +2797,17 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::Vfs</name>
     <message>
-        <location filename="../src/common/vfs.cpp" line="77"/>
+        <location filename="../src/csync/common/vfs.cpp" line="77"/>
         <source>The Virtual filesystem feature does not support a drive as sync root</source>
         <translation>La funzionalità del file system virtuale non supporta un&apos;unità come root di sincronizzazione</translation>
     </message>
     <message>
-        <location filename="../src/common/vfs.cpp" line="81"/>
+        <location filename="../src/csync/common/vfs.cpp" line="81"/>
         <source>The Virtual filesystem feature requires a NTFS file system, %1 is using %2</source>
         <translation>La funzionalità del file system virtuale richiede un file system NTFS, %1 utilizza %2</translation>
     </message>
     <message>
-        <location filename="../src/common/vfs.cpp" line="85"/>
+        <location filename="../src/csync/common/vfs.cpp" line="85"/>
         <source>The Virtual filesystem feature is not supported on network drives</source>
         <translation>La funzionalità del file system virtuale non è supportata sulle unità di rete</translation>
     </message>
@@ -3000,32 +3000,32 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../src/common/utility.cpp" line="301"/>
+        <location filename="../src/csync/common/utility.cpp" line="301"/>
         <source>in the future</source>
         <translation>in futuro</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/common/utility.cpp" line="296"/>
+        <location filename="../src/csync/common/utility.cpp" line="296"/>
         <source>%n day(s) ago</source>
         <translation><numerusform>%n giorno fa</numerusform><numerusform>%n giorni fa</numerusform><numerusform>%n giorni fa</numerusform></translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/common/utility.cpp" line="306"/>
+        <location filename="../src/csync/common/utility.cpp" line="306"/>
         <source>%n hour(s) ago</source>
         <translation><numerusform>%n ora fa</numerusform><numerusform>%n ore fa</numerusform><numerusform>%n ore fa</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/common/utility.cpp" line="312"/>
+        <location filename="../src/csync/common/utility.cpp" line="312"/>
         <source>now</source>
         <translation>adesso</translation>
     </message>
     <message>
-        <location filename="../src/common/utility.cpp" line="314"/>
+        <location filename="../src/csync/common/utility.cpp" line="314"/>
         <source>less than a minute ago</source>
         <translation>meno di un minuto fa</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/common/utility.cpp" line="318"/>
+        <location filename="../src/csync/common/utility.cpp" line="318"/>
         <source>%n minute(s) ago</source>
         <translation><numerusform>%n minuto fa</numerusform><numerusform>%n minuti fa</numerusform><numerusform>%n minuti fa</numerusform></translation>
     </message>
@@ -3317,37 +3317,37 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>Utility</name>
     <message numerus="yes">
-        <location filename="../src/common/utility.cpp" line="200"/>
+        <location filename="../src/csync/common/utility.cpp" line="200"/>
         <source>%n year(s)</source>
         <translation><numerusform>%n anno</numerusform><numerusform>%n anni</numerusform><numerusform>%n anni</numerusform></translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/common/utility.cpp" line="201"/>
+        <location filename="../src/csync/common/utility.cpp" line="201"/>
         <source>%n month(s)</source>
         <translation><numerusform>%n mese</numerusform><numerusform>%n mesi</numerusform><numerusform>%n mesi</numerusform></translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/common/utility.cpp" line="202"/>
+        <location filename="../src/csync/common/utility.cpp" line="202"/>
         <source>%n day(s)</source>
         <translation><numerusform>%n giorno</numerusform><numerusform>%n giorni</numerusform><numerusform>%n giorni</numerusform></translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/common/utility.cpp" line="203"/>
+        <location filename="../src/csync/common/utility.cpp" line="203"/>
         <source>%n hour(s)</source>
         <translation><numerusform>%n ora</numerusform><numerusform>%n ore</numerusform><numerusform>%n ore</numerusform></translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/common/utility.cpp" line="204"/>
+        <location filename="../src/csync/common/utility.cpp" line="204"/>
         <source>%n minute(s)</source>
         <translation><numerusform>%n minuto</numerusform><numerusform>%n minuti</numerusform><numerusform>%n minuti</numerusform></translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/common/utility.cpp" line="205"/>
+        <location filename="../src/csync/common/utility.cpp" line="205"/>
         <source>%n second(s)</source>
         <translation><numerusform>%n secondo</numerusform><numerusform>%n secondi</numerusform><numerusform>%n secondi</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/common/utility.cpp" line="229"/>
+        <location filename="../src/csync/common/utility.cpp" line="229"/>
         <source>%1 %2</source>
         <translation>%1 %2</translation>
     </message>
@@ -3381,22 +3381,22 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>pinstate</name>
     <message>
-        <location filename="../src/common/pinstate.cpp" line="27"/>
+        <location filename="../src/csync/common/pinstate.cpp" line="27"/>
         <source>Always available locally</source>
         <translation>Sempre disponibile localmente</translation>
     </message>
     <message>
-        <location filename="../src/common/pinstate.cpp" line="29"/>
+        <location filename="../src/csync/common/pinstate.cpp" line="29"/>
         <source>Currently available locally</source>
         <translation>Attualmente disponibile localmente</translation>
     </message>
     <message>
-        <location filename="../src/common/pinstate.cpp" line="31"/>
+        <location filename="../src/csync/common/pinstate.cpp" line="31"/>
         <source>Some available online only</source>
         <translation>Alcuni disponibili solo online</translation>
     </message>
     <message>
-        <location filename="../src/common/pinstate.cpp" line="35"/>
+        <location filename="../src/csync/common/pinstate.cpp" line="35"/>
         <source>Available online only</source>
         <translation>Disponibile solo on-line</translation>
     </message>

@@ -89,12 +89,12 @@
 <context>
     <name>ChecksumHeader</name>
     <message>
-        <location filename="../src/common/checksums.cpp" line="124"/>
+        <location filename="../src/csync/common/checksums.cpp" line="124"/>
         <source>The checksum header is malformed: %1</source>
         <translation>L&apos;en-tête de la somme de contrôle est malformé : %1</translation>
     </message>
     <message>
-        <location filename="../src/common/checksums.cpp" line="128"/>
+        <location filename="../src/csync/common/checksums.cpp" line="128"/>
         <source>The checksum header contained an unknown checksum type &apos;%1&apos;</source>
         <translation>L&apos;en-tête de somme de contrôle contient un type de somme de contrôle inconnu &quot;%1</translation>
     </message>
@@ -201,10 +201,10 @@ Utilitaire de bureau pour la synchronisation de fichiers.</translation>
 <context>
     <name>FileSystem</name>
     <message>
-        <location filename="../src/common/filesystembase.cpp" line="166"/>
-        <location filename="../src/common/filesystembase.cpp" line="168"/>
-        <location filename="../src/common/filesystembase.cpp" line="231"/>
-        <location filename="../src/common/filesystembase.cpp" line="236"/>
+        <location filename="../src/csync/common/filesystembase.cpp" line="163"/>
+        <location filename="../src/csync/common/filesystembase.cpp" line="165"/>
+        <location filename="../src/csync/common/filesystembase.cpp" line="224"/>
+        <location filename="../src/csync/common/filesystembase.cpp" line="229"/>
         <source>Can&apos;t rename %1, the file is currently in use</source>
         <translation>Impossible de renommer %1, le fichier est actuellement utilisé</translation>
     </message>
@@ -2629,7 +2629,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
 <context>
     <name>OCC::SyncJournalDb</name>
     <message>
-        <location filename="../src/common/syncjournaldb.cpp" line="888"/>
+        <location filename="../src/csync/common/syncjournaldb.cpp" line="889"/>
         <source>Failed to connect database.</source>
         <translation>Échec de la connexion à la base de données.</translation>
     </message>
@@ -2785,7 +2785,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
 <context>
     <name>OCC::ValidateChecksumHeader</name>
     <message>
-        <location filename="../src/common/checksums.cpp" line="382"/>
+        <location filename="../src/csync/common/checksums.cpp" line="375"/>
         <source>The downloaded file does not match the checksum, it will be resumed. &apos;%1&apos; != &apos;%2&apos;</source>
         <translation>Le fichier téléchargé ne correspond pas à la somme de contrôle, le téléchargement va reprendre. &apos;%1&apos; != &apos;%2&apos;</translation>
     </message>
@@ -2793,17 +2793,17 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
 <context>
     <name>OCC::Vfs</name>
     <message>
-        <location filename="../src/common/vfs.cpp" line="77"/>
+        <location filename="../src/csync/common/vfs.cpp" line="77"/>
         <source>The Virtual filesystem feature does not support a drive as sync root</source>
         <translation>La fonction de système de fichiers virtuel ne prend pas en charge un lecteur en tant que racine de synchronisation.</translation>
     </message>
     <message>
-        <location filename="../src/common/vfs.cpp" line="81"/>
+        <location filename="../src/csync/common/vfs.cpp" line="81"/>
         <source>The Virtual filesystem feature requires a NTFS file system, %1 is using %2</source>
         <translation>Le système de fichiers virtuel nécessite un système de fichiers NTFS, or %1 utilise %2</translation>
     </message>
     <message>
-        <location filename="../src/common/vfs.cpp" line="85"/>
+        <location filename="../src/csync/common/vfs.cpp" line="85"/>
         <source>The Virtual filesystem feature is not supported on network drives</source>
         <translation>Le système de fichiers virtuel n’est pas pris en charge sur les disques réseau</translation>
     </message>
@@ -2995,32 +2995,32 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../src/common/utility.cpp" line="301"/>
+        <location filename="../src/csync/common/utility.cpp" line="301"/>
         <source>in the future</source>
         <translation>dans le futur</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/common/utility.cpp" line="296"/>
+        <location filename="../src/csync/common/utility.cpp" line="296"/>
         <source>%n day(s) ago</source>
         <translation><numerusform>il y a %n jour</numerusform><numerusform>il y a %n jours</numerusform><numerusform>il y a %n jours</numerusform></translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/common/utility.cpp" line="306"/>
+        <location filename="../src/csync/common/utility.cpp" line="306"/>
         <source>%n hour(s) ago</source>
         <translation><numerusform>Il y a %n heure</numerusform><numerusform>Il y a %n heures</numerusform><numerusform>Il y a %n heures</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/common/utility.cpp" line="312"/>
+        <location filename="../src/csync/common/utility.cpp" line="312"/>
         <source>now</source>
         <translation>maintenant</translation>
     </message>
     <message>
-        <location filename="../src/common/utility.cpp" line="314"/>
+        <location filename="../src/csync/common/utility.cpp" line="314"/>
         <source>less than a minute ago</source>
         <translation>il y a moins d&apos;une minute</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/common/utility.cpp" line="318"/>
+        <location filename="../src/csync/common/utility.cpp" line="318"/>
         <source>%n minute(s) ago</source>
         <translation><numerusform>il y a %n minute</numerusform><numerusform>il y a %n minutes</numerusform><numerusform>il y a %n minutes</numerusform></translation>
     </message>
@@ -3311,37 +3311,37 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
 <context>
     <name>Utility</name>
     <message numerus="yes">
-        <location filename="../src/common/utility.cpp" line="200"/>
+        <location filename="../src/csync/common/utility.cpp" line="200"/>
         <source>%n year(s)</source>
         <translation><numerusform>%n année</numerusform><numerusform>%n années</numerusform><numerusform>%n années</numerusform></translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/common/utility.cpp" line="201"/>
+        <location filename="../src/csync/common/utility.cpp" line="201"/>
         <source>%n month(s)</source>
         <translation><numerusform>%n mois</numerusform><numerusform>%n mois</numerusform><numerusform>%n mois</numerusform></translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/common/utility.cpp" line="202"/>
+        <location filename="../src/csync/common/utility.cpp" line="202"/>
         <source>%n day(s)</source>
         <translation><numerusform>%n jour</numerusform><numerusform>%n jours</numerusform><numerusform>%n jours</numerusform></translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/common/utility.cpp" line="203"/>
+        <location filename="../src/csync/common/utility.cpp" line="203"/>
         <source>%n hour(s)</source>
         <translation><numerusform>%n heure</numerusform><numerusform>%n heures</numerusform><numerusform>%n heures</numerusform></translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/common/utility.cpp" line="204"/>
+        <location filename="../src/csync/common/utility.cpp" line="204"/>
         <source>%n minute(s)</source>
         <translation><numerusform>%n minute</numerusform><numerusform>%n minutes</numerusform><numerusform>%n minutes</numerusform></translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/common/utility.cpp" line="205"/>
+        <location filename="../src/csync/common/utility.cpp" line="205"/>
         <source>%n second(s)</source>
         <translation><numerusform>%n seconde</numerusform><numerusform>%n secondes</numerusform><numerusform>%n secondes</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/common/utility.cpp" line="229"/>
+        <location filename="../src/csync/common/utility.cpp" line="229"/>
         <source>%1 %2</source>
         <translation>%1 %2</translation>
     </message>
@@ -3375,22 +3375,22 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
 <context>
     <name>pinstate</name>
     <message>
-        <location filename="../src/common/pinstate.cpp" line="27"/>
+        <location filename="../src/csync/common/pinstate.cpp" line="27"/>
         <source>Always available locally</source>
         <translation>Toujours disponible localement</translation>
     </message>
     <message>
-        <location filename="../src/common/pinstate.cpp" line="29"/>
+        <location filename="../src/csync/common/pinstate.cpp" line="29"/>
         <source>Currently available locally</source>
         <translation>Actuellement disponible localement</translation>
     </message>
     <message>
-        <location filename="../src/common/pinstate.cpp" line="31"/>
+        <location filename="../src/csync/common/pinstate.cpp" line="31"/>
         <source>Some available online only</source>
         <translation>Certains sont disponibles uniquement en ligne</translation>
     </message>
     <message>
-        <location filename="../src/common/pinstate.cpp" line="35"/>
+        <location filename="../src/csync/common/pinstate.cpp" line="35"/>
         <source>Available online only</source>
         <translation>Disponible uniquement en ligne</translation>
     </message>

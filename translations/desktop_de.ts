@@ -89,12 +89,12 @@
 <context>
     <name>ChecksumHeader</name>
     <message>
-        <location filename="../src/common/checksums.cpp" line="124"/>
+        <location filename="../src/csync/common/checksums.cpp" line="124"/>
         <source>The checksum header is malformed: %1</source>
         <translation>Der Prüfsummen-Header ist fehlerhaft: %1</translation>
     </message>
     <message>
-        <location filename="../src/common/checksums.cpp" line="128"/>
+        <location filename="../src/csync/common/checksums.cpp" line="128"/>
         <source>The checksum header contained an unknown checksum type &apos;%1&apos;</source>
         <translation>Der Prüfsummen-Header enthielt einen unbekannten Prüfsummentyp &apos;%1&apos;</translation>
     </message>
@@ -201,10 +201,10 @@ Dateisynchronisierung Desktop-Client .</translation>
 <context>
     <name>FileSystem</name>
     <message>
-        <location filename="../src/common/filesystembase.cpp" line="166"/>
-        <location filename="../src/common/filesystembase.cpp" line="168"/>
-        <location filename="../src/common/filesystembase.cpp" line="231"/>
-        <location filename="../src/common/filesystembase.cpp" line="236"/>
+        <location filename="../src/csync/common/filesystembase.cpp" line="163"/>
+        <location filename="../src/csync/common/filesystembase.cpp" line="165"/>
+        <location filename="../src/csync/common/filesystembase.cpp" line="224"/>
+        <location filename="../src/csync/common/filesystembase.cpp" line="229"/>
         <source>Can&apos;t rename %1, the file is currently in use</source>
         <translation>%1 kann nicht umbenannt werden, da die Datei derzeit verwendet wird</translation>
     </message>
@@ -2630,7 +2630,7 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
 <context>
     <name>OCC::SyncJournalDb</name>
     <message>
-        <location filename="../src/common/syncjournaldb.cpp" line="888"/>
+        <location filename="../src/csync/common/syncjournaldb.cpp" line="889"/>
         <source>Failed to connect database.</source>
         <translation>Verbindung zu Datenbank fehlgeschlagen</translation>
     </message>
@@ -2786,7 +2786,7 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
 <context>
     <name>OCC::ValidateChecksumHeader</name>
     <message>
-        <location filename="../src/common/checksums.cpp" line="382"/>
+        <location filename="../src/csync/common/checksums.cpp" line="375"/>
         <source>The downloaded file does not match the checksum, it will be resumed. &apos;%1&apos; != &apos;%2&apos;</source>
         <translation>Die heruntergeladene Datei stimmt nicht mit der Prüfsumme überein, sie wird wiederaufgenommen. &apos;%1&apos; != &apos;%2&apos;</translation>
     </message>
@@ -2794,17 +2794,17 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
 <context>
     <name>OCC::Vfs</name>
     <message>
-        <location filename="../src/common/vfs.cpp" line="77"/>
+        <location filename="../src/csync/common/vfs.cpp" line="77"/>
         <source>The Virtual filesystem feature does not support a drive as sync root</source>
         <translation>Virtuelle Dateien funktionieren nicht mit einem Laufwerk als Synchronisationspunkt</translation>
     </message>
     <message>
-        <location filename="../src/common/vfs.cpp" line="81"/>
+        <location filename="../src/csync/common/vfs.cpp" line="81"/>
         <source>The Virtual filesystem feature requires a NTFS file system, %1 is using %2</source>
         <translation>Virtuelle Dateien benötigt ein NTFS Dateisystem. %1 benutzt %2</translation>
     </message>
     <message>
-        <location filename="../src/common/vfs.cpp" line="85"/>
+        <location filename="../src/csync/common/vfs.cpp" line="85"/>
         <source>The Virtual filesystem feature is not supported on network drives</source>
         <translation>Virtuelle Dateien funktionieren nicht mit Netzwerk-Laufwerken</translation>
     </message>
@@ -2996,32 +2996,32 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../src/common/utility.cpp" line="301"/>
+        <location filename="../src/csync/common/utility.cpp" line="301"/>
         <source>in the future</source>
         <translation>in der Zukunft</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/common/utility.cpp" line="296"/>
+        <location filename="../src/csync/common/utility.cpp" line="296"/>
         <source>%n day(s) ago</source>
         <translation><numerusform>Vor einem Tag</numerusform><numerusform>Vor %n Tagen</numerusform></translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/common/utility.cpp" line="306"/>
+        <location filename="../src/csync/common/utility.cpp" line="306"/>
         <source>%n hour(s) ago</source>
         <translation><numerusform>Vor einer Stunden</numerusform><numerusform>Vor %n Stunden</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/common/utility.cpp" line="312"/>
+        <location filename="../src/csync/common/utility.cpp" line="312"/>
         <source>now</source>
         <translation>jetzt</translation>
     </message>
     <message>
-        <location filename="../src/common/utility.cpp" line="314"/>
+        <location filename="../src/csync/common/utility.cpp" line="314"/>
         <source>less than a minute ago</source>
         <translation>vor weniger als einer Minute</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/common/utility.cpp" line="318"/>
+        <location filename="../src/csync/common/utility.cpp" line="318"/>
         <source>%n minute(s) ago</source>
         <translation><numerusform>Vor einer Minuten</numerusform><numerusform>Vor %n Minuten</numerusform></translation>
     </message>
@@ -3312,37 +3312,37 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
 <context>
     <name>Utility</name>
     <message numerus="yes">
-        <location filename="../src/common/utility.cpp" line="200"/>
+        <location filename="../src/csync/common/utility.cpp" line="200"/>
         <source>%n year(s)</source>
         <translation><numerusform>%n Jahr</numerusform><numerusform>%n Jahre</numerusform></translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/common/utility.cpp" line="201"/>
+        <location filename="../src/csync/common/utility.cpp" line="201"/>
         <source>%n month(s)</source>
         <translation><numerusform>%n Monat</numerusform><numerusform>%n Monate</numerusform></translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/common/utility.cpp" line="202"/>
+        <location filename="../src/csync/common/utility.cpp" line="202"/>
         <source>%n day(s)</source>
         <translation><numerusform>%n Tag</numerusform><numerusform>%n Tage</numerusform></translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/common/utility.cpp" line="203"/>
+        <location filename="../src/csync/common/utility.cpp" line="203"/>
         <source>%n hour(s)</source>
         <translation><numerusform>%n Stunde</numerusform><numerusform>%n Stunden</numerusform></translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/common/utility.cpp" line="204"/>
+        <location filename="../src/csync/common/utility.cpp" line="204"/>
         <source>%n minute(s)</source>
         <translation><numerusform>%n Minute</numerusform><numerusform>%n Minuten</numerusform></translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/common/utility.cpp" line="205"/>
+        <location filename="../src/csync/common/utility.cpp" line="205"/>
         <source>%n second(s)</source>
         <translation><numerusform>%n Sekunde</numerusform><numerusform>%n Sekunden</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/common/utility.cpp" line="229"/>
+        <location filename="../src/csync/common/utility.cpp" line="229"/>
         <source>%1 %2</source>
         <translation>%1 %2</translation>
     </message>
@@ -3376,22 +3376,22 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
 <context>
     <name>pinstate</name>
     <message>
-        <location filename="../src/common/pinstate.cpp" line="27"/>
+        <location filename="../src/csync/common/pinstate.cpp" line="27"/>
         <source>Always available locally</source>
         <translation>Immer lokal verfügbar</translation>
     </message>
     <message>
-        <location filename="../src/common/pinstate.cpp" line="29"/>
+        <location filename="../src/csync/common/pinstate.cpp" line="29"/>
         <source>Currently available locally</source>
         <translation>Aktuell lokal verfügbar</translation>
     </message>
     <message>
-        <location filename="../src/common/pinstate.cpp" line="31"/>
+        <location filename="../src/csync/common/pinstate.cpp" line="31"/>
         <source>Some available online only</source>
         <translation>Einige nur Online verfügbar</translation>
     </message>
     <message>
-        <location filename="../src/common/pinstate.cpp" line="35"/>
+        <location filename="../src/csync/common/pinstate.cpp" line="35"/>
         <source>Available online only</source>
         <translation>Nur Online verfügbar</translation>
     </message>
