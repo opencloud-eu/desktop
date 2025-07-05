@@ -1,6 +1,20 @@
 # Changelog
 
-## [2.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v2.0.0) - 2025-06-06
+## [3.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v3.0.0) - 2025-07-05
+
+### ❤️ Thanks to all contributors! ❤️
+
+@TheOneRing, @anon-pradip
+
+### 💥 Breaking changes
+
+- Enable http2 support by default [[#333](https://github.com/opencloud-eu/desktop/pull/333)]
+
+### 🐛 Bug Fixes
+
+- OAuth: Only display user name in an error if we have one [[#355](https://github.com/opencloud-eu/desktop/pull/355)]
+
+## [2.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v2.0.0) - 2025-07-03
 
 ### ❤️ Thanks to all contributors! ❤️
 
@@ -8,6 +22,7 @@
 
 ### 💥 Breaking changes
 
+- Enable http2 support by default [[#333](https://github.com/opencloud-eu/desktop/pull/333)]
 - Since Qt 6.8 network headers are normalized to lowercase [[#308](https://github.com/opencloud-eu/desktop/pull/308)]
 - Remove Theme::linkSharing and Theme::userGroupSharing [[#279](https://github.com/opencloud-eu/desktop/pull/279)]
 - Remove unsupported solid avatar color branding [[#280](https://github.com/opencloud-eu/desktop/pull/280)]
@@ -18,6 +33,7 @@
 
 ### 🐛 Bug Fixes
 
+- OAuth: Only display user name in an error if we have one [[#355](https://github.com/opencloud-eu/desktop/pull/355)]
 - Fix reuse of existing Space folders [[#311](https://github.com/opencloud-eu/desktop/pull/311)]
 - Retry oauth refresh if wellknown request failed [[#310](https://github.com/opencloud-eu/desktop/pull/310)]
 - Update KDSingleApplication to 1.2.0 [[#293](https://github.com/opencloud-eu/desktop/pull/293)]
