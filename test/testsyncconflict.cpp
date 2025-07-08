@@ -109,7 +109,13 @@ private Q_SLOTS:
         fakeFolder.localModifier().appendByte(QStringLiteral("A/a2"));
         fakeFolder.remoteModifier().appendByte(QStringLiteral("A/a2"));
         fakeFolder.remoteModifier().appendByte(QStringLiteral("A/a2"));
-        QVERIFY(fakeFolder.applyLocalModificationsAndSync());
+        if (filesAreDehydrated) {
+            // one sync fails as accessing the out of sync placeholder, to  modify, fails
+            QVERIFY(!fakeFolder.applyLocalModificationsWithoutSync());
+            QVERIFY(fakeFolder.applyLocalModificationsAndSync());
+        } else {
+            QVERIFY(fakeFolder.applyLocalModificationsAndSync());
+        }
 
         const auto &conflicts = findConflicts(fakeFolder.currentLocalState().children[QStringLiteral("A")]);
         if (filesAreDehydrated) {
@@ -160,7 +166,13 @@ private Q_SLOTS:
         fakeFolder.localModifier().appendByte(QStringLiteral("A/a2"));
         fakeFolder.remoteModifier().appendByte(QStringLiteral("A/a2"));
         fakeFolder.remoteModifier().appendByte(QStringLiteral("A/a2"));
-        QVERIFY(fakeFolder.applyLocalModificationsAndSync());
+        if (filesAreDehydrated) {
+            // one sync fails as accessing the out of sync placeholder, to  modify, fails
+            QVERIFY(!fakeFolder.applyLocalModificationsWithoutSync());
+            QVERIFY(fakeFolder.applyLocalModificationsAndSync());
+        } else {
+            QVERIFY(fakeFolder.applyLocalModificationsAndSync());
+        }
         if (filesAreDehydrated) {
             // There should be no conflicts: before a modification is done to a local file,
             // it will be downloaded from the remote first.
@@ -362,7 +374,13 @@ private Q_SLOTS:
         fakeFolder.localModifier().appendByte(QStringLiteral("A/a2"));
         fakeFolder.localModifier().appendByte(QStringLiteral("A/a2"));
         fakeFolder.remoteModifier().appendByte(QStringLiteral("A/a2"));
-        QVERIFY(fakeFolder.applyLocalModificationsAndSync());
+        if (filesAreDehydrated) {
+            // one sync fails as accessing the out of sync placeholder, to  modify, fails
+            QVERIFY(!fakeFolder.applyLocalModificationsWithoutSync());
+            QVERIFY(fakeFolder.applyLocalModificationsAndSync());
+        } else {
+            QVERIFY(fakeFolder.applyLocalModificationsAndSync());
+        }
 
         const auto &conflicts = findConflicts(fakeFolder.currentLocalState().children[QStringLiteral("A")]);
         if (filesAreDehydrated) {
