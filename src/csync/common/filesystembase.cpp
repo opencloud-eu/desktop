@@ -35,6 +35,8 @@
 #include <io.h>
 #endif
 
+using namespace Qt::Literals::StringLiterals;
+
 namespace {
 // Regarding
 // https://en.wikipedia.org/wiki/Comparison_of_file_systems#Limits
@@ -422,22 +424,26 @@ namespace {
             break;
         }
         // Check if file exists
-        DWORD attr = GetFileAttributesW(reinterpret_cast<const wchar_t *>(fName.utf16()));
+        const DWORD attr = GetFileAttributesW(reinterpret_cast<const wchar_t *>(fName.utf16()));
         if (attr != INVALID_FILE_ATTRIBUTES) {
             // Try to open the file with as much access as possible..
             auto out = Utility::Handle{CreateFileW(reinterpret_cast<const wchar_t *>(fName.utf16()), accessMode, shareMode, nullptr, OPEN_EXISTING,
                 FILE_ATTRIBUTE_NORMAL | FILE_FLAG_BACKUP_SEMANTICS, nullptr)};
-
             if (out) {
-                LARGE_INTEGER start;
-                start.QuadPart = 0;
-                LARGE_INTEGER end;
-                end.QuadPart = -1;
-                if (LockFile(out.handle(), start.LowPart, start.HighPart, end.LowPart, end.HighPart)) {
-                    OC_ENFORCE(UnlockFile(out.handle(), start.LowPart, start.HighPart, end.LowPart, end.HighPart));
+                if (attr & FILE_ATTRIBUTE_DIRECTORY) {
                     return out;
                 } else {
-                    return {};
+                    // try to lock the complete file explicitly, to check for ranged locks
+                    LARGE_INTEGER start;
+                    start.QuadPart = 0;
+                    LARGE_INTEGER end;
+                    end.QuadPart = -1;
+                    if (LockFile(out.handle(), start.LowPart, start.HighPart, end.LowPart, end.HighPart)) {
+                        OC_ENFORCE(UnlockFile(out.handle(), start.LowPart, start.HighPart, end.LowPart, end.HighPart));
+                        return out;
+                    } else {
+                        return {};
+                    }
                 }
             }
             return out;
@@ -457,7 +463,9 @@ bool FileSystem::isFileLocked(const QString &fileName, LockMode mode)
         if (error == ERROR_SHARING_VIOLATION || error == ERROR_LOCK_VIOLATION) {
             return true;
         } else if (error != ERROR_FILE_NOT_FOUND && error != ERROR_PATH_NOT_FOUND) {
-            qCWarning(lcFileSystem()) << Q_FUNC_INFO << Utility::formatWinError(error);
+            const QFileInfo info(fileName);
+            qCWarning(lcFileSystem) << Q_FUNC_INFO << mode << fileName << (info.isDir() ? "isDir" : (info.exists() ? "isFile" : "does not exist"))
+                                    << Utility::formatWinError(error);
         }
     }
 #else
