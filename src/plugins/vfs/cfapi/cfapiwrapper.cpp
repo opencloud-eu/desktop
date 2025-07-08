@@ -116,10 +116,12 @@ void cfApiSendTransferInfo(const CF_CONNECTION_KEY &connectionKey, const CF_TRAN
 
 void CALLBACK cfApiFetchDataCallback(const CF_CALLBACK_INFO *callbackInfo, const CF_CALLBACK_PARAMETERS *callbackParameters)
 {
-    qDebug(lcCfApiWrapper) << "Fetch data callback called. File size:" << callbackInfo->FileSize.QuadPart;
-    qDebug(lcCfApiWrapper) << "Desktop client proccess id:" << QCoreApplication::applicationPid();
-    qDebug(lcCfApiWrapper) << "Fetch data requested by proccess id:" << callbackInfo->ProcessInfo->ProcessId;
-    qDebug(lcCfApiWrapper) << "Fetch data requested by application id:" << QString(QString::fromWCharArray(callbackInfo->ProcessInfo->ApplicationId));
+    const qint64 requestedFileSize = callbackInfo->FileSize.QuadPart;
+    qDebug(lcCfApiWrapper) << "Fetch data callback called. File size:" << requestedFileSize;
+    qDebug(lcCfApiWrapper) << "Desktop client process id:" << QCoreApplication::applicationPid();
+    qDebug(lcCfApiWrapper) << "Fetch data requested by process id:" << callbackInfo->ProcessInfo->ProcessId;
+    qDebug(lcCfApiWrapper) << "Fetch data requested by application id:" << QString::fromWCharArray(callbackInfo->ProcessInfo->ApplicationId);
+    qDebug(lcCfApiWrapper) << "Fetch data requested by application:" << QString::fromWCharArray(callbackInfo->ProcessInfo->ImagePath);
 
     const auto sendTransferError = [=] {
         cfApiSendTransferInfo(callbackInfo->ConnectionKey, callbackInfo->TransferKey, STATUS_UNSUCCESSFUL, nullptr,
@@ -135,16 +137,18 @@ void CALLBACK cfApiFetchDataCallback(const CF_CALLBACK_INFO *callbackInfo, const
     Q_ASSERT(vfs->metaObject()->className() == QByteArrayLiteral("OCC::VfsCfApi"));
     const auto path = QString(QString::fromWCharArray(callbackInfo->VolumeDosName) + QString::fromWCharArray(callbackInfo->NormalizedPath));
     const auto requestId = QString::number(callbackInfo->TransferKey.QuadPart, 16);
+    const auto fileId = QByteArray(reinterpret_cast<const char *>(callbackInfo->FileIdentity), callbackInfo->FileIdentityLength);
 
     if (QCoreApplication::applicationPid() == callbackInfo->ProcessInfo->ProcessId) {
         qCCritical(lcCfApiWrapper) << "implicit hydration triggered by the client itself. Will lead to a deadlock. Cancel" << path << requestId;
+        Q_ASSERT(false);
         sendTransferError();
         return;
     }
 
     qCDebug(lcCfApiWrapper) << "Request hydration for" << path << requestId;
 
-    const auto invokeResult = QMetaObject::invokeMethod(vfs, [=] { vfs->requestHydration(requestId, path); }, Qt::QueuedConnection);
+    const auto invokeResult = QMetaObject::invokeMethod(vfs, [=] { vfs->requestHydration(requestId, path, fileId, requestedFileSize); }, Qt::QueuedConnection);
     if (!invokeResult) {
         qCCritical(lcCfApiWrapper) << "Failed to trigger hydration for" << path << requestId;
         sendTransferError();
@@ -210,6 +214,8 @@ void CALLBACK cfApiFetchDataCallback(const CF_CALLBACK_INFO *callbackInfo, const
     // CFAPI expects sent blocks to be of a multiple of a block size.
     // Only the last sent block is allowed to be of a different size than
     // a multiple of a block size
+
+    // TODO: this looks like it has optimisation potential
     constexpr auto cfapiBlockSize = 4096;
     qint64 dataOffset = 0;
     QByteArray protrudingData;
@@ -260,14 +266,14 @@ void CALLBACK cfApiFetchDataCallback(const CF_CALLBACK_INFO *callbackInfo, const
         sendTransferInfo(protrudingData, dataOffset);
     }
 
-    int hydrationJobResult = OCC::HydrationJob::Status::Error;
+    OCC::HydrationJob::Status hydrationJobResult = OCC::HydrationJob::Status::Error;
     const auto invokeFinalizeResult = QMetaObject::invokeMethod(
-        vfs, [&hydrationJobResult, vfs, requestId] { return vfs->finalizeHydrationJob(requestId); }, Qt::BlockingQueuedConnection, &hydrationJobResult);
+        vfs, [&hydrationJobResult, vfs, requestId] { hydrationJobResult = vfs->finalizeHydrationJob(requestId); }, Qt::BlockingQueuedConnection);
     if (!invokeFinalizeResult) {
         qCritical(lcCfApiWrapper) << "Failed to finalize hydration job for" << path << requestId;
     }
 
-    if (static_cast<OCC::HydrationJob::Status>(hydrationJobResult) != OCC::HydrationJob::Success) {
+    if (hydrationJobResult != OCC::HydrationJob::Status::Success) {
         sendTransferError();
     }
 }
