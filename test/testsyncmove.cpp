@@ -706,7 +706,7 @@ private Q_SLOTS:
                 // the dehydrating the placeholder failed as the metadata is out of sync
                 QSignalSpy spy(fakeFolder.vfs().get(), &Vfs::needSync);
                 QVERIFY(!fakeFolder.applyLocalModificationsAndSync());
-                QVERIFY(spy.count() == 1);
+                QCOMPARE(spy.count(), 1);
                 QVERIFY(fakeFolder.syncOnce());
                 QVERIFY(fakeFolder.applyLocalModificationsAndSync());
                 QCOMPARE(fakeFolder.currentLocalState(), fakeFolder.currentRemoteState());
