@@ -385,14 +385,6 @@ CF_CALLBACK_REGISTRATION cfApiCallbacks[] = {{CF_CALLBACK_TYPE_FETCH_DATA, cfApi
     {CF_CALLBACK_TYPE_CANCEL_FETCH_PLACEHOLDERS, cfApiCancelFetchPlaceHolders}, CF_CALLBACK_REGISTRATION_END};
 
 
-std::wstring pathForHandle(const OCC::Utility::Handle &handle)
-{
-    wchar_t buffer[MAX_PATH];
-    const qint64 result = GetFinalPathNameByHandle(handle, buffer, MAX_PATH, VOLUME_NAME_DOS);
-    Q_ASSERT(result < MAX_PATH);
-    return std::wstring(buffer);
-}
-
 CF_PIN_STATE pinStateToCfPinState(OCC::PinState state)
 {
     switch (state) {
