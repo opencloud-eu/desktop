@@ -4,9 +4,10 @@
  */
 #pragma once
 
-#include <QObject>
+#include "csync/common/syncjournalfilerecord.h"
+#include "libsync/account.h"
 
-#include "account.h"
+#include <QNetworkReply>
 
 class QLocalServer;
 class QLocalSocket;
@@ -16,18 +17,19 @@ class GETFileJob;
 class SyncJournalDb;
 class VfsCfApi;
 
+// TODO: check checksums
 class HydrationJob : public QObject
 {
     Q_OBJECT
 public:
-    enum Status {
+    enum class Status {
         Success = 0,
         Error,
         Cancelled,
     };
     Q_ENUM(Status)
 
-    explicit HydrationJob(QObject *parent = nullptr);
+    explicit HydrationJob(VfsCfApi *parent);
 
     ~HydrationJob() override;
 
@@ -37,8 +39,8 @@ public:
     [[nodiscard]] QUrl remoteSyncRootPath() const;
     void setRemoteSyncRootPath(const QUrl &path);
 
-    QString localPath() const;
-    void setLocalPath(const QString &localPath);
+    QString localRoot() const;
+    void setLocalRoot(const QString &localPath);
 
     SyncJournalDb *journal() const;
     void setJournal(SyncJournalDb *journal);
@@ -46,11 +48,14 @@ public:
     QString requestId() const;
     void setRequestId(const QString &requestId);
 
-    QString folderPath() const;
-    void setFolderPath(const QString &folderPath);
+    QString localFilePathAbs() const;
+    void setLocalFilePathAbs(const QString &folderPath);
 
-    qint64 fileTotalSize() const;
-    void setFileTotalSize(qint64 totalSize);
+    QString remotePathRel() const;
+    void setRemoteFilePathRel(const QString &path);
+
+    const SyncJournalFileRecord &record() const;
+    void setRecord(SyncJournalFileRecord &&record);
 
     Status status() const;
 
@@ -77,23 +82,26 @@ private:
 
     void startServerAndWaitForConnections();
 
+    VfsCfApi *_parent;
     AccountPtr _account;
     QUrl _remoteSyncRootPath;
-    QString _localPath;
+    QString _localRoot;
     SyncJournalDb *_journal = nullptr;
     bool _isCancelled = false;
 
     QString _requestId;
-    QString _folderPath;
+    QString _localFilePathAbs;
+    QString _remoteFilePathRel;
 
+    SyncJournalFileRecord _record;
 
     QLocalServer *_transferDataServer = nullptr;
     QLocalServer *_signalServer = nullptr;
     QLocalSocket *_transferDataSocket = nullptr;
     QLocalSocket *_signalSocket = nullptr;
-    GETFileJob *_job = nullptr;
-    Status _status = Success;
-    int _errorCode = 0;
+    QPointer<GETFileJob> _job;
+    Status _status = Status::Success;
+    QNetworkReply::NetworkError _errorCode = QNetworkReply::NoError;
     int _statusCode = 0;
     QString _errorString;
     QString _remoteParentPath;

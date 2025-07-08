@@ -4,11 +4,11 @@
  */
 #pragma once
 
-#include <QObject>
-#include <QScopedPointer>
-
 #include "common/plugin.h"
 #include "common/vfs.h"
+#include "hydrationjob.h"
+
+#include <QScopedPointer>
 
 namespace OCC {
 class HydrationJob;
@@ -42,10 +42,10 @@ public:
 
     void cancelHydration(const QString &requestId, const QString &path);
 
-    int finalizeHydrationJob(const QString &requestId);
+    HydrationJob::Status finalizeHydrationJob(const QString &requestId);
 
 public Q_SLOTS:
-    void requestHydration(const QString &requestId, const QString &path);
+    void requestHydration(const QString &requestId, const QString &targetPath, const QByteArray &fileId, qint64 requestedFileSize);
     void fileStatusChanged(const QString &systemFileName, OCC::SyncFileStatus fileStatus) override;
 
 Q_SIGNALS:
@@ -58,7 +58,7 @@ protected:
     void startImpl(const VfsSetupParams &params) override;
 
 private:
-    void scheduleHydrationJob(const QString &requestId, const QString &folderPath);
+    void scheduleHydrationJob(const QString &requestId, SyncJournalFileRecord &&record, const QString &targetPath);
     void onHydrationJobFinished(HydrationJob *job);
     HydrationJob *findHydrationJob(const QString &requestId) const;
 
