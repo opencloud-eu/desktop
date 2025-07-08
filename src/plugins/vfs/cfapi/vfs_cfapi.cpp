@@ -426,45 +426,5 @@ HydrationJob::Status VfsCfApi::finalizeHydrationJob(const QString &requestId)
     return HydrationJob::Status::Error;
 }
 
-VfsCfApi::HydratationAndPinStates VfsCfApi::computeRecursiveHydrationAndPinStates(const QString &folderPath, const Optional<PinState> &basePinState)
-{
-    Q_ASSERT(!folderPath.endsWith('/'_L1));
-    const auto fullPath = QString{params().filesystemPath + folderPath};
-    QFileInfo info(params().filesystemPath + folderPath);
-
-    if (!FileSystem::fileExists(fullPath)) {
-        return {};
-    }
-    const auto effectivePin = pinState(folderPath);
-    const auto pinResult = (!effectivePin && !basePinState) ? Optional<PinState>()
-        : (!effectivePin || !basePinState)                  ? PinState::Inherited
-        : (*effectivePin == *basePinState)                  ? *effectivePin
-                                                            : PinState::Inherited;
-
-    if (QFileInfo(fullPath).isDir()) {
-        const auto dirState = HydratationAndPinStates{pinResult, {}};
-        const auto dir = QDir(info.absoluteFilePath());
-        Q_ASSERT(dir.exists());
-        const auto children = dir.entryList();
-        return std::accumulate(std::cbegin(children), std::cend(children), dirState, [=](const HydratationAndPinStates &currentState, const QString &name) {
-            if (name == QStringLiteral("..") || name == QStringLiteral(".")) {
-                return currentState;
-            }
-
-            // if the folderPath.isEmpty() we don't want to end up having path "/example.file" because this will lead to double slash later, when appending to
-            // "SyncFolder/"
-            const auto path = folderPath.isEmpty() ? name : folderPath + '/'_L1 + name;
-            const auto states = computeRecursiveHydrationAndPinStates(path, currentState.pinState);
-            return HydratationAndPinStates{states.pinState,
-                {
-                    states.hydrationStatus.hasHydrated || currentState.hydrationStatus.hasHydrated,
-                    states.hydrationStatus.hasDehydrated || currentState.hydrationStatus.hasDehydrated,
-                }};
-        });
-    } else { // file case
-        const auto isDehydrated = isDehydratedPlaceholder(info.absoluteFilePath());
-        return {pinResult, {!isDehydrated, isDehydrated}};
-    }
-}
 
 } // namespace OCC

@@ -62,18 +62,6 @@ private:
     void onHydrationJobFinished(HydrationJob *job);
     HydrationJob *findHydrationJob(const QString &requestId) const;
 
-    struct HasHydratedDehydrated
-    {
-        bool hasHydrated = false;
-        bool hasDehydrated = false;
-    };
-    struct HydratationAndPinStates
-    {
-        Optional<PinState> pinState;
-        HasHydratedDehydrated hydrationStatus;
-    };
-    HydratationAndPinStates computeRecursiveHydrationAndPinStates(const QString &path, const Optional<PinState> &basePinState);
-
     QScopedPointer<VfsCfApiPrivate> d;
 };
 
