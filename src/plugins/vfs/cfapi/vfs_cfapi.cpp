@@ -254,28 +254,12 @@ bool VfsCfApi::setPinState(const QString &folderPath, PinState state)
     qCDebug(lcCfApi) << "setPinState" << folderPath << state;
 
     const auto localPath = QDir::toNativeSeparators(params().filesystemPath + folderPath);
-
-    return setPinStateLocal(localPath, state);
-}
-
-bool VfsCfApi::setPinStateLocal(const QString &localPath, PinState state)
-{
-    if (cfapi::setPinState(localPath, state, cfapi::Recurse)) {
-        return true;
-    } else {
-        return false;
-    }
+    return static_cast<bool>(cfapi::setPinState(localPath, state, cfapi::Recurse));
 }
 
 Optional<PinState> VfsCfApi::pinState(const QString &folderPath)
 {
     const auto localPath = QDir::toNativeSeparators(params().filesystemPath + folderPath);
-
-    return pinStateLocal(localPath);
-}
-
-Optional<PinState> VfsCfApi::pinStateLocal(const QString &localPath) const
-{
     const auto info = cfapi::findPlaceholderInfo(localPath);
     if (!info) {
         qCDebug(lcCfApi) << "Couldn't find pin state for regular non-placeholder file" << localPath;
