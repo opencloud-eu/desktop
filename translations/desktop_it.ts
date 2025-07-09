@@ -200,10 +200,10 @@ Utilità desktop per la sincronizazione dei file.</translation>
 <context>
     <name>FileSystem</name>
     <message>
-        <location filename="../src/csync/common/filesystembase.cpp" line="163"/>
         <location filename="../src/csync/common/filesystembase.cpp" line="165"/>
-        <location filename="../src/csync/common/filesystembase.cpp" line="224"/>
-        <location filename="../src/csync/common/filesystembase.cpp" line="229"/>
+        <location filename="../src/csync/common/filesystembase.cpp" line="167"/>
+        <location filename="../src/csync/common/filesystembase.cpp" line="226"/>
+        <location filename="../src/csync/common/filesystembase.cpp" line="231"/>
         <source>Can&apos;t rename %1, the file is currently in use</source>
         <translation>Inpossibili rinominare %1, il file è attualmente in uso.</translation>
     </message>
