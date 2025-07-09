@@ -91,7 +91,7 @@ void cfApiSendTransferInfo(const CF_CONNECTION_KEY &connectionKey, const CF_TRAN
     const qint64 cfExecuteresult = CfExecute(&opInfo, &opParams);
     if (cfExecuteresult != S_OK) {
         qCCritical(lcCfApiWrapper) << "Couldn't send transfer info" << QString::number(transferKey.QuadPart, 16) << ":" << cfExecuteresult
-                                   << QString::fromWCharArray(_com_error(cfExecuteresult).ErrorMessage());
+                                   << OCC::Utility::formatWinError(cfExecuteresult);
     }
 
     const auto isDownloadFinished = ((offset + currentBlockLength) == totalLength);
@@ -110,7 +110,7 @@ void cfApiSendTransferInfo(const CF_CONNECTION_KEY &connectionKey, const CF_TRAN
 
     if (cfReportProgressresult != S_OK) {
         qCCritical(lcCfApiWrapper) << "Couldn't report provider progress" << QString::number(transferKey.QuadPart, 16) << ":" << cfReportProgressresult
-                                   << QString::fromWCharArray(_com_error(cfReportProgressresult).ErrorMessage());
+                                   << OCC::Utility::formatWinError(cfReportProgressresult);
     }
 }
 
@@ -605,9 +605,11 @@ OCC::Result<void, QString> OCC::CfApiWrapper::registerSyncRoot(
     policies.HardLink = CF_HARDLINK_POLICY_NONE;
 
     const qint64 result = CfRegisterSyncRoot(p.data(), &info, &policies, CF_REGISTER_FLAG_UPDATE);
-    Q_ASSERT(result == S_OK);
     if (result != S_OK) {
-        return OCC::Utility::formatWinError(result);
+        const QString error = OCC::Utility::formatWinError(result);
+        qCWarning(lcCfApiWrapper) << "CfRegisterSyncRoot failed" << error;
+        Q_ASSERT(result == S_OK);
+        return error;
     } else {
         return {};
     }
@@ -730,7 +732,7 @@ OCC::Utility::Handle OCC::CfApiWrapper::handleForPath(const QString &path)
         if (openResult == S_OK) {
             return OCC::Utility::Handle{handle, [](HANDLE h) { CfCloseHandle(h); }};
         } else {
-            qCWarning(lcCfApiWrapper) << "Could not open handle for " << path << " result: " << QString::fromWCharArray(_com_error(openResult).ErrorMessage());
+            qCWarning(lcCfApiWrapper) << "Could not open handle for " << path << " result: " << OCC::Utility::formatWinError(openResult);
         }
     } else if (info.isFile()) {
         const auto longpath = OCC::FileSystem::longWinPath(path);
