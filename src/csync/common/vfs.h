@@ -60,11 +60,6 @@ struct OCSYNC_EXPORT VfsSetupParams
     QString providerName;
     QVersionNumber providerVersion;
 
-    /** when registering with the system we might use
-     *  a different presentaton to identify the accounts
-     */
-    bool multipleAccountsRegistered = false;
-
     const QUrl &baseUrl() const { return _baseUrl; }
 
     bool groupInSidebar() const { return _groupInSidebar; }
