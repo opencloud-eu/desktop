@@ -1,6 +1,6 @@
 # Changelog
 
-## [3.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v3.0.0) - 2025-07-09
+## [3.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v3.0.0) - 2025-07-10
 
 ### ❤️ Thanks to all contributors! ❤️
 
@@ -8,6 +8,7 @@
 
 ### 💥 Breaking changes
 
+- Add Windows VFS [[#305](https://github.com/opencloud-eu/desktop/pull/305)]
 - Enable http2 support by default [[#333](https://github.com/opencloud-eu/desktop/pull/333)]
 
 ### 🐛 Bug Fixes
