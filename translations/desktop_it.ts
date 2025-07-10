@@ -1003,32 +1003,32 @@ L&apos;aggiornamento verrà eseguito in background e sovrascriverà il file AppI
         <translation>Sincronizza attività</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="721"/>
+        <location filename="../src/gui/folder.cpp" line="720"/>
         <source>Switching VFS mode on folder &apos;%1&apos;</source>
         <translation>Commutazione della modalità VFS sulla cartella &apos;%1&apos;</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="844"/>
+        <location filename="../src/gui/folder.cpp" line="843"/>
         <source>Could not read system exclude file</source>
         <translation>Impossibile leggere il file di esclusione del sistema</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1065"/>
+        <location filename="../src/gui/folder.cpp" line="1064"/>
         <source>The folder %1 was created but was excluded from synchronization previously. Data inside it will not be synchronized.</source>
         <translation>La cartella %1 è stata creata ma in precedenza era stata esclusa dalla sincronizzazione. I dati al suo interno non verranno sincronizzati.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1068"/>
+        <location filename="../src/gui/folder.cpp" line="1067"/>
         <source>The file %1 was created but was excluded from synchronization previously. It will not be synchronized.</source>
         <translation>Il file %1 è stato creato ma è stato precedentemente escluso dalla sincronizzazione. Non verrà sincronizzato.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1072"/>
+        <location filename="../src/gui/folder.cpp" line="1071"/>
         <source>%1 is not synchronized</source>
         <translation>%1 non è sincronizzato</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1080"/>
+        <location filename="../src/gui/folder.cpp" line="1079"/>
         <source>Changes in synchronized folders could not be tracked reliably.
 
 This means that the synchronization client might not upload local changes immediately and will instead only scan for local changes and upload them occasionally (every two hours by default).
@@ -2131,24 +2131,19 @@ Note that using any logging command line options will override the settings.</so
         <translation>Impossibile rinominare %1 in %2, il file è attualmente in uso</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatorjobs.cpp" line="267"/>
+        <location filename="../src/libsync/propagatorjobs.cpp" line="263"/>
         <source>Error updating metadata: %1</source>
         <translation>Errore durante l&apos;aggiornamento dei metadati: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatorjobs.cpp" line="270"/>
+        <location filename="../src/libsync/propagatorjobs.cpp" line="266"/>
         <source>The file %1 is currently in use</source>
         <translation>Il file %1 è attualmente in uso</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatorjobs.cpp" line="276"/>
+        <location filename="../src/libsync/propagatorjobs.cpp" line="272"/>
         <source>Failed to rename file</source>
         <translation>Impossibile rinominare il file</translation>
-    </message>
-    <message>
-        <location filename="../src/libsync/propagatorjobs.cpp" line="282"/>
-        <source>Error setting pin state</source>
-        <translation>Errore durante l&apos;impostazione dello stato del pin</translation>
     </message>
 </context>
 <context>
@@ -2185,24 +2180,19 @@ Note that using any logging command line options will override the settings.</so
         <translation>Il server ha restituito un codice HTTP errato. Era previsto 201, ma è stato ricevuto &quot;%1 %2&quot;.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateremotemove.cpp" line="152"/>
+        <location filename="../src/libsync/propagateremotemove.cpp" line="149"/>
         <source>Error updating metadata: %1</source>
         <translation>Errore durante l&apos;aggiornamento dei metadati: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateremotemove.cpp" line="155"/>
+        <location filename="../src/libsync/propagateremotemove.cpp" line="152"/>
         <source>The file %1 is currently in use</source>
         <translation>Il file %1 è attualmente in uso</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateremotemove.cpp" line="167"/>
+        <location filename="../src/libsync/propagateremotemove.cpp" line="159"/>
         <source>Error writing metadata to the database</source>
         <translation>Errore durante la scrittura dei metadati nel database</translation>
-    </message>
-    <message>
-        <location filename="../src/libsync/propagateremotemove.cpp" line="160"/>
-        <source>Error setting pin state</source>
-        <translation>Errore durante l&apos;impostazione dello stato del pin</translation>
     </message>
 </context>
 <context>

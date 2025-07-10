@@ -1018,32 +1018,32 @@ The update will be performed in the background, and overwrite the current AppIma
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="721"/>
+        <location filename="../src/gui/folder.cpp" line="720"/>
         <source>Switching VFS mode on folder &apos;%1&apos;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="844"/>
+        <location filename="../src/gui/folder.cpp" line="843"/>
         <source>Could not read system exclude file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1065"/>
+        <location filename="../src/gui/folder.cpp" line="1064"/>
         <source>The folder %1 was created but was excluded from synchronization previously. Data inside it will not be synchronized.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1068"/>
+        <location filename="../src/gui/folder.cpp" line="1067"/>
         <source>The file %1 was created but was excluded from synchronization previously. It will not be synchronized.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1072"/>
+        <location filename="../src/gui/folder.cpp" line="1071"/>
         <source>%1 is not synchronized</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1080"/>
+        <location filename="../src/gui/folder.cpp" line="1079"/>
         <source>Changes in synchronized folders could not be tracked reliably.
 
 This means that the synchronization client might not upload local changes immediately and will instead only scan for local changes and upload them occasionally (every two hours by default).
@@ -2135,23 +2135,18 @@ Note that using any logging command line options will override the settings.</so
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatorjobs.cpp" line="267"/>
+        <location filename="../src/libsync/propagatorjobs.cpp" line="263"/>
         <source>Error updating metadata: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatorjobs.cpp" line="270"/>
+        <location filename="../src/libsync/propagatorjobs.cpp" line="266"/>
         <source>The file %1 is currently in use</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatorjobs.cpp" line="276"/>
+        <location filename="../src/libsync/propagatorjobs.cpp" line="272"/>
         <source>Failed to rename file</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/libsync/propagatorjobs.cpp" line="282"/>
-        <source>Error setting pin state</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2189,23 +2184,18 @@ Note that using any logging command line options will override the settings.</so
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateremotemove.cpp" line="152"/>
+        <location filename="../src/libsync/propagateremotemove.cpp" line="149"/>
         <source>Error updating metadata: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateremotemove.cpp" line="155"/>
+        <location filename="../src/libsync/propagateremotemove.cpp" line="152"/>
         <source>The file %1 is currently in use</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateremotemove.cpp" line="167"/>
+        <location filename="../src/libsync/propagateremotemove.cpp" line="159"/>
         <source>Error writing metadata to the database</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/libsync/propagateremotemove.cpp" line="160"/>
-        <source>Error setting pin state</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
