@@ -284,3 +284,12 @@ def step(context, warn_message):
         warn_message in actual_message,
         'Contains warning message',
     )
+
+
+@Given('the user has removed the connection for user "|any|" and host |any|')
+def step(context, username, _):
+    displayname = get_displayname_for_user(username)
+    displayname = substitute_inline_codes(displayname)
+
+    Toolbar.open_account(displayname)
+    AccountSetting.remove_account_connection()
