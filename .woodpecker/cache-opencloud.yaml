@@ -35,7 +35,7 @@ steps:
       - . ./.woodpecker.env
       - if $OPENCLOUD_CACHE_FOUND; then exit 0; fi
       - cd repo_opencloud
-      - retry -t 3 'make node-generate-prod'
+      - for i in $(seq 3); do make node-generate-prod && break || sleep 1; done
     image: owncloudci/nodejs:20
     name: generate-opencloud
   - commands:
