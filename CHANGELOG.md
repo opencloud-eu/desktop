@@ -11,6 +11,10 @@
 - Add Windows VFS [[#305](https://github.com/opencloud-eu/desktop/pull/305)]
 - Enable http2 support by default [[#333](https://github.com/opencloud-eu/desktop/pull/333)]
 
+### 📈 Enhancement
+
+- Remove margins around the content widgets [[#377](https://github.com/opencloud-eu/desktop/pull/377)]
+
 ### 🐛 Bug Fixes
 
 - Don't try LockFile on directories [[#366](https://github.com/opencloud-eu/desktop/pull/366)]
