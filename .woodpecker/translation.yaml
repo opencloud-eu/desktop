@@ -1,0 +1,44 @@
+---
+when:
+  - event: cron
+    cron: translation-sync
+
+variables:
+  - &ubuntu_image 'ubuntu'
+  - &git_action_plugin 'quay.io/thegeeklab/wp-git-action:2'
+
+steps:
+  - name: translation-update
+    image: *ubuntu_image
+    commands:
+      - apt update
+      - ln -fs /usr/share/zoneinfo/Europe/Berlin /etc/localtime
+      - apt install -y qt6-l10n-tools git curl
+      - rm translations/*.ts
+      - git checkout translations/desktop_en.ts
+      - /usr/lib/qt6/bin/lupdate src -no-obsolete -ts translations/desktop_en.ts
+      - curl -o- https://raw.githubusercontent.com/transifex/cli/master/install.sh | bash
+      - . ~/.profile
+      - tx push -s
+      - rm -rf /tmp/tx
+      - tx pull --force --all
+      - rm tx LICENSE
+    environment:
+      TX_TOKEN:
+        from_secret: tx_token
+
+  - name: translation-push
+    image: *git_action_plugin
+    settings:
+      action:
+        - commit
+        - push
+      author_email: devops@opencloud.eu
+      author_name: opencloudeu
+      branch: ${CI_REPO_DEFAULT_BRANCH}
+      empty_commit: false
+      message: '[tx] updated from transifex'
+      netrc_password:
+        from_secret: github_token
+      netrc_username:
+        from_secret: github_username
