@@ -15,9 +15,6 @@
 #include "common/utility_win.h"
 #include "common/vfs.h"
 
-#include <memory>
-
-
 struct CF_PLACEHOLDER_BASIC_INFO;
 
 namespace OCC {
@@ -45,14 +42,12 @@ namespace CfApiWrapper {
         std::vector<char> _data;
     };
 
-    Result<void, QString> registerSyncRoot(
-        const QString &path, const QString &providerName, const QString &providerVersion, const QUuid &accountId, const QString &folderDisplayName);
+    void registerSyncRoot(const VfsSetupParams &params, const std::function<void(QString)> &callback);
     // void unregisterSyncRootShellExtensions(const QString &providerName, const QString &folderAlias, const QString &accountDisplayName);
-    Result<void, QString> unregisterSyncRoot(const QString &path, const QString &providerName, const QUuid &accountId);
+    Result<void, QString> unregisterSyncRoot(const VfsSetupParams &params);
 
     Result<CF_CONNECTION_KEY, QString> connectSyncRoot(const QString &path, VfsCfApi *context);
     Result<void, QString> disconnectSyncRoot(CF_CONNECTION_KEY &&key);
-    bool isAnySyncRoot(const QString &providerName, const QString &accountDisplayName);
 
     bool isSparseFile(const QString &path);
 
