@@ -4,7 +4,7 @@
 
 ### ❤️ Thanks to all contributors! ❤️
 
-@TheOneRing, @anon-pradip
+@TheOneRing, @anon-pradip, @fschade
 
 ### 💥 Breaking changes
 
