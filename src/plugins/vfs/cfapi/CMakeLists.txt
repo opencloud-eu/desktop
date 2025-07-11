@@ -4,9 +4,9 @@ if (WIN32)
             cfapiwrapper.cpp
             hydrationjob.cpp
             vfs_cfapi.cpp
-            nc_utility.cpp
         LIBS
             cldapi
+            WindowsApp
     )
 
 endif()
