@@ -823,10 +823,6 @@ Folder *FolderMan::addFolderFromWizard(const AccountStatePtr &accountStatePtr, F
     auto newFolder = addFolder(accountStatePtr, folderDefinition);
 
     if (newFolder) {
-        // With spaces we only handle the main folder
-        if (!newFolder->groupInSidebar()) {
-            Utility::setupFavLink(folderDefinition.localPath());
-        }
         qCDebug(lcFolderMan) << "Local sync folder" << folderDefinition.localPath() << "successfully created!";
     } else {
         qCWarning(lcFolderMan) << "Failed to create local sync folder!";
