@@ -83,10 +83,12 @@ Feature: adding accounts
         And user "Alice" has set up a client with default settings
         And the user has removed the connection for user "Alice" and host %local_server_hostname%
         When the user opens the add-account dialog
-        And the user adds the following account:
-            | server   | %local_server% |
-            | user     | Alice          |
-            | password | 1234           |
+        And the user adds the server "%local_server%"
+        And the user accepts the certificate
+        Then credentials wizard should be visible
+        When the user adds the following account:
+            | user     | Alice |
+            | password | 1234  |
         Then the account with displayname "Alice Hansen" and host "%local_server_hostname%" should be displayed
         And the folder "large-folder" should exist on the file system
         And the file "testFile.txt" should exist on the file system
