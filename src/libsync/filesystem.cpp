@@ -22,7 +22,6 @@
 #include <QFileInfo>
 
 #include "csync.h"
-#include "std/c_time.h"
 #include "vio/csync_vio_local.h"
 
 #if defined(Q_OS_MAC) || defined(Q_OS_LINUX)
@@ -85,13 +84,15 @@ time_t FileSystem::getModTime(const QString &filename)
 
 bool FileSystem::setModTime(const QString &filename, time_t modTime)
 {
-    struct timeval times[2];
-    times[0].tv_sec = times[1].tv_sec = modTime;
-    times[0].tv_usec = times[1].tv_usec = 0;
-    int rc = c_utimes(filename, times);
-    if (rc != 0) {
-        qCWarning(lcFileSystem) << "Error setting mtime for" << filename
-                                << "failed: rc" << rc << ", error message:" << strerror(errno);
+#if defined(__GNUC__) && __GNUC__ < 13
+    const auto fileTime = std::chrono::file_clock::from_sys(std::chrono::system_clock::from_time_t(modTime));
+#else
+    const auto fileTime = std::chrono::clock_cast<std::chrono::file_clock>(std::chrono::system_clock::from_time_t(modTime));
+#endif
+    std::error_code rc;
+    std::filesystem::last_write_time(QFileInfo(filename).filesystemAbsoluteFilePath(), fileTime, rc);
+    if (rc) {
+        qCWarning(lcFileSystem) << "Error setting mtime for" << filename << "failed: rc" << rc.value() << ", error message:" << rc.message();
         Q_ASSERT(false);
         return false;
     }

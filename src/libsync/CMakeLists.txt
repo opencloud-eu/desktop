@@ -4,7 +4,6 @@ set_package_properties(LibreGraphAPI PROPERTIES
         DESCRIPTION "Libre Graph is a free API for cloud collaboration inspired by the MS Graph API."
         TYPE OPTIONAL
 )
-include(CheckFunctionExists)
 
 configure_file(config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
@@ -159,15 +158,7 @@ endif()
 target_sources(libsync PRIVATE
     csync.cpp
     csync_exclude.cpp
-
-    std/c_time.cpp
 )
-
-check_function_exists(utimes HAVE_UTIMES)
-
-if(HAVE_UTIMES)
-    set_source_files_properties(std/c_time.cpp PROPERTIES COMPILE_DEFINITIONS HAVE_UTIMES=1)
-endif()
 
 if (WIN32)
     target_sources(libsync PRIVATE
