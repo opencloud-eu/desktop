@@ -39,7 +39,7 @@ class SyncEngine;
 /** Collection of parameters for initializing a Vfs instance. */
 struct OPENCLOUD_SYNC_EXPORT VfsSetupParams
 {
-    explicit VfsSetupParams(const AccountPtr &account, const QString &folderDisplayName, const QUrl &baseUrl, bool groupInSidebar, SyncEngine *syncEngine);
+    explicit VfsSetupParams(const AccountPtr &account, const QUrl &baseUrl, SyncEngine *syncEngine);
     /** The full path to the folder on the local filesystem
      *
      * Always ends with /.
@@ -62,16 +62,10 @@ struct OPENCLOUD_SYNC_EXPORT VfsSetupParams
 
     const QUrl &baseUrl() const { return _baseUrl; }
 
-    bool groupInSidebar() const { return _groupInSidebar; }
-
     SyncEngine *syncEngine() const;
-
-    QString folderDisplayName() const { return _folderDisplayName; }
 
 private:
     QUrl _baseUrl;
-    QString _folderDisplayName;
-    bool _groupInSidebar = false;
     SyncEngine *_syncEngine;
 };
 
