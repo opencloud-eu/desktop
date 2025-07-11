@@ -70,9 +70,6 @@ void setUpInitialSyncFolder(AccountStatePtr accountStatePtr, bool useVfs)
         accountStatePtr->checkConnectivity();
         FolderMan::instance()->setSyncEnabled(true);
         FolderMan::instance()->scheduleAllFolders();
-#ifdef Q_OS_WIN
-        NavigationPaneHelper::updateCloudStorageRegistry();
-#endif
     };
 
     QObject::connect(
@@ -173,7 +170,7 @@ Application::Application(const QString &displayLanguage, bool debugMode)
 #endif
 #ifdef Q_OS_WIN
     // update the existing sidebar entries
-    NavigationPaneHelper::updateCloudStorageRegistry();
+    NavigationPaneHelper::removeLegacyCloudStorageRegistry();
 #endif
 }
 

@@ -9,7 +9,7 @@ namespace OCC {
 
 
 namespace NavigationPaneHelper {
-    void updateCloudStorageRegistry();
+    void removeLegacyCloudStorageRegistry();
 };
 
 }
