@@ -503,7 +503,7 @@ void Folder::startVfs()
         return;
     }
 
-    VfsSetupParams vfsParams(_accountState->account(), displayName(), webDavUrl(), groupInSidebar(), _engine.get());
+    VfsSetupParams vfsParams(_accountState->account(), webDavUrl(), _engine.get());
     vfsParams.filesystemPath = path();
     vfsParams.journal = &_journal;
     vfsParams.providerDisplayName = Theme::instance()->appNameGUI();
@@ -1112,18 +1112,6 @@ void Folder::registerFolderWatcher()
 bool Folder::virtualFilesEnabled() const
 {
     return _definition.virtualFilesMode != Vfs::Off;
-}
-
-bool Folder::groupInSidebar() const
-{
-    if (_accountState->account()->hasDefaultSyncRoot()) {
-        // QFileInfo is horrible and "/foo/" is treated different to "/foo"
-        const QString parentDir = QFileInfo(Utility::stripTrailingSlash(path())).dir().path();
-        Q_ASSERT(QFileInfo(parentDir) != QFileInfo(path()));
-        // If parentDir == home, we would add a the home dir to the side bar.
-        return QFileInfo(parentDir) != QFileInfo(QDir::homePath()) && FileSystem::isChildPathOf(parentDir, _accountState->account()->defaultSyncRoot());
-    }
-    return false;
 }
 
 } // namespace OCC

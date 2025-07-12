@@ -213,7 +213,7 @@ void AccountManager::deleteAccount(AccountStatePtr account)
     if (account->account()->hasDefaultSyncRoot()) {
         Utility::unmarkDirectoryAsSyncRoot(account->account()->defaultSyncRoot());
 #ifdef Q_OS_WIN
-        NavigationPaneHelper::updateCloudStorageRegistry();
+        NavigationPaneHelper::removeLegacyCloudStorageRegistry();
 #endif
     }
 

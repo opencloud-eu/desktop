@@ -22,9 +22,6 @@
 
 #include <cfapi.h>
 #include <comdef.h>
-#include <ntstatus.h>
-
-#include <QCoreApplication>
 
 Q_LOGGING_CATEGORY(lcCfApi, "sync.vfs.cfapi", QtInfoMsg)
 
@@ -126,25 +123,23 @@ Vfs::Mode VfsCfApi::mode() const
 void VfsCfApi::startImpl(const VfsSetupParams &params)
 {
     // cfapi::registerShellExtension();
-    const auto localPath = QDir::toNativeSeparators(params.filesystemPath);
 
-    const auto registerResult =
-        cfapi::registerSyncRoot(localPath, params.providerName, params.providerVersion.toString(), params.account->uuid(), params.folderDisplayName());
-    if (!registerResult) {
-        qCCritical(lcCfApi) << "Initialization failed, couldn't register sync root:" << registerResult.error();
-        return;
-    }
+    cfapi::registerSyncRoot(params, [this](const QString &errorMessage) {
+        if (errorMessage.isEmpty()) {
+            auto connectResult = cfapi::connectSyncRoot(this->params().filesystemPath, this);
+            if (!connectResult) {
+                qCCritical(lcCfApi) << "Initialization failed, couldn't connect sync root:" << connectResult.error();
+                return;
+            }
 
-    auto connectResult = cfapi::connectSyncRoot(localPath, this);
-    if (!connectResult) {
-        qCCritical(lcCfApi) << "Initialization failed, couldn't connect sync root:" << connectResult.error();
-        return;
-    }
-
-    d->connectionKey = *std::move(connectResult);
-
-    // TODO: make async
-    Q_EMIT started();
+            d->connectionKey = *std::move(connectResult);
+            Q_EMIT started();
+        } else {
+            qCCritical(lcCfApi) << errorMessage;
+            Q_ASSERT(false);
+            Q_EMIT error(errorMessage);
+        }
+    });
 }
 
 void VfsCfApi::stop()
@@ -152,17 +147,16 @@ void VfsCfApi::stop()
     if (d->connectionKey.Internal != 0) {
         const auto result = cfapi::disconnectSyncRoot(std::move(d->connectionKey));
         if (!result) {
-            qCCritical(lcCfApi) << "Disconnect failed for" << QDir::toNativeSeparators(params().filesystemPath) << ":" << result.error();
+            qCCritical(lcCfApi) << "Disconnect failed for" << params().filesystemPath << ":" << result.error();
         }
     }
 }
 
 void VfsCfApi::unregisterFolder()
 {
-    const auto localPath = QDir::toNativeSeparators(params().filesystemPath);
-    const auto result = cfapi::unregisterSyncRoot(localPath, params().providerName, params().account->uuid());
+    const auto result = cfapi::unregisterSyncRoot(params());
     if (!result) {
-        qCCritical(lcCfApi) << "Unregistration failed for" << localPath << ":" << result.error();
+        qCCritical(lcCfApi) << "Unregistration failed for" << params().filesystemPath << ":" << result.error();
     }
 
 #if 0
