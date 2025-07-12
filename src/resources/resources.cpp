@@ -30,6 +30,7 @@
 
 using namespace OCC;
 using namespace Resources;
+using namespace Qt::Literals::StringLiterals;
 
 Q_LOGGING_CATEGORY(lcResources, "sync.resoruces", QtInfoMsg)
 
@@ -115,9 +116,11 @@ QIcon OCC::Resources::loadIcon(const QString &flavor, const QString &name, IconT
 
 QColor Resources::tint()
 {
-    static QColor lilac{"#E2BAFF"};
-    static QColor petrol{"#20434F"};
-    return isUsingDarkTheme() ? lilac : petrol;
+    // static QColor lilac{"#E2BAFF"};
+    // static QColor petrol{"#20434F"};
+    // return isUsingDarkTheme() ? lilac : petrol;
+    static auto color = [] { return QSettings(u":/qtquickcontrols2.conf"_s, QSettings::IniFormat).value("Material/Primary").value<QColor>(); }();
+    return color;
 }
 
 QIcon OCC::Resources::themeUniversalIcon(const QString &name, IconType iconType)
