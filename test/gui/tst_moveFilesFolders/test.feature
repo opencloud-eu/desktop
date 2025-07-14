@@ -52,3 +52,16 @@ Feature: move file and folder
         And as "Alice" folder "FOLDER" should exist in the server
         But as "Alice" file "textfile.txt" should not exist in the server
         And as "Alice" folder "folder1" should not exist in the server
+
+
+	Scenario: Move files from one folder to another
+        Given user "Alice" has uploaded file with content "test file 1" to "folder1/file1.txt" in the server
+        And user "Alice" has uploaded file with content "test file 2" to "folder1/file2.txt" in the server
+        And user "Alice" has set up a client with default settings
+        When user "Alice" moves file "folder1/file1.txt" to "folder1/folder2" in the sync folder
+        And user "Alice" moves file "folder1/file2.txt" to "folder1/folder2" in the sync folder
+        And the user waits for the files to sync
+        Then as "Alice" the file "folder1/folder2/file1.txt" should have the content "test file 1" in the server
+        And as "Alice" the file "folder1/folder2/file2.txt" should have the content "test file 2" in the server
+        And as "Alice" file "folder1/file1.txt" should not exist in the server
+        And as "Alice" file "folder1/file2.txt" should not exist in the server
