@@ -30,6 +30,7 @@
 #include <winrt/windows.storage.provider.h>
 
 Q_LOGGING_CATEGORY(lcCfApiWrapper, "sync.vfs.cfapi.wrapper", QtDebugMsg)
+
 using namespace Qt::Literals::StringLiterals;
 
 namespace winrt {
@@ -519,9 +520,10 @@ QString createSyncRootID(const QString &providerName, const QUuid &accountUUID, 
 
 void OCC::CfApiWrapper::registerSyncRoot(const VfsSetupParams &params, const std::function<void(QString)> &callback)
 {
+    static std::mutex register_mutex;
     const auto nativePath = QDir::toNativeSeparators(params.filesystemPath);
     winrt::StorageFolder::GetFolderFromPathAsync(reinterpret_cast<const wchar_t *>(nativePath.utf16()))
-        .Completed([=](const winrt::IAsyncOperation<winrt::StorageFolder> &result, winrt::AsyncStatus status) {
+        .Completed([params, callback, mutex = &register_mutex](const winrt::IAsyncOperation<winrt::StorageFolder> &result, winrt::AsyncStatus status) {
             if (status != winrt::AsyncStatus::Completed) {
                 callback(u"Failed to retrieve folder info: %1"_s.arg(Utility::formatWinError(result.ErrorCode())));
                 return;
@@ -556,7 +558,11 @@ void OCC::CfApiWrapper::registerSyncRoot(const VfsSetupParams &params, const std
                 streamWriter.WriteString(params.account->uuid().toString().toStdWString());
                 info.Context(streamWriter.DetachBuffer());
 
-                winrt::StorageProviderSyncRootManager::Register(info);
+                {
+                    // don't confuse Windows with parallel registrations
+                    std::lock_guard lock(*mutex);
+                    winrt::StorageProviderSyncRootManager::Register(info);
+                }
                 callback({});
             } catch (const winrt::hresult_error &ex) {
                 callback(u"Failed to register sync root %1"_s.arg(Utility::formatWinError(ex.code())));
