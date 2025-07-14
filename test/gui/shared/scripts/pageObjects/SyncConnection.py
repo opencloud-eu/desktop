@@ -30,6 +30,12 @@ class SyncConnection:
         "unnamed": 1,
         "visible": True
     }
+    DISABLE_VFS_CONFIRMATION_BUTTON = {
+        "text": "Disable support",
+        "type": "QPushButton",
+        "visible": 1,
+        "window": names.disable_virtual_file_support_QMessageBox,
+    }
     SELECTIVE_SYNC_APPLY_BUTTON = {
         "container": names.settings_stack_QStackedWidget,
         "name": "selectiveSyncApply",
@@ -78,6 +84,17 @@ class SyncConnection:
     @staticmethod
     def resume_sync():
         SyncConnection.perform_action("Resume sync")
+
+    @staticmethod
+    def enable_vfs():
+        SyncConnection.perform_action("Enable virtual file support")
+
+    @staticmethod
+    def disable_vfs():
+        SyncConnection.perform_action("Disable virtual file support")
+        squish.clickButton(
+            squish.waitForObject(SyncConnection.DISABLE_VFS_CONFIRMATION_BUTTON)
+        )
 
     @staticmethod
     def has_menu_item(item):

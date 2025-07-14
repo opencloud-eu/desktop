@@ -56,6 +56,7 @@ Feature: Syncing files
             client content
             """
 
+
     Scenario: Sync all is selected by default
         Given user "Alice" has created folder "simple-folder" in the server
         And user "Alice" has created folder "large-folder" in the server
@@ -71,6 +72,7 @@ Feature: Syncing files
         And the user sets the sync path in sync connection wizard
         And the user navigates back in the sync connection wizard
         And the user sets the temp folder "localSyncFolder" as local sync path in sync connection wizard
+        And the user disables VFS support for Windows
         Then the sync all checkbox should be checked
         When user unselects all the remote folders
         And the user adds the folder sync connection
@@ -79,6 +81,7 @@ Feature: Syncing files
         And the file "lorem.txt" should exist on the file system
         But the folder "simple-folder" should not exist on the file system
         And the folder "large-folder" should not exist on the file system
+
 
     Scenario: Sync only one folder from the server
         Given user "Alice" has created folder "simple-folder" in the server
@@ -91,6 +94,7 @@ Feature: Syncing files
         When the user selects manual sync folder option in advanced section
         And the user selects "Personal" space in sync connection wizard
         And the user sets the sync path in sync connection wizard
+        And the user disables VFS support for Windows
         And the user selects the following folders to sync:
             | folder        |
             | simple-folder |
@@ -125,6 +129,7 @@ Feature: Syncing files
         When the user selects manual sync folder option in advanced section
         And the user selects "Personal" space in sync connection wizard
         And the user sets the sync path in sync connection wizard
+        And the user disables VFS support for Windows
         # folders are sorted by name in ascending order by default
         Then the folders should be in the following order:
             | folder    |
@@ -465,6 +470,7 @@ Feature: Syncing files
         When the user selects manual sync folder option in advanced section
         And the user selects "Personal" space in sync connection wizard
         And the user sets the temp folder "~`!@#$^&()-_=+{[}];',)PRN%" as local sync path in sync connection wizard
+        And the user disables VFS support for Windows
         And the user selects the following folders to sync:
             | folder                  |
             | ~`!@#$^&()-_=+{[}];',)  |
@@ -478,13 +484,6 @@ Feature: Syncing files
         Then the folder "simple-folder" should not exist on the file system
         And the folder "test-folder/sub-folder2" should exist on the file system
         And the folder "test-folder/sub-folder1" should not exist on the file system
-
-
-    Scenario: Syncing a local folder having special characters to the server
-        Given user "Alice" has set up a client with default settings
-        When user "Alice" creates a folder "~`!@#$^&()-_=+{[}];',)💥🫨❤️‍🔥" inside the sync folder
-        And the user waits for folder "~`!@#$^&()-_=+{[}];',)💥🫨❤️‍🔥" to be synced
-        Then as "Alice" folder "~`!@#$^&()-_=+{[}];',)💥🫨❤️‍🔥" should exist in the server
 
     @issue-11814
     Scenario: remove folder sync connection

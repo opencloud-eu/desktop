@@ -15,6 +15,7 @@ Feature: adding accounts
             | password | 1234           |
         When the user opens the advanced configuration
         Then the download everything option should be selected by default for Linux
+        And the VFS option should be selected by default for Windows
         And the user should be able to choose the local download directory
 
 
@@ -49,6 +50,16 @@ Feature: adding accounts
             | user     | Alice |
             | password | 1234  |
         Then "Alice Hansen" account should be opened
+
+    @skipOnLinux
+    Scenario: Adding account with vfs disabled (Windows only)
+        Given the user has started the client
+        And the user has entered the following account information:
+            | server   | %local_server% |
+            | user     | Alice          |
+            | password | 1234           |
+        When the user selects download everything option in advanced section
+        Then the "Enable virtual file support" button should be available
 
 
     Scenario: Add space manually from sync connection window

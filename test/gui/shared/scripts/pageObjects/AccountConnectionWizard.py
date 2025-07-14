@@ -95,6 +95,12 @@ class AccountConnectionWizard:
         "type": "QLineEdit",
         "visible": 1,
     }
+    VIRTUAL_FILE_RADIO_BUTTON = {
+        "container": names.advancedConfigGroupBox_syncModeGroupBox_QGroupBox,
+        "name": "useVfsRadioButton",
+        "type": "QRadioButton",
+        "visible": 1,
+    }
     SYNC_EVERYTHING_RADIO_BUTTON = {
         "container": names.advancedConfigGroupBox_syncModeGroupBox_QGroupBox,
         "name": "syncEverythingRadioButton",
@@ -211,6 +217,11 @@ class AccountConnectionWizard:
             )
         )
 
+    @staticmethod
+    def select_vfs_option():
+        squish.clickButton(
+            squish.waitForObject(AccountConnectionWizard.VIRTUAL_FILE_RADIO_BUTTON)
+        )
 
     @staticmethod
     def select_download_everything_option():
@@ -266,6 +277,12 @@ class AccountConnectionWizard:
     def is_sync_everything_option_checked():
         return squish.waitForObjectExists(
             AccountConnectionWizard.SYNC_EVERYTHING_RADIO_BUTTON
+        ).checked
+
+    @staticmethod
+    def is_vfs_option_checked():
+        return squish.waitForObjectExists(
+            AccountConnectionWizard.VIRTUAL_FILE_RADIO_BUTTON
         ).checked
 
     @staticmethod
