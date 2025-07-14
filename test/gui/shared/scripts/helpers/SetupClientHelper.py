@@ -177,7 +177,7 @@ def generate_account_config(users, space='Personal'):
         settings.setValue("localPath", sync_path)
         settings.setValue("paused", 'false')
         settings.setValue("priority", '50')
-        settings.setValue("virtualFilesMode", 'off')
+        settings.setValue("virtualFilesMode", 'cfapi')
         settings.setValue("journalPath",".sync_journal.db")
         settings.endArray()
         settings.setValue("size", len(users))
