@@ -100,6 +100,11 @@ def add_copy_suffix(resource_path, resource_type):
     return resource_path + ' - Copy'
 
 
+def overwrite_file(resource, content):
+    resource = get_resource_path(resource)
+    wait_and_write_file(resource, content)
+
+
 @When(
     'user "|any|" creates a file "|any|" with the following content inside the sync folder'
 )
@@ -223,8 +228,7 @@ def step(context, filename):
 
 @When('the user overwrites the file "|any|" with content "|any|"')
 def step(context, resource, content):
-    resource = get_resource_path(resource)
-    wait_and_write_file(resource, content)
+    overwrite_file(resource, content)
 
 
 @When('the user tries to overwrite the file "|any|" with content "|any|"')
@@ -373,3 +377,21 @@ def step(context, folder_name):
     remember_path(folder_path)
     # when account is added, folder with suffix will be created
     remember_path(f'{folder_path} (2)')
+
+
+@When(
+    r'user "([^"]*)" replaces file "([^"]*)" with "([^"]*)" in the sync folder',
+    regexp=True,
+)
+def step(context, username, destination, source):
+    wait_for_client_to_be_ready()
+    source_dir = get_resource_path(source, username)
+    if destination in (None, '/'):
+        destination = ''
+    destination_dir = get_resource_path(destination, username)
+    shutil.copy(source_dir, destination_dir)
+    
+    
+@Given('the user has overwritten the file "|any|" with content "|any|"')
+def step(context, resource, content):
+    overwrite_file(resource, content)
