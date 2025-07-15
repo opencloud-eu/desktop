@@ -18,7 +18,7 @@ clone:
     pull: false
 
 steps:
-  ls:
+  - name: ls
     image: ${DOCKER_REGISTRY}/woodpecker-windows-base-chocolatey-msvsbuild:latest
     commands:
       - echo "Listing files in the current directory:"
