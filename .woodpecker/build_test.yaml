@@ -19,7 +19,7 @@ clone:
 
 steps:
   - name: ls
-    image: ${DOCKER_REGISTRY}/woodpecker-windows-base-chocolatey-msvsbuild:latest
+    image: gecoit84/woodpecker-windows-base-chocolatey-msvsbuild:latest
     commands:
       - echo "Listing files in the current directory:"
       - ls
