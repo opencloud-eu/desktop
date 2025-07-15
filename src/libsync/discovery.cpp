@@ -18,10 +18,10 @@
 #include "syncfileitem.h"
 
 #include "csync_exclude.h"
-#include "libsync/vio/csync_vio_local.h"
 
-#include "common/checksums.h"
-#include "common/syncjournaldb.h"
+#include "libsync/common/checksums.h"
+#include "libsync/common/syncjournaldb.h"
+#include "libsync/filesystem.h"
 
 #include "libsync/theme.h"
 
@@ -92,7 +92,7 @@ void ProcessDirectoryJob::process()
     }
 
     for (auto &e : _localNormalQueryEntries) {
-        entries[e.name].localEntry = e;
+        entries[e.name].localEntry = std::move(e);
     }
     _localNormalQueryEntries.clear();
 
@@ -490,14 +490,14 @@ void ProcessDirectoryJob::processFileAnalyzeRemoteInfo(
         QString originalPathAdjusted = _discoveryData->adjustRenamedPath(originalPath, SyncFileItem::Up);
 
         if (!base.isDirectory()) {
-            csync_file_stat_t buf;
-            if (csync_vio_local_stat(_discoveryData->_localDir + originalPathAdjusted, &buf)) {
+            const auto info = std::filesystem::directory_entry(FileSystem::toFilesystemPath(_discoveryData->_localDir + originalPathAdjusted));
+            if (!info.exists()) {
                 qCInfo(lcDisco) << "Local file does not exist anymore." << originalPathAdjusted;
                 return;
             }
             // NOTE: This prohibits some VFS renames from being detected since
             // suffix-file size is different from the db size. That's ok, they'll DELETE+NEW.
-            if (buf.modtime != base._modtime || buf.size != base._fileSize || buf.type == ItemTypeDirectory) {
+            if (FileSystem::fileTimeToTime_t(info.last_write_time()) != base._modtime || info.file_size() != base._fileSize || info.is_directory()) {
                 qCInfo(lcDisco) << "File has changed locally, not a rename." << originalPath;
                 return;
             }

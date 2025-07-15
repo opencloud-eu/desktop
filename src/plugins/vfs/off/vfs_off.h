@@ -40,11 +40,12 @@ public:
 
     bool needsMetadataUpdate(const SyncFileItem &) override;
     bool isDehydratedPlaceholder(const QString &) override;
-    bool statTypeVirtualFile(csync_file_stat_t *, void *) override;
 
     bool setPinState(const QString &, PinState) override;
     Optional<PinState> pinState(const QString &) override;
     AvailabilityResult availability(const QString &) override;
+
+    LocalInfo statTypeVirtualFile(const std::filesystem::directory_entry &path, ItemType type) override;
 
 public Q_SLOTS:
     void fileStatusChanged(const QString &, SyncFileStatus) override;

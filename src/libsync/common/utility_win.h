@@ -87,9 +87,6 @@ namespace Utility {
         uint32_t _error = NO_ERROR;
     };
 
-    // Possibly refactor to share code with UnixTimevalToFileTime in c_time.c
-    OPENCLOUD_SYNC_EXPORT void UnixTimeToFiletime(time_t t, FILETIME *filetime);
-    OPENCLOUD_SYNC_EXPORT void FiletimeToLargeIntegerFiletime(const FILETIME *filetime, LARGE_INTEGER *hundredNSecs);
     OPENCLOUD_SYNC_EXPORT void UnixTimeToLargeIntegerFiletime(time_t t, LARGE_INTEGER *hundredNSecs);
 
     OPENCLOUD_SYNC_EXPORT QString formatWinError(long error);
