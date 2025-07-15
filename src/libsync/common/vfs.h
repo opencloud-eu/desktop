@@ -13,9 +13,9 @@
  */
 #pragma once
 
-#include "../csync.h"
 #include "assert.h"
 #include "libsync/accountfwd.h"
+#include "libsync/discoveryinfo.h"
 #include "libsync/opencloudsynclib.h"
 #include "pinstate.h"
 #include "result.h"
@@ -27,6 +27,7 @@
 #include <QUrl>
 #include <QVersionNumber>
 
+#include <filesystem>
 #include <memory>
 
 namespace OCC {
@@ -156,7 +157,7 @@ public:
      *
      * Returning true means that type was fully determined.
      */
-    [[nodiscard]] virtual bool statTypeVirtualFile(csync_file_stat_t *stat, void *stat_data) = 0;
+    [[nodiscard]] virtual LocalInfo statTypeVirtualFile(const std::filesystem::directory_entry &path, ItemType type) = 0;
 
     /** Sets the pin state for the item at a path.
      *

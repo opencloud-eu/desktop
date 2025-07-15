@@ -55,11 +55,6 @@ bool VfsOff::isDehydratedPlaceholder(const QString &)
     return false;
 }
 
-bool VfsOff::statTypeVirtualFile(csync_file_stat_t *, void *)
-{
-    return false;
-}
-
 bool VfsOff::setPinState(const QString &, PinState)
 {
     return true;
@@ -73,6 +68,11 @@ Optional<PinState> VfsOff::pinState(const QString &)
 Vfs::AvailabilityResult VfsOff::availability(const QString &)
 {
     return VfsItemAvailability::AlwaysLocal;
+}
+
+LocalInfo VfsOff::statTypeVirtualFile(const std::filesystem::directory_entry &path, ItemType type)
+{
+    return LocalInfo(path, type);
 }
 
 void VfsOff::startImpl(const VfsSetupParams &)

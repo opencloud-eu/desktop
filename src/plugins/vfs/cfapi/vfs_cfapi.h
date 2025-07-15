@@ -34,7 +34,6 @@ public:
 
     bool needsMetadataUpdate(const SyncFileItem &) override;
     bool isDehydratedPlaceholder(const QString &filePath) override;
-    bool statTypeVirtualFile(csync_file_stat_t *stat, void *statData) override;
 
     bool setPinState(const QString &folderPath, PinState state) override;
     Optional<PinState> pinState(const QString &folderPath) override;
@@ -43,6 +42,8 @@ public:
     void cancelHydration(const QString &requestId, const QString &path);
 
     HydrationJob::Status finalizeHydrationJob(const QString &requestId);
+
+    LocalInfo statTypeVirtualFile(const std::filesystem::directory_entry &path, ItemType type) override;
 
 public Q_SLOTS:
     void requestHydration(const QString &requestId, const QString &targetPath, const QByteArray &fileId, qint64 requestedFileSize);

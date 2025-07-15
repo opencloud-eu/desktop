@@ -210,37 +210,40 @@ bool VfsCfApi::isDehydratedPlaceholder(const QString &filePath)
     return cfapi::isSparseFile(path);
 }
 
-bool VfsCfApi::statTypeVirtualFile(csync_file_stat_t *stat, void *statData)
+LocalInfo VfsCfApi::statTypeVirtualFile(const std::filesystem::directory_entry &path, ItemType type)
 {
-    const auto ffd = static_cast<WIN32_FIND_DATA *>(statData);
-
-    const auto isDirectory = (ffd->dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0;
-    const auto isSparseFile = (ffd->dwFileAttributes & FILE_ATTRIBUTE_SPARSE_FILE) != 0;
-    const auto isPinned = (ffd->dwFileAttributes & FILE_ATTRIBUTE_PINNED) != 0;
-    const auto isUnpinned = (ffd->dwFileAttributes & FILE_ATTRIBUTE_UNPINNED) != 0;
-    const auto hasReparsePoint = (ffd->dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT) != 0;
-    const auto hasCloudTag = hasReparsePoint && (ffd->dwReserved0 & ~IO_REPARSE_TAG_CLOUD_MASK) == (IO_REPARSE_TAG_CLOUD & ~IO_REPARSE_TAG_CLOUD_MASK);
-
-    // It's a dir with a reparse point due to the placeholder info (hence the cloud tag)
-    // if we don't remove the reparse point flag the discovery will end up thinking
-    // it is a file... let's prevent it
-    if (isDirectory) {
-        if (hasCloudTag) {
-            ffd->dwFileAttributes &= ~FILE_ATTRIBUTE_REPARSE_POINT;
+    // only get placeholder info if it's a file
+    if (type == ItemTypeFile) {
+        if (auto placeholderInfo = cfapi::findPlaceholderInfo<CF_PLACEHOLDER_BASIC_INFO>(FileSystem::fromFilesystemPath(path))) {
+            Q_ASSERT(placeholderInfo.handle());
+            FILE_ATTRIBUTE_TAG_INFO attributeInfo = {};
+            if (!GetFileInformationByHandleEx(placeholderInfo.handle(), FileAttributeTagInfo, &attributeInfo, sizeof(attributeInfo))) {
+                const auto error = GetLastError();
+                qCCritical(lcFileSystem) << "GetFileInformationByHandle failed on" << path.path() << OCC::Utility::formatWinError(error);
+                return {};
+            }
+            const CF_PLACEHOLDER_STATE placeholderState = CfGetPlaceholderStateFromAttributeTag(attributeInfo.FileAttributes, attributeInfo.ReparseTag);
+            if (placeholderState & CF_PLACEHOLDER_STATE_PLACEHOLDER) {
+                if (placeholderState & CF_PLACEHOLDER_STATE_PARTIAL) {
+                    if (placeholderInfo.pinState() == PinState::AlwaysLocal) {
+                        Q_ASSERT(attributeInfo.FileAttributes & FILE_ATTRIBUTE_PINNED);
+                        type = ItemTypeVirtualFileDownload;
+                    } else {
+                        type = ItemTypeVirtualFile;
+                    }
+                } else {
+                    if (placeholderInfo.pinState() == PinState::OnlineOnly) {
+                        Q_ASSERT(attributeInfo.FileAttributes & FILE_ATTRIBUTE_UNPINNED);
+                        type = ItemTypeVirtualFileDehydration;
+                    } else {
+                        // nothing to do
+                        Q_ASSERT(type == ItemTypeFile);
+                    }
+                }
+            }
         }
-        return false;
-    } else if (isSparseFile && isPinned) {
-        stat->type = ItemTypeVirtualFileDownload;
-        return true;
-    } else if (!isSparseFile && isUnpinned) {
-        stat->type = ItemTypeVirtualFileDehydration;
-        return true;
-    } else if (isSparseFile) {
-        stat->type = ItemTypeVirtualFile;
-        return true;
     }
-
-    return false;
+    return LocalInfo(path, type);
 }
 
 bool VfsCfApi::setPinState(const QString &folderPath, PinState state)

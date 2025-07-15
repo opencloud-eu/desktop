@@ -143,7 +143,7 @@ public:
 
     SyncFileItem(const QString &localName = {})
         : _localName(localName)
-        , _type(ItemTypeSkip)
+        , _type(ItemTypeUnsupported)
         , _direction(None)
         , _serverHasIgnoredFiles(false)
         , _hasBlacklistEntry(false)
