@@ -7,11 +7,13 @@
 #include <QtTest>
 #include <QTemporaryDir>
 
-#include "filesystem.h"
 #include "testutils/testutils.h"
 
-#include "common/filesystembase.h"
-#include "common/utility.h"
+#include "libsync/common/filesystembase.h"
+#include "libsync/common/utility.h"
+#include "libsync/discoveryinfo.h"
+#include "libsync/filesystem.h"
+
 #ifdef Q_OS_WIN
 #include "common/utility_win.h"
 #endif
@@ -336,6 +338,26 @@ private Q_SLOTS:
         QCOMPARE(out.QuadPart, 137930652000000000);
     }
 #endif
+
+    void testFilesystem()
+    {
+        // validate that the different ways to access file metadata behave the same
+        auto entry = std::filesystem::directory_entry{OCC::FileSystem::toFilesystemPath(qApp->applicationFilePath())};
+        OCC::LocalInfo fileInfo(entry, ItemTypeFile);
+        QFileInfo qFileInfo(OCC::FileSystem::fromFilesystemPath(entry.path()));
+
+        QCOMPARE(entry.file_size(), fileInfo.size);
+        QCOMPARE(entry.file_size(), qFileInfo.size());
+        QCOMPARE(entry.file_size(), OCC::FileSystem::getSize(entry.path()));
+
+        QCOMPARE(OCC::FileSystem::fileTimeToTime_t(entry.last_write_time()), fileInfo.modtime);
+        QCOMPARE(OCC::FileSystem::fileTimeToTime_t(entry.last_write_time()), OCC::Utility::qDateTimeToTime_t(qFileInfo.metadataChangeTime()));
+        QCOMPARE(OCC::FileSystem::fileTimeToTime_t(entry.last_write_time()), OCC::FileSystem::getModTime(entry.path()));
+
+        quint64 inode = 0;
+        QVERIFY(OCC::FileSystem::getInode(entry.path(), &inode));
+        QCOMPARE(fileInfo.inode, inode);
+    }
 };
 
 QTEST_GUILESS_MAIN(TestUtility)

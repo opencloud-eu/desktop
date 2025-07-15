@@ -18,8 +18,7 @@
 #include "account.h"
 #include "common/asserts.h"
 #include "common/checksums.h"
-
-#include "vio/csync_vio_local.h"
+#include "filesystem.h"
 
 #include <QDateTime>
 #include <QFile>
@@ -195,62 +194,36 @@ DiscoverySingleLocalDirectoryJob::DiscoverySingleLocalDirectoryJob(const Account
 
 // Use as QRunnable
 void DiscoverySingleLocalDirectoryJob::run() {
-    QString localPath = _localPath;
-    if (localPath.endsWith(QLatin1Char('/'))) // Happens if _currentFolder._local.isEmpty()
-        localPath.chop(1);
-
-    auto dh = csync_vio_local_opendir(localPath);
-    if (!dh) {
-        qCCritical(lcDiscovery) << "Error while opening directory" << (localPath) << errno;
-        QString errorString = tr("Error while opening directory %1").arg(localPath);
-        if (errno == EACCES) {
+    std::error_code ec;
+    const auto localPath = FileSystem::toFilesystemPath(_localPath);
+    QVector<LocalInfo> results;
+    for (const auto &dirent : std::filesystem::directory_iterator{localPath, ec}) {
+        ItemType type = LocalInfo::typeFromDirectoryEntry(dirent);
+        if (type == ItemTypeUnsupported) {
+            continue;
+        }
+        auto info = _vfs->statTypeVirtualFile(dirent, type);
+        if (!info.isValid()) {
+            continue;
+        }
+        results.push_back(std::move(info));
+    }
+    if (ec) {
+        qCCritical(lcDiscovery) << "Error while opening directory" << _localPath << ec.message();
+        QString errorString = tr("Error while opening directory %1").arg(_localPath);
+        if (ec.value() == EACCES) {
             errorString = tr("Directory not accessible on client, permission denied");
             Q_EMIT finishedNonFatalError(errorString);
             return;
-        } else if (errno == ENOENT) {
-            errorString = tr("Directory not found: %1").arg(localPath);
-        } else if (errno == ENOTDIR) {
+        } else if (ec.value() == ENOENT) {
+            errorString = tr("Directory not found: %1").arg(_localPath);
+        } else if (ec.value() == ENOTDIR) {
             // Not a directory..
             // Just consider it is empty
             return;
         }
         Q_EMIT finishedFatalError(errorString);
         return;
-    }
-
-    QVector<LocalInfo> results;
-    while (true) {
-        errno = 0;
-        auto dirent = csync_vio_local_readdir(dh, _vfs);
-        if (!dirent)
-            break;
-        if (dirent->type == ItemTypeSkip)
-            continue;
-        LocalInfo i;
-        i.name = dirent->path;
-        i.modtime = dirent->modtime;
-        i.size = dirent->size;
-        i.inode = dirent->inode;
-        i.isDirectory = dirent->type == ItemTypeDirectory;
-        i.isHidden = dirent->is_hidden;
-        i.isSymLink = dirent->type == ItemTypeSoftLink;
-        i.isVirtualFile = dirent->type == ItemTypeVirtualFile || dirent->type == ItemTypeVirtualFileDownload;
-        i.type = dirent->type;
-        results.push_back(i);
-    }
-    if (errno != 0) {
-        csync_vio_local_closedir(dh);
-
-        // Note: Windows vio converts any error into EACCES
-        qCWarning(lcDiscovery) << "readdir failed for file in " << localPath << " - errno: " << errno;
-        Q_EMIT finishedFatalError(tr("Error while reading directory %1").arg(localPath));
-        return;
-    }
-
-    errno = 0;
-    csync_vio_local_closedir(dh);
-    if (errno != 0) {
-        qCWarning(lcDiscovery) << "closedir failed for file in " << localPath << " - errno: " << errno;
     }
 
     Q_EMIT finished(results);

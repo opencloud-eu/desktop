@@ -14,14 +14,14 @@
 
 #pragma once
 
-#include <QString>
-#include <ctime>
-#include <functional>
-
-#include <opencloudsynclib.h>
+#include "opencloudsynclib.h"
 // Chain in the base include and extend the namespace
 #include "common/filesystembase.h"
 #include "common/result.h"
+
+#ifdef Q_OS_WIN
+#include "common/utility_win.h"
+#endif
 
 class QFile;
 
@@ -38,21 +38,32 @@ class SyncJournal;
  * @brief This file contains file system helper
  */
 namespace FileSystem {
-
     /**
      * @brief compare two files with given filename and return true if they have the same content
      */
     bool fileEquals(const QString &fn1, const QString &fn2);
 
+
+    OPENCLOUD_SYNC_EXPORT time_t fileTimeToTime_t(std::filesystem::file_time_type fileTime);
+    OPENCLOUD_SYNC_EXPORT std::filesystem::file_time_type time_tToFileTime(time_t fileTime);
     /**
      * @brief Get the mtime for a filepath
      *
      * Use this over QFileInfo::lastModified() to avoid timezone related bugs. See
      * owncloud/core#9781 for details.
      */
-    time_t OPENCLOUD_SYNC_EXPORT getModTime(const QString &filename);
 
-    bool OPENCLOUD_SYNC_EXPORT setModTime(const QString &filename, time_t modTime);
+    time_t OPENCLOUD_SYNC_EXPORT getModTime(const std::filesystem::path &filename);
+    inline time_t getModTime(const QString &filename)
+    {
+        return getModTime(toFilesystemPath(filename));
+    }
+
+    bool OPENCLOUD_SYNC_EXPORT setModTime(const std::filesystem::path &filename, time_t modTime);
+    inline time_t setModTime(const QString &filename, time_t modTime)
+    {
+        return setModTime(toFilesystemPath(filename), modTime);
+    }
 
     /**
      * @brief Get the size for a file
@@ -60,12 +71,22 @@ namespace FileSystem {
      * Use this over QFileInfo::size() to avoid bugs with lnk files on Windows.
      * See https://bugreports.qt.io/browse/QTBUG-24831.
      */
-    qint64 OPENCLOUD_SYNC_EXPORT getSize(const QFileInfo &info);
+    [[deprecated("Use std::filesystem::file_size")]]
+    qint64 OPENCLOUD_SYNC_EXPORT getSize(const std::filesystem::path &filename);
+    inline qint64 getSize(const QFileInfo &info)
+    {
+        return getSize(info.filesystemAbsoluteFilePath());
+    }
 
     /**
      * @brief Retrieve a file inode with csync
      */
-    bool OPENCLOUD_SYNC_EXPORT getInode(const QString &filename, quint64 *inode);
+    bool OPENCLOUD_SYNC_EXPORT getInode(const std::filesystem::path &filename, quint64 *inode);
+    inline bool getInode(const QString &filename, quint64 *inode)
+    {
+        return getInode(toFilesystemPath(filename), inode);
+    }
+
 
     /**
      * @brief Check if \a fileName has changed given previous size and mtime

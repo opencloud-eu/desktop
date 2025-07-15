@@ -19,8 +19,9 @@
 #include "utility_win.h"
 #include "utility.h"
 
-#include "asserts.h"
-#include "filesystembase.h"
+#include "libsync/common/asserts.h"
+#include "libsync/common/filesystembase.h"
+#include "libsync/filesystem.h"
 
 #include <comdef.h>
 #include <qt_windows.h>
@@ -31,7 +32,6 @@
 #include <QCoreApplication>
 #include <QDir>
 #include <QFileInfo>
-#include <QLibrary>
 #include <QSettings>
 
 extern Q_CORE_EXPORT int qt_ntfs_permission_lookup;
@@ -87,24 +87,11 @@ bool Utility::hasDarkSystray()
     return !settings.value(QStringLiteral("SystemUsesLightTheme"), false).toBool();
 }
 
-void Utility::UnixTimeToFiletime(time_t t, FILETIME *filetime)
-{
-    LONGLONG ll = (t * 10000000LL) + 116444736000000000LL;
-    filetime->dwLowDateTime = (DWORD)ll;
-    filetime->dwHighDateTime = ll >> 32;
-}
-
-void Utility::FiletimeToLargeIntegerFiletime(const FILETIME *filetime, LARGE_INTEGER *hundredNSecs)
-{
-    hundredNSecs->LowPart = filetime->dwLowDateTime;
-    hundredNSecs->HighPart = filetime->dwHighDateTime;
-}
 
 void Utility::UnixTimeToLargeIntegerFiletime(time_t t, LARGE_INTEGER *hundredNSecs)
 {
-    hundredNSecs->QuadPart = (t * 10000000LL) + 116444736000000000LL;
+    hundredNSecs->QuadPart = FileSystem::time_tToFileTime(t).time_since_epoch().count();
 }
-
 
 QString Utility::formatWinError(long errorCode)
 {
