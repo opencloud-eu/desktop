@@ -209,7 +209,7 @@ Dateisynchronisierung Desktop-Client .</translation>
         <translation>%1 kann nicht umbenannt werden, da die Datei derzeit verwendet wird</translation>
     </message>
     <message>
-        <location filename="../src/libsync/filesystem.cpp" line="192"/>
+        <location filename="../src/libsync/filesystem.cpp" line="193"/>
         <source>Could not remove folder</source>
         <translation>Ordner konnte nicht entfernt werden</translation>
     </message>
@@ -790,12 +790,12 @@ Das Update wird im Hintergrund ausgeführt und überschreibt die aktuelle AppIma
         <translation>Beenden</translation>
     </message>
     <message>
-        <location filename="../src/gui/application.cpp" line="191"/>
+        <location filename="../src/gui/application.cpp" line="188"/>
         <source>Unsupported Server Version</source>
         <translation>Nicht unterstütze Server Version</translation>
     </message>
     <message>
-        <location filename="../src/gui/application.cpp" line="192"/>
+        <location filename="../src/gui/application.cpp" line="189"/>
         <source>The server on account %1 runs an unsupported version %2. Using this client with unsupported server versions is untested and potentially dangerous. Proceed at your own risk.</source>
         <translation>Der Server von Account %1 läuft mit einer nicht unterstützten Version %2. Die Verwendung dieses Clienten mit einer nicht unterstützen Serverversion ist nicht getestet und potentiell gefährlich. Fortfahren auf eigene Gefahr.</translation>
     </message>
@@ -3022,7 +3022,7 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
         <translation>%1: %2</translation>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/cfapi/cfapiwrapper.cpp" line="52"/>
+        <location filename="../src/plugins/vfs/cfapi/cfapiwrapper.cpp" line="63"/>
         <source>Paths beginning with &apos;#&apos; character are not supported in VFS mode.</source>
         <translation type="unfinished"/>
     </message>

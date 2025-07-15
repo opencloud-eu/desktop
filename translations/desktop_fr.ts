@@ -209,7 +209,7 @@ Utilitaire de bureau pour la synchronisation de fichiers.</translation>
         <translation>Impossible de renommer %1, le fichier est actuellement utilisé</translation>
     </message>
     <message>
-        <location filename="../src/libsync/filesystem.cpp" line="192"/>
+        <location filename="../src/libsync/filesystem.cpp" line="193"/>
         <source>Could not remove folder</source>
         <translation>Impossible de supprimer le dossier</translation>
     </message>
@@ -790,12 +790,12 @@ La mise à jour sera effectuée en arrière-plan et écrasera le fichier AppImag
         <translation>Quitter</translation>
     </message>
     <message>
-        <location filename="../src/gui/application.cpp" line="191"/>
+        <location filename="../src/gui/application.cpp" line="188"/>
         <source>Unsupported Server Version</source>
         <translation>Version du serveur non prise en charge</translation>
     </message>
     <message>
-        <location filename="../src/gui/application.cpp" line="192"/>
+        <location filename="../src/gui/application.cpp" line="189"/>
         <source>The server on account %1 runs an unsupported version %2. Using this client with unsupported server versions is untested and potentially dangerous. Proceed at your own risk.</source>
         <translation>Le serveur du compte %1 utilise une version non prise en charge %2. L&apos;utilisation de ce client avec des versions de serveur non supportées n&apos;a pas été testée et est potentiellement dangereuse. Procédez à vos propres risques.</translation>
     </message>
@@ -3021,7 +3021,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
         <translation>%1 : %2</translation>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/cfapi/cfapiwrapper.cpp" line="52"/>
+        <location filename="../src/plugins/vfs/cfapi/cfapiwrapper.cpp" line="63"/>
         <source>Paths beginning with &apos;#&apos; character are not supported in VFS mode.</source>
         <translation type="unfinished"/>
     </message>
