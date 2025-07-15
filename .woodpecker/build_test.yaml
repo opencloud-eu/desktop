@@ -3,19 +3,19 @@ labels:
   platform: windows/amd64
   backend: docker
 
-variables:
-  - &buildx_plugin 'docker.io/woodpeckerci/plugin-docker-buildx:latest'
-  - &publish_repos 'opencloudeu/wccs,quay.io/opencloudeu/wccs'
-  - &publish_platforms 'linux/arm64,linux/amd64'
+# variables:
+#   - &buildx_plugin 'docker.io/woodpeckerci/plugin-docker-buildx:latest'
+#   - &publish_repos 'opencloudeu/wccs,quay.io/opencloudeu/wccs'
+#   - &publish_platforms 'linux/arm64,linux/amd64'
 
 when:
   - event: push
     branch: "flimmy_ci_tests"
 
-# clone:
-#   - name: clone
-#     image: gecoit84/woodpecker-git-plugin
-#     pull: false
+clone:
+  - name: clone
+    image: gecoit84/woodpecker-git-plugin
+    pull: false
 
 steps:
   ls:
