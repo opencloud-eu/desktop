@@ -21,6 +21,6 @@ steps:
   - name: ls
     image: gecoit84/woodpecker-windows-base-chocolatey-msvsbuild:latest
     commands:
-      - $PSVersionTable
-      - pwd
-      - ls -R
+      - "@($PSVersionTable) | ft"
+      - "pwd"
+      - "ls -R"
