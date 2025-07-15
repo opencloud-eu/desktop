@@ -21,4 +21,5 @@ steps:
   - name: ls
     image: gecoit84/woodpecker-windows-base-chocolatey-msvsbuild:latest
     commands:
-      - ls root
+      - pwd
+      - ls -R

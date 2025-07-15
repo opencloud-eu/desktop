@@ -1,0 +1,50 @@
+# .woodpecker/2.yaml
+
+pipeline:
+
+  build-windows:
+    image: mcr.microsoft.com/powershell:lts-nanoserver-1809
+    when:
+      branch:
+        - main
+        - stable-*
+      event:
+        - push
+        - pull_request
+    environment:
+      CRAFT_TARGET: windows-cl-msvc2022-x86_64
+      CRAFT_PACKAGE_SYMBOLS: ${CI_EVENT != pull_request}
+    commands:
+      - git clone --depth=1 https://invent.kde.org/kde/craftmaster.git "${HOME}/craft/CraftMaster/CraftMaster"
+      - pwsh .github/workflows/.craft.ps1 --setup
+      - pwsh .github/workflows/.craft.ps1 -c --unshelve .craft.shelf
+      - pwsh .github/workflows/.craft.ps1 -c craft
+      - mkdir binaries
+      - pwsh .github/workflows/.craft.ps1 -c --set "forceAsserts=true" opencloud/opencloud-desktop
+      - pwsh .github/workflows/.craft.ps1 -c --set "srcDir=${CI_WORKSPACE}" opencloud/opencloud-desktop
+      - pwsh .github/workflows/.craft.ps1 -c --set "buildNumber=${CI_BUILD_NUMBER}" opencloud/opencloud-desktop
+      - pwsh .github/workflows/.craft.ps1 -c dev-utils/nsis
+      - pwsh .github/workflows/.craft.ps1 -c --install-deps opencloud/opencloud-desktop
+      - pwsh .github/workflows/.craft.ps1 -c --shelve .craft.shelf
+      - cp .craft.shelf binaries/craft.shelf
+      - pwsh .github/workflows/.craft.ps1 -c --no-cache opencloud/opencloud-desktop
+      - pwsh .github/workflows/.craft.ps1 -c --no-cache --test opencloud/opencloud-desktop
+      - pwsh .github/workflows/.craft.ps1 -c --no-cache --package opencloud/opencloud-desktop
+      - pwsh .github/workflows/.craft.ps1 -c --no-cache --package --options "[Packager]PackageType=AppxPackager" --options "[Packager]Destination=${CI_WORKSPACE}/appx/" opencloud/opencloud-desktop
+      - cp ${HOME}/craft/binaries/* binaries/
+      - cp appx/* binaries/
+      - |
+        if [ "${CI_COMMIT_TAG}" != "" ]; then
+          for f in binaries/*; do
+            newname=$(echo "$f" | sed "s/opencloud-desktop-HEAD-[0-9]*-/OpenCloud_Desktop-${CI_COMMIT_TAG}-/")
+            if [ "$newname" != "$f" ]; then
+              mv "$f" "$newname"
+            fi
+          done
+        fi
+    artifacts:
+      paths:
+        - binaries/*
+        - appx/*
+
+  
