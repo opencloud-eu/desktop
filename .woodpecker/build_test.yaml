@@ -14,12 +14,13 @@ when:
 
 clone:
   - name: clone
-    image: gecoit84/woodpecker-git-plugin
+    image: docker.io/gecoit84/woodpecker-git-plugin
     pull: false
 
 steps:
   - name: ls
     image: gecoit84/woodpecker-windows-base-chocolatey-msvsbuild:latest
     commands:
+      - $PSVersionTable
       - pwd
       - ls -R
