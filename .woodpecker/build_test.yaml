@@ -19,7 +19,7 @@ clone:
 
 steps:
   - name: ls
-    image: gecoit84/woodpecker-windows-base-chocolatey-msvsbuild:latest
+    image: docker.io/gecoit84/woodpecker-windows-base-chocolatey-msvsbuild:latest
     commands:
       - "ls -R"
       - "pwd"
