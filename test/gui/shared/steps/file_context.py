@@ -373,3 +373,25 @@ def step(context, folder_name):
     remember_path(folder_path)
     # when account is added, folder with suffix will be created
     remember_path(f'{folder_path} (2)')
+
+
+@Given(
+    'user "|any|" has created a file "|any|" with the following content inside the sync folder'
+)
+def step(context, username, filename):
+    file_content = '\n'.join(context.multiLineText)
+    file = get_resource_path(filename, username)
+    wait_and_write_file(convert_path_separators_for_os(file), file_content)
+
+
+@When(
+    r'user "([^"]*)" replaces file "([^"]*)" with "([^"]*)" in the sync folder',
+    regexp=True,
+)
+def step(context, username, destination, source):
+    wait_for_client_to_be_ready()
+    source_dir = get_resource_path(source, username)
+    if destination in (None, '/'):
+        destination = ''
+    destination_dir = get_resource_path(destination, username)
+    shutil.copy(source_dir, destination_dir)
