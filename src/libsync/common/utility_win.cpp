@@ -133,6 +133,18 @@ Utility::Handle::Handle(HANDLE h, std::function<void(HANDLE)> &&close, uint32_t 
     }
 }
 
+Utility::Handle Utility::Handle::createHandle(const std::filesystem::path &path, const CreateHandleParameter &p)
+{
+    uint32_t flags = FILE_ATTRIBUTE_NORMAL | FILE_FLAG_BACKUP_SEMANTICS;
+    if (!p.followSymlinks) {
+        flags |= FILE_FLAG_OPEN_REPARSE_POINT;
+    }
+    if (p.async) {
+        flags |= FILE_FLAG_OVERLAPPED;
+    }
+    return Utility::Handle{CreateFileW(path.native().data(), p.accessMode, p.shareMode, nullptr, p.creationFlags, flags, nullptr)};
+}
+
 Utility::Handle::Handle(HANDLE h)
     : Handle(h, &CloseHandle)
 {
@@ -154,6 +166,11 @@ void Utility::Handle::close()
 uint32_t Utility::Handle::error() const
 {
     return _error;
+}
+
+bool Utility::Handle::hasError() const
+{
+    return _error != NO_ERROR;
 }
 
 QString Utility::Handle::errorMessage() const

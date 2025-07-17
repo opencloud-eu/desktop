@@ -19,15 +19,13 @@ using namespace OCC;
 #ifdef Q_OS_WIN
 #include "common/utility_win.h"
 // pass combination of FILE_SHARE_READ, FILE_SHARE_WRITE, FILE_SHARE_DELETE
-Utility::Handle makeHandle(const QString &file, int shareMode)
+Utility::Handle makeHandle(const QString &file, uint32_t shareMode)
 {
-    const auto fName = FileSystem::longWinPath(file);
-    const wchar_t *wuri = reinterpret_cast<const wchar_t *>(fName.utf16());
-    auto handle = CreateFileW(wuri, GENERIC_READ | GENERIC_WRITE, shareMode, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
-    if (handle == INVALID_HANDLE_VALUE) {
-        qWarning() << GetLastError();
+    auto handle = Utility::Handle::createHandle(FileSystem::toFilesystemPath(file), {.accessMode = GENERIC_READ | GENERIC_WRITE, .shareMode = shareMode});
+    if (!handle) {
+        qWarning() << handle.errorMessage();
     }
-    return Utility::Handle(handle);
+    return handle;
 }
 #endif
 
