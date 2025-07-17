@@ -170,6 +170,8 @@ def generate_account_config(users, space='Personal'):
         settings.setValue("paused", 'false')
         settings.setValue("priority", '50')
         settings.setValue("virtualFilesMode", 'off')
+        if is_windows():
+            settings.setValue("virtualFilesMode", 'cfapi')
         settings.setValue("journalPath",".sync_journal.db")
         settings.endArray()
         settings.setValue("size", len(users))
