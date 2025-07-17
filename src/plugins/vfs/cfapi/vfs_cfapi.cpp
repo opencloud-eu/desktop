@@ -179,7 +179,7 @@ Result<Vfs::ConvertToPlaceholderResult, QString> VfsCfApi::updateMetadata(const 
     if (syncItem._type == ItemTypeVirtualFileDehydration) {
         return cfapi::dehydratePlaceholder(localPath, syncItem._modtime, syncItem._size, syncItem._fileId);
     } else {
-        if (cfapi::findPlaceholderInfo(localPath)) {
+        if (cfapi::findPlaceholderInfo<CF_PLACEHOLDER_BASIC_INFO>(localPath)) {
             return cfapi::updatePlaceholderInfo(localPath, syncItem._modtime, syncItem._size, syncItem._fileId, replacesPath);
         } else {
             return cfapi::convertToPlaceholder(localPath, syncItem._modtime, syncItem._size, syncItem._fileId, replacesPath);
@@ -201,7 +201,7 @@ bool VfsCfApi::needsMetadataUpdate(const SyncFileItem &item)
     if (!QFileInfo::exists(path)) {
         return false;
     }
-    return !cfapi::findPlaceholderInfo(path).isValid();
+    return !cfapi::findPlaceholderInfo<CF_PLACEHOLDER_BASIC_INFO>(path).isValid();
 }
 
 bool VfsCfApi::isDehydratedPlaceholder(const QString &filePath)
@@ -254,7 +254,7 @@ bool VfsCfApi::setPinState(const QString &folderPath, PinState state)
 Optional<PinState> VfsCfApi::pinState(const QString &folderPath)
 {
     const auto localPath = QDir::toNativeSeparators(params().filesystemPath + folderPath);
-    const auto info = cfapi::findPlaceholderInfo(localPath);
+    const auto info = cfapi::findPlaceholderInfo<CF_PLACEHOLDER_BASIC_INFO>(localPath);
     if (!info) {
         qCDebug(lcCfApi) << "Couldn't find pin state for regular non-placeholder file" << localPath;
         return {};
