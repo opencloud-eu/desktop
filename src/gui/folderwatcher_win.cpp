@@ -31,14 +31,10 @@ namespace OCC {
 
 WatcherThread::WatchChanges WatcherThread::watchChanges(size_t fileNotifyBufferSize)
 {
-    _directory = CreateFileW(reinterpret_cast<const wchar_t *>(_longPath.utf16()), // QString stores UTF-16 internally, so use that here.
-        FILE_LIST_DIRECTORY, FILE_SHARE_WRITE | FILE_SHARE_READ | FILE_SHARE_DELETE, nullptr, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OVERLAPPED,
-        nullptr);
+    _directory = Utility::Handle::createHandle(FileSystem::toFilesystemPath(_longPath), {.accessMode = FILE_LIST_DIRECTORY, .async = true});
 
-    if (_directory == INVALID_HANDLE_VALUE) {
-        const auto error = GetLastError();
-        qCWarning(lcFolderWatcher) << "Failed to create handle for" << _path << ", error:" << Utility::formatWinError(error);
-        _directory = nullptr;
+    if (!_directory) {
+        qCWarning(lcFolderWatcher) << "Failed to create handle for" << _path << ", error:" << _directory.errorMessage();
         return WatchChanges::Error;
     }
 
@@ -161,8 +157,7 @@ void WatcherThread::processEntries(FILE_NOTIFY_INFORMATION *curEntry)
 void WatcherThread::closeHandle()
 {
     if (_directory) {
-        CloseHandle(_directory);
-        _directory = nullptr;
+        _directory.close();
     }
 }
 

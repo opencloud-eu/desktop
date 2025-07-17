@@ -18,6 +18,8 @@
 
 #include <QString>
 
+#include <filesystem>
+
 #include <functional>
 #include <qt_windows.h>
 
@@ -33,6 +35,16 @@ namespace Utility {
         explicit Handle(HANDLE h);
         explicit Handle(HANDLE h, std::function<void(HANDLE)> &&close, uint32_t error = NO_ERROR);
 
+        struct CreateHandleParameter
+        {
+            uint32_t accessMode = 0;
+            uint32_t shareMode = FILE_SHARE_WRITE | FILE_SHARE_READ | FILE_SHARE_DELETE;
+            uint32_t creationFlags = OPEN_EXISTING;
+            bool followSymlinks = true;
+            bool async = false;
+        };
+        static Handle createHandle(const std::filesystem::path &path, const CreateHandleParameter &p = {});
+
         Handle(const Handle &) = delete;
         Handle &operator=(const Handle &) = delete;
 
@@ -47,6 +59,7 @@ namespace Utility {
             if (this != &other) {
                 std::swap(_handle, other._handle);
                 std::swap(_close, other._close);
+                std::swap(_error, other._error);
             }
             return *this;
         }
@@ -64,13 +77,14 @@ namespace Utility {
         HANDLE release() { return std::exchange(_handle, INVALID_HANDLE_VALUE); }
 
         uint32_t error() const;
+        bool hasError() const;
 
         QString errorMessage() const;
 
     private:
         HANDLE _handle = INVALID_HANDLE_VALUE;
         std::function<void(HANDLE)> _close;
-        uint32_t _error = {};
+        uint32_t _error = NO_ERROR;
     };
 
     // Possibly refactor to share code with UnixTimevalToFileTime in c_time.c
