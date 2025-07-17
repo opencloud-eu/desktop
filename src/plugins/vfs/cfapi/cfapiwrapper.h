@@ -24,21 +24,45 @@ class VfsCfApi;
 namespace CfApiWrapper {
 
 
+    template <typename T>
     class PlaceHolderInfo
     {
     public:
-        PlaceHolderInfo(std::vector<char> &&buffer = {});
+        PlaceHolderInfo(Utility::Handle &&handle = {}, const std::vector<char> &&buffer = {})
+            : _handle(std::move(handle))
+            , _data(std::move(buffer))
+        {
+        }
 
-        inline auto *get() const noexcept { return reinterpret_cast<CF_PLACEHOLDER_BASIC_INFO *>(const_cast<char *>(_data.data())); }
+        inline auto *get() const noexcept { return reinterpret_cast<T *>(const_cast<char *>(_data.data())); }
         inline auto *operator->() const noexcept { return get(); }
         inline explicit operator bool() const noexcept { return isValid(); }
         inline bool isValid() const noexcept { return !_data.empty(); };
 
         inline auto size() const { return _data.size(); }
 
-        Optional<PinState> pinState() const;
+        PinState pinState() const
+        {
+            Q_ASSERT(this);
+            switch (get()->PinState) {
+            case CF_PIN_STATE_UNSPECIFIED:
+                return OCC::PinState::Unspecified;
+            case CF_PIN_STATE_PINNED:
+                return OCC::PinState::AlwaysLocal;
+            case CF_PIN_STATE_UNPINNED:
+                return OCC::PinState::OnlineOnly;
+            case CF_PIN_STATE_INHERIT:
+                return OCC::PinState::Inherited;
+            case CF_PIN_STATE_EXCLUDED:
+                return OCC::PinState::Inherited;
+            }
+            Q_UNREACHABLE();
+        }
+
+        const Utility::Handle &handle() const { return _handle; }
 
     private:
+        Utility::Handle _handle;
         std::vector<char> _data;
     };
 
@@ -53,7 +77,20 @@ namespace CfApiWrapper {
 
     OCC::Utility::Handle handleForPath(const QString &path);
 
-    PlaceHolderInfo findPlaceholderInfo(const QString &path);
+    /**
+     * The placeholder info can have a dynamic size, by default we don't query FileIdentity
+     * If FileIdentity is required withFileIdentity must be set to true.
+     */
+    template <typename T>
+    PlaceHolderInfo<T> findPlaceholderInfo(const QString &path, bool withFileIdentity = false)
+    {
+    }
+
+    template <>
+    PlaceHolderInfo<CF_PLACEHOLDER_BASIC_INFO> findPlaceholderInfo(const QString &path, bool withFileIdentity);
+
+    template <>
+    PlaceHolderInfo<CF_PLACEHOLDER_STANDARD_INFO> findPlaceholderInfo(const QString &path, bool withFileIdentity);
 
     enum SetPinRecurseMode { NoRecurse = 0, Recurse, ChildrenOnly };
 
