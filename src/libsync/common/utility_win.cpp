@@ -123,15 +123,18 @@ Utility::NtfsPermissionLookupRAII::~NtfsPermissionLookupRAII()
 }
 
 
-Utility::Handle::Handle(HANDLE h, std::function<void(HANDLE)> &&close)
+Utility::Handle::Handle(HANDLE h, std::function<void(HANDLE)> &&close, uint32_t error)
     : _handle(h)
     , _close(std::move(close))
+    , _error(error)
 {
+    if (_handle == INVALID_HANDLE_VALUE && _error == NO_ERROR) {
+        _error = GetLastError();
+    }
 }
 
 Utility::Handle::Handle(HANDLE h)
-    : _handle(h)
-    , _close(&CloseHandle)
+    : Handle(h, &CloseHandle)
 {
 }
 
@@ -146,6 +149,16 @@ void Utility::Handle::close()
         _close(_handle);
         _handle = INVALID_HANDLE_VALUE;
     }
+}
+
+uint32_t Utility::Handle::error() const
+{
+    return _error;
+}
+
+QString Utility::Handle::errorMessage() const
+{
+    return formatWinError(_error);
 }
 
 

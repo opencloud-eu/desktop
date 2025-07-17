@@ -31,7 +31,7 @@ namespace Utility {
          */
         Handle() = default;
         explicit Handle(HANDLE h);
-        explicit Handle(HANDLE h, std::function<void(HANDLE)> &&close);
+        explicit Handle(HANDLE h, std::function<void(HANDLE)> &&close, uint32_t error = NO_ERROR);
 
         Handle(const Handle &) = delete;
         Handle &operator=(const Handle &) = delete;
@@ -53,7 +53,7 @@ namespace Utility {
 
         ~Handle();
 
-        HANDLE &handle() { return _handle; }
+        const HANDLE &handle() const { return _handle; }
 
         void close();
 
@@ -61,9 +61,16 @@ namespace Utility {
 
         operator HANDLE() const { return _handle; }
 
+        HANDLE release() { return std::exchange(_handle, INVALID_HANDLE_VALUE); }
+
+        uint32_t error() const;
+
+        QString errorMessage() const;
+
     private:
         HANDLE _handle = INVALID_HANDLE_VALUE;
         std::function<void(HANDLE)> _close;
+        uint32_t _error = {};
     };
 
     // Possibly refactor to share code with UnixTimevalToFileTime in c_time.c
