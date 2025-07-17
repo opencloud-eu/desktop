@@ -51,6 +51,29 @@ namespace OCC {
 
 Q_LOGGING_CATEGORY(lcFileSystem, "sync.filesystem", QtInfoMsg)
 
+std::filesystem::path FileSystem::toFilesystemPath(QString path)
+{
+#ifdef Q_OS_WIN
+    path = FileSystem::longWinPath(path);
+#endif
+    return std::filesystem::path(reinterpret_cast<const char16_t *>(path.cbegin()), reinterpret_cast<const char16_t *>(path.cend()));
+}
+
+QString FileSystem::fromFilesystemPath(const std::filesystem::path &path)
+{
+#ifdef Q_OS_WIN
+    constexpr std::wstring_view prefix = LR"(\\?\)";
+    std::wstring nativePath = path.native();
+    if (nativePath.starts_with(prefix)) {
+        const auto view = std::wstring_view(nativePath).substr(prefix.size());
+        return QString::fromWCharArray(view.data(), view.length());
+    }
+    return QString::fromStdWString(nativePath);
+#else
+    return QString::fromStdString(path.native());
+#endif
+}
+
 QString FileSystem::longWinPath(const QString &inpath)
 {
 #ifndef Q_OS_WIN

@@ -48,6 +48,9 @@ OPENCLOUD_SYNC_EXPORT Q_DECLARE_LOGGING_CATEGORY(lcFileSystem)
 {
     OPENCLOUD_SYNC_EXPORT Q_NAMESPACE;
 
+    OPENCLOUD_SYNC_EXPORT std::filesystem::path toFilesystemPath(QString path);
+    OPENCLOUD_SYNC_EXPORT QString fromFilesystemPath(const std::filesystem::path &path);
+
     /**
      * List of characters not allowd in filenames on Windows
      */
