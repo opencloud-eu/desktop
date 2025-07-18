@@ -379,7 +379,7 @@ void SyncEngine::startSync()
         return;
     }
 
-    qCInfo(lcEngine) << "#### Discovery start ####################################################" << _duration.duration();
+    qCInfo(lcEngine) << "#### Discovery start ####################################################" << _duration;
     qCInfo(lcEngine) << "Server" << account()->capabilities().status().versionString()
                      << (account()->isHttp2Supported() ? "Using HTTP/2" : "");
     _progressInfo->_status = ProgressInfo::Discovery;
@@ -470,7 +470,7 @@ void SyncEngine::slotDiscoveryFinished()
         return;
     }
 
-    qCInfo(lcEngine) << "#### Discovery end ####################################################" << _duration.duration();
+    qCInfo(lcEngine) << "#### Discovery end ####################################################" << _duration;
 
     // Sanity check
     if (!_journal->open()) {
@@ -537,14 +537,14 @@ void SyncEngine::slotDiscoveryFinished()
             erase_if(_syncItems, [&names](const SyncFileItemPtr &i) { return !names.contains(QStringView{i->localName()}); });
         }
 
-        qCInfo(lcEngine) << "#### Reconcile (aboutToPropagate) ####################################################" << _duration.duration();
+        qCInfo(lcEngine) << "#### Reconcile (aboutToPropagate) ####################################################" << _duration;
 
         _localDiscoveryPaths.clear();
 
         // To announce the beginning of the sync
         Q_EMIT aboutToPropagate(_syncItems);
 
-        qCInfo(lcEngine) << "#### Reconcile (aboutToPropagate OK) ####################################################" << _duration.duration();
+        qCInfo(lcEngine) << "#### Reconcile (aboutToPropagate OK) ####################################################" << _duration;
 
         // it's important to do this before ProgressInfo::start(), to announce start of new sync
         _progressInfo->_status = ProgressInfo::Propagation;
@@ -582,7 +582,7 @@ void SyncEngine::slotDiscoveryFinished()
         _propagator->start(std::move(_syncItems));
 
 
-        qCInfo(lcEngine) << "#### Post-Reconcile end ####################################################" << _duration.duration();
+        qCInfo(lcEngine) << "#### Post-Reconcile end ####################################################" << _duration;
     };
 
     finish();
@@ -656,7 +656,7 @@ void SyncEngine::slotPropagationFinished(bool success)
 
 void SyncEngine::finalize(bool success)
 {
-    qCInfo(lcEngine) << "Sync run for" << _localPath << "took" << _duration.duration();
+    qCInfo(lcEngine) << "Sync run for" << _localPath << "took" << _duration;
     _duration.stop();
 
     if (_discoveryPhase) {
