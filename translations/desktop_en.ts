@@ -200,10 +200,10 @@ File synchronization desktop utility.</source>
 <context>
     <name>FileSystem</name>
     <message>
-        <location filename="../src/libsync/common/filesystembase.cpp" line="165"/>
-        <location filename="../src/libsync/common/filesystembase.cpp" line="167"/>
-        <location filename="../src/libsync/common/filesystembase.cpp" line="226"/>
-        <location filename="../src/libsync/common/filesystembase.cpp" line="231"/>
+        <location filename="../src/libsync/common/filesystembase.cpp" line="188"/>
+        <location filename="../src/libsync/common/filesystembase.cpp" line="190"/>
+        <location filename="../src/libsync/common/filesystembase.cpp" line="249"/>
+        <location filename="../src/libsync/common/filesystembase.cpp" line="254"/>
         <source>Can&apos;t rename %1, the file is currently in use</source>
         <translation type="unfinished"></translation>
     </message>
