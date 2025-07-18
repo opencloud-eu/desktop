@@ -449,7 +449,7 @@ void AccountState::slotConnectionValidatorResult(ConnectionValidator::Status sta
             QTimer::singleShot(_maintenanceToConnectedDelay + 100ms, this, [this] { AccountState::checkConnectivity(false); });
             return;
         } else if (_timeSinceMaintenanceOver.duration() < _maintenanceToConnectedDelay) {
-            qCInfo(lcAccountState) << "AccountState reconnection: only" << _timeSinceMaintenanceOver.duration() << "ms have passed";
+            qCInfo(lcAccountState) << "AccountState reconnection: only" << _timeSinceMaintenanceOver;
             return;
         }
     }

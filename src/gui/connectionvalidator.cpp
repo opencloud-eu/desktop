@@ -50,7 +50,7 @@ ConnectionValidator::ConnectionValidator(AccountPtr account, QObject *parent)
     auto timer = new QTimer(this);
     timer->setInterval(30s);
     connect(timer, &QTimer::timeout, this,
-        [this] { qCInfo(lcConnectionValidator) << "ConnectionValidator" << _account->displayNameWithHost() << "still running after" << _duration.duration(); });
+        [this] { qCInfo(lcConnectionValidator) << "ConnectionValidator" << _account->displayNameWithHost() << "still running after" << _duration; });
     timer->start();
 }
 
@@ -201,7 +201,7 @@ void ConnectionValidator::reportResult(Status status)
 {
     if (OC_ENSURE(!_finished)) {
         _finished = true;
-        qCDebug(lcConnectionValidator) << status << _duration.duration();
+        qCDebug(lcConnectionValidator) << status << _duration;
         Q_EMIT connectionResult(status, _errors);
         deleteLater();
     }

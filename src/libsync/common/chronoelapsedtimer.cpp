@@ -20,9 +20,10 @@
 #include <QtGlobal>
 
 using namespace OCC::Utility;
+using namespace std::chrono;
 
 ChronoElapsedTimer::ChronoElapsedTimer(bool start)
-    : _start(std::chrono::steady_clock::now())
+    : _start(steady_clock::now())
     , _started(start)
 {
 }
@@ -34,26 +35,38 @@ bool ChronoElapsedTimer::isStarted() const
 
 void ChronoElapsedTimer::reset()
 {
-    _start = std::chrono::steady_clock::now();
+    _start = steady_clock::now();
     _end = {};
     _started = true;
 }
 
 void ChronoElapsedTimer::stop()
 {
-    Q_ASSERT(_end == std::chrono::steady_clock::time_point{});
+    Q_ASSERT(_end == steady_clock::time_point{});
     Q_ASSERT(_started);
-    _end = std::chrono::steady_clock::now();
+    _end = steady_clock::now();
     _started = false;
 }
 
-std::chrono::nanoseconds ChronoElapsedTimer::duration() const
+nanoseconds ChronoElapsedTimer::duration() const
 {
     if (!_started) {
-        return std::chrono::nanoseconds::max();
+        return nanoseconds::max();
     }
-    if (_end != std::chrono::steady_clock::time_point{}) {
+    if (_end != steady_clock::time_point{}) {
         return _end - _start;
     }
-    return std::chrono::steady_clock::now() - _start;
+    return steady_clock::now() - _start;
+}
+
+QDebug operator<<(QDebug debug, const ChronoElapsedTimer &timer)
+{
+    QDebugStateSaver save(debug);
+    debug.nospace();
+    auto duration = timer.duration();
+    const auto h = duration_cast<hours>(duration);
+    const auto min = duration_cast<minutes>(duration -= h);
+    const auto s = duration_cast<seconds>(duration -= min);
+    const auto ms = duration_cast<milliseconds>(duration -= s);
+    return debug << "ChronoElapsedTimer(" << h.count() << "h, " << min.count() << "min, " << s.count() << "s, " << ms.count() << "ms)";
 }

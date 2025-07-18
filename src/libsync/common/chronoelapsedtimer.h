@@ -18,6 +18,8 @@
 #pragma once
 #include "libsync/opencloudsynclib.h"
 
+#include <QDebug>
+
 #include <chrono>
 
 namespace OCC::Utility {
@@ -52,3 +54,5 @@ private:
 };
 
 }
+
+OPENCLOUD_SYNC_EXPORT QDebug operator<<(QDebug debug, const OCC::Utility::ChronoElapsedTimer &in);

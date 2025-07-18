@@ -90,7 +90,7 @@ void logHttp(const QByteArray &verb, HttpContext *ctx, QJsonObject &&header, QIO
             {QStringLiteral("cached"), reply->attribute(QNetworkRequest::SourceIsFromCacheAttribute).toBool()},
             // downcast to int, this is json
             {QStringLiteral("duration"), static_cast<int>(duration_cast<milliseconds>(ctx->timer.duration()).count())}, //
-            {QStringLiteral("durationString"), QDebug::toString(ctx->timer.duration())},
+            {QStringLiteral("durationString"), QDebug::toString(ctx->timer)},
             {QStringLiteral("version"),
                 QStringLiteral("HTTP %1").arg(
                     reply->attribute(QNetworkRequest::Http2WasUsedAttribute).toBool() ? QStringLiteral("1.1") : QStringLiteral("2"))}};

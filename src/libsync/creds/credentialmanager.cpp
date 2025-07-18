@@ -75,14 +75,14 @@ QKeychain::Job *CredentialManager::set(const QString &key, const QVariant &data)
 
     Utility::ChronoElapsedTimer elapsedTimer;
     connect(timer, &QTimer::timeout, writeJob,
-        [writeJob, elapsedTimer] { qCWarning(lcCredentialsManager) << "set" << writeJob->key() << "has not yet finished." << elapsedTimer.duration(); });
+        [writeJob, elapsedTimer] { qCWarning(lcCredentialsManager) << "set" << writeJob->key() << "has not yet finished." << elapsedTimer; });
     connect(writeJob, &QKeychain::WritePasswordJob::finished, this, [writeJob, key, elapsedTimer, this] {
         if (writeJob->error() == QKeychain::NoError) {
-            qCInfo(lcCredentialsManager) << "added" << writeJob->key() << "after" << elapsedTimer.duration();
+            qCInfo(lcCredentialsManager) << "added" << writeJob->key() << "after" << elapsedTimer;
             // just a list, the values don't matter
             credentialsList().setValue(key, true);
         } else {
-            qCWarning(lcCredentialsManager) << "Failed to set:" << writeJob->key() << writeJob->errorString() << "after" << elapsedTimer.duration();
+            qCWarning(lcCredentialsManager) << "Failed to set:" << writeJob->key() << writeJob->errorString() << "after" << elapsedTimer;
         }
     });
     writeJob->setBinaryData(QCborValue::fromVariant(data).toCbor());
