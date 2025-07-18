@@ -13,6 +13,7 @@ set(libsync_SRCS
     capabilities.cpp
     cookiejar.cpp
     discovery.cpp
+    discoveryinfo.cpp
     discoveryphase.cpp
     filesystem.cpp
     httplogger.cpp
@@ -160,14 +161,18 @@ target_sources(libsync PRIVATE
     csync_exclude.cpp
 )
 
-if (WIN32)
-    target_sources(libsync PRIVATE
-        vio/csync_vio_local_win.cpp
-    )
-else()
-    target_sources(libsync PRIVATE
-        vio/csync_vio_local_unix.cpp
-    )
+
+try_compile(HAS_CLOCK_CAST
+        SOURCE_FROM_CONTENT chrono_test.cpp "
+#include <chrono>
+int main() {
+    std::chrono::clock_cast<std::chrono::system_clock>;
+}"
+)
+message(STATUS "HAS_CLOCK_CAST: ${HAS_CLOCK_CAST}")
+
+if(HAS_CLOCK_CAST)
+    set_source_files_properties(filesystem.cpp PROPERTIES COMPILE_DEFINITIONS HAS_CLOCK_CAST)
 endif()
 
 add_subdirectory(common)

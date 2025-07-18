@@ -31,6 +31,7 @@
 #include <qt_windows.h>
 #endif
 using namespace OCC;
+using namespace Qt::Literals::StringLiterals;
 
 Q_LOGGING_CATEGORY(lcVfs, "sync.vfs", QtInfoMsg)
 

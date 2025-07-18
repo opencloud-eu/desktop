@@ -14,7 +14,6 @@
 
 #pragma once
 
-#include "libsync/csync.h"
 #include "networkjobs.h"
 #include "syncfileitem.h"
 #include "syncoptions.h"
@@ -27,6 +26,7 @@
 class ExcludedFiles;
 
 namespace OCC {
+class Vfs;
 
 enum class LocalDiscoveryStyle {
     FilesystemOnly, //< read all local data from the filesystem
@@ -38,40 +38,6 @@ class Account;
 class SyncJournalDb;
 class ProcessDirectoryJob;
 
-/**
- * Represent all the meta-data about a file in the server
- */
-struct RemoteInfo
-{
-    /** FileName of the entry (this does not contains any directory or path, just the plain name */
-    QString name;
-    QString etag;
-    QByteArray fileId;
-    QByteArray checksumHeader;
-    OCC::RemotePermissions remotePerm;
-    time_t modtime = 0;
-    int64_t size = 0;
-    bool isDirectory = false;
-    bool isValid() const { return !name.isNull(); }
-
-    QString directDownloadUrl;
-    QString directDownloadCookies;
-};
-
-struct LocalInfo
-{
-    /** FileName of the entry (this does not contains any directory or path, just the plain name */
-    QString name;
-    time_t modtime = 0;
-    int64_t size = 0;
-    uint64_t inode = 0;
-    ItemType type = ItemTypeSkip;
-    bool isDirectory = false;
-    bool isHidden = false;
-    bool isVirtualFile = false;
-    bool isSymLink = false;
-    bool isValid() const { return !name.isNull(); }
-};
 
 /**
  * @brief Run list on a local directory and process the results for Discovery
@@ -92,7 +58,7 @@ Q_SIGNALS:
 
     void itemDiscovered(SyncFileItemPtr item);
     void childIgnored(bool b);
-private Q_SLOTS:
+
 private:
     QString _localPath;
     AccountPtr _account;

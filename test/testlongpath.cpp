@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 #include "common/filesystembase.h"
+#include "filesystem.h"
 #include "libsync/csync.h"
-#include "libsync/vio/csync_vio_local.h"
 #include "testutils/testutils.h"
 
 #include <QTemporaryFile>
@@ -127,13 +127,12 @@ private Q_SLOTS:
 
         QFile file(longPath.filePath());
         QVERIFY(file.open(QFile::WriteOnly));
-        QVERIFY(file.write(data.constData()) == data.size());
+        QCOMPARE(file.write(data.constData()), data.size());
         file.close();
 
-        csync_file_stat_t buf;
-        QVERIFY(csync_vio_local_stat(longPath.filePath(), &buf) != -1);
-        QVERIFY(buf.size == data.size());
-        QVERIFY(buf.size == longPath.size());
+        const auto size = OCC::FileSystem::getSize(OCC::FileSystem::toFilesystemPath(longPath.filePath()));
+        QCOMPARE(size, data.size());
+        QCOMPARE(size, longPath.size());
 
         QVERIFY(tmp.remove());
     }

@@ -7,6 +7,7 @@
 
 #include "common/filesystembase.h"
 #include "common/utility_win.h"
+#include "filesystem.h"
 #include "hydrationjob.h"
 #include "theme.h"
 #include "vfs_cfapi.h"
