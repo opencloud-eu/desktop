@@ -17,11 +17,11 @@
 #include "libsync/opencloudsynclib.h"
 
 #include <QString>
+#include <qt_windows.h>
 
 #include <filesystem>
 
 #include <functional>
-#include <qt_windows.h>
 
 namespace OCC {
 namespace Utility {

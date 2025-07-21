@@ -4,9 +4,6 @@
    any purpose.
 */
 
-#include <QtTest>
-#include <QTemporaryDir>
-
 #include "testutils/testutils.h"
 
 #include "libsync/common/filesystembase.h"
@@ -15,9 +12,23 @@
 #include "libsync/filesystem.h"
 
 #ifdef Q_OS_WIN
+// the lnk code requires some parts we usually no include
+// also the include order is relevant
+#undef WIN32_LEAN_AND_MEAN
+#include <windows.h>
+
+#include <shlguid.h>
+#include <shobjidl.h>
+
 #include "common/utility_win.h"
 #endif
 
+
+#include <QTemporaryDir>
+#include <QtTest>
+
+
+using namespace Qt::Literals::StringLiterals;
 using namespace std::chrono_literals;
 
 using namespace OCC::Utility;
@@ -336,6 +347,81 @@ private Q_SLOTS:
         OCC::Utility::UnixTimeToLargeIntegerFiletime(y2k38, &out);
         // (2148591600 * 10000000) + 116444736000000000
         QCOMPARE(out.QuadPart, 137930652000000000);
+    }
+
+    void testLNK()
+    {
+        auto mkLNK = [](const std::wstring &path, const std::filesystem::path &target) {
+            // https://learn.microsoft.com/en-us/windows/win32/shell/links?redirectedfrom=MSDN#Shellink_Creating_Shortcut
+            IShellLink *psl;
+            HRESULT hres = CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, IID_IShellLink, (LPVOID *)&psl);
+            if (SUCCEEDED(hres)) {
+                IPersistFile *ppf;
+
+                // Set the path to the shortcut target and add the description.
+                psl->SetPath(path.data());
+                psl->SetDescription(L"A test lnk");
+
+                // Query IShellLink for the IPersistFile interface, used for saving the
+                // shortcut in persistent storage.
+                hres = psl->QueryInterface(IID_IPersistFile, (LPVOID *)&ppf);
+
+                if (SUCCEEDED(hres)) {
+                    hres = ppf->Save(target.native().data(), true);
+                    ppf->Release();
+                }
+                psl->Release();
+            }
+        };
+
+        // the test relies on different change times for this binary and the lnk, sleep to be sure
+        QThread::currentThread()->sleep(1s);
+
+        const auto tmp = OCC::TestUtils::createTempDir();
+
+        {
+            // historically Qt handles llnk filles as symlinks and resolves them
+            // ensure w don't do the same
+            const QString qtTarget = tmp.filePath(u"test.lnk"_s);
+            const auto target = OCC::FileSystem::toFilesystemPath(qtTarget);
+            // we must not use toFilesystemPath as we would get a \\?\ path which is not supported with shortcuts
+            mkLNK(qApp->applicationFilePath().toStdWString(), target);
+            auto entry = std::filesystem::directory_entry{target};
+            OCC::LocalInfo fileInfo(entry, ItemTypeFile);
+            const auto qFileInfo = QFileInfo(qtTarget);
+            const auto qFileInfoTarget = QFileInfo(qtTarget);
+
+            QVERIFY(qFileInfo.exists());
+            QVERIFY(entry.exists());
+
+            // fails as Qt resolves the path
+            QCOMPARE_NE(entry.file_size(), qFileInfo.size());
+            QCOMPARE_NE(OCC::FileSystem::fileTimeToTime_t(entry.last_write_time()), OCC::Utility::qDateTimeToTime_t(qFileInfo.metadataChangeTime()));
+
+            QCOMPARE(entry.file_size(), fileInfo.size);
+            QCOMPARE_NE(entry.file_size(), qFileInfoTarget.size());
+            QCOMPARE(OCC::FileSystem::fileTimeToTime_t(entry.last_write_time()), fileInfo.modtime);
+        }
+
+        {
+            const QString qtTarget = tmp.filePath(u"bad_test.lnk"_s);
+            const auto target = OCC::FileSystem::toFilesystemPath(qtTarget);
+            // create an invalid link
+            mkLNK(L"", target);
+            auto entry = std::filesystem::directory_entry{target};
+            OCC::LocalInfo fileInfo(entry, ItemTypeFile);
+            const auto qFileInfo = QFileInfo(qtTarget);
+
+            QVERIFY(!qFileInfo.exists());
+            QVERIFY(entry.exists());
+
+            // Qt resolves the path, the target is invalid
+            QCOMPARE(0, qFileInfo.size());
+            QCOMPARE(0, OCC::Utility::qDateTimeToTime_t(qFileInfo.metadataChangeTime()));
+
+            QCOMPARE(entry.file_size(), fileInfo.size);
+            QCOMPARE(OCC::FileSystem::fileTimeToTime_t(entry.last_write_time()), fileInfo.modtime);
+        }
     }
 #endif
 
