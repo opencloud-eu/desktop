@@ -45,7 +45,7 @@ void ChronoElapsedTimer::stop()
     Q_ASSERT(_end == steady_clock::time_point{});
     Q_ASSERT(_started);
     _end = steady_clock::now();
-    _started = false;
+    // don't set _started to false, so that we can still call duration() later
 }
 
 nanoseconds ChronoElapsedTimer::duration() const
