@@ -4,7 +4,11 @@
 #include "libsync/discoveryinfo.h"
 #include "libsync/filesystem.h"
 
+#ifdef Q_OS_WIN
+#include "libsync/common/utility_win.h"
+#else
 #include <sys/stat.h>
+#endif
 
 using namespace OCC;
 

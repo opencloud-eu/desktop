@@ -19,10 +19,6 @@
 #include "common/filesystembase.h"
 #include "common/result.h"
 
-#ifdef Q_OS_WIN
-#include "common/utility_win.h"
-#endif
-
 class QFile;
 
 namespace OCC {
