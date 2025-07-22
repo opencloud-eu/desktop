@@ -71,11 +71,10 @@ namespace FileSystem {
      * Use this over QFileInfo::size() to avoid bugs with lnk files on Windows.
      * See https://bugreports.qt.io/browse/QTBUG-24831.
      */
-    [[deprecated("Use std::filesystem::file_size")]]
     qint64 OPENCLOUD_SYNC_EXPORT getSize(const std::filesystem::path &filename);
     inline qint64 getSize(const QFileInfo &info)
     {
-        return getSize(info.filesystemAbsoluteFilePath());
+        return getSize(toFilesystemPath(info.absoluteFilePath()));
     }
 
     /**

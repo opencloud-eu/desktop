@@ -118,23 +118,30 @@ bool FileSystem::fileChanged(const QFileInfo &info, qint64 previousSize, time_t 
         qCDebug(lcFileSystem) << info.filePath() << "was removed";
         return true;
     }
-    const qint64 actualSize = getSize(info);
-    if (actualSize != previousSize) {
-        qCDebug(lcFileSystem) << "File" << info.filePath() << "has changed: size: " << previousSize << "<->" << actualSize;
-        return true;
-    } else {
-        const time_t actualMtime = getModTime(info.filePath());
-        if (actualMtime != previousMtime) {
-            qCDebug(lcFileSystem) << "File" << info.filePath() << "has changed: mtime: " << previousMtime << "<->" << actualMtime;
+    if (previousInode.has_value()) {
+        quint64 actualIndoe;
+        FileSystem::getInode(info.filesystemAbsoluteFilePath(), &actualIndoe);
+        if (previousInode.value() != actualIndoe) {
+            qCDebug(lcFileSystem) << "File" << info.filePath() << "has changed: inode" << previousInode.value() << "<-->" << actualIndoe;
             return true;
-        } else if (previousInode.has_value()) {
-            quint64 actualIndoe;
-            FileSystem::getInode(info.filesystemAbsoluteFilePath(), &actualIndoe);
-            if (previousInode.value() != actualIndoe) {
-                qCDebug(lcFileSystem) << "File" << info.filePath() << "has changed: inode" << previousInode.value() << "<-->" << actualIndoe;
-                return true;
-            }
         }
+    }
+    if (info.isDir()) {
+        if (previousSize != 0) {
+            qCDebug(lcFileSystem) << "File" << info.filePath() << "has changed: from file to dir";
+            return true;
+        }
+    } else {
+        const qint64 actualSize = getSize(info);
+        if (actualSize != previousSize) {
+            qCDebug(lcFileSystem) << "File" << info.filePath() << "has changed: size: " << previousSize << "<->" << actualSize;
+            return true;
+        }
+    }
+    const time_t actualMtime = getModTime(info.filePath());
+    if (actualMtime != previousMtime) {
+        qCDebug(lcFileSystem) << "File" << info.filePath() << "has changed: mtime: " << previousMtime << "<->" << actualMtime;
+        return true;
     }
     return false;
 }
@@ -147,6 +154,7 @@ qint64 FileSystem::getSize(const std::filesystem::path &filename)
         if (!std::filesystem::is_directory(filename)) {
             qCCritical(lcFileSystem) << "Error getting size for" << filename << ec.value() << ec.message();
         } else {
+            qCWarning(lcFileSystem) << "Called getFileSize on a directory";
             Q_ASSERT(false);
         }
         return 0;
