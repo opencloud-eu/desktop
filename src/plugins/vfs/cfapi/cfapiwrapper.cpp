@@ -33,6 +33,7 @@
 Q_LOGGING_CATEGORY(lcCfApiWrapper, "sync.vfs.cfapi.wrapper", QtDebugMsg)
 
 using namespace Qt::Literals::StringLiterals;
+using namespace std::chrono_literals;
 
 namespace winrt {
 using namespace Windows::Foundation;
@@ -555,6 +556,9 @@ void OCC::CfApiWrapper::registerSyncRoot(const VfsSetupParams &params, const std
                     std::lock_guard lock(*mutex);
                     winrt::StorageProviderSyncRootManager::Register(info);
                 }
+                // the example suggests to sleep, and we've seen connectSyncRoot fail with "Failed to register sync root WindowsError: -7ff8fb70: Element not
+                // found." as we are not in the main thread this won't block
+                std::this_thread::sleep_for(1s);
                 callback({});
             } catch (const winrt::hresult_error &ex) {
                 callback(u"Failed to register sync root %1"_s.arg(Utility::formatWinError(ex.code())));
