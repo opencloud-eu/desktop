@@ -16,12 +16,15 @@
 
 #include "common/asserts.h"
 #include "common/utility.h"
+#include "libsync/discoveryinfo.h"
+
 #include <QCoreApplication>
 #include <QDirIterator>
 #include <QFile>
 #include <QFileInfo>
 
 #include "csync.h"
+#include "syncfileitem.h"
 
 #include <sys/stat.h>
 
@@ -111,36 +114,64 @@ bool FileSystem::setModTime(const std::filesystem::path &filename, time_t modTim
     return true;
 }
 
-bool FileSystem::fileChanged(const QFileInfo &info, qint64 previousSize, time_t previousMtime, std::optional<quint64> previousInode)
+FileSystem::FileChangedInfo FileSystem::FileChangedInfo::fromSyncFileItem(const SyncFileItem *const item)
+{
+    return {.size = item->_size, .mtime = item->_modtime, .inode = (item->_inode == 0 ? std::optional<quint64>{} : item->_inode), .type = item->_type};
+}
+
+FileSystem::FileChangedInfo FileSystem::FileChangedInfo::fromSyncFileItemPrevious(const SyncFileItem *const item)
+{
+    return {.size = item->_previousSize, .mtime = item->_previousModtime, .type = item->_type};
+}
+
+FileSystem::FileChangedInfo FileSystem::FileChangedInfo::fromSyncJournalFileRecord(const SyncJournalFileRecord &record)
+{
+    return {.size = record._fileSize, .mtime = record._modtime, .inode = record._inode, .type = record._type};
+}
+
+bool FileSystem::fileChanged(const std::filesystem::path &path, const FileChangedInfo &previousInfo)
 {
     // previousMtime == -1 indicates the file does not exist
-    if (!info.exists() && previousMtime != -1) {
-        qCDebug(lcFileSystem) << info.filePath() << "was removed";
+    const auto dirent = std::filesystem::directory_entry{path};
+    if (!dirent.exists()) {
+        if (previousInfo.mtime != -1) {
+            qCDebug(lcFileSystem) << path.native() << "was removed";
+            return true;
+        } else {
+            // the file didn't exist and doesn't exist
+            Q_ASSERT(false); // pointless call
+            return false;
+        }
+    }
+
+    const auto type = LocalInfo::typeFromDirectoryEntry(dirent);
+    if (previousInfo.type != ItemTypeUnsupported) {
+        // only check for dir and file, as virtual files are irrelevant here
+        if (previousInfo.type == ItemTypeDirectory && type == ItemTypeFile) {
+            qCDebug(lcFileSystem) << "File" << path.native() << "has changed: from dir to file";
+            return true;
+        }
+        if (previousInfo.type == ItemTypeFile && type == ItemTypeDirectory) {
+            qCDebug(lcFileSystem) << "File" << path.native() << "has changed: from file to dir";
+            return true;
+        }
+    }
+    const auto info = LocalInfo(dirent, type);
+    if (previousInfo.inode.has_value() && previousInfo.inode.value() != info.inode) {
+        qCDebug(lcFileSystem) << "File" << path.native() << "has changed: inode" << previousInfo.inode.value() << "<-->" << info.inode;
         return true;
     }
-    if (previousInode.has_value()) {
-        quint64 actualIndoe;
-        FileSystem::getInode(info.filesystemAbsoluteFilePath(), &actualIndoe);
-        if (previousInode.value() != actualIndoe) {
-            qCDebug(lcFileSystem) << "File" << info.filePath() << "has changed: inode" << previousInode.value() << "<-->" << actualIndoe;
+    if (info.isDirectory) {
+        if (previousInfo.size != 0) {
+            qCDebug(lcFileSystem) << "File" << path.native() << "has changed: from file to dir";
             return true;
         }
+    } else if (info.size != previousInfo.size) {
+        qCDebug(lcFileSystem) << "File" << path.native() << "has changed: size: " << previousInfo.size << "<->" << info.size;
+        return true;
     }
-    if (info.isDir()) {
-        if (previousSize != 0) {
-            qCDebug(lcFileSystem) << "File" << info.filePath() << "has changed: from file to dir";
-            return true;
-        }
-    } else {
-        const qint64 actualSize = getSize(info);
-        if (actualSize != previousSize) {
-            qCDebug(lcFileSystem) << "File" << info.filePath() << "has changed: size: " << previousSize << "<->" << actualSize;
-            return true;
-        }
-    }
-    const time_t actualMtime = getModTime(info.filePath());
-    if (actualMtime != previousMtime) {
-        qCDebug(lcFileSystem) << "File" << info.filePath() << "has changed: mtime: " << previousMtime << "<->" << actualMtime;
+    if (info.modtime != previousInfo.mtime) {
+        qCDebug(lcFileSystem) << "File" << path.native() << "has changed: mtime: " << previousInfo.mtime << "<->" << info.modtime;
         return true;
     }
     return false;
@@ -209,27 +240,13 @@ bool FileSystem::removeRecursively(const QString &path,
 
 bool FileSystem::getInode(const std::filesystem::path &filename, quint64 *inode)
 {
-#ifdef Q_OS_WIN
-    auto h = Utility::Handle::createHandle(filename, {.followSymlinks = false});
-    if (!h) {
-        qCWarning(lcFileSystem) << h.errorMessage();
+    const LocalInfo info(filename);
+    if (!info.isValid()) {
+        *inode = 0;
         return false;
     }
-    BY_HANDLE_FILE_INFORMATION fileInfo = {};
-    if (!GetFileInformationByHandle(h, &fileInfo)) {
-        qCCritical(lcFileSystem) << "GetFileInformationByHandle failed on" << filename << h.errorMessage();
-        return false;
-    }
-    *inode = ULARGE_INTEGER{{fileInfo.nFileIndexLow, fileInfo.nFileIndexHigh}}.QuadPart & 0x0000FFFFFFFFFFFF;
+    *inode = info.inode;
     return true;
-#else
-    struct stat sb;
-    if (lstat(filename.string().data(), &sb) < 0) {
-        return false;
-    }
-    *inode = sb.st_ino;
-    return true;
-#endif
 }
 
 namespace {

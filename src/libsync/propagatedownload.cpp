@@ -423,7 +423,7 @@ void PropagateDownloadFile::start()
     const QString fsPath = propagator()->fullLocalPath(_item->localName());
     // For virtual files just dehydrate or create the file and be done
     if (_item->_type == ItemTypeVirtualFileDehydration) {
-        if (FileSystem::fileChanged(QFileInfo{fsPath}, _item->_previousSize, _item->_previousModtime)) {
+        if (FileSystem::fileChanged(FileSystem::toFilesystemPath(fsPath), FileSystem::FileChangedInfo::fromSyncFileItemPrevious(_item.data()))) {
             propagator()->_anotherSyncNeeded = true;
             done(SyncFileItem::SoftError, tr("File has changed since discovery"));
             return;
@@ -945,9 +945,7 @@ void PropagateDownloadFile::downloadFinished()
         // phase by comparing size and mtime to the previous values. This
         // is necessary to avoid overwriting user changes that happened between
         // the discovery phase and now.
-        const qint64 expectedSize = _item->_previousSize;
-        const time_t expectedMtime = _item->_previousModtime;
-        if (FileSystem::fileChanged(QFileInfo{fn}, expectedSize, expectedMtime)) {
+        if (FileSystem::fileChanged(FileSystem::toFilesystemPath(fn), FileSystem::FileChangedInfo::fromSyncFileItemPrevious(_item.data()))) {
             propagator()->_anotherSyncNeeded = true;
             done(SyncFileItem::SoftError, tr("File has changed since discovery"));
             return;

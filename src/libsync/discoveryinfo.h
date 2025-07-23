@@ -33,6 +33,8 @@ class OPENCLOUD_SYNC_EXPORT LocalInfo
 public:
     LocalInfo() = default;
     LocalInfo(const std::filesystem::directory_entry &dirent, ItemType type);
+    LocalInfo(const std::filesystem::directory_entry &dirent);
+    LocalInfo(const std::filesystem::path &path);
 
     static ItemType typeFromDirectoryEntry(const std::filesystem::directory_entry &dirent);
 
