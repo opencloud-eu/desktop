@@ -14,13 +14,22 @@ when:
 
 clone:
   - name: clone
-    image: docker.io/gecoit84/woodpecker-git-plugin
+    image: opencloudeu/woodpecker-windows-git-plugin:v1
     pull: false
+    settings:
+      path: "$CI_WORKSPACE/src"
 
 steps:
+  - name: get craftmaker
+    image: opencloudeu/woodpecker-windows-git-plugin:v1
+    settings:
+      depth: 1
+      remote: "https://invent.kde.org/kde/craftmaster.git"
+      path: "$CI_WORKSPACE/craft/CraftMaster/CraftMaster"
+
   - name: ls
-    image: docker.io/gecoit84/woodpecker-windows-base-chocolatey-msvsbuild:latest
+    image: opencloudeu/woodpecker-windows-python:v1
     commands:
-      - "ls -R"
-      - "pwd"
+      - "echo in $(pwd)"
+      - "ls -l /"
       
