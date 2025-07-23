@@ -208,7 +208,7 @@ Utilità desktop per la sincronizazione dei file.</translation>
         <translation>Inpossibili rinominare %1, il file è attualmente in uso.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/filesystem.cpp" line="193"/>
+        <location filename="../src/libsync/filesystem.cpp" line="203"/>
         <source>Could not remove folder</source>
         <translation>Impossibile rimuovere la cartella</translation>
     </message>
@@ -854,8 +854,8 @@ L&apos;aggiornamento verrà eseguito in background e sovrascriverà il file AppI
 <context>
     <name>OCC::DiscoverySingleDirectoryJob</name>
     <message>
-        <location filename="../src/libsync/discoveryphase.cpp" line="300"/>
-        <location filename="../src/libsync/discoveryphase.cpp" line="412"/>
+        <location filename="../src/libsync/discoveryphase.cpp" line="273"/>
+        <location filename="../src/libsync/discoveryphase.cpp" line="385"/>
         <source>Server error: PROPFIND reply is not XML formatted!</source>
         <translation>Errore del server: la risposta PROPFIND non è formattata in XML!</translation>
     </message>
@@ -863,24 +863,19 @@ L&apos;aggiornamento verrà eseguito in background e sovrascriverà il file AppI
 <context>
     <name>OCC::DiscoverySingleLocalDirectoryJob</name>
     <message>
-        <location filename="../src/libsync/discoveryphase.cpp" line="205"/>
+        <location filename="../src/libsync/discoveryphase.cpp" line="213"/>
         <source>Error while opening directory %1</source>
         <translation>Errore durante l&apos;apertura della directory %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discoveryphase.cpp" line="207"/>
+        <location filename="../src/libsync/discoveryphase.cpp" line="215"/>
         <source>Directory not accessible on client, permission denied</source>
         <translation>Directory non accessibile sul client, autorizzazione negata</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discoveryphase.cpp" line="211"/>
+        <location filename="../src/libsync/discoveryphase.cpp" line="219"/>
         <source>Directory not found: %1</source>
         <translation>Directory non trovata: %1</translation>
-    </message>
-    <message>
-        <location filename="../src/libsync/discoveryphase.cpp" line="246"/>
-        <source>Error while reading directory %1</source>
-        <translation>Errore durante la lettura della directory %1</translation>
     </message>
 </context>
 <context>
@@ -2787,17 +2782,17 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::Vfs</name>
     <message>
-        <location filename="../src/libsync/common/vfs.cpp" line="77"/>
+        <location filename="../src/libsync/common/vfs.cpp" line="78"/>
         <source>The Virtual filesystem feature does not support a drive as sync root</source>
         <translation>La funzionalità del file system virtuale non supporta un&apos;unità come root di sincronizzazione</translation>
     </message>
     <message>
-        <location filename="../src/libsync/common/vfs.cpp" line="81"/>
+        <location filename="../src/libsync/common/vfs.cpp" line="82"/>
         <source>The Virtual filesystem feature requires a NTFS file system, %1 is using %2</source>
         <translation>La funzionalità del file system virtuale richiede un file system NTFS, %1 utilizza %2</translation>
     </message>
     <message>
-        <location filename="../src/libsync/common/vfs.cpp" line="85"/>
+        <location filename="../src/libsync/common/vfs.cpp" line="86"/>
         <source>The Virtual filesystem feature is not supported on network drives</source>
         <translation>La funzionalità del file system virtuale non è supportata sulle unità di rete</translation>
     </message>
@@ -3026,7 +3021,7 @@ Note that using any logging command line options will override the settings.</so
         <translation>%1: %2</translation>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/cfapi/cfapiwrapper.cpp" line="63"/>
+        <location filename="../src/plugins/vfs/cfapi/cfapiwrapper.cpp" line="65"/>
         <source>Paths beginning with &apos;#&apos; character are not supported in VFS mode.</source>
         <translation type="unfinished"/>
     </message>
