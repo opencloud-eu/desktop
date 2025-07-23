@@ -609,7 +609,8 @@ void Folder::slotWatchedPathsChanged(const QSet<QString> &paths, ChangeReason re
             // Check that the mtime/size actually changed or there was
             // an attribute change (pin state) that caused the notification
             bool spurious = false;
-            if (record.isValid() && !FileSystem::fileChanged(QFileInfo{path}, record._fileSize, record._modtime, record._inode)) {
+            if (record.isValid()
+                && !FileSystem::fileChanged(FileSystem::toFilesystemPath(path), FileSystem::FileChangedInfo::fromSyncJournalFileRecord(record))) {
                 spurious = true;
 
                 if (auto pinState = _vfs->pinState(relativePath)) {

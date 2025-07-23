@@ -50,6 +50,15 @@ OCC::LocalInfo::LocalInfo(const std::filesystem::directory_entry &dirent, ItemTy
 #endif
 #endif
 }
+LocalInfo::LocalInfo(const std::filesystem::directory_entry &dirent)
+    : LocalInfo(dirent, LocalInfo::typeFromDirectoryEntry(dirent))
+{
+}
+
+LocalInfo::LocalInfo(const std::filesystem::path &path)
+    : LocalInfo(std::filesystem::directory_entry{path})
+{
+}
 
 ItemType LocalInfo::typeFromDirectoryEntry(const std::filesystem::directory_entry &dirent)
 {

@@ -18,6 +18,7 @@
 // Chain in the base include and extend the namespace
 #include "common/filesystembase.h"
 #include "common/result.h"
+#include "libsync/csync.h"
 
 #ifdef Q_OS_WIN
 #include "common/utility_win.h"
@@ -28,6 +29,7 @@ class QFile;
 namespace OCC {
 
 class SyncJournal;
+class SyncFileItem;
 
 /**
  *  \addtogroup libsync
@@ -94,7 +96,18 @@ namespace FileSystem {
      *
      * @return true if the file's mtime or size are not what is expected.
      */
-    bool OPENCLOUD_SYNC_EXPORT fileChanged(const QFileInfo &info, qint64 previousSize, time_t previousMtime, std::optional<quint64> previousInode = {});
+    struct FileChangedInfo
+    {
+        static OPENCLOUD_SYNC_EXPORT FileChangedInfo fromSyncFileItem(const SyncFileItem *const item);
+        static OPENCLOUD_SYNC_EXPORT FileChangedInfo fromSyncFileItemPrevious(const SyncFileItem *const item);
+        static OPENCLOUD_SYNC_EXPORT FileChangedInfo fromSyncJournalFileRecord(const SyncJournalFileRecord &record);
+
+        qint64 size = {};
+        time_t mtime = {};
+        std::optional<quint64> inode = {};
+        CSyncEnums::ItemType type = CSyncEnums::ItemTypeUnsupported;
+    };
+    bool OPENCLOUD_SYNC_EXPORT fileChanged(const std::filesystem::path &path, const FileChangedInfo &previousInfo);
 
 
     struct RemoveEntry
