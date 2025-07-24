@@ -30,22 +30,20 @@ def step(context):
     )
 
 
-@Then('the account with displayname "|any|" and host "|any|" should be displayed')
-def step(context, displayname, _):
+@Then('the account with displayname "|any|" should be displayed')
+def step(context, displayname):
     displayname = substitute_inline_codes(displayname)
     Toolbar.account_exists(displayname)
 
 
-@Then('the account with displayname "|any|" and host "|any|" should not be displayed')
-def step(context, displayname, host):
+@Then('the account with displayname "|any|" should not be displayed')
+def step(context, displayname):
     displayname = substitute_inline_codes(displayname)
-    host = substitute_inline_codes(host)
-    account_title = displayname + '\n' + host
     timeout = get_config('lowestSyncTimeout') * 1000
 
     test.compare(
         False,
-        Toolbar.has_item(account_title, timeout),
+        Toolbar.has_item(displayname, timeout),
         f"Expected account '{displayname}' to be removed",
     )
 
@@ -159,8 +157,8 @@ def step(context, _):
     AccountSetting.wait_until_sync_folder_is_configured()
 
 
-@When('the user removes the connection for user "|any|" and host |any|')
-def step(context, username, _):
+@When('the user removes the connection for user "|any|"')
+def step(context, username):
     displayname = get_displayname_for_user(username)
     displayname = substitute_inline_codes(displayname)
 
@@ -263,7 +261,7 @@ def step(context, sync_path, wizard):
     sync_path = substitute_inline_codes(sync_path)
 
     actual_sync_path = ''
-        
+
     if wizard == 'configuration':
         actual_sync_path = AccountConnectionWizard.get_local_sync_path()
     else:

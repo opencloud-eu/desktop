@@ -10,9 +10,9 @@ Feature: remove account connection
         And the user has set up the following accounts with default settings:
             | Alice |
             | Brian |
-        When the user removes the connection for user "Brian" and host %local_server_hostname%
-        Then the account with displayname "Brian Murphy" and host "%local_server_hostname%" should not be displayed
-        But the account with displayname "Alice Hansen" and host "%local_server_hostname%" should be displayed
+        When the user removes the connection for user "Brian"
+        Then the account with displayname "Brian Murphy" should not be displayed
+        But the account with displayname "Alice Hansen" should be displayed
 
 
     Scenario: remove the only account connection
@@ -20,7 +20,7 @@ Feature: remove account connection
         And user "Alice" has created folder "large-folder" in the server
         And user "Alice" has uploaded file with content "test content" to "testFile.txt" in the server
         And user "Alice" has set up a client with default settings
-        When the user removes the connection for user "Alice" and host %local_server_hostname%
+        When the user removes the connection for user "Alice"
         Then the settings tab should have the following options in the general section:
             | Start on Login |
         And the folder "large-folder" should exist on the file system
