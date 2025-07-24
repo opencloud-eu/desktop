@@ -21,11 +21,12 @@ clone:
 
 steps:
   - name: get craftmaker
-    image: opencloudeu/woodpecker-windows-git-plugin:v1
-    settings:
-      depth: 1
-      remote: "https://invent.kde.org/kde/craftmaster.git"
-      path: "$CI_WORKSPACE/craft/CraftMaster/CraftMaster"
+    image: opencloudeu/woodpecker-windows-git:v1
+    commands:
+      - pwd
+      - ls
+      - ls /
+      #- git clone --depth=1 https://invent.kde.org/kde/craftmaster.git 
 
   - name: ls
     image: opencloudeu/woodpecker-windows-python:v1
