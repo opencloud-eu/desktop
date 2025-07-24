@@ -35,7 +35,7 @@ OCC::LocalInfo::LocalInfo(const std::filesystem::directory_entry &dirent, ItemTy
         return;
     }
     isHidden = fileInfo.dwFileAttributes & FILE_ATTRIBUTE_HIDDEN;
-    inode = ULARGE_INTEGER{{fileInfo.nFileIndexLow, fileInfo.nFileIndexHigh}}.QuadPart & 0x0000FFFFFFFFFFFF;
+    inode = ULARGE_INTEGER{{fileInfo.nFileIndexLow, fileInfo.nFileIndexHigh}}.QuadPart;
     size = ULARGE_INTEGER{{fileInfo.nFileSizeLow, fileInfo.nFileSizeHigh}}.QuadPart;
     modtime = FileSystem::fileTimeToTime_t(std::filesystem::file_time_type{
         std::filesystem::file_time_type::duration{ULARGE_INTEGER{fileInfo.ftLastWriteTime.dwLowDateTime, fileInfo.ftLastWriteTime.dwHighDateTime}.QuadPart}});
