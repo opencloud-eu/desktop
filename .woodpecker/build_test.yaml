@@ -128,7 +128,7 @@ steps:
     environment:
       CRAFT_TARGET: windows-cl-msvc2022-x86_64
       CRAFT_PACKAGE_SYMBOLS: true
-    entrypoint: ["powershell", "-noprofile", "-noninteractive", "-ErrorAction", "stop", "-command", "$IsWindows=$true; New-Item -itemtype SymbolicLink -path $HOME/craft -value $env:CI_WORKSPACE/woodpecker_craft; echo $([System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($Env:CI_SCRIPT))) | iex"]
+    entrypoint: ["powershell", "-noprofile", "-noninteractive", "-command", "$IsWindows=$true; New-Item -itemtype SymbolicLink -path $HOME/craft -value $env:CI_WORKSPACE/woodpecker_craft; echo $([System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($Env:CI_SCRIPT))) | iex"]
     commands:
       - cd $$env:CI_WORKSPACE ; .woodpecker/build.ps1
       # - dir $$HOME

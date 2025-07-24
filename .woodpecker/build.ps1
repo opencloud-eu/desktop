@@ -1,3 +1,4 @@
+$ErrorActionPreference = 'Stop'
 dir $HOME
 New-Item -Path $HOME/cache -ItemType Directory -ErrorAction SilentlyContinue
 dir $HOME
