@@ -13,31 +13,28 @@
 using namespace OCC;
 
 OCC::LocalInfo::LocalInfo(const std::filesystem::directory_entry &dirent, ItemType type)
-    : name(FileSystem::fromFilesystemPath(dirent.path().filename()))
-    , type(type)
-    , isDirectory(type == ItemTypeDirectory)
-    , isVirtualFile(type == ItemTypeVirtualFile || type == ItemTypeVirtualFileDownload)
-    , isSymLink(dirent.is_symlink())
+    : _name(FileSystem::fromFilesystemPath(dirent.path().filename()))
+    , _type(type)
 {
-    Q_ASSERT(!isSymLink || type == ItemTypeSymLink);
+    Q_ASSERT(!dirent.is_symlink() || type == ItemTypeSymLink);
 #ifdef Q_OS_WIN
     auto h = Utility::Handle::createHandle(dirent.path(), {.followSymlinks = false});
     if (!h) {
         qCWarning(lcFileSystem) << dirent.path().native() << h.errorMessage();
-        name.clear();
+        _name.clear();
         return;
     }
     BY_HANDLE_FILE_INFORMATION fileInfo = {};
     if (!GetFileInformationByHandle(h, &fileInfo)) {
         const auto error = GetLastError();
         qCCritical(lcFileSystem) << "GetFileInformationByHandle failed on" << dirent.path().native() << OCC::Utility::formatWinError(error);
-        name.clear();
+        _name.clear();
         return;
     }
-    isHidden = fileInfo.dwFileAttributes & FILE_ATTRIBUTE_HIDDEN;
-    inode = ULARGE_INTEGER{{fileInfo.nFileIndexLow, fileInfo.nFileIndexHigh}}.QuadPart;
-    size = ULARGE_INTEGER{{fileInfo.nFileSizeLow, fileInfo.nFileSizeHigh}}.QuadPart;
-    modtime = FileSystem::fileTimeToTime_t(std::filesystem::file_time_type{
+    _isHidden = fileInfo.dwFileAttributes & FILE_ATTRIBUTE_HIDDEN;
+    _inode = ULARGE_INTEGER{{fileInfo.nFileIndexLow, fileInfo.nFileIndexHigh}}.QuadPart;
+    _size = ULARGE_INTEGER{{fileInfo.nFileSizeLow, fileInfo.nFileSizeHigh}}.QuadPart;
+    _modtime = FileSystem::fileTimeToTime_t(std::filesystem::file_time_type{
         std::filesystem::file_time_type::duration{ULARGE_INTEGER{fileInfo.ftLastWriteTime.dwLowDateTime, fileInfo.ftLastWriteTime.dwHighDateTime}.QuadPart}});
 #else
     struct stat sb;
@@ -46,11 +43,11 @@ OCC::LocalInfo::LocalInfo(const std::filesystem::directory_entry &dirent, ItemTy
         name.clear();
         return;
     }
-    inode = sb.st_ino;
-    size = sb.st_size;
-    modtime = sb.st_mtime;
+    _inode = sb.st_ino;
+    _size = sb.st_size;
+    _modtime = sb.st_mtime;
 #ifdef Q_OS_MAC
-    isHidden = sb.st_flags & UF_HIDDEN;
+    _isHidden = sb.st_flags & UF_HIDDEN;
 #endif
 #endif
 }

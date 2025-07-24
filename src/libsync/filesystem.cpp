@@ -157,21 +157,21 @@ bool FileSystem::fileChanged(const std::filesystem::path &path, const FileChange
         }
     }
     const auto info = LocalInfo(dirent, type);
-    if (previousInfo.inode.has_value() && previousInfo.inode.value() != info.inode) {
-        qCDebug(lcFileSystem) << "File" << path.native() << "has changed: inode" << previousInfo.inode.value() << "<-->" << info.inode;
+    if (previousInfo.inode.has_value() && previousInfo.inode.value() != info.inode()) {
+        qCDebug(lcFileSystem) << "File" << path.native() << "has changed: inode" << previousInfo.inode.value() << "<-->" << info.inode();
         return true;
     }
-    if (info.isDirectory) {
+    if (info.isDirectory()) {
         if (previousInfo.size != 0) {
             qCDebug(lcFileSystem) << "File" << path.native() << "has changed: from file to dir";
             return true;
         }
-    } else if (info.size != previousInfo.size) {
-        qCDebug(lcFileSystem) << "File" << path.native() << "has changed: size: " << previousInfo.size << "<->" << info.size;
+    } else if (info.size() != previousInfo.size) {
+        qCDebug(lcFileSystem) << "File" << path.native() << "has changed: size: " << previousInfo.size << "<->" << info.size();
         return true;
     }
-    if (info.modtime != previousInfo.mtime) {
-        qCDebug(lcFileSystem) << "File" << path.native() << "has changed: mtime: " << previousInfo.mtime << "<->" << info.modtime;
+    if (info.modtime() != previousInfo.mtime) {
+        qCDebug(lcFileSystem) << "File" << path.native() << "has changed: mtime: " << previousInfo.mtime << "<->" << info.modtime();
         return true;
     }
     return false;
@@ -245,7 +245,7 @@ bool FileSystem::getInode(const std::filesystem::path &filename, quint64 *inode)
         *inode = 0;
         return false;
     }
-    *inode = info.inode;
+    *inode = info.inode();
     return true;
 }
 

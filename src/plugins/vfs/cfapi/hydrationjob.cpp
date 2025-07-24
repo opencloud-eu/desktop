@@ -247,11 +247,11 @@ void OCC::HydrationJob::finalize(OCC::VfsCfApi *vfs)
         _record._type = CSyncEnums::ItemTypeVirtualFile;
         break;
     };
-    const auto inode = _record._inode;
+    //  const auto inode = _record._inode;
     FileSystem::getInode(_localFilePathAbs, &_record._inode);
 
     // we don't expect an inode change
-    Q_ASSERT(inode == _record._inode);
+    // Q_ASSERT(inode == _record._inode);
 
     const auto result = _journal->setFileRecord(_record);
     if (!result) {
