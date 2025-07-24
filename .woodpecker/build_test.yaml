@@ -25,5 +25,5 @@ steps:
   - name: ls
     image: opencloudeu/woodpecker-windows-python:v1
     commands:
-      - $$IsWindows=$$true
+      - '`$$IsWindows=`$$true'
       - .github/workflows/.craft.ps1 --setup
