@@ -27,7 +27,9 @@ steps:
     entrypoint: ["powershell", "-noprofile", "-noninteractive", "-command", "$$IsWindows=$$true; [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($Env:CI_SCRIPT)) | iex"]
     commands:
       - New-Item -itemtype SymbolicLink -path $$HOME/craft -value $$env:CI_WORKSPACE/woodpecker_craft
+      - dir $$HOME
       - New-Item -Path $$HOME/cache -ItemType Directory -ErrorAction SilentlyContinue
+      - dir $$HOME
       - pwsh .github/workflows/.craft.ps1 --setup
       - pwsh .github/workflows/.craft.ps1 -c --unshelve .craft.shelf
       - pwsh .github/workflows/.craft.ps1 -c craft
