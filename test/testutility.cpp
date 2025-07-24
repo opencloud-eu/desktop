@@ -398,9 +398,9 @@ private Q_SLOTS:
             QCOMPARE_NE(entry.file_size(), qFileInfo.size());
             QCOMPARE_NE(OCC::FileSystem::fileTimeToTime_t(entry.last_write_time()), OCC::Utility::qDateTimeToTime_t(qFileInfo.metadataChangeTime()));
 
-            QCOMPARE(entry.file_size(), fileInfo.size);
+            QCOMPARE(entry.file_size(), fileInfo.size());
             QCOMPARE_NE(entry.file_size(), qFileInfoTarget.size());
-            QCOMPARE(OCC::FileSystem::fileTimeToTime_t(entry.last_write_time()), fileInfo.modtime);
+            QCOMPARE(OCC::FileSystem::fileTimeToTime_t(entry.last_write_time()), fileInfo.modtime());
         }
 
         {
@@ -419,8 +419,8 @@ private Q_SLOTS:
             QCOMPARE(0, qFileInfo.size());
             QCOMPARE(0, OCC::Utility::qDateTimeToTime_t(qFileInfo.metadataChangeTime()));
 
-            QCOMPARE(entry.file_size(), fileInfo.size);
-            QCOMPARE(OCC::FileSystem::fileTimeToTime_t(entry.last_write_time()), fileInfo.modtime);
+            QCOMPARE(entry.file_size(), fileInfo.size());
+            QCOMPARE(OCC::FileSystem::fileTimeToTime_t(entry.last_write_time()), fileInfo.modtime());
         }
     }
 #endif
@@ -432,17 +432,17 @@ private Q_SLOTS:
         OCC::LocalInfo fileInfo(entry, ItemTypeFile);
         QFileInfo qFileInfo(OCC::FileSystem::fromFilesystemPath(entry.path()));
 
-        QCOMPARE(entry.file_size(), fileInfo.size);
+        QCOMPARE(entry.file_size(), fileInfo.size());
         QCOMPARE(entry.file_size(), qFileInfo.size());
         QCOMPARE(entry.file_size(), OCC::FileSystem::getSize(entry.path()));
 
-        QCOMPARE(OCC::FileSystem::fileTimeToTime_t(entry.last_write_time()), fileInfo.modtime);
+        QCOMPARE(OCC::FileSystem::fileTimeToTime_t(entry.last_write_time()), fileInfo.modtime());
         QCOMPARE(OCC::FileSystem::fileTimeToTime_t(entry.last_write_time()), OCC::Utility::qDateTimeToTime_t(qFileInfo.metadataChangeTime()));
         QCOMPARE(OCC::FileSystem::fileTimeToTime_t(entry.last_write_time()), OCC::FileSystem::getModTime(entry.path()));
 
         quint64 inode = 0;
         QVERIFY(OCC::FileSystem::getInode(entry.path(), &inode));
-        QCOMPARE(fileInfo.inode, inode);
+        QCOMPARE(fileInfo.inode(), inode);
     }
 };
 

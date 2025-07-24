@@ -38,19 +38,25 @@ public:
 
     static ItemType typeFromDirectoryEntry(const std::filesystem::directory_entry &dirent);
 
-    // TODO: getter setter, shared_data?
-    /** FileName of the entry (this does not contain any directory or path, just the plain name */
-    QString name;
-    ItemType type = ItemTypeUnsupported;
-    time_t modtime = 0;
-    int64_t size = 0;
-    uint64_t inode = 0;
-    bool isDirectory = false;
-    bool isHidden = false;
-    bool isVirtualFile = false;
+    bool isHidden() const { return _isHidden; }
 
-    // TODO: remove
-    bool isSymLink = false;
-    bool isValid() const { return !name.isNull(); }
+    /** FileName of the entry (this does not contain any directory or path, just the plain name */
+    QString name() const { return _name; }
+    time_t modtime() const { return _modtime; }
+    int64_t size() const { return _size; }
+    uint64_t inode() const { return _inode; }
+    ItemType type() const { return _type; }
+    bool isDirectory() const { return _type == ItemTypeDirectory; }
+    bool isVirtualFile() const { return _type == ItemTypeVirtualFile || _type == ItemTypeVirtualFileDownload; }
+    bool isSymLink() const { return _type == ItemTypeSymLink; }
+    bool isValid() const { return !_name.isNull(); }
+
+private:
+    QString _name;
+    ItemType _type = ItemTypeUnsupported;
+    time_t _modtime = 0;
+    int64_t _size = 0;
+    uint64_t _inode = 0;
+    bool _isHidden = false;
 };
 }
