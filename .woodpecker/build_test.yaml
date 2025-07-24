@@ -20,7 +20,7 @@ steps:
   - name: Craft setup
     image: opencloudeu/woodpecker-windows-python:v1
     commands:
-      - New-Variable -Name "IsWindows" -Value $$true
+      - New-Variable -Name IsWindows -Value $$true
       - dir
       - New-Item -itemtype SymbolicLink -path $$HOME/craft -value $$env:CI_WORKSPACE/woodpecker_craft
       - New-Item -Path $$HOME/cache -ItemType Directory -ErrorAction SilentlyContinue
