@@ -26,5 +26,5 @@ steps:
     image: opencloudeu/woodpecker-windows-python:v1
     entrypoint: ["powershell", "-noprofile", "-noninteractive", "-command", "$$IsWindows=$$true; [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($Env:CI_SCRIPT)) | iex"]
     commands:
-      - New-Item -itemtype SymbolicLink -path C:\woodpecker/src/craft -value $$HOME/craft
+      - New-Item -itemtype SymbolicLink -path $$HOME/craft -value /woodpecker/src/craft
       - .github/workflows/.craft.ps1 --setup
