@@ -236,7 +236,6 @@ DiscoverySingleDirectoryJob::DiscoverySingleDirectoryJob(const AccountPtr &accou
     , _baseUrl(baseUrl)
     , _ignoredFirst(false)
     , _isRootPath(false)
-    , _isExternalStorage(false)
 {
 }
 
@@ -286,52 +285,6 @@ void DiscoverySingleDirectoryJob::abort()
     }
 }
 
-static void propertyMapToRemoteInfo(const QMap<QString, QString> &map, RemoteInfo &result)
-{
-    result.directDownloadUrl = map.value(QStringLiteral("downloadURL"));
-    result.directDownloadCookies = map.value(QStringLiteral("dDC"));
-
-    if (auto it = Utility::optionalFind(map, QStringLiteral("resourcetype"))) {
-        result.isDirectory = it->value().contains(QStringLiteral("collection"));
-    }
-    if (auto it = Utility::optionalFind(map, QStringLiteral("getlastmodified"))) {
-        const auto date = Utility::parseRFC1123Date(**it);
-        Q_ASSERT(date.isValid());
-        result.modtime = date.toSecsSinceEpoch();
-    }
-    if (auto it = Utility::optionalFind(map, QStringLiteral("getcontentlength"))) {
-        // See #4573, sometimes negative size values are returned
-        result.size = std::max<int64_t>(0, it->value().toLongLong());
-    }
-    if (auto it = Utility::optionalFind(map, QStringLiteral("getetag"))) {
-        result.etag = Utility::normalizeEtag(it->value());
-    }
-    if (auto it = Utility::optionalFind(map, QStringLiteral("id"))) {
-        result.fileId = it->value().toUtf8();
-    }
-    if (auto it = Utility::optionalFind(map, QStringLiteral("checksums"))) {
-        result.checksumHeader = findBestChecksum(it->value().toUtf8());
-    }
-    if (auto it = Utility::optionalFind(map, QStringLiteral("permissions"))) {
-        result.remotePerm = RemotePermissions::fromServerString(it->value());
-    }
-    if (auto it = Utility::optionalFind(map, QStringLiteral("share-types"))) {
-        const QString &value = it->value();
-        if (!value.isEmpty()) {
-            if (!map.contains(QStringLiteral("permissions"))) {
-                qWarning() << "Server returned a share type, but no permissions?";
-                // Empty permissions will cause a sync failure
-            } else {
-                // S means shared with me.
-                // But for our purpose, we want to know if the file is shared. It does not matter
-                // if we are the owner or not.
-                // Piggy back on the persmission field
-                result.remotePerm.setPermission(RemotePermissions::IsShared);
-            }
-        }
-    }
-}
-
 void DiscoverySingleDirectoryJob::directoryListingIteratedSlot(const QString &file, const QMap<QString, QString> &map)
 {
     if (!_ignoredFirst) {
@@ -340,7 +293,6 @@ void DiscoverySingleDirectoryJob::directoryListingIteratedSlot(const QString &fi
         if (auto it = Utility::optionalFind(map, QStringLiteral("permissions"))) {
             auto perm = RemotePermissions::fromServerString(it->value());
             Q_EMIT firstDirectoryPermissions(perm);
-            _isExternalStorage = perm.hasPermission(RemotePermissions::IsMounted);
         }
         if (auto it = Utility::optionalFind(map, QStringLiteral("data-fingerprint"))) {
             _dataFingerprint = it->value().toUtf8();
@@ -350,23 +302,7 @@ void DiscoverySingleDirectoryJob::directoryListingIteratedSlot(const QString &fi
             }
         }
     } else {
-
-        RemoteInfo result;
-        int slash = file.lastIndexOf(QLatin1Char('/'));
-        result.name = file.mid(slash + 1);
-        result.size = -1;
-        propertyMapToRemoteInfo(map, result);
-        if (result.isDirectory)
-            result.size = 0;
-
-        if (_isExternalStorage && result.remotePerm.hasPermission(RemotePermissions::IsMounted)) {
-            /* All the entries in a external storage have 'M' in their permission. However, for all
-               purposes in the desktop client, we only need to know about the mount points.
-               So replace the 'M' by a 'm' for every sub entries in an external storage */
-            result.remotePerm.unsetPermission(RemotePermissions::IsMounted);
-            result.remotePerm.setPermission(RemotePermissions::IsMountedSub);
-        }
-        _results.push_back(std::move(result));
+        _results.emplace_back(file, map);
     }
 
     //This works in concerto with the RequestEtagJob and the Folder object to check if the remote folder changed.

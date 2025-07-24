@@ -15,6 +15,7 @@ set(libsync_SRCS
     discovery.cpp
     discoveryinfo.cpp
     discoveryphase.cpp
+    discoveryremoteinfo.cpp
     filesystem.cpp
     httplogger.cpp
     jobqueue.cpp
