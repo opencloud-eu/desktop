@@ -20,7 +20,6 @@ steps:
   - name: get craftmaker
     image: opencloudeu/woodpecker-windows-git:v1
     commands:
-      - bash -c "env"
       - bash -c "git clone --depth=1 https://invent.kde.org/kde/craftmaster.git `$$CI_WORKSPACE/woodpecker_craft/CraftMaster/CraftMaster"
 
   - name: ls
@@ -28,4 +27,23 @@ steps:
     entrypoint: ["powershell", "-noprofile", "-noninteractive", "-command", "$$IsWindows=$$true; [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($Env:CI_SCRIPT)) | iex"]
     commands:
       - New-Item -itemtype SymbolicLink -path $$HOME/craft -value $$env:CI_WORKSPACE/woodpecker_craft
+      - New-Item -Path ~/cache -ItemType Directory -ErrorAction SilentlyContinue
       - .github/workflows/.craft.ps1 --setup
+      - .github/workflows/.craft.ps1 -c --unshelve .craft.shelf
+      - .github/workflows/.craft.ps1 -c craft
+      - New-Item -ItemType Directory binaries
+      - .github/workflows/.craft.ps1 -c --set "forceAsserts=$($$env:CI_PIPELINE_EVENT -ne "tag")" opencloud/opencloud-desktop
+      - .github/workflows/.craft.ps1 -c --set "srcDir=$$env:CI_WORKSPACE" opencloud/opencloud-desktop
+      - .github/workflows/.craft.ps1 -c --set "buildNumber=$$env:CI_PIPELINE_NUMBER" opencloud/opencloud-desktop
+      - .github/workflows/.craft.ps1 -c dev-utils/nsis
+      - .github/workflows/.craft.ps1 -c --install-deps opencloud/opencloud-desktop
+      - .github/workflows/.craft.ps1 -c --shelve .craft.shelf
+      - Copy-Item .craft.shelf binaries/craft.shelf
+      - .github/workflows/.craft.ps1 -c --no-cache opencloud/opencloud-desktop
+      - .github/workflows/.craft.ps1 -c --no-cache --test opencloud/opencloud-desktop
+      - .github/workflows/.craft.ps1 -c --no-cache --package opencloud/opencloud-desktop
+      - .github/workflows/.craft.ps1 -c --no-cache --package --options "[Packager]PackageType=AppxPackager" --options "[Packager]Destination=$$env:CI_WORKSPACE/appx/" opencloud/opencloud-desktop
+      - Copy-Item ${HOME}/craft/binaries/* binaries/
+      - Copy-Item appx/* binaries/
+      - dir binaries
+      
