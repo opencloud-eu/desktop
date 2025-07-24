@@ -22,7 +22,7 @@ clone:
 steps:
   - name: get craftmaker
     image: opencloudeu/woodpecker-windows-git:v1
-    entrypoint: ["bash.exe"]
+    entrypoint: ["bash.exe", "-c", "echo $CI_SCRIPT | base64 -d | bash -e"]
     commands:
       - pwd
       - ls
