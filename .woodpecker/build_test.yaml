@@ -20,7 +20,7 @@ steps:
   - name: get craftmaker
     image: opencloudeu/woodpecker-windows-git:v1
     commands:
-      - bash -c git clone --depth=1 https://invent.kde.org/kde/craftmaster.git /woodpecker/src/craft/CraftMaster/CraftMaster
+      - bash -c "git clone --depth=1 https://invent.kde.org/kde/craftmaster.git /woodpecker/src/craft/CraftMaster/CraftMaster"
 
   - name: ls
     image: opencloudeu/woodpecker-windows-python:v1
