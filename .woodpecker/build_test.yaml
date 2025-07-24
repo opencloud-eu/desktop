@@ -22,9 +22,11 @@ clone:
 steps:
   - name: get craftmaker
     image: opencloudeu/woodpecker-windows-git:v1
-    #entrypoint: ["bash", "-c", "echo $CI_SCRIPT | base64 -d | bash -e"]
     commands:
       - bash -c pwd
+      - bash -c "ls -l /c/woodpecker"
+      - bash -c "ls -l /c/woodpecker/src"
+      - bash -c "ls -l /c/woodpecker/src/github.com"
 
   - name: ls
     image: opencloudeu/woodpecker-windows-python:v1
