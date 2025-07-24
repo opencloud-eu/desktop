@@ -19,7 +19,6 @@ clone:
 steps:
   - name: Craft setup
     image: opencloudeu/woodpecker-windows-python:v1
-    entrypoint: ["powershell", "-noprofile", "-noninteractive", "-command", "$$IsWindows=$$true; [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($$Env:CI_SCRIPT)) | iex"]
     commands:
       - New-Variable -Name "IsWindows" -Value $$true
       - New-Item -itemtype SymbolicLink -path $$HOME/craft -value $$env:CI_WORKSPACE/woodpecker_craft
