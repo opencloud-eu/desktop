@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include "libsync/discoveryremoteinfo.h"
 #include "networkjobs.h"
 #include "syncfileitem.h"
 #include "syncoptions.h"
@@ -104,8 +105,6 @@ private:
     bool _ignoredFirst;
     // Set to true if this is the root path and we need to check the data-fingerprint
     bool _isRootPath;
-    // If this directory is an external storage (The first item has 'M' in its permission)
-    bool _isExternalStorage;
     // If set, the discovery will finish with an error
     QString _error;
     QPointer<PropfindJob> _proFindJob;

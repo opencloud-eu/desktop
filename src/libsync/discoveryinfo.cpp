@@ -2,6 +2,7 @@
 // SPDX-FileCopyrightText: 2025 Hannah von Reth <h.vonreth@opencloud.eu>
 
 #include "libsync/discoveryinfo.h"
+
 #include "libsync/filesystem.h"
 
 #ifdef Q_OS_WIN
@@ -66,7 +67,6 @@ public:
     uint64_t _inode = 0;
     bool _isHidden = false;
 };
-
 
 LocalInfo::LocalInfo()
     : d([] {
