@@ -27,12 +27,12 @@ steps:
     entrypoint: ["powershell", "-noprofile", "-noninteractive", "-command", "$$IsWindows=$$true; [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($Env:CI_SCRIPT)) | iex"]
     commands:
       - New-Item -itemtype SymbolicLink -path $$HOME/craft -value $$env:CI_WORKSPACE/woodpecker_craft
-      - New-Item -Path ~/cache -ItemType Directory -ErrorAction SilentlyContinue
+      - New-Item -Path $$HOME/cache -ItemType Directory -ErrorAction SilentlyContinue
       - .github/workflows/.craft.ps1 --setup
       - .github/workflows/.craft.ps1 -c --unshelve .craft.shelf
       - .github/workflows/.craft.ps1 -c craft
       - New-Item -ItemType Directory binaries
-      - .github/workflows/.craft.ps1 -c --set "forceAsserts=$($$env:CI_PIPELINE_EVENT -ne "tag")" opencloud/opencloud-desktop
+      - .github/workflows/.craft.ps1 -c --set "forceAsserts$$($$env:CI_PIPELINE_EVENT -ne "tag")" opencloud/opencloud-desktop
       - .github/workflows/.craft.ps1 -c --set "srcDir=$$env:CI_WORKSPACE" opencloud/opencloud-desktop
       - .github/workflows/.craft.ps1 -c --set "buildNumber=$$env:CI_PIPELINE_NUMBER" opencloud/opencloud-desktop
       - .github/workflows/.craft.ps1 -c dev-utils/nsis
