@@ -325,8 +325,6 @@ void ProcessDirectoryJob::processFileAnalyzeRemoteInfo(
     item->_remotePerm = serverEntry.remotePerm();
     item->_type = serverEntry.isDirectory() ? ItemTypeDirectory : ItemTypeFile;
     item->_etag = serverEntry.etag();
-    item->_directDownloadUrl = serverEntry.directDownloadUrl();
-    item->_directDownloadCookies = serverEntry.directDownloadCookies();
 
     // Check for missing server data
     if (!serverEntry.error().isEmpty()) {

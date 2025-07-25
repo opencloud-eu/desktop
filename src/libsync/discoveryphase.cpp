@@ -250,8 +250,6 @@ void DiscoverySingleDirectoryJob::start()
         "getcontentlength",
         "getetag",
         "http://owncloud.org/ns:id",
-        "http://owncloud.org/ns:downloadURL",
-        "http://owncloud.org/ns:dDC",
         "http://owncloud.org/ns:permissions",
         "http://owncloud.org/ns:checksums",
     };
