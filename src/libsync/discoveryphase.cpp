@@ -244,7 +244,7 @@ void DiscoverySingleDirectoryJob::start()
     // Start the actual HTTP job
     _proFindJob = new PropfindJob(_account, _baseUrl, _subPath, PropfindJob::Depth::One, this);
 
-    QList<QByteArray> props {
+    QList<QByteArray> props{
         "resourcetype",
         "getlastmodified",
         "getcontentlength",
@@ -254,7 +254,6 @@ void DiscoverySingleDirectoryJob::start()
         "http://owncloud.org/ns:dDC",
         "http://owncloud.org/ns:permissions",
         "http://owncloud.org/ns:checksums",
-        "http://owncloud.org/ns:share-types"
     };
     if (_isRootPath) {
         props << "http://owncloud.org/ns:data-fingerprint";
