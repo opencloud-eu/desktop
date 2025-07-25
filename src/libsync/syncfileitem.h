@@ -308,9 +308,6 @@ public:
     qint64 _previousSize;
     time_t _previousModtime;
 
-    QString _directDownloadUrl;
-    QString _directDownloadCookies;
-
     bool _relevantDirectoyInstruction = false;
     bool _finished = false;
 

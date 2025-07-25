@@ -38,8 +38,6 @@ public:
     time_t modtime() const;
 
     int64_t size() const;
-    QString directDownloadUrl() const;
-    QString directDownloadCookies() const;
 
     QString error() const;
 

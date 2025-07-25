@@ -18,8 +18,6 @@ public:
     {
         QStringList errors;
         _name = fileName.mid(fileName.lastIndexOf('/'_L1) + 1);
-        _directDownloadUrl = map.value("downloadURL"_L1);
-        _directDownloadCookies = map.value("dDC"_L1);
 
         if (auto it = Utility::optionalFind(map, "resourcetype"_L1)) {
             _isDirectory = it->value().contains(QStringLiteral("collection"));
@@ -78,9 +76,6 @@ public:
     time_t _modtime = 0;
     int64_t _size = 0;
     bool _isDirectory = false;
-
-    QString _directDownloadUrl;
-    QString _directDownloadCookies;
 
     QString _error;
 };
@@ -142,16 +137,6 @@ time_t RemoteInfo::modtime() const
 int64_t RemoteInfo::size() const
 {
     return d->_size;
-}
-
-QString RemoteInfo::directDownloadUrl() const
-{
-    return d->_directDownloadUrl;
-}
-
-QString RemoteInfo::directDownloadCookies() const
-{
-    return d->_directDownloadCookies;
 }
 
 QString RemoteInfo::error() const
