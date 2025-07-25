@@ -101,7 +101,7 @@ private Q_SLOTS:
         QVERIFY(file.isEmpty());
         QVERIFY(watcher.contains(tmpFile, FileSystem::LockMode::Shared));
 
-        CloseHandle(h);
+        h.close();
         QVERIFY(!FileSystem::isFileLocked(tmpFile, FileSystem::LockMode::Shared));
 
         QThread::msleep(120);
@@ -157,7 +157,7 @@ private Q_SLOTS:
         QVERIFY(seenLockedFiles.size() == 1);
         QVERIFY(hasLocalDiscoveryPath(QStringLiteral("A/a1")));
 
-        CloseHandle(h1);
+        h1.close();
 
         fakeFolder.syncEngine().setLocalDiscoveryOptions(LocalDiscoveryStyle::DatabaseAndFilesystem, tracker.localDiscoveryPaths());
         tracker.startSyncPartialDiscovery();
@@ -182,7 +182,7 @@ private Q_SLOTS:
         QVERIFY(seenLockedFiles.contains(fakeFolder.localPath() + QStringLiteral("A/a1")));
         QVERIFY(seenLockedFiles.size() == 1);
 
-        CloseHandle(h2);
+        h2.close();
 
         fakeFolder.syncEngine().setLocalDiscoveryOptions(LocalDiscoveryStyle::DatabaseAndFilesystem, tracker.localDiscoveryPaths());
         tracker.startSyncPartialDiscovery();

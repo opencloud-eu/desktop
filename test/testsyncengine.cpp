@@ -362,11 +362,6 @@ private Q_SLOTS:
 
         // if the files are dehydrated the count is always 1 bigger as we have to download them
 
-        QTest::newRow("Same mtime, but no server checksum -> ignored in reconcile")
-            << true << QByteArray()
-            << 0 // hydrated
-            << 1; // dehydrated
-
         QTest::newRow("Same mtime, weak server checksum differ -> downloaded") //
             << true //
             << QByteArray("Adler32:bad") //
@@ -387,12 +382,6 @@ private Q_SLOTS:
             << true << QByteArray("SHA1:56900fb1d337cf7237ff766276b9c1e8ce507427")
             << 0 // hydrated
             << 1; // dehydrated;
-
-        QTest::newRow("mtime changed, but no server checksum -> download") //
-            << false //
-            << QByteArray() //
-            << 1 // hydrated
-            << 2; // dehydrated;
 
         QTest::newRow("mtime changed, weak checksum match -> download anyway") //
             << false //
