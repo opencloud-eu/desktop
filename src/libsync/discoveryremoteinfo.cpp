@@ -5,7 +5,10 @@
 
 #include "libsync/common/checksums.h"
 
+#include <QApplication>
+
 using namespace OCC;
+using namespace Qt::Literals::StringLiterals;
 
 class OCC::RemoteInfoData : public QSharedData
 {
@@ -13,14 +16,15 @@ public:
     RemoteInfoData() = default;
     RemoteInfoData(const QString &fileName, const QMap<QString, QString> &map)
     {
-        _name = fileName.mid(fileName.lastIndexOf(QLatin1Char('/')) + 1);
-        _directDownloadUrl = map.value(QStringLiteral("downloadURL"));
-        _directDownloadCookies = map.value(QStringLiteral("dDC"));
+        QStringList errors;
+        _name = fileName.mid(fileName.lastIndexOf('/'_L1) + 1);
+        _directDownloadUrl = map.value("downloadURL"_L1);
+        _directDownloadCookies = map.value("dDC"_L1);
 
-        if (auto it = Utility::optionalFind(map, QStringLiteral("resourcetype"))) {
+        if (auto it = Utility::optionalFind(map, "resourcetype"_L1)) {
             _isDirectory = it->value().contains(QStringLiteral("collection"));
         }
-        if (auto it = Utility::optionalFind(map, QStringLiteral("getlastmodified"))) {
+        if (auto it = Utility::optionalFind(map, "getlastmodified"_L1)) {
             const auto date = Utility::parseRFC1123Date(**it);
             Q_ASSERT(date.isValid());
             _modtime = date.toSecsSinceEpoch();
@@ -28,37 +32,41 @@ public:
         if (_isDirectory) {
             _size = 0;
         } else {
-            if (auto it = Utility::optionalFind(map, QStringLiteral("getcontentlength"))) {
+            if (auto it = Utility::optionalFind(map, "getcontentlength"_L1)) {
                 // See #4573, sometimes negative size values are returned
                 _size = std::max<int64_t>(0, it->value().toLongLong());
+            } else {
+                errors.append(u"size"_s);
             }
         }
-        if (auto it = Utility::optionalFind(map, QStringLiteral("getetag"))) {
+        if (auto it = Utility::optionalFind(map, "getetag"_L1)) {
             _etag = Utility::normalizeEtag(it->value());
         }
-        if (auto it = Utility::optionalFind(map, QStringLiteral("id"))) {
+        if (auto it = Utility::optionalFind(map, "id"_L1)) {
             _fileId = it->value().toUtf8();
         }
-        if (auto it = Utility::optionalFind(map, QStringLiteral("checksums"))) {
+        if (auto it = Utility::optionalFind(map, "checksums"_L1)) {
             _checksumHeader = findBestChecksum(it->value().toUtf8());
         }
-        if (auto it = Utility::optionalFind(map, QStringLiteral("permissions"))) {
+        if (auto it = Utility::optionalFind(map, "permissions"_L1)) {
             _remotePerm = RemotePermissions::fromServerString(it->value());
         }
-        if (auto it = Utility::optionalFind(map, QStringLiteral("share-types"))) {
-            const QString &value = it->value();
-            if (!value.isEmpty()) {
-                if (!map.contains(QStringLiteral("permissions"))) {
-                    qWarning() << "Server returned a share type, but no permissions?";
-                    // Empty permissions will cause a sync failure
-                } else {
-                    // S means shared with me.
-                    // But for our purpose, we want to know if the file is shared. It does not matter
-                    // if we are the owner or not.
-                    // Piggy back on the persmission field
-                    _remotePerm.setPermission(RemotePermissions::IsShared);
-                }
-            }
+
+
+        if (_etag.isEmpty()) {
+            errors.append(u"etag"_s);
+        }
+        if (_fileId.isEmpty()) {
+            errors.append(u"id"_s);
+        }
+        if (_checksumHeader.isEmpty()) {
+            errors.append(u"checksum"_s);
+        }
+        if (_remotePerm.isNull()) {
+            errors.append(u"permissions"_s);
+        }
+        if (!errors.empty()) {
+            _error = QApplication::translate("RemoteInfo", "server reported no %1").arg(errors.join(u", "_s));
         }
     }
 
@@ -68,11 +76,13 @@ public:
     QByteArray _checksumHeader;
     RemotePermissions _remotePerm;
     time_t _modtime = 0;
-    int64_t _size = -1;
+    int64_t _size = 0;
     bool _isDirectory = false;
 
     QString _directDownloadUrl;
     QString _directDownloadCookies;
+
+    QString _error;
 };
 
 RemoteInfo::RemoteInfo()
@@ -94,57 +104,62 @@ RemoteInfo::RemoteInfo(const RemoteInfo &other) = default;
 
 RemoteInfo &RemoteInfo::operator=(const RemoteInfo &other) = default;
 
-QString OCC::RemoteInfo::name() const
+QString RemoteInfo::name() const
 {
     return d->_name;
 }
 
-bool OCC::RemoteInfo::isDirectory() const
+bool RemoteInfo::isDirectory() const
 {
     return d->_isDirectory;
 }
 
-QString OCC::RemoteInfo::etag() const
+QString RemoteInfo::etag() const
 {
     return d->_etag;
 }
 
-QByteArray OCC::RemoteInfo::fileId() const
+QByteArray RemoteInfo::fileId() const
 {
     return d->_fileId;
 }
 
-QByteArray OCC::RemoteInfo::checksumHeader() const
+QByteArray RemoteInfo::checksumHeader() const
 {
     return d->_checksumHeader;
 }
 
-RemotePermissions OCC::RemoteInfo::remotePerm() const
+RemotePermissions RemoteInfo::remotePerm() const
 {
     return d->_remotePerm;
 }
 
-time_t OCC::RemoteInfo::modtime() const
+time_t RemoteInfo::modtime() const
 {
     return d->_modtime;
 }
 
-int64_t OCC::RemoteInfo::size() const
+int64_t RemoteInfo::size() const
 {
     return d->_size;
 }
 
-QString OCC::RemoteInfo::directDownloadUrl() const
+QString RemoteInfo::directDownloadUrl() const
 {
     return d->_directDownloadUrl;
 }
 
-QString OCC::RemoteInfo::directDownloadCookies() const
+QString RemoteInfo::directDownloadCookies() const
 {
     return d->_directDownloadCookies;
 }
 
-bool OCC::RemoteInfo::isValid() const
+QString RemoteInfo::error() const
+{
+    return d->_error;
+}
+
+bool RemoteInfo::isValid() const
 {
     return !d->_name.isNull();
 }

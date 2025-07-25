@@ -329,28 +329,13 @@ void ProcessDirectoryJob::processFileAnalyzeRemoteInfo(
     item->_directDownloadCookies = serverEntry.directDownloadCookies();
 
     // Check for missing server data
-    {
-        QStringList missingData;
-        if (serverEntry.size() == -1) {
-            missingData.append(QStringLiteral("size"));
-        }
-        if (serverEntry.remotePerm().isNull()) {
-            missingData.append(QStringLiteral("permissions"));
-        }
-        if (serverEntry.etag().isEmpty()) {
-            missingData.append(QStringLiteral("etag"));
-        }
-        if (serverEntry.fileId().isEmpty()) {
-            missingData.append(QStringLiteral("id"));
-        }
-        if (!missingData.isEmpty()) {
-            item->setInstruction(CSYNC_INSTRUCTION_ERROR);
-            _childIgnored = true;
-            item->_errorString = tr("server reported no %1").arg(missingData.join(QLatin1String(", ")));
-            qCWarning(lcDisco) << item->_errorString;
-            Q_EMIT _discoveryData->itemDiscovered(item);
-            return;
-        }
+    if (!serverEntry.error().isEmpty()) {
+        item->setInstruction(CSYNC_INSTRUCTION_ERROR);
+        _childIgnored = true;
+        item->_errorString = serverEntry.error();
+        qCWarning(lcDisco) << item->_errorString;
+        Q_EMIT _discoveryData->itemDiscovered(item);
+        return;
     }
 
     // The file is known in the db already

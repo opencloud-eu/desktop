@@ -41,6 +41,8 @@ public:
     QString directDownloadUrl() const;
     QString directDownloadCookies() const;
 
+    QString error() const;
+
     bool isValid() const;
 
 private:

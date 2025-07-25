@@ -251,7 +251,7 @@ public:
     qint64 _lastModifiedInSecondsUTC = defaultLastModified();
     QByteArray etag = generateEtag();
     QByteArray fileId = generateFileId();
-    QByteArray checksums;
+    QByteArray checksums = OCC::CheckSums::toString(OCC::CheckSums::Algorithm::DUMMY_FOR_TESTS).data() + QByteArrayLiteral(":0x1");
     QByteArray extraDavProperties;
     quint64 fileSize = 0;
     quint64 contentSize = 0;
