@@ -233,13 +233,6 @@ public:
      */
     QByteArray getChecksumType(int checksumTypeId);
 
-    /**
-     * The data-fingerprint used to detect backup
-     */
-    void setDataFingerprint(const QByteArray &dataFingerprint);
-    QByteArray dataFingerprint();
-
-
     // Conflict record functions
 
     /// Store a new or updated record in the database

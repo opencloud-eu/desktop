@@ -291,13 +291,6 @@ void DiscoverySingleDirectoryJob::directoryListingIteratedSlot(const QString &fi
             auto perm = RemotePermissions::fromServerString(it->value());
             Q_EMIT firstDirectoryPermissions(perm);
         }
-        if (auto it = Utility::optionalFind(map, QStringLiteral("data-fingerprint"))) {
-            _dataFingerprint = it->value().toUtf8();
-            if (_dataFingerprint.isEmpty()) {
-                // Placeholder that means that the server supports the feature even if it did not set one.
-                _dataFingerprint = "[empty]";
-            }
-        }
     } else {
         _results.emplace_back(file, map);
     }

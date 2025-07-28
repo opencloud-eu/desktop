@@ -1240,8 +1240,6 @@ DiscoverySingleDirectoryJob *ProcessDirectoryJob::startAsyncServerQuery()
         if (results) {
             _serverNormalQueryEntries = *results;
             _serverQueryDone = true;
-            if (!serverJob->_dataFingerprint.isEmpty() && _discoveryData->_dataFingerprint.isEmpty())
-                _discoveryData->_dataFingerprint = serverJob->_dataFingerprint;
             if (_localQueryDone)
                 this->process();
         } else {

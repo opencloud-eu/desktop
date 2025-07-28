@@ -398,14 +398,6 @@ bool SyncJournalDb::checkConnect()
         return sqlFail(QStringLiteral("Create table checksumtype"), createQuery);
     }
 
-    // create the datafingerprint table.
-    createQuery.prepare("CREATE TABLE IF NOT EXISTS datafingerprint("
-                        "fingerprint TEXT UNIQUE"
-                        ");");
-    if (!createQuery.exec()) {
-        return sqlFail(QStringLiteral("Create table datafingerprint"), createQuery);
-    }
-
     // create the flags table.
     createQuery.prepare("CREATE TABLE IF NOT EXISTS flags ("
                         "path TEXT PRIMARY KEY,"
@@ -1886,49 +1878,6 @@ int SyncJournalDb::mapChecksumType(CheckSums::Algorithm checksumType)
         _checksymTypeCache[checksumType] = value;
         return value;
     }
-}
-
-QByteArray SyncJournalDb::dataFingerprint()
-{
-    QMutexLocker locker(&_mutex);
-    if (!checkConnect()) {
-        return QByteArray();
-    }
-
-    const auto query = _queryManager.get(PreparedSqlQueryManager::GetDataFingerprintQuery, QByteArrayLiteral("SELECT fingerprint FROM datafingerprint"), _db);
-    if (!query) {
-        return QByteArray();
-    }
-
-    if (!query->exec()) {
-        return QByteArray();
-    }
-
-    if (!query->next().hasData) {
-        return QByteArray();
-    }
-    return query->baValue(0);
-}
-
-void SyncJournalDb::setDataFingerprint(const QByteArray &dataFingerprint)
-{
-    QMutexLocker locker(&_mutex);
-    if (!checkConnect()) {
-        return;
-    }
-
-    const auto setDataFingerprintQuery1 =
-        _queryManager.get(PreparedSqlQueryManager::SetDataFingerprintQuery1, QByteArrayLiteral("DELETE FROM datafingerprint;"), _db);
-    const auto setDataFingerprintQuery2 =
-        _queryManager.get(PreparedSqlQueryManager::SetDataFingerprintQuery2, QByteArrayLiteral("INSERT INTO datafingerprint (fingerprint) VALUES (?1);"), _db);
-    if (!setDataFingerprintQuery1 || !setDataFingerprintQuery2) {
-        return;
-    }
-
-    setDataFingerprintQuery1->exec();
-
-    setDataFingerprintQuery2->bindValue(1, dataFingerprint);
-    setDataFingerprintQuery2->exec();
 }
 
 void SyncJournalDb::setConflictRecord(const ConflictRecord &record)
