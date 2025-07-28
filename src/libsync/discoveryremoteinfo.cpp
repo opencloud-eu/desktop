@@ -57,7 +57,7 @@ public:
         if (_fileId.isEmpty()) {
             errors.append(u"id"_s);
         }
-        if (_checksumHeader.isEmpty()) {
+        if (_size != 0 && _checksumHeader.isEmpty()) {
             errors.append(u"checksum"_s);
         }
         if (_remotePerm.isNull()) {
