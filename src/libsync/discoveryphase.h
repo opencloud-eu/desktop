@@ -108,9 +108,6 @@ private:
     // If set, the discovery will finish with an error
     QString _error;
     QPointer<PropfindJob> _proFindJob;
-
-public:
-    QByteArray _dataFingerprint;
 };
 
 class DiscoveryPhase : public QObject
@@ -220,7 +217,6 @@ public:
     void setSelectiveSyncWhiteList(const QSet<QString> &list);
 
     // output
-    QByteArray _dataFingerprint;
     bool _anotherSyncNeeded = false;
 
 

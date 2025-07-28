@@ -489,18 +489,7 @@ void SyncEngine::slotDiscoveryFinished()
     Q_EMIT transmissionProgress(*_progressInfo);
 
     //    qCInfo(lcEngine) << "Permissions of the root folder: " << _csync_ctx->remote.root_perms.toString();
-    auto finish = [this]{
-
-
-        auto databaseFingerprint = _journal->dataFingerprint();
-        // If databaseFingerprint is empty, this means that there was no information in the database
-        // (for example, upgrading from a previous version, or first sync, or server not supporting fingerprint)
-        if (!databaseFingerprint.isEmpty() && _discoveryPhase
-            && _discoveryPhase->_dataFingerprint != databaseFingerprint) {
-            qCInfo(lcEngine) << "data fingerprint changed, assume restore from backup" << databaseFingerprint << _discoveryPhase->_dataFingerprint;
-            restoreOldFiles(_syncItems);
-        }
-
+    auto finish = [this] {
         if (_discoveryPhase->_anotherSyncNeeded) {
             _anotherSyncNeeded = true;
         }
@@ -628,11 +617,6 @@ void SyncEngine::slotPropagationFinished(bool success)
     if (_propagator->_anotherSyncNeeded) {
         _anotherSyncNeeded = true;
     }
-
-    if (success && _discoveryPhase) {
-        _journal->setDataFingerprint(_discoveryPhase->_dataFingerprint);
-    }
-
     conflictRecordMaintenance();
 
     // update placeholders for files that where marked as dirty in a previous run
