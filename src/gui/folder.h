@@ -263,23 +263,6 @@ public Q_SLOTS:
        */
     void slotWatchedPathsChanged(const QSet<QString> &paths, ChangeReason reason);
 
-    /**
-     * Mark a virtual file as being requested for download, and start a sync.
-     *
-     * "implicit" here means that this download request comes from the user wanting
-     * to access the file's data. The user did not change the file's pin state.
-     * If the file is currently OnlineOnly its state will change to Unspecified.
-     *
-     * The download request is stored by setting ItemTypeVirtualFileDownload
-     * in the database. This is necessary since the hydration is not driven by
-     * the pin state.
-     *
-     * relativepath is the folder-relative path to the file (including the extension)
-     *
-     * Note, passing directories is not supported. Files only.
-     */
-    void implicitlyHydrateFile(const QString &relativepath);
-
     /** Ensures that the next sync performs a full local discovery. */
     void slotNextSyncFullLocalDiscovery();
 
