@@ -433,7 +433,7 @@ void OwncloudPropagator::start(SyncFileItemSet &&items)
                 continue;
             } else if (item->instruction() != CSYNC_INSTRUCTION_RENAME) {
                 // all is good, the rename will be executed before the directory deletion
-                qCWarning(lcPropagator) << "WARNING:  Job within a removed directory?  This should not happen!" << item->localName() << item->instruction();
+                qCWarning(lcPropagator) << "WARNING:  Job within a removed directory?  This should not happen!" << item;
                 Q_ASSERT(false); // we shouldn't land here, but assert for debug purposes
             }
         }

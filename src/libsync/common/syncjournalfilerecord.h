@@ -45,6 +45,7 @@ public:
     void swap(SyncJournalFileRecord &other) noexcept { d.swap(other.d); }
     QT_MOVE_ASSIGNMENT_OPERATOR_IMPL_VIA_MOVE_AND_SWAP(SyncJournalFileRecord);
 
+    static QByteArray query();
     static SyncJournalFileRecord fromSqlQuery(SqlQuery &query);
     static SyncJournalFileRecord fromSyncFileItem(const SyncFileItem &syncFile);
     bool isValid() const;
@@ -74,6 +75,10 @@ public:
     bool hasError() const;
 
 private:
+    // constructor for the non null object
+    SyncJournalFileRecord(const QString &path, ItemType type);
+    bool validateRecord();
+
     QExplicitlySharedDataPointer<SyncJournalFileRecordData> d;
 };
 

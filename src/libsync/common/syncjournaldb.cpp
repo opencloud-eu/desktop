@@ -45,13 +45,6 @@ Q_LOGGING_CATEGORY(lcDb, "sync.database", QtInfoMsg)
 #define IS_PREFIX_PATH_OR_EQUAL(prefix, path) "(" path " == " prefix " OR " IS_PREFIX_PATH_OF(prefix, path) ")"
 
 namespace {
-// base query used to select file record objects, used in combination with WHERE statements.
-const auto getFileRecordQueryC =
-    QByteArrayLiteral("SELECT path, inode, modtime, type, md5, fileid, remotePerm, filesize,"
-                      " ignoredChildrenRemote, contentchecksumtype.name || ':' || contentChecksum,"
-                      " hasDirtyPlaceholder"
-                      " FROM metadata"
-                      " LEFT JOIN checksumtype as contentchecksumtype ON metadata.contentChecksumTypeId == contentchecksumtype.id ");
 
 quint64 getPHash(const QByteArray &file)
 {
@@ -824,7 +817,7 @@ Result<void, QString> SyncJournalDb::setFileRecord(const SyncJournalFileRecord &
         query->bindValue(i++, record.fileId());
         query->bindValue(i++, remotePerm);
         query->bindValue(i++, record.size());
-        query->bindValue(i++, record.serverHasIgnoredFiles() ? 1 : 0);
+        query->bindValue(i++, record.serverHasIgnoredFiles());
         query->bindValue(i++, checksumHeader.checksum());
         query->bindValue(i++, contentChecksumTypeId);
         query->bindValue(i++, record.hasDirtyPlaceholder());
@@ -894,7 +887,8 @@ SyncJournalFileRecord SyncJournalDb::getFileRecord(const QString &filename)
         return {u"Not connected"_s};
 
     if (!filename.isEmpty()) {
-        const auto query = _queryManager.get(PreparedSqlQueryManager::GetFileRecordQuery, getFileRecordQueryC + QByteArrayLiteral("WHERE phash=?1"), _db);
+        const auto query =
+            _queryManager.get(PreparedSqlQueryManager::GetFileRecordQuery, SyncJournalFileRecord::query() + QByteArrayLiteral("WHERE phash=?1"), _db);
         if (!query) {
             return {u"Failed to create query"_s};
         }
@@ -929,7 +923,8 @@ SyncJournalFileRecord SyncJournalDb::getFileRecordByInode(quint64 inode)
 
     if (!checkConnect())
         return {u"Not connected"_s};
-    const auto query = _queryManager.get(PreparedSqlQueryManager::GetFileRecordQueryByInode, getFileRecordQueryC + QByteArrayLiteral("WHERE inode=?1"), _db);
+    const auto query =
+        _queryManager.get(PreparedSqlQueryManager::GetFileRecordQueryByInode, SyncJournalFileRecord::query() + QByteArrayLiteral("WHERE inode=?1"), _db);
     if (!query)
         return {u"Failed to create query"_s};
 
@@ -957,7 +952,8 @@ bool SyncJournalDb::getFileRecordsByFileId(const QByteArray &fileId, const std::
     if (!checkConnect())
         return false;
 
-    const auto query = _queryManager.get(PreparedSqlQueryManager::GetFileRecordQueryByFileId, getFileRecordQueryC + QByteArrayLiteral("WHERE fileid=?1"), _db);
+    const auto query =
+        _queryManager.get(PreparedSqlQueryManager::GetFileRecordQueryByFileId, SyncJournalFileRecord::query() + QByteArrayLiteral("WHERE fileid=?1"), _db);
     if (!query) {
         return false;
     }
@@ -1013,7 +1009,8 @@ bool SyncJournalDb::getFilesBelowPath(const QString &path, const std::function<v
         // and find nothing. So, unfortunately, we have to use a different query for
         // retrieving the whole tree.
 
-        const auto query = _queryManager.get(PreparedSqlQueryManager::GetAllFilesQuery, getFileRecordQueryC + QByteArrayLiteral("ORDER BY path||'/' ASC"), _db);
+        const auto query =
+            _queryManager.get(PreparedSqlQueryManager::GetAllFilesQuery, SyncJournalFileRecord::query() + QByteArrayLiteral("ORDER BY path||'/' ASC"), _db);
         if (!query) {
             return false;
         }
@@ -1022,7 +1019,7 @@ bool SyncJournalDb::getFilesBelowPath(const QString &path, const std::function<v
         // This query is used to skip discovery and fill the tree from the
         // database instead
         const auto query = _queryManager.get(PreparedSqlQueryManager::GetFilesBelowPathQuery,
-            getFileRecordQueryC
+            SyncJournalFileRecord::query()
                 + QByteArrayLiteral("WHERE " IS_PREFIX_PATH_OF("?1", "path")
                     // We want to ensure that the contents of a directory are sorted
                     // directly behind the directory itself. Without this ORDER BY
@@ -1049,8 +1046,8 @@ bool SyncJournalDb::listFilesInPath(const QString &path, const std::function<voi
     if (!checkConnect())
         return false;
 
-    const auto query = _queryManager.get(
-        PreparedSqlQueryManager::ListFilesInPathQuery, getFileRecordQueryC + QByteArrayLiteral("WHERE parent_hash(path) = ?1 ORDER BY path||'/' ASC"), _db);
+    const auto query = _queryManager.get(PreparedSqlQueryManager::ListFilesInPathQuery,
+        SyncJournalFileRecord::query() + QByteArrayLiteral("WHERE parent_hash(path) = ?1 ORDER BY path||'/' ASC"), _db);
     if (!query) {
         return false;
     }
@@ -1976,7 +1973,7 @@ const QVector<SyncJournalFileRecord> SyncJournalDb::getFileRecordsWithDirtyPlace
 
     if (OC_ENSURE(isOpen())) {
         const auto query = _queryManager.get(PreparedSqlQueryManager::GetFileReocrdsWithDirtyPlaceholdersQuery,
-            getFileRecordQueryC + QByteArrayLiteral("WHERE hasDirtyPlaceholder=TRUE"), const_cast<SyncJournalDb *>(this)->_db);
+            SyncJournalFileRecord::query() + QByteArrayLiteral("WHERE hasDirtyPlaceholder=TRUE"), const_cast<SyncJournalDb *>(this)->_db);
         if (!OC_ENSURE(query)) {
             return {};
         }
