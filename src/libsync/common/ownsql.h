@@ -26,6 +26,8 @@
 
 #include "libsync/opencloudsynclib.h"
 
+#include <QRegularExpression>
+
 struct sqlite3;
 struct sqlite3_stmt;
 
@@ -177,7 +179,7 @@ private:
     QByteArray _sql;
     struct Binding
     {
-        QString name;
+        QRegularExpression name;
         QString value;
     };
     QVector<Binding> _boundValues;
