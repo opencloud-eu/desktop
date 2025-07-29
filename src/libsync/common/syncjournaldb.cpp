@@ -52,6 +52,14 @@ const auto getFileRecordQueryC =
                       " FROM metadata"
                       " LEFT JOIN checksumtype as contentchecksumtype ON metadata.contentChecksumTypeId == contentchecksumtype.id ");
 
+quint64 getPHash(const QByteArray &file)
+{
+    qint64 h;
+    int len = file.length();
+
+    h = c_jhash64((uint8_t *)file.data(), len, 0);
+    return h;
+}
 
 void fillFileRecordFromGetQuery(OCC::SyncJournalFileRecord &rec, OCC::SqlQuery &query)
 {
@@ -792,15 +800,6 @@ QVector<QByteArray> SyncJournalDb::tableColumns(const QByteArray &table)
     return columns;
 }
 
-qint64 SyncJournalDb::getPHash(const QByteArray &file)
-{
-    qint64 h;
-    int len = file.length();
-
-    h = c_jhash64((uint8_t *)file.data(), len, 0);
-    return h;
-}
-
 Result<void, QString> SyncJournalDb::setFileRecord(const SyncJournalFileRecord &record)
 {
     QMutexLocker locker(&_mutex);
@@ -822,7 +821,7 @@ Result<void, QString> SyncJournalDb::setFileRecord(const SyncJournalFileRecord &
                  << "checksum:" << record._checksumHeader << "hasDirtyPlaceholder:" << record._hasDirtyPlaceholder;
     Q_ASSERT(!record._remotePerm.isNull());
     const auto utf8Path = record._path;
-    const qint64 phash = getPHash(utf8Path);
+    const auto phash = getPHash(utf8Path);
     if (checkConnect()) {
         QByteArray remotePerm = record._remotePerm.toDbValue();
 
@@ -882,7 +881,7 @@ bool SyncJournalDb::deleteFileRecord(const QString &filename, bool recursively)
                 return false;
             }
 
-            const qint64 phash = getPHash(filename.toUtf8());
+            const auto phash = getPHash(filename.toUtf8());
             query->bindValue(1, phash);
 
             if (!query->exec()) {
@@ -1142,7 +1141,7 @@ bool SyncJournalDb::updateFileRecordChecksum(const QString &filename, const QByt
 
     qCInfo(lcDb) << "Updating file checksum" << filename << contentChecksum << contentChecksumType;
 
-    const qint64 phash = getPHash(filename.toUtf8());
+    const auto phash = getPHash(filename.toUtf8());
     if (!checkConnect()) {
         qCWarning(lcDb) << "Failed to connect database.";
         return false;
