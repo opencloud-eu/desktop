@@ -428,7 +428,7 @@ Feature: Syncing files
             | password | 1234           |
         When the user selects manual sync folder option in advanced section
         And the user cancels the sync connection wizard
-        Then the account with displayname "Alice Hansen" and host "%local_server_hostname%" should be displayed
+        Then the account with displayname "Alice Hansen" should be displayed
         And the sync folder list should be empty
 
 

@@ -143,7 +143,7 @@ public:
 
     SyncFileItem(const QString &localName = {})
         : _localName(localName)
-        , _type(ItemTypeSkip)
+        , _type(ItemTypeUnsupported)
         , _direction(None)
         , _serverHasIgnoredFiles(false)
         , _hasBlacklistEntry(false)
@@ -307,9 +307,6 @@ public:
     // The size and modtime of the file getting overwritten (on the disk for downloads, on the server for uploads).
     qint64 _previousSize;
     time_t _previousModtime;
-
-    QString _directDownloadUrl;
-    QString _directDownloadCookies;
 
     bool _relevantDirectoyInstruction = false;
     bool _finished = false;

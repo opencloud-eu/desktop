@@ -44,48 +44,12 @@ class SyncJournalFileRecord;
 namespace CSyncEnums {
 OPENCLOUD_SYNC_EXPORT Q_NAMESPACE
 
-    enum csync_status_codes_e : uint16_t {
-        CSYNC_STATUS_OK = 0,
 
-        CSYNC_STATUS_ERROR = 1024, /* don't use this code,
-                                    */
-        CSYNC_STATUS_UNSUCCESSFUL, /* Unspecific problem happend */
-        CSYNC_STATUS_STATEDB_LOAD_ERROR, /* Statedb can not be loaded. */
-        CSYNC_STATUS_UPDATE_ERROR, /* general update or discovery error */
-        CSYNC_STATUS_TIMEOUT, /* UNUSED */
-        CSYNC_STATUS_HTTP_ERROR, /* UNUSED */
-        CSYNC_STATUS_PERMISSION_DENIED, /*  */
-        CSYNC_STATUS_NOT_FOUND,
-        CSYNC_STATUS_FILE_EXISTS,
-        CSYNC_STATUS_OUT_OF_SPACE,
-        CSYNC_STATUS_SERVICE_UNAVAILABLE,
-        CSYNC_STATUS_STORAGE_UNAVAILABLE,
-        CSYNC_STATUS_FILE_SIZE_ERROR,
-        CSYNC_STATUS_OPENDIR_ERROR,
-        CSYNC_STATUS_READDIR_ERROR,
-        CSYNC_STATUS_OPEN_ERROR,
-        CSYNC_STATUS_ABORTED,
-        /* Codes for file individual status: */
-        CSYNC_STATUS_INDIVIDUAL_IS_SYMLINK,
-        CSYNC_STATUS_INDIVIDUAL_IGNORE_LIST,
-        CSYNC_STATUS_INDIVIDUAL_IS_INVALID_CHARS,
-        CSYNC_STATUS_INDIVIDUAL_TRAILING_SPACE,
-        CSYNC_STATUS_INDIVIDUAL_EXCLUDE_LONG_FILENAME,
-        CSYNC_STATUS_INDIVIDUAL_EXCLUDE_HIDDEN,
-        CSYNC_STATUS_INVALID_CHARACTERS,
-        CSYNC_STATUS_INDIVIDUAL_STAT_FAILED,
-        CSYNC_STATUS_FORBIDDEN,
-        CSYNC_STATUS_INDIVIDUAL_TOO_DEEP,
-        CSYNC_STATUS_INDIVIDUAL_IS_CONFLICT_FILE,
-        CSYNC_STATUS_INDIVIDUAL_CANNOT_ENCODE
-    };
-Q_ENUM_NS(csync_status_codes_e)
-
-/**
- * Instruction enum. In the file traversal structure, it describes
- * the csync state of a file.
- */
-// clang-format off
+    /**
+     * Instruction enum. In the file traversal structure, it describes
+     * the csync state of a file.
+     */
+    // clang-format off
 enum SyncInstruction : uint16_t {
     CSYNC_INSTRUCTION_NONE            = 1 << 1,  /* Nothing to do (UPDATE|RECONCILE) */
     CSYNC_INSTRUCTION_REMOVE          = 1 << 2,  /* The file need to be removed (RECONCILE) */
@@ -112,9 +76,9 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(SyncInstructions)
 // Also, this value is stored in the database, so beware of value changes.
 enum ItemType : uint8_t {
     ItemTypeFile = 0,
-    ItemTypeSoftLink = 1,
+    ItemTypeSymLink = 1,
     ItemTypeDirectory = 2,
-    ItemTypeSkip = 3,
+    ItemTypeUnsupported = 3,
 
     /** The file is a dehydrated placeholder, meaning data isn't available locally */
     ItemTypeVirtualFile = 4,
@@ -148,18 +112,6 @@ Q_ENUM_NS(ItemType)
 }
 
 using namespace CSyncEnums;
-
-struct OPENCLOUD_SYNC_EXPORT csync_file_stat_t
-{
-    time_t modtime = 0;
-    int64_t size = 0;
-    uint64_t inode = 0;
-
-    ItemType type = ItemTypeSkip;
-    bool is_hidden = false; // Not saved in the DB, only used during discovery for local files.
-
-    QString path;
-};
 
 OPENCLOUD_SYNC_EXPORT QDebug operator<<(QDebug debug, const SyncInstructions &job);
 

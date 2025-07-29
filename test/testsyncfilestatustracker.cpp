@@ -462,8 +462,6 @@ private Q_SLOTS:
         FakeFolder fakeFolder{FileInfo::A12_B12_C12_S12()};
         fakeFolder.remoteModifier().insert(QStringLiteral("S/s0"));
         fakeFolder.remoteModifier().appendByte(QStringLiteral("S/s1"));
-        fakeFolder.remoteModifier().insert(QStringLiteral("B/b3"));
-        fakeFolder.remoteModifier().find(QStringLiteral("B/b3"))->extraDavProperties = "<oc:share-types><oc:share-type>0</oc:share-type></oc:share-types>";
         fakeFolder.remoteModifier().find(QStringLiteral("A/a1"))->isShared = true; // becomes shared
         fakeFolder.remoteModifier().find(QStringLiteral("A"), true); // change the etags of the parent
 
@@ -486,7 +484,6 @@ private Q_SLOTS:
         QCOMPARE(statusSpy.statusOf(QStringLiteral("S/s0")), sharedUpToDateStatus);
         QCOMPARE(statusSpy.statusOf(QStringLiteral("S/s1")), sharedUpToDateStatus);
         QCOMPARE(statusSpy.statusOf(QStringLiteral("B/b1")).shared(), false);
-        QCOMPARE(statusSpy.statusOf(QStringLiteral("B/b3")), sharedUpToDateStatus);
         QCOMPARE(statusSpy.statusOf(QStringLiteral("A/a1")), sharedUpToDateStatus);
 
         QCOMPARE(fakeFolder.currentLocalState(), fakeFolder.currentRemoteState());

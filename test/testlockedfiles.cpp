@@ -19,15 +19,13 @@ using namespace OCC;
 #ifdef Q_OS_WIN
 #include "common/utility_win.h"
 // pass combination of FILE_SHARE_READ, FILE_SHARE_WRITE, FILE_SHARE_DELETE
-Utility::Handle makeHandle(const QString &file, int shareMode)
+Utility::Handle makeHandle(const QString &file, uint32_t shareMode)
 {
-    const auto fName = FileSystem::longWinPath(file);
-    const wchar_t *wuri = reinterpret_cast<const wchar_t *>(fName.utf16());
-    auto handle = CreateFileW(wuri, GENERIC_READ | GENERIC_WRITE, shareMode, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
-    if (handle == INVALID_HANDLE_VALUE) {
-        qWarning() << GetLastError();
+    auto handle = Utility::Handle::createHandle(FileSystem::toFilesystemPath(file), {.accessMode = GENERIC_READ | GENERIC_WRITE, .shareMode = shareMode});
+    if (!handle) {
+        qWarning() << handle.errorMessage();
     }
-    return Utility::Handle(handle);
+    return handle;
 }
 #endif
 
@@ -103,7 +101,7 @@ private Q_SLOTS:
         QVERIFY(file.isEmpty());
         QVERIFY(watcher.contains(tmpFile, FileSystem::LockMode::Shared));
 
-        CloseHandle(h);
+        h.close();
         QVERIFY(!FileSystem::isFileLocked(tmpFile, FileSystem::LockMode::Shared));
 
         QThread::msleep(120);
@@ -159,7 +157,7 @@ private Q_SLOTS:
         QVERIFY(seenLockedFiles.size() == 1);
         QVERIFY(hasLocalDiscoveryPath(QStringLiteral("A/a1")));
 
-        CloseHandle(h1);
+        h1.close();
 
         fakeFolder.syncEngine().setLocalDiscoveryOptions(LocalDiscoveryStyle::DatabaseAndFilesystem, tracker.localDiscoveryPaths());
         tracker.startSyncPartialDiscovery();
@@ -184,7 +182,7 @@ private Q_SLOTS:
         QVERIFY(seenLockedFiles.contains(fakeFolder.localPath() + QStringLiteral("A/a1")));
         QVERIFY(seenLockedFiles.size() == 1);
 
-        CloseHandle(h2);
+        h2.close();
 
         fakeFolder.syncEngine().setLocalDiscoveryOptions(LocalDiscoveryStyle::DatabaseAndFilesystem, tracker.localDiscoveryPaths());
         tracker.startSyncPartialDiscovery();

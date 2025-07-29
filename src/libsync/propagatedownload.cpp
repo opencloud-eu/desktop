@@ -423,7 +423,7 @@ void PropagateDownloadFile::start()
     const QString fsPath = propagator()->fullLocalPath(_item->localName());
     // For virtual files just dehydrate or create the file and be done
     if (_item->_type == ItemTypeVirtualFileDehydration) {
-        if (FileSystem::fileChanged(QFileInfo{fsPath}, _item->_previousSize, _item->_previousModtime)) {
+        if (FileSystem::fileChanged(FileSystem::toFilesystemPath(fsPath), FileSystem::FileChangedInfo::fromSyncFileItemPrevious(_item.data()))) {
             propagator()->_anotherSyncNeeded = true;
             done(SyncFileItem::SoftError, tr("File has changed since discovery"));
             return;
@@ -629,24 +629,9 @@ void PropagateDownloadFile::startFullDownload()
 {
     QMap<QByteArray, QByteArray> headers;
 
-    if (_item->_directDownloadUrl.isEmpty()) {
-        // Normal job, download from oC instance
-        _job = new GETFileJob(propagator()->account(), propagator()->webDavUrl(), propagator()->fullRemotePath(_item->localName()), &_tmpFile, headers,
-            _expectedEtagForResume, _resumeStart, this);
-    } else {
-        // We were provided a direct URL, use that one
-        qCInfo(lcPropagateDownload) << "directDownloadUrl given for " << _item->localName() << _item->_directDownloadUrl;
-
-        if (!_item->_directDownloadCookies.isEmpty()) {
-            headers["Cookie"] = _item->_directDownloadCookies.toUtf8();
-        }
-
-        QUrl url = QUrl::fromUserInput(_item->_directDownloadUrl);
-        _job = new GETFileJob(propagator()->account(),
-            url,
-            {},
-            &_tmpFile, headers, _expectedEtagForResume, _resumeStart, this);
-    }
+    // Normal job, download from oC instance
+    _job = new GETFileJob(propagator()->account(), propagator()->webDavUrl(), propagator()->fullRemotePath(_item->localName()), &_tmpFile, headers,
+        _expectedEtagForResume, _resumeStart, this);
     _job->setBandwidthManager(propagator()->_bandwidthManager);
     _job->setExpectedContentLength(_item->_size - _resumeStart);
 
@@ -704,14 +689,6 @@ void PropagateDownloadFile::slotGetFinished()
             _tmpFile.close();
             FileSystem::remove(_tmpFile.fileName());
             propagator()->_journal->setDownloadInfo(_item->localName(), SyncJournalDb::DownloadInfo());
-        }
-
-        if (!_item->_directDownloadUrl.isEmpty() && err != QNetworkReply::OperationCanceledError) {
-            // If this was with a direct download, retry without direct download
-            qCWarning(lcPropagateDownload) << "Direct download of" << _item->_directDownloadUrl << "failed. Retrying through OpenCloud.";
-            _item->_directDownloadUrl.clear();
-            start();
-            return;
         }
 
         if (badRangeHeader) {
@@ -945,9 +922,7 @@ void PropagateDownloadFile::downloadFinished()
         // phase by comparing size and mtime to the previous values. This
         // is necessary to avoid overwriting user changes that happened between
         // the discovery phase and now.
-        const qint64 expectedSize = _item->_previousSize;
-        const time_t expectedMtime = _item->_previousModtime;
-        if (FileSystem::fileChanged(QFileInfo{fn}, expectedSize, expectedMtime)) {
+        if (FileSystem::fileChanged(FileSystem::toFilesystemPath(fn), FileSystem::FileChangedInfo::fromSyncFileItemPrevious(_item.data()))) {
             propagator()->_anotherSyncNeeded = true;
             done(SyncFileItem::SoftError, tr("File has changed since discovery"));
             return;
@@ -974,7 +949,7 @@ void PropagateDownloadFile::downloadFinished()
 
     // Maybe we downloaded a newer version of the file than we thought we would...
     // Get up to date information for the journal.
-    _item->_size = FileSystem::getSize(QFileInfo{fn});
+    _item->_size = FileSystem::getSize(FileSystem::toFilesystemPath(fn));
 
     // Maybe what we downloaded was a conflict file? If so, set a conflict record.
     // (the data was prepared in slotGetFinished above)

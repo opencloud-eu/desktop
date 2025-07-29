@@ -19,8 +19,9 @@
 #include "utility_win.h"
 #include "utility.h"
 
-#include "asserts.h"
-#include "filesystembase.h"
+#include "libsync/common/asserts.h"
+#include "libsync/common/filesystembase.h"
+#include "libsync/filesystem.h"
 
 #include <comdef.h>
 #include <qt_windows.h>
@@ -31,7 +32,6 @@
 #include <QCoreApplication>
 #include <QDir>
 #include <QFileInfo>
-#include <QLibrary>
 #include <QSettings>
 
 extern Q_CORE_EXPORT int qt_ntfs_permission_lookup;
@@ -87,24 +87,11 @@ bool Utility::hasDarkSystray()
     return !settings.value(QStringLiteral("SystemUsesLightTheme"), false).toBool();
 }
 
-void Utility::UnixTimeToFiletime(time_t t, FILETIME *filetime)
-{
-    LONGLONG ll = (t * 10000000LL) + 116444736000000000LL;
-    filetime->dwLowDateTime = (DWORD)ll;
-    filetime->dwHighDateTime = ll >> 32;
-}
-
-void Utility::FiletimeToLargeIntegerFiletime(const FILETIME *filetime, LARGE_INTEGER *hundredNSecs)
-{
-    hundredNSecs->LowPart = filetime->dwLowDateTime;
-    hundredNSecs->HighPart = filetime->dwHighDateTime;
-}
 
 void Utility::UnixTimeToLargeIntegerFiletime(time_t t, LARGE_INTEGER *hundredNSecs)
 {
-    hundredNSecs->QuadPart = (t * 10000000LL) + 116444736000000000LL;
+    hundredNSecs->QuadPart = FileSystem::time_tToFileTime(t).time_since_epoch().count();
 }
-
 
 QString Utility::formatWinError(long errorCode)
 {
@@ -123,15 +110,30 @@ Utility::NtfsPermissionLookupRAII::~NtfsPermissionLookupRAII()
 }
 
 
-Utility::Handle::Handle(HANDLE h, std::function<void(HANDLE)> &&close)
+Utility::Handle::Handle(HANDLE h, std::function<void(HANDLE)> &&close, uint32_t error)
     : _handle(h)
     , _close(std::move(close))
+    , _error(error)
 {
+    if (_handle == INVALID_HANDLE_VALUE && _error == NO_ERROR) {
+        _error = GetLastError();
+    }
+}
+
+Utility::Handle Utility::Handle::createHandle(const std::filesystem::path &path, const CreateHandleParameter &p)
+{
+    uint32_t flags = FILE_ATTRIBUTE_NORMAL | FILE_FLAG_BACKUP_SEMANTICS;
+    if (!p.followSymlinks) {
+        flags |= FILE_FLAG_OPEN_REPARSE_POINT;
+    }
+    if (p.async) {
+        flags |= FILE_FLAG_OVERLAPPED;
+    }
+    return Utility::Handle{CreateFileW(path.native().data(), p.accessMode, p.shareMode, nullptr, p.creationFlags, flags, nullptr)};
 }
 
 Utility::Handle::Handle(HANDLE h)
-    : _handle(h)
-    , _close(&CloseHandle)
+    : Handle(h, &CloseHandle)
 {
 }
 
@@ -146,6 +148,21 @@ void Utility::Handle::close()
         _close(_handle);
         _handle = INVALID_HANDLE_VALUE;
     }
+}
+
+uint32_t Utility::Handle::error() const
+{
+    return _error;
+}
+
+bool Utility::Handle::hasError() const
+{
+    return _error != NO_ERROR;
+}
+
+QString Utility::Handle::errorMessage() const
+{
+    return formatWinError(_error);
 }
 
 

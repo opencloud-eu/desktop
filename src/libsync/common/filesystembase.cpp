@@ -51,6 +51,29 @@ namespace OCC {
 
 Q_LOGGING_CATEGORY(lcFileSystem, "sync.filesystem", QtInfoMsg)
 
+std::filesystem::path FileSystem::toFilesystemPath(QString path)
+{
+#ifdef Q_OS_WIN
+    path = FileSystem::longWinPath(path);
+#endif
+    return std::filesystem::path(reinterpret_cast<const char16_t *>(path.cbegin()), reinterpret_cast<const char16_t *>(path.cend()));
+}
+
+QString FileSystem::fromFilesystemPath(const std::filesystem::path &path)
+{
+#ifdef Q_OS_WIN
+    constexpr std::wstring_view prefix = LR"(\\?\)";
+    std::wstring nativePath = path.native();
+    if (nativePath.starts_with(prefix)) {
+        const auto view = std::wstring_view(nativePath).substr(prefix.size());
+        return QString::fromWCharArray(view.data(), view.length());
+    }
+    return QString::fromStdWString(nativePath);
+#else
+    return QString::fromStdString(path.native());
+#endif
+}
+
 QString FileSystem::longWinPath(const QString &inpath)
 {
 #ifndef Q_OS_WIN
@@ -253,36 +276,23 @@ bool FileSystem::openAndSeekFileSharedRead(QFile *file, QString *errorOrNull, qi
 #ifdef Q_OS_WIN
     //
     // The following code is adapted from Qt's QFSFileEnginePrivate::nativeOpen()
-    // by including the FILE_SHARE_DELETE share mode.
-    //
-
-    // Enable full sharing.
-    DWORD shareMode = FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE;
-
-    int accessRights = GENERIC_READ;
-    DWORD creationDisp = OPEN_EXISTING;
-
-    // Create the file handle.
-    SECURITY_ATTRIBUTES securityAtts = {sizeof(SECURITY_ATTRIBUTES), nullptr, FALSE};
-    QString fName = longWinPath(file->fileName());
-
-    HANDLE fileHandle = CreateFileW((const wchar_t *)fName.utf16(), accessRights, shareMode, &securityAtts, creationDisp, FILE_ATTRIBUTE_NORMAL, nullptr);
+    auto fileHandle = Utility::Handle::createHandle(toFilesystemPath(file->fileName()), {.accessMode = GENERIC_READ});
 
     // Bail out on error.
-    if (fileHandle == INVALID_HANDLE_VALUE) {
-        error = qt_error_string();
+    if (!fileHandle) {
+        error = fileHandle.errorMessage();
         return false;
     }
 
     // Convert the HANDLE to an fd and pass it to QFile's foreign-open
     // function. The fd owns the handle, so when QFile later closes
     // the fd the handle will be closed too.
-    int fd = _open_osfhandle((intptr_t)fileHandle, _O_RDONLY);
+    int fd = _open_osfhandle((intptr_t)fileHandle.handle(), _O_RDONLY);
     if (fd == -1) {
         error = QStringLiteral("could not make fd from handle");
-        CloseHandle(fileHandle);
         return false;
     }
+    HANDLE basicHandle = fileHandle.release(); // we hand over the handle to qt
     if (!file->open(fd, QIODevice::ReadOnly, QFile::AutoCloseHandle)) {
         error = file->errorString();
         _close(fd); // implicitly closes fileHandle
@@ -291,9 +301,10 @@ bool FileSystem::openAndSeekFileSharedRead(QFile *file, QString *errorOrNull, qi
 
     // Seek to the right spot
     LARGE_INTEGER *li = reinterpret_cast<LARGE_INTEGER *>(&seek);
-    DWORD newFilePointer = SetFilePointer(fileHandle, li->LowPart, &li->HighPart, FILE_BEGIN);
-    if (newFilePointer == 0xFFFFFFFF && GetLastError() != NO_ERROR) {
-        error = qt_error_string();
+    DWORD newFilePointer = SetFilePointer(basicHandle, li->LowPart, &li->HighPart, FILE_BEGIN);
+    const auto llastError = GetLastError();
+    if (newFilePointer == 0xFFFFFFFF && llastError != NO_ERROR) {
+        error = Utility::formatWinError(llastError);
         return false;
     }
 
@@ -408,9 +419,10 @@ namespace {
      */
     Utility::Handle lockFile(const QString &fileName, FileSystem::LockMode mode)
     {
-        const QString fName = FileSystem::longWinPath(fileName);
-        int shareMode = 0;
-        int accessMode = GENERIC_READ | GENERIC_WRITE;
+        // Check if file exists
+        const auto info = std::filesystem::directory_entry(FileSystem::toFilesystemPath(fileName));
+        uint32_t shareMode = 0;
+        uint32_t accessMode = GENERIC_READ | GENERIC_WRITE;
         switch (mode) {
         case FileSystem::LockMode::Exclusive:
             shareMode = 0;
@@ -423,14 +435,11 @@ namespace {
             accessMode = GENERIC_READ;
             break;
         }
-        // Check if file exists
-        const DWORD attr = GetFileAttributesW(reinterpret_cast<const wchar_t *>(fName.utf16()));
-        if (attr != INVALID_FILE_ATTRIBUTES) {
+        if (info.exists()) {
             // Try to open the file with as much access as possible..
-            auto out = Utility::Handle{CreateFileW(reinterpret_cast<const wchar_t *>(fName.utf16()), accessMode, shareMode, nullptr, OPEN_EXISTING,
-                FILE_ATTRIBUTE_NORMAL | FILE_FLAG_BACKUP_SEMANTICS, nullptr)};
+            auto out = Utility::Handle::createHandle(info.path(), {.accessMode = accessMode, .shareMode = shareMode});
             if (out) {
-                if (attr & FILE_ATTRIBUTE_DIRECTORY) {
+                if (info.is_directory()) {
                     return out;
                 } else {
                     // try to lock the complete file explicitly, to check for ranged locks

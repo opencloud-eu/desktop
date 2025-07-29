@@ -82,8 +82,6 @@ public:
 
     QString databaseFilePath() const;
 
-    static qint64 getPHash(const QByteArray &);
-
     void setErrorBlacklistEntry(const SyncJournalErrorBlacklistRecord &item);
     void wipeErrorBlacklistEntry(const QString &relativeFile);
     void wipeErrorBlacklistEntry(const QString &relativeFile, SyncJournalErrorBlacklistRecord::Category category);
@@ -232,13 +230,6 @@ public:
      * Returns the checksum type for an id.
      */
     QByteArray getChecksumType(int checksumTypeId);
-
-    /**
-     * The data-fingerprint used to detect backup
-     */
-    void setDataFingerprint(const QByteArray &dataFingerprint);
-    QByteArray dataFingerprint();
-
 
     // Conflict record functions
 

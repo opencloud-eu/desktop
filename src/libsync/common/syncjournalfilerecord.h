@@ -49,7 +49,7 @@ public:
     QByteArray _path;
     quint64 _inode = 0;
     qint64 _modtime = 0;
-    ItemType _type = ItemTypeSkip;
+    ItemType _type = ItemTypeUnsupported;
     QByteArray _etag;
     QByteArray _fileId;
     qint64 _fileSize = 0;

@@ -7,6 +7,7 @@
 
 #include "common/filesystembase.h"
 #include "common/utility_win.h"
+#include "filesystem.h"
 #include "hydrationjob.h"
 #include "theme.h"
 #include "vfs_cfapi.h"
@@ -32,6 +33,7 @@
 Q_LOGGING_CATEGORY(lcCfApiWrapper, "sync.vfs.cfapi.wrapper", QtDebugMsg)
 
 using namespace Qt::Literals::StringLiterals;
+using namespace std::chrono_literals;
 
 namespace winrt {
 using namespace Windows::Foundation;
@@ -66,21 +68,27 @@ QString createErrorMessageForPlaceholderUpdateAndCreate(const QString &path, con
     return originalErrorMessage;
 }
 
-OCC::PinState cfPinStateToPinState(CF_PIN_STATE state)
+// retreive the pllaceholder info, by default we don't request the full FileIdentity
+OCC::Result<std::vector<char>, int64_t> getPlaceholderInfo(
+    const OCC::Utility::Handle &handle, CF_PLACEHOLDER_INFO_CLASS infoClass = CF_PLACEHOLDER_INFO_BASIC, bool withFileIdentity = false)
 {
-    switch (state) {
-    case CF_PIN_STATE_UNSPECIFIED:
-        return OCC::PinState::Unspecified;
-    case CF_PIN_STATE_PINNED:
-        return OCC::PinState::AlwaysLocal;
-    case CF_PIN_STATE_UNPINNED:
-        return OCC::PinState::OnlineOnly;
-    case CF_PIN_STATE_INHERIT:
-        return OCC::PinState::Inherited;
-    case CF_PIN_STATE_EXCLUDED:
-        return OCC::PinState::Inherited;
+    std::vector<char> buffer(
+        withFileIdentity ? 512 : (infoClass == CF_PLACEHOLDER_INFO_BASIC ? sizeof(CF_PLACEHOLDER_BASIC_INFO) : sizeof(CF_PLACEHOLDER_STANDARD_INFO)));
+    DWORD actualSize = {};
+    const int64_t result = CfGetPlaceholderInfo(handle.handle(), infoClass, buffer.data(), static_cast<DWORD>(buffer.size()), &actualSize);
+    if (result == S_OK || (!withFileIdentity && result == HRESULT_FROM_WIN32(ERROR_MORE_DATA))) {
+        if (withFileIdentity) {
+            buffer.resize(actualSize);
+        }
+        return std::move(buffer);
+    } else if (result == HRESULT_FROM_WIN32(ERROR_NOT_A_CLOUD_FILE)) {
+        // native file, not yet converted
+        return std::vector<char>{};
+    } else {
+        qCWarning(lcCfApiWrapper) << "Failed to retrieve placeholder info:" << OCC::Utility::formatWinError(result);
+        Q_ASSERT(false);
     }
-    Q_UNREACHABLE();
+    return {result};
 }
 
 void cfApiSendTransferInfo(const CF_CONNECTION_KEY &connectionKey, const CF_TRANSFER_KEY &transferKey, NTSTATUS status, void *buffer, qint64 offset,
@@ -301,19 +309,19 @@ OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> updatePlaceholderStat
         return {u"Could not update metadata due to invalid modification time for %1: %2"_s.arg(path, modtime)};
     }
 
-    OCC::CfApiWrapper::PlaceHolderInfo info;
+    OCC::CfApiWrapper::PlaceHolderInfo<CF_PLACEHOLDER_BASIC_INFO> info;
     if (!replacesPath.isEmpty()) {
-        info = OCC::CfApiWrapper::findPlaceholderInfo(replacesPath);
+        info = OCC::CfApiWrapper::findPlaceholderInfo<CF_PLACEHOLDER_BASIC_INFO>(replacesPath);
     }
     if (!info) {
-        info = OCC::CfApiWrapper::findPlaceholderInfo(path);
+        info = OCC::CfApiWrapper::findPlaceholderInfo<CF_PLACEHOLDER_BASIC_INFO>(path);
     }
     if (!info) {
         Q_ASSERT(false);
         return {u"Can't update non existing placeholder info"_s};
     }
 
-    const auto previousPinState = cfPinStateToPinState(info->PinState);
+    const auto previousPinState = info.pinState();
 
     CF_FS_METADATA metadata = {};
     if (updateType == CfApiUpdateMetadataType::AllMetadata) {
@@ -438,21 +446,6 @@ CF_SET_PIN_FLAGS pinRecurseModeToCfSetPinFlags(OCC::CfApiWrapper::SetPinRecurseM
     Q_UNREACHABLE();
 }
 
-
-OCC::CfApiWrapper::PlaceHolderInfo::PlaceHolderInfo(std::vector<char> &&buffer)
-    : _data(buffer)
-{
-}
-
-OCC::Optional<OCC::PinState> OCC::CfApiWrapper::PlaceHolderInfo::pinState() const
-{
-    if (!this) {
-        return {};
-    }
-
-    return cfPinStateToPinState(get()->PinState);
-}
-
 QString convertSidToStringSid(void *sid)
 {
     wchar_t *stringSid = nullptr;
@@ -563,6 +556,9 @@ void OCC::CfApiWrapper::registerSyncRoot(const VfsSetupParams &params, const std
                     std::lock_guard lock(*mutex);
                     winrt::StorageProviderSyncRootManager::Register(info);
                 }
+                // the example suggests to sleep, and we've seen connectSyncRoot fail with "Failed to register sync root WindowsError: -7ff8fb70: Element not
+                // found." as we are not in the main thread this won't block
+                std::this_thread::sleep_for(1s);
                 callback({});
             } catch (const winrt::hresult_error &ex) {
                 callback(u"Failed to register sync root %1"_s.arg(Utility::formatWinError(ex.code())));
@@ -649,48 +645,47 @@ OCC::Utility::Handle OCC::CfApiWrapper::handleForPath(const QString &path)
         return {};
     }
 
-    const QFileInfo info(path);
-    if (info.isDir()) {
+    const auto longpath = OCC::FileSystem::toFilesystemPath(path);
+    OCC::Utility::Handle occHandle;
+    if (std::filesystem::is_directory(longpath)) {
         HANDLE handle = nullptr;
-        const qint64 openResult = CfOpenFileWithOplock(path.toStdWString().data(), CF_OPEN_FILE_FLAG_NONE, &handle);
-        if (openResult == S_OK) {
-            return OCC::Utility::Handle{handle, [](HANDLE h) { CfCloseHandle(h); }};
-        } else {
-            qCWarning(lcCfApiWrapper) << "Could not open handle for " << path << " result: " << OCC::Utility::formatWinError(openResult);
-        }
-    } else if (info.isFile()) {
-        const auto longpath = OCC::FileSystem::longWinPath(path);
-        const auto handle = CreateFile(longpath.toStdWString().data(), 0, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
-        if (handle != INVALID_HANDLE_VALUE) {
-            return OCC::Utility::Handle{handle, [](HANDLE h) { CloseHandle(h); }};
-        } else {
-            qCCritical(lcCfApiWrapper) << "Could not CreateFile for longpath:" << longpath << "with error:" << GetLastError();
-        }
+        const uint32_t openResult = CfOpenFileWithOplock(longpath.native().data(), CF_OPEN_FILE_FLAG_NONE, &handle);
+        occHandle = OCC::Utility::Handle{handle, &CfCloseHandle, openResult};
+    } else {
+        occHandle = OCC::Utility::Handle{CreateFile(longpath.native().data(), 0, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr), &CloseHandle};
     }
-
-    qCWarning(lcCfApiWrapper) << "no handle was created";
-    return {};
+    if (!occHandle) {
+        qCWarning(lcCfApiWrapper) << "no handle was created" << occHandle.errorMessage();
+    }
+    return occHandle;
 }
 
-OCC::CfApiWrapper::PlaceHolderInfo OCC::CfApiWrapper::findPlaceholderInfo(const QString &path)
+template <>
+OCC::CfApiWrapper::PlaceHolderInfo<CF_PLACEHOLDER_BASIC_INFO> OCC::CfApiWrapper::findPlaceholderInfo(const QString &path, bool withFileIdentity)
 {
     if (auto handle = handleForPath(path)) {
-        std::vector<char> buffer(512);
-        DWORD actualSize = {};
-        const qint64 result = CfGetPlaceholderInfo(handle.handle(), CF_PLACEHOLDER_INFO_BASIC, buffer.data(), static_cast<DWORD>(buffer.size()), &actualSize);
-        if (result == S_OK) {
-            buffer.resize(actualSize);
-            return PlaceHolderInfo(std::move(buffer));
-        } else if (result == HRESULT_FROM_WIN32(ERROR_NOT_A_CLOUD_FILE)) {
-            // native file, not yet converted
-            return {};
-        } else {
-            qCWarning(lcCfApiWrapper) << "Failed to retrieve placeholder info:" << Utility::formatWinError(result);
-            Q_ASSERT(false);
+        auto info = getPlaceholderInfo(handle, CF_PLACEHOLDER_INFO_BASIC, withFileIdentity);
+        if (!info || info->empty()) {
+            return {std::move(handle), {}};
         }
+        return PlaceHolderInfo<CF_PLACEHOLDER_BASIC_INFO>(std::move(handle), std::move(*info));
     }
     return {};
 }
+
+template <>
+OCC::CfApiWrapper::PlaceHolderInfo<CF_PLACEHOLDER_STANDARD_INFO> OCC::CfApiWrapper::findPlaceholderInfo(const QString &path, bool withFileIdentity)
+{
+    if (auto handle = handleForPath(path)) {
+        auto info = getPlaceholderInfo(handle, CF_PLACEHOLDER_INFO_STANDARD, withFileIdentity);
+        if (!info || info->empty()) {
+            return {std::move(handle), {}};
+        }
+        return PlaceHolderInfo<CF_PLACEHOLDER_STANDARD_INFO>(std::move(handle), std::move(*info));
+    }
+    return {};
+}
+
 
 OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> OCC::CfApiWrapper::setPinState(const QString &path, OCC::PinState state, SetPinRecurseMode mode)
 {
@@ -743,10 +738,10 @@ OCC::Result<void, QString> OCC::CfApiWrapper::createPlaceholderInfo(const QStrin
         return {u"Couldn't create placeholder info"_s};
     }
 
-    const auto parentInfo = findPlaceholderInfo(QDir::toNativeSeparators(QFileInfo(path).absolutePath()));
-    const auto state = parentInfo && parentInfo->PinState == CF_PIN_STATE_UNPINNED ? CF_PIN_STATE_UNPINNED : CF_PIN_STATE_INHERIT;
+    const auto parentInfo = findPlaceholderInfo<CF_PLACEHOLDER_BASIC_INFO>(QDir::toNativeSeparators(QFileInfo(path).absolutePath()));
+    const auto state = parentInfo && parentInfo.pinState() == PinState::OnlineOnly ? PinState::OnlineOnly : PinState::Inherited;
 
-    if (!setPinState(path, cfPinStateToPinState(state), NoRecurse)) {
+    if (!setPinState(path, state, NoRecurse)) {
         return {u"Couldn't set the default inherit pin state"_s};
     }
 
@@ -766,7 +761,7 @@ OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> OCC::CfApiWrapper::de
         return {u"Could not update metadata due to invalid modification time for %1: %2"_s.arg(path, modtime)};
     }
 
-    const auto info = findPlaceholderInfo(path);
+    const auto info = findPlaceholderInfo<CF_PLACEHOLDER_BASIC_INFO>(path);
     if (info) {
         setPinState(path, OCC::PinState::OnlineOnly, OCC::CfApiWrapper::NoRecurse);
 
@@ -816,7 +811,7 @@ OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> OCC::CfApiWrapper::up
 
 bool OCC::CfApiWrapper::isPlaceHolderInSync(const QString &filePath)
 {
-    if (const auto originalInfo = findPlaceholderInfo(filePath)) {
+    if (const auto originalInfo = findPlaceholderInfo<CF_PLACEHOLDER_BASIC_INFO>(filePath)) {
         return originalInfo->InSyncState == CF_IN_SYNC_STATE_IN_SYNC;
     }
 

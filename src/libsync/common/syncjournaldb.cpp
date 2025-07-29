@@ -52,6 +52,14 @@ const auto getFileRecordQueryC =
                       " FROM metadata"
                       " LEFT JOIN checksumtype as contentchecksumtype ON metadata.contentChecksumTypeId == contentchecksumtype.id ");
 
+quint64 getPHash(const QByteArray &file)
+{
+    qint64 h;
+    int len = file.length();
+
+    h = c_jhash64((uint8_t *)file.data(), len, 0);
+    return h;
+}
 
 void fillFileRecordFromGetQuery(OCC::SyncJournalFileRecord &rec, OCC::SqlQuery &query)
 {
@@ -312,12 +320,8 @@ bool SyncJournalDb::checkConnect()
     SqlQuery createQuery(_db);
     createQuery.prepare("CREATE TABLE IF NOT EXISTS metadata("
                         "phash INTEGER(8),"
-                        "pathlen INTEGER,"
                         "path VARCHAR(4096),"
                         "inode INTEGER,"
-                        "uid INTEGER,"
-                        "gid INTEGER,"
-                        "mode INTEGER,"
                         "modtime INTEGER(8),"
                         "type INTEGER,"
                         "md5 VARCHAR(32)," /* This is the etag.  Called md5 for compatibility */
@@ -400,14 +404,6 @@ bool SyncJournalDb::checkConnect()
                         ");");
     if (!createQuery.exec()) {
         return sqlFail(QStringLiteral("Create table checksumtype"), createQuery);
-    }
-
-    // create the datafingerprint table.
-    createQuery.prepare("CREATE TABLE IF NOT EXISTS datafingerprint("
-                        "fingerprint TEXT UNIQUE"
-                        ");");
-    if (!createQuery.exec()) {
-        return sqlFail(QStringLiteral("Create table datafingerprint"), createQuery);
     }
 
     // create the flags table.
@@ -804,77 +800,57 @@ QVector<QByteArray> SyncJournalDb::tableColumns(const QByteArray &table)
     return columns;
 }
 
-qint64 SyncJournalDb::getPHash(const QByteArray &file)
+Result<void, QString> SyncJournalDb::setFileRecord(const SyncJournalFileRecord &record)
 {
-    qint64 h;
-    int len = file.length();
-
-    h = c_jhash64((uint8_t *)file.data(), len, 0);
-    return h;
-}
-
-Result<void, QString> SyncJournalDb::setFileRecord(const SyncJournalFileRecord &_record)
-{
-    SyncJournalFileRecord record = _record;
     QMutexLocker locker(&_mutex);
 
+    QByteArray etag = record._etag;
     if (!_etagStorageFilter.isEmpty()) {
         // If we are a directory that should not be read from db next time, don't write the etag
         QByteArray prefix = record._path + "/";
         for (const auto &it : std::as_const(_etagStorageFilter)) {
             if (it.startsWith(prefix)) {
                 qCInfo(lcDb) << "Filtered writing the etag of" << prefix << "because it is a prefix of" << it;
-                record._etag = "_invalid_";
+                etag = "_invalid_";
                 break;
             }
         }
     }
-    OC_ASSERT(!record._remotePerm.isNull());
     qCInfo(lcDb) << "Updating file record for path:" << record._path << "inode:" << record._inode << "modtime:" << record._modtime << "type:" << record._type
-                 << "etag:" << record._etag << "fileId:" << record._fileId << "remotePerm:" << record._remotePerm.toString() << "fileSize:" << record._fileSize
+                 << "etag:" << etag << "fileId:" << record._fileId << "remotePerm:" << record._remotePerm.toString() << "fileSize:" << record._fileSize
                  << "checksum:" << record._checksumHeader << "hasDirtyPlaceholder:" << record._hasDirtyPlaceholder;
-
-    const qint64 phash = getPHash(record._path);
+    Q_ASSERT(!record._remotePerm.isNull());
+    const auto utf8Path = record._path;
+    const auto phash = getPHash(utf8Path);
     if (checkConnect()) {
-        int plen = record._path.length();
-
-        QByteArray etag(record._etag);
-        if (etag.isEmpty())
-            etag = "";
-        QByteArray fileId(record._fileId);
-        if (fileId.isEmpty())
-            fileId = "";
         QByteArray remotePerm = record._remotePerm.toDbValue();
 
         const auto checksumHeader = ChecksumHeader::parseChecksumHeader(record._checksumHeader);
         int contentChecksumTypeId = mapChecksumType(checksumHeader.type());
         const auto query = _queryManager.get(PreparedSqlQueryManager::SetFileRecordQuery,
             QByteArrayLiteral("INSERT OR REPLACE INTO metadata "
-                              "(phash, pathlen, path, inode, uid, gid, mode, modtime, type, md5, fileid, remotePerm, filesize, ignoredChildrenRemote, "
+                              "(phash, path, inode, modtime, type, md5, fileid, remotePerm, filesize, ignoredChildrenRemote, "
                               "contentChecksum, contentChecksumTypeId, hasDirtyPlaceholder) "
-                              "VALUES (?1 , ?2, ?3 , ?4 , ?5 , ?6 , ?7,  ?8 , ?9 , ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17);"),
+                              "VALUES (?1 , ?2, ?3 , ?4 , ?5 , ?6 , ?7,  ?8 , ?9 , ?10, ?11, ?12, ?13);"),
             _db);
         if (!query) {
             return query->error();
         }
 
-        query->bindValue(1, phash);
-        query->bindValue(2, plen);
-        query->bindValue(3, record._path);
-        query->bindValue(4, record._inode);
-        query->bindValue(5, 0); // uid Not used
-        query->bindValue(6, 0); // gid Not used
-        query->bindValue(7, 0); // mode Not used
-        query->bindValue(8, record._modtime);
-        query->bindValue(9, record._type);
-        query->bindValue(10, etag);
-        query->bindValue(11, fileId);
-        query->bindValue(12, remotePerm);
-        query->bindValue(13, record._fileSize);
-        query->bindValue(14, record._serverHasIgnoredFiles ? 1 : 0);
-        query->bindValue(15, checksumHeader.checksum());
-        query->bindValue(16, contentChecksumTypeId);
-        query->bindValue(17, record._hasDirtyPlaceholder);
+        int i = 1;
+        query->bindValue(i++, phash);
+        query->bindValue(i++, utf8Path);
+        query->bindValue(i++, record._inode);
+        query->bindValue(i++, record._modtime);
+        query->bindValue(i++, record._type);
+        query->bindValue(i++, etag);
+        query->bindValue(i++, record._fileId);
+        query->bindValue(i++, remotePerm);
+        query->bindValue(i++, record._fileSize);
+        query->bindValue(i++, record._serverHasIgnoredFiles ? 1 : 0);
+        query->bindValue(i++, checksumHeader.checksum());
+        query->bindValue(i++, contentChecksumTypeId);
+        query->bindValue(i++, record._hasDirtyPlaceholder);
 
         if (!query->exec()) {
             return query->error();
@@ -905,7 +881,7 @@ bool SyncJournalDb::deleteFileRecord(const QString &filename, bool recursively)
                 return false;
             }
 
-            const qint64 phash = getPHash(filename.toUtf8());
+            const auto phash = getPHash(filename.toUtf8());
             query->bindValue(1, phash);
 
             if (!query->exec()) {
@@ -1165,7 +1141,7 @@ bool SyncJournalDb::updateFileRecordChecksum(const QString &filename, const QByt
 
     qCInfo(lcDb) << "Updating file checksum" << filename << contentChecksum << contentChecksumType;
 
-    const qint64 phash = getPHash(filename.toUtf8());
+    const auto phash = getPHash(filename.toUtf8());
     if (!checkConnect()) {
         qCWarning(lcDb) << "Failed to connect database.";
         return false;
@@ -1901,49 +1877,6 @@ int SyncJournalDb::mapChecksumType(CheckSums::Algorithm checksumType)
         _checksymTypeCache[checksumType] = value;
         return value;
     }
-}
-
-QByteArray SyncJournalDb::dataFingerprint()
-{
-    QMutexLocker locker(&_mutex);
-    if (!checkConnect()) {
-        return QByteArray();
-    }
-
-    const auto query = _queryManager.get(PreparedSqlQueryManager::GetDataFingerprintQuery, QByteArrayLiteral("SELECT fingerprint FROM datafingerprint"), _db);
-    if (!query) {
-        return QByteArray();
-    }
-
-    if (!query->exec()) {
-        return QByteArray();
-    }
-
-    if (!query->next().hasData) {
-        return QByteArray();
-    }
-    return query->baValue(0);
-}
-
-void SyncJournalDb::setDataFingerprint(const QByteArray &dataFingerprint)
-{
-    QMutexLocker locker(&_mutex);
-    if (!checkConnect()) {
-        return;
-    }
-
-    const auto setDataFingerprintQuery1 =
-        _queryManager.get(PreparedSqlQueryManager::SetDataFingerprintQuery1, QByteArrayLiteral("DELETE FROM datafingerprint;"), _db);
-    const auto setDataFingerprintQuery2 =
-        _queryManager.get(PreparedSqlQueryManager::SetDataFingerprintQuery2, QByteArrayLiteral("INSERT INTO datafingerprint (fingerprint) VALUES (?1);"), _db);
-    if (!setDataFingerprintQuery1 || !setDataFingerprintQuery2) {
-        return;
-    }
-
-    setDataFingerprintQuery1->exec();
-
-    setDataFingerprintQuery2->bindValue(1, dataFingerprint);
-    setDataFingerprintQuery2->exec();
 }
 
 void SyncJournalDb::setConflictRecord(const ConflictRecord &record)

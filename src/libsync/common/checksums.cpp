@@ -285,9 +285,9 @@ QByteArray ComputeChecksum::computeNow(QIODevice *device, CheckSums::Algorithm a
     // const cast to prevent stream to "device"
     const auto log = qScopeGuard([device, algorithm, timer = Utility::ChronoElapsedTimer()] {
         if (auto file = qobject_cast<QFile *>(device)) {
-            qCDebug(lcChecksums) << "Finished" << algorithm << "computation for" << file->fileName() << timer.duration();
+            qCDebug(lcChecksums) << "Finished" << algorithm << "computation for" << file->fileName() << timer;
         } else {
-            qCDebug(lcChecksums) << "Finished" << algorithm << "computation for" << device << timer.duration();
+            qCDebug(lcChecksums) << "Finished" << algorithm << "computation for" << device << timer;
         }
     });
     switch (algorithm) {

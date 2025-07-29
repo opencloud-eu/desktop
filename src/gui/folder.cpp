@@ -609,7 +609,8 @@ void Folder::slotWatchedPathsChanged(const QSet<QString> &paths, ChangeReason re
             // Check that the mtime/size actually changed or there was
             // an attribute change (pin state) that caused the notification
             bool spurious = false;
-            if (record.isValid() && !FileSystem::fileChanged(QFileInfo{path}, record._fileSize, record._modtime, record._inode)) {
+            if (record.isValid()
+                && !FileSystem::fileChanged(FileSystem::toFilesystemPath(path), FileSystem::FileChangedInfo::fromSyncJournalFileRecord(record))) {
                 spurious = true;
 
                 if (auto pinState = _vfs->pinState(relativePath)) {
@@ -632,36 +633,6 @@ void Folder::slotWatchedPathsChanged(const QSet<QString> &paths, ChangeReason re
     if (needSync && canSync()) {
         FolderMan::instance()->scheduler()->enqueueFolder(this);
     }
-}
-
-void Folder::implicitlyHydrateFile(const QString &relativepath)
-{
-    qCInfo(lcFolder) << "Implicitly hydrate virtual file:" << relativepath;
-
-    // Set in the database that we should download the file
-    SyncJournalFileRecord record;
-    _journal.getFileRecord(relativepath.toUtf8(), &record);
-    if (!record.isValid()) {
-        qCInfo(lcFolder) << "Did not find file in db";
-        return;
-    }
-    if (!record.isVirtualFile()) {
-        qCInfo(lcFolder) << "The file is not virtual";
-        return;
-    }
-    record._type = ItemTypeVirtualFileDownload;
-    _journal.setFileRecord(record);
-
-    // Change the file's pin state if it's contradictory to being hydrated
-    // (suffix-virtual file's pin state is stored at the hydrated path)
-    const auto pin = _vfs->pinState(relativepath);
-    if (pin && *pin == PinState::OnlineOnly) {
-        std::ignore = _vfs->setPinState(relativepath, PinState::Unspecified);
-    }
-
-    // Add to local discovery
-    schedulePathForLocalDiscovery(relativepath);
-    FolderMan::instance()->scheduler()->enqueueFolder(this);
 }
 
 void Folder::setVirtualFilesEnabled(bool enabled)

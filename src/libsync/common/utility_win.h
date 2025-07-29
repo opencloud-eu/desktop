@@ -17,9 +17,11 @@
 #include "libsync/opencloudsynclib.h"
 
 #include <QString>
+#include <qt_windows.h>
+
+#include <filesystem>
 
 #include <functional>
-#include <qt_windows.h>
 
 namespace OCC {
 namespace Utility {
@@ -31,7 +33,17 @@ namespace Utility {
          */
         Handle() = default;
         explicit Handle(HANDLE h);
-        explicit Handle(HANDLE h, std::function<void(HANDLE)> &&close);
+        explicit Handle(HANDLE h, std::function<void(HANDLE)> &&close, uint32_t error = NO_ERROR);
+
+        struct CreateHandleParameter
+        {
+            uint32_t accessMode = 0;
+            uint32_t shareMode = FILE_SHARE_WRITE | FILE_SHARE_READ | FILE_SHARE_DELETE;
+            uint32_t creationFlags = OPEN_EXISTING;
+            bool followSymlinks = true;
+            bool async = false;
+        };
+        static Handle createHandle(const std::filesystem::path &path, const CreateHandleParameter &p = {});
 
         Handle(const Handle &) = delete;
         Handle &operator=(const Handle &) = delete;
@@ -47,13 +59,14 @@ namespace Utility {
             if (this != &other) {
                 std::swap(_handle, other._handle);
                 std::swap(_close, other._close);
+                std::swap(_error, other._error);
             }
             return *this;
         }
 
         ~Handle();
 
-        HANDLE &handle() { return _handle; }
+        const HANDLE &handle() const { return _handle; }
 
         void close();
 
@@ -61,14 +74,19 @@ namespace Utility {
 
         operator HANDLE() const { return _handle; }
 
+        HANDLE release() { return std::exchange(_handle, INVALID_HANDLE_VALUE); }
+
+        uint32_t error() const;
+        bool hasError() const;
+
+        QString errorMessage() const;
+
     private:
         HANDLE _handle = INVALID_HANDLE_VALUE;
         std::function<void(HANDLE)> _close;
+        uint32_t _error = NO_ERROR;
     };
 
-    // Possibly refactor to share code with UnixTimevalToFileTime in c_time.c
-    OPENCLOUD_SYNC_EXPORT void UnixTimeToFiletime(time_t t, FILETIME *filetime);
-    OPENCLOUD_SYNC_EXPORT void FiletimeToLargeIntegerFiletime(const FILETIME *filetime, LARGE_INTEGER *hundredNSecs);
     OPENCLOUD_SYNC_EXPORT void UnixTimeToLargeIntegerFiletime(time_t t, LARGE_INTEGER *hundredNSecs);
 
     OPENCLOUD_SYNC_EXPORT QString formatWinError(long error);

@@ -200,15 +200,15 @@ Utilità desktop per la sincronizazione dei file.</translation>
 <context>
     <name>FileSystem</name>
     <message>
-        <location filename="../src/libsync/common/filesystembase.cpp" line="165"/>
-        <location filename="../src/libsync/common/filesystembase.cpp" line="167"/>
-        <location filename="../src/libsync/common/filesystembase.cpp" line="226"/>
-        <location filename="../src/libsync/common/filesystembase.cpp" line="231"/>
+        <location filename="../src/libsync/common/filesystembase.cpp" line="188"/>
+        <location filename="../src/libsync/common/filesystembase.cpp" line="190"/>
+        <location filename="../src/libsync/common/filesystembase.cpp" line="249"/>
+        <location filename="../src/libsync/common/filesystembase.cpp" line="254"/>
         <source>Can&apos;t rename %1, the file is currently in use</source>
         <translation>Inpossibili rinominare %1, il file è attualmente in uso.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/filesystem.cpp" line="193"/>
+        <location filename="../src/libsync/filesystem.cpp" line="234"/>
         <source>Could not remove folder</source>
         <translation>Impossibile rimuovere la cartella</translation>
     </message>
@@ -854,8 +854,8 @@ L&apos;aggiornamento verrà eseguito in background e sovrascriverà il file AppI
 <context>
     <name>OCC::DiscoverySingleDirectoryJob</name>
     <message>
-        <location filename="../src/libsync/discoveryphase.cpp" line="300"/>
-        <location filename="../src/libsync/discoveryphase.cpp" line="412"/>
+        <location filename="../src/libsync/discoveryphase.cpp" line="269"/>
+        <location filename="../src/libsync/discoveryphase.cpp" line="318"/>
         <source>Server error: PROPFIND reply is not XML formatted!</source>
         <translation>Errore del server: la risposta PROPFIND non è formattata in XML!</translation>
     </message>
@@ -863,24 +863,19 @@ L&apos;aggiornamento verrà eseguito in background e sovrascriverà il file AppI
 <context>
     <name>OCC::DiscoverySingleLocalDirectoryJob</name>
     <message>
-        <location filename="../src/libsync/discoveryphase.cpp" line="205"/>
+        <location filename="../src/libsync/discoveryphase.cpp" line="213"/>
         <source>Error while opening directory %1</source>
         <translation>Errore durante l&apos;apertura della directory %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discoveryphase.cpp" line="207"/>
+        <location filename="../src/libsync/discoveryphase.cpp" line="215"/>
         <source>Directory not accessible on client, permission denied</source>
         <translation>Directory non accessibile sul client, autorizzazione negata</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discoveryphase.cpp" line="211"/>
+        <location filename="../src/libsync/discoveryphase.cpp" line="219"/>
         <source>Directory not found: %1</source>
         <translation>Directory non trovata: %1</translation>
-    </message>
-    <message>
-        <location filename="../src/libsync/discoveryphase.cpp" line="246"/>
-        <source>Error while reading directory %1</source>
-        <translation>Errore durante la lettura della directory %1</translation>
     </message>
 </context>
 <context>
@@ -1003,32 +998,32 @@ L&apos;aggiornamento verrà eseguito in background e sovrascriverà il file AppI
         <translation>Sincronizza attività</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="720"/>
+        <location filename="../src/gui/folder.cpp" line="721"/>
         <source>Switching VFS mode on folder &apos;%1&apos;</source>
         <translation>Commutazione della modalità VFS sulla cartella &apos;%1&apos;</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="843"/>
+        <location filename="../src/gui/folder.cpp" line="844"/>
         <source>Could not read system exclude file</source>
         <translation>Impossibile leggere il file di esclusione del sistema</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1064"/>
+        <location filename="../src/gui/folder.cpp" line="1065"/>
         <source>The folder %1 was created but was excluded from synchronization previously. Data inside it will not be synchronized.</source>
         <translation>La cartella %1 è stata creata ma in precedenza era stata esclusa dalla sincronizzazione. I dati al suo interno non verranno sincronizzati.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1067"/>
+        <location filename="../src/gui/folder.cpp" line="1068"/>
         <source>The file %1 was created but was excluded from synchronization previously. It will not be synchronized.</source>
         <translation>Il file %1 è stato creato ma è stato precedentemente escluso dalla sincronizzazione. Non verrà sincronizzato.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1071"/>
+        <location filename="../src/gui/folder.cpp" line="1072"/>
         <source>%1 is not synchronized</source>
         <translation>%1 non è sincronizzato</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1079"/>
+        <location filename="../src/gui/folder.cpp" line="1080"/>
         <source>Changes in synchronized folders could not be tracked reliably.
 
 This means that the synchronization client might not upload local changes immediately and will instead only scan for local changes and upload them occasionally (every two hours by default).
@@ -1857,122 +1852,117 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::ProcessDirectoryJob</name>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="178"/>
+        <location filename="../src/libsync/discovery.cpp" line="174"/>
         <source>Symbolic links are not supported in syncing.</source>
         <translation>I collegamenti simbolici non sono supportati nella sincronizzazione.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="187"/>
+        <location filename="../src/libsync/discovery.cpp" line="183"/>
         <source>File is listed on the ignore list.</source>
         <translation>Il file è elencato nell&apos;elenco degli ignorati.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="192"/>
+        <location filename="../src/libsync/discovery.cpp" line="188"/>
         <source>File names ending with a period are not supported on this file system.</source>
         <translation>Questo file system non supporta i nomi di file che terminano con un punto.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="205"/>
+        <location filename="../src/libsync/discovery.cpp" line="201"/>
         <source>File names containing the character &apos;%1&apos; are not supported on this file system.</source>
         <translation>I nomi di file contenenti il ​​carattere &apos;%1&apos; non sono supportati su questo file system.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="208"/>
+        <location filename="../src/libsync/discovery.cpp" line="204"/>
         <source>File name contains at least one invalid character</source>
         <translation>Il nome del file contiene almeno un carattere non valido</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="210"/>
+        <location filename="../src/libsync/discovery.cpp" line="206"/>
         <source>The file name is a reserved name on this file system.</source>
         <translation>Il nome del file è un nome riservato su questo file system.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="219"/>
+        <location filename="../src/libsync/discovery.cpp" line="215"/>
         <source>Filename contains trailing spaces.</source>
         <translation>Il nome del file contiene spazi consecutivi</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="222"/>
+        <location filename="../src/libsync/discovery.cpp" line="218"/>
         <source>Filename is too long.</source>
         <translation>Il nome del file è troppo lungo.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="225"/>
+        <location filename="../src/libsync/discovery.cpp" line="221"/>
         <source>File/Folder is ignored because it&apos;s hidden.</source>
         <translation>Il file/la cartella viene ignorato perché è nascosto.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="229"/>
+        <location filename="../src/libsync/discovery.cpp" line="225"/>
         <source>Stat failed.</source>
         <translation>Statistica non riuscita</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="232"/>
+        <location filename="../src/libsync/discovery.cpp" line="228"/>
         <source>Conflict: Server version downloaded, local copy renamed and not uploaded.</source>
         <translation>Conflitto: versione del server scaricata, copia locale rinominata e non caricata.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="236"/>
+        <location filename="../src/libsync/discovery.cpp" line="232"/>
         <source>The filename cannot be encoded on your file system.</source>
         <translation>Il nome del file non può essere codificato sul tuo file system.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="239"/>
+        <location filename="../src/libsync/discovery.cpp" line="235"/>
         <source>The filename is blacklisted on the server.</source>
         <translation>Il nome del file è nella blacklist del server.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="357"/>
-        <source>server reported no %1</source>
-        <translation>il server ha segnalato nessun %1</translation>
-    </message>
-    <message>
-        <location filename="../src/libsync/discovery.cpp" line="1055"/>
+        <location filename="../src/libsync/discovery.cpp" line="1028"/>
         <source>SelectiveSync: Ignored because its path is deselected</source>
         <translation>SelectiveSync: ignorato perché il suo percorso è deselezionato</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1129"/>
+        <location filename="../src/libsync/discovery.cpp" line="1102"/>
         <source>Moved to invalid target, restoring</source>
         <translation>Spostato su destinazione non valida, ripristino</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1142"/>
+        <location filename="../src/libsync/discovery.cpp" line="1115"/>
         <source>Not allowed to remove, restoring</source>
         <translation>Non è consentito rimuovere, ripristinare</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1088"/>
+        <location filename="../src/libsync/discovery.cpp" line="1061"/>
         <source>Not allowed because you don&apos;t have permission to add subfolders to that folder</source>
         <translation>Non consentito perché non hai l&apos;autorizzazione per aggiungere sottocartelle a quella cartella</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="560"/>
+        <location filename="../src/libsync/discovery.cpp" line="535"/>
         <source>Error while doing a rename, unhandled status code: %1</source>
         <translation>Errore durante la ridenominazione, codice di stato non gestito: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1093"/>
+        <location filename="../src/libsync/discovery.cpp" line="1066"/>
         <source>Not allowed because you don&apos;t have permission to add files in that folder</source>
         <translation>Non consentito perché non hai l&apos;autorizzazione per aggiungere file in quella cartella</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1106"/>
+        <location filename="../src/libsync/discovery.cpp" line="1079"/>
         <source>Not allowed to upload this file because it is read-only on the server, restoring</source>
         <translation>Non è consentito caricare questo file perché è di sola lettura sul server, ripristino in corso</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1252"/>
+        <location filename="../src/libsync/discovery.cpp" line="1225"/>
         <source>Error while reading the database</source>
         <translation>Errore durante la lettura del database</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1279"/>
+        <location filename="../src/libsync/discovery.cpp" line="1252"/>
         <source>This Space is currently unavailable</source>
         <translation>Questo spazio non è attualmente disponibile</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1300"/>
+        <location filename="../src/libsync/discovery.cpp" line="1273"/>
         <source>Server replied with an error while reading directory &apos;%1&apos; : %2</source>
         <translation>Il server ha risposto con un errore durante la lettura della directory &apos;%1&apos;: %2</translation>
     </message>
@@ -2014,46 +2004,46 @@ Note that using any logging command line options will override the settings.</so
         <translation>Lo spazio libero sul disco è inferiore a %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="722"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="699"/>
         <source>File was deleted from server</source>
         <translation>Il file è stato eliminato dal server</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="781"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="758"/>
         <source>Broken webserver returned empty content length for non-empty file on resume</source>
         <translation>Il server web non funzionante ha restituito una lunghezza di contenuto vuota per il file non vuoto al momento della ripresa</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="788"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="765"/>
         <source>The file could not be downloaded completely.</source>
         <translation>Impossibile scaricare completamente il file.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="795"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="772"/>
         <source>The downloaded file is empty despite the server announced it should have been %1.</source>
         <translation>Il file scaricato è vuoto nonostante il server abbia annunciato che avrebbe dovuto essere %1.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="903"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="880"/>
         <source>File %1 cannot be saved because of a local file name clash with %2!</source>
         <translation>Il file %1 non può essere salvato a causa di un conflitto tra il nome del file locale e %2!</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="992"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="967"/>
         <source>Error updating metadata: %1</source>
         <translation>Errore durante l&apos;aggiornamento dei metadati: %1</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatedownload.cpp" line="551"/>
-        <location filename="../src/libsync/propagatedownload.cpp" line="928"/>
-        <location filename="../src/libsync/propagatedownload.cpp" line="960"/>
-        <location filename="../src/libsync/propagatedownload.cpp" line="995"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="905"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="935"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="970"/>
         <source>The file %1 is currently in use</source>
         <translation>Il file %1 è attualmente in uso</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatedownload.cpp" line="428"/>
-        <location filename="../src/libsync/propagatedownload.cpp" line="952"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="927"/>
         <source>File has changed since discovery</source>
         <translation>Il file è cambiato dopo la scoperta</translation>
     </message>
@@ -2787,17 +2777,17 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::Vfs</name>
     <message>
-        <location filename="../src/libsync/common/vfs.cpp" line="77"/>
+        <location filename="../src/libsync/common/vfs.cpp" line="78"/>
         <source>The Virtual filesystem feature does not support a drive as sync root</source>
         <translation>La funzionalità del file system virtuale non supporta un&apos;unità come root di sincronizzazione</translation>
     </message>
     <message>
-        <location filename="../src/libsync/common/vfs.cpp" line="81"/>
+        <location filename="../src/libsync/common/vfs.cpp" line="82"/>
         <source>The Virtual filesystem feature requires a NTFS file system, %1 is using %2</source>
         <translation>La funzionalità del file system virtuale richiede un file system NTFS, %1 utilizza %2</translation>
     </message>
     <message>
-        <location filename="../src/libsync/common/vfs.cpp" line="85"/>
+        <location filename="../src/libsync/common/vfs.cpp" line="86"/>
         <source>The Virtual filesystem feature is not supported on network drives</source>
         <translation>La funzionalità del file system virtuale non è supportata sulle unità di rete</translation>
     </message>
@@ -3026,8 +3016,16 @@ Note that using any logging command line options will override the settings.</so
         <translation>%1: %2</translation>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/cfapi/cfapiwrapper.cpp" line="63"/>
+        <location filename="../src/plugins/vfs/cfapi/cfapiwrapper.cpp" line="65"/>
         <source>Paths beginning with &apos;#&apos; character are not supported in VFS mode.</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>RemoteInfo</name>
+    <message>
+        <location filename="../src/libsync/discoveryremoteinfo.cpp" line="67"/>
+        <source>server reported no %1</source>
         <translation type="unfinished"/>
     </message>
 </context>
