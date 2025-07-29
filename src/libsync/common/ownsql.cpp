@@ -32,6 +32,7 @@
 
 #include <thread>
 
+using namespace Qt::Literals::StringLiterals;
 using namespace std::chrono_literals;
 
 namespace {
@@ -293,7 +294,8 @@ int SqlQuery::prepare(const QByteArray &sql, bool allow_failure)
             if (lcSql().isDebugEnabled()) {
                 _boundValues.resize(sqlite3_bind_parameter_count(_stmt));
                 for (int i = 1; i <= _boundValues.size(); ++i) {
-                    _boundValues[i - 1].name = QString::fromUtf8(sqlite3_bind_parameter_name(_stmt, i));
+                    const auto name = QRegularExpression::escape(QString::fromUtf8(sqlite3_bind_parameter_name(_stmt, i)));
+                    _boundValues[i - 1].name = QRegularExpression(uR"(%1\b)"_s.arg(name));
                 }
             }
         }
@@ -335,7 +337,7 @@ bool SqlQuery::exec()
                     // the result can be inaccurate
                     QString query = QString::fromUtf8(_sql);
                     for (const auto &v : _boundValues) {
-                        query.replace(query.indexOf(v.name), v.name.size(), v.value);
+                        query.replace(v.name, v.value);
                     }
                     char *actualQuery = sqlite3_expanded_sql(_stmt);
                     qCDebug(lcSql) << "SQL exec: Estimated query:" << query << "Actual query:" << QString::fromUtf8(actualQuery) << "Try:" << n;
@@ -452,7 +454,7 @@ void SqlQuery::bindValueInternal(int pos, const QVariant &value)
         break;
     }
     default: {
-        qCWarning(lcSql) << "Unsupported raw type detected" << value.typeId() << value.typeName() << value;
+        qCWarning(lcSql) << "Unsupported raw type detected" << value.typeId() << value.typeName() << value.metaType().sizeOf() << value;
         Q_ASSERT(false);
         QString str = value.toString();
         // SQLITE_TRANSIENT makes sure that sqlite buffers the data
