@@ -382,7 +382,7 @@ def step(context, folder_name):
 @When('the user deletes the following files')
 def step(context):
     wait_for_client_to_be_ready()
-    
+
     for row in context.table[1:]:
         filename = row[0]
         deleteResource(filename, 'file')

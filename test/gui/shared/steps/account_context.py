@@ -1,3 +1,6 @@
+import shutil
+import os
+
 from pageObjects.AccountConnectionWizard import AccountConnectionWizard
 from pageObjects.SyncConnectionWizard import SyncConnectionWizard
 from pageObjects.EnterPassword import EnterPassword
@@ -159,11 +162,7 @@ def step(context, _):
 
 @When('the user removes the connection for user "|any|"')
 def step(context, username):
-    displayname = get_displayname_for_user(username)
-    displayname = substitute_inline_codes(displayname)
-
-    Toolbar.open_account(displayname)
-    AccountSetting.remove_account_connection()
+    AccountSetting.remove_connection_for_user(username)
 
 
 @Then('connection wizard should be visible')
@@ -282,3 +281,9 @@ def step(context, warn_message):
         warn_message in actual_message,
         'Contains warning message',
     )
+
+
+@Given('the user has removed the connection for user "|any|"')
+def step(context, username):
+    AccountSetting.remove_connection_for_user(username)
+    shutil.rmtree(os.path.join(get_config("clientRootSyncPath"), username))
