@@ -247,8 +247,7 @@ void PropagateLocalRename::start()
         }
     }
 
-    SyncJournalFileRecord oldRecord;
-    propagator()->_journal->getFileRecord(_item->_originalFile, &oldRecord);
+    const SyncJournalFileRecord oldRecord = propagator()->_journal->getFileRecord(_item->_originalFile);
     propagator()->_journal->deleteFileRecord(_item->_originalFile);
 
     const auto oldFile = _item->localName();
@@ -256,7 +255,7 @@ void PropagateLocalRename::start()
     if (!_item->isDirectory()) { // Directories are saved at the end
         SyncFileItem newItem(*_item);
         if (oldRecord.isValid()) {
-            newItem._checksumHeader = oldRecord._checksumHeader;
+            newItem._checksumHeader = oldRecord.checksumHeader();
         }
         const auto result = propagator()->updateMetadata(newItem);
         if (!result) {

@@ -13,6 +13,7 @@
 
 #include <QtTest>
 
+using namespace Qt::Literals::StringLiterals;
 using namespace std::chrono_literals;
 using namespace OCC::FileSystem::SizeLiterals;
 using namespace OCC;
@@ -160,11 +161,7 @@ private Q_SLOTS:
         // Upload and calculate the checksums
         QVERIFY(fakeFolder.applyLocalModificationsAndSync());
 
-        auto getDbChecksum = [&](const QString &path) {
-            SyncJournalFileRecord record;
-            fakeFolder.syncJournal().getFileRecord(path, &record);
-            return record._checksumHeader;
-        };
+        auto getDbChecksum = [&](const QString &path) { return fakeFolder.syncJournal().getFileRecord(path).checksumHeader(); };
 
         // printf 'A%.0s' {1..64} | sha1sum -
         QByteArray referenceChecksum("SHA1:30b86e44e6001403827a62c58b08893e77cf121f");
@@ -220,14 +217,10 @@ private Q_SLOTS:
         // Remove subFolderA with selectiveSync:
         fakeFolder.syncEngine().journal()->setSelectiveSyncList(SyncJournalDb::SelectiveSyncBlackList, {QStringLiteral("parentFolder/subFolderA/")});
         fakeFolder.syncEngine().journal()->schedulePathForRemoteDiscovery(QByteArrayLiteral("parentFolder/subFolderA/"));
-        auto getEtag = [&](const QByteArray &file) {
-            SyncJournalFileRecord rec;
-            fakeFolder.syncJournal().getFileRecord(file, &rec);
-            return rec._etag;
-        };
-        QVERIFY(getEtag("parentFolder") == "_invalid_");
-        QVERIFY(getEtag("parentFolder/subFolderA") == "_invalid_");
-        QVERIFY(getEtag("parentFolder/subFolderA/subsubFolder") != "_invalid_");
+        auto getEtag = [&](const QAnyStringView &file) { return fakeFolder.syncJournal().getFileRecord(file.toString()).etag(); };
+        QCOMPARE(getEtag("parentFolder"), u"_invalid_"_s);
+        QCOMPARE(getEtag("parentFolder/subFolderA"), u"_invalid_"_s);
+        QCOMPARE_NE(getEtag("parentFolder/subFolderA/subsubFolder"), u"_invalid_"_s);
 
         // But touch local file before the next sync, such that the local folder
         // can't be removed
@@ -297,17 +290,16 @@ private Q_SLOTS:
             QVERIFY(!syncSuccess);
         }
 
-        SyncJournalFileRecord rec;
-        fakeFolder.syncJournal().getFileRecord(QByteArrayLiteral("NewFolder"), &rec);
+        SyncJournalFileRecord rec = fakeFolder.syncJournal().getFileRecord(u"NewFolder"_s);
         QVERIFY(rec.isValid());
         if (filesAreDehydrated) {
             // No error, failure occurs only with a GET, so etag should be valid (i.e. NOT invalid):
-            QVERIFY(rec._etag != QByteArrayLiteral("_invalid_"));
+            QCOMPARE_NE(rec.etag(), u"_invalid_"_s);
         } else {
             // Download failed, check for invalid etag:
-            QCOMPARE(rec._etag, QByteArrayLiteral("_invalid_"));
+            QCOMPARE(rec.etag(), u"_invalid_"_s);
         }
-        QVERIFY(!rec._fileId.isEmpty());
+        QVERIFY(!rec.fileId().isEmpty());
     }
 
     void testDirDownloadWithError() {
@@ -435,9 +427,8 @@ private Q_SLOTS:
 
         // check that mtime in journal and filesystem agree
         QString a1path = fakeFolder.localPath() + QStringLiteral("A/a1");
-        SyncJournalFileRecord a1record;
-        fakeFolder.syncJournal().getFileRecord(QByteArray("A/a1"), &a1record);
-        QCOMPARE(a1record._modtime, (qint64)FileSystem::getModTime(a1path));
+        SyncJournalFileRecord a1record = fakeFolder.syncJournal().getFileRecord(u"A/a1"_s);
+        QCOMPARE(a1record.modtime(), FileSystem::getModTime(a1path));
 
         // Extra sync reads from db, no difference
         QVERIFY(fakeFolder.applyLocalModificationsAndSync());

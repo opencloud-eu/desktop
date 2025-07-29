@@ -145,12 +145,12 @@ void Vfs::wipeDehydratedVirtualFiles()
         // there are no placeholders
         return;
     }
-    _setupParams->journal->getFilesBelowPath(QByteArray(), [&](const SyncJournalFileRecord &rec) {
+    _setupParams->journal->getFilesBelowPath(QString(), [&](const SyncJournalFileRecord &rec) {
         // only handle dehydrated files
-        if (rec._type != ItemTypeVirtualFile && rec._type != ItemTypeVirtualFileDownload) {
+        if (rec.type() != ItemTypeVirtualFile && rec.type() != ItemTypeVirtualFileDownload) {
             return;
         }
-        const QString relativePath = QString::fromUtf8(rec._path);
+        const QString relativePath = rec.path();
         qCDebug(lcVfs) << "Removing db record for dehydrated file" << relativePath;
         _setupParams->journal->deleteFileRecord(relativePath);
 

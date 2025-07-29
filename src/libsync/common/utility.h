@@ -240,7 +240,7 @@ OPENCLOUD_SYNC_EXPORT Q_DECLARE_LOGGING_CATEGORY(lcUtility)
      * Prefer to use the data from the conflicts table in the journal to determine
      * a conflict's base file, see SyncJournal::conflictFileBaseName()
      */
-    OPENCLOUD_SYNC_EXPORT QByteArray conflictFileBaseNameFromPattern(const QByteArray &conflictName);
+    OPENCLOUD_SYNC_EXPORT QString conflictFileBaseNameFromPattern(const QString &conflictName);
 
     template <class E>
     E stringToEnum(const char *key)

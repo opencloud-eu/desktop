@@ -53,6 +53,7 @@
 #include <math.h>
 #include <stdarg.h>
 
+using namespace Qt::Literals::StringLiterals;
 using namespace std::chrono;
 namespace {
 auto RFC1123PatternC()
@@ -408,30 +409,30 @@ bool Utility::isConflictFile(QStringView name)
     return false;
 }
 
-QByteArray Utility::conflictFileBaseNameFromPattern(const QByteArray &conflictName)
+QString Utility::conflictFileBaseNameFromPattern(const QString &conflictName)
 {
     // This function must be able to deal with conflict files for conflict files.
     // To do this, we scan backwards, for the outermost conflict marker and
     // strip only that to generate the conflict file base name.
-    auto startOld = conflictName.lastIndexOf("_conflict-");
+    auto startOld = conflictName.lastIndexOf("_conflict-"_L1);
 
     // A single space before "(conflicted copy" is considered part of the tag
-    auto startNew = conflictName.lastIndexOf("(conflicted copy");
-    if (startNew > 0 && conflictName[startNew - 1] == ' ')
+    auto startNew = conflictName.lastIndexOf("(conflicted copy"_L1);
+    if (startNew > 0 && conflictName[startNew - 1] == ' '_L1)
         startNew -= 1;
 
     // The rightmost tag is relevant
     auto tagStart = qMax(startOld, startNew);
     if (tagStart == -1)
-        return "";
+        return QString();
 
     // Find the end of the tag
     auto tagEnd = conflictName.size();
-    auto dot = conflictName.lastIndexOf('.'); // dot could be part of user name for new tag!
+    auto dot = conflictName.lastIndexOf('.'_L1); // dot could be part of user name for new tag!
     if (dot > tagStart)
         tagEnd = dot;
     if (tagStart == startNew) {
-        auto paren = conflictName.indexOf(')', tagStart);
+        auto paren = conflictName.indexOf(')'_L1, tagStart);
         if (paren != -1)
             tagEnd = paren + 1;
     }

@@ -236,17 +236,16 @@ void SyncEngine::conflictRecordMaintenance()
     for (const auto &path : std::as_const(_seenConflictFiles)) {
         OC_ASSERT(Utility::isConflictFile(path));
 
-        auto bapath = path.toUtf8();
+        const auto bapath = path.toUtf8();
         if (!conflictRecordPaths.contains(bapath)) {
             ConflictRecord record;
             record.path = bapath;
-            auto basePath = Utility::conflictFileBaseNameFromPattern(bapath);
-            record.initialBasePath = basePath;
+            auto basePath = Utility::conflictFileBaseNameFromPattern(path);
+            record.initialBasePath = basePath.toUtf8();
 
             // Determine fileid of target file
-            SyncJournalFileRecord baseRecord;
-            if (_journal->getFileRecord(basePath, &baseRecord) && baseRecord.isValid()) {
-                record.baseFileId = baseRecord._fileId;
+            if (const auto baseRecord = _journal->getFileRecord(basePath); baseRecord.isValid()) {
+                record.baseFileId = baseRecord.fileId();
             }
 
             _journal->setConflictRecord(record);

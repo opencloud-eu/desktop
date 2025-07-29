@@ -11,11 +11,9 @@
 
 using namespace OCC;
 
-SyncJournalFileRecord journalRecord(FakeFolder &folder, const QByteArray &path)
+SyncJournalFileRecord journalRecord(FakeFolder &folder, const QAnyStringView &path)
 {
-    SyncJournalFileRecord rec;
-    folder.syncJournal().getFileRecord(path, &rec);
-    return rec;
+    return folder.syncJournal().getFileRecord(path.toString());
 }
 
 class TestBlacklist : public QObject
@@ -77,7 +75,7 @@ private Q_SLOTS:
             completeSpy.clear();
         };
 
-        auto initialEtag = journalRecord(fakeFolder, "A")._etag;
+        auto initialEtag = journalRecord(fakeFolder, "A").etag();
         QVERIFY(!initialEtag.isEmpty());
 
         // The first sync and the download will fail - the item will be blacklisted
@@ -107,7 +105,7 @@ private Q_SLOTS:
             QCOMPARE(entry._requestId, reqId);
 
             if (remote) {
-                QCOMPARE(journalRecord(fakeFolder, "A")._etag, initialEtag);
+                QCOMPARE(journalRecord(fakeFolder, "A").etag(), initialEtag);
             }
         }
         cleanup();
@@ -129,7 +127,7 @@ private Q_SLOTS:
             QCOMPARE(entry._requestId, reqId);
 
             if (remote)
-                QCOMPARE(journalRecord(fakeFolder, "A")._etag, initialEtag);
+                QCOMPARE(journalRecord(fakeFolder, "A").etag(), initialEtag);
         }
         cleanup();
 
@@ -156,7 +154,7 @@ private Q_SLOTS:
             QCOMPARE(entry._requestId, reqId);
 
             if (remote)
-                QCOMPARE(journalRecord(fakeFolder, "A")._etag, initialEtag);
+                QCOMPARE(journalRecord(fakeFolder, "A").etag(), initialEtag);
         }
         cleanup();
 
@@ -182,7 +180,7 @@ private Q_SLOTS:
             QCOMPARE(entry._requestId, reqId);
 
             if (remote)
-                QCOMPARE(journalRecord(fakeFolder, "A")._etag, initialEtag);
+                QCOMPARE(journalRecord(fakeFolder, "A").etag(), initialEtag);
         }
         cleanup();
 
@@ -206,7 +204,7 @@ private Q_SLOTS:
             QCOMPARE(counter, 4);
 
             if (remote)
-                QCOMPARE(journalRecord(fakeFolder, "A")._etag, fakeFolder.currentRemoteState().find(QStringLiteral("A"))->etag);
+                QCOMPARE(journalRecord(fakeFolder, "A").etag(), fakeFolder.currentRemoteState().find(QStringLiteral("A"))->etag);
         }
         cleanup();
 

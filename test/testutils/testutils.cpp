@@ -124,6 +124,17 @@ namespace TestUtils {
         return Resources::Template::renderTemplate(QString::fromUtf8(getPayload(payloadName)), values).toUtf8();
     }
 
+    SyncFileItem dummyItem(const QString &name)
+    {
+        SyncFileItem item(name);
+        item._type = ItemTypeFile;
+        item._fileId = "id";
+        item._inode = 1;
+        item._modtime = Utility::qDateTimeToTime_t(QDateTime::currentDateTimeUtc());
+        item._remotePerm = RemotePermissions::fromDbValue(" ");
+        return item;
+    }
+
     QUrl dummyDavUrl()
     {
         return QUrl(QStringLiteral("http://localhost/dav/spaces/0e443965-2ebb-4673-9464-b2c1d388e666$cb867555-fdf7-48ce-8f1c-d64570812f21"));

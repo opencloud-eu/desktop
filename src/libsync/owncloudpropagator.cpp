@@ -34,7 +34,6 @@
 #endif
 
 #include <QApplication>
-#include <QDir>
 #include <QFileInfo>
 #include <QLoggingCategory>
 #include <QObject>
@@ -747,10 +746,9 @@ bool OwncloudPropagator::createConflict(const SyncFileItemPtr &item,
     conflictRecord.baseModtime = item->_previousModtime;
     conflictRecord.initialBasePath = item->localName().toUtf8();
 
-    SyncJournalFileRecord baseRecord;
-    if (_journal->getFileRecord(item->_originalFile, &baseRecord) && baseRecord.isValid()) {
-        conflictRecord.baseEtag = baseRecord._etag;
-        conflictRecord.baseFileId = baseRecord._fileId;
+    if (const auto baseRecord = _journal->getFileRecord(item->_originalFile); baseRecord.isValid()) {
+        conflictRecord.baseEtag = baseRecord.etag().toUtf8();
+        conflictRecord.baseFileId = baseRecord.fileId();
     } else {
         // We might very well end up with no fileid/etag for new/new conflicts
     }
@@ -807,9 +805,12 @@ Result<Vfs::ConvertToPlaceholderResult, QString> OwncloudPropagator::updateMetad
     if (!result) {
         return result;
     }
-    auto record = item.toSyncJournalFileRecordWithInode(fsPath);
+    auto itemCopy = item;
+    FileSystem::getInode(FileSystem::toFilesystemPath(fsPath), &itemCopy._inode);
+    qCDebug(lcPropagator) << fsPath << "Retrieved inode " << itemCopy._inode << "(previous item inode: " << item._inode << ")";
+    auto record = SyncJournalFileRecord::fromSyncFileItem(itemCopy);
     if (result.get() == Vfs::ConvertToPlaceholderResult::Locked) {
-        record._hasDirtyPlaceholder = true;
+        record.setDirtyPlaceholder(true);
         Q_EMIT seenLockedFile(fullLocalPath(item.localName()), FileSystem::LockMode::Exclusive);
     }
     const auto dBresult = _journal->setFileRecord(record);
@@ -1267,12 +1268,12 @@ void OCC::PropagateUpdateMetaDataJob::start()
 
     const QString filePath = propagator()->fullLocalPath(_item->destination());
     if (_item->_direction == SyncFileItem::Down) {
-        SyncJournalFileRecord prev;
-        if (propagator()->_journal->getFileRecord(_item->localName(), &prev) && prev.isValid()) {
+        const SyncJournalFileRecord prev = propagator()->_journal->getFileRecord(_item->localName());
+        if (prev.isValid()) {
             if (_item->_checksumHeader.isEmpty()) {
-                _item->_checksumHeader = prev._checksumHeader;
+                _item->_checksumHeader = prev.checksumHeader();
             }
-            _item->_serverHasIgnoredFiles |= prev._serverHasIgnoredFiles;
+            _item->_serverHasIgnoredFiles |= prev.serverHasIgnoredFiles();
         }
     }
     const auto result = propagator()->updateMetadata(*_item);

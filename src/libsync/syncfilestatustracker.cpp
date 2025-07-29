@@ -126,9 +126,8 @@ SyncFileStatus SyncFileStatusTracker::fileStatus(const QString &relativePath)
         return SyncFileStatus::StatusSync;
 
     // First look it up in the database to know if it's shared
-    SyncJournalFileRecord rec;
-    if (_syncEngine->journal()->getFileRecord(relativePath, &rec) && rec.isValid()) {
-        return resolveSyncAndErrorStatus(relativePath, rec._remotePerm.hasPermission(RemotePermissions::IsShared) ? Shared : NotShared);
+    if (const auto rec = _syncEngine->journal()->getFileRecord(relativePath); rec.isValid()) {
+        return resolveSyncAndErrorStatus(relativePath, rec.remotePerm().hasPermission(RemotePermissions::IsShared) ? Shared : NotShared);
     }
 
     // Must be a new file not yet in the database, check if it's syncing or has an error.
