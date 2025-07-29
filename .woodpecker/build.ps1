@@ -1,4 +1,5 @@
-New-Item -itemtype Junction -path $HOME/craft -value $env:CI_WORKSPACE/woodpecker_craft;
+git config --global --add safe.directory *
+New-Item -itemtype Junction -path $HOME/craft -value $env:CI_WORKSPACE/woodpecker_craft
 New-Item -Path $HOME/cache -ItemType Directory -ErrorAction SilentlyContinue
 .github/workflows/.craft.ps1 --setup
 .github/workflows/.craft.ps1 -c --unshelve .craft.shelf
