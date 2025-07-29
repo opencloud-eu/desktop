@@ -19,7 +19,7 @@ function(opencloud_add_test test_class)
     target_compile_definitions(${_test_target_name} PRIVATE SOURCEDIR="${PROJECT_SOURCE_DIR}" QT_FORCE_ASSERTS)
 
     target_include_directories(${_test_target_name} PRIVATE "${CMAKE_SOURCE_DIR}/test/")
-    if ((UNIX AND NOT APPLE) OR WINDOWS)
+    if ((UNIX AND NOT APPLE) OR WIN32)
         set_property(TEST ${_test_target_name} PROPERTY ENVIRONMENT "QT_QPA_PLATFORM=offscreen")
     endif()
 endfunction()
