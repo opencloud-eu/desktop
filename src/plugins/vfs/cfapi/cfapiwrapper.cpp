@@ -50,6 +50,8 @@ using namespace Windows::Security::Cryptography;
 
 namespace {
 
+std::mutex sRegister_mutex;
+
 constexpr auto forbiddenLeadingCharacterInPath = '#'_L1;
 
 QString createErrorMessageForPlaceholderUpdateAndCreate(const QString &path, const QString &originalErrorMessage)
@@ -513,10 +515,9 @@ QString createSyncRootID(const QString &providerName, const QUuid &accountUUID, 
 
 void OCC::CfApiWrapper::registerSyncRoot(const VfsSetupParams &params, const std::function<void(QString)> &callback)
 {
-    static std::mutex register_mutex;
     const auto nativePath = QDir::toNativeSeparators(params.filesystemPath);
     winrt::StorageFolder::GetFolderFromPathAsync(reinterpret_cast<const wchar_t *>(nativePath.utf16()))
-        .Completed([params, callback, mutex = &register_mutex](const winrt::IAsyncOperation<winrt::StorageFolder> &result, winrt::AsyncStatus status) {
+        .Completed([params, callback](const winrt::IAsyncOperation<winrt::StorageFolder> &result, winrt::AsyncStatus status) {
             if (status != winrt::AsyncStatus::Completed) {
                 callback(u"Failed to retrieve folder info: %1"_s.arg(Utility::formatWinError(result.ErrorCode())));
                 return;
@@ -553,12 +554,9 @@ void OCC::CfApiWrapper::registerSyncRoot(const VfsSetupParams &params, const std
 
                 {
                     // don't confuse Windows with parallel registrations
-                    std::lock_guard lock(*mutex);
+                    std::lock_guard lock(sRegister_mutex);
                     winrt::StorageProviderSyncRootManager::Register(info);
                 }
-                // the example suggests to sleep, and we've seen connectSyncRoot fail with "Failed to register sync root WindowsError: -7ff8fb70: Element not
-                // found." as we are not in the main thread this won't block
-                std::this_thread::sleep_for(1s);
                 callback({});
             } catch (const winrt::hresult_error &ex) {
                 callback(u"Failed to register sync root %1"_s.arg(Utility::formatWinError(ex.code())));
@@ -590,6 +588,7 @@ void unregisterSyncRootShellExtensions(const QString &providerName, const QStrin
 OCC::Result<void, QString> OCC::CfApiWrapper::unregisterSyncRoot(const VfsSetupParams &params)
 {
     try {
+        std::lock_guard lock(sRegister_mutex);
         winrt::StorageProviderSyncRootManager::Unregister(
             reinterpret_cast<const wchar_t *>(createSyncRootID(params.providerName, params.account->uuid(), params.filesystemPath).utf16()));
     } catch (winrt::hresult_error const &ex) {
@@ -600,6 +599,7 @@ OCC::Result<void, QString> OCC::CfApiWrapper::unregisterSyncRoot(const VfsSetupP
 
 OCC::Result<CF_CONNECTION_KEY, QString> OCC::CfApiWrapper::connectSyncRoot(const QString &path, OCC::VfsCfApi *context)
 {
+    std::lock_guard lock(sRegister_mutex);
     CF_CONNECTION_KEY key;
     const auto p = QDir::toNativeSeparators(path).toStdWString();
     const qint64 result =
@@ -614,6 +614,7 @@ OCC::Result<CF_CONNECTION_KEY, QString> OCC::CfApiWrapper::connectSyncRoot(const
 
 OCC::Result<void, QString> OCC::CfApiWrapper::disconnectSyncRoot(CF_CONNECTION_KEY &&key)
 {
+    std::lock_guard lock(sRegister_mutex);
     const qint64 result = CfDisconnectSyncRoot(key);
     if (result != S_OK) {
         qCWarning(lcCfApiWrapper) << "Disconnecting sync root failed" << OCC::Utility::formatWinError(result);
