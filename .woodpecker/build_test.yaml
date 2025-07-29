@@ -136,10 +136,10 @@ steps:
       $ErrorActionPreference = 'Stop'; `
       $ProgressPreference = 'SilentlyContinue'; `
       $PSNativeCommandUseErrorActionPreference = $true; `
-      New-Item -itemtype SymbolicLink -path $HOME/craft -value $env:CI_WORKSPACE/woodpecker_craft; `
       echo $([System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($Env:CI_SCRIPT))) | iex"
       ]
     commands:
+      - New-Item -itemtype Junction -path $$HOME/craft -value $$env:CI_WORKSPACE/woodpecker_craft;
       - cd $$env:CI_WORKSPACE ; .woodpecker/build.ps1
       - dir $$HOME
       - New-Item -Path $$HOME/cache -ItemType Directory -ErrorAction SilentlyContinue
