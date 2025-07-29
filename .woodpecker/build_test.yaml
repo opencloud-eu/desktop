@@ -20,11 +20,13 @@ steps:
   - name: Clone Craftmaster
     image: opencloudeu/woodpecker-windows-git:v2
     commands:
-      - git clone --depth=1 https://invent.kde.org/kde/craftmaster.git `$$CI_WORKSPACE/woodpecker_craft/CraftMaster/CraftMaster
-      - echo hier
+      - git clone --depth=1 https://invent.kde.org/kde/craftmaster.git `$$env:CI_WORKSPACE/woodpecker_craft/CraftMaster/CraftMaster
+      - pwd
+      - dir
+      - dir $$env:CI_WORKSPACE/woodpecker_craft/CraftMaster/CraftMaster
 
   # - name: Craft setup
-  #   image: opencloudeu/woodpecker-windows-python:v1
+  #   image: opencloudeu/woodpecker-windows-desktop-build-tools:v1
   #   environment:
   #     CRAFT_TARGET: windows-cl-msvc2022-x86_64
   #     CRAFT_PACKAGE_SYMBOLS: true
@@ -34,7 +36,7 @@ steps:
   #     - .github/workflows/.craft.ps1 --setup
 
   # - name: Craft unshelve
-  #   image: opencloudeu/woodpecker-windows-python:v1
+  #   image: opencloudeu/woodpecker-windows-desktop-build-tools:v1
   #   environment:
   #     CRAFT_TARGET: windows-cl-msvc2022-x86_64
   #     CRAFT_PACKAGE_SYMBOLS: true
@@ -45,7 +47,7 @@ steps:
   #     - .github/workflows/.craft.ps1 -c craft
 
   # - name: Craft Prepare
-  #   image: opencloudeu/woodpecker-windows-python:v1
+  #   image: opencloudeu/woodpecker-windows-desktop-build-tools:v1
   #   environment:
   #     CRAFT_TARGET: windows-cl-msvc2022-x86_64
   #     CRAFT_PACKAGE_SYMBOLS: true
@@ -57,7 +59,7 @@ steps:
   #     - .github/workflows/.craft.ps1 -c dev-utils/nsis
 
   # - name: Install dependencies
-  #   image: opencloudeu/woodpecker-windows-python:v1
+  #   image: opencloudeu/woodpecker-windows-desktop-build-tools:v1
   #   environment:
   #     CRAFT_TARGET: windows-cl-msvc2022-x86_64
   #     CRAFT_PACKAGE_SYMBOLS: true
@@ -66,7 +68,7 @@ steps:
   #     - .github/workflows/.craft.ps1 -c --install-deps opencloud/opencloud-desktop
 
   # - name: Update Shelf
-  #   image: opencloudeu/woodpecker-windows-python:v1
+  #   image: opencloudeu/woodpecker-windows-desktop-build-tools:v1
   #   environment:
   #     CRAFT_TARGET: windows-cl-msvc2022-x86_64
   #     CRAFT_PACKAGE_SYMBOLS: true
@@ -76,7 +78,7 @@ steps:
   #     - Copy-Item .craft.shelf binaries/craft.shelf
 
   # - name: Build
-  #   image: opencloudeu/woodpecker-windows-python:v1
+  #   image: opencloudeu/woodpecker-windows-desktop-build-tools:v1
   #   environment:
   #     CRAFT_TARGET: windows-cl-msvc2022-x86_64
   #     CRAFT_PACKAGE_SYMBOLS: true
@@ -85,7 +87,7 @@ steps:
   #     - .github/workflows/.craft.ps1 -c --no-cache opencloud/opencloud-desktop
 
   # - name: Run tests
-  #   image: opencloudeu/woodpecker-windows-python:v1
+  #   image: opencloudeu/woodpecker-windows-desktop-build-tools:v1
   #   environment:
   #     CRAFT_TARGET: windows-cl-msvc2022-x86_64
   #     CRAFT_PACKAGE_SYMBOLS: true
@@ -94,7 +96,7 @@ steps:
   #     - .github/workflows/.craft.ps1 -c --no-cache --test opencloud/opencloud-desktop
 
   # - name: Package
-  #   image: opencloudeu/woodpecker-windows-python:v1
+  #   image: opencloudeu/woodpecker-windows-desktop-build-tools:v1
   #   environment:
   #     CRAFT_TARGET: windows-cl-msvc2022-x86_64
   #     CRAFT_PACKAGE_SYMBOLS: true
@@ -103,7 +105,7 @@ steps:
   #     - .github/workflows/.craft.ps1 -c --no-cache --package opencloud/opencloud-desktop
 
   # - name: Package Appx
-  #   image: opencloudeu/woodpecker-windows-python:v1
+  #   image: opencloudeu/woodpecker-windows-desktop-build-tools:v1
   #   environment:
   #     CRAFT_TARGET: windows-cl-msvc2022-x86_64
   #     CRAFT_PACKAGE_SYMBOLS: true
@@ -112,7 +114,7 @@ steps:
   #     - .github/workflows/.craft.ps1 -c --no-cache --package --options "[Packager]PackageType=AppxPackager" --options "[Packager]Destination=$$env:CI_WORKSPACE/appx/" opencloud/opencloud-desktop
 
   # - name: show artifacts
-  #   image: opencloudeu/woodpecker-windows-python:v1
+  #   image: opencloudeu/woodpecker-windows-desktop-build-tools:v1
   #   environment:
   #     CRAFT_TARGET: windows-cl-msvc2022-x86_64
   #     CRAFT_PACKAGE_SYMBOLS: true
@@ -124,7 +126,7 @@ steps:
 
 
   # - name: build
-  #   image: opencloudeu/woodpecker-windows-python:v1
+  #   image: opencloudeu/woodpecker-windows-desktop-build-tools:v1
   #   environment:
   #     CRAFT_TARGET: windows-cl-msvc2022-x86_64
   #     CRAFT_PACKAGE_SYMBOLS: true
