@@ -131,7 +131,6 @@ public:
     static_assert(
         ErrorStatusItems.size() + OtherDisplayableStatusItems.size() == StatusCount - 2, "ErrorStatusItems or OtherDisplayableStatusItems is incomplete");
 
-    SyncJournalFileRecord toSyncJournalFileRecordWithInode(const QString &localFileName) const;
 
     /** Creates a basic SyncFileItem from a DB record
      *

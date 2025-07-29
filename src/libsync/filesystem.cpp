@@ -126,7 +126,7 @@ FileSystem::FileChangedInfo FileSystem::FileChangedInfo::fromSyncFileItemPreviou
 
 FileSystem::FileChangedInfo FileSystem::FileChangedInfo::fromSyncJournalFileRecord(const SyncJournalFileRecord &record)
 {
-    return {.size = record._fileSize, .mtime = record._modtime, .inode = record._inode, .type = record._type};
+    return {.size = record.size(), .mtime = record.modtime(), .inode = record.inode(), .type = record.type()};
 }
 
 bool FileSystem::fileChanged(const std::filesystem::path &path, const FileChangedInfo &previousInfo)

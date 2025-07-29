@@ -146,7 +146,7 @@ public:
             stream << '\'';
             _boundValues[pos - 1].value = sqlValue;
         }
-        bindValueInternal(pos, converted);
+        bindValueInternal(pos, QVariant::fromValue(converted));
     }
 
     const QByteArray &lastQuery() const;

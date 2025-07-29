@@ -227,35 +227,30 @@ void OCC::HydrationJob::onNewConnection()
 
 void OCC::HydrationJob::finalize(OCC::VfsCfApi *vfs)
 {
+    auto item = SyncFileItem::fromSyncJournalFileRecord(_record);
     if (_isCancelled) {
         // Remove placeholder file because there might be already pumped
         // some data into it
         QFile::remove(_localFilePathAbs);
         // Create a new placeholder file
-        const auto item = SyncFileItem::fromSyncJournalFileRecord(_record);
         vfs->createPlaceholder(*item);
         return;
     }
 
     switch (_status) {
     case Status::Success:
-        _record._type = ItemTypeFile;
+        item->_type = ItemTypeFile;
         break;
     case Status::Error:
         [[fallthrough]];
     case Status::Cancelled:
-        _record._type = CSyncEnums::ItemTypeVirtualFile;
+        item->_type = ItemTypeVirtualFile;
         break;
     };
-    //  const auto inode = _record._inode;
-    FileSystem::getInode(_localFilePathAbs, &_record._inode);
-
-    // we don't expect an inode change
-    // Q_ASSERT(inode == _record._inode);
-
-    const auto result = _journal->setFileRecord(_record);
+    FileSystem::getInode(FileSystem::toFilesystemPath(_localFilePathAbs), &item->_inode);
+    const auto result = _journal->setFileRecord(SyncJournalFileRecord::fromSyncFileItem(*item));
     if (!result) {
-        qCWarning(lcHydration) << "Error when setting the file record to the database" << _record._path << result.error();
+        qCWarning(lcHydration) << "Error when setting the file record to the database" << _localFilePathAbs << result.error();
     }
 }
 
@@ -269,9 +264,9 @@ void OCC::HydrationJob::onGetFinished()
 
     if (_job->contentLength() != -1) {
         const auto size = _job->resumeStart() + _job->contentLength();
-        if (size != _record._fileSize) {
+        if (size != _record.size()) {
             _errorCode = QNetworkReply::UnknownContentError;
-            _errorString = u"Unexpected file size transfered. Expected %1 received %2"_s.arg(QString::number(_record._fileSize), QString::number(size));
+            _errorString = u"Unexpected file size transfered. Expected %1 received %2"_s.arg(QString::number(_record.size()), QString::number(size));
             // assume that the local and the remote metadate are out of sync
             Q_EMIT _parent->needSync();
         }
@@ -301,7 +296,7 @@ void OCC::HydrationJob::handleNewConnection()
     qCInfo(lcHydration) << "Got new connection starting GETFileJob" << _requestId << _localFilePathAbs;
     _transferDataSocket = _transferDataServer->nextPendingConnection();
     _job = new GETFileJob(_account, _remoteSyncRootPath, _remoteFilePathRel, _transferDataSocket, {}, {}, 0, this);
-    _job->setExpectedContentLength(_record._fileSize);
+    _job->setExpectedContentLength(_record.size());
     connect(_job, &GETFileJob::finishedSignal, this, &HydrationJob::onGetFinished);
     _job->start();
 }

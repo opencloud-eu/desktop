@@ -603,8 +603,7 @@ void Folder::slotWatchedPathsChanged(const QSet<QString> &paths, ChangeReason re
         // extra sure to not miss relevant changes.
         _localDiscoveryTracker->addTouchedPath(relativePath);
 
-        SyncJournalFileRecord record;
-        _journal.getFileRecord(relativePath.toUtf8(), &record);
+        const SyncJournalFileRecord record = _journal.getFileRecord(relativePath);
         if (reason != ChangeReason::UnLock) {
             // Check that the mtime/size actually changed or there was
             // an attribute change (pin state) that caused the notification

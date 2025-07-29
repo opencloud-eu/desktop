@@ -336,14 +336,15 @@ void VfsCfApi::requestHydration(const QString &requestId, const QString &targetP
     bool isNotVirtualFileFailure = false;
     if (!record.isVirtualFile()) {
         if (isDehydratedPlaceholder(targetPath)) {
-            qCWarning(lcCfApi) << "Hydration requested for a placeholder file noFt marked as virtual in local DB. Attempting to fix it...";
-            record._type = ItemTypeVirtualFileDownload;
-            isNotVirtualFileFailure = !params().journal->setFileRecord(record);
+            qCWarning(lcCfApi) << "Hydration requested for a placeholder file that is incorrectly not marked as a virtual file in the local database. Attempting to correct this inconsistency...";
+            auto item = SyncFileItem::fromSyncJournalFileRecord(record);
+            item->_type = ItemTypeVirtualFileDownload;
+            isNotVirtualFileFailure = !params().journal->setFileRecord(SyncJournalFileRecord::fromSyncFileItem(*item));
         } else {
             isNotVirtualFileFailure = true;
         }
     }
-    if (requestedFileSize != record._fileSize) {
+    if (requestedFileSize != record.size()) {
         // we are out of sync
         qCWarning(lcCfApi) << "The db size and the placeholder meta data are out of sync, request resync";
         Q_ASSERT(false); // this should not happen
@@ -374,12 +375,11 @@ void VfsCfApi::fileStatusChanged(const QString &systemFileName, SyncFileStatus f
 void VfsCfApi::scheduleHydrationJob(const QString &requestId, SyncJournalFileRecord &&record, const QString &targetPath)
 {
     // after a local move, the remotePath and the targetPath might not match
-    const QString renotePath = QString::fromUtf8(record._path);
     const auto jobAlreadyScheduled = std::any_of(std::cbegin(d->hydrationJobs), std::cend(d->hydrationJobs),
         [=](HydrationJob *job) { return job->requestId() == requestId || job->localFilePathAbs() == targetPath; });
 
     if (jobAlreadyScheduled) {
-        qCWarning(lcCfApi) << "The OS submitted again a hydration request which is already on-going" << requestId << renotePath;
+        qCWarning(lcCfApi) << "The OS submitted again a hydration request which is already on-going" << requestId << record.path();
         Q_EMIT hydrationRequestFailed(requestId);
         return;
     }
@@ -391,7 +391,7 @@ void VfsCfApi::scheduleHydrationJob(const QString &requestId, SyncJournalFileRec
     job->setJournal(params().journal);
     job->setRequestId(requestId);
     job->setLocalFilePathAbs(targetPath);
-    job->setRemoteFilePathRel(renotePath);
+    job->setRemoteFilePathRel(record.path());
     job->setRecord(std::move(record));
     connect(job, &HydrationJob::finished, this, &VfsCfApi::onHydrationJobFinished);
     d->hydrationJobs << job;

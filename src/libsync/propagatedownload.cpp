@@ -92,13 +92,13 @@ namespace CernRecallFeature {
             // Path of the recalled file in the local folder
             QString localRecalledFile = recalledFile.mid(folderPath.size());
 
-            SyncJournalFileRecord record;
-            if (!journal.getFileRecord(localRecalledFile, &record) || !record.isValid()) {
+            const SyncJournalFileRecord record = journal.getFileRecord(localRecalledFile);
+            if (!record.isValid()) {
                 qCWarning(lcPropagateDownload) << "No db entry for recall of" << localRecalledFile;
                 continue;
             }
 
-            qCInfo(lcPropagateDownload) << "Recalling" << localRecalledFile << "Checksum:" << record._checksumHeader;
+            qCInfo(lcPropagateDownload) << "Recalling" << localRecalledFile << "Checksum:" << record.checksumHeader();
 
             QString targetPath = makeRecallFileName(recalledFile);
 

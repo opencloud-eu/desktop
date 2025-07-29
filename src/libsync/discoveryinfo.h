@@ -24,6 +24,8 @@ public:
 
     LocalInfo(const std::filesystem::directory_entry &dirent, ItemType type);
     LocalInfo(const std::filesystem::directory_entry &dirent);
+
+    // TODO: consume path by default
     LocalInfo(const std::filesystem::path &path);
 
 

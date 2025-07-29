@@ -34,10 +34,11 @@ using namespace OCC::FileSystem::SizeLiterals;
 QString getFilePathFromUrl(const QUrl &url);
 
 
-inline QByteArray generateEtag()
+inline QString generateEtag()
 {
-    return QByteArray::number(QDateTime::currentDateTimeUtc().toMSecsSinceEpoch(), 16) + QByteArray::number(QRandomGenerator::global()->generate(), 16);
+    return QString::number(QDateTime::currentDateTimeUtc().toMSecsSinceEpoch(), 16) + QString::number(QRandomGenerator::global()->generate(), 16);
 }
+
 inline QByteArray generateFileId()
 {
     return QByteArray::number(QRandomGenerator::global()->generate(), 16);
@@ -249,7 +250,7 @@ public:
     bool isShared = false;
     OCC::RemotePermissions permissions; // When uset, defaults to everything
     qint64 _lastModifiedInSecondsUTC = defaultLastModified();
-    QByteArray etag = generateEtag();
+    QString etag = generateEtag();
     QByteArray fileId = generateFileId();
     QByteArray checksums = OCC::CheckSums::toString(OCC::CheckSums::Algorithm::DUMMY_FOR_TESTS).data() + QByteArrayLiteral(":0x1");
     QByteArray extraDavProperties;

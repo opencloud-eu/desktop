@@ -19,17 +19,16 @@
 #ifndef SYNCJOURNALFILERECORD_H
 #define SYNCJOURNALFILERECORD_H
 
-#include <QDateTime>
-#include <QString>
-
 #include "libsync/common/utility.h"
 #include "libsync/csync.h"
 #include "libsync/opencloudsynclib.h"
 #include "remotepermissions.h"
 
 namespace OCC {
+class SqlQuery;
 
 class SyncFileItem;
+class SyncJournalFileRecordData;
 
 /**
  * @brief The SyncJournalFileRecord class
@@ -38,28 +37,47 @@ class SyncFileItem;
 class OPENCLOUD_SYNC_EXPORT SyncJournalFileRecord
 {
 public:
-    bool isValid() const { return !_path.isEmpty(); }
+    SyncJournalFileRecord();
+    SyncJournalFileRecord(const QString &error);
+    ~SyncJournalFileRecord();
+    SyncJournalFileRecord(const SyncJournalFileRecord &other);
+    SyncJournalFileRecord &operator=(const SyncJournalFileRecord &other);
+    void swap(SyncJournalFileRecord &other) noexcept { d.swap(other.d); }
+    QT_MOVE_ASSIGNMENT_OPERATOR_IMPL_VIA_MOVE_AND_SWAP(SyncJournalFileRecord);
 
-    QDateTime modDateTime() const { return Utility::qDateTimeFromTime_t(_modtime); }
+    static SyncJournalFileRecord fromSqlQuery(SqlQuery &query);
+    static SyncJournalFileRecord fromSyncFileItem(const SyncFileItem &syncFile);
+    bool isValid() const;
 
-    bool isDirectory() const { return _type == ItemTypeDirectory; }
-    bool isFile() const { return _type == ItemTypeFile || _type == ItemTypeVirtualFileDehydration; }
-    bool isVirtualFile() const { return _type == ItemTypeVirtualFile || _type == ItemTypeVirtualFileDownload; }
+    QDateTime modDateTime() const;
 
-    QByteArray _path;
-    quint64 _inode = 0;
-    qint64 _modtime = 0;
-    ItemType _type = ItemTypeUnsupported;
-    QByteArray _etag;
-    QByteArray _fileId;
-    qint64 _fileSize = 0;
-    RemotePermissions _remotePerm;
-    bool _serverHasIgnoredFiles = false;
-    bool _hasDirtyPlaceholder = false;
-    QByteArray _checksumHeader;
+    bool isDirectory() const;
+    bool isFile() const;
+    bool isVirtualFile() const;
+
+    QString path() const;
+    QString name() const;
+    QString etag() const;
+    QByteArray fileId() const;
+    RemotePermissions remotePerm() const;
+    QByteArray checksumHeader() const;
+    time_t modtime() const;
+    int64_t size() const;
+    uint64_t inode() const;
+    ItemType type() const;
+
+    bool hasDirtyPlaceholder() const;
+    void setDirtyPlaceholder(bool b);
+    bool serverHasIgnoredFiles() const;
+
+    QString error() const;
+    bool hasError() const;
+
+private:
+    QExplicitlySharedDataPointer<SyncJournalFileRecordData> d;
 };
 
-bool OPENCLOUD_SYNC_EXPORT operator==(const SyncJournalFileRecord &lhs, const SyncJournalFileRecord &rhs);
+QDebug OPENCLOUD_SYNC_EXPORT operator<<(QDebug debug, const SyncJournalFileRecord &record);
 
 class OPENCLOUD_SYNC_EXPORT SyncJournalErrorBlacklistRecord
 {
@@ -155,4 +173,7 @@ public:
 };
 }
 
+
+OPENCLOUD_SYNC_EXPORT bool operator==(const OCC::SyncJournalFileRecord &, const OCC::SyncJournalFileRecord &);
+Q_DECLARE_SHARED(OCC::SyncJournalFileRecord);
 #endif // SYNCJOURNALFILERECORD_H

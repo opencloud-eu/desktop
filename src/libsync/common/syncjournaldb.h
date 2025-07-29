@@ -19,19 +19,16 @@
 #ifndef SYNCJOURNALDB_H
 #define SYNCJOURNALDB_H
 
-#include <QDateTime>
-#include <QHash>
-#include <QObject>
-#include <functional>
-#include <qmutex.h>
 
-#include "common/checksumalgorithms.h"
-#include "common/ownsql.h"
-#include "common/pinstate.h"
-#include "common/preparedsqlquerymanager.h"
-#include "common/result.h"
-#include "common/syncjournalfilerecord.h"
-#include "common/utility.h"
+#include "libsync/common/checksumalgorithms.h"
+#include "libsync/common/ownsql.h"
+#include "libsync/common/pinstate.h"
+#include "libsync/common/preparedsqlquerymanager.h"
+#include "libsync/common/result.h"
+#include "libsync/common/syncjournalfilerecord.h"
+#include "libsync/common/utility.h"
+
+#include <QMutex>
 
 namespace OCC {
 class SyncJournalFileRecord;
@@ -55,12 +52,11 @@ public:
     static bool dbIsTooNewForClient(const QString &dbFilePath);
 
     // To verify that the record could be found check with SyncJournalFileRecord::isValid()
-    bool getFileRecord(const QString &filename, SyncJournalFileRecord *rec) { return getFileRecord(filename.toUtf8(), rec); }
-    bool getFileRecord(const QByteArray &filename, SyncJournalFileRecord *rec);
-    bool getFileRecordByInode(quint64 inode, SyncJournalFileRecord *rec);
+    SyncJournalFileRecord getFileRecord(const QString &filename);
+    SyncJournalFileRecord getFileRecordByInode(quint64 inode);
     bool getFileRecordsByFileId(const QByteArray &fileId, const std::function<void(const SyncJournalFileRecord &)> &rowCallback);
-    bool getFilesBelowPath(const QByteArray &path, const std::function<void(const SyncJournalFileRecord &)> &rowCallback);
-    bool listFilesInPath(const QByteArray &path, const std::function<void(const SyncJournalFileRecord &)> &rowCallback);
+    bool getFilesBelowPath(const QString &path, const std::function<void(const SyncJournalFileRecord &)> &rowCallback);
+    bool listFilesInPath(const QString &path, const std::function<void(const SyncJournalFileRecord &)> &rowCallback);
     const QVector<SyncJournalFileRecord> getFileRecordsWithDirtyPlaceholders() const;
     Result<void, QString> setFileRecord(const SyncJournalFileRecord &record);
 
@@ -251,7 +247,7 @@ public:
      *
      * Will return an empty string if it's not even a conflict file by pattern.
      */
-    QByteArray conflictFileBaseName(const QByteArray &conflictName);
+    QString conflictFileBaseName(const QString &conflictName);
 
     /**
      * Delete any file entry. This will force the next sync to re-sync everything as if it was new,

@@ -127,8 +127,7 @@ void PropagateRemoteMove::finalize()
     // reopens the db successfully.
     // The db is only queried to transfer the content checksum from the old
     // to the new record. It is not a problem to skip it here.
-    SyncJournalFileRecord oldRecord;
-    propagator()->_journal->getFileRecord(_item->_originalFile, &oldRecord);
+    const SyncJournalFileRecord oldRecord = propagator()->_journal->getFileRecord(_item->_originalFile);
 
     // Delete old db data.
     propagator()->_journal->deleteFileRecord(_item->_originalFile);
@@ -136,12 +135,12 @@ void PropagateRemoteMove::finalize()
     SyncFileItem newItem(*_item);
     newItem._type = _item->_type;
     if (oldRecord.isValid()) {
-        newItem._checksumHeader = oldRecord._checksumHeader;
-        if (newItem._size != oldRecord._fileSize) {
-            qCWarning(lcPropagateRemoteMove) << "File sizes differ on server vs sync journal: " << newItem._size << oldRecord._fileSize;
+        newItem._checksumHeader = oldRecord.checksumHeader();
+        if (newItem._size != oldRecord.size()) {
+            qCWarning(lcPropagateRemoteMove) << "File sizes differ on server vs sync journal: " << newItem._size << oldRecord.size();
 
             // the server might have claimed a different size, we take the old one from the DB
-            newItem._size = oldRecord._fileSize;
+            newItem._size = oldRecord.size();
         }
     }
     const auto result = propagator()->updateMetadata(newItem);

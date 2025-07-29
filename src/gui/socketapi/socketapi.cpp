@@ -614,14 +614,14 @@ void SocketApi::command_MOVE_ITEM(const QString &localFile, SocketListener *)
 
     // If it's a conflict, we want to save it under the base name by default
     if (Utility::isConflictFile(defaultDirAndName)) {
-        defaultDirAndName = QString::fromUtf8(fileData.folder->journalDb()->conflictFileBaseName(fileData.folderRelativePath.toUtf8()));
+        defaultDirAndName = fileData.folder->journalDb()->conflictFileBaseName(fileData.folderRelativePath);
     }
 
     // If the parent doesn't accept new files, go to the root of the sync folder
     QFileInfo fileInfo(localFile);
     auto parentRecord = parentDir.journalRecord();
-    if ((fileInfo.isFile() && !parentRecord._remotePerm.hasPermission(RemotePermissions::CanAddFile))
-        || (fileInfo.isDir() && !parentRecord._remotePerm.hasPermission(RemotePermissions::CanAddSubDirectories))) {
+    if ((fileInfo.isFile() && !parentRecord.remotePerm().hasPermission(RemotePermissions::CanAddFile))
+        || (fileInfo.isDir() && !parentRecord.remotePerm().hasPermission(RemotePermissions::CanAddSubDirectories))) {
         defaultDirAndName = QFileInfo(defaultDirAndName).fileName();
     }
 
@@ -652,7 +652,7 @@ Q_INVOKABLE void OCC::SocketApi::command_OPEN_APP_LINK(const QString &localFile,
         const auto &provider = data.folder->accountState()->account()->appProvider();
         const auto record = data.journalRecord();
         if (record.isValid()) {
-            provider.open(data.folder->accountState()->account(), localFile, record._fileId);
+            provider.open(data.folder->accountState()->account(), localFile, record.fileId());
         }
     }
 }
@@ -754,7 +754,7 @@ void SocketApi::sendSharingContextMenuOptions(const FileData &fileData, SocketLi
 
     // If sharing is globally disabled, do not show any sharing entries.
     // If there is no permission to share for this file, add a disabled entry saying so
-    if (isOnTheServer && !record._remotePerm.isNull() && !record._remotePerm.hasPermission(RemotePermissions::CanReshare)) {
+    if (isOnTheServer && !record.remotePerm().isNull() && !record.remotePerm().hasPermission(RemotePermissions::CanReshare)) {
         listener->sendMessage(QStringLiteral("MENU_ITEM:DISABLED:d:") + (!record.isDirectory() ? tr("Resharing this file is not allowed") : tr("Resharing this folder is not allowed")));
     } else {
         listener->sendMessage(QStringLiteral("MENU_ITEM:SHARE") + flagString + tr("Share..."));
@@ -799,11 +799,9 @@ SyncFileStatus SocketApi::FileData::syncFileStatus() const
 
 SyncJournalFileRecord SocketApi::FileData::journalRecord() const
 {
-    SyncJournalFileRecord record;
     if (!folder)
-        return record;
-    folder->journalDb()->getFileRecord(folderRelativePath, &record);
-    return record;
+        return {};
+    return folder->journalDb()->getFileRecord(folderRelativePath);
 }
 
 SocketApi::FileData SocketApi::FileData::parentFolder() const
@@ -855,12 +853,12 @@ void SocketApi::command_GET_MENU_ITEMS(const QString &argument, OCC::SocketListe
                     const QFileInfo fileInfo(fileData.localPath);
                     const auto parentDir = fileData.parentFolder();
                     const auto parentRecord = parentDir.journalRecord();
-                    const bool canAddToDir = !parentRecord._remotePerm.isNull()
-                        && ((fileInfo.isFile() && parentRecord._remotePerm.hasPermission(RemotePermissions::CanAddFile))
-                            || (fileInfo.isDir() && parentRecord._remotePerm.hasPermission(RemotePermissions::CanAddSubDirectories)));
+                    const bool canAddToDir = !parentRecord.remotePerm().isNull()
+                        && ((fileInfo.isFile() && parentRecord.remotePerm().hasPermission(RemotePermissions::CanAddFile))
+                            || (fileInfo.isDir() && parentRecord.remotePerm().hasPermission(RemotePermissions::CanAddSubDirectories)));
                     const bool canChangeFile = !isOnTheServer
-                        || (record._remotePerm.hasPermission(RemotePermissions::CanDelete) && record._remotePerm.hasPermission(RemotePermissions::CanMove)
-                            && record._remotePerm.hasPermission(RemotePermissions::CanRename));
+                        || (record.remotePerm().hasPermission(RemotePermissions::CanDelete) && record.remotePerm().hasPermission(RemotePermissions::CanMove)
+                            && record.remotePerm().hasPermission(RemotePermissions::CanRename));
 
                     if (isConflict && canChangeFile) {
                         if (canAddToDir) {
