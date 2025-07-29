@@ -643,5 +643,5 @@ private Q_SLOTS:
 
 };
 
-QTEST_APPLESS_MAIN(TestExcludedFiles)
+QTEST_GUILESS_MAIN(TestExcludedFiles)
 #include "testexcludedfiles.moc"
