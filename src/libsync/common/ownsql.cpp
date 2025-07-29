@@ -418,6 +418,8 @@ void SqlQuery::bindValueInternal(int pos, const QVariant &value)
         res = sqlite3_bind_double(_stmt, pos, value.toDouble());
         break;
     case QMetaType::UInt:
+    case QMetaType::Long:
+    case QMetaType::ULong:
     case QMetaType::LongLong:
     case QMetaType::ULongLong:
         res = sqlite3_bind_int64(_stmt, pos, value.toLongLong());
@@ -450,6 +452,8 @@ void SqlQuery::bindValueInternal(int pos, const QVariant &value)
         break;
     }
     default: {
+        qCWarning(lcSql) << "Unsupported raw type detected" << value.typeId() << value.typeName() << value;
+        Q_ASSERT(false);
         QString str = value.toString();
         // SQLITE_TRANSIENT makes sure that sqlite buffers the data
         res = sqlite3_bind_text16(_stmt, pos, str.utf16(), static_cast<int>(str.size() * sizeof(ushort)), SQLITE_TRANSIENT);
