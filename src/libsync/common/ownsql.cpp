@@ -407,10 +407,6 @@ void SqlQuery::bindValueInternal(int pos, const QVariant &value)
         return;
     }
 
-    const auto bindUtf16 = [this](int pos, const QString &str) {
-        return sqlite3_bind_text16(_stmt, pos, str.utf16(), static_cast<int>(str.size() * sizeof(ushort)), SQLITE_TRANSIENT);
-    };
-
     switch (value.typeId()) {
     case QMetaType::Int:
     case QMetaType::Bool:
@@ -426,23 +422,11 @@ void SqlQuery::bindValueInternal(int pos, const QVariant &value)
     case QMetaType::ULongLong:
         res = sqlite3_bind_int64(_stmt, pos, value.toLongLong());
         break;
-    case QMetaType::QDateTime: {
-        const QDateTime dateTime = value.toDateTime();
-        const QString str = dateTime.toString(QStringLiteral("yyyy-MM-ddThh:mm:ss.zzz"));
-        res = bindUtf16(pos, str);
-        break;
-    }
-    case QMetaType::QTime: {
-        const QTime time = value.toTime();
-        const QString str = time.toString(QStringLiteral("hh:mm:ss.zzz"));
-        res = bindUtf16(pos, str);
-        break;
-    }
     case QMetaType::QString: {
-        if (!value.toString().isNull()) {
+        if (!value.isNull()) {
             // lifetime of string == lifetime of its qvariant
             const QString *str = static_cast<const QString *>(value.constData());
-            res = bindUtf16(pos, *str);
+            res = sqlite3_bind_text16(_stmt, pos, str->utf16(), static_cast<int>(str->size() * sizeof(ushort)), SQLITE_TRANSIENT);
         } else {
             res = sqlite3_bind_null(_stmt, pos);
         }
@@ -455,10 +439,6 @@ void SqlQuery::bindValueInternal(int pos, const QVariant &value)
     }
     default: {
         qCWarning(lcSql) << "Unsupported raw type detected" << value.typeId() << value.typeName() << value.metaType().sizeOf() << value;
-        Q_ASSERT(false);
-        QString str = value.toString();
-        // SQLITE_TRANSIENT makes sure that sqlite buffers the data
-        res = sqlite3_bind_text16(_stmt, pos, str.utf16(), static_cast<int>(str.size() * sizeof(ushort)), SQLITE_TRANSIENT);
         break;
     }
     }
