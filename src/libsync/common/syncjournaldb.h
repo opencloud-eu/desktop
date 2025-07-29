@@ -82,8 +82,6 @@ public:
 
     QString databaseFilePath() const;
 
-    static qint64 getPHash(const QByteArray &);
-
     void setErrorBlacklistEntry(const SyncJournalErrorBlacklistRecord &item);
     void wipeErrorBlacklistEntry(const QString &relativeFile);
     void wipeErrorBlacklistEntry(const QString &relativeFile, SyncJournalErrorBlacklistRecord::Category category);
