@@ -17,10 +17,10 @@ clone:
     image: opencloudeu/woodpecker-windows-git-plugin:v2
 
 steps:
-  # - name: Clone Craftmaster
-  #   image: opencloudeu/woodpecker-windows-git:v2
-  #   commands:
-  #     - git clone --depth=1 https://invent.kde.org/kde/craftmaster.git $$env:CI_WORKSPACE/woodpecker_craft/CraftMaster/CraftMaster
+  - name: Clone Craftmaster
+    image: opencloudeu/woodpecker-windows-git:v2
+    commands:
+      - git clone --depth=1 https://invent.kde.org/kde/craftmaster.git $$env:CI_WORKSPACE/woodpecker_craft/CraftMaster/CraftMaster
 
   # - name: Craft setup
   #   image: opencloudeu/woodpecker-windows-desktop-build-tools:v1
