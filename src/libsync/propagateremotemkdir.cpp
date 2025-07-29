@@ -23,6 +23,7 @@
 #include <QLoggingCategory>
 #include <QtConcurrent>
 
+using namespace Qt::Literals::StringLiterals;
 using namespace std::chrono_literals;
 
 namespace {
@@ -111,10 +112,17 @@ void PropagateRemoteMkdir::slotMkcolJobFinished()
 
     propagator()->_activeJobList.append(this);
     auto propfindJob = new PropfindJob(_job->account(), _job->baseUrl(), _job->path(), PropfindJob::Depth::Zero, this);
-    propfindJob->setProperties({"http://owncloud.org/ns:permissions"});
+    QList<QByteArray> properties{{"http://owncloud.org/ns:permissions"_ba}};
+    if (_item->_fileId.isNull()) {
+        properties << "http://owncloud.org/ns:fileid"_ba;
+    }
+    propfindJob->setProperties(properties);
     connect(propfindJob, &PropfindJob::directoryListingIterated, this, [this](const QString &, const QMap<QString, QString> &result) {
         propagator()->_activeJobList.removeOne(this);
-        _item->_remotePerm = RemotePermissions::fromServerString(result.value(QStringLiteral("permissions")));
+        _item->_remotePerm = RemotePermissions::fromServerString(result.value("permissions"_L1));
+        if (_item->_fileId.isNull()) {
+            _item->_fileId = result.value("fileid"_L1).toUtf8();
+        }
         success();
     });
     connect(propfindJob, &PropfindJob::finishedWithError, this, [this] {
