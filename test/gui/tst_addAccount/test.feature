@@ -75,7 +75,7 @@ Feature: adding accounts
         Then the default local sync path should contain "%home%/OpenCloud (2)" in the configuration wizard
         When the user selects download everything option in advanced section
         Then the button to open sync connection wizard should be disabled
-        
+
     @skipOnWindows @issue-435
     Scenario: Re-add an account
         Given user "Alice" has created folder "large-folder" in the server
