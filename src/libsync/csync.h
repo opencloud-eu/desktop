@@ -72,7 +72,6 @@ Q_FLAG_NS(SyncInstruction)
 Q_DECLARE_FLAGS(SyncInstructions, SyncInstruction)
 Q_DECLARE_OPERATORS_FOR_FLAGS(SyncInstructions)
 
-// This enum is used with BITFIELD(3) and BITFIELD(4) in several places.
 // Also, this value is stored in the database, so beware of value changes.
 enum ItemType : uint8_t {
     ItemTypeFile = 0,

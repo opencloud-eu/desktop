@@ -55,8 +55,28 @@ bool SyncJournalErrorBlacklistRecord::isValid() const
 }
 
 SyncJournalFileRecord::SyncJournalFileRecord()
+    : d([] {
+        static auto nullData = QExplicitlySharedDataPointer{new SyncJournalFileRecordData{}};
+        return nullData;
+    }())
+{
+}
+SyncJournalFileRecord::SyncJournalFileRecord(const QString &path, ItemType type)
     : d(new SyncJournalFileRecordData)
 {
+    d->_path = path;
+    d->_type = type;
+}
+
+bool SyncJournalFileRecord::validateRecord()
+{
+    Q_ASSERT(d != SyncJournalFileRecord().d);
+    Q_ASSERT(!remotePerm().isNull());
+    Q_ASSERT(inode() != 0);
+    Q_ASSERT(modtime() != 0);
+    Q_ASSERT(!fileId().isEmpty());
+    Q_ASSERT(type() != ItemTypeUnsupported);
+    return true;
 }
 
 SyncJournalFileRecord::SyncJournalFileRecord(const QString &error)
@@ -69,29 +89,39 @@ SyncJournalFileRecord::~SyncJournalFileRecord() = default;
 SyncJournalFileRecord::SyncJournalFileRecord(const SyncJournalFileRecord &other) = default;
 SyncJournalFileRecord &SyncJournalFileRecord::operator=(const SyncJournalFileRecord &other) = default;
 
+QByteArray SyncJournalFileRecord::query()
+{
+    return QByteArrayLiteral("SELECT path, inode, modtime, type, md5, fileid, remotePerm, filesize,"
+                             " ignoredChildrenRemote, contentchecksumtype.name || ':' || contentChecksum,"
+                             " hasDirtyPlaceholder"
+                             " FROM metadata"
+                             " LEFT JOIN checksumtype as contentchecksumtype ON metadata.contentChecksumTypeId == contentchecksumtype.id ");
+}
+
 SyncJournalFileRecord SyncJournalFileRecord::fromSqlQuery(OCC::SqlQuery &query)
 {
-    SyncJournalFileRecord rec;
-    rec.d->_path = QString::fromUtf8(query.baValue(0)); // historically utf8
+    // keep in sync with  query
+    SyncJournalFileRecord rec(QString::fromUtf8(query.baValue(0)), static_cast<ItemType>(query.intValue(3)));
     rec.d->_inode = query.int64Value(1);
     rec.d->_modtime = query.int64Value(2);
-    rec.d->_type = static_cast<ItemType>(query.intValue(3));
     rec.d->_etag = QString::fromUtf8(query.baValue(4));
     rec.d->_fileId = query.baValue(5);
     rec.d->_remotePerm = OCC::RemotePermissions::fromDbValue(query.baValue(6));
     rec.d->_fileSize = query.int64Value(7);
     rec.d->_serverHasIgnoredFiles = (query.intValue(8) > 0);
     rec.d->_checksumHeader = query.baValue(9);
+    rec.d->_hasDirtyPlaceholder = query.intValue(10);
+    qCDebug(lcSyncJournalFileRecord) << "Restored from db:" << rec;
+    Q_ASSERT(rec.validateRecord());
     return rec;
 }
+
 SyncJournalFileRecord SyncJournalFileRecord::fromSyncFileItem(const SyncFileItem &syncFile)
 {
-    SyncJournalFileRecord rec;
-    rec.d->_path = syncFile.destination();
+    SyncJournalFileRecord rec(syncFile.destination(), syncFile._type);
     rec.d->_modtime = syncFile._modtime;
 
     // Some types should never be written to the database when propagation completes
-    rec.d->_type = syncFile._type;
     if (rec.d->_type == ItemTypeVirtualFileDownload)
         rec.d->_type = ItemTypeFile;
     if (rec.d->_type == ItemTypeVirtualFileDehydration)
@@ -104,11 +134,7 @@ SyncJournalFileRecord SyncJournalFileRecord::fromSyncFileItem(const SyncFileItem
     rec.d->_remotePerm = syncFile._remotePerm;
     rec.d->_serverHasIgnoredFiles = syncFile._serverHasIgnoredFiles;
     rec.d->_checksumHeader = syncFile._checksumHeader;
-    Q_ASSERT(!rec.remotePerm().isNull());
-    Q_ASSERT(rec.inode() != 0);
-    Q_ASSERT(rec.modtime() != 0);
-    Q_ASSERT(!rec.fileId().isEmpty());
-    Q_ASSERT(rec.type() != ItemTypeUnsupported);
+    Q_ASSERT(rec.validateRecord());
 
     return rec;
 }
@@ -163,10 +189,12 @@ QByteArray SyncJournalFileRecord::checksumHeader() const
 {
     return d->_checksumHeader;
 }
+
 time_t SyncJournalFileRecord::modtime() const
 {
     return d->_modtime;
 }
+
 int64_t SyncJournalFileRecord::size() const
 {
     return d->_fileSize;
