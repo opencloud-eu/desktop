@@ -45,3 +45,21 @@ Feature: deleting files and folders
         And as "Alice" folder "test-folder1" should not exist in the server
         And as "Alice" file "textfile2.txt" should exist in the server
         And as "Alice" folder "test-folder2" should exist in the server
+
+
+    Scenario: Delete multiple files
+        Given user "Alice" has uploaded file with content "openCloud test text file" to "textfile0.txt" in the server
+        Given user "Alice" has uploaded file with content "openCloud test text file" to "textfile1.txt" in the server
+        Given user "Alice" has uploaded file with content "openCloud test text file" to "textfile2.txt" in the server
+        And user "Alice" has set up a client with default settings
+        When the user deletes the following files
+        	| file          |
+            | textfile0.txt |
+            | textfile1.txt |
+            | textfile2.txt |
+        And the user waits for the files to sync
+        Then as "Alice" following files should not exist in the server
+            | file          |
+            | textfile0.txt |
+            | textfile1.txt |
+            | textfile2.txt |

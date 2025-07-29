@@ -100,6 +100,14 @@ def add_copy_suffix(resource_path, resource_type):
     return resource_path + ' - Copy'
 
 
+def deleteResource(resource, resource_type):
+    resource_path = sanitize_path(get_resource_path(resource))
+    if resource_type == 'file':
+        os.remove(resource_path)
+    else:
+        shutil.rmtree(resource_path)
+
+
 @When(
     'user "|any|" creates a file "|any|" with the following content inside the sync folder'
 )
@@ -243,11 +251,7 @@ def step(context, user, resource, content):
 def step(context, item_type, resource):
     wait_for_client_to_be_ready()
 
-    resource_path = sanitize_path(get_resource_path(resource))
-    if item_type == 'file':
-        os.remove(resource_path)
-    else:
-        shutil.rmtree(resource_path)
+    deleteResource(resource, item_type)
 
 
 @When('user "|any|" creates the following files inside the sync folder:')
@@ -373,3 +377,13 @@ def step(context, folder_name):
     remember_path(folder_path)
     # when account is added, folder with suffix will be created
     remember_path(f'{folder_path} (2)')
+
+
+@When('the user deletes the following files')
+def step(context):
+    wait_for_client_to_be_ready()
+    
+    for row in context.table[1:]:
+        filename = row[0]
+        deleteResource(filename, 'file')
+
