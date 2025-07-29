@@ -1015,8 +1015,6 @@ private Q_SLOTS:
             auto vfs = QSharedPointer<Vfs>(VfsPluginManager::instance().createVfsFromPlugin(vfsMode).release());
             QVERIFY(vfs);
             fakeFolder.switchToVfs(vfs);
-            fakeFolder.syncJournal().internalPinStates().setForPath("", PinState::OnlineOnly);
-
             // make files virtual
             QVERIFY(fakeFolder.applyLocalModificationsAndSync());
         }
@@ -1033,9 +1031,7 @@ private Q_SLOTS:
         // sync2 file is in error state, checkErrorBlacklisting sets instruction to IGNORED
         QVERIFY(!fakeFolder.applyLocalModificationsAndSync());
 
-        if (vfsMode != Vfs::Off)
-        {
-            fakeFolder.syncJournal().internalPinStates().setForPath("", PinState::AlwaysLocal);
+        if (vfsMode != Vfs::Off) {
             QVERIFY(!fakeFolder.applyLocalModificationsAndSync());
         }
 

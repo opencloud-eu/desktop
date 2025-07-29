@@ -99,45 +99,6 @@ void Vfs::start(const VfsSetupParams &params)
     startImpl(this->params());
 }
 
-bool Vfs::setPinStateInDb(const QString &folderPath, PinState state)
-{
-    auto path = folderPath.toUtf8();
-    params().journal->internalPinStates().wipeForPathAndBelow(path);
-    if (state != PinState::Inherited)
-        params().journal->internalPinStates().setForPath(path, state);
-    return true;
-}
-
-Optional<PinState> Vfs::pinStateInDb(const QString &folderPath)
-{
-    auto pin = params().journal->internalPinStates().effectiveForPath(folderPath.toUtf8());
-    return pin;
-}
-
-Vfs::AvailabilityResult Vfs::availabilityInDb(const QString &folderPath)
-{
-    auto path = folderPath.toUtf8();
-    auto pin = params().journal->internalPinStates().effectiveForPathRecursive(path);
-    // not being able to retrieve the pin state isn't too bad
-    auto hydrationStatus = params().journal->hasHydratedOrDehydratedFiles(path);
-    if (!hydrationStatus)
-        return AvailabilityError::DbError;
-
-    if (hydrationStatus->hasDehydrated) {
-        if (hydrationStatus->hasHydrated)
-            return VfsItemAvailability::Mixed;
-        if (pin && *pin == PinState::OnlineOnly)
-            return VfsItemAvailability::OnlineOnly;
-        else
-            return VfsItemAvailability::AllDehydrated;
-    } else if (hydrationStatus->hasHydrated) {
-        if (pin && *pin == PinState::AlwaysLocal)
-            return VfsItemAvailability::AlwaysLocal;
-        else
-            return VfsItemAvailability::AllHydrated;
-    }
-    return AvailabilityError::NoSuchItem;
-}
 
 void Vfs::wipeDehydratedVirtualFiles()
 {

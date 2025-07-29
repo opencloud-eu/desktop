@@ -864,7 +864,6 @@ FakeFolder::FakeFolder(const FileInfo &fileTemplate, OCC::Vfs::Mode vfsMode, boo
 
     if (vfsMode != OCC::Vfs::Off) {
         const auto pinState = filesAreDehydrated ? OCC::PinState::OnlineOnly : OCC::PinState::AlwaysLocal;
-        syncJournal().internalPinStates().setForPath("", pinState);
         OC_ENFORCE(vfs->setPinState(QString(), pinState));
     }
 

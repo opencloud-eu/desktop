@@ -236,11 +236,6 @@ protected:
      */
     virtual void startImpl(const VfsSetupParams &params) = 0;
 
-    // Db-backed pin state handling. Derived classes may use it to implement pin states.
-    bool setPinStateInDb(const QString &folderPath, PinState state);
-    Optional<PinState> pinStateInDb(const QString &folderPath);
-    AvailabilityResult availabilityInDb(const QString &folderPath);
-
 private:
     // the parameters passed to start()
     std::unique_ptr<VfsSetupParams> _setupParams;
