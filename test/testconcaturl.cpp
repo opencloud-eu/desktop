@@ -102,5 +102,5 @@ private Q_SLOTS:
 
 };
 
-QTEST_APPLESS_MAIN(TestConcatUrl)
+QTEST_GUILESS_MAIN(TestConcatUrl)
 #include "testconcaturl.moc"
