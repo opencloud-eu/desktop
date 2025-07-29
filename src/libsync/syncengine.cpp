@@ -624,7 +624,6 @@ void SyncEngine::slotPropagationFinished(bool success)
         _propagator->updateMetadata(*SyncFileItem::fromSyncJournalFileRecord(record));
     }
 
-    _journal->deleteStaleFlagsEntries();
     _journal->commit(QStringLiteral("All Finished."), false);
 
     // Send final progress information even if no
