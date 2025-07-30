@@ -71,12 +71,12 @@ FolderWizardPrivate::FolderWizardPrivate(FolderWizard *q, const AccountStatePtr 
     , _account(account)
     , _spacesPage(new SpacesPage(account->account(), q))
 {
-    q->setPage(FolderWizard::Page_Space, _spacesPage);
-
     if (!_account->account()->hasDefaultSyncRoot()) {
         _folderWizardSourcePage = new FolderWizardLocalPath(this);
         q->setPage(FolderWizard::Page_Source, _folderWizardSourcePage);
     }
+
+    q->setPage(FolderWizard::Page_Space, _spacesPage);
 
     if (VfsPluginManager::instance().bestAvailableVfsMode() != Vfs::WindowsCfApi) {
         _folderWizardSelectiveSyncPage = new FolderWizardSelectiveSync(this);
