@@ -49,6 +49,7 @@ target_sources(OpenCloudGui PRIVATE
     ignorelisteditor.cpp
     lockwatcher.cpp
     logbrowser.cpp
+    messagebox.cpp
     networkinformation.cpp
     networksettings.cpp
     notifications.cpp
