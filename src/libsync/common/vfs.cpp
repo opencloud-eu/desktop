@@ -72,16 +72,27 @@ QString Utility::enumToString(Vfs::Mode mode)
 Result<void, QString> Vfs::checkAvailability(const QString &path, Vfs::Mode mode)
 {
 #ifdef Q_OS_WIN
+    const auto canonicalPath = [path] {
+        QFileInfo info(path);
+        if (info.exists()) {
+            return info.canonicalFilePath();
+        } else {
+            return info.absoluteFilePath();
+        }
+    }();
+    const auto fileSystem = FileSystem::fileSystemForPath(canonicalPath);
+    if (fileSystem.startsWith("ReFS"_L1, Qt::CaseInsensitive)) {
+        return tr("ReFS is currently not supported.");
+    }
     if (mode == Mode::WindowsCfApi) {
-        const auto info = QFileInfo(path);
-        if (QDir(info.canonicalFilePath()).isRoot()) {
+        if (QDir(canonicalPath).isRoot()) {
             return tr("The Virtual filesystem feature does not support a drive as sync root");
         }
-        const auto fs = FileSystem::fileSystemForPath(info.absoluteFilePath());
-        if (fs != QLatin1String("NTFS")) {
-            return tr("The Virtual filesystem feature requires a NTFS file system, %1 is using %2").arg(path, fs);
+
+        if (!fileSystem.startsWith("NTFS"_L1, Qt::CaseInsensitive)) {
+            return tr("The Virtual filesystem feature requires a NTFS file system, %1 is using %2").arg(path, fileSystem);
         }
-        const auto type = GetDriveTypeW(reinterpret_cast<const wchar_t *>(QDir::toNativeSeparators(info.absoluteFilePath().mid(0, 3)).utf16()));
+        const auto type = GetDriveTypeW(reinterpret_cast<const wchar_t *>(canonicalPath.mid(0, 3).utf16()));
         if (type == DRIVE_REMOTE) {
             return tr("The Virtual filesystem feature is not supported on network drives");
         }
