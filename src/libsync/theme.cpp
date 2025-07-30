@@ -355,16 +355,6 @@ QString Theme::versionSwitchOutput() const
     return aboutVersions(Theme::VersionFormat::Url);
 }
 
-bool Theme::showVirtualFilesOption() const
-{
-    return true;
-}
-
-bool Theme::forceVirtualFilesOption() const
-{
-    return false;
-}
-
 bool Theme::connectionValidatorClearCookies() const
 {
     return false;

@@ -28,8 +28,7 @@ class AccountConfiguredWizardPage : public AbstractSetupWizardPage
     Q_OBJECT
 
 public:
-    explicit AccountConfiguredWizardPage(
-        const QString &defaultSyncTargetDir, const QString &userChosenSyncTargetDir, bool vfsIsAvailable, bool enableVfsByDefault);
+    explicit AccountConfiguredWizardPage(const QString &defaultSyncTargetDir, const QString &userChosenSyncTargetDir);
     ~AccountConfiguredWizardPage() noexcept override;
 
     QString syncTargetDir() const;

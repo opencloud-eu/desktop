@@ -257,15 +257,6 @@ public:
     virtual QString versionSwitchOutput() const;
 
     /**
-     * @brief Disables all vfs related options, if vfs is still wanted we recommend to set forceVirtualFilesOption
-     *
-     * default: true
-     */
-    virtual bool showVirtualFilesOption() const;
-
-    virtual bool forceVirtualFilesOption() const;
-
-    /**
      * Whether to clear cookies before checking status.php
      * This is used with F5 BIG-IP seups.
      */

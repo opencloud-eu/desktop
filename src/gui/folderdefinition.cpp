@@ -102,7 +102,16 @@ FolderDefinition FolderDefinition::load(QSettings &settings)
     folder._priority = settings.value(priorityC(), 0).toUInt();
 
     folder.virtualFilesMode = Vfs::Off;
+
     QString vfsModeString = settings.value("virtualFilesMode").toString();
+#ifdef Q_OS_WIN
+    // we always use vfs on windows if available
+    if (auto result = Vfs::checkAvailability(folder.localPath(), Vfs::WindowsCfApi); result) {
+        vfsModeString = Utility::enumToString(Vfs::WindowsCfApi);
+    } else {
+        qCWarning(lcFolder) << "Failed to upgrade" << folder.localPath() << "to" << Vfs::WindowsCfApi << result.error();
+    }
+#endif
     if (!vfsModeString.isEmpty()) {
         if (auto mode = Vfs::modeFromString(vfsModeString)) {
             folder.virtualFilesMode = *mode;

@@ -40,16 +40,11 @@ public:
     bool validatePage() override;
 
     void initializePage() override;
-    bool useVirtualFiles() const;
 
     const QSet<QString> &selectiveSyncBlackList() const;
 
-private Q_SLOTS:
-    void virtualFilesCheckboxClicked();
-
 private:
     SelectiveSyncWidget *_selectiveSync;
-    QCheckBox *_virtualFilesCheckBox = nullptr;
     QSet<QString> _selectiveSyncBlackList;
 };
 
