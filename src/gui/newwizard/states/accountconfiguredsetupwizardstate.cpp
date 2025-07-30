@@ -23,19 +23,6 @@ namespace OCC::Wizard {
 AccountConfiguredSetupWizardState::AccountConfiguredSetupWizardState(SetupWizardContext *context)
     : AbstractSetupWizardState(context)
 {
-    // being pessimistic by default
-    bool vfsIsAvailable = false;
-    bool enableVfsByDefault = false;
-
-    switch (VfsPluginManager::instance().bestAvailableVfsMode()) {
-    case Vfs::WindowsCfApi:
-        vfsIsAvailable = true;
-        enableVfsByDefault = true;
-        break;
-    default:
-        break;
-    }
-
     // We need some sync root for spaces. It's never a Space folder.
     // We pass an invalid UUID, because we don't "own" a syncroot yet, and all checks against UUIDs should fail.
     const QString defaultSyncTargetDir = FolderMan::suggestSyncFolder(FolderMan::NewFolderType::SpacesSyncRoot, {});
@@ -45,7 +32,7 @@ AccountConfiguredSetupWizardState::AccountConfiguredSetupWizardState(SetupWizard
         syncTargetDir = defaultSyncTargetDir;
     }
 
-    _page = new AccountConfiguredWizardPage(defaultSyncTargetDir, syncTargetDir, vfsIsAvailable, enableVfsByDefault);
+    _page = new AccountConfiguredWizardPage(defaultSyncTargetDir, syncTargetDir);
 }
 
 SetupWizardState AccountConfiguredSetupWizardState::state() const
@@ -68,6 +55,11 @@ void AccountConfiguredSetupWizardState::evaluatePage()
 
         if (!QDir::isAbsolutePath(syncTargetDir)) {
             Q_EMIT evaluationFailed(errorMessageTemplate.arg(QStringLiteral("path must be absolute")));
+            return;
+        }
+
+        if (auto result = Vfs::checkAvailability(syncTargetDir, VfsPluginManager::instance().bestAvailableVfsMode()); !result) {
+            Q_EMIT evaluationFailed(errorMessageTemplate.arg(result.error()));
             return;
         }
 
