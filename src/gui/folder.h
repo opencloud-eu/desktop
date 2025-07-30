@@ -59,6 +59,7 @@ class OPENCLOUD_GUI_EXPORT Folder : public QObject
     Q_PROPERTY(bool isSyncPaused READ isSyncPaused NOTIFY syncPausedChanged)
     Q_PROPERTY(bool isSyncRunning READ isSyncRunning NOTIFY isSyncRunningChanged)
     Q_PROPERTY(bool isDeployed READ isDeployed CONSTANT)
+    Q_PROPERTY(Vfs::Mode vfsMode READ vfsMode CONSTANT)
     QML_ELEMENT
     QML_UNCREATABLE("Folders can only be created by the FolderManager")
 
@@ -202,6 +203,8 @@ public:
      * We will hide the remove option and the disable/enable vfs option.
      */
     bool isDeployed() const;
+
+    Vfs::Mode vfsMode() const;
 
     auto priority()
     {
