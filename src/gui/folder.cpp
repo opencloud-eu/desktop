@@ -704,6 +704,11 @@ bool Folder::isDeployed() const
     return _definition.isDeployed();
 }
 
+Vfs::Mode Folder::vfsMode() const
+{
+    return _vfs->mode();
+}
+
 bool Folder::isFileExcludedAbsolute(const QString &fullPath) const
 {
     if (OC_ENSURE_NOT(_engine.isNull())) {

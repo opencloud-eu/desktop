@@ -90,17 +90,18 @@ public:
     /** The kind of VFS in use (or no-VFS)
      *
      * Currently plugins and modes are one-to-one but that's not required.
+     * The raw integer values are used in Qml
      */
-    enum Mode { Off, WindowsCfApi };
+    enum Mode : uint8_t { Off = 0, WindowsCfApi = 1 };
     Q_ENUM(Mode)
-    enum class ConvertToPlaceholderResult { Ok, Locked };
+    enum class ConvertToPlaceholderResult : uint8_t { Ok, Locked };
     Q_ENUM(ConvertToPlaceholderResult)
 
     static Optional<Mode> modeFromString(const QString &str);
 
     static Result<void, QString> checkAvailability(const QString &path, OCC::Vfs::Mode mode);
 
-    enum class AvailabilityError {
+    enum class AvailabilityError : uint8_t {
         // Availability can't be retrieved due to db error
         DbError,
         // Availability not available since the item doesn't exist

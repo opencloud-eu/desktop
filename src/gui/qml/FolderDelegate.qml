@@ -331,6 +331,7 @@ Pane {
                                 enabled: accountSettings.accountState.state === AccountState.Connected && !folderDelegate.folder.isSyncPaused
                                 onTriggered: accountSettings.slotForceSyncCurrentFolder(folderDelegate.folder)
                                 visible: folderDelegate.folder.isReady
+                                height: visible ? implicitHeight : 0
                             }
 
                             MenuItem {
@@ -338,18 +339,21 @@ Pane {
                                 enabled: accountSettings.accountState.state === AccountState.Connected
                                 onTriggered: accountSettings.slotEnableCurrentFolder(folderDelegate.folder, true)
                                 visible: folderDelegate.folder.isReady
+                                height: visible ? implicitHeight : 0
                             }
 
                             MenuItem {
                                 text: qsTr("Choose what to sync")
                                 onTriggered: accountSettings.showSelectiveSyncDialog(folderDelegate.folder)
-                                visible: folderDelegate.folder.isReady
+                                visible: folderDelegate.folder.isReady && folderDelegate.folder.vfsMode !== 1
+                                height: visible ? implicitHeight : 0
                             }
 
                             MenuItem {
                                 text: qsTr("Remove Space")
                                 onTriggered: accountSettings.slotRemoveCurrentFolder(folderDelegate.folder)
                                 visible: !folderDelegate.isDeployed
+                                height: visible ? implicitHeight : 0
                             }
 
                             onOpened: {
