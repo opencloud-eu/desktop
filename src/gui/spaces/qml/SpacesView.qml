@@ -117,7 +117,7 @@ Pane {
                     }
 
                     background: Rectangle {
-                        color: spaceDelegate.ListView.isCurrentItem ? scrollView.palette.highlight : scrollView.palette.base
+                        color: spaceDelegate.ListView.isCurrentItem ? spacesView.palette.highlight : spacesView.palette.base
                     }
                     SpaceDelegate {
                         anchors.fill: parent
