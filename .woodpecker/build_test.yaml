@@ -30,18 +30,6 @@ steps:
     image: ${build_image}
     environment:
       CRAFT_TARGET: ${target}
-    # entrypoint: [
-    #   "pwsh",
-    #   "-noprofile",
-    #   "-noninteractive",
-    #   "-command",
-    #   "Set-StrictMode -Version Latest; `
-    #   $ErrorActionPreference = 'Stop'; `
-    #   $ProgressPreference = 'SilentlyContinue'; `
-    #   $PSNativeCommandUseErrorActionPreference = $true; `
-    #   echo $([System.Text.Encoding]::UTF8.GetString(`
-    #   [System.Convert]::FromBase64String($Env:CI_SCRIPT)`
-    #   )) | iex"]
     commands:
       - pwsh .woodpecker/build.ps1
 
