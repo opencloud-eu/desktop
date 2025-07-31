@@ -46,8 +46,8 @@
     </message>
     <message>
         <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.ui" line="147"/>
-        <source>Download everything</source>
-        <translation>Scarica tutto</translation>
+        <source>Synchronize all exisitng spaces</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.ui" line="157"/>
@@ -60,12 +60,12 @@
         <translation>Configura la sincronizzazione manualmente</translation>
     </message>
     <message>
-        <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.ui" line="207"/>
+        <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.ui" line="200"/>
         <source>Choose local download directory:</source>
         <translation>Scegli la cartella per i Download sul tuo dispositivo</translation>
     </message>
     <message>
-        <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.ui" line="230"/>
+        <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.ui" line="223"/>
         <source>Restore default value</source>
         <translation>Ripristina i valori predefiniti</translation>
     </message>
@@ -261,37 +261,37 @@ Utilità desktop per la sincronizazione dei file.</translation>
         <translation>Forza la sincronizzazione ora</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="337"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="338"/>
         <source>Resume sync</source>
         <translation>Riprendi la sincronizzazione</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="337"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="338"/>
         <source>Pause sync</source>
         <translation>Metti in pausa la sincronizzazione</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="344"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="346"/>
         <source>Choose what to sync</source>
         <translation>Scegli cosa sincronizzare</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="350"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="353"/>
         <source>Remove Space</source>
         <translation>Rimuovi lo spazio</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="356"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="360"/>
         <source>Sync options menu</source>
         <translation>Menù sincronizzazione</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="368"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="372"/>
         <source>Add Space</source>
         <translation>Aggiungi spazio</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="390"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="394"/>
         <source>You are synchronizing %1 out of %2 Spaces</source>
         <translation>Stai sincronizzando %1 di %2 Spazi</translation>
     </message>
@@ -1003,27 +1003,27 @@ L&apos;aggiornamento verrà eseguito in background e sovrascriverà il file AppI
         <translation>Commutazione della modalità VFS sulla cartella &apos;%1&apos;</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="813"/>
+        <location filename="../src/gui/folder.cpp" line="818"/>
         <source>Could not read system exclude file</source>
         <translation>Impossibile leggere il file di esclusione del sistema</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1034"/>
+        <location filename="../src/gui/folder.cpp" line="1039"/>
         <source>The folder %1 was created but was excluded from synchronization previously. Data inside it will not be synchronized.</source>
         <translation>La cartella %1 è stata creata ma in precedenza era stata esclusa dalla sincronizzazione. I dati al suo interno non verranno sincronizzati.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1037"/>
+        <location filename="../src/gui/folder.cpp" line="1042"/>
         <source>The file %1 was created but was excluded from synchronization previously. It will not be synchronized.</source>
         <translation>Il file %1 è stato creato ma è stato precedentemente escluso dalla sincronizzazione. Non verrà sincronizzato.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1041"/>
+        <location filename="../src/gui/folder.cpp" line="1046"/>
         <source>%1 is not synchronized</source>
         <translation>%1 non è sincronizzato</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1049"/>
+        <location filename="../src/gui/folder.cpp" line="1054"/>
         <source>Changes in synchronized folders could not be tracked reliably.
 
 This means that the synchronization client might not upload local changes immediately and will instead only scan for local changes and upload them occasionally (every two hours by default).
@@ -1195,13 +1195,8 @@ Si prega di considerare la rimozione di questa cartella dall&apos;account e di a
 <context>
     <name>OCC::FolderWizard</name>
     <message>
-        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="127"/>
-        <source>Virtual files are not available for the selected folder</source>
-        <translation>I file virtuali non sono disponibili per la cartella selezionata.</translation>
-    </message>
-    <message>
-        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="141"/>
-        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="143"/>
+        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="131"/>
+        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="133"/>
         <source>Add Space</source>
         <translation>Aggiungi spazio</translation>
     </message>
@@ -1209,17 +1204,9 @@ Si prega di considerare la rimozione di questa cartella dall&apos;account e di a
 <context>
     <name>OCC::FolderWizardLocalPath</name>
     <message>
-        <location filename="../src/gui/folderwizard/folderwizardlocalpath.cpp" line="97"/>
+        <location filename="../src/gui/folderwizard/folderwizardlocalpath.cpp" line="103"/>
         <source>Select the Spaces root folder</source>
         <translation>Seleziona la cartella radice di Spaces</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::FolderWizardSelectiveSync</name>
-    <message>
-        <location filename="../src/gui/folderwizard/folderwizardselectivesync.cpp" line="47"/>
-        <source>Use virtual files instead of downloading content immediately</source>
-        <translation>Usa file virtuali invece di scaricare immediatamente il contenuto</translation>
     </message>
 </context>
 <context>
@@ -2403,17 +2390,17 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::SettingsDialog</name>
     <message>
-        <location filename="../src/gui/settingsdialog.cpp" line="113"/>
+        <location filename="../src/gui/settingsdialog.cpp" line="114"/>
         <source>Hide</source>
         <translation>Nascondi</translation>
     </message>
     <message>
-        <location filename="../src/gui/settingsdialog.cpp" line="122"/>
+        <location filename="../src/gui/settingsdialog.cpp" line="123"/>
         <source>Quit %1</source>
         <translation>Esci da %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/settingsdialog.cpp" line="123"/>
+        <location filename="../src/gui/settingsdialog.cpp" line="124"/>
         <source>Are you sure you want to quit %1?</source>
         <translation>Vuoi davvero uscire da %1?</translation>
     </message>
@@ -2777,17 +2764,22 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::Vfs</name>
     <message>
-        <location filename="../src/libsync/common/vfs.cpp" line="78"/>
+        <location filename="../src/libsync/common/vfs.cpp" line="85"/>
+        <source>ReFS is currently not supported.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/libsync/common/vfs.cpp" line="89"/>
         <source>The Virtual filesystem feature does not support a drive as sync root</source>
         <translation>La funzionalità del file system virtuale non supporta un&apos;unità come root di sincronizzazione</translation>
     </message>
     <message>
-        <location filename="../src/libsync/common/vfs.cpp" line="82"/>
+        <location filename="../src/libsync/common/vfs.cpp" line="93"/>
         <source>The Virtual filesystem feature requires a NTFS file system, %1 is using %2</source>
         <translation>La funzionalità del file system virtuale richiede un file system NTFS, %1 utilizza %2</translation>
     </message>
     <message>
-        <location filename="../src/libsync/common/vfs.cpp" line="86"/>
+        <location filename="../src/libsync/common/vfs.cpp" line="97"/>
         <source>The Virtual filesystem feature is not supported on network drives</source>
         <translation>La funzionalità del file system virtuale non è supportata sulle unità di rete</translation>
     </message>
@@ -2834,7 +2826,7 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::Wizard::AccountConfiguredSetupWizardState</name>
     <message>
-        <location filename="../src/gui/newwizard/states/accountconfiguredsetupwizardstate.cpp" line="67"/>
+        <location filename="../src/gui/newwizard/states/accountconfiguredsetupwizardstate.cpp" line="54"/>
         <source>Invalid local download directory: %1</source>
         <translation>Directory di download locale non valida: %1</translation>
     </message>
@@ -2842,24 +2834,14 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::Wizard::AccountConfiguredWizardPage</name>
     <message>
-        <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.cpp" line="29"/>
-        <source>Use &amp;virtual files instead of downloading content immediately</source>
-        <translation>Utilizza file virtuali invece di scaricare immediatamente il contenuto</translation>
-    </message>
-    <message>
-        <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.cpp" line="46"/>
-        <source>%1 (recommended)</source>
-        <translation>%1 (consigliato)</translation>
-    </message>
-    <message>
-        <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.cpp" line="64"/>
-        <source>The virtual filesystem feature is not available for this installation.</source>
-        <translation>La funzionalità del file system virtuale non è disponibile per questa installazione.</translation>
-    </message>
-    <message>
-        <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.cpp" line="68"/>
+        <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.cpp" line="33"/>
         <source>Select the local folder</source>
         <translation>Seleziona la cartella locale</translation>
+    </message>
+    <message>
+        <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.cpp" line="42"/>
+        <source>Sync location not supported</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

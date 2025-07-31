@@ -46,8 +46,8 @@
     </message>
     <message>
         <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.ui" line="147"/>
-        <source>Download everything</source>
-        <translation>Tout télécharger</translation>
+        <source>Synchronize all exisitng spaces</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.ui" line="157"/>
@@ -60,12 +60,12 @@
         <translation>Configurer la synchronisation manuellement</translation>
     </message>
     <message>
-        <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.ui" line="207"/>
+        <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.ui" line="200"/>
         <source>Choose local download directory:</source>
         <translation>Choisissez le dossier pour téléchargement local :</translation>
     </message>
     <message>
-        <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.ui" line="230"/>
+        <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.ui" line="223"/>
         <source>Restore default value</source>
         <translation>Rétablir la valeur par défaut</translation>
     </message>
@@ -262,37 +262,37 @@ Utilitaire de bureau pour la synchronisation de fichiers.</translation>
         <translation>Forcer la synchronisation maintenant</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="337"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="338"/>
         <source>Resume sync</source>
         <translation>Reprendre la synchronisation</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="337"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="338"/>
         <source>Pause sync</source>
         <translation>Suspendre la synchronisation</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="344"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="346"/>
         <source>Choose what to sync</source>
         <translation>Choisissez ce que vous souhaitez synchroniser</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="350"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="353"/>
         <source>Remove Space</source>
         <translation>Supprimer l&apos;Espace</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="356"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="360"/>
         <source>Sync options menu</source>
         <translation>Menu des options de synchronisation</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="368"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="372"/>
         <source>Add Space</source>
         <translation>Ajouter un Espace</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="390"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="394"/>
         <source>You are synchronizing %1 out of %2 Spaces</source>
         <translation>Vous synchronisez %1 sur %2 Espaces</translation>
     </message>
@@ -1001,27 +1001,27 @@ La mise à jour sera effectuée en arrière-plan et écrasera le fichier AppImag
         <translation>Changement de mode VFS sur le dossier &apos;%1&apos;.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="813"/>
+        <location filename="../src/gui/folder.cpp" line="818"/>
         <source>Could not read system exclude file</source>
         <translation>Impossible de lire le fichier d&apos;exclusion système</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1034"/>
+        <location filename="../src/gui/folder.cpp" line="1039"/>
         <source>The folder %1 was created but was excluded from synchronization previously. Data inside it will not be synchronized.</source>
         <translation>Le dossier %1 a été créé mais a été exclu de la synchronisation précédemment. Les données qu&apos;il contient ne seront pas synchronisées.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1037"/>
+        <location filename="../src/gui/folder.cpp" line="1042"/>
         <source>The file %1 was created but was excluded from synchronization previously. It will not be synchronized.</source>
         <translation>Le fichier %1 a été créé mais a été exclu de la synchronisation précédemment. Il ne sera pas synchronisé.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1041"/>
+        <location filename="../src/gui/folder.cpp" line="1046"/>
         <source>%1 is not synchronized</source>
         <translation>%1 n&apos;est pas synchronisé</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1049"/>
+        <location filename="../src/gui/folder.cpp" line="1054"/>
         <source>Changes in synchronized folders could not be tracked reliably.
 
 This means that the synchronization client might not upload local changes immediately and will instead only scan for local changes and upload them occasionally (every two hours by default).
@@ -1193,13 +1193,8 @@ Veuillez envisager de supprimer ce dossier du compte et de l&apos;ajouter à nou
 <context>
     <name>OCC::FolderWizard</name>
     <message>
-        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="127"/>
-        <source>Virtual files are not available for the selected folder</source>
-        <translation>Les fichiers virtuels ne sont pas disponibles pour le dossier sélectionné</translation>
-    </message>
-    <message>
-        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="141"/>
-        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="143"/>
+        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="131"/>
+        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="133"/>
         <source>Add Space</source>
         <translation>Ajouter un Espace</translation>
     </message>
@@ -1207,17 +1202,9 @@ Veuillez envisager de supprimer ce dossier du compte et de l&apos;ajouter à nou
 <context>
     <name>OCC::FolderWizardLocalPath</name>
     <message>
-        <location filename="../src/gui/folderwizard/folderwizardlocalpath.cpp" line="97"/>
+        <location filename="../src/gui/folderwizard/folderwizardlocalpath.cpp" line="103"/>
         <source>Select the Spaces root folder</source>
         <translation>Sélectionner le dossier racine de l&apos;Espace</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::FolderWizardSelectiveSync</name>
-    <message>
-        <location filename="../src/gui/folderwizard/folderwizardselectivesync.cpp" line="47"/>
-        <source>Use virtual files instead of downloading content immediately</source>
-        <translation>Utiliser des fichiers virtuels au lieu de télécharger le contenu immédiatement</translation>
     </message>
 </context>
 <context>
@@ -2400,17 +2387,17 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
 <context>
     <name>OCC::SettingsDialog</name>
     <message>
-        <location filename="../src/gui/settingsdialog.cpp" line="113"/>
+        <location filename="../src/gui/settingsdialog.cpp" line="114"/>
         <source>Hide</source>
         <translation>Masquer</translation>
     </message>
     <message>
-        <location filename="../src/gui/settingsdialog.cpp" line="122"/>
+        <location filename="../src/gui/settingsdialog.cpp" line="123"/>
         <source>Quit %1</source>
         <translation>Quitter %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/settingsdialog.cpp" line="123"/>
+        <location filename="../src/gui/settingsdialog.cpp" line="124"/>
         <source>Are you sure you want to quit %1?</source>
         <translation>Êtes-vous sûr de vouloir quitter %1 ?</translation>
     </message>
@@ -2773,17 +2760,22 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
 <context>
     <name>OCC::Vfs</name>
     <message>
-        <location filename="../src/libsync/common/vfs.cpp" line="78"/>
+        <location filename="../src/libsync/common/vfs.cpp" line="85"/>
+        <source>ReFS is currently not supported.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/libsync/common/vfs.cpp" line="89"/>
         <source>The Virtual filesystem feature does not support a drive as sync root</source>
         <translation>La fonction de système de fichiers virtuel ne prend pas en charge un lecteur en tant que racine de synchronisation.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/common/vfs.cpp" line="82"/>
+        <location filename="../src/libsync/common/vfs.cpp" line="93"/>
         <source>The Virtual filesystem feature requires a NTFS file system, %1 is using %2</source>
         <translation>Le système de fichiers virtuel nécessite un système de fichiers NTFS, or %1 utilise %2</translation>
     </message>
     <message>
-        <location filename="../src/libsync/common/vfs.cpp" line="86"/>
+        <location filename="../src/libsync/common/vfs.cpp" line="97"/>
         <source>The Virtual filesystem feature is not supported on network drives</source>
         <translation>Le système de fichiers virtuel n’est pas pris en charge sur les disques réseau</translation>
     </message>
@@ -2829,7 +2821,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
 <context>
     <name>OCC::Wizard::AccountConfiguredSetupWizardState</name>
     <message>
-        <location filename="../src/gui/newwizard/states/accountconfiguredsetupwizardstate.cpp" line="67"/>
+        <location filename="../src/gui/newwizard/states/accountconfiguredsetupwizardstate.cpp" line="54"/>
         <source>Invalid local download directory: %1</source>
         <translation>Répertoire de téléchargement local invalide : %1</translation>
     </message>
@@ -2837,24 +2829,14 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
 <context>
     <name>OCC::Wizard::AccountConfiguredWizardPage</name>
     <message>
-        <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.cpp" line="29"/>
-        <source>Use &amp;virtual files instead of downloading content immediately</source>
-        <translation>Utilisez des fichiers virtuels au lieu de télécharger le contenu immédiatement</translation>
-    </message>
-    <message>
-        <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.cpp" line="46"/>
-        <source>%1 (recommended)</source>
-        <translation>%1 (recommandé)</translation>
-    </message>
-    <message>
-        <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.cpp" line="64"/>
-        <source>The virtual filesystem feature is not available for this installation.</source>
-        <translation>La fonction de système de fichiers virtuel n&apos;est pas disponible pour cette installation.</translation>
-    </message>
-    <message>
-        <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.cpp" line="68"/>
+        <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.cpp" line="33"/>
         <source>Select the local folder</source>
         <translation>Sélectionner le dossier local</translation>
+    </message>
+    <message>
+        <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.cpp" line="42"/>
+        <source>Sync location not supported</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
