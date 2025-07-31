@@ -885,7 +885,7 @@ void FakeFolder::switchToVfs(QSharedPointer<OCC::Vfs> vfs)
     opts._vfs = vfs;
     _syncEngine->setSyncOptions(opts);
 
-    OCC::VfsSetupParams vfsParams(account(), OCC::TestUtils::dummyDavUrl(), &syncEngine());
+    OCC::VfsSetupParams vfsParams(account(), OCC::TestUtils::dummyDavUrl(), QString(), &syncEngine());
     vfsParams.filesystemPath = localPath();
     vfsParams.journal = _journalDb.get();
     vfsParams.providerName = QStringLiteral("OC-TEST");
