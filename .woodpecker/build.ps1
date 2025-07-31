@@ -77,6 +77,8 @@ if ($IsWindows && $env:CI_PIPELINE_EVENT -ne "pull_request") {
 }
 
 Copy-Item ${HOME}/craft/binaries/* binaries/
-Copy-Item appx/* binaries/
-dir binaries
+try {
+    Copy-Item appx/* binaries/
+} catch {}
+
 return 0

@@ -48,13 +48,12 @@ steps:
   - name: uploadc
     image: woodpeckerci/plugin-s3
     settings:
-      bucket:
-        from_secret: cache_s3_bucket
+      bucket: "public"
       access_key:
         from_secret: cache_s3_access_key
       secret_key:
         from_secret: cache_s3_secret_key
-      source: content.txt
-      target: /${CI_REPO_NAME}/${CI_PIPELINE_NUMBER}
+      source: "binaries/*"
+      target: "/${CI_REPO_NAME}/pipeline/${CI_PIPELINE_NUMBER}"
       endpoint: *MC_HOST
       path_style: true
