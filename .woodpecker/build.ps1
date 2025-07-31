@@ -1,4 +1,4 @@
-git config --system --add safe.directory *
+git config --system safe.directory *
 $env:CRAFT_PACKAGE_SYMBOLS=echo ($env:CI_PIPELINE_EVENT -ne "pull_request")
 git clone --depth=1 https://invent.kde.org/kde/craftmaster.git $env:CI_WORKSPACE/woodpecker_craft/CraftMaster/CraftMaster
 New-Item -itemtype Junction -path $HOME/craft -value $env:CI_WORKSPACE/woodpecker_craft
