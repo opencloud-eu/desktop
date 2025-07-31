@@ -57,3 +57,10 @@ steps:
       target: "/${CI_REPO_NAME}/pipeline/${CI_PIPELINE_NUMBER}"
       endpoint: *MC_HOST
       path_style: true
+
+  - name: echo_artifacts
+    image: ${build_image}
+    commands:
+      - pwsh -command '`
+        Write-Host "Artifact Downloads:";`
+        get-childitem binaries | % {`$n=$_.name ; echo "https://${MC_HOST}/public/${CI_REPO_NAME}/pipeline/${CI_PIPELINE_NUMBER}/$$n"`}'
