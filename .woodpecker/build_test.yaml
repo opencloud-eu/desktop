@@ -60,7 +60,9 @@ steps:
 
   - name: echo_artifacts
     image: ${build_image}
+    environment:
+      MC_HOST: *MC_HOST
     commands:
       - pwsh -command '`
         Write-Host "Artifact Downloads:";`
-        get-childitem binaries | % {`$n=$_.name ; echo "https://${MC_HOST}/public/${CI_REPO_NAME}/pipeline/${CI_PIPELINE_NUMBER}/$$n"`}'
+        get-childitem binaries | % {`$$n=$$_.name ; echo "https://$$env:MC_HOST/public/${CI_REPO_NAME}/pipeline/${CI_PIPELINE_NUMBER}/$$n"`}'
