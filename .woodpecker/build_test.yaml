@@ -54,7 +54,7 @@ steps:
       secret_key:
         from_secret: cache_s3_secret_key
       source: binaries/*
-      target: /${CI_REPO_NAME}/pipeline/${CI_PIPELINE_NUMBER}
+      target: /${CI_REPO_NAME}/pipeline/${CI_PIPELINE_NUMBER}/${target}
       endpoint: *MC_HOST
       path_style: true
 
@@ -62,5 +62,6 @@ steps:
     image: ${build_image}
     environment:
       MC_HOST: *MC_HOST
+      TARGET: ${target}
     commands:
-      - pwsh -command 'echo "Artifact Downloads:"; get-childitem binaries | % {$$n=$$_.name ; echo "https://$$env:MC_HOST/public/${CI_REPO_NAME}/pipeline/${CI_PIPELINE_NUMBER}/$$n"}'
+      - pwsh .woodpecker/artifact_links.ps1
