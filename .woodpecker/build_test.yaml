@@ -43,7 +43,7 @@ steps:
     #   [System.Convert]::FromBase64String($Env:CI_SCRIPT)`
     #   )) | iex"]
     commands:
-      - cd ${CI_WORKSPACE} ; pwsh .woodpecker/build.ps1
+      - pwsh .woodpecker/build.ps1
 
   - name: uploadc
     image: woodpeckerci/plugin-s3
@@ -55,6 +55,6 @@ steps:
       secret_key:
         from_secret: cache_s3_secret_key
       source: content.txt
-      target: /$CI_REPO_NAME/$CI_PIPELINE_NUMBER
+      target: /${CI_REPO_NAME}/${CI_PIPELINE_NUMBER}
       endpoint: *MC_HOST
       path_style: true
