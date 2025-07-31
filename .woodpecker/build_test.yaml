@@ -53,16 +53,14 @@ steps:
         from_secret: cache_s3_access_key
       secret_key:
         from_secret: cache_s3_secret_key
-      source: "binaries/*"
-      target: "/${CI_REPO_NAME}/pipeline/${CI_PIPELINE_NUMBER}"
+      source: binaries/*
+      target: /${CI_REPO_NAME}/pipeline/${CI_PIPELINE_NUMBER}
       endpoint: *MC_HOST
       path_style: true
 
-  - name: echo_artifacts
+  - name: artifact_download_links
     image: ${build_image}
     environment:
       MC_HOST: *MC_HOST
     commands:
-      - pwsh -command '`
-        Write-Host "Artifact Downloads:";`
-        get-childitem binaries | % {`$$n=$$_.name ; echo "https://$$env:MC_HOST/public/${CI_REPO_NAME}/pipeline/${CI_PIPELINE_NUMBER}/$$n"`}'
+      - pwsh -command 'echo "Artifact Downloads:"; get-childitem binaries | % {$$n=$$_.name ; echo "https://$$env:MC_HOST/public/${CI_REPO_NAME}/pipeline/${CI_PIPELINE_NUMBER}/$$n"}'
