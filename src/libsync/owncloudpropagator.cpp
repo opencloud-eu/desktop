@@ -492,9 +492,9 @@ void OwncloudPropagator::start(SyncFileItemSet &&items)
                 // since it would be done before the actual remove (issue #1845)
                 // NOTE: Currently this means that we don't update those etag at all in this sync,
                 //       but it should not be a problem, they will be updated in the next sync.
-                for (auto &dir : directories) {
-                    if (dir.second->item()->instruction() == CSYNC_INSTRUCTION_UPDATE_METADATA) {
-                        dir.second->item()->setInstruction(CSYNC_INSTRUCTION_NONE);
+                for (auto &directory : directories) {
+                    if (directory.second->item()->instruction() == CSYNC_INSTRUCTION_UPDATE_METADATA) {
+                        directory.second->item()->setInstruction(CSYNC_INSTRUCTION_NONE);
                         _anotherSyncNeeded = true;
                     }
                 }
