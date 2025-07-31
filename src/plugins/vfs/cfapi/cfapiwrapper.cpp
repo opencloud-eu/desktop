@@ -525,14 +525,14 @@ void OCC::CfApiWrapper::registerSyncRoot(const VfsSetupParams &params, const std
             try {
                 const auto iconPath = QCoreApplication::applicationFilePath();
                 const auto id = createSyncRootID(params.providerName, params.account->uuid(), params.filesystemPath);
-                const auto displayName = u"%1 - %2"_s.arg(params.providerDisplayName, params.account->davDisplayName());
                 const auto version = params.providerVersion.toString();
 
                 winrt::StorageProviderSyncRootInfo info;
                 info.Id(reinterpret_cast<const wchar_t *>(id.utf16()));
                 info.Path(result.GetResults());
 
-                info.DisplayNameResource(reinterpret_cast<const wchar_t *>(displayName.utf16()));
+                // displayed when an error occurs "Make sue OpenCloud is running on your PC, try again."
+                info.DisplayNameResource(reinterpret_cast<const wchar_t *>(params.providerDisplayName.utf16()));
 
                 info.IconResource(reinterpret_cast<const wchar_t *>(iconPath.utf16()));
                 info.HydrationPolicy(winrt::StorageProviderHydrationPolicy::Full);
@@ -543,11 +543,10 @@ void OCC::CfApiWrapper::registerSyncRoot(const VfsSetupParams &params, const std
                 info.Version(reinterpret_cast<const wchar_t *>(version.utf16()));
                 info.AllowPinning(true);
                 info.ShowSiblingsAsGroup(true);
-
-#if 0
-                winrt::Uri uri(L"https://xxx/files/trash/project?fileId=0e443965-2ebb-4673-9464-b2c1d388e666%2420221f24-95b3-471a-9ac0-8067aa845bbb");
+                winrt::Uri uri(reinterpret_cast<const wchar_t *>(
+                    u"%1/files/trash/project?fileId=%2"_s.arg(params.account->url().toString(QUrl::FullyEncoded), params.spaceId()).utf16()));
                 info.RecycleBinUri(uri);
-#endif
+
                 winrt::Streams::DataWriter streamWriter;
                 streamWriter.WriteString(params.account->uuid().toString().toStdWString());
                 info.Context(streamWriter.DetachBuffer());
