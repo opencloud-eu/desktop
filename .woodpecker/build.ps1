@@ -1,11 +1,3 @@
-# s3 upload test
-echo "TEST CONTENT" > content.txt
-exit 0
-
-
-
-
-
 git config --system --add safe.directory *
 $env:CRAFT_PACKAGE_SYMBOLS=echo ($env:CI_PIPELINE_EVENT -ne "pull_request")
 git clone --depth=1 https://invent.kde.org/kde/craftmaster.git $env:CI_WORKSPACE/woodpecker_craft/CraftMaster/CraftMaster
