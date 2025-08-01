@@ -80,3 +80,17 @@ def step(context, user):
 @Given('user "|any|" has uploaded file "|any|" to "|any|" in the server')
 def step(context, user, file_name, destination):
     webdav.upload_file(user, file_name, destination)
+    
+
+@Then(
+    r'as "([^"].*)" following files should not exist in the server',
+    regexp=True,
+)
+def step(context, user_name):
+    for row in context.table[1:]:
+        resource_name = row[0]
+        test.compare(
+            webdav.resource_exists(user_name, resource_name),
+            False,
+            f"Resource '{resource_name}' should not exist, but does",
+        )
