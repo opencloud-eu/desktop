@@ -51,6 +51,7 @@
 #include <QDesktopServices>
 #include <QMenuBar>
 
+using namespace Qt::Literals::StringLiterals;
 using namespace OCC;
 
 Q_LOGGING_CATEGORY(lcApplication, "gui.application", QtInfoMsg)
@@ -82,7 +83,6 @@ void setUpInitialSyncFolder(AccountStatePtr accountStatePtr, bool useVfs)
             if (!spaces.isEmpty()) {
                 const QString localDir(accountStatePtr->account()->defaultSyncRoot());
                 FileSystem::setFolderMinimumPermissions(localDir);
-                Folder::prepareFolder(localDir);
                 Utility::setupFavLink(localDir);
                 for (const auto *space : spaces) {
                     const QString name = space->displayName();

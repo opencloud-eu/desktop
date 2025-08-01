@@ -17,7 +17,6 @@
 #include "folder.h"
 
 #include "account.h"
-#include "accountmanager.h"
 #include "accountstate.h"
 #include "application.h"
 #include "common/checksums.h"
@@ -58,6 +57,7 @@
 #include <QApplication>
 #include <QMessageBox>
 
+using namespace Qt::Literals::StringLiterals;
 using namespace std::chrono_literals;
 
 namespace {
@@ -91,7 +91,6 @@ Folder::Folder(const FolderDefinition &definition, const AccountStatePtr &accoun
     setSyncState(status);
     // check if the local path exists
     if (checkLocalPath()) {
-        prepareFolder(path());
         // those errors should not persist over sessions
         _journal.wipeErrorBlacklistCategory(SyncJournalErrorBlacklistRecord::Category::LocalSoftError);
         _engine.reset(new SyncEngine(_accountState->account(), webDavUrl(), path(), {}, &_journal));
@@ -127,6 +126,7 @@ Folder::Folder(const FolderDefinition &definition, const AccountStatePtr &accoun
 
         connect(_accountState->account()->spacesManager(), &GraphApi::SpacesManager::spaceChanged, this, [this](GraphApi::Space *changedSpace) {
             if (_definition.spaceId() == changedSpace->id()) {
+                prepareFolder(path(), displayName(), changedSpace->drive().getDescription());
                 Q_EMIT spaceChanged();
             }
         });
@@ -241,17 +241,37 @@ void Folder::setIsReady(bool b)
     Q_EMIT isReadyChanged();
 }
 
-void Folder::prepareFolder(const QString &path)
+void Folder::prepareFolder(const QString &path, const std::optional<QString> &displayName, const std::optional<QString> &description)
 {
 #ifdef Q_OS_WIN
     // First create a Desktop.ini so that the folder and favorite link show our application's icon.
-    const QFileInfo desktopIniPath{QStringLiteral("%1/Desktop.ini").arg(path)};
+    const QFileInfo desktopIniPath{u"%1/Desktop.ini"_s.arg(path)};
     {
-        const QString updateIconKey = QStringLiteral("%1/UpdateIcon").arg(Theme::instance()->appName());
+        const QString updateIconKey = u"%1/UpdateIcon"_s.arg(Theme::instance()->appName());
+        const QString localizedNameKey = u".ShellClassInfo/LocalizedResourcename"_s;
         QSettings desktopIni(desktopIniPath.absoluteFilePath(), QSettings::IniFormat);
         if (desktopIni.value(updateIconKey, true).toBool()) {
             qCInfo(lcFolder) << "Creating" << desktopIni.fileName() << "to set a folder icon in Explorer.";
-            desktopIni.setValue(QStringLiteral(".ShellClassInfo/IconResource"), QDir::toNativeSeparators(qApp->applicationFilePath()));
+            desktopIni.setValue(u".ShellClassInfo/IconResource"_s, QDir::toNativeSeparators(qApp->applicationFilePath()));
+            desktopIni.setValue(u".ShellClassInfo/ConfirmFileOp"_s, 1);
+            if (description.has_value()) {
+                QString descriptionValue = description.value();
+                // the description can still be empty
+                if (descriptionValue.isEmpty()) {
+                    const auto displayNameVal = displayName.has_value() ? displayName.value() : desktopIni.value(localizedNameKey).toString();
+                    if (displayNameVal.isEmpty()) {
+                        descriptionValue = Theme::instance()->appNameGUI();
+                    } else {
+                        descriptionValue = u"%1 - %2"_s.arg(Theme::instance()->appNameGUI(), displayNameVal);
+                    }
+                }
+                desktopIni.setValue(u".ShellClassInfo/InfoTip"_s, descriptionValue);
+            }
+            // we got an actual displayName, update
+            if (displayName.has_value()) {
+                Q_ASSERT(!displayName->isEmpty());
+                desktopIni.setValue(u".ShellClassInfo/LocalizedResourcename"_s, displayName.value());
+            }
             desktopIni.setValue(updateIconKey, true);
         } else {
             qCInfo(lcFolder) << "Skip icon update for" << desktopIni.fileName() << "," << updateIconKey << "is disabled";
@@ -709,6 +729,16 @@ Vfs::Mode Folder::vfsMode() const
     return _vfs->mode();
 }
 
+uint32_t Folder::priority()
+{
+    return _definition.priority();
+}
+
+void Folder::setPriority(uint32_t p)
+{
+    return _definition.setPriority(p);
+}
+
 bool Folder::isFileExcludedAbsolute(const QString &fullPath) const
 {
     if (OC_ENSURE_NOT(_engine.isNull())) {
@@ -777,6 +807,14 @@ void Folder::wipeForRemoval()
     QFile::remove(stateDbFile + QStringLiteral("-shm"));
     QFile::remove(stateDbFile + QStringLiteral("-wal"));
     QFile::remove(stateDbFile + QStringLiteral("-journal"));
+
+    // remove the sync log
+    QFile::remove(u"%1/.OpenCloudSync.log"_s.arg(_canonicalLocalPath));
+
+#ifdef Q_OS_WIN
+    // remove the desktop ini
+    QFile::remove(u"%1/Desktop.ini"_s.arg(_canonicalLocalPath));
+#endif
 
     _vfs->stop();
     _vfs->unregisterFolder();

@@ -68,6 +68,7 @@ public:
     void setSpaceId(const QString &spaceId) { _spaceId = spaceId; }
 
     QString displayName() const;
+    void setDisplayName(const QString &s);
 
     /**
      * The folder is deployed by an admin

@@ -19,7 +19,8 @@
 #include "accountstate.h"
 #include "common/asserts.h"
 #include "configfile.h"
-#include "folder.h"
+#include "gui/folder.h"
+#include "gui/folderdefinition.h"
 #include "gui/networkinformation.h"
 #include "guiutility.h"
 #include "libsync/syncengine.h"
@@ -38,6 +39,7 @@
 #include <QNetworkProxy>
 #include <QtCore>
 
+using namespace Qt::Literals::StringLiterals;
 using namespace std::chrono;
 using namespace std::chrono_literals;
 
@@ -91,6 +93,22 @@ FolderMan::FolderMan()
     , _scheduler(new SyncScheduler(this))
     , _socketApi(new SocketApi)
 {
+#ifdef Q_OS_WIN
+    auto updateSyncRoots = [] {
+        // set the metadata for a sync root, depending on the number of accounts
+        for (const auto &accountStatePtr : AccountManager::instance()->accounts()) {
+            if (accountStatePtr->account()->hasDefaultSyncRoot()) {
+                Folder::prepareFolder(accountStatePtr->account()->defaultSyncRoot(),
+                    AccountManager::instance()->accounts().size() == 1
+                        ? Theme::instance()->appNameGUI()
+                        : u"%1 - %2"_s.arg(Theme::instance()->appNameGUI(), accountStatePtr->account()->davDisplayName()),
+                    accountStatePtr->account()->davDisplayName());
+            }
+        }
+    };
+    updateSyncRoots();
+    connect(AccountManager::instance(), &AccountManager::accountAdded, this, updateSyncRoots);
+#endif
     connect(AccountManager::instance(), &AccountManager::accountRemoved,
         this, &FolderMan::slotRemoveFoldersForAccount);
 
@@ -208,6 +226,7 @@ void FolderMan::saveFolders()
         // with spaces we rely on the space id
         // we save the dav URL nevertheless to have it available during startup
         definitionToSave.setWebDavUrl(folder->webDavUrl());
+        definitionToSave.setDisplayName(folder->displayName());
         FolderDefinition::save(settings, definitionToSave);
     }
     settings.endArray();
