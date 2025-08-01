@@ -125,7 +125,6 @@ public:
     };
 
     static QString suggestSyncFolder(NewFolderType folderType, const QUuid &accountUuid);
-    [[nodiscard]] static bool prepareFolder(const QString &folder);
 
     static QString checkPathValidityRecursive(const QString &path, FolderMan::NewFolderType folderType, const QUuid &accountUuid);
 
@@ -292,6 +291,8 @@ private Q_SLOTS:
 
 private:
     explicit FolderMan();
+
+    [[nodiscard]] static bool prepareFolder(const QString &folder);
 
     /** Adds a new folder, does not add it to the account settings and
      *  does not set an account on the new folder.
