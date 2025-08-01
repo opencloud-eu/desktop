@@ -32,6 +32,7 @@
 #include <QFileInfo>
 #include <QString>
 
+using namespace Qt::Literals::StringLiterals;
 namespace {
 
 // See http://support.microsoft.com/kb/74496 and
@@ -214,8 +215,7 @@ static CSYNC_EXCLUDE_TYPE _csync_excluded_common(QStringView path, bool excludeC
 #endif
 
     /* Do not sync desktop.ini files anywhere in the tree. */
-    const auto desktopIniFile = QStringLiteral("desktop.ini");
-    if (blen == static_cast<qsizetype>(desktopIniFile.length()) && bname.compare(desktopIniFile, Qt::CaseInsensitive) == 0) {
+    if (bname.startsWith("desktop.ini"_L1, Qt::CaseInsensitive)) {
         return CSYNC_FILE_SILENTLY_EXCLUDED;
     }
 
