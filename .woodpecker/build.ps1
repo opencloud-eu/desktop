@@ -75,12 +75,11 @@ if ($env:CRAFT_TARGET -eq "macos-64-clang-debug" ) {
 
 .github/workflows/.craft.ps1 -c --no-cache opencloud/opencloud-desktop
 .github/workflows/.craft.ps1 -c --no-cache --test opencloud/opencloud-desktop
-.github/workflows/.craft.ps1 -c --no-cache --package opencloud/opencloud-desktop
 
 if ($env:CRAFT_TARGET -ne "macos-clang-arm64" ) {
     .github/workflows/.craft.ps1 -c --no-cache --package opencloud/opencloud-desktop
 }
-if ($IsWindows && $env:CI_PIPELINE_EVENT -ne "pull_request") {
+if ($IsWindows -and $env:CI_PIPELINE_EVENT -ne "pull_request") {
     .github/workflows/.craft.ps1 -c --no-cache --package --options "[Packager]PackageType=AppxPackager" --options "[Packager]Destination=$env:CI_WORKSPACE/appx/" opencloud/opencloud-desktop
 }
 
