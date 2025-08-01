@@ -2837,7 +2837,7 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
     <message>
         <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.cpp" line="42"/>
         <source>Sync location not supported</source>
-        <translation type="unfinished"/>
+        <translation>Synchronisation Pfad wird nicht unterstützt</translation>
     </message>
 </context>
 <context>
