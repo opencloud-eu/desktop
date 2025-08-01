@@ -67,10 +67,10 @@ Feature: Syncing files
             | user     | Alice          |
             | password | 1234           |
         When the user selects manual sync folder option in advanced section
-        And the user selects "Personal" space in sync connection wizard
         And the user sets the sync path in sync connection wizard
         And the user navigates back in the sync connection wizard
         And the user sets the temp folder "localSyncFolder" as local sync path in sync connection wizard
+        And the user selects "Personal" space in sync connection wizard
         Then the sync all checkbox should be checked
         When user unselects all the remote folders
         And the user adds the folder sync connection
@@ -89,8 +89,8 @@ Feature: Syncing files
             | user     | Alice          |
             | password | 1234           |
         When the user selects manual sync folder option in advanced section
-        And the user selects "Personal" space in sync connection wizard
         And the user sets the sync path in sync connection wizard
+        And the user selects "Personal" space in sync connection wizard
         And the user selects the following folders to sync:
             | folder        |
             | simple-folder |
@@ -123,8 +123,8 @@ Feature: Syncing files
             | user     | Alice          |
             | password | 1234           |
         When the user selects manual sync folder option in advanced section
-        And the user selects "Personal" space in sync connection wizard
         And the user sets the sync path in sync connection wizard
+        And the user selects "Personal" space in sync connection wizard
         # folders are sorted by name in ascending order by default
         Then the folders should be in the following order:
             | folder    |
@@ -463,8 +463,8 @@ Feature: Syncing files
             | user     | Alice          |
             | password | 1234           |
         When the user selects manual sync folder option in advanced section
-        And the user selects "Personal" space in sync connection wizard
         And the user sets the temp folder "~`!@#$^&()-_=+{[}];',)PRN%" as local sync path in sync connection wizard
+        And the user selects "Personal" space in sync connection wizard
         And the user selects the following folders to sync:
             | folder                  |
             | ~`!@#$^&()-_=+{[}];',)  |
