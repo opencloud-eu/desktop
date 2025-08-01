@@ -1,7 +1,23 @@
+# Enforce Strict Mode to Prevent weird variable behavior
+Set-StrictMode -Version Latest;
+
+# exit on errors, and suppress status display
+$ErrorActionPreference = 'Stop';
+$PSNativeCommandUseErrorActionPreference = $true;
+$ProgressPreference = 'SilentlyContinue';
+
 git config --system --add safe.directory "*"
-$env:CRAFT_PACKAGE_SYMBOLS=echo ($env:CI_PIPELINE_EVENT -ne "pull_request")
+$env:CRAFT_PACKAGE_SYMBOLS=Write-Output ($env:CI_PIPELINE_EVENT -ne "pull_request")
 git clone --depth=1 https://invent.kde.org/kde/craftmaster.git $env:CI_WORKSPACE/woodpecker_craft/CraftMaster/CraftMaster
-New-Item -itemtype Junction -path $HOME/craft -value $env:CI_WORKSPACE/woodpecker_craft
+
+if ($IsWindows) {
+    Write-Output "Creating Junction"
+    New-Item -itemtype Junction -path $HOME/craft -value $env:CI_WORKSPACE/woodpecker_craft
+} else {
+    Write-Output "Creating SymLink"
+    New-Item -itemtype SymbolicLink -path $HOME/craft -value $env:CI_WORKSPACE/woodpecker_craft
+}
+
 New-Item -Path $HOME/cache -ItemType Directory -ErrorAction SilentlyContinue
 .github/workflows/.craft.ps1 --setup
 .github/workflows/.craft.ps1 -c --unshelve .craft.shelf
