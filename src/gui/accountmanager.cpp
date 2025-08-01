@@ -236,6 +236,7 @@ void AccountManager::shutdown()
     for (const auto &acc : accounts) {
         Q_EMIT accountRemoved(acc);
     }
+    qDeleteAll(accounts);
 }
 
 AccountStatePtr AccountManager::addAccountState(std::unique_ptr<AccountState> &&accountState)
