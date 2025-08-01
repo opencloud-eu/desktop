@@ -14,6 +14,7 @@
 
 ### 🐛 Bug Fixes
 
+- Fix leak of accountstates [[#445](https://github.com/opencloud-eu/desktop/pull/445)]
 - Fix color for selected space [[#437](https://github.com/opencloud-eu/desktop/pull/437)]
 - Don't truncate inode on Windows [[#412](https://github.com/opencloud-eu/desktop/pull/412)]
 - Fix printing of duration [[#400](https://github.com/opencloud-eu/desktop/pull/400)]
