@@ -70,7 +70,7 @@ public:
     };
     Q_ENUM(ChangeReason)
 
-    static void prepareFolder(const QString &path);
+    static void prepareFolder(const QString &path, const std::optional<QString> &displayName = {}, const std::optional<QString> &description = {});
 
     ~Folder() override;
     /**
@@ -206,15 +206,9 @@ public:
 
     Vfs::Mode vfsMode() const;
 
-    auto priority()
-    {
-        return _definition.priority();
-    }
+    uint32_t priority();
 
-    void setPriority(uint32_t p)
-    {
-        return _definition.setPriority(p);
-    }
+    void setPriority(uint32_t p);
 
     static Result<void, QString> checkPathLength(const QString &path);
 

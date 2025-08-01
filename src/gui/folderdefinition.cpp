@@ -140,6 +140,10 @@ QString FolderDefinition::displayName() const
     return _displayName;
 }
 
+void FolderDefinition::setDisplayName(const QString &s)
+{
+    _displayName = s;
+}
 
 bool FolderDefinition::isDeployed() const
 {
