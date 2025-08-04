@@ -729,7 +729,7 @@ bool OwncloudPropagator::createConflict(const SyncFileItemPtr &item,
     if (FileSystem::isFileLocked(fn, FileSystem::LockMode::Exclusive)) {
         Q_EMIT seenLockedFile(fn, FileSystem::LockMode::Exclusive);
         if (error)
-            *error = tr("File %1 is currently in use").arg(fn);
+            *error = tr("The file%1 is currently in use").arg(fn);
         return false;
     }
 
@@ -1099,7 +1099,7 @@ void PropagateDirectory::slotSubJobsFinished(const SyncFileItem::Status status)
                     done(SyncFileItem::FatalError, tr("Error updating metadata: %1").arg(result.error()));
                     return;
                 } else if (result.get() == Vfs::ConvertToPlaceholderResult::Locked) {
-                    done(SyncFileItem::SoftError, tr("%1 the folder is currently in use").arg(_item->destination()));
+                    done(SyncFileItem::SoftError, tr("The folder %1 is currently in use").arg(_item->destination()));
                     return;
                 }
             }

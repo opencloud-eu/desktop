@@ -238,7 +238,7 @@ bool FolderMan::ensureJournalGone(const QString &journalDbFile)
     while (QFile::exists(journalDbFile) && !QFile::remove(journalDbFile)) {
         qCWarning(lcFolderMan) << u"Could not remove old db file at" << journalDbFile;
         int ret = QMessageBox::warning(nullptr, tr("Could not reset folder state"),
-            tr("An old sync journal '%1' was found, "
+            tr("An old sync journal %1 was found, "
                "but could not be removed. Please make sure "
                "that no application is currently using it.")
                 .arg(QDir::fromNativeSeparators(QDir::cleanPath(journalDbFile))),
@@ -627,7 +627,7 @@ static QString checkPathForSyncRootMarkingRecursive(const QString &path, FolderM
     if (!existingTags.first.isEmpty()) {
         if (existingTags.first != Theme::instance()->orgDomainName()) {
             // another application uses this as spaces root folder
-            return FolderMan::tr("Folder '%1' is already in use by application %2!").arg(path, existingTags.first);
+            return FolderMan::tr("The folder %1 is already in use by application %2!").arg(path, existingTags.first);
         }
 
         // Looks good, it's our app, let's check the account tag:
@@ -640,7 +640,7 @@ static QString checkPathForSyncRootMarkingRecursive(const QString &path, FolderM
             [[fallthrough]];
         case FolderMan::NewFolderType::SpacesSyncRoot:
             // It's our application but we don't want to create a spaces folder, so it must be another space root
-            return FolderMan::tr("Folder '%1' is already in use by another account.").arg(path);
+            return FolderMan::tr("The folder %1 is already in use by another account.").arg(path);
         }
     }
 
@@ -729,7 +729,7 @@ QString FolderMan::checkPathValidityForNewFolder(const QString &path, NewFolderT
 
     const auto result = checkPathValidityRecursive(path, folderType, accountUuid);
     if (!result.isEmpty()) {
-        return tr("%1 Please pick another local folder!").arg(result);
+        return tr("Please pick another local folder for %1.").arg(result);
     }
     return {};
 }

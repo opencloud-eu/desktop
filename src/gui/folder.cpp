@@ -153,7 +153,7 @@ Result<void, QString> Folder::checkPathLength(const QString &path)
 #ifdef Q_OS_WIN
     if (path.size() > MAX_PATH) {
         if (!FileSystem::longPathsEnabledOnWindows()) {
-            return tr("The path '%1' is too long. Please enable long paths in the Windows settings or choose a different folder.").arg(path);
+            return tr("The path %1 is too long. Please enable long paths in the Windows settings or choose a different folder.").arg(path);
         }
     }
 #else
@@ -195,7 +195,7 @@ bool Folder::checkLocalPath()
         if (error.isEmpty()) {
             qCDebug(lcFolder) << u"Checked local path ok";
             if (!_journal.open()) {
-                error = tr("%1 failed to open the database.").arg(_definition.localPath());
+                error = tr("Failed to open the database for %1.").arg(_definition.localPath());
             }
         }
     } else {

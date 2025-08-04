@@ -84,7 +84,7 @@ bool PropagateLocalRemove::removeRecursively(const QString &absolute)
             for (const auto &l : locked) {
                 // unlock is handled in hack in `void Folder::slotWatchedPathChanged`
                 Q_EMIT propagator()->seenLockedFile(l.path, FileSystem::LockMode::Exclusive);
-                errorList.append(tr("%1 the file is currently in use").arg(QDir::toNativeSeparators(l.path)));
+                errorList.append(tr("The file %1 is currently in use").arg(QDir::toNativeSeparators(l.path)));
             }
             done(SyncFileItem::SoftError, errorList.join(QStringLiteral(", ")));
             return false;
@@ -111,7 +111,7 @@ void PropagateLocalRemove::start()
     if (FileSystem::fileExists(filename)) {
         if (FileSystem::isFileLocked(filename, FileSystem::LockMode::Exclusive)) {
             Q_EMIT propagator()->seenLockedFile(filename, FileSystem::LockMode::Exclusive);
-            done(SyncFileItem::SoftError, tr("%1 the file is currently in use").arg(QDir::toNativeSeparators(filename)));
+            done(SyncFileItem::SoftError, tr("The file %1 is currently in use").arg(QDir::toNativeSeparators(filename)));
             return;
         }
 
@@ -120,7 +120,7 @@ void PropagateLocalRemove::start()
         if (_moveToTrash) {
             ok = QFile(filename).moveToTrash();
             if (!ok) {
-                removeError = tr("Could not move '%1' to the trash bin").arg(filename);
+                removeError = tr("Could not move %1 to the trash bin").arg(filename);
             }
         } else {
             if (_item->isDirectory()) {
@@ -231,7 +231,7 @@ void PropagateLocalRename::start()
             // Fixme: the file that is the reason for the clash could be named here,
             // it would have to come out the localFileNameClash function
             done(SyncFileItem::NormalError,
-                tr("File %1 can not be renamed to %2 because of a local file name clash")
+                tr("The file%1 can not be renamed to %2 because of a local file name clash")
                     .arg(QDir::toNativeSeparators(_item->localName()), QDir::toNativeSeparators(_item->_renameTarget)));
             return;
         }

@@ -423,7 +423,7 @@ void PropagateDownloadFile::start()
     if (_item->_type == ItemTypeVirtualFileDehydration) {
         if (FileSystem::fileChanged(FileSystem::toFilesystemPath(fsPath), FileSystem::FileChangedInfo::fromSyncFileItemPrevious(_item.data()))) {
             propagator()->_anotherSyncNeeded = true;
-            done(SyncFileItem::SoftError, tr("File has changed since discovery"));
+            done(SyncFileItem::SoftError, tr("The filehas changed since discovery"));
             return;
         }
         if (FileSystem::isFileLocked(fsPath, FileSystem::LockMode::Exclusive)) {
@@ -454,7 +454,7 @@ void PropagateDownloadFile::start()
         // do a klaas' case clash check.
         if (auto clash = propagator()->localFileNameClash(_item->localName())) {
             done(SyncFileItem::NormalError,
-                tr("File %1 can not be downloaded because of a local file name clash with %2!")
+                tr("The file%1 can not be downloaded because of a local file name clash with %2!")
                     .arg(QDir::toNativeSeparators(_item->localName()), QDir::toNativeSeparators(clash.get())));
             return;
         }
@@ -537,7 +537,7 @@ void PropagateDownloadFile::startDownload()
     // do a klaas' case clash check.
     if (auto clash = propagator()->localFileNameClash(_item->localName())) {
         done(SyncFileItem::NormalError,
-            tr("File %1 can not be downloaded because of a local file name clash with %2!")
+            tr("The file%1 can not be downloaded because of a local file name clash with %2!")
                 .arg(QDir::toNativeSeparators(_item->localName()), QDir::toNativeSeparators(clash.get())));
         return;
     }
@@ -571,7 +571,7 @@ void PropagateDownloadFile::startDownload()
 
     _resumeStart = _tmpFile.size();
     if (_resumeStart > 0 && _resumeStart == _item->_size) {
-        qCInfo(lcPropagateDownload) << u"File is already complete, no need to download";
+        qCInfo(lcPropagateDownload) << u"The file is already complete, no need to download";
         downloadFinished();
         return;
     }
@@ -694,7 +694,7 @@ void PropagateDownloadFile::slotGetFinished()
             // Range header should result in NormalError.
             job->setErrorStatus(SyncFileItem::SoftError);
         } else if (fileNotFound) {
-            job->setErrorString(tr("File was deleted from server"));
+            job->setErrorString(tr("The filewas deleted from server"));
             job->setErrorStatus(SyncFileItem::SoftError);
 
             // As a precaution against bugs that cause our database and the
@@ -875,7 +875,7 @@ void PropagateDownloadFile::downloadFinished()
     // This can happen if another parallel download saved a clashing file.
     if (auto clash = propagator()->localFileNameClash(_item->localName())) {
         done(SyncFileItem::NormalError,
-            tr("File %1 cannot be saved because of a local file name clash with %2!")
+            tr("The file%1 cannot be saved because of a local file name clash with %2!")
                 .arg(QDir::toNativeSeparators(_item->localName()), QDir::toNativeSeparators(clash.get())));
         return;
     }
@@ -922,7 +922,7 @@ void PropagateDownloadFile::downloadFinished()
         // the discovery phase and now.
         if (FileSystem::fileChanged(FileSystem::toFilesystemPath(fn), FileSystem::FileChangedInfo::fromSyncFileItemPrevious(_item.data()))) {
             propagator()->_anotherSyncNeeded = true;
-            done(SyncFileItem::SoftError, tr("File has changed since discovery"));
+            done(SyncFileItem::SoftError, tr("The filehas changed since discovery"));
             return;
         }
     }
