@@ -281,6 +281,8 @@ Vfs::AvailabilityResult VfsCfApi::availability(const QString &folderPath)
             break;
         case OCC::PinState::Unspecified:
             break;
+        case OCC::PinState::Excluded:
+            break;
         };
         return VfsItemAvailability::Mixed;
     } else {
@@ -367,9 +369,14 @@ void VfsCfApi::requestHydration(const QString &requestId, const QString &targetP
 
 void VfsCfApi::fileStatusChanged(const QString &systemFileName, SyncFileStatus fileStatus)
 {
-    // TODO:
-    Q_UNUSED(systemFileName);
-    Q_UNUSED(fileStatus);
+    if (!QFileInfo::exists(systemFileName)) {
+        return;
+    }
+    if (fileStatus.tag() == SyncFileStatus::StatusUpToDate) {
+        std::ignore = cfapi::updatePlaceholderMarkInSync(systemFileName);
+    } else if (fileStatus.tag() == SyncFileStatus::StatusExcluded) {
+        cfapi::setPinState(systemFileName, PinState::Excluded, CfApiWrapper::Recurse);
+    }
 }
 
 void VfsCfApi::scheduleHydrationJob(const QString &requestId, SyncJournalFileRecord &&record, const QString &targetPath)

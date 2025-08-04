@@ -308,6 +308,7 @@ OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> updatePlaceholderStat
     const QString &path, time_t modtime, qint64 size, const QByteArray &fileId, const QString &replacesPath, CfApiUpdateMetadataType updateType)
 {
     if (updateType == CfApiUpdateMetadataType::AllMetadata && modtime <= 0) {
+        Q_ASSERT(false);
         return {u"Could not update metadata due to invalid modification time for %1: %2"_s.arg(path, modtime)};
     }
 
@@ -335,7 +336,7 @@ OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> updatePlaceholderStat
     }
 
 
-    qCInfo(lcCfApiWrapper) << "updatePlaceholderState" << path << modtime;
+    qCInfo(lcCfApiWrapper) << "updatePlaceholderState" << path << modtime << fileId;
     const qint64 result = CfUpdatePlaceholder(OCC::CfApiWrapper::handleForPath(path).handle(), &metadata, fileId.data(), static_cast<DWORD>(fileId.size()),
         nullptr, 0, CF_UPDATE_FLAG_MARK_IN_SYNC, nullptr, nullptr);
 
@@ -431,6 +432,8 @@ CF_PIN_STATE pinStateToCfPinState(OCC::PinState state)
         return CF_PIN_STATE_UNPINNED;
     case OCC::PinState::Unspecified:
         return CF_PIN_STATE_UNSPECIFIED;
+    case OCC::PinState::Excluded:
+        return CF_PIN_STATE_EXCLUDED;
     }
     Q_UNREACHABLE();
 }
@@ -803,10 +806,17 @@ OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> OCC::CfApiWrapper::co
     return updatePlaceholderState(path, modtime, size, fileId, replacesPath, CfApiUpdateMetadataType::AllMetadata);
 }
 
-OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> OCC::CfApiWrapper::updatePlaceholderMarkInSync(
-    const QString &path, const QByteArray &fileId, const QString &replacesPath)
+OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> OCC::CfApiWrapper::updatePlaceholderMarkInSync(const QString &path)
 {
-    return updatePlaceholderState(path, {}, {}, fileId, replacesPath, CfApiUpdateMetadataType::OnlyBasicMetadata);
+    auto handle = handleForPath(path);
+    if (handle) {
+        if (auto result = CfSetInSyncState(handle, CF_IN_SYNC_STATE_IN_SYNC, CF_SET_IN_SYNC_FLAG_NONE, nullptr); SUCCEEDED(result)) {
+            return OCC::Vfs::ConvertToPlaceholderResult::Ok;
+        } else {
+            return u"updatePlaceholderMarkInSync failed: %1"_s.arg(Utility::formatWinError(result));
+        }
+    }
+    return handle.errorMessage();
 }
 
 bool OCC::CfApiWrapper::isPlaceHolderInSync(const QString &filePath)

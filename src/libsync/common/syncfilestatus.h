@@ -31,7 +31,7 @@ class OPENCLOUD_SYNC_EXPORT SyncFileStatus
 {
     Q_GADGET
 public:
-    enum SyncFileStatusTag {
+    enum SyncFileStatusTag : uint8_t {
         StatusNone,
         StatusSync,
         StatusWarning,
