@@ -41,7 +41,7 @@ namespace PinStateEnums {
          *
          * Note: This enum intentionally mimics CF_PIN_STATE of Windows cfapi.
          */
-        enum class PinState {
+        enum class PinState : uint8_t {
             /** The pin state is derived from the state of the parent folder.
              *
              * For example new remote files start out in this state, following
@@ -77,6 +77,11 @@ namespace PinStateEnums {
              * dehydrated (which is an arbitrary decision).
              */
             Unspecified = 3,
+
+            /**
+             * Special case for files that are excluded
+             */
+            Excluded = 4
         };
     Q_ENUM_NS(PinState);
 
@@ -93,7 +98,7 @@ namespace PinStateEnums {
      *
      * NOTE: The numerical values and ordering of this enum are relevant.
      */
-    enum class VfsItemAvailability {
+    enum class VfsItemAvailability : uint8_t {
         /** The item and all its subitems are hydrated and pinned AlwaysLocal.
          *
          * This guarantees that all contents will be kept in sync.
