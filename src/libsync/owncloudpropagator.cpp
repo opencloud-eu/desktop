@@ -1278,7 +1278,7 @@ void OCC::PropagateUpdateMetaDataJob::start()
     }
     const auto result = propagator()->updateMetadata(*_item);
     if (!result) {
-        done(SyncFileItem::FatalError, tr("Could not update file : %1").arg(result.error()));
+        done(SyncFileItem::FatalError, tr("Could not update file: %1").arg(result.error()));
         return;
     } else if (result.get() == Vfs::ConvertToPlaceholderResult::Locked) {
         done(SyncFileItem::SoftError, tr("The file %1 is currently in use").arg(_item->localName()));

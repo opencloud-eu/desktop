@@ -83,7 +83,7 @@ QString TlsErrorDialog::describeCertificateHtml(const QSslCertificate &certifica
         "Fingerprint (SHA1): <tt>%6</tt><br/>"
         "Fingerprint (SHA256): <tt>%7</tt><br/>"
         "<br/>"
-        "Effective Date: %8"
+        "Effective Date: %8<br/>"
         "Expiration Date: %9"
         "</div>"
         "<h3>Issuer: %10</h3>"
