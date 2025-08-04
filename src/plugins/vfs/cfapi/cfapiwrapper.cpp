@@ -135,14 +135,32 @@ void cfApiSendTransferInfo(const CF_CONNECTION_KEY &connectionKey, const CF_TRAN
     }
 }
 
+OCC::CfApiWrapper::CallBackContext logCallback(const char *function, const CF_CALLBACK_INFO *callbackInfo, QMap<QByteArray, QVariant> &&extraArgs = {})
+{
+    OCC::CfApiWrapper::CallBackContext context{.vfs = reinterpret_cast<OCC::VfsCfApi *>(callbackInfo->CallbackContext),
+        .path = QString(QString::fromWCharArray(callbackInfo->VolumeDosName) + QString::fromWCharArray(callbackInfo->NormalizedPath)),
+        .requestId = callbackInfo->TransferKey.QuadPart,
+        .fileId = QByteArray(reinterpret_cast<const char *>(callbackInfo->FileIdentity), callbackInfo->FileIdentityLength),
+        .extraArgs = std::move(extraArgs)};
+    Q_ASSERT(context.vfs->metaObject()->className() == QByteArrayLiteral("OCC::VfsCfApi"));
+
+    QString app = u"NULL"_s;
+    QString appId;
+    uint32_t pid{};
+
+
+    if (callbackInfo->ProcessInfo) {
+        app = QString::fromWCharArray(callbackInfo->ProcessInfo->ImagePath);
+        appId = QString::fromWCharArray(callbackInfo->ProcessInfo->ApplicationId);
+        pid = callbackInfo->ProcessInfo->ProcessId;
+    }
+    qCInfo(lcCfApiWrapper) << function << context << "requested by application:" << app << "PID:" << pid << "AppID:" << appId;
+    return context;
+}
+
 void CALLBACK cfApiFetchDataCallback(const CF_CALLBACK_INFO *callbackInfo, const CF_CALLBACK_PARAMETERS *callbackParameters)
 {
-    const qint64 requestedFileSize = callbackInfo->FileSize.QuadPart;
-    qDebug(lcCfApiWrapper) << "Fetch data callback called. File size:" << requestedFileSize;
-    qDebug(lcCfApiWrapper) << "Desktop client process id:" << QCoreApplication::applicationPid();
-    qDebug(lcCfApiWrapper) << "Fetch data requested by process id:" << callbackInfo->ProcessInfo->ProcessId;
-    qDebug(lcCfApiWrapper) << "Fetch data requested by application id:" << QString::fromWCharArray(callbackInfo->ProcessInfo->ApplicationId);
-    qDebug(lcCfApiWrapper) << "Fetch data requested by application:" << QString::fromWCharArray(callbackInfo->ProcessInfo->ImagePath);
+    const auto context = logCallback(Q_FUNC_INFO, callbackInfo);
 
     const auto sendTransferError = [=] {
         cfApiSendTransferInfo(callbackInfo->ConnectionKey, callbackInfo->TransferKey, STATUS_UNSUCCESSFUL, nullptr,
@@ -154,70 +172,63 @@ void CALLBACK cfApiFetchDataCallback(const CF_CALLBACK_INFO *callbackInfo, const
             callbackInfo->ConnectionKey, callbackInfo->TransferKey, STATUS_SUCCESS, data.data(), offset, data.length(), callbackInfo->FileSize.QuadPart);
     };
 
-    auto vfs = reinterpret_cast<OCC::VfsCfApi *>(callbackInfo->CallbackContext);
-    Q_ASSERT(vfs->metaObject()->className() == QByteArrayLiteral("OCC::VfsCfApi"));
-    const auto path = QString(QString::fromWCharArray(callbackInfo->VolumeDosName) + QString::fromWCharArray(callbackInfo->NormalizedPath));
-    const auto requestId = QString::number(callbackInfo->TransferKey.QuadPart, 16);
-    const auto fileId = QByteArray(reinterpret_cast<const char *>(callbackInfo->FileIdentity), callbackInfo->FileIdentityLength);
-
     if (QCoreApplication::applicationPid() == callbackInfo->ProcessInfo->ProcessId) {
-        qCCritical(lcCfApiWrapper) << "implicit hydration triggered by the client itself. Will lead to a deadlock. Cancel" << path << requestId;
+        qCCritical(lcCfApiWrapper) << "implicit hydration triggered by the client itself. Will lead to a deadlock. Cancel" << context.path << context.requestId;
         Q_ASSERT(false);
         sendTransferError();
         return;
     }
 
-    qCDebug(lcCfApiWrapper) << "Request hydration for" << path << requestId;
-
-    const auto invokeResult = QMetaObject::invokeMethod(vfs, [=] { vfs->requestHydration(requestId, path, fileId, requestedFileSize); }, Qt::QueuedConnection);
+    const auto invokeResult =
+        QMetaObject::invokeMethod(context.vfs, [=] { context.vfs->requestHydration(context, callbackInfo->FileSize.QuadPart); }, Qt::QueuedConnection);
     if (!invokeResult) {
-        qCCritical(lcCfApiWrapper) << "Failed to trigger hydration for" << path << requestId;
+        qCCritical(lcCfApiWrapper) << "Failed to trigger hydration for" << context;
         sendTransferError();
         return;
     }
 
-    qCDebug(lcCfApiWrapper) << "Successfully triggered hydration for" << path << requestId;
+    qCDebug(lcCfApiWrapper) << "Successfully triggered hydration for" << context;
 
     // Block and wait for vfs to signal back the hydration is ready
     bool hydrationRequestResult = false;
     QEventLoop loop;
-    QObject::connect(vfs, &OCC::VfsCfApi::hydrationRequestReady, &loop, [&](const QString &id) {
-        if (requestId == id) {
+    QObject::connect(context.vfs, &OCC::VfsCfApi::hydrationRequestReady, &loop, [&](int64_t id) {
+        if (context.requestId == id) {
             hydrationRequestResult = true;
-            qCDebug(lcCfApiWrapper) << "Hydration request ready for" << path << requestId;
+            qCDebug(lcCfApiWrapper) << "Hydration request ready for" << context;
             loop.quit();
         }
     });
-    QObject::connect(vfs, &OCC::VfsCfApi::hydrationRequestFailed, &loop, [&](const QString &id) {
-        if (requestId == id) {
+    QObject::connect(context.vfs, &OCC::VfsCfApi::hydrationRequestFailed, &loop, [&](int64_t id) {
+        if (context.requestId == id) {
             hydrationRequestResult = false;
-            qCWarning(lcCfApiWrapper) << "Hydration request failed for" << path << requestId;
+            qCWarning(lcCfApiWrapper) << "Hydration request failed for" << context;
             loop.quit();
         }
     });
 
     qCDebug(lcCfApiWrapper) << "Starting event loop 1";
     loop.exec();
-    QObject::disconnect(vfs, nullptr, &loop, nullptr); // Ensure we properly cancel hydration on server errors
+    QObject::disconnect(context.vfs, nullptr, &loop, nullptr); // Ensure we properly cancel hydration on server errors
 
-    qCInfo(lcCfApiWrapper) << "VFS replied for hydration of" << path << requestId << "status was:" << hydrationRequestResult;
+    qCInfo(lcCfApiWrapper) << "VFS replied for hydration of" << context << "status was:" << hydrationRequestResult;
     if (!hydrationRequestResult) {
-        qCCritical(lcCfApiWrapper) << "Failed to trigger hydration for" << path << requestId;
+        qCCritical(lcCfApiWrapper) << "Failed to trigger hydration for" << context;
         sendTransferError();
         return;
     }
 
     QLocalSocket socket;
-    socket.connectToServer(requestId);
+    socket.connectToServer(context.requestHexId());
     const auto connectResult = socket.waitForConnected();
     if (!connectResult) {
-        qCWarning(lcCfApiWrapper) << "Couldn't connect the socket" << requestId << socket.error() << socket.errorString();
+        qCWarning(lcCfApiWrapper) << "Couldn't connect the socket" << context << socket.error() << socket.errorString();
         sendTransferError();
         return;
     }
 
     QLocalSocket signalSocket;
-    const QString signalSocketName = requestId + u":cancellation"_s;
+    const QString signalSocketName = context.requestHexId() + u":cancellation"_s;
     signalSocket.connectToServer(signalSocketName);
     const auto cancellationSocketConnectResult = signalSocket.waitForConnected();
     if (!cancellationSocketConnectResult) {
@@ -229,7 +240,7 @@ void CALLBACK cfApiFetchDataCallback(const CF_CALLBACK_INFO *callbackInfo, const
     auto hydrationRequestCancelled = false;
     QObject::connect(&signalSocket, &QLocalSocket::readyRead, &loop, [&] {
         hydrationRequestCancelled = true;
-        qCCritical(lcCfApiWrapper) << "Hydration canceled for " << path << requestId;
+        qCCritical(lcCfApiWrapper) << "Hydration canceled for " << context;
     });
 
     // CFAPI expects sent blocks to be of a multiple of a block size.
@@ -257,13 +268,13 @@ void CALLBACK cfApiFetchDataCallback(const CF_CALLBACK_INFO *callbackInfo, const
 
     QObject::connect(&socket, &QLocalSocket::readyRead, &loop, [&] {
         if (hydrationRequestCancelled) {
-            qCDebug(lcCfApiWrapper) << "Don't transfer data because request" << requestId << "was cancelled";
+            qCDebug(lcCfApiWrapper) << "Don't transfer data because request" << context << "was cancelled";
             return;
         }
 
         const auto receivedData = socket.readAll();
         if (receivedData.isEmpty()) {
-            qCWarning(lcCfApiWrapper) << "Unexpected empty data received" << requestId;
+            qCWarning(lcCfApiWrapper) << "Unexpected empty data received" << context;
             sendTransferError();
             protrudingData.clear();
             loop.quit();
@@ -272,9 +283,9 @@ void CALLBACK cfApiFetchDataCallback(const CF_CALLBACK_INFO *callbackInfo, const
         alignAndSendData(receivedData);
     });
 
-    QObject::connect(vfs, &OCC::VfsCfApi::hydrationRequestFinished, &loop, [&](const QString &id) {
+    QObject::connect(context.vfs, &OCC::VfsCfApi::hydrationRequestFinished, &loop, [&](int64_t id) {
         qDebug(lcCfApiWrapper) << "Hydration finished for request" << id;
-        if (requestId == id) {
+        if (context.requestId == id) {
             loop.quit();
         }
     });
@@ -289,9 +300,10 @@ void CALLBACK cfApiFetchDataCallback(const CF_CALLBACK_INFO *callbackInfo, const
 
     OCC::HydrationJob::Status hydrationJobResult = OCC::HydrationJob::Status::Error;
     const auto invokeFinalizeResult = QMetaObject::invokeMethod(
-        vfs, [&hydrationJobResult, vfs, requestId] { hydrationJobResult = vfs->finalizeHydrationJob(requestId); }, Qt::BlockingQueuedConnection);
+        context.vfs, [&hydrationJobResult, &context] { hydrationJobResult = context.vfs->finalizeHydrationJob(context.requestId); },
+        Qt::BlockingQueuedConnection);
     if (!invokeFinalizeResult) {
-        qCritical(lcCfApiWrapper) << "Failed to finalize hydration job for" << path << requestId;
+        qCritical(lcCfApiWrapper) << "Failed to finalize hydration job for" << context;
     }
 
     if (hydrationJobResult != OCC::HydrationJob::Status::Success) {
@@ -347,19 +359,14 @@ OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> updatePlaceholderStat
 }
 }
 
-void CALLBACK cfApiCancelFetchData(const CF_CALLBACK_INFO *callbackInfo, const CF_CALLBACK_PARAMETERS * /*callbackParameters*/)
+void CALLBACK cfApiCancelFetchData(const CF_CALLBACK_INFO *callbackInfo, const CF_CALLBACK_PARAMETERS *)
 {
-    const auto path = QString(QString::fromWCharArray(callbackInfo->VolumeDosName) + QString::fromWCharArray(callbackInfo->NormalizedPath));
+    const auto context = logCallback(Q_FUNC_INFO, callbackInfo);
 
-    qInfo(lcCfApiWrapper) << "Cancel fetch data of" << path;
-
-    auto vfs = reinterpret_cast<OCC::VfsCfApi *>(callbackInfo->CallbackContext);
-    Q_ASSERT(vfs->metaObject()->className() == QByteArrayLiteral("OCC::VfsCfApi"));
-    const auto requestId = QString::number(callbackInfo->TransferKey.QuadPart, 16);
-
-    const auto invokeResult = QMetaObject::invokeMethod(vfs, [=] { vfs->cancelHydration(requestId, path); }, Qt::QueuedConnection);
+    qInfo(lcCfApiWrapper) << "Cancel fetch data of" << context;
+    const auto invokeResult = QMetaObject::invokeMethod(context.vfs, [context] { context.vfs->cancelHydration(context); }, Qt::QueuedConnection);
     if (!invokeResult) {
-        qCritical(lcCfApiWrapper) << "Failed to cancel hydration for" << path << requestId;
+        qCritical(lcCfApiWrapper) << "Failed to cancel hydration for" << context;
     }
 }
 
@@ -823,4 +830,18 @@ bool OCC::CfApiWrapper::isPlaceHolderInSync(const QString &filePath)
     }
 
     return true;
+}
+
+QDebug operator<<(QDebug debug, const OCC::CfApiWrapper::CallBackContext &context)
+{
+    QDebugStateSaver saver(debug);
+    debug.setAutoInsertSpaces(false);
+    debug << "cfapiCallback(" << context.path << ", " << context.requestHexId();
+    for (const auto &[k, v] : context.extraArgs.asKeyValueRange()) {
+        debug << ", ";
+        debug.noquote() << k << "=";
+        debug.quote() << v;
+    };
+    debug << ")";
+    return debug.maybeSpace();
 }

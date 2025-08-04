@@ -14,7 +14,9 @@ namespace OCC {
 class HydrationJob;
 class VfsCfApiPrivate;
 class SyncJournalFileRecord;
-
+namespace CfApiWrapper {
+    struct CallBackContext;
+}
 class VfsCfApi : public Vfs
 {
     Q_OBJECT
@@ -39,29 +41,29 @@ public:
     Optional<PinState> pinState(const QString &folderPath) override;
     AvailabilityResult availability(const QString &folderPath) override;
 
-    void cancelHydration(const QString &requestId, const QString &path);
+    void cancelHydration(const OCC::CfApiWrapper::CallBackContext &context);
 
-    HydrationJob::Status finalizeHydrationJob(const QString &requestId);
+    HydrationJob::Status finalizeHydrationJob(int64_t requestId);
 
     LocalInfo statTypeVirtualFile(const std::filesystem::directory_entry &path, ItemType type) override;
 
 public Q_SLOTS:
-    void requestHydration(const QString &requestId, const QString &targetPath, const QByteArray &fileId, qint64 requestedFileSize);
+    void requestHydration(const CfApiWrapper::CallBackContext &context, qint64 requestedFileSize);
     void fileStatusChanged(const QString &systemFileName, OCC::SyncFileStatus fileStatus) override;
 
 Q_SIGNALS:
-    void hydrationRequestReady(const QString &requestId);
-    void hydrationRequestFailed(const QString &requestId);
-    void hydrationRequestFinished(const QString &requestId);
+    void hydrationRequestReady(int64_t requestId);
+    void hydrationRequestFailed(int64_t requestId);
+    void hydrationRequestFinished(int64_t requestId);
 
 protected:
     Result<ConvertToPlaceholderResult, QString> updateMetadata(const SyncFileItem &, const QString &, const QString &) override;
     void startImpl(const VfsSetupParams &params) override;
 
 private:
-    void scheduleHydrationJob(const QString &requestId, SyncJournalFileRecord &&record, const QString &targetPath);
+    void scheduleHydrationJob(const OCC::CfApiWrapper::CallBackContext &context, SyncJournalFileRecord &&record);
     void onHydrationJobFinished(HydrationJob *job);
-    HydrationJob *findHydrationJob(const QString &requestId) const;
+    HydrationJob *findHydrationJob(int64_t requestId) const;
 
     QScopedPointer<VfsCfApiPrivate> d;
 };

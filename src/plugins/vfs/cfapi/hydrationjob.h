@@ -4,6 +4,7 @@
  */
 #pragma once
 
+#include "cfapiwrapper.h"
 #include "libsync/account.h"
 #include "libsync/common/syncjournalfilerecord.h"
 
@@ -22,14 +23,14 @@ class HydrationJob : public QObject
 {
     Q_OBJECT
 public:
-    enum class Status {
+    enum class Status : uint8_t {
         Success = 0,
         Error,
         Cancelled,
     };
     Q_ENUM(Status)
 
-    explicit HydrationJob(VfsCfApi *parent);
+    explicit HydrationJob(const CfApiWrapper::CallBackContext &context);
 
     ~HydrationJob() override;
 
@@ -45,11 +46,9 @@ public:
     SyncJournalDb *journal() const;
     void setJournal(SyncJournalDb *journal);
 
-    QString requestId() const;
-    void setRequestId(const QString &requestId);
+    int64_t requestId() const;
 
     QString localFilePathAbs() const;
-    void setLocalFilePathAbs(const QString &folderPath);
 
     QString remotePathRel() const;
     void setRemoteFilePathRel(const QString &path);
@@ -58,6 +57,8 @@ public:
     void setRecord(SyncJournalFileRecord &&record);
 
     Status status() const;
+
+    const CfApiWrapper::CallBackContext context() const;
 
     [[nodiscard]] int errorCode() const;
     [[nodiscard]] int statusCode() const;
@@ -82,15 +83,13 @@ private:
 
     void startServerAndWaitForConnections();
 
-    VfsCfApi *_parent;
     AccountPtr _account;
     QUrl _remoteSyncRootPath;
     QString _localRoot;
     SyncJournalDb *_journal = nullptr;
     bool _isCancelled = false;
 
-    QString _requestId;
-    QString _localFilePathAbs;
+    CfApiWrapper::CallBackContext _context;
     QString _remoteFilePathRel;
 
     SyncJournalFileRecord _record;
