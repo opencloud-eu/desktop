@@ -41,6 +41,16 @@ namespace CfApiWrapper {
 
         inline auto size() const { return _data.size(); }
 
+        inline QByteArray fileId() const
+        {
+            if (get()->FileIdentityLength == 0) {
+                return {};
+            }
+            // the file id increases the struct size, ensure we fetched the whole dynamic struct
+            Q_ASSERT(size() > (sizeof(T) + 20));
+            return QByteArray(reinterpret_cast<char *>(get()->FileIdentity), get()->FileIdentityLength);
+        }
+
         PinState pinState() const
         {
             Q_ASSERT(this);
