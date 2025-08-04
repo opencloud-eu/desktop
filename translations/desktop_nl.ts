@@ -3318,7 +3318,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/platform_win.cpp" line="112"/>
         <source>Shutting down %1</source>
-        <translation type="unfinished"/>
+        <translation>%1 afsluiten</translation>
     </message>
 </context>
 <context>
@@ -3326,7 +3326,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/gui/newwizard/jobs/webfingeruserinfojobfactory.cpp" line="60"/>
         <source>Failed to retrieve user info</source>
-        <translation type="unfinished"/>
+        <translation>Ophalen van gebruikersinformatie is mislukt</translation>
     </message>
 </context>
 <context>
@@ -3334,7 +3334,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/gui/main.cpp" line="467"/>
         <source>Error accessing the configuration file</source>
-        <translation type="unfinished"/>
+        <translation>Fout bij het openen van het configuratiebestand.</translation>
     </message>
     <message>
         <location filename="../src/gui/main.cpp" line="468"/>
@@ -3347,22 +3347,22 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/common/pinstate.cpp" line="27"/>
         <source>Always available locally</source>
-        <translation type="unfinished"/>
+        <translation>Altijd lokaal beschikbaar</translation>
     </message>
     <message>
         <location filename="../src/libsync/common/pinstate.cpp" line="29"/>
         <source>Currently available locally</source>
-        <translation type="unfinished"/>
+        <translation>Momenteel lokaal beschikbaar</translation>
     </message>
     <message>
         <location filename="../src/libsync/common/pinstate.cpp" line="31"/>
         <source>Some available online only</source>
-        <translation type="unfinished"/>
+        <translation>Sommige alleen online beschikbaar</translation>
     </message>
     <message>
         <location filename="../src/libsync/common/pinstate.cpp" line="35"/>
         <source>Available online only</source>
-        <translation type="unfinished"/>
+        <translation>Alleen online beschikbaar</translation>
     </message>
 </context>
 <context>
@@ -3370,17 +3370,17 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="33"/>
         <source>Virtual file created</source>
-        <translation type="unfinished"/>
+        <translation>Virtueel bestand aangemaakt</translation>
     </message>
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="35"/>
         <source>Replaced by virtual file</source>
-        <translation type="unfinished"/>
+        <translation>Vervangen door virtueel bestand</translation>
     </message>
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="37"/>
         <source>Downloaded</source>
-        <translation type="unfinished"/>
+        <translation>Gedownload</translation>
     </message>
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="40"/>
@@ -3390,73 +3390,73 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="45"/>
         <source>Deleted</source>
-        <translation type="unfinished"/>
+        <translation>Verwijderd</translation>
     </message>
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="47"/>
         <source>%1 moved to %2</source>
-        <translation type="unfinished"/>
+        <translation>%1 verplaatst naar %2.</translation>
     </message>
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="49"/>
         <source>Ignored</source>
-        <translation type="unfinished"/>
+        <translation>Genegeerd</translation>
     </message>
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="43"/>
         <source>Server version downloaded, local copy was backed up as conflict file</source>
-        <translation type="unfinished"/>
+        <translation>Serverversie gedownload, lokale kopie is opgeslagen als conflictbestand</translation>
     </message>
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="51"/>
         <source>Error</source>
-        <translation type="unfinished"/>
+        <translation>Fout</translation>
     </message>
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="53"/>
         <source>Updated local metadata</source>
-        <translation type="unfinished"/>
+        <translation>Lokale metagegevens bijgewerkt</translation>
     </message>
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="55"/>
         <location filename="../src/libsync/progressdispatcher.cpp" line="57"/>
         <source>Unknown</source>
-        <translation type="unfinished"/>
+        <translation>Onbekend</translation>
     </message>
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="68"/>
         <source>downloading</source>
-        <translation type="unfinished"/>
+        <translation>downloaden</translation>
     </message>
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="70"/>
         <source>uploading</source>
-        <translation type="unfinished"/>
+        <translation>uploaden</translation>
     </message>
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="72"/>
         <source>deleting</source>
-        <translation type="unfinished"/>
+        <translation>verwijderen</translation>
     </message>
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="74"/>
         <source>moving</source>
-        <translation type="unfinished"/>
+        <translation>verplaatsen</translation>
     </message>
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="76"/>
         <source>ignoring</source>
-        <translation type="unfinished"/>
+        <translation>negeren</translation>
     </message>
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="78"/>
         <source>error</source>
-        <translation type="unfinished"/>
+        <translation>fout</translation>
     </message>
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="80"/>
         <source>updating local metadata</source>
-        <translation type="unfinished"/>
+        <translation>lokale metagegevens bijwerken</translation>
     </message>
 </context>
 <context>
@@ -3464,32 +3464,32 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/gui/guiutility.cpp" line="52"/>
         <source>Could not open browser</source>
-        <translation type="unfinished"/>
+        <translation>Kan browser niet openen</translation>
     </message>
     <message>
         <location filename="../src/gui/guiutility.cpp" line="53"/>
         <source>There was an error when launching the browser to go to URL %1. Maybe no default browser is configured?</source>
-        <translation type="unfinished"/>
+        <translation>Er trad een fout op bij het opstarten van de browser om naar de URL %1 te gaan. Misschien is er geen standaardbrowser ingesteld?</translation>
     </message>
     <message>
         <location filename="../src/gui/guiutility.cpp" line="76"/>
         <source>Could not open email client</source>
-        <translation type="unfinished"/>
+        <translation>Kan e-mailclient niet openen</translation>
     </message>
     <message>
         <location filename="../src/gui/guiutility.cpp" line="77"/>
         <source>There was an error when launching the email client to create a new message. Maybe no default email client is configured?</source>
-        <translation type="unfinished"/>
+        <translation>Er trad een fout op bij het opstarten van de e-mailclient om een nieuw bericht aan te maken. Misschien is er geen standaard e-mailprogramma ingesteld?</translation>
     </message>
     <message>
         <location filename="../src/gui/guiutility.cpp" line="90"/>
         <source>Make always available locally</source>
-        <translation type="unfinished"/>
+        <translation>Altijd lokaal beschikbaar maken</translation>
     </message>
     <message>
         <location filename="../src/gui/guiutility.cpp" line="95"/>
         <source>Free up local space</source>
-        <translation type="unfinished"/>
+        <translation>Lokale ruimte vrijmaken</translation>
     </message>
 </context>
 <context>
@@ -3497,7 +3497,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/gui/main.cpp" line="173"/>
         <source>Some settings were configured in newer versions of this client and use features that are not available in this version</source>
-        <translation type="unfinished"/>
+        <translation>Sommige instellingen zijn geconfigureerd in nieuwere versies van deze client en maken gebruik van functies die in deze versie niet beschikbaar zijn.</translation>
     </message>
 </context>
 </TS>
