@@ -109,7 +109,7 @@ void PropagateUploadFileV1::slotPutFinished()
     }
 
     if (_item->_httpErrorCode == 202) {
-        done(SyncFileItem::NormalError, tr("The server did ask for a removed legacy feature(polling)"));
+        done(SyncFileItem::NormalError, tr("The server did ask for a removed legacy feature (polling)"));
         return;
     }
 

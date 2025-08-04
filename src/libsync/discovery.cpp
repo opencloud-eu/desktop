@@ -1024,7 +1024,7 @@ void ProcessDirectoryJob::processBlacklisted(const PathTuple &path, const OCC::L
     } else {
         item->setInstruction(CSYNC_INSTRUCTION_IGNORE);
         item->_status = SyncFileItem::FileIgnored;
-        item->_errorString = tr("SelectiveSync: Ignored because its path is deselected");
+        item->_errorString = tr("Selective sync: Ignored because its path is deselected");
         _childIgnored = true;
     }
 
