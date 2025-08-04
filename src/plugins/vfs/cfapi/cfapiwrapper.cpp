@@ -299,15 +299,10 @@ void CALLBACK cfApiFetchDataCallback(const CF_CALLBACK_INFO *callbackInfo, const
     }
 }
 
-enum class CfApiUpdateMetadataType {
-    OnlyBasicMetadata,
-    AllMetadata,
-};
-
 OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> updatePlaceholderState(
-    const QString &path, time_t modtime, qint64 size, const QByteArray &fileId, const QString &replacesPath, CfApiUpdateMetadataType updateType)
+    const QString &path, time_t modtime, qint64 size, const QByteArray &fileId, const QString &replacesPath)
 {
-    if (updateType == CfApiUpdateMetadataType::AllMetadata && modtime <= 0) {
+    if (modtime <= 0) {
         Q_ASSERT(false);
         return {u"Could not update metadata due to invalid modification time for %1: %2"_s.arg(path, modtime)};
     }
@@ -327,14 +322,11 @@ OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> updatePlaceholderStat
     const auto previousPinState = info.pinState();
 
     CF_FS_METADATA metadata = {};
-    if (updateType == CfApiUpdateMetadataType::AllMetadata) {
-        metadata.FileSize.QuadPart = size;
-        OCC::Utility::UnixTimeToLargeIntegerFiletime(modtime, &metadata.BasicInfo.CreationTime);
-        metadata.BasicInfo.LastWriteTime = metadata.BasicInfo.CreationTime;
-        metadata.BasicInfo.LastAccessTime = metadata.BasicInfo.CreationTime;
-        metadata.BasicInfo.ChangeTime = metadata.BasicInfo.CreationTime;
-    }
-
+    metadata.FileSize.QuadPart = size;
+    OCC::Utility::UnixTimeToLargeIntegerFiletime(modtime, &metadata.BasicInfo.CreationTime);
+    metadata.BasicInfo.LastWriteTime = metadata.BasicInfo.CreationTime;
+    metadata.BasicInfo.LastAccessTime = metadata.BasicInfo.CreationTime;
+    metadata.BasicInfo.ChangeTime = metadata.BasicInfo.CreationTime;
 
     qCInfo(lcCfApiWrapper) << "updatePlaceholderState" << path << modtime << fileId;
     const qint64 result = CfUpdatePlaceholder(OCC::CfApiWrapper::handleForPath(path).handle(), &metadata, fileId.data(), static_cast<DWORD>(fileId.size()),
@@ -754,7 +746,7 @@ OCC::Result<void, QString> OCC::CfApiWrapper::createPlaceholderInfo(const QStrin
 OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> OCC::CfApiWrapper::updatePlaceholderInfo(
     const QString &path, time_t modtime, qint64 size, const QByteArray &fileId, const QString &replacesPath)
 {
-    return updatePlaceholderState(path, modtime, size, fileId, replacesPath, CfApiUpdateMetadataType::AllMetadata);
+    return updatePlaceholderState(path, modtime, size, fileId, replacesPath);
 }
 
 OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> OCC::CfApiWrapper::dehydratePlaceholder(
@@ -803,7 +795,7 @@ OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> OCC::CfApiWrapper::co
         qCWarning(lcCfApiWrapper) << errorMessage << path << ":" << OCC::Utility::formatWinError(result);
         return errorMessage;
     }
-    return updatePlaceholderState(path, modtime, size, fileId, replacesPath, CfApiUpdateMetadataType::AllMetadata);
+    return updatePlaceholderState(path, modtime, size, fileId, replacesPath);
 }
 
 OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> OCC::CfApiWrapper::updatePlaceholderMarkInSync(const QString &path)
