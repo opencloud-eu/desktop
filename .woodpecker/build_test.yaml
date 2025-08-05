@@ -37,13 +37,15 @@ steps:
   - name: uploadc
     image: opencloudeu/s3cmd:v1
     environment:
+      MC_HOST: *MC_HOST
+      bucket: *bucket
       AWS_ACCESS_KEY_ID:
         from_secret: cache_s3_access_key
       AWS_SECRET_ACCESS_KEY:
         from_secret: cache_s3_secret_key
       source: binaries/*
     commands:
-      - s3cmd --host=${MC_HOST} --host-bucket=${MC_HOST} put binaries/* s3://${bucket}/${CI_REPO_NAME}/pipeline/${CI_PIPELINE_NUMBER}/${target}
+      - s3cmd --host=${MC_HOST} --host-bucket=${MC_HOST} put binaries/* s3://${bucket}/${CI_REPO_NAME}/pipeline/${CI_PIPELINE_NUMBER}/${target}/
 
   - name: artifact_download_links
     image: ${build_image}
