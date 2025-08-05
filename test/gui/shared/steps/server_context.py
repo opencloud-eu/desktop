@@ -80,3 +80,15 @@ def step(context, user):
 @Given('user "|any|" has uploaded file "|any|" to "|any|" in the server')
 def step(context, user, file_name, destination):
     webdav.upload_file(user, file_name, destination)
+
+
+@Then('as "|any|" the content of file "|any|" in the server should match the content of local file "|any|"')
+def step(context, user_name, server_file_name, local_file_name):
+    server_content = webdav.get_file_content(user_name, server_file_name)
+    local_content  = open(get_file_for_upload(local_file_name), "rb").read()
+
+    test.compare(
+        server_content,
+        local_content,
+        f"Server file '{server_file_name}' differs from local file '{local_file_name}'"
+    )

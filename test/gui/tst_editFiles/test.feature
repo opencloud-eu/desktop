@@ -28,15 +28,12 @@ Feature: edit files
 
 
    Scenario: Replace and modify the content of a pdf file multiple times
-     Given user "Alice" has uploaded file "simple.pdf" to "/simple.pdf" in the server
-     And user "Alice" has created folder "simple-folder" in the server
-     And user "Alice" has uploaded file "simple.pdf" to "simple-folder/simple.pdf" in the server
-     And user "Alice" has set up a client with default settings
-     And the user has overwritten the file "simple-folder/simple.pdf" with content "overwrite openCloud test pdf file"
-     When user "Alice" replaces file "simple.pdf" with "simple-folder/simple.pdf" in the sync folder
-     And the user waits for the files to sync
-     And the user overwrites the file "simple.pdf" with content "overwritten to replace file inside root sync folder"
+     Given user "Alice" has set up a client with default settings
+     And the user has copied file "simple.pdf" from outside the sync folder to "/" in the sync folder
+     When the user copies file "simple1.pdf" from outside the sync folder to "/simple.pdf" in the sync folder
      And the user waits for file "simple.pdf" to be synced
-     And the user overwrites the file "simple.pdf" with content "overwritten again to replace file inside root sync folder"
+     And the user copies file "simple2.pdf" from outside the sync folder to "/simple.pdf" in the sync folder
      And the user waits for file "simple.pdf" to be synced
-     Then as "Alice" the file "simple.pdf" should have the content "overwritten again to replace file inside root sync folder" in the server
+     And the user copies file "simple3.pdf" from outside the sync folder to "/simple.pdf" in the sync folder
+     And the user waits for file "simple.pdf" to be synced
+     Then as "Alice" the content of file "simple.pdf" in the server should match the content of local file "simple3.pdf"
