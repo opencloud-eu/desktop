@@ -36,7 +36,7 @@ public:
     // the order of the values markes their importance
     // higher values take prcedence when computing the
     // overall status
-    enum Status {
+    enum Status : uint8_t {
         Undefined,
         Success,
         NotYetStarted,

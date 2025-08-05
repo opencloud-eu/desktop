@@ -153,7 +153,12 @@ void SyncScheduler::enqueueFolder(Folder *folder, Priority priority)
     }
 
     _queue->enqueueFolder(folder, priority);
+
     if (!_currentSync) {
+        startNext();
+    } else if (!OC_ENSURE(_currentSync->isSyncRunning())) {
+        // the sync is not running, this should never happen, enqueue next
+        _currentSync.clear();
         startNext();
     }
 }

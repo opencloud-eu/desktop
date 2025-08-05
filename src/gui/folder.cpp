@@ -331,7 +331,7 @@ QString Folder::cleanPath() const
 
 bool Folder::isSyncRunning() const
 {
-    return !hasSetupError() && _engine->isSyncRunning();
+    return _syncResult.status() == SyncResult::SyncPrepare || _syncResult.status() == SyncResult::SyncRunning;
 }
 
 QUrl Folder::webDavUrl() const
@@ -807,8 +807,8 @@ void Folder::startSync()
     }
 
     _timeSinceLastSyncStart.start();
-    setSyncState(SyncResult::SyncPrepare);
     _syncResult.reset();
+    setSyncState(SyncResult::SyncPrepare);
 
     qCInfo(lcFolder) << "*** Start syncing " << displayName() << "client version" << Theme::instance()->aboutVersions(Theme::VersionFormat::OneLiner);
 
