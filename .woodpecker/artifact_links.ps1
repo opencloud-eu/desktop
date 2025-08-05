@@ -1,6 +1,6 @@
-echo "Artifact Downloads:";
-get-childitem binaries | % {
+Write-Output "Artifact Downloads:";
+get-childitem binaries | ForEach-Object {
     $n=$_.name;
-    echo "https://$env:MC_HOST/public/$env:CI_REPO_NAME/pipeline/$env:CI_PIPELINE_NUMBER/$env:TARGET/$n";
+    Write-Output "$env:MC_HOST/$env:BUCKET/$env:CI_REPO_NAME/pipeline_$env:CI_PIPELINE_NUMBER/$env:TARGET/$n";
 }
 exit 0
