@@ -19,9 +19,6 @@
 
 #include <QObject>
 
-#include <queue>
-#include <unordered_map>
-
 
 class FolderPriorityQueue;
 
@@ -71,5 +68,6 @@ private:
     bool _pauseSyncWhenMetered;
     QPointer<Folder> _currentSync;
     FolderPriorityQueue *_queue;
+    Utility::ChronoElapsedTimer _syncTimer;
 };
 }
