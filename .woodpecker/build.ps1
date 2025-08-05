@@ -1,3 +1,9 @@
+# TESTING
+mkdir binaries
+echo "TEXT" > binaries/test.txt
+echo "TEXT" > binaries/test2.txt
+exit 0
+
 # Enforce Strict Mode to Prevent weird variable behavior
 Set-StrictMode -Version Latest;
 
