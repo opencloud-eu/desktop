@@ -12,6 +12,13 @@
 - Add Windows VFS [[#305](https://github.com/opencloud-eu/desktop/pull/305)]
 - Enable http2 support by default [[#333](https://github.com/opencloud-eu/desktop/pull/333)]
 
+### 📈 Enhancement
+
+- Also ignore all file names called desktop.ini* [[#444](https://github.com/opencloud-eu/desktop/pull/444)]
+- Sync description and space name to Windows [[#443](https://github.com/opencloud-eu/desktop/pull/443)]
+- Replace csync C code with std::filesystem [[#393](https://github.com/opencloud-eu/desktop/pull/393)]
+- Remove margins around the content widgets [[#377](https://github.com/opencloud-eu/desktop/pull/377)]
+
 ### 🐛 Bug Fixes
 
 - Sync Scheduler: Ensure the current sync is actually running [[#452](https://github.com/opencloud-eu/desktop/pull/452)]
@@ -21,11 +28,6 @@
 - Fix printing of duration [[#400](https://github.com/opencloud-eu/desktop/pull/400)]
 - Don't try LockFile on directories [[#366](https://github.com/opencloud-eu/desktop/pull/366)]
 - OAuth: Only display user name in an error if we have one [[#355](https://github.com/opencloud-eu/desktop/pull/355)]
-
-### 📈 Enhancement
-
-- Replace csync C code with std::filesystem [[#393](https://github.com/opencloud-eu/desktop/pull/393)]
-- Remove margins around the content widgets [[#377](https://github.com/opencloud-eu/desktop/pull/377)]
 
 ## [2.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v2.0.0) - 2025-07-03
 
