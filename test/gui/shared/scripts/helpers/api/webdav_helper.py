@@ -30,7 +30,9 @@ def resource_exists(user, resource):
 
 def get_file_content(user, resource):
     response = request.get(get_resource_path(user, resource), user=user)
-    return response.text
+    if resource.lower().endswith('.txt'):
+        return response.text
+    return response.content
 
 
 def get_folder_items_count(user, folder_name):
