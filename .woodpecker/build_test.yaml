@@ -46,7 +46,7 @@ steps:
       AWS_SECRET_ACCESS_KEY:
         from_secret: cache_s3_secret_key
     commands:
-      - s3cmd --host=${MC_HOST} --host-bucket=${MC_HOST} put binaries s3://${bucket}/${CI_REPO_NAME}/pipeline_${CI_PIPELINE_NUMBER}/${target}/
+      - s3cmd --host=${MC_HOST} --host-bucket=${MC_HOST} put --recursive binaries s3://${bucket}/${CI_REPO_NAME}/pipeline_${CI_PIPELINE_NUMBER}/${target}/
 
   - name: artifact_download_links
     image: ${build_image}
