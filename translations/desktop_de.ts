@@ -405,8 +405,8 @@ Dateisynchronisierung Desktop-Client .</translation>
     </message>
     <message>
         <location filename="../src/gui/folderwizard/folderwizardsourcepage.ui" line="39"/>
-        <source>Click to select a the Spaces root folder.</source>
-        <translation>Klicke um den Stammordner der Spaces auszuwählen.</translation>
+        <source>Click to select the Spaces root folder.</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/gui/folderwizard/folderwizardsourcepage.ui" line="42"/>
@@ -1883,71 +1883,61 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
     </message>
     <message>
         <location filename="../src/libsync/discovery.cpp" line="223"/>
-        <source>Stat failed.</source>
-        <translation>Stat fehlgeschlagen.</translation>
-    </message>
-    <message>
-        <location filename="../src/libsync/discovery.cpp" line="226"/>
         <source>Conflict: Server version downloaded, local copy renamed and not uploaded.</source>
         <translation>Konflikt: Serverversion heruntergeladen, lokale Kopie umbenannt und nicht hochgeladen.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="230"/>
-        <source>The filename cannot be encoded on your file system.</source>
-        <translation>Der Dateiname kann auf Ihrem Dateisystem nicht kodiert werden.</translation>
-    </message>
-    <message>
-        <location filename="../src/libsync/discovery.cpp" line="233"/>
+        <location filename="../src/libsync/discovery.cpp" line="227"/>
         <source>The filename is blacklisted on the server.</source>
         <translation>Der Dateiname steht auf dem Server auf der schwarzen Liste.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1027"/>
-        <source>SelectiveSync: Ignored because its path is deselected</source>
-        <translation>SelektivSync: Ignoriert, weil der Pfad abgewählt ist</translation>
-    </message>
-    <message>
-        <location filename="../src/libsync/discovery.cpp" line="1100"/>
+        <location filename="../src/libsync/discovery.cpp" line="1094"/>
         <source>Moved to invalid target, restoring</source>
         <translation>Auf ungültiges Ziel verschoben, Wiederherstellung</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1113"/>
+        <location filename="../src/libsync/discovery.cpp" line="1107"/>
         <source>Not allowed to remove, restoring</source>
         <translation>Entfernen nicht erlaubt, Wiederherstellung</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1059"/>
+        <location filename="../src/libsync/discovery.cpp" line="1053"/>
         <source>Not allowed because you don&apos;t have permission to add subfolders to that folder</source>
         <translation>Nicht erlaubt, da Sie keine Berechtigung haben Unterordner in diesem Ordner anzulegen.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="533"/>
+        <location filename="../src/libsync/discovery.cpp" line="527"/>
         <source>Error while doing a rename, unhandled status code: %1</source>
         <translation>Fehler beim Umbenennen, unbehandelter Statuscode: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1064"/>
+        <location filename="../src/libsync/discovery.cpp" line="1021"/>
+        <source>Selective sync: Ignored because its path is deselected</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/libsync/discovery.cpp" line="1058"/>
         <source>Not allowed because you don&apos;t have permission to add files in that folder</source>
         <translation>Nicht erlaubt, da Sie keine Berechtigung haben Dateien in diesem Ordner anzulegen.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1077"/>
+        <location filename="../src/libsync/discovery.cpp" line="1071"/>
         <source>Not allowed to upload this file because it is read-only on the server, restoring</source>
         <translation>Diese Datei darf nicht hochgeladen werden, da sie auf dem Server schreibgeschützt ist, Wiederherstellung</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1223"/>
+        <location filename="../src/libsync/discovery.cpp" line="1217"/>
         <source>Error while reading the database</source>
         <translation>Fehler beim Lesen der Datenbank</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1248"/>
+        <location filename="../src/libsync/discovery.cpp" line="1242"/>
         <source>This Space is currently unavailable</source>
         <translation>Dieser Space ist aktuell nicht verfügbar</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1269"/>
+        <location filename="../src/libsync/discovery.cpp" line="1263"/>
         <source>Server replied with an error while reading directory &apos;%1&apos; : %2</source>
         <translation>Server antwortete mit einem Fehler beim Lesen des Verzeichnisses &apos;%1&apos; : %2</translation>
     </message>
@@ -2174,8 +2164,8 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
     <name>OCC::PropagateUpdateMetaDataJob</name>
     <message>
         <location filename="../src/libsync/owncloudpropagator.cpp" line="1281"/>
-        <source>Could not update file : %1</source>
-        <translation>Datei konnte nicht aktualisiert werden : %1</translation>
+        <source>Could not update file: %1</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/libsync/owncloudpropagator.cpp" line="1284"/>
@@ -2250,8 +2240,8 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
     </message>
     <message>
         <location filename="../src/libsync/propagateuploadv1.cpp" line="112"/>
-        <source>The server did ask for a removed legacy feature(polling)</source>
-        <translation>Der Server hat nach einem entfernten Legacy-Feature (Polling) gefragt</translation>
+        <source>The server did ask for a removed legacy feature (polling)</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/libsync/propagateuploadv1.cpp" line="132"/>
@@ -2355,8 +2345,8 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
     <name>OCC::SelectiveSyncWidget</name>
     <message>
         <location filename="../src/gui/selectivesyncwidget.cpp" line="69"/>
-        <source>Loading ...</source>
-        <translation>Laden ...</translation>
+        <source>Loading...</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/gui/selectivesyncwidget.cpp" line="75"/>
@@ -2712,8 +2702,8 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
     </message>
     <message>
         <location filename="../src/gui/tlserrordialog.cpp" line="72"/>
-        <source>&lt;div id=&quot;cert&quot;&gt;&lt;h3&gt;with Certificate %1&lt;/h3&gt;&lt;div id=&quot;ccert&quot;&gt;&lt;p&gt;Organization: %2&lt;br/&gt;Unit: %3&lt;br/&gt;Country: %4&lt;/p&gt;&lt;p&gt;Fingerprint (MD5): &lt;tt&gt;%5&lt;/tt&gt;&lt;br/&gt;Fingerprint (SHA1): &lt;tt&gt;%6&lt;/tt&gt;&lt;br/&gt;Fingerprint (SHA256): &lt;tt&gt;%7&lt;/tt&gt;&lt;br/&gt;&lt;br/&gt;Effective Date: %8Expiration Date: %9&lt;/div&gt;&lt;h3&gt;Issuer: %10&lt;/h3&gt;&lt;div id=&quot;issuer&quot;&gt;&lt;p&gt;Organization: %11&lt;br/&gt;Unit: %12&lt;br/&gt;Country: %13&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;</source>
-        <translation>&lt;div id=&quot;cert&quot;&gt;&lt;h3&gt;mit Zertifikat %1&lt;/h3&gt;&lt;div id=&quot;ccert&quot;&gt;&lt;p&gt;Organisation: %2&lt;br/&gt;Einheit: %3&lt;br/&gt;Land: %4&lt;/p&gt;&lt;p&gt;Fingerabdruck print (MD5): &lt;tt&gt;%5&lt;/tt&gt;&lt;br/&gt;Fingerabdruck (SHA1): &lt;tt&gt;%6&lt;/tt&gt;&lt;br/&gt;Fingerabdruck (SHA256): &lt;tt&gt;%7&lt;/tt&gt;&lt;br/&gt;&lt;br/&gt;Gültigkeitsdatum: %8Ablaufdatum: %9&lt;/div&gt;&lt;h3&gt;Aussteller: %10&lt;/h3&gt;&lt;div id=&quot;issuer&quot;&gt;&lt;p&gt;Organisation: %11&lt;br/&gt;Einheit: %12&lt;br/&gt;Land: %13&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;</translation>
+        <source>&lt;div id=&quot;cert&quot;&gt;&lt;h3&gt;with Certificate %1&lt;/h3&gt;&lt;div id=&quot;ccert&quot;&gt;&lt;p&gt;Organization: %2&lt;br/&gt;Unit: %3&lt;br/&gt;Country: %4&lt;/p&gt;&lt;p&gt;Fingerprint (MD5): &lt;tt&gt;%5&lt;/tt&gt;&lt;br/&gt;Fingerprint (SHA1): &lt;tt&gt;%6&lt;/tt&gt;&lt;br/&gt;Fingerprint (SHA256): &lt;tt&gt;%7&lt;/tt&gt;&lt;br/&gt;&lt;br/&gt;Effective Date: %8&lt;br/&gt;Expiration Date: %9&lt;/div&gt;&lt;h3&gt;Issuer: %10&lt;/h3&gt;&lt;div id=&quot;issuer&quot;&gt;&lt;p&gt;Organization: %11&lt;br/&gt;Unit: %12&lt;br/&gt;Country: %13&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
