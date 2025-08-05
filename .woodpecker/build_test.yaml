@@ -35,7 +35,7 @@ steps:
       - pwsh .woodpecker/build.ps1
 
   - name: uploadc
-    image: woodpeckerci/plugin-s3
+    image: opencloudeu/s3cmd:v1
     environment:
       AWS_ACCESS_KEY_ID:
         from_secret: cache_s3_access_key
