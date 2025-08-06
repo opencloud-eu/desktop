@@ -14,7 +14,7 @@
 
 ### 📈 Enhancement
 
-- Also ignore all file names called desktop.ini* [[#444](https://github.com/opencloud-eu/desktop/pull/444)]
+- Fix assert in httplogger if a cached request is actuall send [[#456](https://github.com/opencloud-eu/desktop/pull/456)]
 - Sync description and space name to Windows [[#443](https://github.com/opencloud-eu/desktop/pull/443)]
 - Replace csync C code with std::filesystem [[#393](https://github.com/opencloud-eu/desktop/pull/393)]
 - Remove margins around the content widgets [[#377](https://github.com/opencloud-eu/desktop/pull/377)]
