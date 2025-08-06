@@ -70,6 +70,14 @@ class FolderWatcherPrivate : public QObject
 {
     Q_OBJECT
 public:
+    enum class ChangeAction : uint8_t {
+        ACTION_ADDED = FILE_ACTION_ADDED,
+        ACTION_REMOVED = FILE_ACTION_REMOVED,
+        ACTION_MODIFIED = FILE_ACTION_MODIFIED,
+        ACTION_RENAMED_OLD_NAME = FILE_ACTION_RENAMED_OLD_NAME,
+        ACTION_RENAMED_NEW_NAME = FILE_ACTION_RENAMED_NEW_NAME
+    };
+    Q_ENUM(ChangeAction)
     FolderWatcherPrivate(FolderWatcher *p, const QString &path);
     ~FolderWatcherPrivate() override;
 
