@@ -247,20 +247,15 @@ void PropagateLocalRename::start()
         }
     }
 
-    SyncJournalFileRecord oldRecord;
-    propagator()->_journal->getFileRecord(_item->_originalFile, &oldRecord);
+    const SyncJournalFileRecord oldRecord = propagator()->_journal->getFileRecord(_item->_originalFile);
     propagator()->_journal->deleteFileRecord(_item->_originalFile);
-
-    auto &vfs = propagator()->syncOptions()._vfs;
-    auto pinState = vfs->pinState(_item->_originalFile);
-    std::ignore = vfs->setPinState(_item->_originalFile, PinState::Inherited);
 
     const auto oldFile = _item->localName();
 
     if (!_item->isDirectory()) { // Directories are saved at the end
         SyncFileItem newItem(*_item);
         if (oldRecord.isValid()) {
-            newItem._checksumHeader = oldRecord._checksumHeader;
+            newItem._checksumHeader = oldRecord.checksumHeader();
         }
         const auto result = propagator()->updateMetadata(newItem);
         if (!result) {
@@ -276,11 +271,6 @@ void PropagateLocalRename::start()
             done(SyncFileItem::FatalError, tr("Failed to rename file"));
             return;
         }
-    }
-    if (pinState && *pinState != PinState::Inherited
-        && !vfs->setPinState(_item->_renameTarget, *pinState)) {
-        done(SyncFileItem::NormalError, tr("Error setting pin state"));
-        return;
     }
 
     propagator()->_journal->commit(QStringLiteral("localRename"));

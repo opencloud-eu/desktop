@@ -24,7 +24,7 @@ Feature: adding accounts
             | server   | %local_server% |
             | user     | Alice          |
             | password | 1234           |
-        Then the account with displayname "Alice Hansen" and host "%local_server_hostname%" should be displayed
+        Then the account with displayname "Alice Hansen" should be displayed
 
 
     Scenario: Adding multiple accounts
@@ -36,8 +36,8 @@ Feature: adding accounts
             | user     | Brian          |
             | password | AaBb2Cc3Dd4    |
         Then "Brian Murphy" account should be opened
-        And the account with displayname "Alice Hansen" and host "%local_server_hostname%" should be displayed
-        And the account with displayname "Brian Murphy" and host "%local_server_hostname%" should be displayed
+        And the account with displayname "Alice Hansen" should be displayed
+        And the account with displayname "Brian Murphy" should be displayed
 
 
     Scenario: Adding account with self signed certificate for the first time

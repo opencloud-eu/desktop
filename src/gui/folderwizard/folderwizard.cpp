@@ -70,16 +70,18 @@ FolderWizardPrivate::FolderWizardPrivate(FolderWizard *q, const AccountStatePtr 
     : q_ptr(q)
     , _account(account)
     , _spacesPage(new SpacesPage(account->account(), q))
-    , _folderWizardSelectiveSyncPage(new FolderWizardSelectiveSync(this))
 {
-    q->setPage(FolderWizard::Page_Space, _spacesPage);
-
     if (!_account->account()->hasDefaultSyncRoot()) {
         _folderWizardSourcePage = new FolderWizardLocalPath(this);
         q->setPage(FolderWizard::Page_Source, _folderWizardSourcePage);
     }
 
-    q->setPage(FolderWizard::Page_SelectiveSync, _folderWizardSelectiveSyncPage);
+    q->setPage(FolderWizard::Page_Space, _spacesPage);
+
+    if (VfsPluginManager::instance().bestAvailableVfsMode() != Vfs::WindowsCfApi) {
+        _folderWizardSelectiveSyncPage = new FolderWizardSelectiveSync(this);
+        q->setPage(FolderWizard::Page_SelectiveSync, _folderWizardSelectiveSyncPage);
+    }
 }
 
 QString FolderWizardPrivate::localPath() const
@@ -119,19 +121,7 @@ const AccountStatePtr &FolderWizardPrivate::accountState()
 
 bool FolderWizardPrivate::useVirtualFiles() const
 {
-    const auto mode = VfsPluginManager::instance().bestAvailableVfsMode();
-    const bool useVirtualFiles = (Theme::instance()->forceVirtualFilesOption() && mode == Vfs::WindowsCfApi) || (_folderWizardSelectiveSyncPage->useVirtualFiles());
-    if (useVirtualFiles) {
-        const auto availability = Vfs::checkAvailability(localPath(), mode);
-        if (!availability) {
-            auto msg = new QMessageBox(QMessageBox::Warning, FolderWizard::tr("Virtual files are not available for the selected folder"), availability.error(),
-                QMessageBox::Ok, ocApp()->settingsDialog());
-            msg->setAttribute(Qt::WA_DeleteOnClose);
-            msg->open();
-            return false;
-        }
-    }
-    return useVirtualFiles;
+    return VfsPluginManager::instance().bestAvailableVfsMode() == Vfs::WindowsCfApi;
 }
 
 FolderWizard::FolderWizard(const AccountStatePtr &account, QWidget *parent)

@@ -12,6 +12,7 @@
 
 #include <QtTest>
 
+using namespace Qt::Literals::StringLiterals;
 using namespace OCC;
 
 namespace {
@@ -69,9 +70,7 @@ bool expectAndWipeConflict(FakeFolder &fFolder, const QString &path)
 
 SyncJournalFileRecord dbRecord(FakeFolder &folder, const QString &path)
 {
-    SyncJournalFileRecord record;
-    folder.syncJournal().getFileRecord(path, &record);
-    return record;
+    return folder.syncJournal().getFileRecord(path);
 }
 
 }
@@ -109,7 +108,13 @@ private Q_SLOTS:
         fakeFolder.localModifier().appendByte(QStringLiteral("A/a2"));
         fakeFolder.remoteModifier().appendByte(QStringLiteral("A/a2"));
         fakeFolder.remoteModifier().appendByte(QStringLiteral("A/a2"));
-        QVERIFY(fakeFolder.applyLocalModificationsAndSync());
+        if (filesAreDehydrated) {
+            // one sync fails as accessing the out of sync placeholder, to  modify, fails
+            QVERIFY(!fakeFolder.applyLocalModificationsWithoutSync());
+            QVERIFY(fakeFolder.applyLocalModificationsAndSync());
+        } else {
+            QVERIFY(fakeFolder.applyLocalModificationsAndSync());
+        }
 
         const auto &conflicts = findConflicts(fakeFolder.currentLocalState().children[QStringLiteral("A")]);
         if (filesAreDehydrated) {
@@ -147,8 +152,7 @@ private Q_SLOTS:
                     conflictMap[baseFileId] = conflictFile;
                     [&] {
                         QVERIFY(!baseFileId.isEmpty());
-                        QCOMPARE(request.rawHeader("OC-ConflictInitialBasePath"),
-                                 Utility::conflictFileBaseNameFromPattern(conflictFile.toUtf8()));
+                        QCOMPARE(QString::fromUtf8(request.rawHeader("OC-ConflictInitialBasePath")), Utility::conflictFileBaseNameFromPattern(conflictFile));
                     }();
                 }
             }
@@ -160,7 +164,13 @@ private Q_SLOTS:
         fakeFolder.localModifier().appendByte(QStringLiteral("A/a2"));
         fakeFolder.remoteModifier().appendByte(QStringLiteral("A/a2"));
         fakeFolder.remoteModifier().appendByte(QStringLiteral("A/a2"));
-        QVERIFY(fakeFolder.applyLocalModificationsAndSync());
+        if (filesAreDehydrated) {
+            // one sync fails as accessing the out of sync placeholder, to  modify, fails
+            QVERIFY(!fakeFolder.applyLocalModificationsWithoutSync());
+            QVERIFY(fakeFolder.applyLocalModificationsAndSync());
+        } else {
+            QVERIFY(fakeFolder.applyLocalModificationsAndSync());
+        }
         if (filesAreDehydrated) {
             // There should be no conflicts: before a modification is done to a local file,
             // it will be downloaded from the remote first.
@@ -175,7 +185,7 @@ private Q_SLOTS:
             QVERIFY(conflictMap.contains(a1FileId));
             QVERIFY(conflictMap.contains(a2FileId));
             QCOMPARE(conflictMap.size(), 2);
-            QCOMPARE(Utility::conflictFileBaseNameFromPattern(conflictMap[a1FileId].toUtf8()), QByteArray("A/a1"));
+            QCOMPARE(Utility::conflictFileBaseNameFromPattern(conflictMap[a1FileId]), u"A/a1"_s);
 
             // Check that the conflict file contains the username
             QVERIFY(conflictMap[a1FileId].contains(QString::fromLatin1("(conflicted copy %1 ").arg(fakeFolder.syncEngine().account()->davDisplayName())));
@@ -207,8 +217,7 @@ private Q_SLOTS:
                     conflictMap[baseFileId] = conflictFile;
                     [&] {
                         QVERIFY(!baseFileId.isEmpty());
-                        QCOMPARE(request.rawHeader("OC-ConflictInitialBasePath"),
-                                 Utility::conflictFileBaseNameFromPattern(conflictFile.toUtf8()));
+                        QCOMPARE(QString::fromUtf8(request.rawHeader("OC-ConflictInitialBasePath")), Utility::conflictFileBaseNameFromPattern(conflictFile));
                     }();
                 }
             }
@@ -362,7 +371,13 @@ private Q_SLOTS:
         fakeFolder.localModifier().appendByte(QStringLiteral("A/a2"));
         fakeFolder.localModifier().appendByte(QStringLiteral("A/a2"));
         fakeFolder.remoteModifier().appendByte(QStringLiteral("A/a2"));
-        QVERIFY(fakeFolder.applyLocalModificationsAndSync());
+        if (filesAreDehydrated) {
+            // one sync fails as accessing the out of sync placeholder, to  modify, fails
+            QVERIFY(!fakeFolder.applyLocalModificationsWithoutSync());
+            QVERIFY(fakeFolder.applyLocalModificationsAndSync());
+        } else {
+            QVERIFY(fakeFolder.applyLocalModificationsAndSync());
+        }
 
         const auto &conflicts = findConflicts(fakeFolder.currentLocalState().children[QStringLiteral("A")]);
         if (filesAreDehydrated) {
@@ -469,7 +484,7 @@ private Q_SLOTS:
     {
         QFETCH(QString, input);
         QFETCH(QString, output);
-        QCOMPARE(Utility::conflictFileBaseNameFromPattern(input.toUtf8()), output.toUtf8());
+        QCOMPARE(Utility::conflictFileBaseNameFromPattern(input), output);
     }
 
     void testLocalDirRemoteFileConflict()

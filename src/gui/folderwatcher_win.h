@@ -15,9 +15,9 @@
 #ifndef MIRALL_FOLDERWATCHER_WIN_H
 #define MIRALL_FOLDERWATCHER_WIN_H
 
-#include <QAtomicInt>
+#include "libsync/common/utility_win.h"
+
 #include <QThread>
-#include <qt_windows.h>
 
 namespace OCC {
 
@@ -57,7 +57,7 @@ private:
     FolderWatcherPrivate *_parent;
     const QString _path;
     const QString _longPath;
-    HANDLE _directory;
+    Utility::Handle _directory;
     HANDLE _resultEvent;
     HANDLE _stopEvent;
 };

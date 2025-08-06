@@ -212,9 +212,6 @@ void AccountManager::deleteAccount(AccountStatePtr account)
 
     if (account->account()->hasDefaultSyncRoot()) {
         Utility::unmarkDirectoryAsSyncRoot(account->account()->defaultSyncRoot());
-#ifdef Q_OS_WIN
-        NavigationPaneHelper::updateCloudStorageRegistry();
-#endif
     }
 
     // Forget account credentials, cookies
@@ -239,6 +236,7 @@ void AccountManager::shutdown()
     for (const auto &acc : accounts) {
         Q_EMIT accountRemoved(acc);
     }
+    qDeleteAll(accounts);
 }
 
 AccountStatePtr AccountManager::addAccountState(std::unique_ptr<AccountState> &&accountState)

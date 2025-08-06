@@ -59,6 +59,7 @@ class OPENCLOUD_GUI_EXPORT Folder : public QObject
     Q_PROPERTY(bool isSyncPaused READ isSyncPaused NOTIFY syncPausedChanged)
     Q_PROPERTY(bool isSyncRunning READ isSyncRunning NOTIFY isSyncRunningChanged)
     Q_PROPERTY(bool isDeployed READ isDeployed CONSTANT)
+    Q_PROPERTY(Vfs::Mode vfsMode READ vfsMode CONSTANT)
     QML_ELEMENT
     QML_UNCREATABLE("Folders can only be created by the FolderManager")
 
@@ -69,7 +70,7 @@ public:
     };
     Q_ENUM(ChangeReason)
 
-    static void prepareFolder(const QString &path);
+    static void prepareFolder(const QString &path, const std::optional<QString> &displayName = {}, const std::optional<QString> &description = {});
 
     ~Folder() override;
     /**
@@ -198,28 +199,16 @@ public:
     bool supportsSelectiveSync() const;
 
     /**
-     * Whether to register the parent folder of our sync root in the explorer
-     * The default behaviour is to register alls spaces in a common dir in the home folder
-     * in that case we only display that common dir in the Windows side bar.
-     * With the legacy behaviour we only have one dir which we will register with Windows
-     */
-    bool groupInSidebar() const;
-
-    /**
      * The folder is deployed by an admin
      * We will hide the remove option and the disable/enable vfs option.
      */
     bool isDeployed() const;
 
-    auto priority()
-    {
-        return _definition.priority();
-    }
+    Vfs::Mode vfsMode() const;
 
-    void setPriority(uint32_t p)
-    {
-        return _definition.setPriority(p);
-    }
+    uint32_t priority();
+
+    void setPriority(uint32_t p);
 
     static Result<void, QString> checkPathLength(const QString &path);
 
@@ -270,23 +259,6 @@ public Q_SLOTS:
        * sync run to be scheduled.
        */
     void slotWatchedPathsChanged(const QSet<QString> &paths, ChangeReason reason);
-
-    /**
-     * Mark a virtual file as being requested for download, and start a sync.
-     *
-     * "implicit" here means that this download request comes from the user wanting
-     * to access the file's data. The user did not change the file's pin state.
-     * If the file is currently OnlineOnly its state will change to Unspecified.
-     *
-     * The download request is stored by setting ItemTypeVirtualFileDownload
-     * in the database. This is necessary since the hydration is not driven by
-     * the pin state.
-     *
-     * relativepath is the folder-relative path to the file (including the extension)
-     *
-     * Note, passing directories is not supported. Files only.
-     */
-    void implicitlyHydrateFile(const QString &relativepath);
 
     /** Ensures that the next sync performs a full local discovery. */
     void slotNextSyncFullLocalDiscovery();

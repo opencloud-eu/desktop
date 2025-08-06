@@ -127,24 +127,20 @@ void PropagateRemoteMove::finalize()
     // reopens the db successfully.
     // The db is only queried to transfer the content checksum from the old
     // to the new record. It is not a problem to skip it here.
-    SyncJournalFileRecord oldRecord;
-    propagator()->_journal->getFileRecord(_item->_originalFile, &oldRecord);
-    auto &vfs = propagator()->syncOptions()._vfs;
-    auto pinState = vfs->pinState(_item->_originalFile);
+    const SyncJournalFileRecord oldRecord = propagator()->_journal->getFileRecord(_item->_originalFile);
 
     // Delete old db data.
     propagator()->_journal->deleteFileRecord(_item->_originalFile);
-    std::ignore = vfs->setPinState(_item->_originalFile, PinState::Inherited);
 
     SyncFileItem newItem(*_item);
     newItem._type = _item->_type;
     if (oldRecord.isValid()) {
-        newItem._checksumHeader = oldRecord._checksumHeader;
-        if (newItem._size != oldRecord._fileSize) {
-            qCWarning(lcPropagateRemoteMove) << "File sizes differ on server vs sync journal: " << newItem._size << oldRecord._fileSize;
+        newItem._checksumHeader = oldRecord.checksumHeader();
+        if (newItem._size != oldRecord.size()) {
+            qCWarning(lcPropagateRemoteMove) << "File sizes differ on server vs sync journal: " << newItem._size << oldRecord.size();
 
             // the server might have claimed a different size, we take the old one from the DB
-            newItem._size = oldRecord._fileSize;
+            newItem._size = oldRecord.size();
         }
     }
     const auto result = propagator()->updateMetadata(newItem);
@@ -153,11 +149,6 @@ void PropagateRemoteMove::finalize()
         return;
     } else if (result.get() == Vfs::ConvertToPlaceholderResult::Locked) {
         done(SyncFileItem::SoftError, tr("The file %1 is currently in use").arg(newItem.localName()));
-        return;
-    }
-    if (pinState && *pinState != PinState::Inherited
-        && !vfs->setPinState(newItem._renameTarget, *pinState)) {
-        done(SyncFileItem::NormalError, tr("Error setting pin state"));
         return;
     }
 

@@ -131,7 +131,6 @@ public:
     static_assert(
         ErrorStatusItems.size() + OtherDisplayableStatusItems.size() == StatusCount - 2, "ErrorStatusItems or OtherDisplayableStatusItems is incomplete");
 
-    SyncJournalFileRecord toSyncJournalFileRecordWithInode(const QString &localFileName) const;
 
     /** Creates a basic SyncFileItem from a DB record
      *
@@ -143,7 +142,7 @@ public:
 
     SyncFileItem(const QString &localName = {})
         : _localName(localName)
-        , _type(ItemTypeSkip)
+        , _type(ItemTypeUnsupported)
         , _direction(None)
         , _serverHasIgnoredFiles(false)
         , _hasBlacklistEntry(false)
@@ -307,9 +306,6 @@ public:
     // The size and modtime of the file getting overwritten (on the disk for downloads, on the server for uploads).
     qint64 _previousSize;
     time_t _previousModtime;
-
-    QString _directDownloadUrl;
-    QString _directDownloadCookies;
 
     bool _relevantDirectoyInstruction = false;
     bool _finished = false;

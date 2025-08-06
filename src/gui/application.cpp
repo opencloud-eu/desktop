@@ -51,6 +51,7 @@
 #include <QDesktopServices>
 #include <QMenuBar>
 
+using namespace Qt::Literals::StringLiterals;
 using namespace OCC;
 
 Q_LOGGING_CATEGORY(lcApplication, "gui.application", QtInfoMsg)
@@ -70,9 +71,6 @@ void setUpInitialSyncFolder(AccountStatePtr accountStatePtr, bool useVfs)
         accountStatePtr->checkConnectivity();
         FolderMan::instance()->setSyncEnabled(true);
         FolderMan::instance()->scheduleAllFolders();
-#ifdef Q_OS_WIN
-        NavigationPaneHelper::updateCloudStorageRegistry();
-#endif
     };
 
     QObject::connect(
@@ -85,7 +83,6 @@ void setUpInitialSyncFolder(AccountStatePtr accountStatePtr, bool useVfs)
             if (!spaces.isEmpty()) {
                 const QString localDir(accountStatePtr->account()->defaultSyncRoot());
                 FileSystem::setFolderMinimumPermissions(localDir);
-                Folder::prepareFolder(localDir);
                 Utility::setupFavLink(localDir);
                 for (const auto *space : spaces) {
                     const QString name = space->displayName();
@@ -123,7 +120,7 @@ Application::Application(const QString &displayLanguage, bool debugMode)
     qCInfo(lcApplication) << "Plugin search paths:" << qApp->libraryPaths();
 
     // Check vfs plugins
-    if (Theme::instance()->showVirtualFilesOption() && VfsPluginManager::instance().bestAvailableVfsMode() == Vfs::Off) {
+    if (VfsPluginManager::instance().bestAvailableVfsMode() == Vfs::Off) {
         qCWarning(lcApplication) << "Theme wants to show vfs mode, but no vfs plugins are available";
     }
     if (VfsPluginManager::instance().isVfsPluginAvailable(Vfs::WindowsCfApi))
@@ -173,7 +170,7 @@ Application::Application(const QString &displayLanguage, bool debugMode)
 #endif
 #ifdef Q_OS_WIN
     // update the existing sidebar entries
-    NavigationPaneHelper::updateCloudStorageRegistry();
+    NavigationPaneHelper::removeLegacyCloudStorageRegistry();
 #endif
 }
 

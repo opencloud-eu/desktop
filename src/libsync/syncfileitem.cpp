@@ -25,53 +25,19 @@ namespace OCC {
 
 Q_LOGGING_CATEGORY(lcFileItem, "sync.fileitem", QtInfoMsg)
 
-SyncJournalFileRecord SyncFileItem::toSyncJournalFileRecordWithInode(const QString &localFileName) const
-{
-    SyncJournalFileRecord rec;
-    rec._path = destination().toUtf8();
-    rec._modtime = _modtime;
-
-    // Some types should never be written to the database when propagation completes
-    rec._type = _type;
-    if (rec._type == ItemTypeVirtualFileDownload)
-        rec._type = ItemTypeFile;
-    if (rec._type == ItemTypeVirtualFileDehydration)
-        rec._type = ItemTypeVirtualFile;
-
-    rec._etag = _etag.toUtf8();
-    rec._fileId = _fileId;
-    rec._fileSize = _size;
-    rec._remotePerm = _remotePerm;
-    rec._serverHasIgnoredFiles = _serverHasIgnoredFiles;
-    rec._checksumHeader = _checksumHeader;
-
-    // Update the inode if possible
-    rec._inode = _inode;
-    if (FileSystem::getInode(localFileName, &rec._inode)) {
-        qCDebug(lcFileItem) << localFileName << "Retrieved inode " << rec._inode << "(previous item inode: " << _inode << ")";
-    } else {
-        // use the "old" inode coming with the item for the case where the
-        // filesystem stat fails. That can happen if the the file was removed
-        // or renamed meanwhile. For the rename case we still need the inode to
-        // detect the rename though.
-        qCWarning(lcFileItem) << "Failed to query the 'inode' for file " << localFileName;
-    }
-    return rec;
-}
-
 SyncFileItemPtr SyncFileItem::fromSyncJournalFileRecord(const SyncJournalFileRecord &rec)
 {
     auto item = SyncFileItemPtr::create();
-    item->_localName = QString::fromUtf8(rec._path);
-    item->_inode = rec._inode;
-    item->_modtime = rec._modtime;
-    item->_type = rec._type;
-    item->_etag = QString::fromUtf8(rec._etag);
-    item->_fileId = rec._fileId;
-    item->_size = rec._fileSize;
-    item->_remotePerm = rec._remotePerm;
-    item->_serverHasIgnoredFiles = rec._serverHasIgnoredFiles;
-    item->_checksumHeader = rec._checksumHeader;
+    item->_localName = rec.path();
+    item->_inode = rec.inode();
+    item->_modtime = rec.modtime();
+    item->_type = rec.type();
+    item->_etag = rec.etag();
+    item->_fileId = rec.fileId();
+    item->_size = rec.size();
+    item->_remotePerm = rec.remotePerm();
+    item->_serverHasIgnoredFiles = rec.serverHasIgnoredFiles();
+    item->_checksumHeader = rec.checksumHeader();
     return item;
 }
 

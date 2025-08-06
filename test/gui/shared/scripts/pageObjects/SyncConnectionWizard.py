@@ -246,9 +246,9 @@ class SyncConnectionWizard:
 
     @staticmethod
     def sync_space(space_name):
+        SyncConnectionWizard.set_sync_path(get_current_user_sync_path())
         SyncConnectionWizard.select_space(space_name)
         SyncConnectionWizard.next_step()
-        SyncConnectionWizard.set_sync_path(get_current_user_sync_path())
         SyncConnectionWizard.add_sync_connection()
 
     @staticmethod

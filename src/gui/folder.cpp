@@ -17,7 +17,6 @@
 #include "folder.h"
 
 #include "account.h"
-#include "accountmanager.h"
 #include "accountstate.h"
 #include "application.h"
 #include "common/checksums.h"
@@ -58,6 +57,7 @@
 #include <QApplication>
 #include <QMessageBox>
 
+using namespace Qt::Literals::StringLiterals;
 using namespace std::chrono_literals;
 
 namespace {
@@ -91,7 +91,6 @@ Folder::Folder(const FolderDefinition &definition, const AccountStatePtr &accoun
     setSyncState(status);
     // check if the local path exists
     if (checkLocalPath()) {
-        prepareFolder(path());
         // those errors should not persist over sessions
         _journal.wipeErrorBlacklistCategory(SyncJournalErrorBlacklistRecord::Category::LocalSoftError);
         _engine.reset(new SyncEngine(_accountState->account(), webDavUrl(), path(), {}, &_journal));
@@ -127,6 +126,7 @@ Folder::Folder(const FolderDefinition &definition, const AccountStatePtr &accoun
 
         connect(_accountState->account()->spacesManager(), &GraphApi::SpacesManager::spaceChanged, this, [this](GraphApi::Space *changedSpace) {
             if (_definition.spaceId() == changedSpace->id()) {
+                prepareFolder(path(), displayName(), changedSpace->drive().getDescription());
                 Q_EMIT spaceChanged();
             }
         });
@@ -226,7 +226,8 @@ SyncOptions Folder::loadSyncOptions()
 
     opt._moveFilesToTrash = cfgFile.moveToTrash();
     opt._vfs = _vfs;
-    opt._parallelNetworkJobs = _accountState->account()->isHttp2Supported() ? 20 : 6;
+    // account is currently a shared ptr and thus the lifetime of the account object is guaranteed
+    opt._parallelNetworkJobs = [account = _accountState->account()] { return account->isHttp2Supported() ? 20 : 6; };
 
     return opt;
 }
@@ -240,17 +241,37 @@ void Folder::setIsReady(bool b)
     Q_EMIT isReadyChanged();
 }
 
-void Folder::prepareFolder(const QString &path)
+void Folder::prepareFolder(const QString &path, const std::optional<QString> &displayName, const std::optional<QString> &description)
 {
 #ifdef Q_OS_WIN
     // First create a Desktop.ini so that the folder and favorite link show our application's icon.
-    const QFileInfo desktopIniPath{QStringLiteral("%1/Desktop.ini").arg(path)};
+    const QFileInfo desktopIniPath{u"%1/Desktop.ini"_s.arg(path)};
     {
-        const QString updateIconKey = QStringLiteral("%1/UpdateIcon").arg(Theme::instance()->appName());
+        const QString updateIconKey = u"%1/UpdateIcon"_s.arg(Theme::instance()->appName());
+        const QString localizedNameKey = u".ShellClassInfo/LocalizedResourcename"_s;
         QSettings desktopIni(desktopIniPath.absoluteFilePath(), QSettings::IniFormat);
         if (desktopIni.value(updateIconKey, true).toBool()) {
             qCInfo(lcFolder) << "Creating" << desktopIni.fileName() << "to set a folder icon in Explorer.";
-            desktopIni.setValue(QStringLiteral(".ShellClassInfo/IconResource"), QDir::toNativeSeparators(qApp->applicationFilePath()));
+            desktopIni.setValue(u".ShellClassInfo/IconResource"_s, QDir::toNativeSeparators(qApp->applicationFilePath()));
+            desktopIni.setValue(u".ShellClassInfo/ConfirmFileOp"_s, 1);
+            if (description.has_value()) {
+                QString descriptionValue = description.value();
+                // the description can still be empty
+                if (descriptionValue.isEmpty()) {
+                    const auto displayNameVal = displayName.has_value() ? displayName.value() : desktopIni.value(localizedNameKey).toString();
+                    if (displayNameVal.isEmpty()) {
+                        descriptionValue = Theme::instance()->appNameGUI();
+                    } else {
+                        descriptionValue = u"%1 - %2"_s.arg(Theme::instance()->appNameGUI(), displayNameVal);
+                    }
+                }
+                desktopIni.setValue(u".ShellClassInfo/InfoTip"_s, descriptionValue);
+            }
+            // we got an actual displayName, update
+            if (displayName.has_value()) {
+                Q_ASSERT(!displayName->isEmpty());
+                desktopIni.setValue(u".ShellClassInfo/LocalizedResourcename"_s, displayName.value());
+            }
             desktopIni.setValue(updateIconKey, true);
         } else {
             qCInfo(lcFolder) << "Skip icon update for" << desktopIni.fileName() << "," << updateIconKey << "is disabled";
@@ -330,7 +351,7 @@ QString Folder::cleanPath() const
 
 bool Folder::isSyncRunning() const
 {
-    return !hasSetupError() && _engine->isSyncRunning();
+    return _syncResult.status() == SyncResult::SyncPrepare || _syncResult.status() == SyncResult::SyncRunning;
 }
 
 QUrl Folder::webDavUrl() const
@@ -502,13 +523,12 @@ void Folder::startVfs()
         return;
     }
 
-    VfsSetupParams vfsParams(_accountState->account(), webDavUrl(), groupInSidebar(), _engine.get());
+    VfsSetupParams vfsParams(_accountState->account(), webDavUrl(), _definition.spaceId(), _engine.get());
     vfsParams.filesystemPath = path();
     vfsParams.journal = &_journal;
     vfsParams.providerDisplayName = Theme::instance()->appNameGUI();
     vfsParams.providerName = Theme::instance()->appName();
     vfsParams.providerVersion = Version::version();
-    vfsParams.multipleAccountsRegistered = AccountManager::instance()->accounts().size() > 1;
 
     connect(&_engine->syncFileStatusTracker(), &SyncFileStatusTracker::fileStatusChanged,
         _vfs.data(), &Vfs::fileStatusChanged);
@@ -603,13 +623,13 @@ void Folder::slotWatchedPathsChanged(const QSet<QString> &paths, ChangeReason re
         // extra sure to not miss relevant changes.
         _localDiscoveryTracker->addTouchedPath(relativePath);
 
-        SyncJournalFileRecord record;
-        _journal.getFileRecord(relativePath.toUtf8(), &record);
+        const SyncJournalFileRecord record = _journal.getFileRecord(relativePath);
         if (reason != ChangeReason::UnLock) {
             // Check that the mtime/size actually changed or there was
             // an attribute change (pin state) that caused the notification
             bool spurious = false;
-            if (record.isValid() && !FileSystem::fileChanged(QFileInfo{path}, record._fileSize, record._modtime, record._inode)) {
+            if (record.isValid()
+                && !FileSystem::fileChanged(FileSystem::toFilesystemPath(path), FileSystem::FileChangedInfo::fromSyncJournalFileRecord(record))) {
                 spurious = true;
 
                 if (auto pinState = _vfs->pinState(relativePath)) {
@@ -632,36 +652,6 @@ void Folder::slotWatchedPathsChanged(const QSet<QString> &paths, ChangeReason re
     if (needSync && canSync()) {
         FolderMan::instance()->scheduler()->enqueueFolder(this);
     }
-}
-
-void Folder::implicitlyHydrateFile(const QString &relativepath)
-{
-    qCInfo(lcFolder) << "Implicitly hydrate virtual file:" << relativepath;
-
-    // Set in the database that we should download the file
-    SyncJournalFileRecord record;
-    _journal.getFileRecord(relativepath.toUtf8(), &record);
-    if (!record.isValid()) {
-        qCInfo(lcFolder) << "Did not find file in db";
-        return;
-    }
-    if (!record.isVirtualFile()) {
-        qCInfo(lcFolder) << "The file is not virtual";
-        return;
-    }
-    record._type = ItemTypeVirtualFileDownload;
-    _journal.setFileRecord(record);
-
-    // Change the file's pin state if it's contradictory to being hydrated
-    // (suffix-virtual file's pin state is stored at the hydrated path)
-    const auto pin = _vfs->pinState(relativepath);
-    if (pin && *pin == PinState::OnlineOnly) {
-        std::ignore = _vfs->setPinState(relativepath, PinState::Unspecified);
-    }
-
-    // Add to local discovery
-    schedulePathForLocalDiscovery(relativepath);
-    FolderMan::instance()->scheduler()->enqueueFolder(this);
 }
 
 void Folder::setVirtualFilesEnabled(bool enabled)
@@ -734,6 +724,21 @@ bool Folder::isDeployed() const
     return _definition.isDeployed();
 }
 
+Vfs::Mode Folder::vfsMode() const
+{
+    return _vfs->mode();
+}
+
+uint32_t Folder::priority()
+{
+    return _definition.priority();
+}
+
+void Folder::setPriority(uint32_t p)
+{
+    return _definition.setPriority(p);
+}
+
 bool Folder::isFileExcludedAbsolute(const QString &fullPath) const
 {
     if (OC_ENSURE_NOT(_engine.isNull())) {
@@ -803,6 +808,14 @@ void Folder::wipeForRemoval()
     QFile::remove(stateDbFile + QStringLiteral("-wal"));
     QFile::remove(stateDbFile + QStringLiteral("-journal"));
 
+    // remove the sync log
+    QFile::remove(u"%1/.OpenCloudSync.log"_s.arg(_canonicalLocalPath));
+
+#ifdef Q_OS_WIN
+    // remove the desktop ini
+    QFile::remove(u"%1/Desktop.ini"_s.arg(_canonicalLocalPath));
+#endif
+
     _vfs->stop();
     _vfs->unregisterFolder();
     _vfs.reset(nullptr); // warning: folder now in an invalid state
@@ -832,8 +845,8 @@ void Folder::startSync()
     }
 
     _timeSinceLastSyncStart.start();
-    setSyncState(SyncResult::SyncPrepare);
     _syncResult.reset();
+    setSyncState(SyncResult::SyncPrepare);
 
     qCInfo(lcFolder) << "*** Start syncing " << displayName() << "client version" << Theme::instance()->aboutVersions(Theme::VersionFormat::OneLiner);
 
@@ -1112,18 +1125,6 @@ void Folder::registerFolderWatcher()
 bool Folder::virtualFilesEnabled() const
 {
     return _definition.virtualFilesMode != Vfs::Off;
-}
-
-bool Folder::groupInSidebar() const
-{
-    if (_accountState->account()->hasDefaultSyncRoot()) {
-        // QFileInfo is horrible and "/foo/" is treated different to "/foo"
-        const QString parentDir = QFileInfo(Utility::stripTrailingSlash(path())).dir().path();
-        Q_ASSERT(QFileInfo(parentDir) != QFileInfo(path()));
-        // If parentDir == home, we would add a the home dir to the side bar.
-        return QFileInfo(parentDir) != QFileInfo(QDir::homePath()) && FileSystem::isChildPathOf(parentDir, _accountState->account()->defaultSyncRoot());
-    }
-    return false;
 }
 
 } // namespace OCC

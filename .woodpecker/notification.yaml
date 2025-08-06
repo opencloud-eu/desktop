@@ -1,0 +1,39 @@
+variables:
+  - &golang_image 'docker.io/golang:1.24'
+  - &qa_repo 'https://github.com/opencloud-eu/qa.git'
+  - &qa_repo_branch 'main'
+  - &current_repo_id '11'
+
+depends_on: [build, ui-tests]
+runs_on: [ success, failure ]
+when:
+  - event: [ push , manual ]
+    branch: ${CI_REPO_DEFAULT_BRANCH}
+  - event: [ pull_request ]
+skip_clone: true
+
+steps:
+  - name: notify
+    image: *golang_image
+    environment:
+      HTTP_PROXY:
+        from_secret: ci_http_proxy
+      HTTPS_PROXY:
+        from_secret: ci_http_proxy
+      MATRIX_HOME_SERVER: matrix.org
+      MATRIX_ROOM_ALIAS:
+        from_secret: opencloud-notifications-channel
+      MATRIX_USER:
+        from_secret: opencloud-notifications-user
+      MATRIX_PASSWORD:
+        from_secret: opencloud-notifications-user-password
+      QA_REPO: *qa_repo
+      QA_REPO_BRANCH: *qa_repo_branch
+      CI_WOODPECKER_URL: https://ci.opencloud.eu/
+      CI_REPO_ID: *current_repo_id
+      CI_WOODPECKER_TOKEN: no-auth-needed-on-this-repo
+
+    commands:
+      - git clone --single-branch --branch $QA_REPO_BRANCH $QA_REPO /tmp/qa
+      - cd /tmp/qa/scripts/matrix-notification/
+      - go run matrix-notification.go

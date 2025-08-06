@@ -21,7 +21,7 @@
 #include <QUrl>
 
 #include "common/utility.h"
-#include "csync.h"
+#include "libsync/csync.h"
 
 namespace OCC {
 

@@ -706,7 +706,7 @@ private Q_SLOTS:
                 // the dehydrating the placeholder failed as the metadata is out of sync
                 QSignalSpy spy(fakeFolder.vfs().get(), &Vfs::needSync);
                 QVERIFY(!fakeFolder.applyLocalModificationsAndSync());
-                QVERIFY(spy.count() == 1);
+                QCOMPARE(spy.count(), 1);
                 QVERIFY(fakeFolder.syncOnce());
                 QVERIFY(fakeFolder.applyLocalModificationsAndSync());
                 QCOMPARE(fakeFolder.currentLocalState(), fakeFolder.currentRemoteState());
@@ -1005,7 +1005,7 @@ private Q_SLOTS:
         const QString dest = QStringLiteral("folder/folderB/file.txt");
         FakeFolder fakeFolder{ FileInfo{ QString(), { FileInfo{ QStringLiteral("folder"), { FileInfo{ QStringLiteral("folderA"), { { QStringLiteral("file.txt"), 400 } } }, QStringLiteral("folderB") } } } } };
         auto syncOpts = fakeFolder.syncEngine().syncOptions();
-        syncOpts._parallelNetworkJobs = 0;
+        syncOpts._parallelNetworkJobs = [] { return 0; };
         fakeFolder.syncEngine().setSyncOptions(syncOpts);
 
         QCOMPARE(fakeFolder.currentLocalState(), fakeFolder.currentRemoteState());
@@ -1015,8 +1015,6 @@ private Q_SLOTS:
             auto vfs = QSharedPointer<Vfs>(VfsPluginManager::instance().createVfsFromPlugin(vfsMode).release());
             QVERIFY(vfs);
             fakeFolder.switchToVfs(vfs);
-            fakeFolder.syncJournal().internalPinStates().setForPath("", PinState::OnlineOnly);
-
             // make files virtual
             QVERIFY(fakeFolder.applyLocalModificationsAndSync());
         }
@@ -1033,9 +1031,7 @@ private Q_SLOTS:
         // sync2 file is in error state, checkErrorBlacklisting sets instruction to IGNORED
         QVERIFY(!fakeFolder.applyLocalModificationsAndSync());
 
-        if (vfsMode != Vfs::Off)
-        {
-            fakeFolder.syncJournal().internalPinStates().setForPath("", PinState::AlwaysLocal);
+        if (vfsMode != Vfs::Off) {
             QVERIFY(!fakeFolder.applyLocalModificationsAndSync());
         }
 

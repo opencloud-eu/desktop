@@ -17,6 +17,7 @@
 
 using namespace std::chrono_literals;
 using namespace std::chrono;
+using namespace Qt::Literals::StringLiterals;
 
 
 PathComponents::PathComponents(const QString &path)
@@ -390,7 +391,7 @@ FakePropfindReply::FakePropfindReply(FileInfo &remoteRootFileInfo, QNetworkAcces
         auto gmtDate = fileInfo.lastModifiedInUtc();
         xml.writeTextElement(davUri, QStringLiteral("getlastmodified"), OCC::Utility::formatRFC1123Date(gmtDate));
         xml.writeTextElement(davUri, QStringLiteral("getcontentlength"), QString::number(fileInfo.contentSize));
-        xml.writeTextElement(davUri, QStringLiteral("getetag"), QStringLiteral("\"%1\"").arg(QString::fromUtf8(fileInfo.etag)));
+        xml.writeTextElement(davUri, QStringLiteral("getetag"), QStringLiteral("\"%1\"").arg(fileInfo.etag));
         xml.writeTextElement(ocUri, QStringLiteral("permissions"), !fileInfo.permissions.isNull() ? QString(fileInfo.permissions.toString()) : fileInfo.isShared ? QStringLiteral("SRDNVCKW")
                                                                                                                                                                  : QStringLiteral("RDNVCKW"));
         xml.writeTextElement(ocUri, QStringLiteral("id"), QString::fromUtf8(fileInfo.fileId));
@@ -484,8 +485,8 @@ FileInfo *FakePutReply::perform(FileInfo &remoteRootFileInfo, const QNetworkRequ
 void FakePutReply::respond()
 {
     Q_EMIT uploadProgress(fileInfo->contentSize, fileInfo->contentSize);
-    setRawHeader("OC-ETag", fileInfo->etag);
-    setRawHeader("ETag", fileInfo->etag);
+    setRawHeader("OC-ETag", fileInfo->etag.toUtf8());
+    setRawHeader("ETag", fileInfo->etag.toUtf8());
     setRawHeader("OC-FileID", fileInfo->fileId);
     setRawHeader("X-OC-MTime", "accepted"); // Prevents Q_ASSERT(!_runningNow) since we'll call PropagateItemJob::done twice in that case.
     setAttribute(QNetworkRequest::HttpStatusCodeAttribute, 200);
@@ -637,8 +638,8 @@ void FakeGetReply::respond()
             }
             setHeader(QNetworkRequest::ContentLengthHeader, size);
             setAttribute(QNetworkRequest::HttpStatusCodeAttribute, 200);
-            setRawHeader("OC-ETag", fileInfo->etag);
-            setRawHeader("ETag", fileInfo->etag);
+            setRawHeader("OC-ETag", fileInfo->etag.toUtf8());
+            setRawHeader("ETag", fileInfo->etag.toUtf8());
             setRawHeader("OC-FileId", fileInfo->fileId);
             setRawHeader("X-OC-Mtime", QByteArray::number(fileInfo->lastModifiedInSecondsUTC()));
 
@@ -863,7 +864,6 @@ FakeFolder::FakeFolder(const FileInfo &fileTemplate, OCC::Vfs::Mode vfsMode, boo
 
     if (vfsMode != OCC::Vfs::Off) {
         const auto pinState = filesAreDehydrated ? OCC::PinState::OnlineOnly : OCC::PinState::AlwaysLocal;
-        syncJournal().internalPinStates().setForPath("", pinState);
         OC_ENFORCE(vfs->setPinState(QString(), pinState));
     }
 
@@ -885,13 +885,12 @@ void FakeFolder::switchToVfs(QSharedPointer<OCC::Vfs> vfs)
     opts._vfs = vfs;
     _syncEngine->setSyncOptions(opts);
 
-    OCC::VfsSetupParams vfsParams(account(), OCC::TestUtils::dummyDavUrl(), false, &syncEngine());
+    OCC::VfsSetupParams vfsParams(account(), OCC::TestUtils::dummyDavUrl(), QString(), &syncEngine());
     vfsParams.filesystemPath = localPath();
     vfsParams.journal = _journalDb.get();
     vfsParams.providerName = QStringLiteral("OC-TEST");
     vfsParams.providerDisplayName = QStringLiteral("OC-TEST");
     vfsParams.providerVersion = QVersionNumber(0, 1, 0);
-    vfsParams.multipleAccountsRegistered = false;
     QObject::connect(_syncEngine.get(), &QObject::destroyed, vfs.data(), [vfs]() {
         vfs->stop();
         vfs->unregisterFolder();
@@ -1044,20 +1043,20 @@ FileInfo &findOrCreateDirs(FileInfo &base, const PathComponents &components)
 FileInfo FakeFolder::dbState() const
 {
     FileInfo result;
-    _journalDb->getFilesBelowPath("", [&](const OCC::SyncJournalFileRecord &record) {
-        auto components = PathComponents(QString::fromUtf8(record._path));
+    _journalDb->getFilesBelowPath(QString(), [&](const OCC::SyncJournalFileRecord &record) {
+        auto components = PathComponents(record.path());
         auto &parentDir = findOrCreateDirs(result, components.parentDirComponents());
         auto name = components.fileName();
         auto &item = parentDir.children[name];
         item.name = name;
         item.parentPath = parentDir.path();
-        item.contentSize = record._fileSize;
-        item.isDir = record._type == ItemTypeDirectory;
-        item.permissions = record._remotePerm;
-        item.etag = record._etag;
-        item.setLastModifiedFromSecondsUTC(record._modtime);
-        item.fileId = record._fileId;
-        item.checksums = record._checksumHeader;
+        item.contentSize = record.size();
+        item.isDir = record.isDirectory();
+        item.permissions = record.remotePerm();
+        item.etag = record.etag();
+        item.setLastModifiedFromSecondsUTC(record.modtime());
+        item.fileId = record.fileId();
+        item.checksums = record.checksumHeader();
         // item.contentChar can't be set from the db
     });
     return result;

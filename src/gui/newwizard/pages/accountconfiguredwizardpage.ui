@@ -14,10 +14,10 @@
    <item>
     <spacer name="verticalSpacer">
      <property name="orientation">
-      <enum>Qt::Vertical</enum>
+      <enum>Qt::Orientation::Vertical</enum>
      </property>
      <property name="sizeType">
-      <enum>QSizePolicy::MinimumExpanding</enum>
+      <enum>QSizePolicy::Policy::MinimumExpanding</enum>
      </property>
      <property name="sizeHint" stdset="0">
       <size>
@@ -33,17 +33,17 @@
       <string>✓ You're all set!</string>
      </property>
      <property name="alignment">
-      <set>Qt::AlignCenter</set>
+      <set>Qt::AlignmentFlag::AlignCenter</set>
      </property>
     </widget>
    </item>
    <item>
     <spacer name="verticalSpacer_2">
      <property name="orientation">
-      <enum>Qt::Vertical</enum>
+      <enum>Qt::Orientation::Vertical</enum>
      </property>
      <property name="sizeType">
-      <enum>QSizePolicy::MinimumExpanding</enum>
+      <enum>QSizePolicy::Policy::MinimumExpanding</enum>
      </property>
      <property name="sizeHint" stdset="0">
       <size>
@@ -144,7 +144,7 @@
             <item>
              <widget class="QRadioButton" name="syncEverythingRadioButton">
               <property name="text">
-               <string>Download everything</string>
+               <string>Synchronize all exisitng spaces</string>
               </property>
               <property name="checked">
                <bool>true</bool>
@@ -158,13 +158,6 @@
               </property>
               <property name="text">
                <string>Configure synchronization manually</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QRadioButton" name="useVfsRadioButton">
-              <property name="text">
-               <string notr="true">Enable virtual filesystem (placeholder)</string>
               </property>
              </widget>
             </item>
@@ -219,7 +212,7 @@
                  <string notr="true"/>
                 </property>
                 <property name="icon">
-                 <iconset resource="../../../resources/client.qrc">
+                 <iconset>
                   <normaloff>:/client/resources/core/more.svg</normaloff>:/client/resources/core/more.svg</iconset>
                 </property>
                </widget>
@@ -233,7 +226,7 @@
                  <string/>
                 </property>
                 <property name="icon">
-                 <iconset resource="../../../resources/client.qrc">
+                 <iconset>
                   <normaloff>:/client/resources/core/undo.svg</normaloff>:/client/resources/core/undo.svg</iconset>
                 </property>
                </widget>

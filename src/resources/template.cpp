@@ -14,7 +14,7 @@
 
 #include "template.h"
 
-#include "common/asserts.h"
+#include "libsync/common/asserts.h"
 
 #include <QFile>
 #include <QFileInfo>

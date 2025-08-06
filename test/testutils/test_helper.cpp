@@ -82,24 +82,13 @@ bool writeToFile(std::string_view command, const QString &fileName, QIODevice::O
             return false;
         }
     }
-    auto handle = CreateFileW(reinterpret_cast<const wchar_t *>(fileName.utf16()),
-        GENERIC_WRITE,
-        FILE_SHARE_WRITE | FILE_SHARE_READ | FILE_SHARE_DELETE,
-        {},
-        creation,
-        FILE_ATTRIBUTE_NORMAL,
-        nullptr);
+    auto handle = OCC::Utility::Handle::createHandle(OCC::FileSystem::toFilesystemPath(fileName), {.accessMode = GENERIC_WRITE, .creationFlags = creation});
 
-    if (handle == INVALID_HANDLE_VALUE) {
-        const auto error = OCC::Utility::formatWinError(GetLastError());
-        cerr << "Error: cannot open file '" << qPrintable(fileName) << "' for " << command << " command: "
-             << qPrintable(error) << endl;
+    if (!handle) {
+        cerr << "Error: cannot open file '" << qPrintable(fileName) << "' for " << command << " command: " << qPrintable(handle.errorMessage()) << endl;
         return false;
     }
-    // cleanup the handle when leaving the scope
-    auto close = qScopeGuard([handle] {
-        CloseHandle(handle);
-    });
+
     if (mode & QFile::Append) {
         LARGE_INTEGER pos;
         pos.QuadPart = info.size();

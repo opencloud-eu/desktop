@@ -109,7 +109,7 @@ void PropagateUploadFileV1::slotPutFinished()
     }
 
     if (_item->_httpErrorCode == 202) {
-        done(SyncFileItem::NormalError, tr("The server did ask for a removed legacy feature(polling)"));
+        done(SyncFileItem::NormalError, tr("The server did ask for a removed legacy feature (polling)"));
         return;
     }
 
@@ -137,7 +137,7 @@ void PropagateUploadFileV1::slotPutFinished()
     }
 
     // Check whether the file changed since discovery.
-    if (FileSystem::fileChanged(QFileInfo{fullFilePath}, _item->_size, _item->_modtime)) {
+    if (FileSystem::fileChanged(FileSystem::toFilesystemPath(fullFilePath), FileSystem::FileChangedInfo::fromSyncFileItem(_item.data()))) {
         propagator()->_anotherSyncNeeded = true;
         if (!_finished) {
             abortWithError(SyncFileItem::Message, fileChangedMessage());

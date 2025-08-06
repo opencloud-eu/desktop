@@ -37,6 +37,7 @@ FolderWizardLocalPath::FolderWizardLocalPath(FolderWizardPrivate *parent)
 {
     _ui->setupUi(this);
     connect(_ui->localFolderChooseBtn, &QAbstractButton::clicked, this, &FolderWizardLocalPath::slotChooseLocalFolder);
+    connect(_ui->localFolderLineEdit, &QLineEdit::textChanged, this, &FolderWizardLocalPath::completeChanged);
 
     _ui->warnLabel->setTextFormat(Qt::RichText);
     _ui->warnLabel->hide();
@@ -62,6 +63,11 @@ bool FolderWizardLocalPath::isComplete() const
 {
     auto accountUuid = folderWizardPrivate()->accountState()->account()->uuid();
     QString errorStr = FolderMan::instance()->checkPathValidityForNewFolder(localPath(), FolderMan::NewFolderType::SpacesSyncRoot, accountUuid);
+    if (errorStr.isEmpty()) {
+        if (auto result = Vfs::checkAvailability(localPath(), VfsPluginManager::instance().bestAvailableVfsMode()); !result) {
+            errorStr = result.error();
+        }
+    }
 
     bool isOk = errorStr.isEmpty();
     QStringList warnStrings;

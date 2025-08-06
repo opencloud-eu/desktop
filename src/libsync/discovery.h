@@ -14,11 +14,12 @@
 
 #pragma once
 
-#include <QObject>
-#include "discoveryphase.h"
-#include "syncfileitem.h"
-#include "common/asserts.h"
-#include "common/syncjournaldb.h"
+#include "libsync/common/syncjournaldb.h"
+#include "libsync/discoveryinfo.h"
+#include "libsync/discoveryphase.h"
+#include "libsync/syncfileitem.h"
+
+#include <deque>
 
 class ExcludedFiles;
 

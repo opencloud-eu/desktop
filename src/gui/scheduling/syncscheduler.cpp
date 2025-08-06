@@ -20,6 +20,8 @@
 #include "libsync/configfile.h"
 #include "libsync/syncengine.h"
 
+#include <queue>
+
 using namespace std::chrono_literals;
 
 using namespace OCC;
@@ -138,9 +140,25 @@ void SyncScheduler::enqueueFolder(Folder *folder, Priority priority)
         return;
     }
 
-    qCInfo(lcSyncScheduler) << "Enqueue" << folder->path() << priority << "QueueSize:" << _queue->size();
+    if (lcSyncScheduler().isInfoEnabled()) {
+        QString message;
+        QDebug d(&message);
+        d << "Enqueue" << folder->path() << priority << "QueueSize:" << _queue->size() << "scheduler is active:" << isRunning();
+        if (_currentSync) {
+            d << "current sync" << _currentSync->path() << "for" << _syncTimer;
+        } else {
+            d << "no current sync running";
+        }
+        qCInfo(lcSyncScheduler).noquote() << message;
+    }
+
     _queue->enqueueFolder(folder, priority);
+
     if (!_currentSync) {
+        startNext();
+    } else if (!OC_ENSURE(_currentSync->isSyncRunning())) {
+        // the sync is not running, this should never happen, enqueue next
+        _currentSync.clear();
         startNext();
     }
 }
@@ -157,36 +175,42 @@ void SyncScheduler::startNext()
         return;
     }
 
-    auto nextSync = _queue->pop();
-    while (nextSync.first && !nextSync.first->canSync()) {
-        nextSync = _queue->pop();
-    }
-    _currentSync = nextSync.first;
-    auto syncPriority = nextSync.second;
-
-    if (!_currentSync.isNull()) {
-        if (_pauseSyncWhenMetered && NetworkInformation::instance()->isMetered()) {
-            if (syncPriority == Priority::High) {
-                qCInfo(lcSyncScheduler) << "Scheduler is paused due to metered internet connection, BUT next sync is HIGH priority, so allow sync to start";
-            } else {
-                enqueueFolder(_currentSync, syncPriority);
-                qCInfo(lcSyncScheduler) << "Scheduler is paused due to metered internet connection, next sync is not started";
-                return;
-            }
+    Priority syncPriority;
+    while (!_currentSync) {
+        if (_queue->empty()) {
+            qCInfo(lcSyncScheduler) << "Queue is empty, no sync to start";
+            return;
         }
-
-        connect(
-            _currentSync, &Folder::syncFinished, this,
-            [this](const SyncResult &result) {
-                qCInfo(lcSyncScheduler) << "Sync finished for" << _currentSync->path() << "with status" << result.status();
-                _currentSync = nullptr;
-                startNext();
-            },
-            Qt::SingleShotConnection);
-        connect(_currentSync, &Folder::destroyed, this, &SyncScheduler::startNext, Qt::SingleShotConnection);
-        qCInfo(lcSyncScheduler) << "Starting sync for" << _currentSync->path();
-        _currentSync->startSync();
+        std::tie(_currentSync, syncPriority) = _queue->pop();
+        // If the folder is deleted in the meantime, we skip it
+        if (_currentSync && !_currentSync->isReady()) {
+            qCInfo(lcSyncScheduler) << "Skipping sync of" << _currentSync->path() << "because it is not ready";
+            _currentSync.clear();
+        }
     }
+
+    if (_pauseSyncWhenMetered && NetworkInformation::instance()->isMetered()) {
+        if (syncPriority == Priority::High) {
+            qCInfo(lcSyncScheduler) << "Scheduler is paused due to metered internet connection, BUT next sync is HIGH priority, so allow sync to start";
+        } else {
+            enqueueFolder(_currentSync, syncPriority);
+            qCInfo(lcSyncScheduler) << "Scheduler is paused due to metered internet connection, next sync is not started";
+            return;
+        }
+    }
+
+    connect(
+        _currentSync, &Folder::syncFinished, this,
+        [this](const SyncResult &result) {
+            qCInfo(lcSyncScheduler) << "Sync finished for" << _currentSync->path() << "with status" << result.status();
+            _currentSync = nullptr;
+            startNext();
+        },
+        Qt::SingleShotConnection);
+    connect(_currentSync, &Folder::destroyed, this, &SyncScheduler::startNext, Qt::SingleShotConnection);
+    qCInfo(lcSyncScheduler) << "Starting sync for" << _currentSync->path() << "QueueSize:" << _queue->size();
+    _currentSync->startSync();
+    _syncTimer.reset();
 }
 
 void SyncScheduler::start()

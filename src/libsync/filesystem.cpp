@@ -16,14 +16,17 @@
 
 #include "common/asserts.h"
 #include "common/utility.h"
+#include "libsync/discoveryinfo.h"
+
 #include <QCoreApplication>
 #include <QDirIterator>
 #include <QFile>
 #include <QFileInfo>
 
 #include "csync.h"
-#include "vio/csync_vio_local.h"
-#include "std/c_time.h"
+#include "syncfileitem.h"
+
+#include <sys/stat.h>
 
 #if defined(Q_OS_MAC) || defined(Q_OS_LINUX)
 #include <sys/xattr.h>
@@ -33,6 +36,8 @@
 #include "common/utility_win.h"
 #include <winsock2.h>
 #endif
+
+using namespace Qt::Literals::StringLiterals;
 
 namespace {
 static constexpr unsigned MaxValueSize = 1023; // This is without a terminating NUL character
@@ -58,7 +63,7 @@ bool FileSystem::fileEquals(const QString &fn1, const QString &fn2)
     QByteArray buffer1(BufferSize, 0);
     QByteArray buffer2(BufferSize, 0);
     // the files have the same size, compare all of it
-    while(!f1.atEnd()){
+    while (!f1.atEnd()) {
         f1.read(buffer1.data(), BufferSize);
         f2.read(buffer2.data(), BufferSize);
         if (buffer1 != buffer2) {
@@ -67,88 +72,125 @@ bool FileSystem::fileEquals(const QString &fn1, const QString &fn2)
     };
     return true;
 }
-
-time_t FileSystem::getModTime(const QString &filename)
+time_t FileSystem::fileTimeToTime_t(std::filesystem::file_time_type fileTime)
 {
-    csync_file_stat_t stat;
-    qint64 result = -1;
-    if (csync_vio_local_stat(filename, &stat) != -1
-        && (stat.modtime != 0)) {
-        result = stat.modtime;
-    } else {
-        result = Utility::qDateTimeToTime_t(QFileInfo(filename).lastModified());
-        qCWarning(lcFileSystem) << "Could not get modification time for" << filename
-                                << "with csync, using QFileInfo:" << result;
-    }
-    return result;
+#ifdef HAS_CLOCK_CAST
+    return std::chrono::system_clock::to_time_t(std::chrono::clock_cast<std::chrono::system_clock>(fileTime));
+#else
+    const auto systemTime = std::chrono::time_point_cast<std::chrono::system_clock::duration>(std::chrono::file_clock::to_sys(fileTime));
+    return std::chrono::system_clock::to_time_t(systemTime);
+#endif
+}
+std::filesystem::file_time_type FileSystem::time_tToFileTime(time_t fileTime)
+{
+#ifdef HAS_CLOCK_CAST
+    return std::chrono::clock_cast<std::chrono::file_clock>(std::chrono::system_clock::from_time_t(fileTime));
+#else
+    return std::chrono::file_clock::from_sys(std::chrono::system_clock::from_time_t(fileTime));
+#endif
 }
 
-bool FileSystem::setModTime(const QString &filename, time_t modTime)
+time_t FileSystem::getModTime(const std::filesystem::path &filename)
 {
-    struct timeval times[2];
-    times[0].tv_sec = times[1].tv_sec = modTime;
-    times[0].tv_usec = times[1].tv_usec = 0;
-    int rc = c_utimes(filename, times);
-    if (rc != 0) {
-        qCWarning(lcFileSystem) << "Error setting mtime for" << filename
-                                << "failed: rc" << rc << ", error message:" << strerror(errno);
-        Q_ASSERT(false);
+    std::error_code rc;
+    const auto fileTime = std::filesystem::last_write_time(filename, rc);
+    if (rc) {
+        Q_ASSERT(!rc);
+        return std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+    } else {
+        return fileTimeToTime_t(fileTime);
+    }
+}
+
+bool FileSystem::setModTime(const std::filesystem::path &filename, time_t modTime)
+{
+    std::error_code rc;
+    std::filesystem::last_write_time(filename, time_tToFileTime(modTime), rc);
+    if (rc) {
+        qCWarning(lcFileSystem) << "Error setting mtime for" << filename << "failed: rc" << rc.value() << ", error message:" << rc.message();
+        Q_ASSERT(!rc);
         return false;
     }
     return true;
 }
 
-bool FileSystem::fileChanged(const QFileInfo &info, qint64 previousSize, time_t previousMtime, std::optional<quint64> previousInode)
+FileSystem::FileChangedInfo FileSystem::FileChangedInfo::fromSyncFileItem(const SyncFileItem *const item)
+{
+    return {.size = item->_size, .mtime = item->_modtime, .inode = (item->_inode == 0 ? std::optional<quint64>{} : item->_inode), .type = item->_type};
+}
+
+FileSystem::FileChangedInfo FileSystem::FileChangedInfo::fromSyncFileItemPrevious(const SyncFileItem *const item)
+{
+    return {.size = item->_previousSize, .mtime = item->_previousModtime, .type = item->_type};
+}
+
+FileSystem::FileChangedInfo FileSystem::FileChangedInfo::fromSyncJournalFileRecord(const SyncJournalFileRecord &record)
+{
+    return {.size = record.size(), .mtime = record.modtime(), .inode = record.inode(), .type = record.type()};
+}
+
+bool FileSystem::fileChanged(const std::filesystem::path &path, const FileChangedInfo &previousInfo)
 {
     // previousMtime == -1 indicates the file does not exist
-    if (!info.exists() && previousMtime != -1) {
-        qCDebug(lcFileSystem) << info.filePath() << "was removed";
+    const auto dirent = std::filesystem::directory_entry{path};
+    if (!dirent.exists()) {
+        if (previousInfo.mtime != -1) {
+            qCDebug(lcFileSystem) << path.native() << "was removed";
+            return true;
+        } else {
+            // the file didn't exist and doesn't exist
+            Q_ASSERT(false); // pointless call
+            return false;
+        }
+    }
+
+    const auto type = LocalInfo::typeFromDirectoryEntry(dirent);
+    if (previousInfo.type != ItemTypeUnsupported) {
+        // only check for dir and file, as virtual files are irrelevant here
+        if (previousInfo.type == ItemTypeDirectory && type == ItemTypeFile) {
+            qCDebug(lcFileSystem) << "File" << path.native() << "has changed: from dir to file";
+            return true;
+        }
+        if (previousInfo.type == ItemTypeFile && type == ItemTypeDirectory) {
+            qCDebug(lcFileSystem) << "File" << path.native() << "has changed: from file to dir";
+            return true;
+        }
+    }
+    const auto info = LocalInfo(dirent, type);
+    if (previousInfo.inode.has_value() && previousInfo.inode.value() != info.inode()) {
+        qCDebug(lcFileSystem) << "File" << path.native() << "has changed: inode" << previousInfo.inode.value() << "<-->" << info.inode();
         return true;
     }
-    const qint64 actualSize = getSize(info);
-    if (actualSize != previousSize) {
-        qCDebug(lcFileSystem) << "File" << info.filePath() << "has changed: size: " << previousSize << "<->" << actualSize;
-        return true;
-    } else {
-        const time_t actualMtime = getModTime(info.filePath());
-        if (actualMtime != previousMtime) {
-            qCDebug(lcFileSystem) << "File" << info.filePath() << "has changed: mtime: " << previousMtime << "<->" << actualMtime;
+    if (info.isDirectory()) {
+        if (previousInfo.size != 0) {
+            qCDebug(lcFileSystem) << "File" << path.native() << "has changed: from file to dir";
             return true;
-        } else if (previousInode.has_value()) {
-            quint64 actualIndoe;
-            FileSystem::getInode(info.filePath(), &actualIndoe);
-            if (previousInode.value() != actualIndoe) {
-                qCDebug(lcFileSystem) << "File" << info.filePath() << "has changed: inode" << previousInode.value() << "<-->" << actualIndoe;
-                return true;
-            }
         }
+    } else if (info.size() != previousInfo.size) {
+        qCDebug(lcFileSystem) << "File" << path.native() << "has changed: size: " << previousInfo.size << "<->" << info.size();
+        return true;
+    }
+    if (info.modtime() != previousInfo.mtime) {
+        qCDebug(lcFileSystem) << "File" << path.native() << "has changed: mtime: " << previousInfo.mtime << "<->" << info.modtime();
+        return true;
     }
     return false;
 }
 
-#ifdef Q_OS_WIN
-static qint64 getSizeWithCsync(const QString &filename)
+qint64 FileSystem::getSize(const std::filesystem::path &filename)
 {
-    qint64 result = 0;
-    csync_file_stat_t stat;
-    if (csync_vio_local_stat(filename, &stat) != -1) {
-        result = stat.size;
-    } else {
-        qCWarning(lcFileSystem) << "Could not get size for" << filename << "with csync" << Utility::formatWinError(errno);
+    std::error_code ec;
+    const quint64 size = std::filesystem::file_size(filename, ec);
+    if (ec) {
+        if (!std::filesystem::is_directory(filename)) {
+            qCCritical(lcFileSystem) << "Error getting size for" << filename << ec.value() << ec.message();
+        } else {
+            qCWarning(lcFileSystem) << "Called getFileSize on a directory";
+            Q_ASSERT(false);
+        }
+        return 0;
     }
-    return result;
-}
-#endif
-
-qint64 FileSystem::getSize(const QFileInfo &info)
-{
-#ifdef Q_OS_WIN
-    if (isLnkFile(info.fileName())) {
-        // Qt handles .lnk as symlink... https://doc.qt.io/qt-5/qfileinfo.html#details
-        return getSizeWithCsync(info.filePath());
-    }
-#endif
-    return info.size();
+    return size;
 }
 
 // Code inspired from Qt5's QDir::removeRecursively
@@ -196,14 +238,15 @@ bool FileSystem::removeRecursively(const QString &path,
     return allRemoved;
 }
 
-bool FileSystem::getInode(const QString &filename, quint64 *inode)
+bool FileSystem::getInode(const std::filesystem::path &filename, quint64 *inode)
 {
-    csync_file_stat_t fs;
-    if (csync_vio_local_stat(filename, &fs) == 0) {
-        *inode = fs.inode;
-        return true;
+    const LocalInfo info(filename);
+    if (!info.isValid()) {
+        *inode = 0;
+        return false;
     }
-    return false;
+    *inode = info.inode();
+    return true;
 }
 
 namespace {

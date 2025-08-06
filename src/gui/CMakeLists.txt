@@ -49,6 +49,7 @@ target_sources(OpenCloudGui PRIVATE
     ignorelisteditor.cpp
     lockwatcher.cpp
     logbrowser.cpp
+    messagebox.cpp
     networkinformation.cpp
     networksettings.cpp
     notifications.cpp
@@ -62,7 +63,6 @@ target_sources(OpenCloudGui PRIVATE
     tlserrordialog.cpp
     syncrunfilelog.cpp
     systray.cpp
-    thumbnailjob.cpp
     accountstate.cpp
     guiutility.cpp
     elidedlabel.cpp

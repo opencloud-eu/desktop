@@ -18,8 +18,7 @@
 #include "account.h"
 #include "common/asserts.h"
 #include "common/checksums.h"
-
-#include "vio/csync_vio_local.h"
+#include "filesystem.h"
 
 #include <QDateTime>
 #include <QFile>
@@ -177,7 +176,7 @@ void DiscoveryPhase::setSelectiveSyncWhiteList(const QSet<QString> &list)
 
 void DiscoveryPhase::scheduleMoreJobs()
 {
-    auto limit = qMax(1, _syncOptions._parallelNetworkJobs);
+    auto limit = std::max(1, _syncOptions._parallelNetworkJobs());
     if (_currentRootJob && _currentlyActiveJobs < limit) {
         _currentRootJob->processSubJobs(limit - _currentlyActiveJobs);
     }
@@ -195,62 +194,36 @@ DiscoverySingleLocalDirectoryJob::DiscoverySingleLocalDirectoryJob(const Account
 
 // Use as QRunnable
 void DiscoverySingleLocalDirectoryJob::run() {
-    QString localPath = _localPath;
-    if (localPath.endsWith(QLatin1Char('/'))) // Happens if _currentFolder._local.isEmpty()
-        localPath.chop(1);
-
-    auto dh = csync_vio_local_opendir(localPath);
-    if (!dh) {
-        qCCritical(lcDiscovery) << "Error while opening directory" << (localPath) << errno;
-        QString errorString = tr("Error while opening directory %1").arg(localPath);
-        if (errno == EACCES) {
+    std::error_code ec;
+    const auto localPath = FileSystem::toFilesystemPath(_localPath);
+    QVector<LocalInfo> results;
+    for (const auto &dirent : std::filesystem::directory_iterator{localPath, ec}) {
+        ItemType type = LocalInfo::typeFromDirectoryEntry(dirent);
+        if (type == ItemTypeUnsupported) {
+            continue;
+        }
+        auto info = _vfs->statTypeVirtualFile(dirent, type);
+        if (!info.isValid()) {
+            continue;
+        }
+        results.push_back(std::move(info));
+    }
+    if (ec) {
+        qCCritical(lcDiscovery) << "Error while opening directory" << _localPath << ec.message();
+        QString errorString = tr("Error while opening directory %1").arg(_localPath);
+        if (ec.value() == EACCES) {
             errorString = tr("Directory not accessible on client, permission denied");
             Q_EMIT finishedNonFatalError(errorString);
             return;
-        } else if (errno == ENOENT) {
-            errorString = tr("Directory not found: %1").arg(localPath);
-        } else if (errno == ENOTDIR) {
+        } else if (ec.value() == ENOENT) {
+            errorString = tr("Directory not found: %1").arg(_localPath);
+        } else if (ec.value() == ENOTDIR) {
             // Not a directory..
             // Just consider it is empty
             return;
         }
         Q_EMIT finishedFatalError(errorString);
         return;
-    }
-
-    QVector<LocalInfo> results;
-    while (true) {
-        errno = 0;
-        auto dirent = csync_vio_local_readdir(dh, _vfs);
-        if (!dirent)
-            break;
-        if (dirent->type == ItemTypeSkip)
-            continue;
-        LocalInfo i;
-        i.name = dirent->path;
-        i.modtime = dirent->modtime;
-        i.size = dirent->size;
-        i.inode = dirent->inode;
-        i.isDirectory = dirent->type == ItemTypeDirectory;
-        i.isHidden = dirent->is_hidden;
-        i.isSymLink = dirent->type == ItemTypeSoftLink;
-        i.isVirtualFile = dirent->type == ItemTypeVirtualFile || dirent->type == ItemTypeVirtualFileDownload;
-        i.type = dirent->type;
-        results.push_back(i);
-    }
-    if (errno != 0) {
-        csync_vio_local_closedir(dh);
-
-        // Note: Windows vio converts any error into EACCES
-        qCWarning(lcDiscovery) << "readdir failed for file in " << localPath << " - errno: " << errno;
-        Q_EMIT finishedFatalError(tr("Error while reading directory %1").arg(localPath));
-        return;
-    }
-
-    errno = 0;
-    csync_vio_local_closedir(dh);
-    if (errno != 0) {
-        qCWarning(lcDiscovery) << "closedir failed for file in " << localPath << " - errno: " << errno;
     }
 
     Q_EMIT finished(results);
@@ -263,7 +236,6 @@ DiscoverySingleDirectoryJob::DiscoverySingleDirectoryJob(const AccountPtr &accou
     , _baseUrl(baseUrl)
     , _ignoredFirst(false)
     , _isRootPath(false)
-    , _isExternalStorage(false)
 {
 }
 
@@ -272,17 +244,14 @@ void DiscoverySingleDirectoryJob::start()
     // Start the actual HTTP job
     _proFindJob = new PropfindJob(_account, _baseUrl, _subPath, PropfindJob::Depth::One, this);
 
-    QList<QByteArray> props {
+    QList<QByteArray> props{
         "resourcetype",
         "getlastmodified",
         "getcontentlength",
         "getetag",
         "http://owncloud.org/ns:id",
-        "http://owncloud.org/ns:downloadURL",
-        "http://owncloud.org/ns:dDC",
         "http://owncloud.org/ns:permissions",
         "http://owncloud.org/ns:checksums",
-        "http://owncloud.org/ns:share-types"
     };
     if (_isRootPath) {
         props << "http://owncloud.org/ns:data-fingerprint";
@@ -313,52 +282,6 @@ void DiscoverySingleDirectoryJob::abort()
     }
 }
 
-static void propertyMapToRemoteInfo(const QMap<QString, QString> &map, RemoteInfo &result)
-{
-    result.directDownloadUrl = map.value(QStringLiteral("downloadURL"));
-    result.directDownloadCookies = map.value(QStringLiteral("dDC"));
-
-    if (auto it = Utility::optionalFind(map, QStringLiteral("resourcetype"))) {
-        result.isDirectory = it->value().contains(QStringLiteral("collection"));
-    }
-    if (auto it = Utility::optionalFind(map, QStringLiteral("getlastmodified"))) {
-        const auto date = Utility::parseRFC1123Date(**it);
-        Q_ASSERT(date.isValid());
-        result.modtime = date.toSecsSinceEpoch();
-    }
-    if (auto it = Utility::optionalFind(map, QStringLiteral("getcontentlength"))) {
-        // See #4573, sometimes negative size values are returned
-        result.size = std::max<int64_t>(0, it->value().toLongLong());
-    }
-    if (auto it = Utility::optionalFind(map, QStringLiteral("getetag"))) {
-        result.etag = Utility::normalizeEtag(it->value());
-    }
-    if (auto it = Utility::optionalFind(map, QStringLiteral("id"))) {
-        result.fileId = it->value().toUtf8();
-    }
-    if (auto it = Utility::optionalFind(map, QStringLiteral("checksums"))) {
-        result.checksumHeader = findBestChecksum(it->value().toUtf8());
-    }
-    if (auto it = Utility::optionalFind(map, QStringLiteral("permissions"))) {
-        result.remotePerm = RemotePermissions::fromServerString(it->value());
-    }
-    if (auto it = Utility::optionalFind(map, QStringLiteral("share-types"))) {
-        const QString &value = it->value();
-        if (!value.isEmpty()) {
-            if (!map.contains(QStringLiteral("permissions"))) {
-                qWarning() << "Server returned a share type, but no permissions?";
-                // Empty permissions will cause a sync failure
-            } else {
-                // S means shared with me.
-                // But for our purpose, we want to know if the file is shared. It does not matter
-                // if we are the owner or not.
-                // Piggy back on the persmission field
-                result.remotePerm.setPermission(RemotePermissions::IsShared);
-            }
-        }
-    }
-}
-
 void DiscoverySingleDirectoryJob::directoryListingIteratedSlot(const QString &file, const QMap<QString, QString> &map)
 {
     if (!_ignoredFirst) {
@@ -367,33 +290,9 @@ void DiscoverySingleDirectoryJob::directoryListingIteratedSlot(const QString &fi
         if (auto it = Utility::optionalFind(map, QStringLiteral("permissions"))) {
             auto perm = RemotePermissions::fromServerString(it->value());
             Q_EMIT firstDirectoryPermissions(perm);
-            _isExternalStorage = perm.hasPermission(RemotePermissions::IsMounted);
-        }
-        if (auto it = Utility::optionalFind(map, QStringLiteral("data-fingerprint"))) {
-            _dataFingerprint = it->value().toUtf8();
-            if (_dataFingerprint.isEmpty()) {
-                // Placeholder that means that the server supports the feature even if it did not set one.
-                _dataFingerprint = "[empty]";
-            }
         }
     } else {
-
-        RemoteInfo result;
-        int slash = file.lastIndexOf(QLatin1Char('/'));
-        result.name = file.mid(slash + 1);
-        result.size = -1;
-        propertyMapToRemoteInfo(map, result);
-        if (result.isDirectory)
-            result.size = 0;
-
-        if (_isExternalStorage && result.remotePerm.hasPermission(RemotePermissions::IsMounted)) {
-            /* All the entries in a external storage have 'M' in their permission. However, for all
-               purposes in the desktop client, we only need to know about the mount points.
-               So replace the 'M' by a 'm' for every sub entries in an external storage */
-            result.remotePerm.unsetPermission(RemotePermissions::IsMounted);
-            result.remotePerm.setPermission(RemotePermissions::IsMountedSub);
-        }
-        _results.push_back(std::move(result));
+        _results.emplace_back(file, map);
     }
 
     //This works in concerto with the RequestEtagJob and the Folder object to check if the remote folder changed.

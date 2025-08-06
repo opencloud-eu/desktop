@@ -41,6 +41,9 @@ namespace TestUtils {
     using Values = QMap<QAnyStringView, QAnyStringView>;
     QByteArray getPayloadTemplated(QAnyStringView payloadName, const Values &values);
 
+    // creates a SyncFileItem that fulfills the minimal criteria to not trigger an assert
+    SyncFileItem dummyItem(const QString &name);
+
     QUrl dummyDavUrl();
 }
 }

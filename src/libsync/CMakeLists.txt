@@ -5,13 +5,17 @@ set_package_properties(LibreGraphAPI PROPERTIES
         TYPE OPTIONAL
 )
 
+configure_file(config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
+
 set(libsync_SRCS
     account.cpp
     bandwidthmanager.cpp
     capabilities.cpp
     cookiejar.cpp
     discovery.cpp
+    discoveryinfo.cpp
     discoveryphase.cpp
+    discoveryremoteinfo.cpp
     filesystem.cpp
     httplogger.cpp
     jobqueue.cpp
@@ -83,7 +87,6 @@ set_target_properties(libsync PROPERTIES EXPORT_NAME SyncCore)
 
 target_link_libraries(libsync
     PUBLIC
-        csync
         OpenCloudResources
         Qt::Core
         Qt::Network
@@ -94,6 +97,7 @@ target_link_libraries(libsync
         Qt::Concurrent
         ZLIB::ZLIB
         Qt6Keychain::Qt6Keychain
+        SQLite::SQLite3
 )
 
 apply_common_target_settings(libsync)
@@ -153,5 +157,25 @@ if(WITH_CRASHREPORTER)
     endif()
 endif()
 
+target_sources(libsync PRIVATE
+    csync.cpp
+    csync_exclude.cpp
+)
+
+
+try_compile(HAS_CLOCK_CAST
+        SOURCE_FROM_CONTENT chrono_test.cpp "
+#include <chrono>
+int main() {
+    std::chrono::clock_cast<std::chrono::system_clock>;
+}"
+)
+message(STATUS "HAS_CLOCK_CAST: ${HAS_CLOCK_CAST}")
+
+if(HAS_CLOCK_CAST)
+    set_source_files_properties(filesystem.cpp PROPERTIES COMPILE_DEFINITIONS HAS_CLOCK_CAST)
+endif()
+
+add_subdirectory(common)
 
 install(TARGETS libsync EXPORT ${APPLICATION_SHORTNAME}Config ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

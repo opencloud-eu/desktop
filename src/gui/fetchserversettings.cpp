@@ -62,7 +62,6 @@ void FetchServerSettingsJob::start()
         if (job->ocsSuccess()) {
             // Record that the server supports HTTP/2
             // Actual decision if we should use HTTP/2 is done in AccessManager::createRequest
-            // TODO: http2 support is currently disabled in the client code
             if (auto reply = job->reply()) {
                 _account->setHttp2Supported(reply->attribute(QNetworkRequest::Http2WasUsedAttribute).toBool());
             }

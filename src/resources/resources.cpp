@@ -19,7 +19,7 @@
 #include "resources/template.h"
 #include "resources/themewatcher.h"
 
-#include "common/asserts.h"
+#include "libsync/common/asserts.h"
 
 #include <QDebug>
 #include <QFileInfo>

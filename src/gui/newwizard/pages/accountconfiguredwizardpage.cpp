@@ -1,8 +1,9 @@
 #include "accountconfiguredwizardpage.h"
 
+#include "common/vfs.h"
+#include "gui/messagebox.h"
 #include "ui_accountconfiguredwizardpage.h"
 
-#include "gui/application.h"
 #include "libsync/theme.h"
 #include "resources/fonticon.h"
 
@@ -13,8 +14,7 @@
 
 namespace OCC::Wizard {
 
-AccountConfiguredWizardPage::AccountConfiguredWizardPage(
-    const QString &defaultSyncTargetDir, const QString &userChosenSyncTargetDir, bool vfsIsAvailable, bool enableVfsByDefault)
+AccountConfiguredWizardPage::AccountConfiguredWizardPage(const QString &defaultSyncTargetDir, const QString &userChosenSyncTargetDir)
     : _ui(new ::Ui::AccountConfiguredWizardPage)
 {
     _ui->setupUi(this);
@@ -24,44 +24,9 @@ AccountConfiguredWizardPage::AccountConfiguredWizardPage(
     _ui->localDirectoryLineEdit->setText(QDir::toNativeSeparators(userChosenSyncTargetDir));
     _ui->syncEverythingRadioButton->setChecked(true);
 
-    _ui->useVfsRadioButton->setVisible(vfsIsAvailable);
-
-    _ui->useVfsRadioButton->setText(tr("Use &virtual files instead of downloading content immediately"));
-
     // just adjusting the visibility should be sufficient for these branding options
     if (Theme::instance()->wizardSkipAdvancedPage()) {
         _ui->advancedConfigGroupBox->setVisible(false);
-    }
-
-    if (!Theme::instance()->showVirtualFilesOption()) {
-        _ui->useVfsRadioButton->setVisible(false);
-        enableVfsByDefault = false;
-    }
-
-    if (!vfsIsAvailable) {
-        enableVfsByDefault = false;
-    }
-
-    auto setRecommendedOption = [](QRadioButton *radioButton) {
-        radioButton->setText(tr("%1 (recommended)").arg(radioButton->text()));
-        radioButton->setChecked(true);
-    };
-
-    if (enableVfsByDefault) {
-        setRecommendedOption(_ui->useVfsRadioButton);
-
-        // move up top
-        _ui->syncModeGroupBoxLayout->removeWidget(_ui->useVfsRadioButton);
-        _ui->syncModeGroupBoxLayout->insertWidget(1, _ui->useVfsRadioButton);
-    } else {
-        setRecommendedOption(_ui->syncEverythingRadioButton);
-    }
-
-    if (!vfsIsAvailable) {
-        // fallback: it's set as default option in Qt Designer, but we should make sure the option is selected if VFS is not available
-        _ui->syncEverythingRadioButton->setChecked(true);
-
-        _ui->useVfsRadioButton->setToolTip(tr("The virtual filesystem feature is not available for this installation."));
     }
 
     connect(_ui->chooseLocalDirectoryButton, &QToolButton::clicked, this, [this]() {
@@ -73,19 +38,17 @@ AccountConfiguredWizardPage::AccountConfiguredWizardPage(
             // the directory chooser should guarantee that the directory exists
             Q_ASSERT(QDir(directory).exists());
 
+            if (auto result = Vfs::checkAvailability(directory, VfsPluginManager::instance().bestAvailableVfsMode()); !result) {
+                auto *box = new MessageBox({u''}, tr("Sync location not supported"), result.error(), QMessageBox::Ok, this);
+                box->setAttribute(Qt::WA_DeleteOnClose);
+                box->open();
+                return;
+            }
+
             _ui->localDirectoryLineEdit->setText(QDir::toNativeSeparators(directory));
         });
         dialog->open();
     });
-
-    // vfsIsAvailable is false when experimental features are not enabled and the mode is experimental even if a plugin is found
-    if (vfsIsAvailable && Theme::instance()->forceVirtualFilesOption()) {
-        // this has no visual effect, but is needed for syncMode()
-        _ui->useVfsRadioButton->setChecked(true);
-
-        // we want to hide the entire sync mode selection from the user, not just disable it
-        _ui->syncModeGroupBox->setVisible(false);
-    }
 
     connect(_ui->advancedConfigGroupBox, &QGroupBox::toggled, this, [this](bool enabled) {
         // layouts cannot be hidden, therefore we use a plain widget within the group box to "house" the contained widgets
@@ -127,15 +90,16 @@ QString AccountConfiguredWizardPage::syncTargetDir() const
 SyncMode AccountConfiguredWizardPage::syncMode() const
 {
     if (_ui->syncEverythingRadioButton->isChecked()) {
+#ifdef Q_OS_WIN
+        if (Vfs::checkAvailability(syncTargetDir(), Vfs::WindowsCfApi)) {
+            return SyncMode::UseVfs;
+        }
+#endif
         return SyncMode::SyncEverything;
     }
     if (_ui->configureSyncManuallyRadioButton->isChecked()) {
         return SyncMode::ConfigureUsingFolderWizard;
     }
-    if (_ui->useVfsRadioButton->isChecked()) {
-        return SyncMode::UseVfs;
-    }
-
     Q_UNREACHABLE();
 }
 

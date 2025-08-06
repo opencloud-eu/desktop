@@ -119,7 +119,7 @@ public:
     FakeAM *fakeAm = nullptr;
     QNetworkAccessManager realQNAM;
     QPointer<QNetworkReply> browserReply = nullptr;
-    QString code = QString::fromUtf8(generateEtag());
+    QString code = generateEtag();
     OCC::AccountPtr account;
 
     std::unique_ptr<AccountBasedOAuth> oauth;

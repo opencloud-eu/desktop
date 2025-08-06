@@ -298,5 +298,5 @@ private Q_SLOTS:
 };
 
 
-QTEST_APPLESS_MAIN(TestJHash)
+QTEST_GUILESS_MAIN(TestJHash)
 #include "testjhash.moc"

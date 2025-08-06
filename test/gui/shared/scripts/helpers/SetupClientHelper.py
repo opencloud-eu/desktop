@@ -9,7 +9,7 @@ import psutil
 import squish
 from PySide6.QtCore import QSettings, QUuid, QUrl, QJsonValue
 
-from helpers.SpaceHelper import get_space_id
+from helpers.SpaceHelper import get_space_id, get_personal_space_id
 from helpers.ConfigHelper import get_config, set_config, is_windows
 from helpers.SyncHelper import listen_sync_status_for_item
 from helpers.api.utils import url_join
@@ -156,11 +156,11 @@ def generate_account_config(users, space='Personal'):
         settings.beginWriteArray(str(idx+1),len(users))
 
         if space == 'Personal':
-            dav_endpoint = QUrl(url_join(server_url, '/dav/files', username))
+            space_id = get_personal_space_id(username)
         else:
             space_id = get_space_id(space, username)
-            dav_endpoint = QUrl(url_join(server_url, '/dav/spaces/', space_id))
-            settings.setValue("spaceId", space_id)
+        dav_endpoint = QUrl(url_join(server_url, '/dav/spaces/', space_id))
+        settings.setValue("spaceId", space_id)
         settings.setValue("accountUUID", users_uuids[username])
         settings.setValue("davUrl", dav_endpoint)
         settings.setValue("deployed", 'false')

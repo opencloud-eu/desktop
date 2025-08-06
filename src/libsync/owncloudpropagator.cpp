@@ -34,7 +34,6 @@
 #endif
 
 #include <QApplication>
-#include <QDir>
 #include <QFileInfo>
 #include <QLoggingCategory>
 #include <QObject>
@@ -72,19 +71,19 @@ OwncloudPropagator::~OwncloudPropagator()
 
 int OwncloudPropagator::maximumActiveTransferJob()
 {
-    if (_bandwidthManager || !_syncOptions._parallelNetworkJobs) {
+    if (_bandwidthManager || !_syncOptions._parallelNetworkJobs()) {
         // disable parallelism when there is a network limit.
         return 1;
     }
-    return qMin(3, qCeil(_syncOptions._parallelNetworkJobs / 2.));
+    return std::max(3, qCeil(_syncOptions._parallelNetworkJobs() / 2.));
 }
 
 /* The maximum number of active jobs in parallel  */
 int OwncloudPropagator::hardMaximumActiveJob()
 {
-    if (!_syncOptions._parallelNetworkJobs)
+    if (!_syncOptions._parallelNetworkJobs())
         return 1;
-    return _syncOptions._parallelNetworkJobs;
+    return _syncOptions._parallelNetworkJobs();
 }
 
 PropagateItemJob::~PropagateItemJob()
@@ -434,7 +433,7 @@ void OwncloudPropagator::start(SyncFileItemSet &&items)
                 continue;
             } else if (item->instruction() != CSYNC_INSTRUCTION_RENAME) {
                 // all is good, the rename will be executed before the directory deletion
-                qCWarning(lcPropagator) << "WARNING:  Job within a removed directory?  This should not happen!" << item->localName() << item->instruction();
+                qCWarning(lcPropagator) << "WARNING:  Job within a removed directory?  This should not happen!" << item;
                 Q_ASSERT(false); // we shouldn't land here, but assert for debug purposes
             }
         }
@@ -493,9 +492,9 @@ void OwncloudPropagator::start(SyncFileItemSet &&items)
                 // since it would be done before the actual remove (issue #1845)
                 // NOTE: Currently this means that we don't update those etag at all in this sync,
                 //       but it should not be a problem, they will be updated in the next sync.
-                for (auto &dir : directories) {
-                    if (dir.second->item()->instruction() == CSYNC_INSTRUCTION_UPDATE_METADATA) {
-                        dir.second->item()->setInstruction(CSYNC_INSTRUCTION_NONE);
+                for (auto &directory : directories) {
+                    if (directory.second->item()->instruction() == CSYNC_INSTRUCTION_UPDATE_METADATA) {
+                        directory.second->item()->setInstruction(CSYNC_INSTRUCTION_NONE);
                         _anotherSyncNeeded = true;
                     }
                 }
@@ -747,10 +746,9 @@ bool OwncloudPropagator::createConflict(const SyncFileItemPtr &item,
     conflictRecord.baseModtime = item->_previousModtime;
     conflictRecord.initialBasePath = item->localName().toUtf8();
 
-    SyncJournalFileRecord baseRecord;
-    if (_journal->getFileRecord(item->_originalFile, &baseRecord) && baseRecord.isValid()) {
-        conflictRecord.baseEtag = baseRecord._etag;
-        conflictRecord.baseFileId = baseRecord._fileId;
+    if (const auto baseRecord = _journal->getFileRecord(item->_originalFile); baseRecord.isValid()) {
+        conflictRecord.baseEtag = baseRecord.etag().toUtf8();
+        conflictRecord.baseFileId = baseRecord.fileId();
     } else {
         // We might very well end up with no fileid/etag for new/new conflicts
     }
@@ -807,9 +805,12 @@ Result<Vfs::ConvertToPlaceholderResult, QString> OwncloudPropagator::updateMetad
     if (!result) {
         return result;
     }
-    auto record = item.toSyncJournalFileRecordWithInode(fsPath);
+    auto itemCopy = item;
+    FileSystem::getInode(FileSystem::toFilesystemPath(fsPath), &itemCopy._inode);
+    qCDebug(lcPropagator) << fsPath << "Retrieved inode " << itemCopy._inode << "(previous item inode: " << item._inode << ")";
+    auto record = SyncJournalFileRecord::fromSyncFileItem(itemCopy);
     if (result.get() == Vfs::ConvertToPlaceholderResult::Locked) {
-        record._hasDirtyPlaceholder = true;
+        record.setDirtyPlaceholder(true);
         Q_EMIT seenLockedFile(fullLocalPath(item.localName()), FileSystem::LockMode::Exclusive);
     }
     const auto dBresult = _journal->setFileRecord(record);
@@ -1267,17 +1268,17 @@ void OCC::PropagateUpdateMetaDataJob::start()
 
     const QString filePath = propagator()->fullLocalPath(_item->destination());
     if (_item->_direction == SyncFileItem::Down) {
-        SyncJournalFileRecord prev;
-        if (propagator()->_journal->getFileRecord(_item->localName(), &prev) && prev.isValid()) {
+        const SyncJournalFileRecord prev = propagator()->_journal->getFileRecord(_item->localName());
+        if (prev.isValid()) {
             if (_item->_checksumHeader.isEmpty()) {
-                _item->_checksumHeader = prev._checksumHeader;
+                _item->_checksumHeader = prev.checksumHeader();
             }
-            _item->_serverHasIgnoredFiles |= prev._serverHasIgnoredFiles;
+            _item->_serverHasIgnoredFiles |= prev.serverHasIgnoredFiles();
         }
     }
     const auto result = propagator()->updateMetadata(*_item);
     if (!result) {
-        done(SyncFileItem::FatalError, tr("Could not update file : %1").arg(result.error()));
+        done(SyncFileItem::FatalError, tr("Could not update file: %1").arg(result.error()));
         return;
     } else if (result.get() == Vfs::ConvertToPlaceholderResult::Locked) {
         done(SyncFileItem::SoftError, tr("The file %1 is currently in use").arg(_item->localName()));

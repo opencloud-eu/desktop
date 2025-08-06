@@ -40,11 +40,12 @@ public:
 
     bool needsMetadataUpdate(const SyncFileItem &) override;
     bool isDehydratedPlaceholder(const QString &) override;
-    bool statTypeVirtualFile(csync_file_stat_t *, void *) override;
 
     bool setPinState(const QString &, PinState) override;
     Optional<PinState> pinState(const QString &) override;
     AvailabilityResult availability(const QString &) override;
+
+    LocalInfo statTypeVirtualFile(const std::filesystem::directory_entry &path, ItemType type) override;
 
 public Q_SLOTS:
     void fileStatusChanged(const QString &, SyncFileStatus) override;
@@ -58,7 +59,7 @@ protected:
 class OffVfsPluginFactory : public QObject, public DefaultPluginFactory<VfsOff>
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID "eu.opencloud.PluginFactory" FILE "vfspluginmetadata.json")
+    Q_PLUGIN_METADATA(IID "eu.opencloud.PluginFactory" FILE "libsync/common/vfspluginmetadata.json")
     Q_INTERFACES(OCC::PluginFactory)
 };
 

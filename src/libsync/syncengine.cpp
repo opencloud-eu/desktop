@@ -236,17 +236,16 @@ void SyncEngine::conflictRecordMaintenance()
     for (const auto &path : std::as_const(_seenConflictFiles)) {
         OC_ASSERT(Utility::isConflictFile(path));
 
-        auto bapath = path.toUtf8();
+        const auto bapath = path.toUtf8();
         if (!conflictRecordPaths.contains(bapath)) {
             ConflictRecord record;
             record.path = bapath;
-            auto basePath = Utility::conflictFileBaseNameFromPattern(bapath);
-            record.initialBasePath = basePath;
+            auto basePath = Utility::conflictFileBaseNameFromPattern(path);
+            record.initialBasePath = basePath.toUtf8();
 
             // Determine fileid of target file
-            SyncJournalFileRecord baseRecord;
-            if (_journal->getFileRecord(basePath, &baseRecord) && baseRecord.isValid()) {
-                record.baseFileId = baseRecord._fileId;
+            if (const auto baseRecord = _journal->getFileRecord(basePath); baseRecord.isValid()) {
+                record.baseFileId = baseRecord.fileId();
             }
 
             _journal->setConflictRecord(record);
@@ -379,7 +378,7 @@ void SyncEngine::startSync()
         return;
     }
 
-    qCInfo(lcEngine) << "#### Discovery start ####################################################" << _duration.duration();
+    qCInfo(lcEngine) << "#### Discovery start ####################################################" << _duration;
     qCInfo(lcEngine) << "Server" << account()->capabilities().status().versionString()
                      << (account()->isHttp2Supported() ? "Using HTTP/2" : "");
     _progressInfo->_status = ProgressInfo::Discovery;
@@ -470,7 +469,7 @@ void SyncEngine::slotDiscoveryFinished()
         return;
     }
 
-    qCInfo(lcEngine) << "#### Discovery end ####################################################" << _duration.duration();
+    qCInfo(lcEngine) << "#### Discovery end ####################################################" << _duration;
 
     // Sanity check
     if (!_journal->open()) {
@@ -489,18 +488,7 @@ void SyncEngine::slotDiscoveryFinished()
     Q_EMIT transmissionProgress(*_progressInfo);
 
     //    qCInfo(lcEngine) << "Permissions of the root folder: " << _csync_ctx->remote.root_perms.toString();
-    auto finish = [this]{
-
-
-        auto databaseFingerprint = _journal->dataFingerprint();
-        // If databaseFingerprint is empty, this means that there was no information in the database
-        // (for example, upgrading from a previous version, or first sync, or server not supporting fingerprint)
-        if (!databaseFingerprint.isEmpty() && _discoveryPhase
-            && _discoveryPhase->_dataFingerprint != databaseFingerprint) {
-            qCInfo(lcEngine) << "data fingerprint changed, assume restore from backup" << databaseFingerprint << _discoveryPhase->_dataFingerprint;
-            restoreOldFiles(_syncItems);
-        }
-
+    auto finish = [this] {
         if (_discoveryPhase->_anotherSyncNeeded) {
             _anotherSyncNeeded = true;
         }
@@ -537,14 +525,14 @@ void SyncEngine::slotDiscoveryFinished()
             erase_if(_syncItems, [&names](const SyncFileItemPtr &i) { return !names.contains(QStringView{i->localName()}); });
         }
 
-        qCInfo(lcEngine) << "#### Reconcile (aboutToPropagate) ####################################################" << _duration.duration();
+        qCInfo(lcEngine) << "#### Reconcile (aboutToPropagate) ####################################################" << _duration;
 
         _localDiscoveryPaths.clear();
 
         // To announce the beginning of the sync
         Q_EMIT aboutToPropagate(_syncItems);
 
-        qCInfo(lcEngine) << "#### Reconcile (aboutToPropagate OK) ####################################################" << _duration.duration();
+        qCInfo(lcEngine) << "#### Reconcile (aboutToPropagate OK) ####################################################" << _duration;
 
         // it's important to do this before ProgressInfo::start(), to announce start of new sync
         _progressInfo->_status = ProgressInfo::Propagation;
@@ -582,7 +570,7 @@ void SyncEngine::slotDiscoveryFinished()
         _propagator->start(std::move(_syncItems));
 
 
-        qCInfo(lcEngine) << "#### Post-Reconcile end ####################################################" << _duration.duration();
+        qCInfo(lcEngine) << "#### Post-Reconcile end ####################################################" << _duration;
     };
 
     finish();
@@ -628,11 +616,6 @@ void SyncEngine::slotPropagationFinished(bool success)
     if (_propagator->_anotherSyncNeeded) {
         _anotherSyncNeeded = true;
     }
-
-    if (success && _discoveryPhase) {
-        _journal->setDataFingerprint(_discoveryPhase->_dataFingerprint);
-    }
-
     conflictRecordMaintenance();
 
     // update placeholders for files that where marked as dirty in a previous run
@@ -641,7 +624,6 @@ void SyncEngine::slotPropagationFinished(bool success)
         _propagator->updateMetadata(*SyncFileItem::fromSyncJournalFileRecord(record));
     }
 
-    _journal->deleteStaleFlagsEntries();
     _journal->commit(QStringLiteral("All Finished."), false);
 
     // Send final progress information even if no
@@ -656,7 +638,7 @@ void SyncEngine::slotPropagationFinished(bool success)
 
 void SyncEngine::finalize(bool success)
 {
-    qCInfo(lcEngine) << "Sync run took" << _duration.duration();
+    qCInfo(lcEngine) << "Sync run for" << _localPath << "took" << _duration;
     _duration.stop();
 
     if (_discoveryPhase) {

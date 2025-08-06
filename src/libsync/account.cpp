@@ -313,6 +313,16 @@ Account::ServerSupportLevel Account::serverSupportLevel() const
     return ServerSupportLevel::Unsupported;
 }
 
+bool Account::isHttp2Supported() const
+{
+    return _http2Supported;
+}
+
+void Account::setHttp2Supported(bool value)
+{
+    _http2Supported = value;
+}
+
 QString Account::defaultSyncRoot() const
 {
     Q_ASSERT(!_defaultSyncRoot.isEmpty());

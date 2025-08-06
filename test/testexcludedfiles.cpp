@@ -9,7 +9,7 @@
 
 #include <QtTest>
 
-#include "csync_exclude.h"
+#include "libsync/csync_exclude.h"
 #include "testutils.h"
 
 using namespace OCC;
@@ -643,5 +643,5 @@ private Q_SLOTS:
 
 };
 
-QTEST_APPLESS_MAIN(TestExcludedFiles)
+QTEST_GUILESS_MAIN(TestExcludedFiles)
 #include "testexcludedfiles.moc"
