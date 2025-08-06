@@ -70,6 +70,14 @@ bool FolderWatcher::pathIsIgnored(const QString &path) const
 {
     Q_ASSERT(!path.isEmpty());
     Q_ASSERT(_folder);
+    if (!QFileInfo::exists(path)) {
+        if (auto record = _folder->journalDb()->getFileRecord(path); record.isValid()) {
+            // we know about the file, it got removed, we should not ignore that
+            return false;
+        }
+        // probably a temporary file that no longer exists
+        return true;
+    }
     if (_folder->isFileExcludedAbsolute(path) && !Utility::isConflictFile(path)) {
         qCDebug(lcFolderWatcher) << "* Ignoring file" << path;
         return true;

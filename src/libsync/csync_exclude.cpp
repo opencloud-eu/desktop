@@ -369,6 +369,7 @@ bool ExcludedFiles::isExcludedRemote(QStringView filePath, QStringView basePath,
     }
 
     auto relativePath = filePath.mid(basePath.size());
+    Q_ASSERT(!relativePath.isEmpty());
     if (relativePath.endsWith(QLatin1Char('/'))) {
         relativePath.chop(1);
     }
