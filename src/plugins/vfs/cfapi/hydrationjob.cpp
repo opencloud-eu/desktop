@@ -242,10 +242,14 @@ void OCC::HydrationJob::finalize(OCC::VfsCfApi *vfs)
         item->_type = ItemTypeVirtualFile;
         break;
     };
-    FileSystem::getInode(FileSystem::toFilesystemPath(localFilePathAbs()), &item->_inode);
-    const auto result = _journal->setFileRecord(SyncJournalFileRecord::fromSyncFileItem(*item));
-    if (!result) {
-        qCWarning(lcHydration) << "Error when setting the file record to the database" << localFilePathAbs() << result.error();
+    if (QFileInfo::exists(localFilePathAbs())) {
+        FileSystem::getInode(FileSystem::toFilesystemPath(localFilePathAbs()), &item->_inode);
+        const auto result = _journal->setFileRecord(SyncJournalFileRecord::fromSyncFileItem(*item));
+        if (!result) {
+            qCWarning(lcHydration) << "Error when setting the file record to the database" << _context << result.error();
+        }
+    } else {
+        qCWarning(lcHydration) << "Hydration succeeded but the file appears to be moved" << _context;
     }
 }
 
