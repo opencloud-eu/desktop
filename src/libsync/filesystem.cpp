@@ -241,6 +241,7 @@ bool FileSystem::removeRecursively(const QString &path,
 bool FileSystem::getInode(const std::filesystem::path &filename, quint64 *inode)
 {
     const LocalInfo info(filename);
+    Q_ASSERT(info.isValid());
     if (!info.isValid()) {
         *inode = 0;
         return false;
