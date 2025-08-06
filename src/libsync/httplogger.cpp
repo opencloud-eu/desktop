@@ -62,9 +62,7 @@ struct HttpContext
 
     OCC::Utility::ChronoElapsedTimer timer;
     bool send = false;
-    // if a file is cached we might get the finished signal before the request was sent
-    // in that case we call logSend to see the request.
-    bool sendForCached = false;
+    bool receivedBeforeSent = false;
 };
 
 void logHttp(const QByteArray &verb, HttpContext *ctx, QJsonObject &&header, QIODevice *device, bool cached = false)
@@ -156,8 +154,8 @@ void HttpLogger::logRequest(QNetworkReply *reply, QNetworkAccessManager::Operati
             // this is a redirect
             if (ctx->lastUrl != reply->url()) {
                 ctx->addRedirect(reply->url());
-            } else if (ctx->sendForCached) {
-                qCWarning(lcNetworkHttp) << u"Request:" << ctx->id << u" was sent after we received a cached result";
+            } else if (ctx->receivedBeforeSent) {
+                qCWarning(lcNetworkHttp) << u"Request:" << ctx->id << u" was sent after we received a result";
             } else {
                 Q_UNREACHABLE();
             }
@@ -176,9 +174,9 @@ void HttpLogger::logRequest(QNetworkReply *reply, QNetworkAccessManager::Operati
     QObject::connect(
         reply, &QNetworkReply::finished, reply,
         [reply, ctx = std::move(ctx), logSend] {
-            ctx->sendForCached = true;
             if (!ctx->send) {
-                logSend(true);
+                ctx->receivedBeforeSent = true;
+                logSend(reply->attribute(QNetworkRequest::SourceIsFromCacheAttribute).toBool());
             }
             ctx->timer.stop();
 
