@@ -404,6 +404,7 @@ void Folder::setSyncState(SyncResult::Status state)
 {
     if (state != _syncResult.status()) {
         _syncResult.setStatus(state);
+        qCDebug(lcFolder) << u"State of" << path() << u"changed to" << state;
         Q_EMIT syncStateChange();
     }
 }
@@ -1113,7 +1114,12 @@ void Folder::registerFolderWatcher()
     _folderWatcher.reset(new FolderWatcher(this));
     connect(_folderWatcher.data(), &FolderWatcher::pathChanged, this,
         [this](const QSet<QString> &paths) { slotWatchedPathsChanged(paths, Folder::ChangeReason::Other); });
-    connect(_folderWatcher.data(), &FolderWatcher::changesDetected, this, [this] { setSyncState(SyncResult::NotYetStarted); });
+    connect(_folderWatcher.data(), &FolderWatcher::changesDetected, this, [this] {
+        // don't set to not yet started if a sync is already running
+        if (!isSyncRunning()) {
+            setSyncState(SyncResult::NotYetStarted);
+        }
+    });
     connect(_folderWatcher.data(), &FolderWatcher::lostChanges,
         this, &Folder::slotNextSyncFullLocalDiscovery);
     connect(_folderWatcher.data(), &FolderWatcher::becameUnreliable,
