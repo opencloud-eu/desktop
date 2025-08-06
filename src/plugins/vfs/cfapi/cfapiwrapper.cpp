@@ -9,6 +9,7 @@
 #include "common/utility_win.h"
 #include "filesystem.h"
 #include "hydrationjob.h"
+#include "syncengine.h"
 #include "theme.h"
 #include "vfs_cfapi.h"
 
@@ -385,16 +386,53 @@ void CALLBACK cfApiCancelFetchPlaceHolders(const CF_CALLBACK_INFO *callbackInfo,
     logCallback(Q_FUNC_INFO, callbackInfo);
 }
 
-void CALLBACK cfApiNotifyFileCloseCompletion(const CF_CALLBACK_INFO *callbackInfo, const CF_CALLBACK_PARAMETERS * /*callbackParameters*/)
+void CALLBACK cfApiRename(const CF_CALLBACK_INFO *callbackInfo, const CF_CALLBACK_PARAMETERS *callbackParameters)
+{
+    const QString target = QString::fromWCharArray(callbackInfo->VolumeDosName) + QString::fromWCharArray(callbackParameters->Rename.TargetPath);
+    // isExcluded can't handle windows paths, as the target does not exist yet, we can't use QFileInfo::canonicalFilePath
+    const auto qtPath = QString(target).replace('\\'_L1, '/'_L1);
+    const auto context = logCallback(Q_FUNC_INFO, callbackInfo, {{"flags", QVariant::fromValue(QFlags(callbackParameters->Rename.Flags))}, {"target", target}});
+
+    bool reject = false;
+    // if both are managed by us, we prevent the move of  a placeholder to a folder where its ignored, as it would implicitly cause a deletion
+    if (callbackParameters->Rename.Flags & (CF_CALLBACK_RENAME_FLAG_TARGET_IN_SCOPE | CF_CALLBACK_RENAME_FLAG_SOURCE_IN_SCOPE) &&
+        // CF_CALLBACK_RENAME_FLAG_TARGET_IN_SCOPE is also set for any other sync root we manage
+        // but in that case windows will hydrate the file before its moved
+        OCC::FileSystem::isChildPathOf(target, context.vfs->params().filesystemPath) && context.vfs->isDehydratedPlaceholder(context.path)
+        && context.vfs->params().syncEngine()->isExcluded(qtPath)) {
+        reject = true;
+    }
+    if (reject) {
+        qCInfo(lcCfApiWrapper) << "Rejecting rename of" << context;
+    } else {
+        qCInfo(lcCfApiWrapper) << "Accepting rename of" << context;
+    }
+
+    CF_OPERATION_INFO opInfo = {};
+    opInfo.StructSize = sizeof(opInfo);
+    opInfo.ConnectionKey = callbackInfo->ConnectionKey;
+    opInfo.TransferKey = callbackInfo->TransferKey;
+    opInfo.Type = CF_OPERATION_TYPE_ACK_RENAME;
+
+    CF_OPERATION_PARAMETERS params = {};
+    params.ParamSize = CF_SIZE_OF_OP_PARAM(AckRename);
+    params.AckRename.CompletionStatus = reject ? STATUS_CLOUD_FILE_NOT_SUPPORTED : STATUS_SUCCESS;
+
+
+    if (auto result = CfExecute(&opInfo, &params); FAILED(result)) {
+        qCWarning(lcCfApiWrapper) << "CfExecute failed:" << OCC::Utility::formatWinError(result);
+    }
+}
+
+void CALLBACK cfApiRenameCompletion(const CF_CALLBACK_INFO *callbackInfo, const CF_CALLBACK_PARAMETERS * /*callbackParameters*/)
 {
     logCallback(Q_FUNC_INFO, callbackInfo);
 }
 
-CF_CALLBACK_REGISTRATION cfApiCallbacks[] = {{CF_CALLBACK_TYPE_FETCH_DATA, cfApiFetchDataCallback}, {CF_CALLBACK_TYPE_CANCEL_FETCH_DATA, cfApiCancelFetchData},
-    {CF_CALLBACK_TYPE_NOTIFY_FILE_OPEN_COMPLETION, cfApiNotifyFileOpenCompletion},
-    {CF_CALLBACK_TYPE_NOTIFY_FILE_CLOSE_COMPLETION, cfApiNotifyFileCloseCompletion}, {CF_CALLBACK_TYPE_VALIDATE_DATA, cfApiValidateData},
-    {CF_CALLBACK_TYPE_CANCEL_FETCH_PLACEHOLDERS, cfApiCancelFetchPlaceHolders}, CF_CALLBACK_REGISTRATION_END};
-
+void CALLBACK cfApiNotifyFileCloseCompletion(const CF_CALLBACK_INFO *callbackInfo, const CF_CALLBACK_PARAMETERS * /*callbackParameters*/)
+{
+    logCallback(Q_FUNC_INFO, callbackInfo);
+}
 
 CF_PIN_STATE pinStateToCfPinState(OCC::PinState state)
 {
@@ -579,6 +617,17 @@ OCC::Result<CF_CONNECTION_KEY, QString> OCC::CfApiWrapper::connectSyncRoot(const
     std::lock_guard lock(sRegister_mutex);
     CF_CONNECTION_KEY key;
     const auto p = QDir::toNativeSeparators(path).toStdWString();
+
+    CF_CALLBACK_REGISTRATION cfApiCallbacks[] = {{CF_CALLBACK_TYPE_FETCH_DATA, cfApiFetchDataCallback}, //
+        {CF_CALLBACK_TYPE_CANCEL_FETCH_DATA, cfApiCancelFetchData}, //
+        {CF_CALLBACK_TYPE_NOTIFY_FILE_OPEN_COMPLETION, cfApiNotifyFileOpenCompletion}, //
+        {CF_CALLBACK_TYPE_NOTIFY_FILE_CLOSE_COMPLETION, cfApiNotifyFileCloseCompletion}, //,
+        {CF_CALLBACK_TYPE_VALIDATE_DATA, cfApiValidateData}, //
+        {CF_CALLBACK_TYPE_CANCEL_FETCH_PLACEHOLDERS, cfApiCancelFetchPlaceHolders}, //
+        {CF_CALLBACK_TYPE_NOTIFY_RENAME, cfApiRename}, //
+        {CF_CALLBACK_TYPE_NOTIFY_RENAME_COMPLETION, cfApiRenameCompletion}, //
+        CF_CALLBACK_REGISTRATION_END};
+
     const qint64 result =
         CfConnectSyncRoot(p.data(), cfApiCallbacks, context, CF_CONNECT_FLAG_REQUIRE_PROCESS_INFO | CF_CONNECT_FLAG_REQUIRE_FULL_FILE_PATH | CF_CONNECT_FLAG_BLOCK_SELF_IMPLICIT_HYDRATION, &key);
     Q_ASSERT(result == S_OK);
