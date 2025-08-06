@@ -14,6 +14,7 @@
 
 ### 📈 Enhancement
 
+- Folder watcher: ignore changes in short lived files [[#455](https://github.com/opencloud-eu/desktop/pull/455)]
 - Fix assert in httplogger if a cached request is actuall send [[#456](https://github.com/opencloud-eu/desktop/pull/456)]
 - Sync description and space name to Windows [[#443](https://github.com/opencloud-eu/desktop/pull/443)]
 - Replace csync C code with std::filesystem [[#393](https://github.com/opencloud-eu/desktop/pull/393)]
