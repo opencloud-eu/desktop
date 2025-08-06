@@ -48,7 +48,7 @@ WatcherThread::WatchChanges WatcherThread::watchChanges(size_t fileNotifyBufferS
 
     // QVarLengthArray ensures the stack-buffer is aligned like double and qint64.
     QVarLengthArray<char, 4096 * 10> fileNotifyBuffer;
-    fileNotifyBuffer.resize(static_cast<int>(fileNotifyBufferSize));
+    fileNotifyBuffer.resize(fileNotifyBufferSize);
 
     while (true) {
         ResetEvent(_resultEvent);
