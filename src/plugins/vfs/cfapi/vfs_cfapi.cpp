@@ -103,7 +103,7 @@ namespace OCC {
 class VfsCfApiPrivate
 {
 public:
-    QList<HydrationJob *> hydrationJobs;
+    QMap<uint64_t, HydrationJob *> hydrationJobs;
     CF_CONNECTION_KEY connectionKey = {};
 };
 
@@ -293,20 +293,13 @@ Vfs::AvailabilityResult VfsCfApi::availability(const QString &folderPath)
 HydrationJob *VfsCfApi::findHydrationJob(int64_t requestId) const
 {
     // Find matching hydration job for request id
-    const auto hydrationJobsIter =
-        std::find_if(d->hydrationJobs.cbegin(), d->hydrationJobs.cend(), [&](const HydrationJob *job) { return job->requestId() == requestId; });
-
-    if (hydrationJobsIter != d->hydrationJobs.cend()) {
-        return *hydrationJobsIter;
-    }
-
-    return nullptr;
+    return d->hydrationJobs.value(requestId);
 }
 
 void VfsCfApi::cancelHydration(const OCC::CfApiWrapper::CallBackContext &context)
 {
     // Find matching hydration job for request id
-    const auto hydrationJob = findHydrationJob(context.requestId);
+    const auto hydrationJob = d->hydrationJobs.take(context.requestId);
     // If found, cancel it
     if (hydrationJob) {
         qCInfo(lcCfApi) << "Cancel hydration" << hydrationJob->context();
@@ -382,15 +375,13 @@ void VfsCfApi::fileStatusChanged(const QString &systemFileName, SyncFileStatus f
 void VfsCfApi::scheduleHydrationJob(const OCC::CfApiWrapper::CallBackContext &context, SyncJournalFileRecord &&record)
 {
     // after a local move, the remotePath and the targetPath might not match
-    const auto jobAlreadyScheduled = std::any_of(std::cbegin(d->hydrationJobs), std::cend(d->hydrationJobs),
-        [=](HydrationJob *job) { return job->requestId() == context.requestId || job->localFilePathAbs() == context.path; });
-
-    if (jobAlreadyScheduled) {
+    if (findHydrationJob(context.requestId)) {
         qCWarning(lcCfApi) << "The OS submitted again a hydration request which is already on-going" << context;
         Q_EMIT hydrationRequestFailed(context.requestId);
         return;
     }
-
+    Q_ASSERT(!std::any_of(std::cbegin(d->hydrationJobs), std::cend(d->hydrationJobs),
+        [=](HydrationJob *job) { return job->requestId() == context.requestId || job->localFilePathAbs() == context.path; }));
     auto job = new HydrationJob(context);
     job->setAccount(params().account);
     job->setRemoteSyncRootPath(params().baseUrl());
@@ -399,14 +390,14 @@ void VfsCfApi::scheduleHydrationJob(const OCC::CfApiWrapper::CallBackContext &co
     job->setRemoteFilePathRel(record.path());
     job->setRecord(std::move(record));
     connect(job, &HydrationJob::finished, this, &VfsCfApi::onHydrationJobFinished);
-    d->hydrationJobs << job;
+    d->hydrationJobs.insert(context.requestId, job);
     job->start();
     Q_EMIT hydrationRequestReady(context.requestId);
 }
 
 void VfsCfApi::onHydrationJobFinished(HydrationJob *job)
 {
-    Q_ASSERT(d->hydrationJobs.contains(job));
+    Q_ASSERT(findHydrationJob(job->requestId()));
     qCInfo(lcCfApi) << "Hydration job finished" << job->requestId() << job->localFilePathAbs() << job->status();
     Q_EMIT hydrationRequestFinished(job->requestId());
     if (!job->errorString().isEmpty()) {
@@ -420,7 +411,7 @@ HydrationJob::Status VfsCfApi::finalizeHydrationJob(int64_t requestId)
     if (const auto hydrationJob = findHydrationJob(requestId)) {
         qCDebug(lcCfApi) << "Finalize hydration job" << hydrationJob->context();
         hydrationJob->finalize(this);
-        d->hydrationJobs.removeAll(hydrationJob);
+        d->hydrationJobs.take(hydrationJob->requestId());
         hydrationJob->deleteLater();
         return hydrationJob->status();
     }
