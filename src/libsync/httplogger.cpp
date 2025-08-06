@@ -62,6 +62,9 @@ struct HttpContext
 
     OCC::Utility::ChronoElapsedTimer timer;
     bool send = false;
+    // if a file is cached we might get the finished signal before the request was sent
+    // in that case we call logSend to see the request.
+    bool sendForCached = false;
 };
 
 void logHttp(const QByteArray &verb, HttpContext *ctx, QJsonObject &&header, QIODevice *device, bool cached = false)
@@ -99,7 +102,7 @@ void logHttp(const QByteArray &verb, HttpContext *ctx, QJsonObject &&header, QIO
         }
         info.insert(QStringLiteral("reply"), replyInfo);
     } else {
-        // request
+        // request was not actually sent but will be returned from cache
         info.insert(QStringLiteral("cached"), cached);
     }
 
@@ -153,6 +156,8 @@ void HttpLogger::logRequest(QNetworkReply *reply, QNetworkAccessManager::Operati
             // this is a redirect
             if (ctx->lastUrl != reply->url()) {
                 ctx->addRedirect(reply->url());
+            } else if (ctx->sendForCached) {
+                qCWarning(lcNetworkHttp) << u"Request:" << ctx->id << u" was sent after we received a cached result";
             } else {
                 Q_UNREACHABLE();
             }
@@ -171,10 +176,12 @@ void HttpLogger::logRequest(QNetworkReply *reply, QNetworkAccessManager::Operati
     QObject::connect(
         reply, &QNetworkReply::finished, reply,
         [reply, ctx = std::move(ctx), logSend] {
-            ctx->timer.stop();
+            ctx->sendForCached = true;
             if (!ctx->send) {
                 logSend(true);
             }
+            ctx->timer.stop();
+
             QJsonObject header;
             for (const auto &[key, value] : reply->rawHeaderPairs()) {
                 header[QString::fromUtf8(key)] = QString::fromUtf8(value);
