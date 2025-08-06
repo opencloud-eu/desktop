@@ -26,7 +26,7 @@
 #include <QUrl>
 #include <cstring>
 
-
+using namespace Qt::Literals::StringLiterals;
 namespace OCC {
 
 Q_LOGGING_CATEGORY(lcDiscovery, "sync.discovery", QtInfoMsg)
@@ -243,22 +243,15 @@ void DiscoverySingleDirectoryJob::start()
 {
     // Start the actual HTTP job
     _proFindJob = new PropfindJob(_account, _baseUrl, _subPath, PropfindJob::Depth::One, this);
-
-    QList<QByteArray> props{
-        "resourcetype",
-        "getlastmodified",
-        "getcontentlength",
-        "getetag",
-        "http://owncloud.org/ns:id",
-        "http://owncloud.org/ns:permissions",
-        "http://owncloud.org/ns:checksums",
-    };
-    if (_isRootPath) {
-        props << "http://owncloud.org/ns:data-fingerprint";
-    }
-
-
-    _proFindJob->setProperties(props);
+    _proFindJob->setProperties({
+        "resourcetype"_ba,
+        "getlastmodified"_ba,
+        "getcontentlength"_ba,
+        "getetag"_ba,
+        "http://owncloud.org/ns:id"_ba,
+        "http://owncloud.org/ns:permissions"_ba,
+        "http://owncloud.org/ns:checksums"_ba,
+    });
 
     QObject::connect(_proFindJob, &PropfindJob::directoryListingIterated,
         this, &DiscoverySingleDirectoryJob::directoryListingIteratedSlot);
