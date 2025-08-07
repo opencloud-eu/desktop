@@ -94,8 +94,6 @@ namespace CfApiWrapper {
 
     bool isSparseFile(const QString &path);
 
-    OCC::Utility::Handle handleForPath(const QString &path);
-
     /**
      * The placeholder info can have a dynamic size, by default we don't query FileIdentity
      * If FileIdentity is required withFileIdentity must be set to true.
