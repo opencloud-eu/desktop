@@ -175,7 +175,7 @@ FakesAssemblies/
 !building.adoc
 
 # Same thing to allow build-files in the .woodpecker directory to be tracked
-!.woodpecker/*build*
+!.woodpecker/**/*build*
 
 # squish test
 test/gui/config.ini
