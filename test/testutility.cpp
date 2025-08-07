@@ -368,9 +368,18 @@ private Q_SLOTS:
 
                 if (SUCCEEDED(hres)) {
                     hres = ppf->Save(target.native().data(), true);
+                    if (SUCCEEDED(hres)) {
+                        qDebug() << "Created lnk" << target << "->" << path;
+                    } else {
+                        qCritical() << "Failed to create lnk: Save" << OCC::Utility::formatWinError(hres);
+                    }
                     ppf->Release();
+                } else {
+                    qCritical() << "Failed to create lnk: QueryInterface" << OCC::Utility::formatWinError(hres);
                 }
                 psl->Release();
+            } else {
+                qCritical() << "Failed to create lnk: CoCreateInstance" << OCC::Utility::formatWinError(hres);
             }
         };
 
