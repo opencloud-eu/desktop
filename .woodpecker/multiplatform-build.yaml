@@ -65,6 +65,7 @@ steps:
     commands:
       # no linebreaks for this command
       # backticks fail in bash , backslashes fail in powershell
+      # yamllint disable-line rule:line-length
       - s3cmd --host=${MC_HOST} --host-bucket=${MC_HOST} --no-check-certificate put --recursive binaries s3://${bucket}/${CI_REPO_NAME}/pipeline_${CI_PIPELINE_NUMBER}/${target}/
 
   - name: artifact download links
