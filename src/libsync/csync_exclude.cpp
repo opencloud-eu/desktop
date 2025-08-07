@@ -327,9 +327,21 @@ bool ExcludedFiles::versionDirectiveKeepNextLine(const QByteArray &directive) co
 
 bool ExcludedFiles::isExcluded(QStringView filePath, QStringView basePath, bool excludeHidden) const
 {
-    if (!FileSystem::isChildPathOf(filePath, basePath)) {
+    Q_ASSERT(!filePath.isEmpty());
+    Q_ASSERT(!basePath.isEmpty());
+#ifdef Q_OS_WIN
+    Q_ASSERT_X(!filePath.contains('\\'_L1), Q_FUNC_INFO, "ExcludedFiles does not support Windows like paths");
+    Q_ASSERT_X(!basePath.contains('\\'_L1), Q_FUNC_INFO, "ExcludedFiles does not support Windows like paths");
+#endif
+    const auto isChild = FileSystem::isChildPathOf2(filePath, basePath);
+    if (isChild == FileSystem::ChildResult::IsNoChild) {
         // Mark paths we're not responsible for as excluded...
         return true;
+    }
+
+    if (isChild & FileSystem::ChildResult::IsEqual) {
+        // both paths are equal
+        return false;
     }
 
     const QFileInfo fileInfo(filePath.toString());
@@ -363,9 +375,22 @@ bool ExcludedFiles::isExcluded(QStringView filePath, QStringView basePath, bool 
 
 bool ExcludedFiles::isExcludedRemote(QStringView filePath, QStringView basePath, bool excludeHidden, ItemType type) const
 {
-    if (!FileSystem::isChildPathOf(filePath, basePath)) {
+    Q_ASSERT(!filePath.isEmpty());
+    Q_ASSERT(!basePath.isEmpty());
+#ifdef Q_OS_WIN
+    Q_ASSERT_X(!filePath.contains('\\'_L1), Q_FUNC_INFO, "ExcludedFiles does not support Windows like paths");
+    Q_ASSERT_X(!basePath.contains('\\'_L1), Q_FUNC_INFO, "ExcludedFiles does not support Windows like paths");
+#endif
+
+    const auto isChild = FileSystem::isChildPathOf2(filePath, basePath);
+    if (isChild == FileSystem::ChildResult::IsNoChild) {
         // Mark paths we're not responsible for as excluded...
         return true;
+    }
+
+    if (isChild & FileSystem::ChildResult::IsEqual) {
+        // both paths are equal
+        return false;
     }
 
     auto relativePath = filePath.mid(basePath.size());

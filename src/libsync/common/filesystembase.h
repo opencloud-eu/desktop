@@ -168,7 +168,16 @@ OPENCLOUD_SYNC_EXPORT Q_DECLARE_LOGGING_CATEGORY(lcFileSystem)
     /**
      * Returns whether a Path is a child of another
      */
-    bool OPENCLOUD_SYNC_EXPORT isChildPathOf(QStringView child, QStringView parent);
+    enum class ChildResult : uint8_t { IsNoChild = 0, IsChild = 0x1 << 0, IsEqual = 0x1 << 1, IsParentEmpty = 0x1 << 2 };
+    Q_FLAG_NS(ChildResult);
+    Q_DECLARE_FLAGS(ChildResults, ChildResult)
+    Q_DECLARE_OPERATORS_FOR_FLAGS(ChildResults)
+
+    ChildResults OPENCLOUD_SYNC_EXPORT isChildPathOf2(QStringView child, QStringView parent);
+    inline bool isChildPathOf(QStringView child, QStringView parent)
+    {
+        return isChildPathOf2(child, parent) & ChildResult::IsChild;
+    }
 
     /**
      * Ensures the file name length is allowed on all platforms and the file name does not contain illegal characters
