@@ -20,6 +20,7 @@ function(opencloud_add_test test_class)
 
     # depend on opencloud to ensure the plugins are up to date
     add_dependencies(${_test_target_name} opencloud)
+    add_dependencies(${_test_target_name} test_helper)
 
     target_include_directories(${_test_target_name} PRIVATE "${CMAKE_SOURCE_DIR}/test/")
     if (UNIX AND NOT APPLE)

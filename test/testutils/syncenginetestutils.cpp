@@ -107,6 +107,12 @@ public:
 
         qDebug() << "Starting helper:" << TEST_HELPER_EXE << processArguments;
         start(QStringLiteral(TEST_HELPER_EXE), processArguments);
+        QTimer::singleShot(10s, this, [this] {
+            if (!finished) {
+                qWarning() << "Helper:" << TEST_HELPER_EXE << arguments() << "timed out.";
+                kill();
+            }
+        });
     }
 
 public:
