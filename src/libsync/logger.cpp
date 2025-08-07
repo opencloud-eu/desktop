@@ -108,8 +108,6 @@ void Logger::doLog(QtMsgType type, const QMessageLogContext &ctx, const QString 
         _crashLog[_crashLogIndex] = msg;
         if (_logstream) {
             (*_logstream) << msg;
-            if (_doFileFlush)
-                _logstream->flush();
         }
 #if defined(Q_OS_WIN)
         if (isDebuggerPresent()) {
@@ -135,13 +133,19 @@ void Logger::doLog(QtMsgType type, const QMessageLogContext &ctx, const QString 
 void Logger::open(const QString &name)
 {
     bool openSucceeded = false;
+    QIODevice::OpenMode flags = QIODevice::WriteOnly;
+    auto encoding = QStringConverter::Utf16;
+    if (_doFileFlush) {
+        flags |= QIODevice::Unbuffered;
+    }
     if (name == QLatin1Char('-')) {
         attacheToConsole();
-        setLogFlush(true);
-        openSucceeded = _logFile.open(stdout, QIODevice::WriteOnly);
+        // always unbuffered
+        openSucceeded = _logFile.open(stdout, flags | QIODevice::Unbuffered);
+        encoding = QStringConverter::Utf8;
     } else {
         _logFile.setFileName(name);
-        openSucceeded = _logFile.open(QIODevice::WriteOnly);
+        openSucceeded = _logFile.open(flags);
     }
 
     if (!openSucceeded) {
@@ -149,7 +153,8 @@ void Logger::open(const QString &name)
         return;
     }
     _logstream.reset(new QTextStream(&_logFile));
-    _logstream->setEncoding(QStringConverter::Utf8);
+    _logstream->setGenerateByteOrderMark(true);
+    _logstream->setEncoding(encoding);
     (*_logstream) << Theme::instance()->aboutVersions(Theme::VersionFormat::OneLiner) << " " << qApp->applicationName() << Qt::endl;
 }
 
