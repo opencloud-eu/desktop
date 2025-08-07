@@ -507,7 +507,7 @@ bool FileSystem::isJunction(const QString &filename)
 #endif
 }
 
-bool FileSystem::isChildPathOf(QStringView child, QStringView parent)
+FileSystem::ChildResults FileSystem::isChildPathOf2(QStringView child, QStringView parent)
 {
     // if it is a relative path assume a local file, resolve it based on root
     const auto sensitivity = Utility::fsCaseSensitivity();
@@ -515,16 +515,17 @@ bool FileSystem::isChildPathOf(QStringView child, QStringView parent)
     // Fast-path the 3 common cases in this if-else statement:
     if (parent.isEmpty()) {
         // The empty parent is often used as the sync root, as (child) items do not start with a `/`
-        return true;
+        return ChildResult::IsChild | ChildResult::IsParentEmpty;
     }
-
+    if (child.compare(parent, sensitivity) == 0) {
+        return ChildResult::IsChild | ChildResult::IsEqual;
+    }
     const auto isSeparator = [](QChar c) { return c == QLatin1Char('/') || (Utility::isWindows() && c == QLatin1Char('\\')); };
-
     if (isSeparator(parent.back())) {
         // Here we can do a normal prefix check, because the parent is "terminated" with a slash,
         // and we can't walk into the case in the else below.
         if (child.startsWith(parent, sensitivity)) {
-            return true;
+            return ChildResult::IsChild;
         }
         // else: do the `cleanPath` version below
     } else {
@@ -538,7 +539,7 @@ bool FileSystem::isChildPathOf(QStringView child, QStringView parent)
         if (child.startsWith(parent, sensitivity)) {
             // ok, now check if the character after the parent is a '/'
             if (child.length() >= parent.length() + 1 && isSeparator(child.at(parent.length()))) {
-                return true;
+                return ChildResult::IsChild;
             }
             // else: do the `cleanPath` version below
         }
@@ -550,13 +551,13 @@ bool FileSystem::isChildPathOf(QStringView child, QStringView parent)
     // cleanPath removes trailing slashes, add one to parent to be sure we handle a child path
     // /root/foo/bar is not  a child of /root/fo, therefor the trailing slash is important
     if (cleanChild.startsWith(cleanParent + QLatin1Char('/'), sensitivity)) {
-        return true;
+        return ChildResult::IsChild;
     }
     // both paths are the same /root/foo == /root/foo
     if (cleanChild.compare(cleanParent, sensitivity) == 0) {
-        return true;
+        return ChildResult::IsChild | ChildResult::IsEqual;
     }
-    return false;
+    return ChildResult::IsNoChild;
 }
 
 QString FileSystem::createPortableFileName(const QString &path, const QString &fileName, qsizetype reservedSize)
