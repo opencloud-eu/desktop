@@ -6,7 +6,7 @@ $ErrorActionPreference = 'Stop';
 $PSNativeCommandUseErrorActionPreference = $true;
 $ProgressPreference = 'SilentlyContinue';
 
-.woodpecker/multiplatform-build/init.ps1
+.woodpecker/.multiplatform-build/init.ps1
 
 if ($env:CRAFT_TARGET -ne "macos-clang-arm64" ) {
     .github/workflows/.craft.ps1 -c --no-cache --package opencloud/opencloud-desktop

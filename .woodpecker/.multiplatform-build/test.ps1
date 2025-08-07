@@ -6,7 +6,7 @@ $ErrorActionPreference = 'Stop';
 $PSNativeCommandUseErrorActionPreference = $true;
 $ProgressPreference = 'SilentlyContinue';
 
-.woodpecker/multiplatform-build/init.ps1
+.woodpecker/.multiplatform-build/init.ps1
 
 .github/workflows/.craft.ps1 -c --no-cache --test opencloud/opencloud-desktop
 
