@@ -150,7 +150,7 @@ bool Theme::multiAccount() const
 
 QUrl Theme::helpUrl() const
 {
-    return QUrl(QStringLiteral("https://docs.opencloud.eu/docs/category/opencloud-desktop-1"));
+    return QUrl(QStringLiteral("https://docs.opencloud.eu/docs/user/desktop-client"));
 }
 
 QUrl Theme::updateCheckUrl() const
