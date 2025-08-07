@@ -7,7 +7,7 @@ $PSNativeCommandUseErrorActionPreference = $true;
 $ProgressPreference = 'SilentlyContinue';
 
 git clone --depth=1 https://invent.kde.org/kde/craftmaster.git $env:CI_WORKSPACE/woodpecker_craft/CraftMaster/CraftMaster
-.woodpecker/.multiplatform-build/init.ps1
+.woodpecker_files/multiplatform-build/init.ps1
 
 New-Item -Path $HOME/cache -ItemType Directory -ErrorAction SilentlyContinue
 .github/workflows/.craft.ps1 --setup
