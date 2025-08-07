@@ -38,7 +38,7 @@ IgnoreListEditor::IgnoreListEditor(QWidget *parent)
     ui->setupUi(this);
 
     ConfigFile cfgFile;
-    readOnlyTooltip = tr("This entry is provided by the system at '%1' "
+    readOnlyTooltip = tr("This entry is provided by the system at %1 "
                          "and cannot be modified in this view.")
                           .arg(QDir::toNativeSeparators(cfgFile.excludeFile(ConfigFile::SystemScope)));
 
