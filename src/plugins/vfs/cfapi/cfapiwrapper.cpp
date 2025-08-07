@@ -805,7 +805,12 @@ OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> OCC::CfApiWrapper::up
         if (auto result = CfSetInSyncState(handle, CF_IN_SYNC_STATE_IN_SYNC, CF_SET_IN_SYNC_FLAG_NONE, nullptr); SUCCEEDED(result)) {
             return OCC::Vfs::ConvertToPlaceholderResult::Ok;
         } else {
-            return u"updatePlaceholderMarkInSync failed: %1"_s.arg(Utility::formatWinError(result));
+            if (result == HRESULT_FROM_WIN32(ERROR_NOT_A_CLOUD_FILE)) {
+                return u"%1 is not a cloud file"_s.arg(path);
+            }
+            const auto error = u"updatePlaceholderMarkInSync failed: %1"_s.arg(Utility::formatWinError(result));
+            qCWarning(lcCfApiWrapper) << error;
+            return error;
         }
     }
     return handle.errorMessage();
