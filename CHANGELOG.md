@@ -14,6 +14,7 @@
 
 ### 📈 Enhancement
 
+- Use utf16 for the rotating log, to reduce string conversions [[#467](https://github.com/opencloud-eu/desktop/pull/467)]
 - change help URL to the right docs URL [[#466](https://github.com/opencloud-eu/desktop/pull/466)]
 - Folder watcher: ignore changes in short lived files [[#455](https://github.com/opencloud-eu/desktop/pull/455)]
 - Fix assert in httplogger if a cached request is actuall send [[#456](https://github.com/opencloud-eu/desktop/pull/456)]
