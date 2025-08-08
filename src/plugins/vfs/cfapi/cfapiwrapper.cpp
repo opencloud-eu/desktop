@@ -547,8 +547,9 @@ void OCC::CfApiWrapper::registerSyncRoot(const VfsSetupParams &params, const std
                 info.Id(reinterpret_cast<const wchar_t *>(id.utf16()));
                 info.Path(result.GetResults());
 
-                // displayed when an error occurs "Make sue OpenCloud is running on your PC, try again."
-                info.DisplayNameResource(reinterpret_cast<const wchar_t *>(params.providerDisplayName.utf16()));
+                // displayed when an error occurs "Make sure OpenCloud is running on your PC, try again." and in the trash bin etc.
+                const QString displayname = u"%1: %2"_s.arg(params.providerName, params.folderDisplayName());
+                info.DisplayNameResource(reinterpret_cast<const wchar_t *>(displayname.utf16()));
 
                 info.IconResource(reinterpret_cast<const wchar_t *>(iconPath.utf16()));
                 info.HydrationPolicy(winrt::StorageProviderHydrationPolicy::Full);
@@ -825,7 +826,6 @@ bool OCC::CfApiWrapper::isPlaceHolderInSync(const QString &filePath)
     if (const auto originalInfo = findPlaceholderInfo<CF_PLACEHOLDER_BASIC_INFO>(filePath)) {
         return originalInfo->InSyncState == CF_IN_SYNC_STATE_IN_SYNC;
     }
-
     return true;
 }
 
