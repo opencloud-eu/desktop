@@ -352,14 +352,9 @@ private Q_SLOTS:
     void testLNK()
     {
         auto mkLNK = [](const std::wstring &path, const std::filesystem::path &target) -> bool {
-            HRESULT hres = CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
-            if (FAILED(hres)) {
-                qWarning() << "Failed to create lnk: CoInitializeEx" << OCC::Utility::formatWinError(hres);
-                return false;
-            }
             // https://learn.microsoft.com/en-us/windows/win32/shell/links?redirectedfrom=MSDN#Shellink_Creating_Shortcut
             IShellLink *psl;
-            hres = CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, IID_IShellLink, (LPVOID *)&psl);
+            auto hres = CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, IID_IShellLink, (LPVOID *)&psl);
             if (SUCCEEDED(hres)) {
                 IPersistFile *ppf;
 
