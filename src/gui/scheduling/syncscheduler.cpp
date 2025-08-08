@@ -175,7 +175,7 @@ void SyncScheduler::startNext()
         return;
     }
 
-    Priority syncPriority;
+    Priority syncPriority = Priority::Low;
     while (!_currentSync) {
         if (_queue->empty()) {
             qCInfo(lcSyncScheduler) << "Queue is empty, no sync to start";
