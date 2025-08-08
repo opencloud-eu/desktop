@@ -1,0 +1,92 @@
+---
+
+when:
+  - branch:
+      - "flimmy_ci_tests"
+      - "main"
+    event:
+      - push
+      - manual
+
+variables:
+  - &MC_HOST "https://s3.ci.opencloud.eu"
+  - &bucket "public"
+
+matrix:
+  include:
+    - platform: linux/amd64
+      clone_image: woodpeckerci/plugin-git
+      build_image: ghcr.io/opencloud-eu/ci-docker-desktop/appimage:latest
+      target: linux-gcc-x86_64
+      MC_HOST: *MC_HOST
+      bucket: *bucket
+    - platform: windows/amd64
+      clone_image: opencloudeu/woodpecker-windows-git-plugin:v2
+      build_image: opencloudeu/woodpecker-windows-desktop-build-tools:v1
+      target: windows-cl-msvc2022-x86_64
+      MC_HOST: *MC_HOST
+      bucket: *bucket
+
+labels:
+  platform: ${platform}
+  backend: docker
+
+clone:
+  - name: clone
+    image: ${clone_image}
+
+steps:
+  - name: build
+    image: ${build_image}
+    environment:
+      CRAFT_TARGET: ${target}
+    commands:
+      - pwsh .woodpecker_files/multiplatform-build/build.ps1
+
+  - name: test
+    image: ${build_image}
+    depends_on: build
+    environment:
+      CRAFT_TARGET: ${target}
+    commands:
+      - pwsh .woodpecker_files/multiplatform-build/test.ps1
+
+  - name: package
+    image: ${build_image}
+    depends_on: build
+    environment:
+      CRAFT_TARGET: ${target}
+    commands:
+      - pwsh .woodpecker_files/multiplatform-build/package.ps1
+
+  - name: upload artifacts
+    image: opencloudeu/s3cmd:v1
+    depends_on: package
+    when:
+      - status:
+          - success
+          - failure
+    environment:
+      AWS_ACCESS_KEY_ID:
+        from_secret: cache_s3_access_key
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: cache_s3_secret_key
+    commands:
+      # no linebreaks for this command
+      # backticks fail in bash , backslashes fail in powershell
+      # yamllint disable-line rule:line-length
+      - s3cmd --host=${MC_HOST} --host-bucket=${MC_HOST} --no-check-certificate put --recursive binaries s3://${bucket}/${CI_REPO_NAME}/pipeline_${CI_PIPELINE_NUMBER}/${target}/
+
+  - name: artifact download links
+    image: ${build_image}
+    depends_on: upload artifacts
+    when:
+      - status:
+          - success
+          - failure
+    environment:
+      MC_HOST: *MC_HOST
+      TARGET: ${target}
+      BUCKET: *bucket
+    commands:
+      - pwsh .woodpecker_files/multiplatform-build/print_links.ps1
