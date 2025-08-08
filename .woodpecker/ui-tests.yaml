@@ -2,6 +2,7 @@
 variables:
   - &squish_image 'opencloudeu/squish@sha256:6eaecc218044020f49f24fd29b6bdc052e8170699a762687b10398b353e5fcda'
   - &minio_image 'minio/mc:RELEASE.2021-10-07T04-19-58Z'
+  - &ubuntu_image 'owncloud/ubuntu:20.04'
   - &minio_environment
     AWS_ACCESS_KEY_ID:
       from_secret: cache_s3_access_key
@@ -93,14 +94,15 @@ steps:
       <<: *minio_environment
     image: *minio_image
 
-  - name: create-gui-test-report-directory
-    image: owncloud/ubuntu:20.04
+  - name: create-extra-directories
+    image: *ubuntu_image
     commands:
       - mkdir /woodpecker/desktop/test/gui/guiReportUpload/screenshots -p
+      - mkdir /woodpecker/desktop/test/gui/tmp -p
       - chmod 777 /woodpecker/desktop/test/gui/ -R
 
   - name: monitor-server-logs
-    image: owncloud/ubuntu:20.04
+    image: *ubuntu_image
     detach: true
     commands:
       - touch /woodpecker/desktop/test/gui/guiReportUpload/serverlog.log
@@ -111,6 +113,7 @@ steps:
     image: *squish_image
     environment:
       PYTHONUSERBASE: /woodpecker/desktop/
+      TMPDIR: /woodpecker/desktop/test/gui/tmp/
       PLAYWRIGHT_BROWSERS_PATH: /woodpecker/desktop/.playwright
       SQUISH_LICENSE_SERVER:
         from_secret: squish_license_key
@@ -121,6 +124,13 @@ steps:
       GUI_TEST_REPORT_DIR: /woodpecker/desktop/test/gui/guiReportUpload
       SERVER_INI: /woodpecker/desktop/test/gui/woodpecker/server.ini
       SQUISH_PARAMETERS: --testsuite /woodpecker/desktop/test/gui --reportgen html,/woodpecker/desktop/test/gui/guiReportUpload --envvar QT_LOGGING_RULES=sync.httplogger=true;gui.socketapi=false --tags ~@skip --tags ~@skipOnLinux
+
+  - name: crash-log
+    image: *ubuntu_image
+    when:
+      - status: [ success, failure ]
+    commands:
+      - cat /woodpecker/desktop/test/gui/tmp/OpenCloud-crash.log 2>/dev/null || exit 0
 
 when:
   - branch:
