@@ -173,6 +173,8 @@ FakesAssemblies/
 # This exclusion needs to be added at the end, after any previous
 # reference to "build"
 !building.adoc
+# Same thing to allow "build"-files in the .woodpecker directory to be tracked
+!.woodpecker/*build*
 
 # squish test
 test/gui/config.ini
