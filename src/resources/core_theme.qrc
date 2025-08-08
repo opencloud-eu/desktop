@@ -22,4 +22,7 @@
         <file>theme/universal/wizard_logo.svg</file>
         <file>theme/universal/sync-exclude.lst</file>
     </qresource>
+    <qresource prefix="/">
+        <file alias="qtquickcontrols2.conf">theme/universal/qtquickcontrols2.conf</file>
+    </qresource>
 </RCC>
