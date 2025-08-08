@@ -114,6 +114,7 @@ steps:
     environment:
       PYTHONUSERBASE: /woodpecker/desktop/
       TMPDIR: /woodpecker/desktop/test/gui/tmp/
+      CLIENT_LOG_FILE: /woodpecker/desktop/test/gui/tmp/guiReportUpload/client.log
       PLAYWRIGHT_BROWSERS_PATH: /woodpecker/desktop/.playwright
       SQUISH_LICENSE_SERVER:
         from_secret: squish_license_key
@@ -131,6 +132,13 @@ steps:
       - status: [ success, failure ]
     commands:
       - cat /woodpecker/desktop/test/gui/tmp/OpenCloud-crash.log 2>/dev/null || exit 0
+
+  - name: client-log
+    image: *ubuntu_image
+    when:
+      - status: [ success, failure ]
+    commands:
+      - cat /woodpecker/desktop/test/gui/tmp/guiReportUpload/client.log 2>/dev/null || exit 0
 
 when:
   - branch:
