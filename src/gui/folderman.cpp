@@ -658,7 +658,7 @@ QString FolderMan::checkPathValidityRecursive(const QString &path, FolderMan::Ne
     }
 
 #ifdef Q_OS_WIN
-    Utility::NtfsPermissionLookupRAII ntfs_perm;
+    QNtfsPermissionCheckGuard ntfs_perm;
 #endif
 
     auto pathLenghtCheck = Folder::checkPathLength(path);
