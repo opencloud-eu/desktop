@@ -1,6 +1,11 @@
 import names
 import squish
 
+from helpers.UserHelper import get_displayname_for_user
+from helpers.SetupClientHelper import substitute_inline_codes
+
+from pageObjects.Toolbar import Toolbar
+
 
 class AccountSetting:
     MANAGE_ACCOUNT_BUTTON = {
@@ -154,3 +159,10 @@ class AccountSetting:
         except:
             pass
         return visible
+
+    @staticmethod
+    def remove_connection_for_user(username):
+        displayname = get_displayname_for_user(username)
+        displayname = substitute_inline_codes(displayname)
+        Toolbar.open_account(displayname)
+        AccountSetting.remove_account_connection()
