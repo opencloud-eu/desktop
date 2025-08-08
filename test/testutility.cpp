@@ -351,10 +351,15 @@ private Q_SLOTS:
 
     void testLNK()
     {
-        auto mkLNK = [](const std::wstring &path, const std::filesystem::path &target) {
+        auto mkLNK = [](const std::wstring &path, const std::filesystem::path &target) -> bool {
+            HRESULT hres = CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
+            if (FAILED(hres)) {
+                qWarning() << "Failed to create lnk: CoInitializeEx" << OCC::Utility::formatWinError(hres);
+                return false;
+            }
             // https://learn.microsoft.com/en-us/windows/win32/shell/links?redirectedfrom=MSDN#Shellink_Creating_Shortcut
             IShellLink *psl;
-            HRESULT hres = CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, IID_IShellLink, (LPVOID *)&psl);
+            hres = CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, IID_IShellLink, (LPVOID *)&psl);
             if (SUCCEEDED(hres)) {
                 IPersistFile *ppf;
 
@@ -381,6 +386,7 @@ private Q_SLOTS:
             } else {
                 qCritical() << "Failed to create lnk: CoCreateInstance" << OCC::Utility::formatWinError(hres);
             }
+            return SUCCEEDED(hres);
         };
 
         // the test relies on different change times for this binary and the lnk, sleep to be sure
@@ -394,7 +400,7 @@ private Q_SLOTS:
             const QString qtTarget = tmp.filePath(u"test.lnk"_s);
             const auto target = OCC::FileSystem::toFilesystemPath(qtTarget);
             // we must not use toFilesystemPath as we would get a \\?\ path which is not supported with shortcuts
-            mkLNK(qApp->applicationFilePath().toStdWString(), target);
+            QVERIFY(mkLNK(qApp->applicationFilePath().toStdWString(), target));
             auto entry = std::filesystem::directory_entry{target};
             OCC::LocalInfo fileInfo(entry, ItemTypeFile);
             const auto qFileInfo = QFileInfo(qtTarget);
@@ -416,7 +422,7 @@ private Q_SLOTS:
             const QString qtTarget = tmp.filePath(u"bad_test.lnk"_s);
             const auto target = OCC::FileSystem::toFilesystemPath(qtTarget);
             // create an invalid link
-            mkLNK(L"", target);
+            QVERIFY(mkLNK(L"", target));
             auto entry = std::filesystem::directory_entry{target};
             OCC::LocalInfo fileInfo(entry, ItemTypeFile);
             const auto qFileInfo = QFileInfo(qtTarget);
@@ -455,5 +461,5 @@ private Q_SLOTS:
     }
 };
 
-QTEST_GUILESS_MAIN(TestUtility)
+QTEST_MAIN(TestUtility)
 #include "testutility.moc"
