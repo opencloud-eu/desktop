@@ -1177,7 +1177,7 @@ Bitte entferne diesen Ordner vom Account und lege ihn erneut an.</translation>
 <context>
     <name>OCC::FolderWatcher</name>
     <message>
-        <location filename="../src/gui/folderwatcher.cpp" line="133"/>
+        <location filename="../src/gui/folderwatcher.cpp" line="135"/>
         <source>The watcher did not receive a test notification.</source>
         <translation>Der Watcher hat keine Test-Benachritigung erhalten.</translation>
     </message>
@@ -2984,7 +2984,7 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
         <translation>%1: %2</translation>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/cfapi/cfapiwrapper.cpp" line="67"/>
+        <location filename="../src/plugins/vfs/cfapi/cfapiwrapper.cpp" line="68"/>
         <source>Paths beginning with &apos;#&apos; character are not supported in VFS mode.</source>
         <translation type="unfinished"/>
     </message>

@@ -47,7 +47,7 @@
     <message>
         <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.ui" line="147"/>
         <source>Synchronize all exisitng spaces</source>
-        <translation type="unfinished"/>
+        <translation>Synchroniser tous les espaces existants</translation>
     </message>
     <message>
         <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.ui" line="157"/>
@@ -406,7 +406,7 @@ Utilitaire de bureau pour la synchronisation de fichiers.</translation>
     <message>
         <location filename="../src/gui/folderwizard/folderwizardsourcepage.ui" line="39"/>
         <source>Click to select the Spaces root folder.</source>
-        <translation type="unfinished"/>
+        <translation>Cliquez pour sélectionner le dossier racine des espaces.</translation>
     </message>
     <message>
         <location filename="../src/gui/folderwizard/folderwizardsourcepage.ui" line="42"/>
@@ -1177,7 +1177,7 @@ Veuillez envisager de supprimer ce dossier du compte et de l&apos;ajouter à nou
 <context>
     <name>OCC::FolderWatcher</name>
     <message>
-        <location filename="../src/gui/folderwatcher.cpp" line="133"/>
+        <location filename="../src/gui/folderwatcher.cpp" line="135"/>
         <source>The watcher did not receive a test notification.</source>
         <translation>L&apos;observateur n&apos;a pas reçu de notification de test.</translation>
     </message>
@@ -1734,12 +1734,12 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="382"/>
         <source>&lt;h1&gt;Incorrect user&lt;/h1&gt;&lt;p&gt;You logged-in as user &lt;em&gt;%1&lt;/em&gt;, but must login with user &lt;em&gt;%2&lt;/em&gt;.&lt;br&gt;Please return to the %3 and restart the authentication.&lt;/p&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;h1&gt;Utilisateur incorrect &lt;/h1&gt;&lt;p&gt; Vous êtes connecté en tant que l&apos;utilisateur &lt;em&gt;%1&lt;/em&gt;,  mais vous devez vous connecter avec l’utilisateur &lt;em&gt;%2&lt;/em&gt;.&lt;br&gt; Veuillez retourner à %3 et recommencer l’authentification.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="387"/>
         <source>&lt;h1&gt;Incorrect user&lt;/h1&gt;&lt;p&gt;You logged-in as a different user than is associated with this account.&lt;br&gt;Please return to the %1 and restart the authentication.&lt;/p&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;h1&gt;Utilisateur incorrect&lt;/h1&gt;&lt;p&gt;Vous vous êtes connecté en tant qu&apos;utilisateur différent de celui associé à ce compte.&lt;br&gt;Veuillez retourner à %1 et recommencer l’authentification.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="392"/>
@@ -1913,7 +1913,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
     <message>
         <location filename="../src/libsync/discovery.cpp" line="1021"/>
         <source>Selective sync: Ignored because its path is deselected</source>
-        <translation type="unfinished"/>
+        <translation>Synchronisation sélective : ignoré car son chemin est désélectionné</translation>
     </message>
     <message>
         <location filename="../src/libsync/discovery.cpp" line="1058"/>
@@ -2164,7 +2164,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
     <message>
         <location filename="../src/libsync/owncloudpropagator.cpp" line="1281"/>
         <source>Could not update file: %1</source>
-        <translation type="unfinished"/>
+        <translation>Impossible de mettre à jour le fichier : %1</translation>
     </message>
     <message>
         <location filename="../src/libsync/owncloudpropagator.cpp" line="1284"/>
@@ -2240,7 +2240,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
     <message>
         <location filename="../src/libsync/propagateuploadv1.cpp" line="112"/>
         <source>The server did ask for a removed legacy feature (polling)</source>
-        <translation type="unfinished"/>
+        <translation>Le serveur a demandé une fonctionnalité héritée supprimée (polling)</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagateuploadv1.cpp" line="132"/>
@@ -2702,7 +2702,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
     <message>
         <location filename="../src/gui/tlserrordialog.cpp" line="72"/>
         <source>&lt;div id=&quot;cert&quot;&gt;&lt;h3&gt;with Certificate %1&lt;/h3&gt;&lt;div id=&quot;ccert&quot;&gt;&lt;p&gt;Organization: %2&lt;br/&gt;Unit: %3&lt;br/&gt;Country: %4&lt;/p&gt;&lt;p&gt;Fingerprint (MD5): &lt;tt&gt;%5&lt;/tt&gt;&lt;br/&gt;Fingerprint (SHA1): &lt;tt&gt;%6&lt;/tt&gt;&lt;br/&gt;Fingerprint (SHA256): &lt;tt&gt;%7&lt;/tt&gt;&lt;br/&gt;&lt;br/&gt;Effective Date: %8&lt;br/&gt;Expiration Date: %9&lt;/div&gt;&lt;h3&gt;Issuer: %10&lt;/h3&gt;&lt;div id=&quot;issuer&quot;&gt;&lt;p&gt;Organization: %11&lt;br/&gt;Unit: %12&lt;br/&gt;Country: %13&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;div id=&quot;cert&quot;&gt;&lt;h3&gt; avec le certificat %1&lt;/h3&gt;&lt;div id=&quot;ccert&quot;&gt;&lt;p&gt;Organisation : %2&lt;br/&gt;Unité : %3&lt;br/&gt;Pays : %4&lt;/p&gt;&lt;p&gt;Empreinte (MD5): &lt;tt&gt;%5&lt;/tt&gt;&lt;br/&gt;Empreinte (SHA1): &lt;tt&gt;%6&lt;/tt&gt;&lt;br/&gt;Empreinte (SHA256): &lt;tt&gt;%7&lt;/tt&gt;&lt;br/&gt;&lt;br/&gt;Date d&apos;effet : %8&lt;br/&gt;Date d&apos;expiration : %9&lt;/div&gt;&lt;h3&gt;Émetteur : %10&lt;/h3&gt;&lt;div id=&quot;issuer&quot;&gt;&lt;p&gt;Organisation : %11&lt;br/&gt;Unité : %12&lt;br/&gt;Pays : %13&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;</translation>
     </message>
 </context>
 <context>
@@ -2752,7 +2752,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
     <message>
         <location filename="../src/libsync/common/vfs.cpp" line="85"/>
         <source>ReFS is currently not supported.</source>
-        <translation type="unfinished"/>
+        <translation>ReFS n&apos;est actuellement pas pris en charge.</translation>
     </message>
     <message>
         <location filename="../src/libsync/common/vfs.cpp" line="89"/>
@@ -2826,7 +2826,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
     <message>
         <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.cpp" line="42"/>
         <source>Sync location not supported</source>
-        <translation type="unfinished"/>
+        <translation>La synchronisation de l&apos;emplacement n&apos;est pas prise en charge</translation>
     </message>
 </context>
 <context>
@@ -2983,9 +2983,9 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
         <translation>%1 : %2</translation>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/cfapi/cfapiwrapper.cpp" line="67"/>
+        <location filename="../src/plugins/vfs/cfapi/cfapiwrapper.cpp" line="68"/>
         <source>Paths beginning with &apos;#&apos; character are not supported in VFS mode.</source>
-        <translation type="unfinished"/>
+        <translation>Les chemins commençant par le caractère &apos;#&apos; ne sont pas pris en charge en mode VFS.</translation>
     </message>
 </context>
 <context>
@@ -2993,7 +2993,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
     <message>
         <location filename="../src/libsync/discoveryremoteinfo.cpp" line="67"/>
         <source>server reported no %1</source>
-        <translation type="unfinished"/>
+        <translation>Le serveur n’a signalé aucun/aucune %1</translation>
     </message>
 </context>
 <context>
