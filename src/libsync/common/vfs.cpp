@@ -250,12 +250,18 @@ const VfsPluginManager &VfsPluginManager::instance()
     return *_instance;
 }
 
-VfsSetupParams::VfsSetupParams(const AccountPtr &account, const QUrl &baseUrl, const QString &spaceId, SyncEngine *syncEngine)
+VfsSetupParams::VfsSetupParams(const AccountPtr &account, const QUrl &baseUrl, const QString &spaceId, const QString &folderDisplayName, SyncEngine *syncEngine)
     : account(account)
     , _baseUrl(baseUrl)
     , _syncEngine(syncEngine)
     , _spaceId(spaceId)
+    , _folderDisplayName(folderDisplayName)
 {
+}
+
+QString VfsSetupParams::folderDisplayName() const
+{
+    return _folderDisplayName;
 }
 
 SyncEngine *VfsSetupParams::syncEngine() const

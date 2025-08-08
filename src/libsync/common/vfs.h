@@ -40,12 +40,13 @@ class SyncEngine;
 /** Collection of parameters for initializing a Vfs instance. */
 struct OPENCLOUD_SYNC_EXPORT VfsSetupParams
 {
-    explicit VfsSetupParams(const AccountPtr &account, const QUrl &baseUrl, const QString &spaceId, SyncEngine *syncEngine);
+    explicit VfsSetupParams(const AccountPtr &account, const QUrl &baseUrl, const QString &spaceId, const QString &folderDisplayName, SyncEngine *syncEngine);
     /** The full path to the folder on the local filesystem
      *
      * Always ends with /.
      */
     QString filesystemPath;
+    QString folderDisplayName() const;
 
     /// Account url, credentials etc for network calls
     AccountPtr account;
@@ -70,6 +71,7 @@ private:
     QUrl _baseUrl;
     SyncEngine *_syncEngine;
     QString _spaceId;
+    QString _folderDisplayName;
 };
 
 /** Interface describing how to deal with virtual/placeholder files.
