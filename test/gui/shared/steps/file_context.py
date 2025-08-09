@@ -115,6 +115,14 @@ def copy_resource(resource_type, source, destination, from_files_for_upload=Fals
     return shutil.copy2(source_dir, destination_dir)
 
 
+def deleteResource(resource, resource_type):
+    resource_path = sanitize_path(get_resource_path(resource))
+    if resource_type == 'file':
+        os.remove(resource_path)
+    else:
+        shutil.rmtree(resource_path)
+
+
 @When(
     'user "|any|" creates a file "|any|" with the following content inside the sync folder'
 )
@@ -252,11 +260,7 @@ def step(context, user, resource, content):
 def step(context, item_type, resource):
     wait_for_client_to_be_ready()
 
-    resource_path = sanitize_path(get_resource_path(resource))
-    if item_type == 'file':
-        os.remove(resource_path)
-    else:
-        shutil.rmtree(resource_path)
+    deleteResource(resource, item_type)
 
 
 @When('user "|any|" creates the following files inside the sync folder:')
@@ -398,3 +402,13 @@ def step(context, resource_name, destination):
 )
 def step(context, resource_name, destination):
     copy_resource('file', resource_name, destination, True)
+
+
+@When('the user deletes the following files')
+def step(context):
+    wait_for_client_to_be_ready()
+
+    for row in context.table[1:]:
+        filename = row[0]
+        deleteResource(filename, 'file')
+
