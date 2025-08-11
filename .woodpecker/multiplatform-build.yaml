@@ -3,6 +3,7 @@
 when:
   - branch:
       - "flimmy_ci_tests"
+      - "work/ci_hannah"
       - "main"
     event:
       - push

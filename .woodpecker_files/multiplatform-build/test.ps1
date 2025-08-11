@@ -8,6 +8,6 @@ $ProgressPreference = 'SilentlyContinue';
 
 .woodpecker_files/multiplatform-build/init.ps1
 
-.github/workflows/.craft.ps1 -c --no-cache --test opencloud/opencloud-desktop
+.github/workflows/.craft.ps1 -c -v --no-cache --test opencloud/opencloud-desktop
 
 exit 0
