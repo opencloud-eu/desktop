@@ -349,12 +349,23 @@ private Q_SLOTS:
         QCOMPARE(out.QuadPart, 137930652000000000);
     }
 
+
+    void initTestLNK()
+    {
+        // can be replaced with a private api cal in 6.9
+        // https://github.com/qt/qtbase/blob/a64bc279969b2cf8da6d0c07bf01683e57a8a30c/src/corelib/kernel/qfunctions_win.cpp#L48 in docker with the offscreen
+        // backend this will initialise com, if com is already initialised nothing will happen
+        HRESULT hres = CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
+        // abort if failed
+        Q_ASSERT(SUCCEEDED(hres));
+    }
+
     void testLNK()
     {
-        auto mkLNK = [](const std::wstring &path, const std::filesystem::path &target) {
+        auto mkLNK = [](const std::wstring &path, const std::filesystem::path &target) -> bool {
             // https://learn.microsoft.com/en-us/windows/win32/shell/links?redirectedfrom=MSDN#Shellink_Creating_Shortcut
             IShellLink *psl;
-            HRESULT hres = CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, IID_IShellLink, (LPVOID *)&psl);
+            auto hres = CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, IID_IShellLink, (LPVOID *)&psl);
             if (SUCCEEDED(hres)) {
                 IPersistFile *ppf;
 
@@ -381,6 +392,7 @@ private Q_SLOTS:
             } else {
                 qCritical() << "Failed to create lnk: CoCreateInstance" << OCC::Utility::formatWinError(hres);
             }
+            return SUCCEEDED(hres);
         };
 
         // the test relies on different change times for this binary and the lnk, sleep to be sure
@@ -394,7 +406,7 @@ private Q_SLOTS:
             const QString qtTarget = tmp.filePath(u"test.lnk"_s);
             const auto target = OCC::FileSystem::toFilesystemPath(qtTarget);
             // we must not use toFilesystemPath as we would get a \\?\ path which is not supported with shortcuts
-            mkLNK(qApp->applicationFilePath().toStdWString(), target);
+            QVERIFY(mkLNK(qApp->applicationFilePath().toStdWString(), target));
             auto entry = std::filesystem::directory_entry{target};
             OCC::LocalInfo fileInfo(entry, ItemTypeFile);
             const auto qFileInfo = QFileInfo(qtTarget);
@@ -416,7 +428,7 @@ private Q_SLOTS:
             const QString qtTarget = tmp.filePath(u"bad_test.lnk"_s);
             const auto target = OCC::FileSystem::toFilesystemPath(qtTarget);
             // create an invalid link
-            mkLNK(L"", target);
+            QVERIFY(mkLNK(L"", target));
             auto entry = std::filesystem::directory_entry{target};
             OCC::LocalInfo fileInfo(entry, ItemTypeFile);
             const auto qFileInfo = QFileInfo(qtTarget);
@@ -432,6 +444,8 @@ private Q_SLOTS:
             QCOMPARE(OCC::FileSystem::fileTimeToTime_t(entry.last_write_time()), fileInfo.modtime());
         }
     }
+
+    void cleanupTestLNK() { CoUninitialize(); }
 #endif
 
     void testFilesystem()
