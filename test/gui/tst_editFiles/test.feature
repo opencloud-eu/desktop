@@ -42,4 +42,3 @@ Feature: edit files
       | simple.pdf  | simple1.pdf  | simple2.pdf  | simple3.pdf  |
       | simple.docx | simple1.docx | simple2.docx | simple3.docx |
       | simple.xlsx | simple1.xlsx | simple2.xlsx | simple3.xlsx |
-

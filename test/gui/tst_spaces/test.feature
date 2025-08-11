@@ -47,3 +47,13 @@ Feature: Project spaces
         And the user waits for the files to sync
         Then as "Alice" the file "localFile.txt" in the space "Project101" should have content "test content" in the server
         And as "Alice" the space "Project101" should have folder "localFolder" in the server
+
+
+    Scenario: User with Editor role can rename a file
+        Given the administrator has uploaded a file "testfile.txt" with content "some content" inside space "Project101"
+        And the administrator has added user "Alice" to space "Project101" with role "editor"
+        And user "Alice" has set up a client with space "Project101"
+        When the user renames a file "testfile.txt" to "renamedFile.txt"
+        And the user waits for file "renamedFile.txt" to be synced
+        Then as "Alice" the space "Project101" should have file "renamedFile.txt" in the server
+        And as "Alice" the file "renamedFile.txt" in the space "Project101" should have content "some content" in the server
