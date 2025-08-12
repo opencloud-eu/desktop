@@ -51,7 +51,9 @@ int ProtocolItemModel::columnCount(const QModelIndex &parent) const
 
 QVariant ProtocolItemModel::data(const QModelIndex &index, int role) const
 {
-    Q_ASSERT(checkIndex(index, QAbstractItemModel::CheckIndexOption::IndexIsValid));
+    if (!checkIndex(index, QAbstractItemModel::CheckIndexOption::IndexIsValid)) {
+        return {};
+    }
 
     const auto column = static_cast<ProtocolItemRole>(index.column());
     const auto &item = protocolItem(index);
