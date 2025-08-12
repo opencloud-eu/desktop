@@ -27,10 +27,7 @@ OPENCLOUD_SYNC_EXPORT const QVersionNumber &version();
 
 OPENCLOUD_SYNC_EXPORT const QVersionNumber &versionWithBuildNumber();
 
-inline int buildNumber()
-{
-    return versionWithBuildNumber().segmentAt(3);
-}
+OPENCLOUD_SYNC_EXPORT int buildNumber();
 
 /**
  * git, rc1, rc2
@@ -44,4 +41,6 @@ OPENCLOUD_SYNC_EXPORT QString suffix();
 OPENCLOUD_SYNC_EXPORT QString gitSha();
 
 OPENCLOUD_SYNC_EXPORT QString displayString();
+
+OPENCLOUD_SYNC_EXPORT bool isBeta();
 }

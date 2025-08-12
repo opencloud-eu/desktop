@@ -1,17 +1,15 @@
-option(DEV_BUILD "Use a standalone profile for developement" OFF)
-
-if (DEV_BUILD)
-    set(THEME_SUFFIX " Dev")
-else()
-    set(THEME_SUFFIX "")
-endif()
-
-set( APPLICATION_NAME       "OpenCloud Desktop${THEME_SUFFIX}")
-set( APPLICATION_SHORTNAME  "OpenCloud${THEME_SUFFIX}" )
-set( APPLICATION_EXECUTABLE "opencloud${THEME_SUFFIX}" )
-set( APPLICATION_VENDOR     "OpenCloud${THEME_SUFFIX}" )
+set( APPLICATION_NAME       "OpenCloud Desktop")
+set( APPLICATION_SHORTNAME  "OpenCloud" )
+set( APPLICATION_EXECUTABLE "opencloud" )
+set( APPLICATION_VENDOR     "OpenCloud" )
 set( APPLICATION_ICON_NAME  "opencloud" )
 
+if(BETA_CHANNEL_BUILD)
+    set( APPLICATION_NAME       "${APPLICATION_NAME} Beta")
+    set( APPLICATION_SHORTNAME  "${APPLICATION_SHORTNAME} Beta" )
+    set( APPLICATION_EXECUTABLE "${APPLICATION_EXECUTABLE}_beta" )
+    set( APPLICATION_VENDOR     "${APPLICATION_VENDOR} Beta" )
+endif()
 # TODO: re enable once we got icons
 #set( MAC_INSTALLER_BACKGROUND_FILE "${CMAKE_SOURCE_DIR}/admin/osx/installer-background.png")
 

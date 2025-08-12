@@ -40,10 +40,6 @@ QIcon OpenCloudTheme::wizardHeaderLogo() const
 {
     return Resources::themeUniversalIcon(QStringLiteral("wizard_logo"));
 }
-QIcon OpenCloudTheme::aboutIcon() const
-{
-    return Resources::themeUniversalIcon(QStringLiteral("opencloud-icon"));
-}
 
 QmlButtonColor OpenCloudTheme::primaryButtonColor() const
 {

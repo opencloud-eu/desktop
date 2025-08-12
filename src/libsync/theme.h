@@ -143,7 +143,6 @@ public:
     QString syncStateIconName(const SyncResult &result) const;
 
     virtual QIcon applicationIcon() const;
-    virtual QString applicationIconName() const;
     virtual QIcon aboutIcon() const;
 
     /**
