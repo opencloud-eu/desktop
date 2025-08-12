@@ -61,14 +61,14 @@ QByteArray defaultJournalMode(const QString &dbPath)
     // See #2693: Some exFAT file systems seem unable to cope with the
     // WAL journaling mode. They work fine with DELETE.
     QString fileSystem = OCC::FileSystem::fileSystemForPath(dbPath);
-    qCInfo(lcDb) << "Detected filesystem" << fileSystem << "for" << dbPath;
+    qCInfo(lcDb) << u"Detected filesystem" << fileSystem << u"for" << dbPath;
     if (fileSystem.contains(QLatin1String("FAT"))) {
-        qCInfo(lcDb) << "Filesystem contains FAT - using DELETE journal mode";
+        qCInfo(lcDb) << u"Filesystem contains FAT - using DELETE journal mode";
         return "DELETE";
     }
 #elif defined(Q_OS_MAC)
     if (dbPath.startsWith(QLatin1String("/Volumes/"))) {
-        qCInfo(lcDb) << "Mounted sync dir, do not use WAL for" << dbPath;
+        qCInfo(lcDb) << u"Mounted sync dir, do not use WAL for" << dbPath;
         return "DELETE";
     }
 #else
@@ -108,7 +108,7 @@ QString SyncJournalDb::makeDbName(const QString &localPath, const QString &infix
     }
 
     // Error during creation, just keep the original and throw errors later
-    qCWarning(lcDb) << "Could not find a writable database path" << file.fileName() << file.errorString();
+    qCWarning(lcDb) << u"Could not find a writable database path" << file.fileName() << file.errorString();
     return journalPath;
 }
 
@@ -154,7 +154,7 @@ void SyncJournalDb::walCheckpoint()
     SqlQuery pragma1(_db);
     pragma1.prepare("PRAGMA wal_checkpoint(FULL);");
     if (pragma1.exec()) {
-        qCDebug(lcDb) << "took" << t.elapsed() << "msec";
+        qCDebug(lcDb) << u"took" << t.elapsed() << u"msec";
     }
 }
 
@@ -162,12 +162,12 @@ void SyncJournalDb::startTransaction()
 {
     if (_transaction == 0) {
         if (!_db.transaction()) {
-            qCWarning(lcDb) << "ERROR starting transaction:" << _db.error();
+            qCWarning(lcDb) << u"ERROR starting transaction:" << _db.error();
             return;
         }
         _transaction = 1;
     } else {
-        qCDebug(lcDb) << "Database Transaction is running, not starting another one!";
+        qCDebug(lcDb) << u"Database Transaction is running, not starting another one!";
     }
 }
 
@@ -175,19 +175,19 @@ void SyncJournalDb::commitTransaction()
 {
     if (_transaction == 1) {
         if (!_db.commit()) {
-            qCWarning(lcDb) << "ERROR committing to the database:" << _db.error();
+            qCWarning(lcDb) << u"ERROR committing to the database:" << _db.error();
             return;
         }
         _transaction = 0;
     } else {
-        qCDebug(lcDb) << "No database Transaction to commit";
+        qCDebug(lcDb) << u"No database Transaction to commit";
     }
 }
 
 bool SyncJournalDb::sqlFail(const QString &log, const SqlQuery &query)
 {
     commitTransaction();
-    qCWarning(lcDb) << "SQL Error" << log << query.error();
+    qCWarning(lcDb) << u"SQL Error" << log << query.error();
     _db.close();
     OC_ASSERT(false);
     return false;
@@ -196,12 +196,12 @@ bool SyncJournalDb::sqlFail(const QString &log, const SqlQuery &query)
 bool SyncJournalDb::checkConnect()
 {
     if (_closed) {
-        qCWarning(lcDb) << Q_FUNC_INFO << "after the db was closed";
+        qCWarning(lcDb) << Q_FUNC_INFO << u"after the db was closed";
         return false;
     }
     if (autotestFailCounter >= 0) {
         if (!autotestFailCounter--) {
-            qCInfo(lcDb) << "Error Simulated";
+            qCInfo(lcDb) << u"Error Simulated";
             return false;
         }
     }
@@ -211,19 +211,19 @@ bool SyncJournalDb::checkConnect()
     }
 
     if (_dbFile.isEmpty()) {
-        qCWarning(lcDb) << "Database filename" << _dbFile << "is empty";
+        qCWarning(lcDb) << u"Database filename" << _dbFile << u"is empty";
         return false;
     }
 
     // The database file is created by this call (SQLITE_OPEN_CREATE)
     if (!_db.openOrCreateReadWrite(_dbFile)) {
         QString error = _db.error();
-        qCWarning(lcDb) << "Error opening the db:" << error;
+        qCWarning(lcDb) << u"Error opening the db:" << error;
         return false;
     }
 
     if (!QFile::exists(_dbFile)) {
-        qCWarning(lcDb) << "Database file" << _dbFile << "does not exist";
+        qCWarning(lcDb) << u"Database file" << _dbFile << u"does not exist";
         return false;
     }
 
@@ -233,7 +233,7 @@ bool SyncJournalDb::checkConnect()
         return sqlFail(QStringLiteral("SELECT sqlite_version()"), pragma1);
     } else {
         pragma1.next();
-        qCInfo(lcDb) << "sqlite3 version" << pragma1.stringValue(0);
+        qCInfo(lcDb) << u"sqlite3 version" << pragma1.stringValue(0);
     }
 
     // Set locking mode to avoid issues with WAL on Windows
@@ -242,7 +242,7 @@ bool SyncJournalDb::checkConnect()
         return sqlFail(QStringLiteral("Set PRAGMA locking_mode"), pragma1);
     } else {
         pragma1.next();
-        qCInfo(lcDb) << "sqlite3 locking_mode=" << pragma1.stringValue(0);
+        qCInfo(lcDb) << u"sqlite3 locking_mode=" << pragma1.stringValue(0);
     }
 
     pragma1.prepare("PRAGMA journal_mode=" + _journalMode + ";");
@@ -250,7 +250,7 @@ bool SyncJournalDb::checkConnect()
         return sqlFail(QStringLiteral("Set PRAGMA journal_mode"), pragma1);
     } else {
         pragma1.next();
-        qCInfo(lcDb) << "sqlite3 journal_mode=" << pragma1.stringValue(0);
+        qCInfo(lcDb) << u"sqlite3 journal_mode=" << pragma1.stringValue(0);
     }
 
     // With WAL journal the NORMAL sync mode is safe from corruption,
@@ -262,7 +262,7 @@ bool SyncJournalDb::checkConnect()
     if (!pragma1.exec()) {
         return sqlFail(QStringLiteral("Set PRAGMA synchronous"), pragma1);
     } else {
-        qCInfo(lcDb) << "sqlite3 synchronous=" << synchronousMode;
+        qCInfo(lcDb) << u"sqlite3 synchronous=" << synchronousMode;
     }
 
     pragma1.prepare("PRAGMA case_sensitive_like = ON;");
@@ -326,7 +326,7 @@ bool SyncJournalDb::checkConnect()
         // In certain situations the io error can be avoided by switching
         // to the DELETE journal mode, see #5723
         if (_journalMode != "DELETE" && createQuery.errorId() == SQLITE_IOERR && sqlite3_extended_errcode(_db.sqliteDb()) == SQLITE_IOERR_SHMMAP) {
-            qCWarning(lcDb) << "IO error SHMMAP on table creation, attempting with DELETE journal mode";
+            qCWarning(lcDb) << u"IO error SHMMAP on table creation, attempting with DELETE journal mode";
             _journalMode = "DELETE";
             commitTransaction();
             _db.close();
@@ -428,7 +428,7 @@ bool SyncJournalDb::checkConnect()
         int patch = versionQuery.intValue(2);
 
         if (major == 1 && minor == 8 && (patch == 0 || patch == 1)) {
-            qCInfo(lcDb) << "possibleUpgradeFromMirall_1_8_0_or_1 detected!";
+            qCInfo(lcDb) << u"possibleUpgradeFromMirall_1_8_0_or_1 detected!";
             forceRemoteDiscovery = true;
         }
 
@@ -437,7 +437,7 @@ bool SyncJournalDb::checkConnect()
         //   See #5190 #5242.
         // - New remote HasZSyncMetadata permission added, invalidate cache
         if (major == 2 && minor < 5) {
-            qCInfo(lcDb) << "upgrade from client < 2.5.0 detected! forcing remote discovery";
+            qCInfo(lcDb) << u"upgrade from client < 2.5.0 detected! forcing remote discovery";
             forceRemoteDiscovery = true;
         }
 
@@ -462,7 +462,7 @@ bool SyncJournalDb::checkConnect()
 
     bool rc = updateDatabaseStructure();
     if (!rc) {
-        qCWarning(lcDb) << "Failed to update the database structure!";
+        qCWarning(lcDb) << u"Failed to update the database structure!";
     }
 
     /*
@@ -520,7 +520,7 @@ bool SyncJournalDb::checkConnect()
 void SyncJournalDb::close()
 {
     QMutexLocker locker(&_mutex);
-    qCInfo(lcDb) << "Closing DB" << _dbFile;
+    qCInfo(lcDb) << u"Closing DB" << _dbFile;
 
     commitTransaction();
     _db.close();
@@ -767,7 +767,7 @@ QVector<QByteArray> SyncJournalDb::tableColumns(const QByteArray &table)
     while (query.next().hasData) {
         columns.append(query.baValue(1));
     }
-    qCDebug(lcDb) << "Columns in the current journal:" << columns;
+    qCDebug(lcDb) << u"Columns in the current journal:" << columns;
     return columns;
 }
 
@@ -782,13 +782,13 @@ Result<void, QString> SyncJournalDb::setFileRecord(const SyncJournalFileRecord &
         QByteArray prefix = utf8Path + "/";
         for (const auto &it : std::as_const(_etagStorageFilter)) {
             if (it.startsWith(prefix)) {
-                qCInfo(lcDb) << "Filtered writing the etag of" << prefix << "because it is a prefix of" << it;
+                qCInfo(lcDb) << u"Filtered writing the etag of" << prefix << u"because it is a prefix of" << it;
                 etag = "_invalid_";
                 break;
             }
         }
     }
-    qCInfo(lcDb) << "Updating file record:" << record << "with etag" << etag;
+    qCInfo(lcDb) << u"Updating file record:" << record << u"with etag" << etag;
     Q_ASSERT(!record.remotePerm().isNull());
     Q_ASSERT(record.inode() != 0);
     if (checkConnect()) {
@@ -831,7 +831,7 @@ Result<void, QString> SyncJournalDb::setFileRecord(const SyncJournalFileRecord &
 
         return {};
     } else {
-        qCWarning(lcDb) << "Failed to connect database.";
+        qCWarning(lcDb) << u"Failed to connect database.";
         return tr("Failed to connect database."); // checkConnect failed.
     }
 }
@@ -870,7 +870,7 @@ bool SyncJournalDb::deleteFileRecord(const QString &filename, bool recursively)
         }
         return true;
     } else {
-        qCWarning(lcDb) << "Failed to connect database.";
+        qCWarning(lcDb) << u"Failed to connect database.";
         return false; // checkConnect failed.
     }
 }
@@ -903,7 +903,7 @@ SyncJournalFileRecord SyncJournalDb::getFileRecord(const QString &filename)
         auto next = query->next();
         if (!next.ok) {
             QString err = query->error();
-            qCWarning(lcDb) << "No journal entry found for" << filename << "Error:" << err;
+            qCWarning(lcDb) << u"No journal entry found for" << filename << u"Error:" << err;
             close();
             return {err};
         }
@@ -1065,7 +1065,7 @@ bool SyncJournalDb::listFilesInPath(const QString &path, const std::function<voi
 
         const auto rec = SyncJournalFileRecord::fromSqlQuery(*query);
         if (!rec.path().startsWith(path) || rec.path().indexOf('/'_L1, path.size() + 1) > 0) {
-            qWarning(lcDb) << "hash collision" << path << rec.path();
+            qWarning(lcDb) << u"hash collision" << path << rec.path();
             continue;
         }
         rowCallback(rec);
@@ -1097,11 +1097,11 @@ bool SyncJournalDb::updateFileRecordChecksum(const QString &filename, const QByt
 {
     QMutexLocker locker(&_mutex);
 
-    qCInfo(lcDb) << "Updating file checksum" << filename << contentChecksum << contentChecksumType;
+    qCInfo(lcDb) << u"Updating file checksum" << filename << contentChecksum << contentChecksumType;
 
     const auto phash = getPHash(filename.toUtf8());
     if (!checkConnect()) {
-        qCWarning(lcDb) << "Failed to connect database.";
+        qCWarning(lcDb) << u"Failed to connect database.";
         return false;
     }
 
@@ -1170,7 +1170,7 @@ static bool deleteBatch(SqlQuery &query, const QStringList &entries, const QStri
     if (entries.isEmpty())
         return true;
 
-    qCDebug(lcDb) << "Removing stale" << name << "entries:" << entries.join(QStringLiteral(", "));
+    qCDebug(lcDb) << u"Removing stale" << name << u"entries:" << entries.join(QStringLiteral(", "));
     // FIXME: Was ported from execBatch, check if correct!
     for (const auto &entry : entries) {
         query.reset_and_clear_bindings();
@@ -1428,7 +1428,7 @@ QVector<uint> SyncJournalDb::deleteStaleUploadInfos(const QSet<QString> &keep)
             ids.append(query.intValue(1));
         }
     }
-    qCDebug(lcDb) << Q_FUNC_INFO << "Keep:" << keep << "Removing Stale:" << superfluousPaths;
+    qCDebug(lcDb) << Q_FUNC_INFO << u"Keep:" << keep << u"Removing Stale:" << superfluousPaths;
     const auto deleteUploadInfoQuery = _queryManager.get(PreparedSqlQueryManager::DeleteUploadInfoQuery);
     deleteBatch(*deleteUploadInfoQuery, superfluousPaths, QStringLiteral("uploadinfo"));
     return ids;
@@ -1585,7 +1585,7 @@ void SyncJournalDb::setErrorBlacklistEntry(const SyncJournalErrorBlacklistRecord
 {
     QMutexLocker locker(&_mutex);
 
-    qCInfo(lcDb) << "Setting blacklist entry for" << item._file << item._retryCount << item._errorString << item._lastTryTime << item._ignoreDuration
+    qCInfo(lcDb) << u"Setting blacklist entry for" << item._file << item._retryCount << item._errorString << item._lastTryTime << item._ignoreDuration
                  << item._lastTryModtime << item._lastTryEtag << item._renameTarget << item._errorCategory;
 
     if (!checkConnect()) {
@@ -1670,7 +1670,7 @@ void SyncJournalDb::setSelectiveSyncList(SyncJournalDb::SelectiveSyncListType ty
     SqlQuery delQuery("DELETE FROM selectivesync WHERE type == ?1", _db);
     delQuery.bindValue(1, int(type));
     if (!delQuery.exec()) {
-        qCWarning(lcDb) << "SQL error when deleting selective sync list" << list << delQuery.error();
+        qCWarning(lcDb) << u"SQL error when deleting selective sync list" << list << delQuery.error();
     }
 
     SqlQuery insQuery("INSERT INTO selectivesync VALUES (?1, ?2)", _db);
@@ -1679,7 +1679,7 @@ void SyncJournalDb::setSelectiveSyncList(SyncJournalDb::SelectiveSyncListType ty
         insQuery.bindValue(1, path);
         insQuery.bindValue(2, int(type));
         if (!insQuery.exec()) {
-            qCWarning(lcDb) << "SQL error when inserting into selective sync" << type << path << delQuery.error();
+            qCWarning(lcDb) << u"SQL error when inserting into selective sync" << type << path << delQuery.error();
         }
     }
 
@@ -1748,7 +1748,7 @@ void SyncJournalDb::forceRemoteDiscoveryNextSync()
 
 void SyncJournalDb::forceRemoteDiscoveryNextSyncLocked()
 {
-    qCInfo(lcDb) << "Forcing remote re-discovery by deleting folder Etags";
+    qCInfo(lcDb) << u"Forcing remote re-discovery by deleting folder Etags";
     SqlQuery deleteRemoteFolderEtagsQuery(_db);
     deleteRemoteFolderEtagsQuery.prepare("UPDATE metadata SET md5='_invalid_' WHERE type=2;");
     deleteRemoteFolderEtagsQuery.exec();
@@ -1773,7 +1773,7 @@ QByteArray SyncJournalDb::getChecksumType(int checksumTypeId)
     }
 
     if (!query->next().hasData) {
-        qCWarning(lcDb) << "No checksum type mapping found for" << checksumTypeId;
+        qCWarning(lcDb) << u"No checksum type mapping found for" << checksumTypeId;
         return QByteArray();
     }
     return query->baValue(0);
@@ -1818,7 +1818,7 @@ int SyncJournalDb::mapChecksumType(CheckSums::Algorithm checksumType)
         }
 
         if (!query->next().hasData) {
-            qCWarning(lcDb) << "No checksum type mapping found for" << checksumType;
+            qCWarning(lcDb) << u"No checksum type mapping found for" << checksumType;
             return 0;
         }
         auto value = query->intValue(0);
@@ -1954,7 +1954,7 @@ bool SyncJournalDb::isOpen() const
 
 void SyncJournalDb::commitInternal(const QString &context, bool startTrans)
 {
-    qCDebug(lcDb) << "Transaction commit" << context << (startTrans ? "and starting new transaction" : "");
+    qCDebug(lcDb) << u"Transaction commit" << context << (startTrans ? "and starting new transaction" : "");
     commitTransaction();
 
     if (startTrans) {

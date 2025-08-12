@@ -113,18 +113,18 @@ QPair<bool, QString> DiscoveryPhase::findAndCancelDeletedJob(const QString &orig
                     || (item->_isRestoration && instruction == CSYNC_INSTRUCTION_NEW)
                     // we encountered an ignored error
                     || (item->_hasBlacklistEntry && instruction == CSYNC_INSTRUCTION_IGNORE))) {
-                qCWarning(lcDiscovery) << "OC_ENFORCE(FAILING)" << originalPath;
-                qCWarning(lcDiscovery) << "instruction == CSYNC_INSTRUCTION_REMOVE" << (instruction == CSYNC_INSTRUCTION_REMOVE);
-                qCWarning(lcDiscovery) << "(item->_type == ItemTypeVirtualFile && instruction == CSYNC_INSTRUCTION_NEW)"
+                qCWarning(lcDiscovery) << u"OC_ENFORCE(FAILING)" << originalPath;
+                qCWarning(lcDiscovery) << u"instruction == CSYNC_INSTRUCTION_REMOVE" << (instruction == CSYNC_INSTRUCTION_REMOVE);
+                qCWarning(lcDiscovery) << u"(item->_type == ItemTypeVirtualFile && instruction == CSYNC_INSTRUCTION_NEW)"
                                        << (item->_type == ItemTypeVirtualFile && instruction == CSYNC_INSTRUCTION_NEW);
-                qCWarning(lcDiscovery) << "(item->_isRestoration && instruction == CSYNC_INSTRUCTION_NEW)"
+                qCWarning(lcDiscovery) << u"(item->_isRestoration && instruction == CSYNC_INSTRUCTION_NEW)"
                                        << (item->_isRestoration && instruction == CSYNC_INSTRUCTION_NEW);
-                qCWarning(lcDiscovery) << "(item->_hasBlacklistEntry && instruction == CSYNC_INSTRUCTION_IGNORE)"
+                qCWarning(lcDiscovery) << u"(item->_hasBlacklistEntry && instruction == CSYNC_INSTRUCTION_IGNORE)"
                                        << (item->_hasBlacklistEntry && instruction == CSYNC_INSTRUCTION_IGNORE);
-                qCWarning(lcDiscovery) << "instruction" << instruction;
-                qCWarning(lcDiscovery) << "item->_type" << item->_type;
-                qCWarning(lcDiscovery) << "item->_isRestoration " << item->_isRestoration;
-                qCWarning(lcDiscovery) << "item->_remotePerm" << item->_remotePerm;
+                qCWarning(lcDiscovery) << u"instruction" << instruction;
+                qCWarning(lcDiscovery) << u"item->_type" << item->_type;
+                qCWarning(lcDiscovery) << u"item->_isRestoration " << item->_isRestoration;
+                qCWarning(lcDiscovery) << u"item->_remotePerm" << item->_remotePerm;
                 OC_ENFORCE(false);
             }
             item->setInstruction(CSYNC_INSTRUCTION_NONE);
@@ -209,7 +209,7 @@ void DiscoverySingleLocalDirectoryJob::run() {
         results.push_back(std::move(info));
     }
     if (ec) {
-        qCCritical(lcDiscovery) << "Error while opening directory" << _localPath << ec.message();
+        qCCritical(lcDiscovery) << u"Error while opening directory" << _localPath << ec.message();
         QString errorString = tr("Error while opening directory %1").arg(_localPath);
         if (ec.value() == EACCES) {
             errorString = tr("Directory not accessible on client, permission denied");

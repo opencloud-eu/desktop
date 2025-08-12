@@ -62,10 +62,10 @@ CoreJob *ResolveUrlJobFactory::startJob(const QUrl &url, QObject *parent)
             const auto newUrl = reply->url().adjusted(QUrl::RemoveFilename);
 
             if (newUrl != oldUrl) {
-                qCInfo(lcResolveUrl) << oldUrl << "was redirected to" << newUrl;
+                qCInfo(lcResolveUrl) << oldUrl << u"was redirected to" << newUrl;
 
                 if (newUrl.scheme() == QLatin1String("https") && oldUrl.host() == newUrl.host()) {
-                    qCInfo(lcResolveUrl()) << "redirect accepted automatically";
+                    qCInfo(lcResolveUrl()) << u"redirect accepted automatically";
                     setJobResult(job, newUrl);
                 } else {
                     if (Utility::urlEqual(oldUrl, newUrl)) {

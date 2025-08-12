@@ -109,10 +109,10 @@ AccountState::AccountState(AccountPtr account)
     connect(NetworkInformation::instance(), &NetworkInformation::isMeteredChanged, this, [this](bool isMetered) {
         if (ConfigFile().pauseSyncWhenMetered()) {
             if (state() == State::Connected && isMetered) {
-                qCInfo(lcAccountState) << "Network switched to a metered connection, setting account state to PausedDueToMetered";
+                qCInfo(lcAccountState) << u"Network switched to a metered connection, setting account state to PausedDueToMetered";
                 setState(State::Connecting);
             } else if (state() == State::Connecting && !isMetered) {
-                qCInfo(lcAccountState) << "Network switched to a NON-metered connection, setting account state to Connected";
+                qCInfo(lcAccountState) << u"Network switched to a NON-metered connection, setting account state to Connected";
                 setState(State::Connected);
             }
         }
@@ -217,7 +217,7 @@ void AccountState::setState(State state)
 {
     const State oldState = _state;
     if (_state != state) {
-        qCInfo(lcAccountState) << "AccountState state change: " << _state << "->" << state;
+        qCInfo(lcAccountState) << u"AccountState state change: " << _state << u"->" << state;
         _state = state;
 
         if (_state == SignedOut) {
@@ -317,12 +317,12 @@ void AccountState::checkConnectivity(bool blockJobs)
     if (isSignedOut() || _waitingForNewCredentials) {
         return;
     }
-    qCInfo(lcAccountState) << "checkConnectivity blocking:" << blockJobs << account()->displayNameWithHost();
+    qCInfo(lcAccountState) << u"checkConnectivity blocking:" << blockJobs << account()->displayNameWithHost();
     if (_state != Connected) {
         setState(Connecting);
     }
     if (_tlsDialog) {
-        qCDebug(lcAccountState) << "Skip checkConnectivity, waiting for tls dialog";
+        qCDebug(lcAccountState) << u"Skip checkConnectivity, waiting for tls dialog";
         return;
     }
 
@@ -333,8 +333,8 @@ void AccountState::checkConnectivity(bool blockJobs)
         _connectionValidator.clear();
     }
     if (_connectionValidator) {
-        qCWarning(lcAccountState) << "ConnectionValidator already running, ignoring" << account()->displayNameWithHost()
-                                  << "Queue is blocked:" << _queueGuard.queue()->isBlocked();
+        qCWarning(lcAccountState) << u"ConnectionValidator already running, ignoring" << account()->displayNameWithHost() << u"Queue is blocked:"
+                                  << _queueGuard.queue()->isBlocked();
         return;
     }
 
@@ -353,8 +353,8 @@ void AccountState::checkConnectivity(bool blockJobs)
         const auto elapsed = _timeOfLastETagCheck.secsTo(QDateTime::currentDateTimeUtc());
         if (!blockJobs && isConnected() && _timeOfLastETagCheck.isValid()
             && elapsed <= polltime.count()) {
-            qCDebug(lcAccountState) << account()->displayNameWithHost() << "The last ETag check succeeded within the last " << polltime.count() << "s ("
-                                    << elapsed << "s). No connection check needed!";
+            qCDebug(lcAccountState) << account()->displayNameWithHost() << u"The last ETag check succeeded within the last " << polltime.count() << u"s ("
+                                    << elapsed << u"s). No connection check needed!";
             return;
         }
     }
@@ -423,7 +423,7 @@ void AccountState::checkConnectivity(bool blockJobs)
 void AccountState::slotConnectionValidatorResult(ConnectionValidator::Status status, const QStringList &errors)
 {
     if (isSignedOut()) {
-        qCWarning(lcAccountState) << "Signed out, ignoring" << status << _account->url().toString();
+        qCWarning(lcAccountState) << u"Signed out, ignoring" << status << _account->url().toString();
         return;
     }
 
@@ -443,21 +443,18 @@ void AccountState::slotConnectionValidatorResult(ConnectionValidator::Status sta
         && (_connectionStatus == ConnectionValidator::ServiceUnavailable
                || _connectionStatus == ConnectionValidator::MaintenanceMode)) {
         if (!_timeSinceMaintenanceOver.isStarted()) {
-            qCInfo(lcAccountState) << "AccountState reconnection: delaying for"
-                                   << _maintenanceToConnectedDelay.count() << "ms";
+            qCInfo(lcAccountState) << u"AccountState reconnection: delaying for" << _maintenanceToConnectedDelay.count() << u"ms";
             _timeSinceMaintenanceOver.reset();
             QTimer::singleShot(_maintenanceToConnectedDelay + 100ms, this, [this] { AccountState::checkConnectivity(false); });
             return;
         } else if (_timeSinceMaintenanceOver.duration() < _maintenanceToConnectedDelay) {
-            qCInfo(lcAccountState) << "AccountState reconnection: only" << _timeSinceMaintenanceOver;
+            qCInfo(lcAccountState) << u"AccountState reconnection: only" << _timeSinceMaintenanceOver;
             return;
         }
     }
 
     if (_connectionStatus != status) {
-        qCInfo(lcAccountState) << "AccountState connection status change: "
-                               << _connectionStatus << "->"
-                               << status;
+        qCInfo(lcAccountState) << u"AccountState connection status change: " << _connectionStatus << u"->" << status;
         _connectionStatus = status;
     }
     _connectionErrors = errors;
@@ -504,20 +501,20 @@ void AccountState::slotConnectionValidatorResult(ConnectionValidator::Status sta
 void AccountState::slotInvalidCredentials()
 {
     if (!_waitingForNewCredentials) {
-        qCInfo(lcAccountState) << "Invalid credentials for" << _account->url().toString();
+        qCInfo(lcAccountState) << u"Invalid credentials for" << _account->url().toString();
 
         _waitingForNewCredentials = true;
         if (account()->credentials()->ready()) {
             account()->credentials()->invalidateToken();
         }
         if (auto creds = qobject_cast<HttpCredentials *>(account()->credentials())) {
-            qCInfo(lcAccountState) << "refreshing oauth";
+            qCInfo(lcAccountState) << u"refreshing oauth";
             if (creds->refreshAccessToken()) {
                 return;
             }
-            qCInfo(lcAccountState) << "refreshing oauth failed";
+            qCInfo(lcAccountState) << u"refreshing oauth failed";
         }
-        qCInfo(lcAccountState) << "restart oauth";
+        qCInfo(lcAccountState) << u"restart oauth";
         account()->credentials()->restartOauth();
         setState(AskingCredentials);
     }
@@ -528,15 +525,14 @@ void AccountState::slotCredentialsFetched()
     // Make a connection attempt, no matter whether the credentials are
     // ready or not - we want to check whether we can get an SSL connection
     // going before bothering the user for a password.
-    qCInfo(lcAccountState) << "Fetched credentials for" << _account->url().toString()
-                           << "attempting to connect";
+    qCInfo(lcAccountState) << u"Fetched credentials for" << _account->url().toString() << u"attempting to connect";
     _waitingForNewCredentials = false;
     checkConnectivity();
 }
 
 void AccountState::slotCredentialsAsked()
 {
-    qCInfo(lcAccountState) << "Credentials asked for" << _account->url().toString() << "are they ready?" << _account->credentials()->ready();
+    qCInfo(lcAccountState) << u"Credentials asked for" << _account->url().toString() << u"are they ready?" << _account->credentials()->ready();
 
     _waitingForNewCredentials = false;
 

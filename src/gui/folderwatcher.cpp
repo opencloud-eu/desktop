@@ -51,7 +51,7 @@ FolderWatcher::FolderWatcher(Folder *folder)
         auto paths = popChangeSet();
         Q_ASSERT(!paths.empty());
         if (!paths.isEmpty()) {
-            qCInfo(lcFolderWatcher) << "Detected changes in paths:" << paths;
+            qCInfo(lcFolderWatcher) << u"Detected changes in paths:" << paths;
             Q_EMIT pathChanged(paths);
         }
     });
@@ -73,15 +73,15 @@ bool FolderWatcher::pathIsIgnored(const QString &path) const
     if (!QFileInfo::exists(path)) {
         if (auto record = _folder->journalDb()->getFileRecord(path); record.isValid()) {
             // we know about the file, it got removed, we should not ignore that
-            qCDebug(lcFolderWatcher) << "* Not ignoring remvoed file" << path;
+            qCDebug(lcFolderWatcher) << u"* Not ignoring remvoed file" << path;
             return false;
         }
         // probably a temporary file that no longer exists
-        qCDebug(lcFolderWatcher) << "* Ignoring file" << path << "It no longer exists and we don't have it in the database.";
+        qCDebug(lcFolderWatcher) << u"* Ignoring file" << path << u"It no longer exists and we don't have it in the database.";
         return true;
     }
     if (_folder->isFileExcludedAbsolute(path) && !Utility::isConflictFile(path)) {
-        qCDebug(lcFolderWatcher) << "* Ignoring file" << path;
+        qCDebug(lcFolderWatcher) << u"* Ignoring file" << path;
         return true;
     }
     return false;

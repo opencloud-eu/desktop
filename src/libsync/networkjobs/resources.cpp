@@ -38,7 +38,7 @@ namespace {
 void ResourceJob::finished()
 {
     if (reply()->error() != QNetworkReply::NoError) {
-        qCWarning(lcResources) << "Network error: " << this << errorString();
+        qCWarning(lcResources) << u"Network error: " << this << errorString();
     } else {
         _cacheKey = cacheKey(reply());
     }
@@ -48,20 +48,20 @@ void ResourceJob::finished()
     if (httpStatusCode() == 200 && reply()->size() > 0) {
         const QString path = _cache->path(_cacheKey);
 
-        qCDebug(lcResources) << "cache file path:" << path;
+        qCDebug(lcResources) << u"cache file path:" << path;
 
         // furthermore, we can skip writing the file if the cache key has not changed (i.e., a file exists) and the file has come from the network cache
         if (QFileInfo::exists(path) && reply()->attribute(QNetworkRequest::SourceIsFromCacheAttribute).toBool()) {
-            qCDebug(lcResources) << "file has come from network cache, skipping writing";
+            qCDebug(lcResources) << u"file has come from network cache, skipping writing";
         } else {
             QFile cacheFile(path);
 
             // note: we want to truncate the file if it exists
             if (!cacheFile.open(QIODevice::WriteOnly)) {
-                qCCritical(lcResources) << "failed to open cache file for writing:" << cacheFile.fileName();
+                qCCritical(lcResources) << u"failed to open cache file for writing:" << cacheFile.fileName();
             } else {
                 if (!cacheFile.write(reply()->readAll())) {
-                    qCCritical(lcResources) << "failed to write to cache file:" << cacheFile.fileName();
+                    qCCritical(lcResources) << u"failed to write to cache file:" << cacheFile.fileName();
                 }
             }
         }

@@ -146,7 +146,7 @@ void NetworkSettings::loadProxySettings()
     const QString legacyPasswordKey = QStringLiteral("Proxy/pass");
     const QString legacyPassword = QString::fromUtf8(QByteArray::fromBase64(ConfigFile().makeQSettings().value(legacyPasswordKey).toByteArray()));
     if (!legacyPassword.isEmpty()) {
-        qCWarning(lcNetworkSettings) << "Migrating legacy proxy password to keychain";
+        qCWarning(lcNetworkSettings) << u"Migrating legacy proxy password to keychain";
         ConfigFile().makeQSettings().remove(legacyPasswordKey);
         _credentialManager->set(proxyPasswordC(), legacyPassword);
         _ui->passwordLineEdit->setText(legacyPassword);

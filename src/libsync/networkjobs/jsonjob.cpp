@@ -31,7 +31,7 @@ JsonJob::~JsonJob()
 void JsonJob::finished()
 {
     if (reply()->error() != QNetworkReply::NoError) {
-        qCWarning(lcJsonApiJob) << "Network error: " << this << errorString();
+        qCWarning(lcJsonApiJob) << u"Network error: " << this << errorString();
     } else {
         parse(reply()->readAll());
     }
@@ -43,7 +43,7 @@ void JsonJob::parse(const QByteArray &data)
     const auto doc = QJsonDocument::fromJson(data, &_parseError);
     // empty or invalid response
     if (_parseError.error != QJsonParseError::NoError || doc.isNull()) {
-        qCWarning(lcJsonApiJob) << "invalid JSON!" << data << _parseError.errorString();
+        qCWarning(lcJsonApiJob) << u"invalid JSON!" << data << _parseError.errorString();
     } else {
         _data = doc.object();
     }

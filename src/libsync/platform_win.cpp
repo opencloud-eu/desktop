@@ -101,23 +101,23 @@ void WinPlatform::startShutdownWatcher()
         wc.lpfnWndProc = [](HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) -> LRESULT {
             //            qDebug() << MSG { hwnd, msg, wParam, lParam, 0, {} };
             if (msg == WM_QUERYENDSESSION) {
-                qCDebug(lcPlatform) << "Received WM_QUERYENDSESSION";
+                qCDebug(lcPlatform) << u"Received WM_QUERYENDSESSION";
                 return 1;
             } else if (msg == WM_ENDSESSION) {
-                qCDebug(lcPlatform) << "Received WM_ENDSESSION quitting";
+                qCDebug(lcPlatform) << u"Received WM_ENDSESSION quitting";
                 QMetaObject::invokeMethod(qApp, &QApplication::quit);
                 auto start = steady_clock::now();
                 if (lParam == ENDSESSION_LOGOFF) {
                     // block the windows shutdown until we are done
                     const QString description = QApplication::translate("Utility", "Shutting down %1").arg(Theme::instance()->appNameGUI());
-                    qCDebug(lcPlatform) << "Block shutdown until we are ready" << description;
+                    qCDebug(lcPlatform) << u"Block shutdown until we are ready" << description;
                     OC_ASSERT(ShutdownBlockReasonCreate(hwnd, reinterpret_cast<const wchar_t *>(description.utf16())));
                 }
                 WaitForSingleObject(watchWMCtx.windowMessageWatcherEvent, INFINITE);
                 if (lParam == ENDSESSION_LOGOFF) {
                     OC_ASSERT(ShutdownBlockReasonDestroy(hwnd));
                 }
-                qCInfo(lcPlatform) << "WM_ENDSESSION successfully shut down" << (steady_clock::now() - start);
+                qCInfo(lcPlatform) << u"WM_ENDSESSION successfully shut down" << (steady_clock::now() - start);
                 watchWMCtx.windowMessageWatcherRun = false;
                 return 0;
             }
@@ -142,7 +142,7 @@ void WinPlatform::startShutdownWatcher()
     });
 
     qAddPostRoutine([] {
-        qCDebug(OCC::lcUtility) << "app closed";
+        qCDebug(OCC::lcUtility) << u"app closed";
         SetEvent(watchWMCtx.windowMessageWatcherEvent);
     });
 }

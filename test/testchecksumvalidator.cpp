@@ -35,7 +35,7 @@ using namespace OCC::Utility;
 
         void slotUpValidated(CheckSums::Algorithm type, const QByteArray &checksum)
         {
-            qDebug() << "Checksum: " << checksum;
+            qDebug() << u"Checksum: " << checksum;
             QCOMPARE(_expected, checksum);
             QVERIFY(_expectedType == type);
         }
@@ -56,7 +56,7 @@ using namespace OCC::Utility;
         args.append(file);
         md5.start(QString::fromUtf8(cmd), args);
         QByteArray sumShell;
-        qDebug() << "File: "<< file;
+        qDebug() << u"File: " << file;
 
         if( md5.waitForFinished()  ) {
 
@@ -123,7 +123,7 @@ private Q_SLOTS:
         auto file = QFile(_testfile);
         file.open(QIODevice::ReadOnly);
         _expected = ComputeChecksum::computeNow(&file, CheckSums::Algorithm::ADLER32);
-        qDebug() << "XX Expected Checksum: " << _expected;
+        qDebug() << u"XX Expected Checksum: " << _expected;
         vali->start(_testfile);
 
         QEventLoop loop;

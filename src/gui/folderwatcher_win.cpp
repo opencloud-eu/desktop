@@ -34,7 +34,7 @@ WatcherThread::WatchChanges WatcherThread::watchChanges(size_t fileNotifyBufferS
     _directory = Utility::Handle::createHandle(FileSystem::toFilesystemPath(_longPath), {.accessMode = FILE_LIST_DIRECTORY, .async = true});
 
     if (!_directory) {
-        qCWarning(lcFolderWatcher) << "Failed to create handle for" << _path << ", error:" << _directory.errorMessage();
+        qCWarning(lcFolderWatcher) << u"Failed to create handle for" << _path << u", error:" << _directory.errorMessage();
         return WatchChanges::Error;
     }
 
@@ -65,11 +65,11 @@ WatcherThread::WatchChanges WatcherThread::watchChanges(size_t fileNotifyBufferS
                 &dwBytesReturned, &overlapped, nullptr)) {
             const DWORD errorCode = GetLastError();
             if (errorCode == ERROR_NOTIFY_ENUM_DIR) {
-                qCDebug(lcFolderWatcher) << "The buffer for changes overflowed! Triggering a generic change and resizing";
+                qCDebug(lcFolderWatcher) << u"The buffer for changes overflowed! Triggering a generic change and resizing";
                 Q_EMIT changed({_path});
                 return WatchChanges::NeedBiggerBuffer;
             } else {
-                qCWarning(lcFolderWatcher) << "ReadDirectoryChangesW error" << Utility::formatWinError(errorCode);
+                qCWarning(lcFolderWatcher) << u"ReadDirectoryChangesW error" << Utility::formatWinError(errorCode);
                 return WatchChanges::Error;
             }
         }
@@ -83,11 +83,11 @@ WatcherThread::WatchChanges WatcherThread::watchChanges(size_t fileNotifyBufferS
             INFINITE);
         const auto error = GetLastError();
         if (result == 1) {
-            qCDebug(lcFolderWatcher) << "Received stop event, aborting folder watcher thread";
+            qCDebug(lcFolderWatcher) << u"Received stop event, aborting folder watcher thread";
             return WatchChanges::Done;
         }
         if (result != 0) {
-            qCWarning(lcFolderWatcher) << "WaitForMultipleObjects failed" << result << Utility::formatWinError(error);
+            qCWarning(lcFolderWatcher) << u"WaitForMultipleObjects failed" << result << Utility::formatWinError(error);
             return WatchChanges::Error;
         }
 
@@ -95,12 +95,12 @@ WatcherThread::WatchChanges WatcherThread::watchChanges(size_t fileNotifyBufferS
         if (!ok) {
             const DWORD errorCode = GetLastError();
             if (errorCode == ERROR_NOTIFY_ENUM_DIR) {
-                qCDebug(lcFolderWatcher) << "The buffer for changes overflowed! Triggering a generic change and resizing";
+                qCDebug(lcFolderWatcher) << u"The buffer for changes overflowed! Triggering a generic change and resizing";
                 Q_EMIT lostChanges();
                 Q_EMIT changed({_path});
                 return WatchChanges::NeedBiggerBuffer;
             } else {
-                qCWarning(lcFolderWatcher) << "GetOverlappedResult error" << Utility::formatWinError(errorCode);
+                qCWarning(lcFolderWatcher) << u"GetOverlappedResult error" << Utility::formatWinError(errorCode);
                 return WatchChanges::Error;
             }
         }
@@ -130,10 +130,10 @@ void WatcherThread::processEntries(FILE_NOTIFY_INFORMATION *curEntry)
                 longfile = QString::fromWCharArray(fileNameBuffer, longNameSize);
             } else {
                 if (error == ERROR_FILE_NOT_FOUND) {
-                    qCInfo(lcFolderWatcher) << "Ignoring change in" << longfile << "the file no longer exists, probably a temporary file." << action;
+                    qCInfo(lcFolderWatcher) << u"Ignoring change in" << longfile << u"the file no longer exists, probably a temporary file." << action;
                     continue;
                 } else {
-                    qCWarning(lcFolderWatcher) << "Error converting file name" << longfile << "to full length, keeping original name." << action
+                    qCWarning(lcFolderWatcher) << u"Error converting file name" << longfile << u"to full length, keeping original name." << action
                                                << Utility::formatWinError(error);
                 }
             }

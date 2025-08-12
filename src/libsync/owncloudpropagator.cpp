@@ -101,7 +101,7 @@ bool PropagateItemJob::scheduleSelfOrChild()
     if (state() != NotYetStarted) {
         return false;
     }
-    qCInfo(lcPropagator) << "Starting propagation of" << _item << "by" << this;
+    qCInfo(lcPropagator) << u"Starting propagation of" << _item << u"by" << this;
 
     setState(Running);
     if (thread() != QApplication::instance()->thread()) {
@@ -136,11 +136,11 @@ static SyncJournalErrorBlacklistRecord createBlacklistEntry(
     entry._ignoreDuration = old._ignoreDuration * 5;
 
     if (item._httpErrorCode == 403) {
-        qCWarning(lcPropagator) << "Probably firewall error: " << item._httpErrorCode << ", blacklisting up to 1h only";
+        qCWarning(lcPropagator) << u"Probably firewall error: " << item._httpErrorCode << u", blacklisting up to 1h only";
         entry._ignoreDuration = qMin(entry._ignoreDuration, qint64(60 * 60));
 
     } else if (item._httpErrorCode == 413 || item._httpErrorCode == 415) {
-        qCWarning(lcPropagator) << "Fatal Error condition" << item._httpErrorCode << ", maximum blacklist ignore time!";
+        qCWarning(lcPropagator) << u"Fatal Error condition" << item._httpErrorCode << u", maximum blacklist ignore time!";
         entry._ignoreDuration = maxBlacklistTime;
     }
 
@@ -186,13 +186,13 @@ static void blacklistUpdate(SyncJournalDb *journal, SyncFileItem &item)
     if (item._status == SyncFileItem::SoftError
         && newEntry._retryCount > 1
         && item._httpErrorCode != 0) {
-        qCWarning(lcPropagator) << "escalating http soft error on " << item.localName() << " to normal error, " << item._httpErrorCode;
+        qCWarning(lcPropagator) << u"escalating http soft error on " << item.localName() << u" to normal error, " << item._httpErrorCode;
         item._status = SyncFileItem::NormalError;
     } else if (item._status != SyncFileItem::SoftError && item._hasBlacklistEntry && newEntry._ignoreDuration > 0) {
         item._status = SyncFileItem::BlacklistedError;
     }
 
-    qCInfo(lcPropagator) << "blacklisting " << item.localName() << " for " << newEntry._ignoreDuration << ", retry count " << newEntry._retryCount;
+    qCInfo(lcPropagator) << u"blacklisting " << item.localName() << u" for " << newEntry._ignoreDuration << u", retry count " << newEntry._retryCount;
 }
 
 void PropagateItemJob::done(SyncFileItem::Status statusArg, const QString &errorString)
@@ -266,9 +266,10 @@ void PropagateItemJob::done(SyncFileItem::Status statusArg, const QString &error
     }
 
     if (_item->hasErrorStatus())
-        qCWarning(lcPropagator) << "Could not complete propagation of" << _item->destination() << "by" << this << "with status" << _item->_status << "and error:" << _item->_errorString;
+        qCWarning(lcPropagator) << u"Could not complete propagation of" << _item->destination() << u"by" << this << u"with status" << _item->_status
+                                << u"and error:" << _item->_errorString;
     else
-        qCInfo(lcPropagator) << "Completed propagation of" << _item->destination() << "by" << this << "with status" << _item->_status;
+        qCInfo(lcPropagator) << u"Completed propagation of" << _item->destination() << u"by" << this << u"with status" << _item->_status;
 
     // Will be handled in PropagateDirectory::slotSubJobsFinished at the end
     if (!_item->isDirectory() || _item->_relevantDirectoyInstruction) {
@@ -292,7 +293,7 @@ void PropagateItemJob::done(SyncFileItem::Status statusArg, const QString &error
 
 PropagateItemJob *OwncloudPropagator::createJob(const SyncFileItemPtr &item)
 {
-    qCDebug(lcPropagator) << "Propagating:" << item;
+    qCDebug(lcPropagator) << u"Propagating:" << item;
     const bool deleteExisting = item->instruction() == CSYNC_INSTRUCTION_TYPE_CHANGE;
     switch (item->instruction()) {
     case CSYNC_INSTRUCTION_REMOVE:
@@ -433,7 +434,7 @@ void OwncloudPropagator::start(SyncFileItemSet &&items)
                 continue;
             } else if (item->instruction() != CSYNC_INSTRUCTION_RENAME) {
                 // all is good, the rename will be executed before the directory deletion
-                qCWarning(lcPropagator) << "WARNING:  Job within a removed directory?  This should not happen!" << item;
+                qCWarning(lcPropagator) << u"WARNING:  Job within a removed directory?  This should not happen!" << item;
                 Q_ASSERT(false); // we shouldn't land here, but assert for debug purposes
             }
         }
@@ -444,7 +445,7 @@ void OwncloudPropagator::start(SyncFileItemSet &&items)
         if (!maybeConflictDirectory.isEmpty()) {
             if (FileSystem::isChildPathOf(item->destination(), maybeConflictDirectory)) {
                 // We're processing an item in a CONFLICT directory.
-                qCInfo(lcPropagator) << "Skipping job inside CONFLICT directory" << item->localName() << item->instruction();
+                qCInfo(lcPropagator) << u"Skipping job inside CONFLICT directory" << item->localName() << item->instruction();
                 item->setInstruction(CSYNC_INSTRUCTION_NONE);
                 continue;
             } else {
@@ -544,7 +545,7 @@ Result<QString, bool> OwncloudPropagator::localFileNameClash(const QString &relF
             // Need to normalize to composited form because of QTBUG-39622/QTBUG-55896
             const QString cName = fileInfo.canonicalFilePath().normalized(QString::NormalizationForm_C);
             if (fileInfo.filePath() != cName && !cName.endsWith(relFile, Qt::CaseSensitive)) {
-                qCWarning(lcPropagator) << "Detected case clash between" << fileInfo.filePath() << "and" << cName;
+                qCWarning(lcPropagator) << u"Detected case clash between" << fileInfo.filePath() << u"and" << cName;
                 return cName;
             }
         }
@@ -557,7 +558,7 @@ Result<QString, bool> OwncloudPropagator::localFileNameClash(const QString &relF
 
             if (!fileInfo.filePath().endsWith(realFileName, Qt::CaseSensitive)) {
                 const QString clashName = fileInfo.path() + QLatin1Char('/') + realFileName;
-                qCWarning(lcPropagator) << "Detected case clash between" << fileInfo.filePath() << "and" << clashName;
+                qCWarning(lcPropagator) << u"Detected case clash between" << fileInfo.filePath() << u"and" << clashName;
                 return clashName;
             }
         }
@@ -592,7 +593,7 @@ bool OwncloudPropagator::hasCaseClashAccessibilityProblem(const QString &relfile
             if (firstFile != secondFile
                 && QString::compare(firstFile, secondFile, Qt::CaseInsensitive) == 0) {
                 result = true;
-                qCWarning(lcPropagator) << "Found two filepaths that only differ in case: " << firstFile << secondFile;
+                qCWarning(lcPropagator) << u"Found two filepaths that only differ in case: " << firstFile << secondFile;
             }
         }
         FindClose(hFind);
@@ -646,7 +647,7 @@ void OwncloudPropagator::scheduleNextJobImpl()
             }
         }
         if (_activeJobList.count() < maximumActiveTransferJob() + likelyFinishedQuicklyCount) {
-            qCDebug(lcPropagator) << "Can pump in another request! activeJobs =" << _activeJobList.count();
+            qCDebug(lcPropagator) << u"Can pump in another request! activeJobs =" << _activeJobList.count();
             if (_rootJob->scheduleSelfOrChild()) {
                 scheduleNextJob();
             }
@@ -738,7 +739,7 @@ bool OwncloudPropagator::createConflict(const SyncFileItemPtr &item,
             *error = renameError;
         return false;
     }
-    qCInfo(lcPropagator) << "Created conflict file" << fn << "->" << conflictFileName;
+    qCInfo(lcPropagator) << u"Created conflict file" << fn << u"->" << conflictFileName;
 
     // Create a new conflict record. To get the base etag, we need to read it from the db.
     ConflictRecord conflictRecord;
@@ -807,7 +808,7 @@ Result<Vfs::ConvertToPlaceholderResult, QString> OwncloudPropagator::updateMetad
     }
     auto itemCopy = item;
     FileSystem::getInode(FileSystem::toFilesystemPath(fsPath), &itemCopy._inode);
-    qCDebug(lcPropagator) << fsPath << "Retrieved inode " << itemCopy._inode << "(previous item inode: " << item._inode << ")";
+    qCDebug(lcPropagator) << fsPath << u"Retrieved inode " << itemCopy._inode << u"(previous item inode: " << item._inode << u")";
     auto record = SyncJournalFileRecord::fromSyncFileItem(itemCopy);
     if (result.get() == Vfs::ConvertToPlaceholderResult::Locked) {
         record.setDirtyPlaceholder(true);
@@ -903,7 +904,7 @@ bool PropagatorCompositeJob::scheduleSelfOrChild()
         _tasksToDo.erase(_tasksToDo.begin());
         PropagatorJob *job = propagator()->createJob(nextTask);
         if (!job) {
-            qCWarning(lcDirectory) << "Useless task found for file" << nextTask->destination() << "instruction" << nextTask->instruction();
+            qCWarning(lcDirectory) << u"Useless task found for file" << nextTask->destination() << u"instruction" << nextTask->instruction();
             continue;
         }
         appendJob(job);
@@ -1066,7 +1067,7 @@ void PropagateDirectory::slotSubJobsFinished(const SyncFileItem::Status status)
         // report an error if the acutal action on the folder failed
         if (_item->_relevantDirectoyInstruction && _item->_status != SyncFileItem::Success) {
             Q_ASSERT(_item->_status != SyncFileItem::NoStatus);
-            qCWarning(lcDirectory) << "PropagateDirectory completed with" << status << "the dirctory job itself is marked as" << _item->_status;
+            qCWarning(lcDirectory) << u"PropagateDirectory completed with" << status << u"the dirctory job itself is marked as" << _item->_status;
             done(_item->_status);
             return;
         }
@@ -1094,7 +1095,7 @@ void PropagateDirectory::slotSubJobsFinished(const SyncFileItem::Status status)
                 _item->_status = SyncFileItem::Success;
                 const auto result = propagator()->updateMetadata(*_item);
                 if (!result) {
-                    qCWarning(lcDirectory) << "Error writing to the database for file" << _item->localName() << "with" << result.error();
+                    qCWarning(lcDirectory) << u"Error writing to the database for file" << _item->localName() << u"with" << result.error();
                     done(SyncFileItem::FatalError, tr("Error updating metadata: %1").arg(result.error()));
                     return;
                 } else if (result.get() == Vfs::ConvertToPlaceholderResult::Locked) {

@@ -117,14 +117,14 @@ Application::Application(const QString &displayLanguage, bool debugMode)
         _systray = new Systray(this);
         _systemNotificationManager = new SystemNotificationManager(this);
     }
-    qCInfo(lcApplication) << "Plugin search paths:" << qApp->libraryPaths();
+    qCInfo(lcApplication) << u"Plugin search paths:" << qApp->libraryPaths();
 
     // Check vfs plugins
     if (VfsPluginManager::instance().bestAvailableVfsMode() == Vfs::Off) {
-        qCWarning(lcApplication) << "Theme wants to show vfs mode, but no vfs plugins are available";
+        qCWarning(lcApplication) << u"Theme wants to show vfs mode, but no vfs plugins are available";
     }
     if (VfsPluginManager::instance().isVfsPluginAvailable(Vfs::WindowsCfApi))
-        qCInfo(lcApplication) << "VFS windows plugin is available";
+        qCInfo(lcApplication) << u"VFS windows plugin is available";
 
     ConfigFile cfg;
 
@@ -338,7 +338,7 @@ void Application::runNewAccountWizard()
                         connect(folderWizard, &QDialog::accepted, accountStatePtr.data(), [accountStatePtr, folderWizard]() {
                             FolderMan *folderMan = FolderMan::instance();
 
-                            qCInfo(lcApplication) << "Folder wizard completed";
+                            qCInfo(lcApplication) << u"Folder wizard completed";
                             const auto config = folderWizard->result();
 
                             auto folder = folderMan->addFolderFromFolderWizardResult(accountStatePtr, config);
@@ -356,7 +356,7 @@ void Application::runNewAccountWizard()
                         });
 
                         connect(folderWizard, &QDialog::rejected, accountStatePtr.data(), [accountStatePtr]() {
-                            qCInfo(lcApplication) << "Folder wizard cancelled";
+                            qCInfo(lcApplication) << u"Folder wizard cancelled";
                             FolderMan::instance()->setSyncEnabled(true);
                             accountStatePtr->setSettingUp(false);
                         });

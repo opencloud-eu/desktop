@@ -43,7 +43,7 @@ SnoreToast::SnoreToast(SystemNotificationManager *parent)
     , _server(new QLocalServer(this))
 {
     if (!_snoreSystemPath.isEmpty()) {
-        qCDebug(lcSnoreToast) << "Located SnoreToast.exe in" << _snoreSystemPath;
+        qCDebug(lcSnoreToast) << u"Located SnoreToast.exe in" << _snoreSystemPath;
         connect(_server, &QLocalServer::newConnection, _server, [this]() {
             auto *sock = _server->nextPendingConnection();
             connect(sock, &QLocalSocket::readyRead, sock, [sock, this]() {
@@ -62,8 +62,8 @@ SnoreToast::SnoreToast(SystemNotificationManager *parent)
 
                 const auto snoreAction = SnoreToastActions::getAction(action.toString().toStdWString());
 
-                qCInfo(lcSnoreToast) << "Notification" << notificationResponseMap["notificationId"]
-                                     << "Closed with action:" << SnoreToastActions::getActionString(snoreAction);
+                qCInfo(lcSnoreToast) << u"Notification" << notificationResponseMap["notificationId"] << u"Closed with action:"
+                                     << SnoreToastActions::getActionString(snoreAction);
 
                 SystemNotification *notification = activeNotification(notificationResponseMap["notificationId"].toULongLong());
                 SystemNotification::Result result = SystemNotification::Result::Clicked;
@@ -89,22 +89,22 @@ SnoreToast::SnoreToast(SystemNotificationManager *parent)
                         Q_UNREACHABLE();
                         break;
                     case SnoreToastActions::Actions::Error:
-                        qCWarning(lcSnoreToast) << "Error:" << data;
+                        qCWarning(lcSnoreToast) << u"Error:" << data;
                         break;
                     }
                     finishNotification(notification, result);
                 } else {
-                    qCWarning(lcSnoreToast) << "Received notification response for unknown notification with the id:"
+                    qCWarning(lcSnoreToast) << u"Received notification response for unknown notification with the id:"
                                             << notificationResponseMap["notificationId"];
                     Q_EMIT systemNotificationManager() -> unknownNotificationClicked();
                 }
             });
         });
         if (!_server->listen(QStringLiteral("%1.SnoreToast").arg(Theme::instance()->orgDomainName()))) {
-            qCWarning(lcSnoreToast) << "Failed to listen on the server";
+            qCWarning(lcSnoreToast) << u"Failed to listen on the server";
         }
     } else {
-        qCWarning(lcSnoreToast) << "Failed to locate SnoreToast.exe";
+        qCWarning(lcSnoreToast) << u"Failed to locate SnoreToast.exe";
     }
 }
 

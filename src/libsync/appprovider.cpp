@@ -83,7 +83,7 @@ bool AppProvider::open(const AccountPtr &account, const QString &localPath, cons
             if (job->httpStatusCode() == 200) {
                 const auto url = QUrl(job->data().value(QStringLiteral("uri")).toString());
                 const auto result = QDesktopServices::openUrl(url);
-                qCDebug(lcAppProvider) << "start browser" << url << result;
+                qCDebug(lcAppProvider) << u"start browser" << url << result;
             } else {
                 Q_EMIT account->appProviderErrorOccured(
                     QCoreApplication::translate("AppProvider", "Failed to open %1 in web. Error: %2.").arg(localPath, job->reply()->errorString()));

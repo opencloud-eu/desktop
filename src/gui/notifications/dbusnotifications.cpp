@@ -49,13 +49,13 @@ DBusNotifications::DBusNotifications(SystemNotificationManager *parent)
         Q_D(DBusNotifications);
         // we get called for all global notifications, only handle ours
         if (auto id = Utility::optionalFind(d->_idMap, systemId)) {
-            qCDebug(lcDbusNotification) << "ActionInvoked" << id->value() << "SystemId" << systemId << actionKey;
+            qCDebug(lcDbusNotification) << u"ActionInvoked" << id->value() << u"SystemId" << systemId << actionKey;
             if (auto *notification = activeNotification(id->value())) {
                 const qsizetype index = actionKey.toLongLong();
                 if (index < notification->request().buttons().size()) {
                     Q_EMIT notification->buttonClicked(notification->request().buttons().at(index));
                 } else {
-                    qCDebug(lcDbusNotification) << actionKey << "is out of range";
+                    qCDebug(lcDbusNotification) << actionKey << u"is out of range";
                 }
             }
         }
@@ -77,13 +77,13 @@ DBusNotifications::DBusNotifications(SystemNotificationManager *parent)
                     break;
                 default:
                     result = SystemNotification::Result::Dismissed;
-                    qCWarning(lcDbusNotification) << "Unsupported close reason" << reason;
+                    qCWarning(lcDbusNotification) << u"Unsupported close reason" << reason;
                     break;
                 }
-                qCDebug(lcDbusNotification) << "NotificationClosed" << id->value() << "SystemId" << systemId << reason << result;
+                qCDebug(lcDbusNotification) << u"NotificationClosed" << id->value() << u"SystemId" << systemId << reason << result;
                 finishNotification(notification, result);
             } else {
-                qCDebug(lcDbusNotification) << "Unknown NotificationClicked" << id->value() << "SystemId" << systemId << reason;
+                qCDebug(lcDbusNotification) << u"Unknown NotificationClicked" << id->value() << u"SystemId" << systemId << reason;
                 Q_EMIT systemNotificationManager() -> unknownNotificationClicked();
             }
         }
@@ -115,7 +115,7 @@ void DBusNotifications::notify(const SystemNotificationRequest &notificationRequ
         actionList.append(action);
     }
 
-    qCDebug(lcDbusNotification) << "Creating system notification" << notificationRequest.id();
+    qCDebug(lcDbusNotification) << u"Creating system notification" << notificationRequest.id();
     const auto reply = d->dbusInterface.Notify(Theme::instance()->appNameGUI(), 0, Resources::iconToFileSystemUrl(qGuiApp->windowIcon()).toString(),
         notificationRequest.title(), notificationRequest.text(), actionList, hints, -1);
 
@@ -125,7 +125,7 @@ void DBusNotifications::notify(const SystemNotificationRequest &notificationRequ
         watcher->deleteLater();
 
         const auto systemID = QDBusPendingReply<uint>(*watcher).argumentAt<0>();
-        qCDebug(lcDbusNotification) << "System notification" << id << "was assigned the system notification id" << systemID;
+        qCDebug(lcDbusNotification) << u"System notification" << id << u"was assigned the system notification id" << systemID;
         d->_idMap.insert(systemID, id);
     });
 }

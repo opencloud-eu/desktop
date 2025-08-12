@@ -55,7 +55,7 @@ private:
         std::string currentStatusMessage;
 
         while (_updater.nextStatusMessage(currentStatusMessage)) {
-            qCInfo(lcUpdater) << "AppImageUpdate:" << QString::fromStdString(currentStatusMessage);
+            qCInfo(lcUpdater) << u"AppImageUpdate:" << QString::fromStdString(currentStatusMessage);
         }
     }
 
@@ -65,7 +65,7 @@ public:
         try {
             return new AppImageUpdaterShim(updateInformation, parent);
         } catch (const std::exception &e) {
-            qCCritical(lcUpdater) << "Failed to create updater shim:" << e.what();
+            qCCritical(lcUpdater) << u"Failed to create updater shim:" << e.what();
             return nullptr;
         }
     }
@@ -84,7 +84,7 @@ public:
             return updateAvailable;
         } catch (const std::exception &e) {
             _logStatusMessages();
-            qCCritical(lcUpdater) << "Checking for update failed:" << e.what();
+            qCCritical(lcUpdater) << u"Checking for update failed:" << e.what();
             return false;
         }
     }
@@ -129,14 +129,14 @@ void AppImageUpdater::versionInfoArrived(const UpdateInfo &info)
     const auto newVersion = QVersionNumber::fromString(info.version());
 
     if (info.version().isEmpty() || currentVersion >= newVersion) {
-        qCInfo(lcUpdater) << "Client is on latest version!";
+        qCInfo(lcUpdater) << u"Client is on latest version!";
         setDownloadState(UpToDate);
         return;
     }
 
     const auto previouslySkippedVersion = this->previouslySkippedVersion();
     if (previouslySkippedVersion >= newVersion) {
-        qCInfo(lcUpdater) << "Update" << previouslySkippedVersion << "was skipped previously by user";
+        qCInfo(lcUpdater) << u"Update" << previouslySkippedVersion << u"was skipped previously by user";
         setDownloadState(UpToDate);
         return;
     }
@@ -149,7 +149,7 @@ void AppImageUpdater::versionInfoArrived(const UpdateInfo &info)
     }
 
     if (!appImageUpdaterShim->isUpdateAvailable()) {
-        qCCritical(lcUpdater) << "Update server reported that update is available, but AppImageUpdate disagrees, aborting";
+        qCCritical(lcUpdater) << u"Update server reported that update is available, but AppImageUpdate disagrees, aborting";
         setDownloadState(DownloadFailed);
         return;
     }
@@ -157,7 +157,7 @@ void AppImageUpdater::versionInfoArrived(const UpdateInfo &info)
     auto widget = new AppImageUpdateAvailableWidget(currentVersion, newVersion, ocApp()->settingsDialog());
 
     connect(widget, &AppImageUpdateAvailableWidget::skipUpdateButtonClicked, this, [newVersion, widget]() {
-        qCInfo(lcUpdater) << "Update" << newVersion << "skipped by user";
+        qCInfo(lcUpdater) << u"Update" << newVersion << u"skipped by user";
         setPreviouslySkippedVersion(newVersion);
         widget->deleteLater();
     });
@@ -168,10 +168,10 @@ void AppImageUpdater::versionInfoArrived(const UpdateInfo &info)
         // binding AppImageUpdaterShim shared pointer to finished callback makes sure the updater is cleaned up when it's done
         connect(appImageUpdaterShim, &AppImageUpdaterShim::finished, this, [this](bool succeeded) {
             if (succeeded) {
-                qCInfo(lcUpdater) << "AppImage update complete";
+                qCInfo(lcUpdater) << u"AppImage update complete";
                 setDownloadState(DownloadComplete);
             } else {
-                qCInfo(lcUpdater) << "AppImage update failed";
+                qCInfo(lcUpdater) << u"AppImage update failed";
                 setDownloadState(DownloadFailed);
             }
         });

@@ -112,7 +112,7 @@ private Q_SLOTS:
             QCOMPARE(storedRecord.remotePerm(), record.remotePerm());
             QCOMPARE(storedRecord.checksumHeader(), record.checksumHeader());
 
-            // qDebug()<< "OOOOO " << storedRecord._modtime.toTime_t() << record._modtime.toTime_t();
+            // qDebug()<< u"OOOOO " << storedRecord._modtime.toTime_t() << record._modtime.toTime_t();
 
             // Attention: compare time_t types here, as QDateTime seem to maintain
             // milliseconds internally, which disappear in sqlite. Go for full seconds here.
@@ -277,7 +277,7 @@ private Q_SLOTS:
             for (const auto &elem : std::as_const(elements)) {
                 SyncJournalFileRecord record = _db.getFileRecord(elem);
                 if (!record.isValid()) {
-                    qWarning() << "Missing record: " << elem;
+                    qWarning() << u"Missing record: " << elem;
                     ok = false;
                 }
             }

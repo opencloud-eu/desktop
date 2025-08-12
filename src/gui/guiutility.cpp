@@ -55,7 +55,7 @@ bool Utility::openBrowser(const QUrl &url, QWidget *errorWidgetParent)
                     "URL %1. Maybe no default browser is configured?")
                     .arg(url.toString()));
         }
-        qCWarning(lcGuiUtility) << "QDesktopServices::openUrl failed for" << url;
+        qCWarning(lcGuiUtility) << u"QDesktopServices::openUrl failed for" << url;
         return false;
     }
     return true;
@@ -79,7 +79,7 @@ bool Utility::openEmailComposer(const QString &subject, const QString &body, QWi
                     "create a new message. Maybe no default email client is "
                     "configured?"));
         }
-        qCWarning(lcGuiUtility) << "QDesktopServices::openUrl failed for" << url;
+        qCWarning(lcGuiUtility) << u"QDesktopServices::openUrl failed for" << url;
         return false;
     }
     return true;
@@ -136,9 +136,9 @@ std::pair<QString, QUuid> Utility::getDirectorySyncRootMarkings(const QString &p
 void Utility::unmarkDirectoryAsSyncRoot(const QString &path)
 {
     if (!FileSystem::Tags::remove(path, dirTag())) {
-        qCWarning(lcGuiUtility) << "Failed to remove tag on" << path;
+        qCWarning(lcGuiUtility) << u"Failed to remove tag on" << path;
     }
     if (!FileSystem::Tags::remove(path, uuidTag())) {
-        qCWarning(lcGuiUtility) << "Failed to remove uuid tag on" << path;
+        qCWarning(lcGuiUtility) << u"Failed to remove uuid tag on" << path;
     }
 }

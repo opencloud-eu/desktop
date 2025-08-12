@@ -104,14 +104,14 @@ CoreJob *CheckServerJobFactory::startJob(const QUrl &url, QObject *parent)
         if (targetUrl.scheme() == QLatin1String("https")
             && job->reply()->sslConfiguration().sessionTicket().isEmpty()
             && job->reply()->error() == QNetworkReply::NoError) {
-            qCWarning(lcCheckServerJob) << "No SSL session identifier / session ticket is used, this might impact sync performance negatively.";
+            qCWarning(lcCheckServerJob) << u"No SSL session identifier / session ticket is used, this might impact sync performance negatively.";
         }
 
         if (!Utility::urlEqual(serverUrl, targetUrl)) {
             if (job->_redirectDistinct) {
                 serverUrl = targetUrl;
             } else {
-                qCWarning(lcCheckServerJob) << "We got a temporary moved server aborting";
+                qCWarning(lcCheckServerJob) << u"We got a temporary moved server aborting";
                 setJobError(job, QStringLiteral("Illegal redirect by server"));
                 return;
             }
@@ -119,10 +119,10 @@ CoreJob *CheckServerJobFactory::startJob(const QUrl &url, QObject *parent)
 
         const int httpStatus = job->reply()->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
         if (job->reply()->error() == QNetworkReply::TooManyRedirectsError) {
-            qCWarning(lcCheckServerJob) << "error:" << job->reply()->errorString();
+            qCWarning(lcCheckServerJob) << u"error:" << job->reply()->errorString();
             setJobError(job, job->reply()->errorString());
         } else if (httpStatus != 200 || job->reply()->bytesAvailable() == 0) {
-            qCWarning(lcCheckServerJob) << "error: status.php replied" << httpStatus;
+            qCWarning(lcCheckServerJob) << u"error: status.php replied" << httpStatus;
             setJobError(job, QStringLiteral("Invalid HTTP status code received for status.php: %1").arg(httpStatus));
         } else {
             const QByteArray body = job->reply()->peek(4 * 1024);
@@ -130,16 +130,16 @@ CoreJob *CheckServerJobFactory::startJob(const QUrl &url, QObject *parent)
             auto status = QJsonDocument::fromJson(body, &error);
             // empty or invalid response
             if (error.error != QJsonParseError::NoError || status.isNull()) {
-                qCWarning(lcCheckServerJob) << "status.php from server is not valid JSON!" << body << job->reply()->request().url() << error.errorString();
+                qCWarning(lcCheckServerJob) << u"status.php from server is not valid JSON!" << body << job->reply()->request().url() << error.errorString();
             }
 
-            qCInfo(lcCheckServerJob) << "status.php returns: " << status << " " << job->reply()->error() << " Reply: " << job->reply();
+            qCInfo(lcCheckServerJob) << u"status.php returns: " << status << u" " << job->reply()->error() << u" Reply: " << job->reply();
 
             if (status.object().contains(QStringLiteral("installed"))) {
                 CheckServerJobResult result(status.object(), serverUrl);
                 setJobResult(job, QVariant::fromValue(result));
             } else {
-                qCWarning(lcCheckServerJob) << "No proper answer on " << job->reply()->url();
+                qCWarning(lcCheckServerJob) << u"No proper answer on " << job->reply()->url();
                 setJobError(job, QStringLiteral("Did not receive expected reply from server"));
             }
         }

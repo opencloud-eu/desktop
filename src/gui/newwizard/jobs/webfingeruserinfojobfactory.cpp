@@ -69,11 +69,11 @@ CoreJob *WebFingerInstanceLookupJobFactory::startJob(const QUrl &url, QObject *p
             return;
         }
 
-        qCDebug(lcWebFingerUserInfoJob) << "retrieved instances list for user" << json.object().value(QStringLiteral("subject")).toString();
+        qCDebug(lcWebFingerUserInfoJob) << u"retrieved instances list for user" << json.object().value(QStringLiteral("subject")).toString();
 
         const auto links = json.object().value(QStringLiteral("links")).toArray();
 
-        qCDebug(lcWebFingerUserInfoJob) << "found links:" << links;
+        qCDebug(lcWebFingerUserInfoJob) << u"found links:" << links;
 
         // we only intend to return server instance(s) currently, additional information is discarded
         QVector<QUrl> instanceUrls;
@@ -85,7 +85,7 @@ CoreJob *WebFingerInstanceLookupJobFactory::startJob(const QUrl &url, QObject *p
             const QString href = linkObject.value(QStringLiteral("href")).toString();
 
             if (rel != WebFinger::relId()) {
-                qCDebug(lcWebFingerUserInfoJob) << "skipping invalid link" << href << "with rel" << rel;
+                qCDebug(lcWebFingerUserInfoJob) << u"skipping invalid link" << href << u"with rel" << rel;
                 continue;
             }
 

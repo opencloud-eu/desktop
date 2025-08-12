@@ -40,7 +40,7 @@ HttpCredentialsGui::HttpCredentialsGui(const QString &accessToken, const QString
 
 void HttpCredentialsGui::restartOauth()
 {
-    qCDebug(lcHttpCredentialsGui) << "showing modal dialog asking user to log in again via OAuth2";
+    qCDebug(lcHttpCredentialsGui) << u"showing modal dialog asking user to log in again via OAuth2";
     if (_asyncAuth) {
         return;
     }

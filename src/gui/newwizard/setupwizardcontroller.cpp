@@ -55,17 +55,17 @@ SetupWizardController::SetupWizardController(SettingsDialog *parent)
 
     // allow settings dialog to clean up the wizard controller and all the objects it created
     connect(_context->window(), &SetupWizardWidget::rejected, this, [this]() {
-        qCDebug(lcSetupWizardController) << "wizard window closed";
+        qCDebug(lcSetupWizardController) << u"wizard window closed";
         Q_EMIT finished(nullptr, SyncMode::Invalid);
     });
 
     connect(_context->window(), &SetupWizardWidget::navigationEntryClicked, this, [this](SetupWizardState clickedState) {
-        qCDebug(lcSetupWizardController) << "pagination entry clicked: current state" << _currentState << "clicked state" << clickedState;
+        qCDebug(lcSetupWizardController) << u"pagination entry clicked: current state" << _currentState << u"clicked state" << clickedState;
         changeStateTo(clickedState);
     });
 
     connect(_context->window(), &SetupWizardWidget::nextButtonClicked, this, [this]() {
-        qCDebug(lcSetupWizardController) << "next button clicked, current state" << _currentState;
+        qCDebug(lcSetupWizardController) << u"next button clicked, current state" << _currentState;
         _currentState->evaluatePage();
     });
 
@@ -75,7 +75,7 @@ SetupWizardController::SetupWizardController(SettingsDialog *parent)
         const auto currentStateIdx = static_cast<int>(_currentState->state());
         Q_ASSERT(currentStateIdx > 0);
 
-        qCDebug(lcSetupWizardController) << "back button clicked, current state" << _currentState;
+        qCDebug(lcSetupWizardController) << u"back button clicked, current state" << _currentState;
 
         auto previousState = static_cast<SetupWizardState>(currentStateIdx - 1);
         changeStateTo(previousState);
@@ -127,7 +127,7 @@ void SetupWizardController::changeStateTo(SetupWizardState nextState, ChangeReas
     Q_ASSERT(_currentState != nullptr);
     Q_ASSERT(_currentState->state() == nextState);
 
-    qCDebug(lcSetupWizardController) << "Current wizard state:" << _currentState->state();
+    qCDebug(lcSetupWizardController) << u"Current wizard state:" << _currentState->state();
 
     connect(_currentState, &AbstractSetupWizardState::evaluationSuccessful, this, [this]() {
         switch (_currentState->state()) {

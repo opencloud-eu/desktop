@@ -93,7 +93,7 @@ void PUTFileJob::finished()
 {
     _device->close();
 
-    qCInfo(lcPutJob) << "PUT of" << reply()->request().url().toString() << "FINISHED WITH STATUS" << replyStatusString()
+    qCInfo(lcPutJob) << u"PUT of" << reply()->request().url().toString() << u"FINISHED WITH STATUS" << replyStatusString()
                      << reply()->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt()
                      << reply()->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toString();
 }
@@ -428,10 +428,10 @@ void PropagateUploadFileCommon::checkResettingErrors()
         auto uploadInfo = propagator()->_journal->getUploadInfo(_item->localName());
         uploadInfo._errorCount += 1;
         if (uploadInfo._errorCount > 3) {
-            qCInfo(lcPropagateUpload) << "Reset transfer of" << _item->localName() << "due to repeated error" << _item->_httpErrorCode;
+            qCInfo(lcPropagateUpload) << u"Reset transfer of" << _item->localName() << u"due to repeated error" << _item->_httpErrorCode;
             uploadInfo = SyncJournalDb::UploadInfo();
         } else {
-            qCInfo(lcPropagateUpload) << "Error count for maybe-reset error" << _item->_httpErrorCode << "on file" << _item->localName() << "is"
+            qCInfo(lcPropagateUpload) << u"Error count for maybe-reset error" << _item->_httpErrorCode << u"on file" << _item->localName() << u"is"
                                       << uploadInfo._errorCount;
         }
         propagator()->_journal->setUploadInfo(_item->localName(), uploadInfo);
@@ -565,7 +565,7 @@ void PropagateUploadFileCommon::finalize()
     }
 
     if (_item->_remotePerm.isNull()) {
-        qCWarning(lcPropagateUpload) << "PropagateUploadFileCommon::finalize: Missing permissions for" << propagator()->fullRemotePath(_item->localName());
+        qCWarning(lcPropagateUpload) << u"PropagateUploadFileCommon::finalize: Missing permissions for" << propagator()->fullRemotePath(_item->localName());
         auto *permCheck = new PropfindJob(
             propagator()->account(), propagator()->webDavUrl(), propagator()->fullRemotePath(_item->localName()), PropfindJob::Depth::Zero, this);
         addChildJob(permCheck);

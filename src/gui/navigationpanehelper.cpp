@@ -22,7 +22,7 @@ void OCC::NavigationPaneHelper::removeLegacyCloudStorageRegistry()
     // that matches ours when we saved.
 
     auto removeGroup = [](const QString &key) {
-        qCDebug(lcNavPane) << "Removing" << key;
+        qCDebug(lcNavPane) << u"Removing" << key;
         QSettings settings(key, QSettings::NativeFormat);
         settings.remove(QString());
     };

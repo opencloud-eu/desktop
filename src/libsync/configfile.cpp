@@ -136,7 +136,7 @@ bool ConfigFile::setConfDir(const QString &value)
     }
     if (fi.exists() && fi.isDir()) {
         dirPath = fi.absoluteFilePath();
-        qCInfo(lcConfigFile) << "Using custom config dir " << dirPath;
+        qCInfo(lcConfigFile) << u"Using custom config dir " << dirPath;
         _confDir = dirPath;
         return true;
     }
@@ -294,7 +294,7 @@ chrono::milliseconds ConfigFile::remotePollInterval(std::chrono::seconds default
     auto remoteInterval = millisecondsValue(settings, remotePollIntervalC(), defaultPollInterval);
     if (remoteInterval < chrono::seconds(5)) {
         remoteInterval = defaultPollInterval;
-        qCWarning(lcConfigFile) << "Remote Interval is less than 5 seconds, reverting to" << remoteInterval.count();
+        qCWarning(lcConfigFile) << u"Remote Interval is less than 5 seconds, reverting to" << remoteInterval.count();
     }
     return remoteInterval;
 }
@@ -314,7 +314,7 @@ chrono::milliseconds ConfigFile::updateCheckInterval() const
 
     auto minInterval = chrono::minutes(5);
     if (interval < minInterval) {
-        qCWarning(lcConfigFile) << "Update check interval less than five minutes, resetting to 5 minutes";
+        qCWarning(lcConfigFile) << u"Update check interval less than five minutes, resetting to 5 minutes";
         interval = minInterval;
     }
     return interval;
@@ -570,12 +570,12 @@ void ConfigFile::setupDefaultExcludeFilePaths(ExcludedFiles &excludedFiles)
 {
     ConfigFile cfg;
     QString systemList = cfg.excludeFile(ConfigFile::SystemScope);
-    qCInfo(lcConfigFile) << "Adding system ignore list to csync:" << systemList;
+    qCInfo(lcConfigFile) << u"Adding system ignore list to csync:" << systemList;
     excludedFiles.addExcludeFilePath(systemList);
 
     QString userList = cfg.excludeFile(ConfigFile::UserScope);
     if (QFile::exists(userList)) {
-        qCInfo(lcConfigFile) << "Adding user defined ignore list to csync:" << userList;
+        qCInfo(lcConfigFile) << u"Adding user defined ignore list to csync:" << userList;
         excludedFiles.addExcludeFilePath(userList);
     }
 }

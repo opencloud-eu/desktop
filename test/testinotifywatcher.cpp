@@ -22,7 +22,7 @@ private:
 private Q_SLOTS:
     void initTestCase() {
         _root = QDir::tempPath() + QStringLiteral("/test_") + QString::number(QRandomGenerator::global()->generate());
-        qDebug() << "creating test directory tree in " << _root;
+        qDebug() << u"creating test directory tree in " << _root;
         QDir rootDir(_root);
 
         rootDir.mkpath(_root + QStringLiteral("/a1/b1/c1"));

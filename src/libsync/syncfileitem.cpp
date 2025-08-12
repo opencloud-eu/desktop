@@ -94,15 +94,15 @@ QString Utility::enumToDisplayName(SyncFileItem::Status s)
 QDebug operator<<(QDebug debug, const OCC::SyncFileItem *item)
 {
     if (!item) {
-        debug << "OCC::SyncFileItem(0x0)";
+        debug << u"OCC::SyncFileItem(0x0)";
     } else {
         QDebugStateSaver saver(debug);
         debug.setAutoInsertSpaces(false);
-        debug << "OCC::SyncFileItem(file=" << item->localName();
+        debug << u"OCC::SyncFileItem(file=" << item->localName();
         if (!item->_renameTarget.isEmpty()) {
-            debug << ", destination=" << item->destination();
+            debug << u", destination=" << item->destination();
         }
-        debug << ", type=" << item->_type << ", instruction=" << item->instruction() << ", status=" << item->_status << ")";
+        debug << u", type=" << item->_type << u", instruction=" << item->instruction() << u", status=" << item->_status << u")";
     }
     return debug;
 }

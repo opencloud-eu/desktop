@@ -51,7 +51,7 @@ bool FileSystem::fileEquals(const QString &fn1, const QString &fn2)
     QFile f1(fn1);
     QFile f2(fn2);
     if (!f1.open(QIODevice::ReadOnly) || !f2.open(QIODevice::ReadOnly)) {
-        qCWarning(lcFileSystem) << "fileEquals: Failed to open " << fn1 << "or" << fn2;
+        qCWarning(lcFileSystem) << u"fileEquals: Failed to open " << fn1 << u"or" << fn2;
         return false;
     }
 
@@ -107,7 +107,7 @@ bool FileSystem::setModTime(const std::filesystem::path &filename, time_t modTim
     std::error_code rc;
     std::filesystem::last_write_time(filename, time_tToFileTime(modTime), rc);
     if (rc) {
-        qCWarning(lcFileSystem) << "Error setting mtime for" << filename << "failed: rc" << rc.value() << ", error message:" << rc.message();
+        qCWarning(lcFileSystem) << u"Error setting mtime for" << filename << u"failed: rc" << rc.value() << u", error message:" << rc.message();
         Q_ASSERT(!rc);
         return false;
     }
@@ -135,7 +135,7 @@ bool FileSystem::fileChanged(const std::filesystem::path &path, const FileChange
     const auto dirent = std::filesystem::directory_entry{path};
     if (!dirent.exists()) {
         if (previousInfo.mtime != -1) {
-            qCDebug(lcFileSystem) << path.native() << "was removed";
+            qCDebug(lcFileSystem) << path.native() << u"was removed";
             return true;
         } else {
             // the file didn't exist and doesn't exist
@@ -148,30 +148,30 @@ bool FileSystem::fileChanged(const std::filesystem::path &path, const FileChange
     if (previousInfo.type != ItemTypeUnsupported) {
         // only check for dir and file, as virtual files are irrelevant here
         if (previousInfo.type == ItemTypeDirectory && type == ItemTypeFile) {
-            qCDebug(lcFileSystem) << "File" << path.native() << "has changed: from dir to file";
+            qCDebug(lcFileSystem) << u"File" << path.native() << u"has changed: from dir to file";
             return true;
         }
         if (previousInfo.type == ItemTypeFile && type == ItemTypeDirectory) {
-            qCDebug(lcFileSystem) << "File" << path.native() << "has changed: from file to dir";
+            qCDebug(lcFileSystem) << u"File" << path.native() << u"has changed: from file to dir";
             return true;
         }
     }
     const auto info = LocalInfo(dirent, type);
     if (previousInfo.inode.has_value() && previousInfo.inode.value() != info.inode()) {
-        qCDebug(lcFileSystem) << "File" << path.native() << "has changed: inode" << previousInfo.inode.value() << "<-->" << info.inode();
+        qCDebug(lcFileSystem) << u"File" << path.native() << u"has changed: inode" << previousInfo.inode.value() << u"<-->" << info.inode();
         return true;
     }
     if (info.isDirectory()) {
         if (previousInfo.size != 0) {
-            qCDebug(lcFileSystem) << "File" << path.native() << "has changed: from file to dir";
+            qCDebug(lcFileSystem) << u"File" << path.native() << u"has changed: from file to dir";
             return true;
         }
     } else if (info.size() != previousInfo.size) {
-        qCDebug(lcFileSystem) << "File" << path.native() << "has changed: size: " << previousInfo.size << "<->" << info.size();
+        qCDebug(lcFileSystem) << u"File" << path.native() << u"has changed: size: " << previousInfo.size << u"<->" << info.size();
         return true;
     }
     if (info.modtime() != previousInfo.mtime) {
-        qCDebug(lcFileSystem) << "File" << path.native() << "has changed: mtime: " << previousInfo.mtime << "<->" << info.modtime();
+        qCDebug(lcFileSystem) << u"File" << path.native() << u"has changed: mtime: " << previousInfo.mtime << u"<->" << info.modtime();
         return true;
     }
     return false;
@@ -183,9 +183,9 @@ qint64 FileSystem::getSize(const std::filesystem::path &filename)
     const quint64 size = std::filesystem::file_size(filename, ec);
     if (ec) {
         if (!std::filesystem::is_directory(filename)) {
-            qCCritical(lcFileSystem) << "Error getting size for" << filename << ec.value() << ec.message();
+            qCCritical(lcFileSystem) << u"Error getting size for" << filename << ec.value() << ec.message();
         } else {
-            qCWarning(lcFileSystem) << "Called getFileSize on a directory";
+            qCWarning(lcFileSystem) << u"Called getFileSize on a directory";
             Q_ASSERT(false);
         }
         return 0;
@@ -220,7 +220,7 @@ bool FileSystem::removeRecursively(const QString &path,
                     success->push_back({ di.filePath(), isDir });
                 } else {
                     errors->push_back({ { di.filePath(), isDir }, removeError });
-                    qCWarning(lcFileSystem) << "Error removing " << di.filePath() << ':' << removeError;
+                    qCWarning(lcFileSystem) << u"Error removing " << di.filePath() << ':' << removeError;
                     allRemoved = false;
                 }
             }
@@ -232,7 +232,7 @@ bool FileSystem::removeRecursively(const QString &path,
             success->push_back({ path, true });
         } else {
             errors->push_back({ { path, true }, QCoreApplication::translate("FileSystem", "Could not remove folder") });
-            qCWarning(lcFileSystem) << "Error removing folder" << path;
+            qCWarning(lcFileSystem) << u"Error removing folder" << path;
         }
     }
     return allRemoved;

@@ -58,15 +58,15 @@ void WebFinger::start(const QUrl &url, const QString &resourceId)
                     const auto links = obj.value(QLatin1String("links")).toArray();
                     if (!links.empty()) {
                         _href = QUrl::fromEncoded(links.first().toObject().value(QLatin1String("href")).toString().toUtf8());
-                        qCInfo(lcWebFinger) << "Webfinger provided" << _href << "as server";
+                        qCInfo(lcWebFinger) << u"Webfinger provided" << _href << u"as server";
                     } else {
-                        qCWarning(lcWebFinger) << reply->url() << "Did not reply a valid link";
+                        qCWarning(lcWebFinger) << reply->url() << u"Did not reply a valid link";
                     }
                 } else {
-                    qCWarning(lcWebFinger) << "Failed with" << _error.errorString();
+                    qCWarning(lcWebFinger) << u"Failed with" << _error.errorString();
                 }
             } else {
-                qCWarning(lcWebFinger) << "Failed with status code" << status;
+                qCWarning(lcWebFinger) << u"Failed with status code" << status;
                 _error.error = QJsonParseError::MissingObject;
             }
             Q_EMIT finished();

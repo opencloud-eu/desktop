@@ -202,7 +202,7 @@ void SyncFileStatusTracker::slotAboutToPropagate(const SyncFileItemSet &items)
     std::swap(_syncProblems, oldProblems);
 
     for (const auto &item : std::as_const(items)) {
-        qCDebug(lcStatusTracker) << "Investigating" << item->destination() << item->_status << item->instruction();
+        qCDebug(lcStatusTracker) << u"Investigating" << item->destination() << item->_status << item->instruction();
         _dirtyPaths.remove(item->destination());
         _dirtyPaths.remove(item->_originalFile);
 
@@ -245,7 +245,7 @@ void SyncFileStatusTracker::slotAboutToPropagate(const SyncFileItemSet &items)
 
 void SyncFileStatusTracker::slotItemCompleted(const SyncFileItemPtr &item)
 {
-    qCDebug(lcStatusTracker) << "Item completed" << item->destination() << item->_status << item->instruction();
+    qCDebug(lcStatusTracker) << u"Item completed" << item->destination() << item->_status << item->instruction();
 
     if (hasErrorStatus(*item)) {
         _syncProblems[item->destination()] = SyncFileStatus::StatusError;

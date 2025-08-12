@@ -162,7 +162,7 @@ void AccountSettings::slotAddFolder()
 
     connect(folderWizard, &QDialog::accepted, this, &AccountSettings::slotFolderWizardAccepted);
     connect(folderWizard, &QDialog::rejected, this, [] {
-        qCInfo(lcAccountSettings) << "Folder wizard cancelled";
+        qCInfo(lcAccountSettings) << u"Folder wizard cancelled";
         FolderMan::instance()->setSyncEnabled(true);
     });
 
@@ -173,7 +173,7 @@ void AccountSettings::slotAddFolder()
 void AccountSettings::slotFolderWizardAccepted()
 {
     FolderWizard *folderWizard = qobject_cast<FolderWizard *>(sender());
-    qCInfo(lcAccountSettings) << "Folder wizard completed";
+    qCInfo(lcAccountSettings) << u"Folder wizard completed";
 
     const auto config = folderWizard->result();
 
@@ -192,7 +192,7 @@ void AccountSettings::slotFolderWizardAccepted()
 void AccountSettings::slotRemoveCurrentFolder(Folder *folder)
 {
     // TODO: move to qml
-    qCInfo(lcAccountSettings) << "Remove Folder " << folder->path();
+    qCInfo(lcAccountSettings) << u"Remove Folder " << folder->path();
     auto messageBox = new QMessageBox(QMessageBox::Question, tr("Confirm removal of Space"),
         tr("<p>Do you really want to stop syncing the Space <i>\"%1\"</i>?</p>"
            "<p><b>Note:</b> This will <b>not</b> delete any files.</p>")
@@ -216,7 +216,7 @@ void AccountSettings::slotEnableVfsCurrentFolder(Folder *folder)
         if (!folder) {
             return;
         }
-        qCInfo(lcAccountSettings) << "Enabling vfs support for folder" << folder->path();
+        qCInfo(lcAccountSettings) << u"Enabling vfs support for folder" << folder->path();
 
         // Change the folder vfs mode and load the plugin
         folder->setVirtualFilesEnabled(true);
@@ -246,7 +246,7 @@ void AccountSettings::slotDisableVfsCurrentFolder(Folder *folder)
             return;
         }
 
-        qCInfo(lcAccountSettings) << "Disabling vfs support for folder" << folder->path();
+        qCInfo(lcAccountSettings) << u"Disabling vfs support for folder" << folder->path();
 
         // Also wipes virtual files, schedules remote discovery
         folder->setVirtualFilesEnabled(false);
@@ -271,7 +271,7 @@ void AccountSettings::showConnectionLabel(const QString &message, SyncResult::St
 void AccountSettings::slotEnableCurrentFolder(Folder *folder, bool terminate)
 {
     Q_ASSERT(folder);
-    qCInfo(lcAccountSettings) << "Application: enable folder with alias " << folder->path();
+    qCInfo(lcAccountSettings) << u"Application: enable folder with alias " << folder->path();
     bool currentlyPaused = false;
 
     // this sets the folder status to disabled but does not interrupt it.
@@ -381,7 +381,7 @@ void AccountSettings::slotAccountStateChanged()
 {
     const AccountState::State state = _accountState->state();
     const AccountPtr account = _accountState->account();
-    qCDebug(lcAccountSettings) << "Account state changed to" << state << "for account" << account;
+    qCDebug(lcAccountSettings) << u"Account state changed to" << state << u"for account" << account;
 
     FolderMan *folderMan = FolderMan::instance();
     for (auto *folder : folderMan->folders()) {
@@ -466,7 +466,7 @@ void AccountSettings::addModalLegacyDialog(QWidget *widget, ModalWidgetSizePolic
 {
     if (!widget->testAttribute(Qt::WA_DeleteOnClose)) { // DEBUG CODE! See https://github.com/owncloud/client/issues/11673
         // Early check to see if the attribute gets unset before the second/real check below
-        qCWarning(lcAccountSettings) << "Missing WA_DeleteOnClose! (1)" << widget->metaObject() << widget;
+        qCWarning(lcAccountSettings) << u"Missing WA_DeleteOnClose! (1)" << widget->metaObject() << widget;
     }
 
     // create a widget filling the stacked widget
@@ -496,7 +496,7 @@ void AccountSettings::addModalLegacyDialog(QWidget *widget, ModalWidgetSizePolic
 
     // the widget is supposed to behave like a dialog and we connect to its destuction
     if (!widget->testAttribute(Qt::WA_DeleteOnClose)) { // DEBUG CODE! See https://github.com/owncloud/client/issues/11673
-        qCWarning(lcAccountSettings) << "Missing WA_DeleteOnClose! (2)" << widget->metaObject() << widget;
+        qCWarning(lcAccountSettings) << u"Missing WA_DeleteOnClose! (2)" << widget->metaObject() << widget;
     }
     Q_ASSERT(widget->testAttribute(Qt::WA_DeleteOnClose));
     connect(widget, &QWidget::destroyed, this, [this, outerWidget] {

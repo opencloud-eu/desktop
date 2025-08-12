@@ -174,7 +174,7 @@ void GeneralSettings::loadLanguageNamesIntoDropdown()
         // fallback if there's a locale whose name Qt doesn't know
         // this indicates a broken filename
         if (nativeLanguageName.isEmpty()) {
-            qCDebug(lcGeneralSettings) << "Warning: could not find native language name for locale" << availableLocale;
+            qCDebug(lcGeneralSettings) << u"Warning: could not find native language name for locale" << availableLocale;
             nativeLanguageName = tr("unknown (%1)").arg(availableLocale);
         }
 

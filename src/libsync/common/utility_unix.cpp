@@ -71,12 +71,12 @@ void Utility::setLaunchOnStartup(const QString &appName, const QString &guiName,
     QString desktopFileLocation = userAutoStartPath + appName + QLatin1String(".desktop");
     if (enable) {
         if (!QDir().exists(userAutoStartPath) && !QDir().mkpath(userAutoStartPath)) {
-            qCWarning(lcUtility) << "Could not create autostart folder" << userAutoStartPath;
+            qCWarning(lcUtility) << u"Could not create autostart folder" << userAutoStartPath;
             return;
         }
         QFile iniFile(desktopFileLocation);
         if (!iniFile.open(QIODevice::WriteOnly)) {
-            qCWarning(lcUtility) << "Could not write auto start entry" << desktopFileLocation;
+            qCWarning(lcUtility) << u"Could not write auto start entry" << desktopFileLocation;
             return;
         }
 
@@ -113,16 +113,16 @@ void Utility::setLaunchOnStartup(const QString &appName, const QString &guiName,
            << QLatin1String("Name=") << guiName << Qt::endl
            << QLatin1String("GenericName=") << QLatin1String("File Synchronizer") << Qt::endl
            << QLatin1String("Exec=") << autostartApplicationPath << Qt::endl
-           << QLatin1String("Terminal=") << "false" << Qt::endl
+           << QLatin1String("Terminal=") << u"false" << Qt::endl
            << QLatin1String("Icon=") << appName.toLower() << Qt::endl // always use lowercase for icons
            << QLatin1String("Categories=") << QLatin1String("Network") << Qt::endl
            << QLatin1String("Type=") << QLatin1String("Application") << Qt::endl
-           << QLatin1String("StartupNotify=") << "false" << Qt::endl
-           << QLatin1String("X-GNOME-Autostart-enabled=") << "true" << Qt::endl
+           << QLatin1String("StartupNotify=") << u"false" << Qt::endl
+           << QLatin1String("X-GNOME-Autostart-enabled=") << u"true" << Qt::endl
            << QLatin1String("X-GNOME-Autostart-Delay=10") << Qt::endl;
     } else {
         if (!QFile::remove(desktopFileLocation)) {
-            qCWarning(lcUtility) << "Could not remove autostart desktop file";
+            qCWarning(lcUtility) << u"Could not remove autostart desktop file";
         }
     }
 }

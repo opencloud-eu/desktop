@@ -27,23 +27,23 @@ namespace {
 void loadQNetworkInformationBackend()
 {
     if (!QNetworkInformation::loadDefaultBackend()) {
-        qCWarning(lcNetInfo) << "Failed to load default backend of QNetworkInformation.";
+        qCWarning(lcNetInfo) << u"Failed to load default backend of QNetworkInformation.";
         if (!QNetworkInformation::loadBackendByFeatures(QNetworkInformation::Feature::Metered)) {
-            qCWarning(lcNetInfo) << "Failed to load backend of QNetworkInformation by metered feature.";
+            qCWarning(lcNetInfo) << u"Failed to load backend of QNetworkInformation by metered feature.";
             if (!QNetworkInformation::loadBackendByFeatures(QNetworkInformation::Feature::Reachability)) {
-                qCWarning(lcNetInfo) << "Failed to load backend of QNetworkInformation by reachability feature.";
-                qCWarning(lcNetInfo) << "Available backends:" << QNetworkInformation::availableBackends().join(QStringLiteral(", "));
+                qCWarning(lcNetInfo) << u"Failed to load backend of QNetworkInformation by reachability feature.";
+                qCWarning(lcNetInfo) << u"Available backends:" << QNetworkInformation::availableBackends().join(QStringLiteral(", "));
                 return;
             }
         }
     }
-    qCDebug(lcNetInfo) << "Loaded network information backend:" << QNetworkInformation::instance()->backendName();
-    qCDebug(lcNetInfo) << "Supported features:" << QNetworkInformation::instance()->supportedFeatures();
-    qCDebug(lcNetInfo) << "Available backends:" << QNetworkInformation::availableBackends().join(QStringLiteral(", "));
+    qCDebug(lcNetInfo) << u"Loaded network information backend:" << QNetworkInformation::instance()->backendName();
+    qCDebug(lcNetInfo) << u"Supported features:" << QNetworkInformation::instance()->supportedFeatures();
+    qCDebug(lcNetInfo) << u"Available backends:" << QNetworkInformation::availableBackends().join(QStringLiteral(", "));
 
     if (auto qni = QNetworkInformation::instance()) {
         QObject::connect(qni, &QNetworkInformation::reachabilityChanged, qni, [qni](QNetworkInformation::Reachability reachability) {
-            qCInfo(lcNetInfo) << "Connection Status changed to:" << reachability << "captive portal status:" << qni->isBehindCaptivePortal();
+            qCInfo(lcNetInfo) << u"Connection Status changed to:" << reachability << u"captive portal status:" << qni->isBehindCaptivePortal();
         });
     }
 }
@@ -96,7 +96,7 @@ void NetworkInformation::setForcedCaptivePortal(bool onoff)
 {
     if (_forcedCaptivePortal != onoff) {
         _forcedCaptivePortal = onoff;
-        qCDebug(lcNetInfo) << "Switching forced captive portal to" << onoff;
+        qCDebug(lcNetInfo) << u"Switching forced captive portal to" << onoff;
 
         bool behindCaptivePortal = false;
 
@@ -125,7 +125,7 @@ bool NetworkInformation::isBehindCaptivePortal() const
 
 void NetworkInformation::slotIsBehindCaptivePortalChanged(bool state)
 {
-    qCDebug(lcNetInfo) << "OS signals behind captive portal changed to" << state << "forced captive portal flag:" << _forcedCaptivePortal;
+    qCDebug(lcNetInfo) << u"OS signals behind captive portal changed to" << state << u"forced captive portal flag:" << _forcedCaptivePortal;
 
     if (!_forcedCaptivePortal) {
         Q_EMIT isBehindCaptivePortalChanged(state);

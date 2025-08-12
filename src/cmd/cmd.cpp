@@ -146,7 +146,7 @@ void sync(const SyncCTX &ctx, const QUrl &spaceUrl)
         if (!ctx.options.unsyncedfolders.isEmpty()) {
             QFile f(ctx.options.unsyncedfolders);
             if (!f.open(QFile::ReadOnly)) {
-                qCritical() << "Could not open file containing the list of unsynced folders: " << ctx.options.unsyncedfolders;
+                qCritical() << u"Could not open file containing the list of unsynced folders: " << ctx.options.unsyncedfolders;
             } else {
                 // filter out empty lines and comments
                 auto selectiveSyncList = QString::fromUtf8(f.readAll())
@@ -178,33 +178,32 @@ void sync(const SyncCTX &ctx, const QUrl &spaceUrl)
 
     QObject::connect(engine, &SyncEngine::finished, engine, [engine, ctx, restartCount = std::make_shared<int>(0)](bool result) {
         if (!result) {
-            qWarning() << "Failed to sync";
+            qWarning() << u"Failed to sync";
             exit(EXIT_FAILURE);
         } else {
             if (engine->isAnotherSyncNeeded()) {
                 if (*restartCount < ctx.options.restartTimes) {
                     (*restartCount)++;
-                    qDebug() << "Restarting Sync, because another sync is needed" << *restartCount;
+                    qDebug() << u"Restarting Sync, because another sync is needed" << *restartCount;
                     engine->startSync();
                     return;
                 }
-                qWarning() << "Another sync is needed, but not done because restart count is exceeded" << *restartCount;
+                qWarning() << u"Another sync is needed, but not done because restart count is exceeded" << *restartCount;
             } else {
-                qInfo() << "Sync succeeded";
+                qInfo() << u"Sync succeeded";
                 qApp->quit();
             }
         }
     });
-    QObject::connect(engine, &SyncEngine::syncError, engine,
-        [](const QString &error) { qWarning() << "Sync error:" << error; });
+    QObject::connect(engine, &SyncEngine::syncError, engine, [](const QString &error) { qWarning() << u"Sync error:" << error; });
     QObject::connect(engine, &SyncEngine::itemCompleted, engine, [](const SyncFileItemPtr &item) {
         if (item->hasErrorStatus()) {
             switch (item->_status) {
             case SyncFileItem::Excluded:
-                qDebug() << "Sync excluded file:" << item->_errorString;
+                qDebug() << u"Sync excluded file:" << item->_errorString;
                 break;
             default:
-                qWarning() << "Sync error:" << item->_status << item->_errorString;
+                qWarning() << u"Sync error:" << item->_status << item->_errorString;
             }
         }
     });
@@ -220,7 +219,7 @@ void sync(const SyncCTX &ctx, const QUrl &spaceUrl)
     }
 
     if (!engine->reloadExcludes()) {
-        qCritical() << "Cannot load system exclude list or list supplied via --exclude";
+        qCritical() << u"Cannot load system exclude list or list supplied via --exclude";
         exit(EXIT_FAILURE);
     }
     engine->startSync();
@@ -248,14 +247,14 @@ void setupCredentials(SyncCTX &ctx)
 
             port = pList.at(2).toUInt(&ok);
             if (!ok || port > std::numeric_limits<uint16_t>::max()) {
-                qCritical() << "Invalid port number";
+                qCritical() << u"Invalid port number";
                 exit(EXIT_FAILURE);
             }
 
             QNetworkProxyFactory::setUseSystemConfiguration(false);
             QNetworkProxy::setApplicationProxy(QNetworkProxy(QNetworkProxy::HttpProxy, host, static_cast<uint16_t>(port)));
         } else {
-            qCritical() << "Could not read httpproxy. The proxy should have the format \"http://hostname:port\".";
+            qCritical() << u"Could not read httpproxy. The proxy should have the format \"http://hostname:port\".";
             exit(EXIT_FAILURE);
         }
     }
@@ -266,7 +265,7 @@ void setupCredentials(SyncCTX &ctx)
         // also fail
         QFile f(ctx.options.unsyncedfolders);
         if (!f.open(QFile::ReadOnly)) {
-            qCritical() << "Cannot read unsyncedfolders file '" << ctx.options.unsyncedfolders << "': " << f.errorString();
+            qCritical() << u"Cannot read unsyncedfolders file '" << ctx.options.unsyncedfolders << u"': " << f.errorString();
             exit(EXIT_FAILURE);
         }
         f.close();
@@ -280,11 +279,11 @@ void setupCredentials(SyncCTX &ctx)
         QObject::connect(ctx.account->accessManager(), &QNetworkAccessManager::sslErrors, qApp, [](QNetworkReply *reply, const QList<QSslError> &errors) {
             Q_UNUSED(reply)
 
-            qCritical() << "SSL error encountered";
+            qCritical() << u"SSL error encountered";
             for (const auto &e : errors) {
                 qCritical() << e.errorString();
             }
-            qCritical() << "If you trust the certificate and want to ignore the errors, use the --trust option.";
+            qCritical() << u"If you trust the certificate and want to ignore the errors, use the --trust option.";
             exit(EXIT_FAILURE);
         });
     }
@@ -302,7 +301,7 @@ void printSpaces(const QVector<GraphApi::Space *> &spaces)
     auto printTable = [](const QString &a, const QString &b, const QString &c) {
         qInfo().noquote() << QStringLiteral("%1 | %2 | %3").arg(a, 15).arg(b, 20).arg(c);
     };
-    qInfo() << "Listing spaces:";
+    qInfo() << u"Listing spaces:";
     printTable(QStringLiteral("Short ID"), QStringLiteral("DisplayName"), QStringLiteral("ID"));
     printTable(QString().fill(QLatin1Char('-'), 15), QString().fill(QLatin1Char('-'), 20), QString().fill(QLatin1Char('-'), 20));
     for (auto *s : spaces) {
@@ -378,7 +377,7 @@ CmdOptions parseOptions(const QStringList &app_args)
             Logger::instance()->setLogDebug(true);
         }
     } else {
-        qCritical() << "Verbosity:" << verbosity << "is not supported, valid verbosity level are 0, 1, 2";
+        qCritical() << u"Verbosity:" << verbosity << u"is not supported, valid verbosity level are 0, 1, 2";
         parser.showHelp(EXIT_FAILURE);
     }
 
@@ -386,11 +385,11 @@ CmdOptions parseOptions(const QStringList &app_args)
     if (!args.isEmpty()) {
         options.server_url = QUrl::fromUserInput(args.takeFirst());
         if (!options.server_url.isValid()) {
-            qCritical() << "Invalid url: " << options.server_url.toString();
+            qCritical() << u"Invalid url: " << options.server_url.toString();
             parser.showHelp(EXIT_FAILURE);
         }
     } else {
-        qCritical() << "Please specify server_url";
+        qCritical() << u"Please specify server_url";
         parser.showHelp(EXIT_FAILURE);
     }
 
@@ -404,7 +403,7 @@ CmdOptions parseOptions(const QStringList &app_args)
         options.source_dir = [&parser, arg = args.takeFirst()] {
             const QFileInfo fi(arg);
             if (!fi.exists()) {
-                qCritical() << "Source dir" << fi.filePath() << "does not exist.";
+                qCritical() << u"Source dir" << fi.filePath() << u"does not exist.";
                 parser.showHelp(EXIT_FAILURE);
             }
             QString sourceDir = fi.absoluteFilePath();
@@ -416,7 +415,7 @@ CmdOptions parseOptions(const QStringList &app_args)
     }
 
     if (!args.isEmpty()) {
-        qCritical() << "Unhandled arguments" << args;
+        qCritical() << u"Unhandled arguments" << args;
         parser.showHelp(EXIT_FAILURE);
     }
 
@@ -437,13 +436,13 @@ CmdOptions parseOptions(const QStringList &app_args)
     if (parser.isSet(tokenOption)) {
         options.token = parser.value(tokenOption).toUtf8();
     } else if (options.token.isEmpty()) {
-        qCritical() << "Token not set";
+        qCritical() << u"Token not set";
         parser.showHelp(EXIT_FAILURE);
     }
     if (parser.isSet(userOption)) {
         options.username = parser.value(userOption).toUtf8();
     } else {
-        qCritical() << "Username not set";
+        qCritical() << u"Username not set";
         parser.showHelp(EXIT_FAILURE);
     }
     if (parser.isSet(excludeOption)) {
@@ -466,7 +465,7 @@ CmdOptions parseOptions(const QStringList &app_args)
     }
     if (parser.isSet(testCrashReporter)) {
         // crash onc ethe main loop was started
-        qCritical() << "We'll soon crash on purpose";
+        qCritical() << u"We'll soon crash on purpose";
         QTimer::singleShot(0, qApp, &Utility::crash);
     }
     return options;
@@ -491,7 +490,7 @@ int main(int argc, char **argv)
         ctx.account = Account::create(QUuid::createUuid());
 
         if (!ctx.account) {
-            qCritical() << "Could not initialize account!";
+            qCritical() << u"Could not initialize account!";
             exit(EXIT_FAILURE);
         }
 
@@ -502,7 +501,7 @@ int main(int argc, char **argv)
         ctx.account->setUrl(ctx.options.server_url);
 
         QObject::connect(ctx.account->credentials(), &AbstractCredentials::authenticationFailed, qApp,
-            [] { qFatal() << "Authentication failed please verify your credentials"; });
+            [] { qFatal() << u"Authentication failed please verify your credentials"; });
 
         auto *checkServerJob = CheckServerJobFactory(ctx.account->accessManager()).startJob(ctx.account->url(), qApp);
 
@@ -512,7 +511,7 @@ int main(int argc, char **argv)
                 auto *capabilitiesJob = new JsonApiJob(ctx.account, QStringLiteral("ocs/v1.php/cloud/capabilities"), {}, {}, nullptr);
                 QObject::connect(capabilitiesJob, &JsonApiJob::finishedSignal, qApp, [capabilitiesJob, ctx] {
                     if (capabilitiesJob->reply()->error() != QNetworkReply::NoError || capabilitiesJob->httpStatusCode() != 200) {
-                        qCritical() << "Error connecting to server";
+                        qCritical() << u"Error connecting to server";
                         exit(EXIT_FAILURE);
                     }
                     auto caps = capabilitiesJob->data()
@@ -522,17 +521,17 @@ int main(int argc, char **argv)
                                     .toObject()
                                     .value(QStringLiteral("capabilities"))
                                     .toObject();
-                    qDebug() << "Server capabilities" << caps;
+                    qDebug() << u"Server capabilities" << caps;
                     ctx.account->setCapabilities({ctx.account->url(), caps.toVariantMap()});
 
                     switch (ctx.account->serverSupportLevel()) {
                     case Account::ServerSupportLevel::Supported:
                         break;
                     case Account::ServerSupportLevel::Unknown:
-                        qWarning() << "Failed to detect server version";
+                        qWarning() << u"Failed to detect server version";
                         break;
                     case Account::ServerSupportLevel::Unsupported:
-                        qCritical() << "Error unsupported server";
+                        qCritical() << u"Error unsupported server";
                         exit(EXIT_FAILURE);
                     }
 
@@ -563,7 +562,7 @@ int main(int argc, char **argv)
                                 }
                             }
                             if (!space) {
-                                qCritical() << "No spaces found matching:" << ctx.options.space_id;
+                                qCritical() << u"No spaces found matching:" << ctx.options.space_id;
                                 printSpaces(ctx.account->spacesManager()->spaces());
                                 qApp->exit(EXIT_FAILURE);
                                 return;
@@ -581,9 +580,9 @@ int main(int argc, char **argv)
                 capabilitiesJob->start();
             } else {
                 if (checkServerJob->reply()->error() == QNetworkReply::OperationCanceledError) {
-                    qFatal() << "Looking up " << ctx.account->url().toString() << " timed out.";
+                    qFatal() << u"Looking up " << ctx.account->url().toString() << u" timed out.";
                 } else {
-                    qFatal() << "Failed to resolve " << ctx.account->url().toString() << " Error: " << checkServerJob->reply()->errorString();
+                    qFatal() << u"Failed to resolve " << ctx.account->url().toString() << u" Error: " << checkServerJob->reply()->errorString();
                 }
             }
         });

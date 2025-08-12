@@ -57,7 +57,7 @@ CredentialManager::CredentialManager(QObject *parent)
 
 CredentialJob *CredentialManager::get(const QString &key)
 {
-    qCInfo(lcCredentialsManager) << "get" << scopedKey(this, key);
+    qCInfo(lcCredentialsManager) << u"get" << scopedKey(this, key);
     auto out = new CredentialJob(this, key);
     out->start();
     return out;
@@ -66,7 +66,7 @@ CredentialJob *CredentialManager::get(const QString &key)
 QKeychain::Job *CredentialManager::set(const QString &key, const QVariant &data)
 {
     OC_ASSERT(!data.isNull());
-    qCInfo(lcCredentialsManager) << "set" << scopedKey(this, key);
+    qCInfo(lcCredentialsManager) << u"set" << scopedKey(this, key);
     auto writeJob = new QKeychain::WritePasswordJob(Theme::instance()->appName());
     writeJob->setKey(scopedKey(this, key));
 
@@ -75,14 +75,14 @@ QKeychain::Job *CredentialManager::set(const QString &key, const QVariant &data)
 
     Utility::ChronoElapsedTimer elapsedTimer;
     connect(timer, &QTimer::timeout, writeJob,
-        [writeJob, elapsedTimer] { qCWarning(lcCredentialsManager) << "set" << writeJob->key() << "has not yet finished." << elapsedTimer; });
+        [writeJob, elapsedTimer] { qCWarning(lcCredentialsManager) << u"set" << writeJob->key() << u"has not yet finished." << elapsedTimer; });
     connect(writeJob, &QKeychain::WritePasswordJob::finished, this, [writeJob, key, elapsedTimer, this] {
         if (writeJob->error() == QKeychain::NoError) {
-            qCInfo(lcCredentialsManager) << "added" << writeJob->key() << "after" << elapsedTimer;
+            qCInfo(lcCredentialsManager) << u"added" << writeJob->key() << u"after" << elapsedTimer;
             // just a list, the values don't matter
             credentialsList().setValue(key, true);
         } else {
-            qCWarning(lcCredentialsManager) << "Failed to set:" << writeJob->key() << writeJob->errorString() << "after" << elapsedTimer;
+            qCWarning(lcCredentialsManager) << u"Failed to set:" << writeJob->key() << writeJob->errorString() << u"after" << elapsedTimer;
         }
     });
     writeJob->setBinaryData(QCborValue::fromVariant(data).toCbor());
@@ -98,15 +98,15 @@ QKeychain::Job *CredentialManager::remove(const QString &key)
     OC_ASSERT(contains(key));
     // remove immediately to prevent double invocation by clear()
     credentialsList().remove(key);
-    qCInfo(lcCredentialsManager) << "del" << scopedKey(this, key);
+    qCInfo(lcCredentialsManager) << u"del" << scopedKey(this, key);
     auto keychainJob = new QKeychain::DeletePasswordJob(Theme::instance()->appName());
     keychainJob->setKey(scopedKey(this, key));
     connect(keychainJob, &QKeychain::DeletePasswordJob::finished, this, [keychainJob, key, this] {
         OC_ASSERT(keychainJob->error() != QKeychain::EntryNotFound);
         if (keychainJob->error() == QKeychain::NoError) {
-            qCInfo(lcCredentialsManager) << "removed" << scopedKey(this, key);
+            qCInfo(lcCredentialsManager) << u"removed" << scopedKey(this, key);
         } else {
-            qCWarning(lcCredentialsManager) << "Failed to remove:" << scopedKey(this, key) << keychainJob->errorString();
+            qCWarning(lcCredentialsManager) << u"Failed to remove:" << scopedKey(this, key) << keychainJob->errorString();
         }
     });
     // start is delayed so we can directly call it
@@ -195,7 +195,7 @@ void CredentialJob::start()
     if (!_parent->contains(_key)) {
         _error = QKeychain::EntryNotFound;
         // QKeychain is started delayed, Q_EMIT the signal delayed to make sure we are connected
-        qCDebug(lcCredentialsManager) << "We don't know" << _key << "skipping retrieval from keychain";
+        qCDebug(lcCredentialsManager) << u"We don't know" << _key << u"skipping retrieval from keychain";
         QTimer::singleShot(0, this, &CredentialJob::finished);
         return;
     }
@@ -208,7 +208,7 @@ void CredentialJob::start()
             // Could be that the backend was not yet available. Wait some extra seconds.
             // (Issues #4274 and #6522)
             // (For kwallet, the error is OtherError instead of NoBackendAvailable, maybe a bug in QtKeychain)
-            qCInfo(lcCredentialsManager) << "Backend unavailable (yet?) Retrying in a few seconds." << _job->errorString();
+            qCInfo(lcCredentialsManager) << u"Backend unavailable (yet?) Retrying in a few seconds." << _job->errorString();
             QTimer::singleShot(10s, this, &CredentialJob::start);
             _retryOnKeyChainError = false;
         }
@@ -225,7 +225,7 @@ void CredentialJob::start()
             _data = obj.toVariant();
             OC_ASSERT(_data.isValid());
         } else {
-            qCWarning(lcCredentialsManager) << "Failed to get password" << scopedKey(_parent, _key) << _job->errorString();
+            qCWarning(lcCredentialsManager) << u"Failed to get password" << scopedKey(_parent, _key) << _job->errorString();
             _error = _job->error();
             _errorString = _job->errorString();
         }

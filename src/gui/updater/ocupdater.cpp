@@ -61,7 +61,7 @@ UpdaterScheduler::UpdaterScheduler(Application *app, QObject *parent)
         });
 
         connect(updater, &OCUpdater::retryUpdateCheckLater, this, [this]() {
-            qCInfo(lcUpdater) << "Retrying update check in 10 minutes";
+            qCInfo(lcUpdater) << u"Retrying update check in 10 minutes";
             QTimer::singleShot(10min, this, &UpdaterScheduler::slotTimerFired);
         });
     }
@@ -82,12 +82,12 @@ void UpdaterScheduler::slotTimerFired()
     auto checkInterval = std::chrono::milliseconds(cfg.updateCheckInterval()).count();
     if (checkInterval != _updateCheckTimer.interval()) {
         _updateCheckTimer.setInterval(checkInterval);
-        qCInfo(lcUpdater) << "Setting new update check interval " << checkInterval;
+        qCInfo(lcUpdater) << u"Setting new update check interval " << checkInterval;
     }
 
     // consider the skipUpdateCheck flag in the config.
     if (cfg.skipUpdateCheck()) {
-        qCInfo(lcUpdater) << "Skipping update check because of config file";
+        qCInfo(lcUpdater) << u"Skipping update check because of config file";
         return;
     }
 
@@ -125,14 +125,14 @@ void OCUpdater::backgroundCheckForUpdate()
     case UpToDate:
     case DownloadFailed:
     case DownloadTimedOut:
-        qCInfo(lcUpdater) << "Checking for available update";
+        qCInfo(lcUpdater) << u"Checking for available update";
         checkForUpdate();
         break;
     case DownloadComplete:
-        qCInfo(lcUpdater) << "Update is downloaded, skip new check.";
+        qCInfo(lcUpdater) << u"Update is downloaded, skip new check.";
         break;
     case UpdateOnlyAvailableThroughSystem:
-        qCInfo(lcUpdater) << "Update is only available through system, skip check.";
+        qCInfo(lcUpdater) << u"Update is only available through system, skip check.";
         break;
     }
 }
@@ -230,7 +230,7 @@ void OCUpdater::slotVersionInfoArrived()
     QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
     reply->deleteLater();
     if (reply->error() != QNetworkReply::NoError) {
-        qCWarning(lcUpdater) << "Failed to reach version check url: " << reply->errorString();
+        qCWarning(lcUpdater) << u"Failed to reach version check url: " << reply->errorString();
         setDownloadState(OCUpdater::Unknown);
         Q_EMIT retryUpdateCheckLater();
         return;
@@ -243,7 +243,7 @@ void OCUpdater::slotVersionInfoArrived()
     if (ok) {
         versionInfoArrived(_updateInfo);
     } else {
-        qCWarning(lcUpdater) << "Could not parse update information.";
+        qCWarning(lcUpdater) << u"Could not parse update information.";
         setDownloadState(OCUpdater::Unknown);
         Q_EMIT retryUpdateCheckLater();
     }
@@ -325,7 +325,7 @@ void WindowsUpdater::slotDownloadFinished()
 
     QFile::copy(_file->fileName(), _targetFile);
     setDownloadState(DownloadComplete);
-    qCInfo(lcUpdater) << "Downloaded" << url.toString() << "to" << _targetFile;
+    qCInfo(lcUpdater) << u"Downloaded" << url.toString() << u"to" << _targetFile;
     settings.setValue(updateTargetVersionC, updateInfo().version());
     settings.setValue(updateTargetVersionStringC, updateInfo().versionString());
     settings.setValue(updateAvailableC, _targetFile);
@@ -336,20 +336,16 @@ void WindowsUpdater::versionInfoArrived(const UpdateInfo &info)
     auto settings = ConfigFile::makeQSettings();
     const auto infoVersion = QVersionNumber::fromString(info.version());
     const auto previouslySkippedVersion = this->previouslySkippedVersion();
-    qCInfo(lcUpdater) << "Version info arrived:"
-                      << "Your version:" << Version::versionWithBuildNumber()
-                      << "Skipped version:" << previouslySkippedVersion
-                      << "Available version:" << infoVersion << info.version()
-                      << "Available version string:" << info.versionString()
-                      << "Web url:" << info.web()
-                      << "Download url:" << info.downloadUrl();
+    qCInfo(lcUpdater) << u"Version info arrived:" << u"Your version:" << Version::versionWithBuildNumber() << u"Skipped version:" << previouslySkippedVersion
+                      << u"Available version:" << infoVersion << info.version() << u"Available version string:" << info.versionString() << u"Web url:"
+                      << info.web() << u"Download url:" << info.downloadUrl();
     if (info.version().isEmpty())
     {
-        qCInfo(lcUpdater) << "No version information available at the moment";
+        qCInfo(lcUpdater) << u"No version information available at the moment";
         setDownloadState(UpToDate);
     } else if (infoVersion <= Version::versionWithBuildNumber()
         || infoVersion <= previouslySkippedVersion) {
-        qCInfo(lcUpdater) << "Client is on latest version!";
+        qCInfo(lcUpdater) << u"Client is on latest version!";
         setDownloadState(UpToDate);
     } else {
         const QString url = info.downloadUrl();
@@ -457,18 +453,16 @@ void WindowsUpdater::validateUpdate()
     const QString updateFileName = settings.value(updateAvailableC).toString();
     // has the previous run downloaded an update?
     if (!updateFileName.isEmpty() && QFile(updateFileName).exists()) {
-        qCInfo(lcUpdater) << "An updater file is available";
+        qCInfo(lcUpdater) << u"An updater file is available";
         // did it try to execute the update?
         if (settings.value(autoUpdateAttemptedC, false).toBool()) {
             if (updateSucceeded()) {
                 // success: clean up
-                qCInfo(lcUpdater) << "The requested update attempt has succeeded"
-                                  << Version::versionWithBuildNumber();
+                qCInfo(lcUpdater) << u"The requested update attempt has succeeded" << Version::versionWithBuildNumber();
                 wipeUpdateData();
             } else {
                 // auto update failed. Ask user what to do
-                qCInfo(lcUpdater) << "The requested update attempt has failed"
-                        << settings.value(updateTargetVersionC).toString();
+                qCInfo(lcUpdater) << u"The requested update attempt has failed" << settings.value(updateTargetVersionC).toString();
                 showUpdateErrorDialog(settings.value(updateTargetVersionStringC).toString());
             }
         }
@@ -488,7 +482,7 @@ void WindowsUpdater::applyUpdateAndRestart()
     QString updateFile = settings.value(updateAvailableC).toString();
     settings.setValue(autoUpdateAttemptedC, true);
     settings.sync();
-    qCInfo(lcUpdater) << "Running updater" << updateFile;
+    qCInfo(lcUpdater) << u"Running updater" << updateFile;
 
     Q_ASSERT(updateFile.endsWith(QLatin1String(".msi")));
     // When MSIs are installed without gui they cannot launch applications
@@ -533,9 +527,9 @@ void PassiveUpdateNotifier::backgroundCheckForUpdate()
         // whenever the application binary's mtime changes, we assume it has changed, since users are expected not to call touch on it or otherwise change it
         // manually
         const auto currentMTime = applicationMTime();
-        qCDebug(lcUpdater) << "initial mtime:" << _initialAppMTime << "current mtime:" << currentMTime;
+        qCDebug(lcUpdater) << u"initial mtime:" << _initialAppMTime << u"current mtime:" << currentMTime;
         if (currentMTime != _initialAppMTime) {
-            qCInfo(lcUpdater) << "Binary mtime changed since application started, requesting restart";
+            qCInfo(lcUpdater) << u"Binary mtime changed since application started, requesting restart";
             setDownloadState(DownloadState::DownloadComplete);
             Q_EMIT updateDownloaded();
         }
@@ -548,7 +542,7 @@ void PassiveUpdateNotifier::versionInfoArrived(const UpdateInfo &info)
 {
     const auto remoteVer = QVersionNumber::fromString(info.version());
     if (info.version().isEmpty() || Version::versionWithBuildNumber() >= remoteVer) {
-        qCInfo(lcUpdater) << "Client is on latest version!";
+        qCInfo(lcUpdater) << u"Client is on latest version!";
         setDownloadState(UpToDate);
     } else {
         setDownloadState(UpdateOnlyAvailableThroughSystem);
