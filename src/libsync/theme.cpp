@@ -34,6 +34,8 @@
 #include THEME_INCLUDE
 #endif
 
+using namespace Qt::Literals::StringLiterals;
+
 namespace OCC {
 
 Theme *Theme::_instance = nullptr;
@@ -100,12 +102,23 @@ QString Theme::configFileName() const
 
 QIcon Theme::applicationIcon() const
 {
-    return Resources::themeUniversalIcon(applicationIconName() + QStringLiteral("-icon"));
-}
-
-QString Theme::applicationIconName() const
-{
-    return QStringLiteral(APPLICATION_ICON_NAME);
+    const auto icon = Resources::themeUniversalIcon(QStringLiteral(APPLICATION_ICON_NAME "-icon"));
+    if (Version::isBeta()) {
+        QPixmap pix(512, 512);
+        pix.fill(Qt::transparent);
+        {
+            QPainter p(&pix);
+            icon.paint(&p, pix.rect());
+            p.setPen(Qt::yellow);
+            auto font = p.font();
+            font.setPixelSize(pix.height() / 2.0);
+            font.setBold(true);
+            p.setFont(font);
+            p.drawText(pix.rect(), Qt::AlignCenter, u"Beta"_s);
+        }
+        return pix;
+    }
+    return icon;
 }
 
 QIcon Theme::aboutIcon() const
@@ -392,11 +405,7 @@ bool Theme::enableCernBranding() const
 
 bool Theme::withCrashReporter() const
 {
-#ifdef WITH_CRASHREPORTER
-    return true;
-#else
-    return false;
-#endif
+    return WITH_CRASHREPORTER;
 }
 
 } // end namespace client

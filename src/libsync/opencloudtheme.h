@@ -25,7 +25,6 @@ public:
     QColor wizardHeaderBackgroundColor() const override;
     QColor wizardHeaderTitleColor() const override;
     QIcon wizardHeaderLogo() const override;
-    QIcon aboutIcon() const override;
     QmlButtonColor primaryButtonColor() const override;
     QmlButtonColor secondaryButtonColor() const override;
 };

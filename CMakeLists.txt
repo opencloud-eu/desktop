@@ -83,11 +83,16 @@ message(STATUS "GIT_SHA1 ${GIT_SHA1}")
 
 option(NO_MSG_HANDLER "Don't redirect QDebug outputs to the log window/file" OFF)
 
-# this option builds the shell integration
-option(BUILD_SHELL_INTEGRATION "BUILD_SHELL_INTEGRATION" ON)
+if (APPLE)
+    # this option builds the shell integration, currently only available on MacOS
+    option(BUILD_SHELL_INTEGRATION "BUILD_SHELL_INTEGRATION" ON)
+endif()
 
 # build the auto updater component
 option(WITH_AUTO_UPDATER "WITH_AUTO_UPDATER" OFF)
+
+# create a co-installable client, that uses a separate profile
+option(BETA_CHANNEL_BUILD "Use a standalone profile for a beta release" OFF)
 
 # build with -DQT_FORCE_ASSERTS
 option(FORCE_ASSERTS "FORCE_ASSERTS" OFF)
