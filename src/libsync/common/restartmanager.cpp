@@ -42,11 +42,11 @@ RestartManager::~RestartManager()
         process.setProgram(_applicationToRestart);
         process.setArguments(_args);
         qint64 pid;
-        qCDebug(lcRestart) << "Detaching" << _applicationToRestart << _args;
+        qCDebug(lcRestart) << u"Detaching" << _applicationToRestart << _args;
         if (process.startDetached(&pid)) {
-            qCDebug(lcRestart) << "Successfully restarted. New process PID" << pid;
+            qCDebug(lcRestart) << u"Successfully restarted. New process PID" << pid;
         } else {
-            qCCritical(lcRestart) << "Failed to restart" << process.error() << process.errorString();
+            qCCritical(lcRestart) << u"Failed to restart" << process.error() << process.errorString();
         }
     }
 }
@@ -59,7 +59,7 @@ int RestartManager::exec(int argc, char **argv) const
 void RestartManager::requestRestart()
 {
     Q_ASSERT(_instance);
-    qCInfo(lcRestart) << "Restarting application with PID" << QCoreApplication::applicationPid();
+    qCInfo(lcRestart) << u"Restarting application with PID" << QCoreApplication::applicationPid();
 
     QString pathToLaunch = QCoreApplication::applicationFilePath();
 #ifdef Q_OS_LINUX

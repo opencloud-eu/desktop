@@ -104,11 +104,11 @@ Q_LOGGING_CATEGORY(lcSocketApi, "gui.socketapi", QtInfoMsg)
 void SocketListener::sendMessage(const QString &message, bool doWait) const
 {
     if (!socket) {
-        qCInfo(lcSocketApi) << "Not sending message to dead socket:" << message;
+        qCInfo(lcSocketApi) << u"Not sending message to dead socket:" << message;
         return;
     }
 
-    qCInfo(lcSocketApi) << "Sending SocketAPI message -->" << message << "to" << socket;
+    qCInfo(lcSocketApi) << u"Sending SocketAPI message -->" << message << u"to" << socket;
     QString localMessage = message;
     if (!localMessage.endsWith(QLatin1Char('\n'))) {
         localMessage.append(QLatin1Char('\n'));
@@ -120,7 +120,7 @@ void SocketListener::sendMessage(const QString &message, bool doWait) const
         socket->waitForBytesWritten(1000);
     }
     if (sent != bytesToSend.length()) {
-        qCWarning(lcSocketApi) << "Could not send all data on socket for " << localMessage;
+        qCWarning(lcSocketApi) << u"Could not send all data on socket for " << localMessage;
     }
 }
 
@@ -143,7 +143,7 @@ SocketApi::SocketApi(QObject *parent)
         QFileInfo info(_socketPath);
         if (!info.dir().exists()) {
             bool result = info.dir().mkpath(QStringLiteral("."));
-            qCDebug(lcSocketApi) << "creating" << info.dir().path() << result;
+            qCDebug(lcSocketApi) << u"creating" << info.dir().path() << result;
             if (result) {
                 QFile::setPermissions(_socketPath, QFile::Permissions(QFile::ReadOwner | QFile::WriteOwner | QFile::ExeOwner));
             }
@@ -162,7 +162,7 @@ SocketApi::SocketApi(QObject *parent)
 
 SocketApi::~SocketApi()
 {
-    qCDebug(lcSocketApi) << "dtor";
+    qCDebug(lcSocketApi) << u"dtor";
     _localServer.close();
     // All remaining sockets will be destroyed with _localServer, their parent
     OC_ASSERT(_listeners.isEmpty() || _listeners.first()->socket->parent() == &_localServer);
@@ -173,9 +173,9 @@ void SocketApi::startShellIntegration()
 {
     // Start listeneing:
     if (_localServer.listen(_socketPath)) {
-        qCInfo(lcSocketApi) << "server started, listening at " << _socketPath;
+        qCInfo(lcSocketApi) << u"server started, listening at " << _socketPath;
     } else {
-        qCWarning(lcSocketApi) << "can't start server" << _socketPath;
+        qCWarning(lcSocketApi) << u"can't start server" << _socketPath;
     }
 
     // Now we're ready to start the native shell integration:
@@ -191,10 +191,10 @@ void SocketApi::slotNewConnection()
     if (!socket) {
         return;
     }
-    qCInfo(lcSocketApi) << "New connection" << socket;
+    qCInfo(lcSocketApi) << u"New connection" << socket;
     connect(socket, &SocketApiSocket::readyRead, this, &SocketApi::slotReadSocket);
     connect(socket, &SocketApiSocket::disconnected, this, [socket] {
-        qCInfo(lcSocketApi) << "Lost connection " << socket;
+        qCInfo(lcSocketApi) << u"Lost connection " << socket;
         // will trigger destroyed in the next execution of the main loop
         // a direct removal can cause issues when iterating on _listeners
         socket->deleteLater();
@@ -239,7 +239,7 @@ void SocketApi::slotReadSocket()
         // Note: do NOT use QString::trimmed() here! That will also remove any trailing spaces (which _are_ part of the filename)!
         line.chop(1); // remove the '\n'
 
-        qCInfo(lcSocketApi) << "Received SocketAPI message <--" << line << "from" << socket;
+        qCInfo(lcSocketApi) << u"Received SocketAPI message <--" << line << u"from" << socket;
         const int argPos = line.indexOf(QLatin1Char(':'));
         const QString command = line.mid(0, argPos).toUpper();
         const int indexOfMethod = [&] {
@@ -278,15 +278,14 @@ void SocketApi::slotReadSocket()
                     .invoke(this, Qt::QueuedConnection,
                         Q_ARG(QSharedPointer<SocketApiJob>, socketApiJob));
             } else {
-                qCWarning(lcSocketApi) << "The command is not supported by this version of the client:" << command
-                                       << "with argument:" << argument;
+                qCWarning(lcSocketApi) << u"The command is not supported by this version of the client:" << command << u"with argument:" << argument;
                 socketApiJob->reject(QStringLiteral("command not found"));
             }
         } else if (command.startsWith(QLatin1String("V2/"))) {
             QJsonParseError error;
             const auto json = QJsonDocument::fromJson(argument.toUtf8(), &error).object();
             if (error.error != QJsonParseError::NoError) {
-                qCWarning(lcSocketApi()) << "Invalid json" << argument << error.errorString();
+                qCWarning(lcSocketApi()) << u"Invalid json" << argument << error.errorString();
                 listener->sendError(error.errorString());
                 return;
             }
@@ -296,8 +295,7 @@ void SocketApi::slotReadSocket()
                     .invoke(this, Qt::QueuedConnection,
                         Q_ARG(QSharedPointer<SocketApiJobV2>, socketApiJob));
             } else {
-                qCWarning(lcSocketApi) << "The command is not supported by this version of the client:" << command
-                                       << "with argument:" << argument;
+                qCWarning(lcSocketApi) << u"The command is not supported by this version of the client:" << command << u"with argument:" << argument;
                 socketApiJob->failure(QStringLiteral("command not found"));
             }
         } else {
@@ -390,7 +388,7 @@ void SocketApi::slotUpdateFolderView(Folder *f)
         case OCC::SyncResult::SyncAbortRequested:
             [[fallthrough]];
         case OCC::SyncResult::Offline:
-            qCDebug(lcSocketApi) << "Not sending UPDATE_VIEW for" << f->path() << "because status() is" << f->syncResult().status();
+            qCDebug(lcSocketApi) << u"Not sending UPDATE_VIEW for" << f->path() << u"because status() is" << f->syncResult().status();
         }
     }
 }
@@ -495,7 +493,7 @@ void SocketApi::fetchPrivateLinkUrlHelper(const QString &localFile, const std::f
 {
     auto fileData = FileData::get(localFile);
     if (!fileData.folder) {
-        qCWarning(lcSocketApi) << "Unknown path" << localFile;
+        qCWarning(lcSocketApi) << u"Unknown path" << localFile;
         return;
     }
 
@@ -638,7 +636,7 @@ void SocketApi::command_MOVE_ITEM(const QString &localFile, SocketListener *)
 
     QString error;
     if (!FileSystem::uncheckedRenameReplace(localFile, target, &error)) {
-        qCWarning(lcSocketApi) << "Rename error:" << error;
+        qCWarning(lcSocketApi) << u"Rename error:" << error;
         QMessageBox::warning(
             nullptr, tr("Error"),
             tr("Moving file failed:\n\n%1").arg(error));
@@ -674,7 +672,7 @@ void SocketApi::command_V2_GET_CLIENT_ICON(const QSharedPointer<SocketApiJobV2> 
 
     const auto size = arguments.value(QStringLiteral("size"));
     if (size.isUndefined()) {
-        qCWarning(lcSocketApi) << "Icon size not given in " << Q_FUNC_INFO;
+        qCWarning(lcSocketApi) << u"Icon size not given in " << Q_FUNC_INFO;
         job->failure(QStringLiteral("cannot get client icon"));
         return;
     }
@@ -684,7 +682,7 @@ void SocketApi::command_V2_GET_CLIENT_ICON(const QSharedPointer<SocketApiJobV2> 
     // return an empty answer if the end point was disabled
     if (theme->enableSocketApiIconSupport()) {
         const QIcon appIcon = theme->applicationIcon();
-        qCDebug(lcSocketApi) << Q_FUNC_INFO << " got icon from theme: " << appIcon;
+        qCDebug(lcSocketApi) << Q_FUNC_INFO << u" got icon from theme: " << appIcon;
 
         // convert to pixmap (might be smaller if size is not available)
         const QPixmap pixmap = appIcon.pixmap(QSize(size.toInt(), size.toInt()));
@@ -694,14 +692,14 @@ void SocketApi::command_V2_GET_CLIENT_ICON(const QSharedPointer<SocketApiJobV2> 
         QBuffer pngBuffer(&png);
         auto success = pngBuffer.open(QIODevice::WriteOnly);
         if (!success) {
-            qCWarning(lcSocketApi) << "Error opening buffer for png in " << Q_FUNC_INFO;
+            qCWarning(lcSocketApi) << u"Error opening buffer for png in " << Q_FUNC_INFO;
             job->failure(QStringLiteral("cannot get client icon"));
             return;
         }
 
         success = pixmap.save(&pngBuffer, "PNG");
         if (!success) {
-            qCWarning(lcSocketApi) << "Error saving client icon as png in " << Q_FUNC_INFO;
+            qCWarning(lcSocketApi) << u"Error saving client icon as png in " << Q_FUNC_INFO;
             job->failure(QStringLiteral("cannot get client icon"));
             return;
         }

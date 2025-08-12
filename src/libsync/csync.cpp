@@ -26,6 +26,6 @@ QDebug operator<<(QDebug debug, const SyncInstructions &enumValue)
 {
     static const QMetaEnum me = QMetaEnum::fromType<SyncInstruction>();
     QDebugStateSaver saver(debug);
-    debug.nospace().noquote() << me.enumName() << "(" << me.valueToKeys(enumValue) << ")";
+    debug.nospace().noquote() << me.enumName() << u"(" << me.valueToKeys(enumValue) << u")";
     return debug;
 }

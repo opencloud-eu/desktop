@@ -45,7 +45,7 @@ QString Template::renderTemplate(QString &&templ, const QMap<QAnyStringView, QAn
             Q_ASSERT(match.lastCapturedIndex() == 1);
             Q_ASSERT([&] {
                 if (!values.contains(match.captured(1))) {
-                    qWarning(lcResourcesTeplate) << "Unknown key:" << match.captured(1);
+                    qWarning(lcResourcesTeplate) << u"Unknown key:" << match.captured(1);
                     return false;
                 }
                 return true;

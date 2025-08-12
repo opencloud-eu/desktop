@@ -47,7 +47,7 @@ void UnixPlatform::setLimitsForCoreDumps()
         if (setrlimit(RLIMIT_CORE, &core_limit) < 0) {
             fprintf(stderr, "Unable to set core dump limit\n");
         } else {
-            qCInfo(lcPlatform) << "Core dumps enabled";
+            qCInfo(lcPlatform) << u"Core dumps enabled";
         }
     }
 }

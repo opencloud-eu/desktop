@@ -111,7 +111,7 @@ SyncJournalFileRecord SyncJournalFileRecord::fromSqlQuery(OCC::SqlQuery &query)
     rec.d->_serverHasIgnoredFiles = (query.intValue(8) > 0);
     rec.d->_checksumHeader = query.baValue(9);
     rec.d->_hasDirtyPlaceholder = query.intValue(10);
-    qCDebug(lcSyncJournalFileRecord) << "Restored from db:" << rec;
+    qCDebug(lcSyncJournalFileRecord) << u"Restored from db:" << rec;
     Q_ASSERT(rec.validateRecord());
     return rec;
 }
@@ -238,16 +238,16 @@ bool SyncJournalFileRecord::hasError() const
 QDebug OCC::operator<<(QDebug debug, const SyncJournalFileRecord &record)
 {
     QDebugStateSaver saver(debug);
-    debug.nospace() << "SyncJournalFileRecord(";
+    debug.nospace() << u"SyncJournalFileRecord(";
     if (record.hasError()) {
-        debug << "Error: " << record.error();
+        debug << u"Error: " << record.error();
     } else {
-        debug << "path: " << record.path() << ", inode: " << record.inode() << ", modtime: " << record.modtime() << ", type: " << record.type()
-              << ", etag: " << record.etag() << ", fileId: " << record.fileId() << ", remotePerm: " << record.remotePerm().toString()
-              << ", size: " << record.size() << ", checksum: " << record.checksumHeader() << ", serverHasIgnoredFiles: " << record.serverHasIgnoredFiles()
-              << ", hasDirtyPlaceholder: " << record.hasDirtyPlaceholder();
+        debug << u"path: " << record.path() << u", inode: " << record.inode() << u", modtime: " << record.modtime() << u", type: " << record.type()
+              << u", etag: " << record.etag() << u", fileId: " << record.fileId() << u", remotePerm: " << record.remotePerm().toString() << u", size: "
+              << record.size() << u", checksum: " << record.checksumHeader() << u", serverHasIgnoredFiles: " << record.serverHasIgnoredFiles()
+              << u", hasDirtyPlaceholder: " << record.hasDirtyPlaceholder();
     }
-    return debug << ")";
+    return debug << u")";
 }
 
 bool operator==(const SyncJournalFileRecord &lhs, const SyncJournalFileRecord &rhs)

@@ -28,7 +28,7 @@ LocalDiscoveryTracker::LocalDiscoveryTracker()
 
 void LocalDiscoveryTracker::addTouchedPath(const QString &relativePath)
 {
-    qCDebug(lcLocalDiscoveryTracker) << "inserted touched" << relativePath;
+    qCDebug(lcLocalDiscoveryTracker) << u"inserted touched" << relativePath;
     _localDiscoveryPaths.insert(relativePath);
 }
 
@@ -36,7 +36,7 @@ void LocalDiscoveryTracker::startSyncFullDiscovery()
 {
     _localDiscoveryPaths.clear();
     _previousLocalDiscoveryPaths.clear();
-    qCDebug(lcLocalDiscoveryTracker) << "full discovery";
+    qCDebug(lcLocalDiscoveryTracker) << u"full discovery";
 }
 
 void LocalDiscoveryTracker::startSyncPartialDiscovery()
@@ -45,7 +45,7 @@ void LocalDiscoveryTracker::startSyncPartialDiscovery()
         QStringList paths;
         for (auto &path : _localDiscoveryPaths)
             paths.append(path);
-        qCDebug(lcLocalDiscoveryTracker) << "partial discovery with paths: " << paths;
+        qCDebug(lcLocalDiscoveryTracker) << u"partial discovery with paths: " << paths;
     }
 
     _previousLocalDiscoveryPaths = std::move(_localDiscoveryPaths);
@@ -82,10 +82,10 @@ void LocalDiscoveryTracker::slotItemCompleted(const SyncFileItemPtr &item)
         Q_FALLTHROUGH();
     case OCC::SyncFileItem::Message:
         if (_previousLocalDiscoveryPaths.erase(item->localName())) {
-            qCDebug(lcLocalDiscoveryTracker) << "wiped successful item" << item->localName();
+            qCDebug(lcLocalDiscoveryTracker) << u"wiped successful item" << item->localName();
         }
         if (!item->_renameTarget.isEmpty() && _previousLocalDiscoveryPaths.erase(item->_renameTarget)) {
-            qCDebug(lcLocalDiscoveryTracker) << "wiped successful item" << item->_renameTarget;
+            qCDebug(lcLocalDiscoveryTracker) << u"wiped successful item" << item->_renameTarget;
         }
         return;
     case OCC::SyncFileItem::FatalError:
@@ -107,20 +107,20 @@ void LocalDiscoveryTracker::slotItemCompleted(const SyncFileItemPtr &item)
     }
 
     _localDiscoveryPaths.insert(item->localName());
-    qCDebug(lcLocalDiscoveryTracker) << "inserted error item" << item->localName();
+    qCDebug(lcLocalDiscoveryTracker) << u"inserted error item" << item->localName();
 }
 
 void LocalDiscoveryTracker::slotSyncFinished(bool success)
 {
     if (success) {
-        qCDebug(lcLocalDiscoveryTracker) << "sync success, forgetting last sync's local discovery path list";
+        qCDebug(lcLocalDiscoveryTracker) << u"sync success, forgetting last sync's local discovery path list";
     } else {
         // On overall-failure we can't forget about last sync's local discovery
         // paths yet, reuse them for the next sync again.
         // C++17: Could use std::set::merge().
         _localDiscoveryPaths.insert(
             _previousLocalDiscoveryPaths.begin(), _previousLocalDiscoveryPaths.end());
-        qCDebug(lcLocalDiscoveryTracker) << "sync failed, keeping last sync's local discovery path list";
+        qCDebug(lcLocalDiscoveryTracker) << u"sync failed, keeping last sync's local discovery path list";
     }
     _previousLocalDiscoveryPaths.clear();
 }

@@ -31,7 +31,7 @@ void touch(const QString &file)
 #else
     QString cmd;
     cmd = QStringLiteral("touch %1").arg(file);
-    qDebug() << "Command: " << cmd;
+    qDebug() << u"Command: " << cmd;
     system(cmd.toLocal8Bit().constData());
 #endif
 }
@@ -43,7 +43,7 @@ void mkdir(const QString &file)
     dir.mkdir(file);
 #else
     QString cmd = QStringLiteral("mkdir %1").arg(file);
-    qDebug() << "Command: " << cmd;
+    qDebug() << u"Command: " << cmd;
     system(cmd.toLocal8Bit().constData());
 #endif
 }
@@ -55,7 +55,7 @@ void rmdir(const QString &file)
     dir.rmdir(file);
 #else
     QString cmd = QStringLiteral("rmdir %1").arg(file);
-    qDebug() << "Command: " << cmd;
+    qDebug() << u"Command: " << cmd;
     system(cmd.toLocal8Bit().constData());
 #endif
 }
@@ -66,7 +66,7 @@ void rm(const QString &file)
     QFile::remove(file);
 #else
     QString cmd = QStringLiteral("rm %1").arg(file);
-    qDebug() << "Command: " << cmd;
+    qDebug() << u"Command: " << cmd;
     system(cmd.toLocal8Bit().constData());
 #endif
 }
@@ -77,7 +77,7 @@ void mv(const QString &file1, const QString &file2)
     QFile::rename(file1, file2);
 #else
     QString cmd = QStringLiteral("mv %1 %2").arg(file1, file2);
-    qDebug() << "Command: " << cmd;
+    qDebug() << u"Command: " << cmd;
     system(cmd.toLocal8Bit().constData());
 #endif
 }
@@ -122,7 +122,7 @@ public:
     TestFolderWatcher() {
         QDir rootDir(_root.path());
         _rootPath = rootDir.canonicalPath();
-        qDebug() << "creating test directory tree in " << _rootPath;
+        qDebug() << u"creating test directory tree in " << _rootPath;
 
         rootDir.mkpath(QStringLiteral("a1/b1/c1"));
         rootDir.mkpath(QStringLiteral("a1/b1/c2"));
@@ -164,7 +164,7 @@ private Q_SLOTS:
         QString file(_rootPath + QStringLiteral("/foo.txt"));
         QString cmd;
         cmd = QStringLiteral("echo \"xyz\" > %1").arg(file);
-        qDebug() << "Command: " << cmd;
+        qDebug() << u"Command: " << cmd;
         system(cmd.toLocal8Bit().constData());
 
         QVERIFY(waitForPathChanged(file));

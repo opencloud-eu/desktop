@@ -76,7 +76,7 @@ SetupWizardWidget::SetupWizardWidget(SettingsDialog *parent)
     if (OC_ENSURE(fusionStyle != nullptr)) {
         _ui->contentWidget->setStyle(fusionStyle);
     } else {
-        qCDebug(lcSetupWizardWidget) << "Could not set up default style, wizard contents will be shown using default style";
+        qCDebug(lcSetupWizardWidget) << u"Could not set up default style, wizard contents will be shown using default style";
     }
 
     loadStylesheet();

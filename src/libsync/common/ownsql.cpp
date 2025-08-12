@@ -87,11 +87,11 @@ bool SqlDatabase::openHelper(const QString &filename, int sqliteFlags)
     SQLITE_DO(sqlite3_open_v2(FileSystem::longWinPath(filename).toUtf8().constData(), &_db, sqliteFlags, vfs));
 
     if (_errId != SQLITE_OK) {
-        qCWarning(lcSql) << "Error:" << _error << "for" << filename;
+        qCWarning(lcSql) << u"Error:" << _error << u"for" << filename;
         if (_errId == SQLITE_CANTOPEN) {
-            qCWarning(lcSql) << "CANTOPEN extended errcode: " << sqlite3_extended_errcode(_db);
+            qCWarning(lcSql) << u"CANTOPEN extended errcode: " << sqlite3_extended_errcode(_db);
 #if SQLITE_VERSION_NUMBER >= 3012000
-            qCWarning(lcSql) << "CANTOPEN system errno: " << sqlite3_system_errno(_db);
+            qCWarning(lcSql) << u"CANTOPEN system errno: " << sqlite3_system_errno(_db);
 #endif
         }
         close();
@@ -99,7 +99,7 @@ bool SqlDatabase::openHelper(const QString &filename, int sqliteFlags)
     }
 
     if (!_db) {
-        qCWarning(lcSql) << "Error: no database for" << filename;
+        qCWarning(lcSql) << u"Error: no database for" << filename;
         return false;
     }
 
@@ -114,13 +114,13 @@ SqlDatabase::CheckDbResult SqlDatabase::checkDb()
     SqlQuery quick_check(*this);
 
     if (quick_check.prepare("PRAGMA quick_check;", /*allow_failure=*/true) != SQLITE_OK) {
-        qCWarning(lcSql) << "Error preparing quick_check on database";
+        qCWarning(lcSql) << u"Error preparing quick_check on database";
         _errId = quick_check.errorId();
         _error = quick_check.error();
         return CheckDbResult::CantPrepare;
     }
     if (!quick_check.exec()) {
-        qCWarning(lcSql) << "Error running quick_check on database";
+        qCWarning(lcSql) << u"Error running quick_check on database";
         _errId = quick_check.errorId();
         _error = quick_check.error();
         return CheckDbResult::CantExec;
@@ -129,7 +129,7 @@ SqlDatabase::CheckDbResult SqlDatabase::checkDb()
     quick_check.next();
     QString result = quick_check.stringValue(0);
     if (result != QLatin1String("ok")) {
-        qCWarning(lcSql) << "quick_check returned failure:" << result;
+        qCWarning(lcSql) << u"quick_check returned failure:" << result;
         return CheckDbResult::NotOk;
     }
 
@@ -154,21 +154,21 @@ bool SqlDatabase::openOrCreateReadWrite(const QString &filename)
             // Typically CANTOPEN or IOERR.
             qint64 freeSpace = Utility::freeDiskSpace(QFileInfo(filename).dir().absolutePath());
             if (freeSpace != -1 && freeSpace < 1000000) {
-                qCWarning(lcSql) << "Can't prepare consistency check and disk space is low:" << freeSpace;
+                qCWarning(lcSql) << u"Can't prepare consistency check and disk space is low:" << freeSpace;
             } else if (_errId == SQLITE_CANTOPEN) {
                 // Even when there's enough disk space, it might very well be that the
                 // file is on a read-only filesystem and can't be opened because of that.
-                qCWarning(lcSql) << "Can't open db to prepare consistency check, aborting";
+                qCWarning(lcSql) << u"Can't open db to prepare consistency check, aborting";
             } else if (_errId == SQLITE_LOCKED || _errId == SQLITE_BUSY) {
-                qCWarning(lcSql) << "Can't open db to prepare consistency check, the db is locked aborting" << _errId << _error;
+                qCWarning(lcSql) << u"Can't open db to prepare consistency check, the db is locked aborting" << _errId << _error;
             }
             return false;
         }
 
-        qCCritical(lcSql) << "Consistency check failed, removing broken db" << filename;
+        qCCritical(lcSql) << u"Consistency check failed, removing broken db" << filename;
         QFile fileToRemove(filename);
         if (!fileToRemove.remove()) {
-            qCCritical(lcSql) << "Failed to remove broken db" << filename << ":" << fileToRemove.errorString();
+            qCCritical(lcSql) << u"Failed to remove broken db" << filename << u":" << fileToRemove.errorString();
             return false;
         }
 
@@ -189,7 +189,7 @@ bool SqlDatabase::openReadOnly(const QString &filename)
     }
 
     if (checkDb() != CheckDbResult::Ok) {
-        qCWarning(lcSql) << "Consistency check failed in readonly mode, giving up" << filename;
+        qCWarning(lcSql) << u"Consistency check failed in readonly mode, giving up" << filename;
         close();
         return false;
     }
@@ -214,7 +214,7 @@ void SqlDatabase::close()
         }
         SQLITE_DO(sqlite3_close(_db));
         if (_errId != SQLITE_OK)
-            qCWarning(lcSql) << "Closing database failed" << _error;
+            qCWarning(lcSql) << u"Closing database failed" << _error;
         _db = nullptr;
     }
 }
@@ -272,10 +272,10 @@ int SqlQuery::prepare(const QByteArray &sql, bool allow_failure)
     }
     if (!_sql.isEmpty()) {
         for (int n = 0; n < SQLITE_REPEAT_COUNT; ++n) {
-            qCDebug(lcSql) << "SQL prepare" << _sql << "Try:" << n;
+            qCDebug(lcSql) << u"SQL prepare" << _sql << u"Try:" << n;
             _errId = sqlite3_prepare_v2(_db, _sql.constData(), -1, &_stmt, nullptr);
             if (_errId != SQLITE_OK) {
-                qCWarning(lcSql) << "SQL prepare failed" << _sql << QString::fromUtf8(sqlite3_errmsg(_db));
+                qCWarning(lcSql) << u"SQL prepare failed" << _sql << QString::fromUtf8(sqlite3_errmsg(_db));
                 if ((_errId == SQLITE_BUSY) || (_errId == SQLITE_LOCKED)) {
                     continue;
                 }
@@ -285,7 +285,7 @@ int SqlQuery::prepare(const QByteArray &sql, bool allow_failure)
 
         if (_errId != SQLITE_OK) {
             _error = QString::fromUtf8(sqlite3_errmsg(_db));
-            qCWarning(lcSql) << "Sqlite prepare statement error:" << _errId << _error << "in" << _sql;
+            qCWarning(lcSql) << u"Sqlite prepare statement error:" << _errId << _error << u"in" << _sql;
             OC_ENFORCE_X(allow_failure, "SQLITE Prepare error");
         } else {
             OC_ASSERT(_stmt);
@@ -325,7 +325,7 @@ bool SqlQuery::isPragma()
 bool SqlQuery::exec()
 {
     if (!_stmt) {
-        qCWarning(lcSql) << "Can't exec query, statement unprepared.";
+        qCWarning(lcSql) << u"Can't exec query, statement unprepared.";
         return false;
     }
     // Don't do anything for selects, that is how we use the lib :-|
@@ -340,15 +340,15 @@ bool SqlQuery::exec()
                         query.replace(v.name, v.value);
                     }
                     char *actualQuery = sqlite3_expanded_sql(_stmt);
-                    qCDebug(lcSql) << "SQL exec: Estimated query:" << query << "Actual query:" << QString::fromUtf8(actualQuery) << "Try:" << n;
+                    qCDebug(lcSql) << u"SQL exec: Estimated query:" << query << u"Actual query:" << QString::fromUtf8(actualQuery) << u"Try:" << n;
                     sqlite3_free(actualQuery);
                 } else {
-                    qCDebug(lcSql) << "SQL exec:" << _sql << "Try:" << n;
+                    qCDebug(lcSql) << u"SQL exec:" << _sql << u"Try:" << n;
                 }
             }
             _errId = sqlite3_step(_stmt);
             if (_errId != SQLITE_DONE && _errId != SQLITE_ROW) {
-                qCWarning(lcSql) << "SQL exec failed" << _sql << QString::fromUtf8(sqlite3_errmsg(_db));
+                qCWarning(lcSql) << u"SQL exec failed" << _sql << QString::fromUtf8(sqlite3_errmsg(_db));
                 if (_errId == SQLITE_LOCKED || _errId == SQLITE_BUSY) {
                     continue;
                 }
@@ -358,15 +358,15 @@ bool SqlQuery::exec()
 
         if (_errId != SQLITE_DONE && _errId != SQLITE_ROW) {
             _error = QString::fromUtf8(sqlite3_errmsg(_db));
-            qCWarning(lcSql) << "Sqlite exec statement error:" << _errId << _error << "in" << _sql;
+            qCWarning(lcSql) << u"Sqlite exec statement error:" << _errId << _error << u"in" << _sql;
             if (_errId == SQLITE_IOERR) {
-                qCWarning(lcSql) << "IOERR extended errcode: " << sqlite3_extended_errcode(_db);
+                qCWarning(lcSql) << u"IOERR extended errcode: " << sqlite3_extended_errcode(_db);
 #if SQLITE_VERSION_NUMBER >= 3012000
-                qCWarning(lcSql) << "IOERR system errno: " << sqlite3_system_errno(_db);
+                qCWarning(lcSql) << u"IOERR system errno: " << sqlite3_system_errno(_db);
 #endif
             }
         } else {
-            qCDebug(lcSql) << "Last exec affected" << numRowsAffected() << "rows.";
+            qCDebug(lcSql) << u"Last exec affected" << numRowsAffected() << u"rows.";
         }
         return (_errId == SQLITE_DONE); // either SQLITE_ROW or SQLITE_DONE
     }
@@ -393,7 +393,7 @@ auto SqlQuery::next() -> NextResult
     result.hasData = _errId == SQLITE_ROW;
     if (!result.ok) {
         _error = QString::fromUtf8(sqlite3_errmsg(_db));
-        qCWarning(lcSql) << "Sqlite step statement error:" << _errId << _error << "in" << _sql;
+        qCWarning(lcSql) << u"Sqlite step statement error:" << _errId << _error << u"in" << _sql;
     }
 
     return result;
@@ -438,12 +438,12 @@ void SqlQuery::bindValueInternal(int pos, const QVariant &value)
         break;
     }
     default: {
-        qCWarning(lcSql) << "Unsupported raw type detected" << value.typeId() << value.typeName() << value.metaType().sizeOf() << value;
+        qCWarning(lcSql) << u"Unsupported raw type detected" << value.typeId() << value.typeName() << value.metaType().sizeOf() << value;
         break;
     }
     }
     if (res != SQLITE_OK) {
-        qCWarning(lcSql) << "ERROR binding SQL value:" << value << "error:" << res;
+        qCWarning(lcSql) << u"ERROR binding SQL value:" << value << u"error:" << res;
     }
     OC_ASSERT(res == SQLITE_OK);
 }

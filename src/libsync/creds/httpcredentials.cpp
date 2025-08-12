@@ -117,7 +117,7 @@ void HttpCredentials::fetchFromKeychainHelper()
     auto job = _account->credentialManager()->get(refreshTokenKeyC());
     connect(job, &CredentialJob::finished, this, [job, this] {
         auto handleError = [job, this] {
-            qCWarning(lcHttpCredentials) << "Could not retrieve client password from keychain" << job->errorString();
+            qCWarning(lcHttpCredentials) << u"Could not retrieve client password from keychain" << job->errorString();
 
             // we come here if the password is empty or any other keychain
             // error happend.
@@ -160,11 +160,11 @@ void HttpCredentials::slotAuthentication(QNetworkReply *reply, QAuthenticator *a
     Q_UNUSED(authenticator)
     // Because of issue #4326, we need to set the login and password manually at every requests
     // Thus, if we reach this signal, those credentials were invalid and we terminate.
-    qCWarning(lcHttpCredentials) << "Stop request: Authentication failed for " << reply->url().toString() << reply->request().rawHeader("Original-Request-ID");
+    qCWarning(lcHttpCredentials) << u"Stop request: Authentication failed for " << reply->url().toString() << reply->request().rawHeader("Original-Request-ID");
     reply->setProperty(authenticationFailedC, true);
 
     if (!_oAuthJob) {
-        qCInfo(lcHttpCredentials) << "Refreshing token";
+        qCInfo(lcHttpCredentials) << u"Refreshing token";
         refreshAccessToken();
     }
 }
@@ -231,7 +231,7 @@ bool HttpCredentials::refreshAccessTokenInternal(int tokenRefreshRetriesCount)
         }
 
         if (nextTry >= TokenRefreshMaxRetries) {
-            qCWarning(lcHttpCredentials) << "Too many failed refreshes" << nextTry << "-> log out";
+            qCWarning(lcHttpCredentials) << u"Too many failed refreshes" << nextTry << u"-> log out";
             forgetSensitiveData();
             Q_EMIT authenticationFailed();
             Q_EMIT fetched();
@@ -268,7 +268,7 @@ bool HttpCredentials::refreshAccessTokenInternal(int tokenRefreshRetriesCount)
 
 void HttpCredentials::invalidateToken()
 {
-    qCWarning(lcHttpCredentials) << "Invalidating the credentials";
+    qCWarning(lcHttpCredentials) << u"Invalidating the credentials";
 
     if (!_accessToken.isEmpty()) {
         _previousPassword = _accessToken;

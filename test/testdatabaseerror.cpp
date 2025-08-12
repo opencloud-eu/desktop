@@ -56,7 +56,7 @@ private Q_SLOTS:
         };
 
         for (int count = 0; true; ++count) {
-            qInfo() << "Starting Iteration" << count;
+            qInfo() << u"Starting Iteration" << count;
 
             FakeFolder fakeFolder(FileInfo::A12_B12_C12_S12(), vfsMode, filesAreDehydrated);
 
@@ -80,7 +80,7 @@ private Q_SLOTS:
             // run the sync
             bool result = fakeFolder.applyLocalModificationsAndSync();
 
-            qInfo() << "Result of iteration" << count << "was" << result;
+            qInfo() << u"Result of iteration" << count << u"was" << result;
 
             if (fakeFolder.syncJournal().autotestFailCounter >= 0) {
                 // No error was thrown, we are finished

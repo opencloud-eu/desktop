@@ -204,7 +204,7 @@ bool FileSystem::rename(const QString &originFileName, const QString &destinatio
     }
 
     if (!success) {
-        qCWarning(lcFileSystem) << "Error renaming file" << originFileName << "to" << destinationFileName << "failed: " << error;
+        qCWarning(lcFileSystem) << u"Error renaming file" << originFileName << u"to" << destinationFileName << u"failed: " << error;
         if (errorString) {
             *errorString = error;
         }
@@ -225,7 +225,7 @@ bool FileSystem::uncheckedRenameReplace(const QString &originFileName, const QSt
     bool destExists = fileExists(destinationFileName);
     if (destExists && !QFile::remove(destinationFileName)) {
         *errorString = orig.errorString();
-        qCWarning(lcFileSystem) << "Target file could not be removed.";
+        qCWarning(lcFileSystem) << u"Target file could not be removed.";
         success = false;
     }
     if (success) {
@@ -233,7 +233,7 @@ bool FileSystem::uncheckedRenameReplace(const QString &originFileName, const QSt
     }
     if (!success) {
         *errorString = orig.errorString();
-        qCWarning(lcFileSystem) << "Renaming temp file to final failed: " << *errorString;
+        qCWarning(lcFileSystem) << u"Renaming temp file to final failed: " << *errorString;
         return false;
     }
 
@@ -247,19 +247,19 @@ bool FileSystem::uncheckedRenameReplace(const QString &originFileName, const QSt
     const QString dest = longWinPath(destinationFileName);
     if (FileSystem::isFileLocked(dest, FileSystem::LockMode::Exclusive)) {
         *errorString = QCoreApplication::translate("FileSystem", "Can't rename %1, the file is currently in use").arg(destinationFileName);
-        qCWarning(lcFileSystem) << "Renaming failed: " << *errorString;
+        qCWarning(lcFileSystem) << u"Renaming failed: " << *errorString;
         return false;
     }
     if (FileSystem::isFileLocked(orig, FileSystem::LockMode::Exclusive)) {
         *errorString = QCoreApplication::translate("FileSystem", "Can't rename %1, the file is currently in use").arg(originFileName);
-        qCWarning(lcFileSystem) << "Renaming failed: " << *errorString;
+        qCWarning(lcFileSystem) << u"Renaming failed: " << *errorString;
         return false;
     }
     const BOOL ok = MoveFileEx(reinterpret_cast<const wchar_t *>(orig.utf16()), reinterpret_cast<const wchar_t *>(dest.utf16()),
         MOVEFILE_REPLACE_EXISTING | MOVEFILE_COPY_ALLOWED | MOVEFILE_WRITE_THROUGH);
     if (!ok) {
         *errorString = Utility::formatWinError(GetLastError());
-        qCWarning(lcFileSystem) << "Renaming temp file to final failed: " << *errorString;
+        qCWarning(lcFileSystem) << u"Renaming temp file to final failed: " << *errorString;
         return false;
     }
 #endif
@@ -382,7 +382,7 @@ bool FileSystem::longPathsEnabledOnWindows()
         // https://learn.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation?tabs=registry#enable-long-paths-in-windows-10-version-1607-and-later
         QSettings fsSettings(QStringLiteral("HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\FileSystem"), QSettings::NativeFormat);
         QVariant longPathsEnabled = fsSettings.value(QStringLiteral("LongPathsEnabled"));
-        qCDebug(lcFileSystem) << "LongPathsEnabled:" << longPathsEnabled;
+        qCDebug(lcFileSystem) << u"LongPathsEnabled:" << longPathsEnabled;
         longPathsEnabledCached = longPathsEnabled.value<uint32_t>() == 1;
     }
 
@@ -405,7 +405,7 @@ bool FileSystem::remove(const QString &fileName, QString *errorString)
         if (errorString) {
             *errorString = f.errorString();
         }
-        qCWarning(lcFileSystem) << "Failed to delete:" << fileName << "Error:" << f.errorString();
+        qCWarning(lcFileSystem) << u"Failed to delete:" << fileName << u"Error:" << f.errorString();
         return false;
     }
     return true;

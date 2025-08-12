@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
 #endif // Q_OS_WIN
 
     if (app.arguments().size() != 2) {
-        qDebug() << "You need to pass the .dmp file path as only argument";
+        qDebug() << u"You need to pass the .dmp file path as only argument";
         return 1;
     }
 

@@ -35,7 +35,7 @@ FolderWatcherPrivate::FolderWatcherPrivate(FolderWatcher *p, const QString &path
         _socket.reset(new QSocketNotifier(_fd, QSocketNotifier::Read));
         connect(_socket.data(), &QSocketNotifier::activated, this, &FolderWatcherPrivate::slotReceivedNotification);
     } else {
-        qCWarning(lcFolderWatcher) << "notify_init() failed: " << strerror(errno);
+        qCWarning(lcFolderWatcher) << u"notify_init() failed: " << strerror(errno);
     }
 
     QMetaObject::invokeMethod(this, [path, this] { slotAddFolderRecursive(path); });
@@ -45,10 +45,10 @@ FolderWatcherPrivate::FolderWatcherPrivate(FolderWatcher *p, const QString &path
 bool FolderWatcherPrivate::findFoldersBelow(const QDir &dir, QStringList &fullList)
 {
     if (!dir.exists()) {
-        qCDebug(lcFolderWatcher) << "      - non existing path coming in: " << dir.absolutePath();
+        qCDebug(lcFolderWatcher) << u"      - non existing path coming in: " << dir.absolutePath();
         return false;
     } else if (!dir.isReadable()) {
-        qCDebug(lcFolderWatcher) << "      - path without read permissions coming in: " << dir.absolutePath();
+        qCDebug(lcFolderWatcher) << u"      - path without read permissions coming in: " << dir.absolutePath();
         return false;
     }
 
@@ -91,15 +91,14 @@ void FolderWatcherPrivate::slotAddFolderRecursive(const QString &path)
     }
 
     int subdirCount = 0;
-    qCDebug(lcFolderWatcher) << "(+) Watcher:" << path;
+    qCDebug(lcFolderWatcher) << u"(+) Watcher:" << path;
 
     QDir inPath(path);
     inotifyRegisterPath(inPath.absolutePath());
 
     QStringList allSubfolders;
     if (!findFoldersBelow(QDir(path), allSubfolders)) {
-        qCWarning(lcFolderWatcher).nospace() << "Could not traverse all sub folders of '"
-                                             << path << "'";
+        qCWarning(lcFolderWatcher).nospace() << u"Could not traverse all sub folders of '" << path << u"'";
     }
 
     for (const auto &subfolder : std::as_const(allSubfolders)) {
@@ -107,20 +106,20 @@ void FolderWatcherPrivate::slotAddFolderRecursive(const QString &path)
         if (folder.exists() && !_pathToWatch.contains(folder.absolutePath())) {
             ++subdirCount;
             if (_parent->pathIsIgnored(subfolder)) {
-                qCDebug(lcFolderWatcher) << "* Not adding" << folder.path();
+                qCDebug(lcFolderWatcher) << u"* Not adding" << folder.path();
                 continue;
             }
             inotifyRegisterPath(folder.absolutePath());
         } else {
-            qCDebug(lcFolderWatcher) << "    `-> discarded:" << folder.path();
+            qCDebug(lcFolderWatcher) << u"    `-> discarded:" << folder.path();
         }
     }
 
     if (subdirCount > 0) {
-        qCDebug(lcFolderWatcher) << "    `-> and" << subdirCount << "subdirectories";
+        qCDebug(lcFolderWatcher) << u"    `-> and" << subdirCount << u"subdirectories";
     }
 
-    qCDebug(lcFolderWatcher) << "    --- Finished scanning" << path;
+    qCDebug(lcFolderWatcher) << u"    --- Finished scanning" << path;
 }
 
 void FolderWatcherPrivate::slotReceivedNotification(int fd)
@@ -161,7 +160,7 @@ void FolderWatcherPrivate::slotReceivedNotification(int fd)
         event = reinterpret_cast<struct inotify_event *>(&buffer[bytePosition]);
 
         if (event == nullptr) {
-            qCDebug(lcFolderWatcher) << "NULL event";
+            qCDebug(lcFolderWatcher) << u"NULL event";
             continue;
         }
 
@@ -218,7 +217,7 @@ void FolderWatcherPrivate::removeFoldersBelow(const QString &path)
         inotify_rm_watch(_fd, wid);
         _watchToPath.remove(wid);
         it = _pathToWatch.erase(it);
-        qCDebug(lcFolderWatcher) << "Removed watch for" << itPath;
+        qCDebug(lcFolderWatcher) << u"Removed watch for" << itPath;
     }
 }
 

@@ -188,7 +188,7 @@ void Account::setCredentials(AbstractCredentials *cred)
     // the network access manager takes ownership when setCache is called, so we have to reinitialize it every time we reset the manager
     _networkCache = new QNetworkDiskCache(this);
     const QString networkCacheLocation = (QStringLiteral("%1/network/").arg(_cacheDirectory));
-    qCDebug(lcAccount) << "Cache location for account" << this << "set to" << networkCacheLocation;
+    qCDebug(lcAccount) << u"Cache location for account" << this << u"set to" << networkCacheLocation;
     _networkCache->setCacheDirectory(networkCacheLocation);
     _am->setCache(_networkCache);
 
@@ -210,7 +210,7 @@ void Account::setCredentials(AbstractCredentials *cred)
  */
 void Account::clearCookieJar()
 {
-    qCInfo(lcAccount) << "Clearing cookies";
+    qCInfo(lcAccount) << u"Clearing cookies";
     _am->cookieJar()->deleteLater();
     _am->setCookieJar(new CookieJar);
 }
@@ -368,6 +368,6 @@ QDebug operator<<(QDebug debug, const OCC::Account *acc)
 {
     QDebugStateSaver saver(debug);
     debug.setAutoInsertSpaces(false);
-    debug << "OCC::Account(" << acc->displayNameWithHost() << ")";
+    debug << u"OCC::Account(" << acc->displayNameWithHost() << u")";
     return debug.maybeSpace();
 }

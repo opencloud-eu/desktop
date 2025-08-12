@@ -69,7 +69,7 @@ void PropagateUploadFileV1::doStartUpload()
 
     auto device = std::make_unique<UploadDevice>(fileName, 0, fileSize, propagator()->_bandwidthManager);
     if (!device->open(QIODevice::ReadOnly)) {
-        qCWarning(lcPropagateUploadV1) << "Could not prepare upload device: " << device->errorString();
+        qCWarning(lcPropagateUploadV1) << u"Could not prepare upload device: " << device->errorString();
         // Soft error because this is likely caused by the user modifying his files while syncing
         abortWithError(SyncFileItem::SoftError, device->errorString());
         return;
@@ -155,7 +155,7 @@ void PropagateUploadFileV1::slotPutFinished()
     QByteArray fid = job->reply()->rawHeader("OC-FileID");
     if (!fid.isEmpty()) {
         if (!_item->_fileId.isEmpty() && _item->_fileId != fid) {
-            qCWarning(lcPropagateUploadV1) << "File ID changed!" << _item->_fileId << fid;
+            qCWarning(lcPropagateUploadV1) << u"File ID changed!" << _item->_fileId << fid;
         }
         _item->_fileId = fid;
     }

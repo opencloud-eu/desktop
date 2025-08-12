@@ -90,6 +90,6 @@ QDebug &operator<<(QDebug &debug, const OCC::SyncFileStatus &item)
 {
     QDebugStateSaver saver(debug);
     debug.setAutoInsertSpaces(false);
-    debug << "OCC::SyncFileStatus(shared=" << item.shared() << ", tag=" << item.tag() << ")";
+    debug << u"OCC::SyncFileStatus(shared=" << item.shared() << u", tag=" << item.tag() << u")";
     return debug;
 }

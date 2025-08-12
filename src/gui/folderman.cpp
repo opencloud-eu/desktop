@@ -183,7 +183,7 @@ void FolderMan::registerFolderWithSocketApi(Folder *folder)
 
 std::optional<qsizetype> FolderMan::loadFolders()
 {
-    qCInfo(lcFolderMan) << "Setup folders from settings file";
+    qCInfo(lcFolderMan) << u"Setup folders from settings file";
 
     auto settings = ConfigFile::makeQSettings();
     const auto size = settings.beginReadArray(foldersC());
@@ -236,7 +236,7 @@ bool FolderMan::ensureJournalGone(const QString &journalDbFile)
 {
     // remove the old journal file
     while (QFile::exists(journalDbFile) && !QFile::remove(journalDbFile)) {
-        qCWarning(lcFolderMan) << "Could not remove old db file at" << journalDbFile;
+        qCWarning(lcFolderMan) << u"Could not remove old db file at" << journalDbFile;
         int ret = QMessageBox::warning(nullptr, tr("Could not reset folder state"),
             tr("An old sync journal '%1' was found, "
                "but could not be removed. Please make sure "
@@ -258,7 +258,7 @@ SocketApi *FolderMan::socketApi()
 void FolderMan::slotFolderSyncPaused(Folder *f, bool paused)
 {
     if (!f) {
-        qCCritical(lcFolderMan) << "slotFolderSyncPaused called with empty folder";
+        qCCritical(lcFolderMan) << u"slotFolderSyncPaused called with empty folder";
         return;
     }
 
@@ -306,7 +306,7 @@ void FolderMan::slotIsConnectedChanged()
     QString accountName = accountState->account()->displayNameWithHost();
 
     if (accountState->isConnected()) {
-        qCInfo(lcFolderMan) << "Account" << accountName << "connected, scheduling its folders";
+        qCInfo(lcFolderMan) << u"Account" << accountName << u"connected, scheduling its folders";
 
         for (auto *f : std::as_const(_folders)) {
             if (f
@@ -316,8 +316,9 @@ void FolderMan::slotIsConnectedChanged()
             }
         }
     } else {
-        qCInfo(lcFolderMan) << "Account" << accountName << "disconnected or paused, "
-                                                           "terminating or descheduling sync folders";
+        qCInfo(lcFolderMan) << u"Account" << accountName
+                            << u"disconnected or paused, "
+                               "terminating or descheduling sync folders";
 
         for (auto *f : std::as_const(_folders)) {
             if (f
@@ -363,8 +364,8 @@ void FolderMan::slotServerVersionChanged(Account *account)
 {
     // Pause folders if the server version is unsupported
     if (account->serverSupportLevel() == Account::ServerSupportLevel::Unsupported) {
-        qCWarning(lcFolderMan) << "The server version is unsupported:" << account->capabilities().status().versionString()
-                               << "pausing all folders on the account";
+        qCWarning(lcFolderMan) << u"The server version is unsupported:" << account->capabilities().status().versionString()
+                               << u"pausing all folders on the account";
 
         for (auto &f : std::as_const(_folders)) {
             if (f->accountState()->account().data() == account) {
@@ -394,8 +395,8 @@ void FolderMan::slotFolderSyncStarted()
     if (!f)
         return;
 
-    qCInfo(lcFolderMan) << ">========== Sync started for folder [" << f->shortGuiLocalPath() << "] of account ["
-                        << f->accountState()->account()->displayNameWithHost() << "]";
+    qCInfo(lcFolderMan) << u">========== Sync started for folder [" << f->shortGuiLocalPath() << u"] of account ["
+                        << f->accountState()->account()->displayNameWithHost() << u"]";
 }
 
 /*
@@ -411,8 +412,8 @@ void FolderMan::slotFolderSyncFinished(const SyncResult &)
     if (!f)
         return;
 
-    qCInfo(lcFolderMan) << "<========== Sync finished for folder [" << f->shortGuiLocalPath() << "] of account ["
-                        << f->accountState()->account()->displayNameWithHost() << "]";
+    qCInfo(lcFolderMan) << u"<========== Sync finished for folder [" << f->shortGuiLocalPath() << u"] of account ["
+                        << f->accountState()->account()->displayNameWithHost() << u"]";
 }
 
 Folder *FolderMan::addFolder(const AccountStatePtr &accountState, const FolderDefinition &folderDefinition)
@@ -427,7 +428,7 @@ Folder *FolderMan::addFolder(const AccountStatePtr &accountState, const FolderDe
 
     auto vfs = VfsPluginManager::instance().createVfsFromPlugin(folderDefinition.virtualFilesMode);
     if (!vfs) {
-        qCWarning(lcFolderMan) << "Could not load plugin for mode" << folderDefinition.virtualFilesMode;
+        qCWarning(lcFolderMan) << u"Could not load plugin for mode" << folderDefinition.virtualFilesMode;
         return nullptr;
     }
 
@@ -449,7 +450,7 @@ Folder *FolderMan::addFolderInternal(
 {
     auto folder = new Folder(folderDefinition, accountState, std::move(vfs), this);
 
-    qCInfo(lcFolderMan) << "Adding folder to Folder Map " << folder << folder->path();
+    qCInfo(lcFolderMan) << u"Adding folder to Folder Map " << folder << folder->path();
     _folders.push_back(folder);
     if (folder->isSyncPaused()) {
         _disabledFolders.insert(folder);
@@ -498,7 +499,7 @@ void FolderMan::removeFolder(Folder *f)
         return;
     }
 
-    qCInfo(lcFolderMan) << "Removing " << f->path();
+    qCInfo(lcFolderMan) << u"Removing " << f->path();
 
     const bool currentlyRunning = f->isSyncRunning();
     if (currentlyRunning) {
@@ -797,8 +798,8 @@ Result<void, QString> FolderMan::unsupportedConfiguration(const QString &path) c
                     qCWarning(lcFolderMan) << error;
                     return error;
                 } else {
-                    qCWarning(lcFolderMan) << error << "this error is not displayed to the user as this is a branded"
-                                           << "client and the error itself might be a false positive caused by a previous broken migration";
+                    qCWarning(lcFolderMan) << error << u"this error is not displayed to the user as this is a branded"
+                                           << u"client and the error itself might be a false positive caused by a previous broken migration";
                 }
             }
             return {};
@@ -842,9 +843,9 @@ Folder *FolderMan::addFolderFromWizard(const AccountStatePtr &accountStatePtr, F
     auto newFolder = addFolder(accountStatePtr, folderDefinition);
 
     if (newFolder) {
-        qCDebug(lcFolderMan) << "Local sync folder" << folderDefinition.localPath() << "successfully created!";
+        qCDebug(lcFolderMan) << u"Local sync folder" << folderDefinition.localPath() << u"successfully created!";
     } else {
-        qCWarning(lcFolderMan) << "Failed to create local sync folder!";
+        qCWarning(lcFolderMan) << u"Failed to create local sync folder!";
     }
     return newFolder;
 }

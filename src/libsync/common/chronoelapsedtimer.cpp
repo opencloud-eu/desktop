@@ -68,5 +68,5 @@ QDebug operator<<(QDebug debug, const ChronoElapsedTimer &timer)
     const auto min = duration_cast<minutes>(duration -= h);
     const auto s = duration_cast<seconds>(duration -= min);
     const auto ms = duration_cast<milliseconds>(duration -= s);
-    return debug << "duration(" << h.count() << "h, " << min.count() << "min, " << s.count() << "s, " << ms.count() << "ms)";
+    return debug << u"duration(" << h.count() << u"h, " << min.count() << u"min, " << s.count() << u"s, " << ms.count() << u"ms)";
 }

@@ -233,15 +233,15 @@ void setupLogging(const CommandLineOptions &options)
     // Possibly configure logging from config file
     LogBrowser::setupLoggingFromConfig();
 
-    qCInfo(lcMain) << "##################" << Theme::instance()->appName() << "locale:" << QLocale::system().name()
-                   << "version:" << Theme::instance()->aboutVersions(Theme::VersionFormat::OneLiner);
-    qCInfo(lcMain) << "Arguments:" << qApp->arguments();
+    qCInfo(lcMain) << u"##################" << Theme::instance()->appName() << u"locale:" << QLocale::system().name() << u"version:"
+                   << Theme::instance()->aboutVersions(Theme::VersionFormat::OneLiner);
+    qCInfo(lcMain) << u"Arguments:" << qApp->arguments();
 }
 
 QString setupTranslations(QApplication *app)
 {
     const auto trPath = Translations::translationsDirectoryPath();
-    qCDebug(lcMain) << "Translations directory path:" << trPath;
+    qCDebug(lcMain) << u"Translations directory path:" << trPath;
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 7, 0)
     QStringList uiLanguages = QLocale::system().uiLanguages(QLocale::TagSeparator::Underscore);
@@ -251,7 +251,7 @@ QString setupTranslations(QApplication *app)
         uiLanguages << lang.replace(QLatin1Char('-'), QLatin1Char('_'));
     }
 #endif
-    qCDebug(lcMain) << "UI languages:" << uiLanguages;
+    qCDebug(lcMain) << u"UI languages:" << uiLanguages;
 
     // the user can also set a locale in the settings, so we need to load the config file
     const ConfigFile cfg;
@@ -259,7 +259,7 @@ QString setupTranslations(QApplication *app)
     // we need to track the enforced language separately, since we need to distinguish between locale-provided
     // and user-enforced one below
     const QString enforcedLocale = cfg.uiLanguage();
-    qCDebug(lcMain) << "Enforced language:" << enforcedLocale;
+    qCDebug(lcMain) << u"Enforced language:" << enforcedLocale;
 
     // note that user-enforced language are prioritized over the theme enforced one
     // to make testing easier.
@@ -294,15 +294,15 @@ QString setupTranslations(QApplication *app)
             // for us to accept the language. Otherwise, we try with the next.
             // "en" is an exception as it is the default language and may not
             // have a translation file provided.
-            qCInfo(lcMain) << "Using" << lang << "translation" << translator->language();
+            qCInfo(lcMain) << u"Using" << lang << u"translation" << translator->language();
             displayLanguage = lang;
 
             const QString qtTrPath = QLibraryInfo::path(QLibraryInfo::TranslationsPath);
-            qCDebug(lcMain) << "qtTrPath:" << qtTrPath;
+            qCDebug(lcMain) << u"qtTrPath:" << qtTrPath;
             const QString qtTrFile = QLatin1String("qt_") + lang;
-            qCDebug(lcMain) << "qtTrFile:" << qtTrFile;
+            qCDebug(lcMain) << u"qtTrFile:" << qtTrFile;
             const QString qtBaseTrFile = QLatin1String("qtbase_") + lang;
-            qCDebug(lcMain) << "qtBaseTrFile:" << qtBaseTrFile;
+            qCDebug(lcMain) << u"qtBaseTrFile:" << qtBaseTrFile;
 
             QTranslator *qtTranslator = new QTranslator(app);
             QTranslator *qtkeychainTranslator = new QTranslator(app);
@@ -311,7 +311,7 @@ QString setupTranslations(QApplication *app)
                 if (!qtTranslator->load(qtTrFile, trPath)) {
                     if (!qtTranslator->load(qtBaseTrFile, qtTrPath)) {
                         if (!qtTranslator->load(qtBaseTrFile, trPath)) {
-                            qCCritical(lcMain) << "Could not load Qt translations";
+                            qCCritical(lcMain) << u"Could not load Qt translations";
                         }
                     }
                 }
@@ -320,20 +320,20 @@ QString setupTranslations(QApplication *app)
             const QString qtkeychainTrFile = QLatin1String("qtkeychain_") + lang;
             if (!qtkeychainTranslator->load(qtkeychainTrFile, qtTrPath)) {
                 if (!qtkeychainTranslator->load(qtkeychainTrFile, trPath)) {
-                    qCCritical(lcMain) << "Could not load qtkeychain translations";
+                    qCCritical(lcMain) << u"Could not load qtkeychain translations";
                 }
             }
 
             if (!translator->isEmpty() && !qApp->installTranslator(translator)) {
-                qCCritical(lcMain) << "Failed to install translator";
+                qCCritical(lcMain) << u"Failed to install translator";
                 translator->deleteLater();
             }
             if (!qtTranslator->isEmpty() && !qApp->installTranslator(qtTranslator)) {
-                qCCritical(lcMain) << "Failed to install Qt translator";
+                qCCritical(lcMain) << u"Failed to install Qt translator";
                 qtTranslator->deleteLater();
             }
             if (!qtkeychainTranslator->isEmpty() && !qApp->installTranslator(qtkeychainTranslator)) {
-                qCCritical(lcMain) << "Failed to install qtkeychain translator";
+                qCCritical(lcMain) << u"Failed to install qtkeychain translator";
                 qtkeychainTranslator->deleteLater();
             }
 
@@ -344,7 +344,7 @@ QString setupTranslations(QApplication *app)
             // see https://github.com/owncloud/client/issues/8608 for more information
             if (enforcedLocale == lang) {
                 QLocale newLocale(lang);
-                qCDebug(lcMain) << "language" << lang << "was enforced, changing default locale to" << newLocale;
+                qCDebug(lcMain) << u"language" << lang << u"was enforced, changing default locale to" << newLocale;
                 QLocale::setDefault(newLocale);
             }
             break;
@@ -432,10 +432,10 @@ int main(int argc, char **argv)
 
         if (!singleApplication.isPrimaryInstance()) {
             // if the application is already running, notify it.
-            qCInfo(lcMain) << "Already running, exiting...";
+            qCInfo(lcMain) << u"Already running, exiting...";
             if (app.isSessionRestored()) {
                 // This call is mirrored with the one in Application::slotParseMessage
-                qCInfo(lcMain) << "Session was restored, don't notify app!";
+                qCInfo(lcMain) << u"Session was restored, don't notify app!";
                 return -1;
             }
 
@@ -463,7 +463,7 @@ int main(int argc, char **argv)
         auto folderManager = FolderMan::createInstance();
 
         if (!AccountManager::instance()->restore()) {
-            qCCritical(lcMain) << "Could not read the account settings, quitting";
+            qCCritical(lcMain) << u"Could not read the account settings, quitting";
             QMessageBox::critical(nullptr, QCoreApplication::translate("account loading", "Error accessing the configuration file"),
                 QCoreApplication::translate("account loading", "There was an error while accessing the configuration file at %1.")
                     .arg(ConfigFile::configFile()),

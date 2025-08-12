@@ -50,7 +50,7 @@ ConnectionValidator::ConnectionValidator(AccountPtr account, QObject *parent)
     auto timer = new QTimer(this);
     timer->setInterval(30s);
     connect(timer, &QTimer::timeout, this,
-        [this] { qCInfo(lcConnectionValidator) << "ConnectionValidator" << _account->displayNameWithHost() << "still running after" << _duration; });
+        [this] { qCInfo(lcConnectionValidator) << u"ConnectionValidator" << _account->displayNameWithHost() << u"still running after" << _duration; });
     timer->start();
 }
 
@@ -62,11 +62,11 @@ void ConnectionValidator::setClearCookies(bool clearCookies)
 void ConnectionValidator::checkServer(ConnectionValidator::ValidationMode mode)
 {
     _mode = mode;
-    qCDebug(lcConnectionValidator) << "Checking server and authentication";
+    qCDebug(lcConnectionValidator) << u"Checking server and authentication";
 
     // Lookup system proxy in a thread https://github.com/owncloud/client/issues/2993
     if (ClientProxy::isUsingSystemDefault()) {
-        qCDebug(lcConnectionValidator) << "Trying to look up system proxy";
+        qCDebug(lcConnectionValidator) << u"Trying to look up system proxy";
         ClientProxy::lookupSystemProxyAsync(_account->url(),
             this, SLOT(systemProxyLookupDone(QNetworkProxy)));
     } else {
@@ -80,14 +80,14 @@ void ConnectionValidator::checkServer(ConnectionValidator::ValidationMode mode)
 void ConnectionValidator::systemProxyLookupDone(const QNetworkProxy &proxy)
 {
     if (!_account) {
-        qCWarning(lcConnectionValidator) << "Bailing out, Account had been deleted";
+        qCWarning(lcConnectionValidator) << u"Bailing out, Account had been deleted";
         return;
     }
 
     if (proxy.type() != QNetworkProxy::NoProxy) {
-        qCInfo(lcConnectionValidator) << "Setting QNAM proxy to be system proxy" << ClientProxy::printQNetworkProxy(proxy);
+        qCInfo(lcConnectionValidator) << u"Setting QNAM proxy to be system proxy" << ClientProxy::printQNetworkProxy(proxy);
     } else {
-        qCInfo(lcConnectionValidator) << "No system proxy set by OS";
+        qCInfo(lcConnectionValidator) << u"No system proxy set by OS";
     }
     _account->accessManager()->setProxy(proxy);
 
@@ -142,15 +142,15 @@ void ConnectionValidator::slotCheckServerAndAuth()
 void ConnectionValidator::slotStatusFound(const QUrl &url, const QJsonObject &info)
 {
     // status.php was found.
-    qCInfo(lcConnectionValidator) << "** Application: OpenCloud found: " << url << " with version " << info.value(QLatin1String("productversion")).toString();
+    qCInfo(lcConnectionValidator) << u"** Application: OpenCloud found: " << url << u" with version " << info.value(QLatin1String("productversion")).toString();
 
     // Update server URL in case of redirection
     if (_account->url() != url) {
         if (Utility::urlEqual(_account->url(), url)) {
-            qCInfo(lcConnectionValidator()) << "status.php was redirected to" << url.toString() << "updating the account url";
+            qCInfo(lcConnectionValidator()) << u"status.php was redirected to" << url.toString() << u"updating the account url";
             _account->setUrl(url);
         } else {
-            qCInfo(lcConnectionValidator()) << "status.php was redirected to" << url.toString() << "asking user to accept and abort for now";
+            qCInfo(lcConnectionValidator()) << u"status.php was redirected to" << url.toString() << u"asking user to accept and abort for now";
             Q_EMIT _account->requestUrlUpdate(url);
             reportResult(StatusNotFound);
             return;

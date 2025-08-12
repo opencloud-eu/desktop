@@ -50,8 +50,7 @@ void MoveJob::start()
 
 void MoveJob::finished()
 {
-    qCInfo(lcMoveJob) << "MOVE of" << reply()->request().url() << "FINISHED WITH STATUS"
-                      << replyStatusString();
+    qCInfo(lcMoveJob) << u"MOVE of" << reply()->request().url() << u"FINISHED WITH STATUS" << replyStatusString();
 }
 
 void PropagateRemoteMove::start()
@@ -137,7 +136,7 @@ void PropagateRemoteMove::finalize()
     if (oldRecord.isValid()) {
         newItem._checksumHeader = oldRecord.checksumHeader();
         if (newItem._size != oldRecord.size()) {
-            qCWarning(lcPropagateRemoteMove) << "File sizes differ on server vs sync journal: " << newItem._size << oldRecord.size();
+            qCWarning(lcPropagateRemoteMove) << u"File sizes differ on server vs sync journal: " << newItem._size << oldRecord.size();
 
             // the server might have claimed a different size, we take the old one from the DB
             newItem._size = oldRecord.size();

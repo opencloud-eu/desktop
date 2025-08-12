@@ -52,12 +52,12 @@ ETagWatcher::ETagWatcher(FolderMan *folderMan, QObject *parent)
                         if (OC_ENSURE_NOT(etag.isEmpty())) {
                             auto &info = _lastEtagJob[f];
                             if (f->canSync() && info != etag) {
-                                qCDebug(lcEtagWatcher) << "Scheduling sync of" << f->displayName() << f->path() << "due to an etag change";
+                                qCDebug(lcEtagWatcher) << u"Scheduling sync of" << f->displayName() << f->path() << u"due to an etag change";
                                 info = etag;
                                 _folderMan->scheduler()->enqueueFolder(f);
                             }
                         } else {
-                            qCWarning(lcEtagWatcher) << "Invalid empty etag received for" << f->displayName() << f->path();
+                            qCWarning(lcEtagWatcher) << u"Invalid empty etag received for" << f->displayName() << f->path();
                         }
                     });
                 }

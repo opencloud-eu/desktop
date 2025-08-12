@@ -87,7 +87,7 @@ bool AccountManager::restore()
 {
     auto settings = ConfigFile::makeQSettings();
     if (settings.status() != QSettings::NoError) {
-        qCWarning(lcAccountManager) << "Could not read settings from" << settings.fileName() << settings.status();
+        qCWarning(lcAccountManager) << u"Could not read settings from" << settings.fileName() << settings.status();
         return false;
     }
 
@@ -97,7 +97,7 @@ bool AccountManager::restore()
         auto urlConfig = settings.value(urlC());
         if (!urlConfig.isValid()) {
             // No URL probably means a corrupted entry in the account settings
-            qCWarning(lcAccountManager) << "No URL for account " << settings.group();
+            qCWarning(lcAccountManager) << u"No URL for account " << settings.group();
             continue;
         }
 
@@ -113,7 +113,7 @@ bool AccountManager::restore()
 
         // now the server cert
         const auto certs = QSslCertificate::fromData(settings.value(caCertsKeyC()).toByteArray());
-        qCInfo(lcAccountManager) << "Restored: " << certs.count() << " unknown certs.";
+        qCInfo(lcAccountManager) << u"Restored: " << certs.count() << u" unknown certs.";
         acc->setApprovedCerts(certs);
 
         if (auto accState = AccountState::loadFromSettings(acc, settings)) {
@@ -135,7 +135,7 @@ void AccountManager::save()
     for (const auto &accountState : std::as_const(_accounts)) {
         settings.setArrayIndex(i++);
         auto account = accountState->account();
-        qCDebug(lcAccountManager) << "Saving account" << account->url().toString();
+        qCDebug(lcAccountManager) << u"Saving account" << account->url().toString();
         settings.setValue(urlC(), account->_url.toString());
         settings.setValue(davUserDisplyNameC(), account->_displayName);
         settings.setValue(userUUIDC(), account->uuid());
@@ -147,7 +147,7 @@ void AccountManager::save()
         }
 
         // Save accepted certificates.
-        qCInfo(lcAccountManager) << "Saving " << account->approvedCerts().count() << " unknown certs.";
+        qCInfo(lcAccountManager) << u"Saving " << account->approvedCerts().count() << u" unknown certs.";
         const auto approvedCerts = account->approvedCerts();
         QByteArray certs;
         for (const auto &cert : approvedCerts) {
@@ -162,7 +162,7 @@ void AccountManager::save()
     }
     settings.endArray();
 
-    qCInfo(lcAccountManager) << "Saved all account settings";
+    qCInfo(lcAccountManager) << u"Saved all account settings";
 }
 
 QStringList AccountManager::accountNames() const

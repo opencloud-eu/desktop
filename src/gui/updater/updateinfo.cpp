@@ -54,7 +54,7 @@ QString UpdateInfo::downloadUrl() const
 UpdateInfo UpdateInfo::parseElement(const QDomElement &element, bool *ok)
 {
     if (element.tagName() != QLatin1String("OpenCloud")) {
-        qCCritical(lcUpdater) << "Expected 'OpenCloud', got '" << element.tagName() << "'.";
+        qCCritical(lcUpdater) << u"Expected 'OpenCloud', got '" << element.tagName() << u"'.";
         if (ok)
             *ok = false;
         return UpdateInfo();
@@ -88,10 +88,10 @@ UpdateInfo UpdateInfo::parseString(const QString &xml, bool *ok)
     int errorLine, errorCol;
     QDomDocument doc;
     if (!doc.setContent(xml, false, &errorMsg, &errorLine, &errorCol)) {
-        qCWarning(lcUpdater).noquote().nospace() << errorMsg << " at " << errorLine << "," << errorCol << "\n"
-                                                 << xml.split(QStringLiteral("\n")).value(errorLine - 1) << "\n"
-                                                 << QStringLiteral(" ").repeated(errorCol - 1) << "^\n"
-                                                 << "->" << xml << "<-";
+        qCWarning(lcUpdater).noquote().nospace() << errorMsg << u" at " << errorLine << u"," << errorCol << u"\n"
+                                                 << xml.split(QStringLiteral("\n")).value(errorLine - 1) << u"\n"
+                                                 << QStringLiteral(" ").repeated(errorCol - 1) << u"^\n"
+                                                 << u"->" << xml << u"<-";
         if (ok)
             *ok = false;
         return UpdateInfo();

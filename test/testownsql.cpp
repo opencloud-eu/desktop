@@ -73,8 +73,8 @@ private Q_SLOTS:
 
         q.exec();
         while( q.next().hasData ) {
-            qDebug() << "Name: " << q.stringValue(1);
-            qDebug() << "Address: " << q.stringValue(2);
+            qDebug() << u"Name: " << q.stringValue(1);
+            qDebug() << u"Address: " << q.stringValue(2);
         }
     }
 
@@ -85,8 +85,8 @@ private Q_SLOTS:
         q.bindValue(1, 2);
         q.exec();
         if( q.next().hasData ) {
-            qDebug() << "Name:" << q.stringValue(1);
-            qDebug() << "Address:" << q.stringValue(2);
+            qDebug() << u"Name:" << q.stringValue(1);
+            qDebug() << u"Address:" << q.stringValue(2);
         }
     }
 
@@ -95,10 +95,10 @@ private Q_SLOTS:
 
         SqlQuery q(_db);
         int rc = q.prepare(sql);
-        qDebug() << "Pragma:" << rc;
+        qDebug() << u"Pragma:" << rc;
         q.exec();
         if( q.next().hasData ) {
-            qDebug() << "P:" << q.stringValue(1);
+            qDebug() << u"P:" << q.stringValue(1);
         }
     }
 

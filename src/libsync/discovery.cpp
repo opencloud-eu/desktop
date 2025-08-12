@@ -37,7 +37,7 @@ Q_LOGGING_CATEGORY(lcDisco, "sync.discovery", QtInfoMsg)
 
 void ProcessDirectoryJob::start()
 {
-    qCInfo(lcDisco) << "STARTING" << _currentFolder._server << _queryServer << _currentFolder._local << _queryLocal;
+    qCInfo(lcDisco) << u"STARTING" << _currentFolder._server << _queryServer << _currentFolder._local << _queryLocal;
 
     if (_queryServer == NormalQuery) {
         _serverJob = startAsyncServerQuery();
@@ -117,7 +117,7 @@ void ProcessDirectoryJob::process()
         if (handleExcluded(path._target, e.localEntry.name(), e.localEntry.isDirectory() || e.serverEntry.isDirectory(), isHidden, e.localEntry.isSymLink())) {
             // the file only exists in the db
             if (!e.localEntry.isValid() && e.dbEntry.isValid()) {
-                qCWarning(lcDisco) << "Removing db entry for non exisitng ignored file:" << path._original;
+                qCWarning(lcDisco) << u"Removing db entry for non exisitng ignored file:" << path._original;
                 _discoveryData->_statedb->deleteFileRecord(path._original, true);
             }
             continue;
@@ -240,17 +240,16 @@ void ProcessDirectoryJob::processFile(const PathTuple &path,
 {
     const char *hasServer = serverEntry.isValid() ? "true" : _queryServer == ParentNotChanged ? "db" : "false";
     const char *hasLocal = localEntry.isValid() ? "true" : _queryLocal == ParentNotChanged ? "db" : "false";
-    qCInfo(lcDisco).nospace() << "Processing (db|local|remote) " << path._original << " | valid: " << dbEntry.isValid() << "/" << hasLocal << "/" << hasServer
-                              << " | mtime: " << dbEntry.modtime() << "/" << localEntry.modtime() << "/" << serverEntry.modtime()
-                              << " | size: " << dbEntry.size() << "/" << localEntry.size() << "/" << serverEntry.size() << " | etag: " << dbEntry.etag() << "//"
-                              << serverEntry.etag() << " | checksum: " << dbEntry.checksumHeader() << "//" << serverEntry.checksumHeader()
-                              << " | perm: " << dbEntry.remotePerm() << "//" << serverEntry.remotePerm() << " | fileid: " << dbEntry.fileId() << "//"
-                              << serverEntry.fileId() << " | inode: " << dbEntry.inode() << "/" << localEntry.inode() << "/"
-                              << " | type: " << dbEntry.type() << "/" << localEntry.type() << "/"
-                              << (serverEntry.isDirectory() ? ItemTypeDirectory : ItemTypeFile);
+    qCInfo(lcDisco).nospace() << u"Processing (db|local|remote) " << path._original << u" | valid: " << dbEntry.isValid() << u"/" << hasLocal << u"/"
+                              << hasServer << u" | mtime: " << dbEntry.modtime() << u"/" << localEntry.modtime() << u"/" << serverEntry.modtime()
+                              << u" | size: " << dbEntry.size() << u"/" << localEntry.size() << u"/" << serverEntry.size() << u" | etag: " << dbEntry.etag()
+                              << u"//" << serverEntry.etag() << u" | checksum: " << dbEntry.checksumHeader() << u"//" << serverEntry.checksumHeader()
+                              << u" | perm: " << dbEntry.remotePerm() << u"//" << serverEntry.remotePerm() << u" | fileid: " << dbEntry.fileId() << u"//"
+                              << serverEntry.fileId() << u" | inode: " << dbEntry.inode() << u"/" << localEntry.inode() << u"/" << u" | type: "
+                              << dbEntry.type() << u"/" << localEntry.type() << u"/" << (serverEntry.isDirectory() ? ItemTypeDirectory : ItemTypeFile);
 
     if (_discoveryData->isRenamed(path._original)) {
-        qCDebug(lcDisco) << "Ignoring renamed";
+        qCDebug(lcDisco) << u"Ignoring renamed";
         return; // Ignore this.
     }
 
@@ -459,18 +458,18 @@ void ProcessDirectoryJob::processFileAnalyzeRemoteInfo(
         if (!base.isDirectory()) {
             const auto info = std::filesystem::directory_entry(FileSystem::toFilesystemPath(_discoveryData->_localDir + originalPathAdjusted));
             if (!info.exists()) {
-                qCInfo(lcDisco) << "Local file does not exist anymore." << originalPathAdjusted;
+                qCInfo(lcDisco) << u"Local file does not exist anymore." << originalPathAdjusted;
                 return;
             }
             // NOTE: This prohibits some VFS renames from being detected since
             // suffix-file size is different from the db size. That's ok, they'll DELETE+NEW.
             if (FileSystem::fileTimeToTime_t(info.last_write_time()) != base.modtime() || info.file_size() != base.size() || info.is_directory()) {
-                qCInfo(lcDisco) << "File has changed locally, not a rename." << originalPath;
+                qCInfo(lcDisco) << u"File has changed locally, not a rename." << originalPath;
                 return;
             }
         } else {
             if (!QFileInfo(_discoveryData->_localDir + originalPathAdjusted).isDir()) {
-                qCInfo(lcDisco) << "Local directory does not exist anymore." << originalPathAdjusted;
+                qCInfo(lcDisco) << u"Local directory does not exist anymore." << originalPathAdjusted;
                 return;
             }
         }
@@ -494,7 +493,7 @@ void ProcessDirectoryJob::processFileAnalyzeRemoteInfo(
             item->_originalFile = originalPath;
             path._original = originalPath;
             path._local = adjustedOriginalPath;
-            qCInfo(lcDisco) << "Rename detected (down) " << item->localName() << " -> " << item->_renameTarget;
+            qCInfo(lcDisco) << u"Rename detected (down) " << item->localName() << u" -> " << item->_renameTarget;
         };
 
         if (wasDeletedOnServer) {
@@ -607,7 +606,7 @@ void ProcessDirectoryJob::processFileAnalyzeLocalInfo(
             }
         } else if (noServerEntry) {
             // Not locally, not on the server. The entry is stale!
-            qCInfo(lcDisco) << "Stale DB entry";
+            qCInfo(lcDisco) << u"Stale DB entry";
             _discoveryData->_statedb->deleteFileRecord(path._original, true);
             return;
         } else if (!serverModified) {
@@ -678,7 +677,7 @@ void ProcessDirectoryJob::processFileAnalyzeLocalInfo(
             if (isEmlFile && dbEntry.size() == localEntry.size() && !dbEntry.checksumHeader().isEmpty()) {
                 if (computeLocalChecksum(dbEntry.checksumHeader(), _discoveryData->_localDir + path._local, item)
                     && item->_checksumHeader == dbEntry.checksumHeader()) {
-                    qCInfo(lcDisco) << "NOTE: Checksums are identical, file did not actually change: " << path._local;
+                    qCInfo(lcDisco) << u"NOTE: Checksums are identical, file did not actually change: " << path._local;
                     item->setInstruction(CSYNC_INSTRUCTION_UPDATE_METADATA);
                 }
             }
@@ -716,12 +715,11 @@ void ProcessDirectoryJob::processFileAnalyzeLocalInfo(
         if (localEntry.isVirtualFile()) {
             const bool isPlaceHolder = _discoveryData->_syncOptions._vfs->isDehydratedPlaceholder(_discoveryData->_localDir + path._local);
             if (isPlaceHolder) {
-                qCWarning(lcDisco) << "Wiping virtual file without db entry for" << path._local;
+                qCWarning(lcDisco) << u"Wiping virtual file without db entry for" << path._local;
                 item->setInstruction(CSYNC_INSTRUCTION_REMOVE);
                 item->_direction = SyncFileItem::Down;
             } else {
-                qCWarning(lcDisco) << "Virtual file without db entry for" << path._local
-                                   << "but looks odd, keeping";
+                qCWarning(lcDisco) << u"Virtual file without db entry for" << path._local << u"but looks odd, keeping";
                 item->setInstruction(CSYNC_INSTRUCTION_IGNORE);
             }
         }
@@ -738,18 +736,17 @@ void ProcessDirectoryJob::processFileAnalyzeLocalInfo(
     // Function to gradually check conditions for accepting a move-candidate
     auto moveCheck = [&]() {
         if (!base.isValid()) {
-            qCInfo(lcDisco) << "Not a move, no item in db with inode" << localEntry.inode();
+            qCInfo(lcDisco) << u"Not a move, no item in db with inode" << localEntry.inode();
             return false;
         }
         if (base.isDirectory() != item->isDirectory()) {
-            qCInfo(lcDisco) << "Not a move, types don't match" << base.type() << item->_type << localEntry.type();
+            qCInfo(lcDisco) << u"Not a move, types don't match" << base.type() << item->_type << localEntry.type();
             return false;
         }
         // Directories and virtual files don't need size/mtime equality
         if (!localEntry.isDirectory() && !base.isVirtualFile() && (base.modtime() != localEntry.modtime() || base.size() != localEntry.size())) {
-            qCInfo(lcDisco) << "Not a move, mtime or size differs, "
-                            << "modtime:" << base.modtime() << localEntry.modtime() << ", "
-                            << "size:" << base.size() << localEntry.size();
+            qCInfo(lcDisco) << u"Not a move, mtime or size differs, " << u"modtime:" << base.modtime() << localEntry.modtime() << u", " << u"size:"
+                            << base.size() << localEntry.size();
             return false;
         }
 
@@ -760,23 +757,23 @@ void ProcessDirectoryJob::processFileAnalyzeLocalInfo(
             && !(Utility::fsCasePreserving()
                  && originalPath.compare(path._local, Qt::CaseInsensitive) == 0
                  && originalPath != path._local)) {
-            qCInfo(lcDisco) << "Not a move, base file still exists at" << originalPath;
+            qCInfo(lcDisco) << u"Not a move, base file still exists at" << originalPath;
             return false;
         }
 
         // Verify the checksum where possible
         if (!base.checksumHeader().isEmpty() && item->_type == ItemTypeFile && base.type() == ItemTypeFile) {
             if (computeLocalChecksum(base.checksumHeader(), _discoveryData->_localDir + path._original, item)) {
-                qCInfo(lcDisco) << "checking checksum of potential rename " << path._original << item->_checksumHeader << base.checksumHeader();
+                qCInfo(lcDisco) << u"checking checksum of potential rename " << path._original << item->_checksumHeader << base.checksumHeader();
                 if (item->_checksumHeader != base.checksumHeader()) {
-                    qCInfo(lcDisco) << "Not a move, checksums differ";
+                    qCInfo(lcDisco) << u"Not a move, checksums differ";
                     return false;
                 }
             }
         }
 
         if (_discoveryData->isRenamed(originalPath)) {
-            qCInfo(lcDisco) << "Not a move, base path already renamed";
+            qCInfo(lcDisco) << u"Not a move, base path already renamed";
             return false;
         }
 
@@ -794,10 +791,8 @@ void ProcessDirectoryJob::processFileAnalyzeLocalInfo(
     // Technically we should use the permissions from the server, but we'll assume it is the same
     auto movePerms = checkMovePermissions(base.remotePerm(), originalPath, item->isDirectory());
     if (!movePerms.sourceOk || !movePerms.destinationOk) {
-        qCInfo(lcDisco) << "Move without permission to rename base file, "
-                        << "source:" << movePerms.sourceOk
-                        << ", target:" << movePerms.destinationOk
-                        << ", targetNew:" << movePerms.destinationNewOk;
+        qCInfo(lcDisco) << u"Move without permission to rename base file, " << u"source:" << movePerms.sourceOk << u", target:" << movePerms.destinationOk
+                        << u", targetNew:" << movePerms.destinationNewOk;
 
         // If we can create the destination, do that.
         // Permission errors on the destination will be handled by checkPermissions later.
@@ -814,13 +809,13 @@ void ProcessDirectoryJob::processFileAnalyzeLocalInfo(
         auto wasDeletedOnClient = _discoveryData->findAndCancelDeletedJob(originalPath);
         if (wasDeletedOnClient.first) {
             // More complicated. The REMOVE is canceled. Restore will happen next sync.
-            qCInfo(lcDisco) << "Undid remove instruction on source" << originalPath;
+            qCInfo(lcDisco) << u"Undid remove instruction on source" << originalPath;
             _discoveryData->_statedb->deleteFileRecord(originalPath, true);
             _discoveryData->_statedb->schedulePathForRemoteDiscovery(originalPath);
             _discoveryData->_anotherSyncNeeded = true;
         } else {
             // Signal to future checkPermissions() to forbid the REMOVE and set to restore instead
-            qCInfo(lcDisco) << "Preventing future remove on source" << originalPath;
+            qCInfo(lcDisco) << u"Preventing future remove on source" << originalPath;
             _discoveryData->_forbiddenDeletes.insert(originalPath + QLatin1Char('/'));
         }
         return;
@@ -855,7 +850,7 @@ void ProcessDirectoryJob::processFileAnalyzeLocalInfo(
             item->_type = ItemTypeFile;
         }
 
-        qCInfo(lcDisco) << "Rename detected (up) " << item->localName() << " -> " << item->_renameTarget;
+        qCInfo(lcDisco) << u"Rename detected (up) " << item->localName() << u" -> " << item->_renameTarget;
         return path;
     };
     if (wasDeletedOnClient.first) {
@@ -868,7 +863,7 @@ void ProcessDirectoryJob::processFileAnalyzeLocalInfo(
         connect(job, &RequestEtagJob::finishedSignal, this,
             [job, recurseQueryServer, path = path, postProcessLocalNew, processRename, base, item, originalPath, this] {
                 if (job->httpStatusCode() == 404 || (job->etag() != base.etag() && !item->isDirectory()) || _discoveryData->isRenamed(originalPath)) {
-                    qCInfo(lcDisco) << "Can't rename because the etag has changed or the directory is gone" << originalPath;
+                    qCInfo(lcDisco) << u"Can't rename because the etag has changed or the directory is gone" << originalPath;
                     // Can't be a rename, leave it as a new.
                     postProcessLocalNew(path);
                     processFileFinalize(item, path, item->isDirectory(), NormalQuery, recurseQueryServer);
@@ -907,9 +902,9 @@ void ProcessDirectoryJob::processFileConflict(const SyncFileItemPtr &item, const
         bool modTimeDiffers = serverEntry.modtime() != localEntry.modtime();
         bool isConflict = sizeDiffers || modTimeDiffers;
         if (isConflict) {
-            qCDebug(lcDisco) << serverEntry.name() << ": detected conflict: size difference: " << sizeDiffers << "mtime difference: " << modTimeDiffers;
+            qCDebug(lcDisco) << serverEntry.name() << u": detected conflict: size difference: " << sizeDiffers << u"mtime difference: " << modTimeDiffers;
         } else {
-            qCDebug(lcDisco) << serverEntry.name() << ": no conflict detected";
+            qCDebug(lcDisco) << serverEntry.name() << u": no conflict detected";
         }
         // It could be a conflict even if size and mtime match!
         //
@@ -970,7 +965,7 @@ void ProcessDirectoryJob::processFileFinalize(
         item->_direction = _dirItem->_direction;
     }
 
-    qCInfo(lcDisco) << "Discovered" << item->localName() << item->instruction() << item->_direction << item->_type;
+    qCInfo(lcDisco) << u"Discovered" << item->localName() << item->instruction() << item->_direction << item->_type;
 
     if (item->isDirectory() && item->instruction() == CSYNC_INSTRUCTION_SYNC)
         item->setInstruction(CSYNC_INSTRUCTION_UPDATE_METADATA);
@@ -1022,7 +1017,7 @@ void ProcessDirectoryJob::processBlacklisted(const PathTuple &path, const OCC::L
         _childIgnored = true;
     }
 
-    qCInfo(lcDisco) << "Discovered (blacklisted) " << item->localName() << item->instruction() << item->_direction << item->isDirectory();
+    qCInfo(lcDisco) << u"Discovered (blacklisted) " << item->localName() << item->instruction() << item->_direction << item->isDirectory();
 
     if (item->isDirectory() && item->instruction() != CSYNC_INSTRUCTION_IGNORE) {
         auto job = new ProcessDirectoryJob(path, item, NormalQuery, InBlackList, this);
@@ -1048,12 +1043,12 @@ bool ProcessDirectoryJob::checkPermissions(const OCC::SyncFileItemPtr &item)
             // No permissions set
             return true;
         } else if (item->isDirectory() && !perms.hasPermission(RemotePermissions::CanAddSubDirectories)) {
-            qCWarning(lcDisco) << "checkForPermission: ERROR" << item->localName() << perms;
+            qCWarning(lcDisco) << u"checkForPermission: ERROR" << item->localName() << perms;
             item->setInstruction(CSYNC_INSTRUCTION_ERROR);
             item->_errorString = tr("Not allowed because you don't have permission to add subfolders to that folder");
             return false;
         } else if (!item->isDirectory() && !perms.hasPermission(RemotePermissions::CanAddFile)) {
-            qCWarning(lcDisco) << "checkForPermission: ERROR" << item->localName() << perms;
+            qCWarning(lcDisco) << u"checkForPermission: ERROR" << item->localName() << perms;
             item->setInstruction(CSYNC_INSTRUCTION_ERROR);
             item->_errorString = tr("Not allowed because you don't have permission to add files in that folder");
             return false;
@@ -1071,7 +1066,7 @@ bool ProcessDirectoryJob::checkPermissions(const OCC::SyncFileItemPtr &item)
             item->_errorString = tr("Not allowed to upload this file because it is read-only on the server, restoring");
             item->_direction = SyncFileItem::Down;
             item->_isRestoration = true;
-            qCWarning(lcDisco) << "checkForPermission: RESTORING" << item->localName() << item->_errorString;
+            qCWarning(lcDisco) << u"checkForPermission: RESTORING" << item->localName() << item->_errorString;
             // Take the things to write to the db from the "other" node (i.e: info from server).
             // Do a lookup into the csync remote tree to get the metadata we need to restore.
             qSwap(item->_size, item->_previousSize);
@@ -1092,7 +1087,7 @@ bool ProcessDirectoryJob::checkPermissions(const OCC::SyncFileItemPtr &item)
             item->_direction = SyncFileItem::Down;
             item->_isRestoration = true;
             item->_errorString = tr("Moved to invalid target, restoring");
-            qCWarning(lcDisco) << "checkForPermission: RESTORING" << item->localName() << item->_errorString;
+            qCWarning(lcDisco) << u"checkForPermission: RESTORING" << item->localName() << item->_errorString;
             return true; // restore sub items
         }
         const auto perms = item->_remotePerm;
@@ -1105,7 +1100,7 @@ bool ProcessDirectoryJob::checkPermissions(const OCC::SyncFileItemPtr &item)
             item->_direction = SyncFileItem::Down;
             item->_isRestoration = true;
             item->_errorString = tr("Not allowed to remove, restoring");
-            qCWarning(lcDisco) << "checkForPermission: RESTORING" << item->localName() << item->_errorString;
+            qCWarning(lcDisco) << u"checkForPermission: RESTORING" << item->localName() << item->_errorString;
             return true; // (we need to recurse to restore sub items)
         }
         break;
@@ -1236,7 +1231,7 @@ DiscoverySingleDirectoryJob *ProcessDirectoryJob::startAsyncServerQuery()
                 this->process();
         } else {
             auto code = results.error().code;
-            qCWarning(lcDisco) << "Server error in directory" << _currentFolder._server << code;
+            qCWarning(lcDisco) << u"Server error in directory" << _currentFolder._server << code;
             if (serverJob->isRootPath()) {
                 if (code == 404) {
                     Q_EMIT _discoveryData->fatalError(tr("This Space is currently unavailable"));

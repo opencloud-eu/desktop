@@ -131,7 +131,7 @@ ChecksumHeader ChecksumHeader::parseChecksumHeader(const QByteArray &header)
         out._checksum = header.mid(idx + 1);
     }
     if (!out.isValid()) {
-        qCDebug(lcChecksumsHeader) << "Failed to parse" << header << out.error();
+        qCDebug(lcChecksumsHeader) << u"Failed to parse" << header << out.error();
     }
     return out;
 }
@@ -207,7 +207,7 @@ QByteArray findBestChecksum(const QByteArray &_checksums)
         }
         return _checksums.mid(i, end - i);
     }
-    qCWarning(lcChecksums) << "Failed to parse" << _checksums;
+    qCWarning(lcChecksums) << u"Failed to parse" << _checksums;
     return {};
 }
 
@@ -231,14 +231,14 @@ CheckSums::Algorithm ComputeChecksum::checksumType() const
 
 void ComputeChecksum::start(const QString &filePath)
 {
-    qCInfo(lcChecksums) << "Computing" << checksumType() << "checksum of" << filePath << "in a thread";
+    qCInfo(lcChecksums) << u"Computing" << checksumType() << u"checksum of" << filePath << u"in a thread";
     startImpl(std::make_unique<QFile>(filePath));
 }
 
 void ComputeChecksum::start(std::unique_ptr<QIODevice> device)
 {
     OC_ENFORCE(device);
-    qCInfo(lcChecksums) << "Computing" << checksumType() << "checksum of device" << device.get() << "in a thread";
+    qCInfo(lcChecksums) << u"Computing" << checksumType() << u"checksum of device" << device.get() << u"in a thread";
     OC_ASSERT(!device->parent());
 
     startImpl(std::move(device));
@@ -257,9 +257,10 @@ void ComputeChecksum::startImpl(std::unique_ptr<QIODevice> device)
     _watcher.setFuture(QtConcurrent::run([sharedDevice, type]() {
         if (!sharedDevice->open(QIODevice::ReadOnly)) {
             if (auto file = qobject_cast<QFile *>(sharedDevice.data())) {
-                qCWarning(lcChecksums) << "Could not open file" << file->fileName() << "for reading to compute a checksum" << file->errorString();
+                qCWarning(lcChecksums) << u"Could not open file" << file->fileName() << u"for reading to compute a checksum" << file->errorString();
             } else {
-                qCWarning(lcChecksums) << "Could not open device" << sharedDevice.data() << "for reading to compute a checksum" << sharedDevice->errorString();
+                qCWarning(lcChecksums) << u"Could not open device" << sharedDevice.data() << u"for reading to compute a checksum"
+                                       << sharedDevice->errorString();
             }
             return QByteArray();
         }
@@ -273,7 +274,7 @@ QByteArray ComputeChecksum::computeNowOnFile(const QString &filePath, CheckSums:
 {
     QFile file(filePath);
     if (!file.open(QIODevice::ReadOnly)) {
-        qCWarning(lcChecksums) << "Could not open file" << filePath << "for reading and computing checksum" << file.errorString();
+        qCWarning(lcChecksums) << u"Could not open file" << filePath << u"for reading and computing checksum" << file.errorString();
         return QByteArray();
     }
 
@@ -285,9 +286,9 @@ QByteArray ComputeChecksum::computeNow(QIODevice *device, CheckSums::Algorithm a
     // const cast to prevent stream to "device"
     const auto log = qScopeGuard([device, algorithm, timer = Utility::ChronoElapsedTimer()] {
         if (auto file = qobject_cast<QFile *>(device)) {
-            qCDebug(lcChecksums) << "Finished" << algorithm << "computation for" << file->fileName() << timer;
+            qCDebug(lcChecksums) << u"Finished" << algorithm << u"computation for" << file->fileName() << timer;
         } else {
-            qCDebug(lcChecksums) << "Finished" << algorithm << "computation for" << device << timer;
+            qCDebug(lcChecksums) << u"Finished" << algorithm << u"computation for" << device << timer;
         }
     });
     switch (algorithm) {
@@ -302,7 +303,7 @@ QByteArray ComputeChecksum::computeNow(QIODevice *device, CheckSums::Algorithm a
         if (crypto.addData(device)) {
             return crypto.result().toHex();
         }
-        qCWarning(lcChecksums) << "Failed to compoute checksum" << Utility::enumToString(algorithm);
+        qCWarning(lcChecksums) << u"Failed to compoute checksum" << Utility::enumToString(algorithm);
         return {};
     }
     case CheckSums::Algorithm::ADLER32:
@@ -342,7 +343,7 @@ ComputeChecksum *ValidateChecksumHeader::prepareStart(const QByteArray &checksum
     }
     _expectedChecksum = ChecksumHeader::parseChecksumHeader(checksumHeader);
     if (!_expectedChecksum.isValid()) {
-        qCWarning(lcChecksums) << "Checksum header malformed:" << checksumHeader;
+        qCWarning(lcChecksums) << u"Checksum header malformed:" << checksumHeader;
         Q_EMIT validationFailed(_expectedChecksum.error());
         return nullptr;
     }

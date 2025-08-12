@@ -62,7 +62,7 @@ UploadDevice *PropagateUploadFileTUS::prepareDevice(const quint64 &chunkSize)
     }
     auto device = std::make_unique<UploadDevice>(localFileName, _currentOffset, chunkSize, propagator()->_bandwidthManager);
     if (!device->open(QIODevice::ReadOnly)) {
-        qCWarning(lcPropagateUploadTUS) << "Could not prepare upload device: " << device->errorString();
+        qCWarning(lcPropagateUploadTUS) << u"Could not prepare upload device: " << device->errorString();
 
         // Soft error because this is likely caused by the user modifying his files while syncing
         abortWithError(SyncFileItem::SoftError, device->errorString());
@@ -152,17 +152,17 @@ void PropagateUploadFileTUS::startNextChunk()
 
     SimpleNetworkJob *job;
     if (_currentOffset != 0) {
-        qCDebug(lcPropagateUploadTUS) << "Starting to patch upload:" << propagator()->fullRemotePath(_item->localName());
+        qCDebug(lcPropagateUploadTUS) << u"Starting to patch upload:" << propagator()->fullRemotePath(_item->localName());
         job = new SimpleNetworkJob(propagator()->account(), _location, {}, "PATCH", device, req, this);
     } else {
         Q_ASSERT(_location.isEmpty());
-        qCDebug(lcPropagateUploadTUS) << "Starting creation with upload:" << propagator()->fullRemotePath(_item->localName());
+        qCDebug(lcPropagateUploadTUS) << u"Starting creation with upload:" << propagator()->fullRemotePath(_item->localName());
         job = makeCreationWithUploadJob(&req, device);
     }
 
     job->setPriority(QNetworkRequest::LowPriority);
-    qCDebug(lcPropagateUploadTUS) << "Offset:" << _currentOffset << _currentOffset  / (_item->_size + 1) * 100
-                                  << "Chunk:" << chunkSize << chunkSize / (_item->_size + 1) * 100;
+    qCDebug(lcPropagateUploadTUS) << u"Offset:" << _currentOffset << _currentOffset / (_item->_size + 1) * 100 << u"Chunk:" << chunkSize
+                                  << chunkSize / (_item->_size + 1) * 100;
 
     addChildJob(job);
     connect(job, &SimpleNetworkJob::finishedSignal, this, &PropagateUploadFileTUS::slotChunkFinished);
@@ -190,7 +190,7 @@ void PropagateUploadFileTUS::slotChunkFinished()
         // try to get the offset if possible, only try once
         if (err == QNetworkReply::TimeoutError && !_location.isEmpty() && HttpLogger::requestVerb(*job->reply())  != "HEAD")
         {
-            qCWarning(lcPropagateUploadTUS) << propagator()->fullRemotePath(_item->localName()) << "Encountered a timeout -> get progrss for" << _location;
+            qCWarning(lcPropagateUploadTUS) << propagator()->fullRemotePath(_item->localName()) << u"Encountered a timeout -> get progrss for" << _location;
             QNetworkRequest req;
             setTusVersionHeader(req);
             auto updateJob = new SimpleNetworkJob(propagator()->account(), propagator()->webDavUrl(), _location.path(), "HEAD", {}, req, this);
@@ -282,7 +282,7 @@ void PropagateUploadFileTUS::finalize(const QString &etag, const QByteArray &fil
     _item->_etag = etag;
     if (!fileId.isEmpty()) {
         if (!_item->_fileId.isEmpty() && _item->_fileId != fileId) {
-            qCWarning(lcPropagateUploadTUS) << "File ID changed!" << _item->_fileId << fileId;
+            qCWarning(lcPropagateUploadTUS) << u"File ID changed!" << _item->_fileId << fileId;
         }
         _item->_fileId = fileId;
     }

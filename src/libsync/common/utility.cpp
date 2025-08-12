@@ -505,5 +505,5 @@ QDebug operator<<(QDebug debug, nanoseconds in)
     const auto min = duration_cast<minutes>(in -= h);
     const auto s = duration_cast<seconds>(in -= min);
     const auto ms = duration_cast<milliseconds>(in -= s);
-    return debug << "duration(" << h.count() << "h, " << min.count() << "min, " << s.count() << "s, " << ms.count() << "ms)";
+    return debug << u"duration(" << h.count() << u"h, " << min.count() << u"min, " << s.count() << u"s, " << ms.count() << u"ms)";
 }

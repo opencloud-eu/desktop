@@ -109,14 +109,14 @@ FolderDefinition FolderDefinition::load(QSettings &settings)
     if (auto result = Vfs::checkAvailability(folder.localPath(), Vfs::WindowsCfApi); result) {
         vfsModeString = Utility::enumToString(Vfs::WindowsCfApi);
     } else {
-        qCWarning(lcFolder) << "Failed to upgrade" << folder.localPath() << "to" << Vfs::WindowsCfApi << result.error();
+        qCWarning(lcFolder) << u"Failed to upgrade" << folder.localPath() << u"to" << Vfs::WindowsCfApi << result.error();
     }
 #endif
     if (!vfsModeString.isEmpty()) {
         if (auto mode = Vfs::modeFromString(vfsModeString)) {
             folder.virtualFilesMode = *mode;
         } else {
-            qCWarning(lcFolder) << "Unknown virtualFilesMode:" << vfsModeString << "assuming 'off'";
+            qCWarning(lcFolder) << u"Unknown virtualFilesMode:" << vfsModeString << u"assuming 'off'";
         }
     }
     return folder;

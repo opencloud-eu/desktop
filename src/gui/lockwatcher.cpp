@@ -40,7 +40,7 @@ LockWatcher::LockWatcher(QObject *parent)
 
 void LockWatcher::addFile(const QString &path, FileSystem::LockMode mode)
 {
-    qCInfo(lcLockWatcher) << "Watching for lock of" << path << mode << "being released";
+    qCInfo(lcLockWatcher) << u"Watching for lock of" << path << mode << u"being released";
     _watchedPaths.insert({ path, mode });
 }
 
@@ -61,7 +61,7 @@ void LockWatcher::checkFiles()
     decltype(_watchedPaths) unlocked;
     for (const auto &p : watchedPathsCopy) {
         if (!FileSystem::isFileLocked(p.first, p.second)) {
-            qCInfo(lcLockWatcher) << "Lock of" << p.first << p.second << "was released";
+            qCInfo(lcLockWatcher) << u"Lock of" << p.first << p.second << u"was released";
             Q_EMIT fileUnlocked(p.first, p.second);
             unlocked.insert(p);
         }

@@ -114,7 +114,7 @@ namespace TestUtils {
         static QFileInfo info(QString::fromUtf8(QTest::currentAppName()));
         QFile f(QStringLiteral(SOURCEDIR "/test/%1/%2").arg(info.baseName(), payloadName.toString()));
         if (!f.open(QIODevice::ReadOnly)) {
-            qFatal() << "Failed to open file: " << f.fileName();
+            qFatal() << u"Failed to open file: " << f.fileName();
         }
         return f.readAll();
     }

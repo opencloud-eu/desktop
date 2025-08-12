@@ -34,7 +34,7 @@ public:
         BY_HANDLE_FILE_INFORMATION fileInfo = {};
         if (!GetFileInformationByHandle(h, &fileInfo)) {
             const auto error = GetLastError();
-            qCCritical(lcFileSystem) << "GetFileInformationByHandle failed on" << dirent.path().native() << OCC::Utility::formatWinError(error);
+            qCCritical(lcFileSystem) << u"GetFileInformationByHandle failed on" << dirent.path().native() << OCC::Utility::formatWinError(error);
             _name.clear();
             return;
         }
@@ -47,7 +47,7 @@ public:
 #else
         struct stat sb;
         if (lstat(dirent.path().native().data(), &sb) < 0) {
-            qCCritical(lcFileSystem) << "lstat failed on" << dirent.path().native();
+            qCCritical(lcFileSystem) << u"lstat failed on" << dirent.path().native();
             _name.clear();
             return;
         }

@@ -179,7 +179,7 @@ bool Folder::checkLocalPath()
     _canonicalLocalPath = _canonicalLocalPath.normalized(QString::NormalizationForm_C);
 #endif
     if (_canonicalLocalPath.isEmpty()) {
-        qCWarning(lcFolder) << "Broken symlink:" << _definition.localPath();
+        qCWarning(lcFolder) << u"Broken symlink:" << _definition.localPath();
         _canonicalLocalPath = _definition.localPath();
     } else if (!_canonicalLocalPath.endsWith(QLatin1Char('/'))) {
         _canonicalLocalPath.append(QLatin1Char('/'));
@@ -193,7 +193,7 @@ bool Folder::checkLocalPath()
         }
 
         if (error.isEmpty()) {
-            qCDebug(lcFolder) << "Checked local path ok";
+            qCDebug(lcFolder) << u"Checked local path ok";
             if (!_journal.open()) {
                 error = tr("%1 failed to open the database.").arg(_definition.localPath());
             }
@@ -251,7 +251,7 @@ void Folder::prepareFolder(const QString &path, const std::optional<QString> &di
         const QString localizedNameKey = u".ShellClassInfo/LocalizedResourcename"_s;
         QSettings desktopIni(desktopIniPath.absoluteFilePath(), QSettings::IniFormat);
         if (desktopIni.value(updateIconKey, true).toBool()) {
-            qCInfo(lcFolder) << "Creating" << desktopIni.fileName() << "to set a folder icon in Explorer.";
+            qCInfo(lcFolder) << u"Creating" << desktopIni.fileName() << u"to set a folder icon in Explorer.";
             desktopIni.setValue(u".ShellClassInfo/IconResource"_s, QDir::toNativeSeparators(qApp->applicationFilePath()));
             desktopIni.setValue(u".ShellClassInfo/ConfirmFileOp"_s, 1);
             if (description.has_value()) {
@@ -274,7 +274,7 @@ void Folder::prepareFolder(const QString &path, const std::optional<QString> &di
             }
             desktopIni.setValue(updateIconKey, true);
         } else {
-            qCInfo(lcFolder) << "Skip icon update for" << desktopIni.fileName() << "," << updateIconKey << "is disabled";
+            qCInfo(lcFolder) << u"Skip icon update for" << desktopIni.fileName() << u"," << updateIconKey << u"is disabled";
         }
 
         desktopIni.sync();
@@ -287,11 +287,11 @@ void Folder::prepareFolder(const QString &path, const std::optional<QString> &di
     const DWORD folderAttrs = GetFileAttributesW(reinterpret_cast<const wchar_t *>(longFolderPath.utf16()));
     if (!SetFileAttributesW(reinterpret_cast<const wchar_t *>(longFolderPath.utf16()), folderAttrs | FILE_ATTRIBUTE_SYSTEM)) {
         const auto error = GetLastError();
-        qCWarning(lcFolder) << "SetFileAttributesW failed on" << longFolderPath << Utility::formatWinError(error);
+        qCWarning(lcFolder) << u"SetFileAttributesW failed on" << longFolderPath << Utility::formatWinError(error);
     }
     if (!SetFileAttributesW(reinterpret_cast<const wchar_t *>(longDesktopIniPath.utf16()), FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_SYSTEM)) {
         const auto error = GetLastError();
-        qCWarning(lcFolder) << "SetFileAttributesW failed on" << longDesktopIniPath << Utility::formatWinError(error);
+        qCWarning(lcFolder) << u"SetFileAttributesW failed on" << longDesktopIniPath << Utility::formatWinError(error);
     }
 #else
     Q_UNUSED(path)
@@ -444,7 +444,7 @@ void Folder::showSyncResultPopup()
         createGuiLog(_syncResult.firstItemError()->localName(), LogStatusError, errorCount);
     }
 
-    qCInfo(lcFolder) << "Folder" << path() << "sync result: " << _syncResult.status();
+    qCInfo(lcFolder) << u"Folder" << path() << u"sync result: " << _syncResult.status();
 }
 
 void Folder::createGuiLog(const QString &filename, LogStatus status, int count,
@@ -578,7 +578,7 @@ void Folder::slotDiscardDownloadProgress()
         _journal.getAndDeleteStaleDownloadInfos(keep_nothing);
     for (const auto &deleted_info : deleted_infos) {
         const QString tmppath = folderpath.filePath(deleted_info._tmpfile);
-        qCInfo(lcFolder) << "Deleting temporary file: " << tmppath;
+        qCInfo(lcFolder) << u"Deleting temporary file: " << tmppath;
         FileSystem::remove(tmppath);
     }
 }
@@ -641,7 +641,7 @@ void Folder::slotWatchedPathsChanged(const QSet<QString> &paths, ChangeReason re
                 }
             }
             if (spurious) {
-                qCInfo(lcFolder) << "Ignoring spurious notification for file" << relativePath;
+                qCInfo(lcFolder) << u"Ignoring spurious notification for file" << relativePath;
                 continue; // probably a spurious notification
             }
         }
@@ -761,7 +761,7 @@ void Folder::openInWebBrowser()
 void Folder::slotTerminateSync(const QString &reason)
 {
     if (isReady()) {
-        qCInfo(lcFolder) << "folder " << path() << " Terminating!";
+        qCInfo(lcFolder) << u"folder " << path() << u" Terminating!";
         if (_engine->isSyncRunning()) {
             _engine->abort(reason);
             setSyncState(SyncResult::SyncAbortRequested);
@@ -795,12 +795,12 @@ void Folder::wipeForRemoval()
     QFile file(stateDbFile);
     if (file.exists()) {
         if (!file.remove()) {
-            qCCritical(lcFolder) << "Failed to remove existing csync StateDB " << stateDbFile;
+            qCCritical(lcFolder) << u"Failed to remove existing csync StateDB " << stateDbFile;
         } else {
-            qCInfo(lcFolder) << "wipe: Removed csync StateDB " << stateDbFile;
+            qCInfo(lcFolder) << u"wipe: Removed csync StateDB " << stateDbFile;
         }
     } else {
-        qCWarning(lcFolder) << "statedb is empty, can not remove.";
+        qCWarning(lcFolder) << u"statedb is empty, can not remove.";
     }
 
     // Also remove other db related files
@@ -836,12 +836,12 @@ void Folder::startSync()
     Q_ASSERT(_folderWatcher);
 
     if (!OC_ENSURE(!isSyncRunning())) {
-        qCCritical(lcFolder) << "ERROR sync is still running and new sync requested.";
+        qCCritical(lcFolder) << u"ERROR sync is still running and new sync requested.";
         return;
     }
 
     if (!OC_ENSURE(canSync())) {
-        qCCritical(lcFolder) << "ERROR folder is currently not sync able.";
+        qCCritical(lcFolder) << u"ERROR folder is currently not sync able.";
         return;
     }
 
@@ -849,7 +849,7 @@ void Folder::startSync()
     _syncResult.reset();
     setSyncState(SyncResult::SyncPrepare);
 
-    qCInfo(lcFolder) << "*** Start syncing " << displayName() << "client version" << Theme::instance()->aboutVersions(Theme::VersionFormat::OneLiner);
+    qCInfo(lcFolder) << u"*** Start syncing " << displayName() << u"client version" << Theme::instance()->aboutVersions(Theme::VersionFormat::OneLiner);
 
     _fileLog->start(path());
 
@@ -874,13 +874,13 @@ void Folder::startSync()
     if (_folderWatcher && _folderWatcher->isReliable()
         && hasDoneFullLocalDiscovery
         && !periodicFullLocalDiscoveryNow) {
-        qCInfo(lcFolder) << "Allowing local discovery to read from the database";
+        qCInfo(lcFolder) << u"Allowing local discovery to read from the database";
         _engine->setLocalDiscoveryOptions(
             LocalDiscoveryStyle::DatabaseAndFilesystem,
             _localDiscoveryTracker->localDiscoveryPaths());
         _localDiscoveryTracker->startSyncPartialDiscovery();
     } else {
-        qCInfo(lcFolder) << "Forbidding local discovery to read from the database";
+        qCInfo(lcFolder) << u"Forbidding local discovery to read from the database";
         _engine->setLocalDiscoveryOptions(LocalDiscoveryStyle::FilesystemOnly);
         _localDiscoveryTracker->startSyncFullDiscovery();
     }
@@ -927,7 +927,7 @@ void Folder::slotSyncError(const QString &message, ErrorCategory category)
 
 void Folder::slotSyncStarted()
 {
-    qCInfo(lcFolder) << "#### Propagation start ####################################################";
+    qCInfo(lcFolder) << u"#### Propagation start ####################################################";
     setSyncState(SyncResult::SyncRunning);
     Q_EMIT isSyncRunningChanged();
 }
@@ -938,14 +938,14 @@ void Folder::slotSyncFinished(bool success)
         // probably removing the folder
         return;
     }
-    qCInfo(lcFolder) << "Client version" << Theme::instance()->aboutVersions(Theme::VersionFormat::OneLiner);
+    qCInfo(lcFolder) << u"Client version" << Theme::instance()->aboutVersions(Theme::VersionFormat::OneLiner);
     Q_EMIT isSyncRunningChanged();
 
     bool syncError = !_syncResult.errorStrings().isEmpty();
     if (syncError) {
-        qCWarning(lcFolder) << "SyncEngine finished with ERROR";
+        qCWarning(lcFolder) << u"SyncEngine finished with ERROR";
     } else {
-        qCInfo(lcFolder) << "SyncEngine finished without problem.";
+        qCInfo(lcFolder) << u"SyncEngine finished without problem.";
     }
     _fileLog->finish();
     showSyncResultPopup();
@@ -971,7 +971,7 @@ void Folder::slotSyncFinished(bool success)
     } else {
         _consecutiveFailingSyncs++;
         anotherSyncNeeded |= _consecutiveFailingSyncs <= retrySyncLimitC;
-        qCInfo(lcFolder) << "the last" << _consecutiveFailingSyncs << "syncs failed";
+        qCInfo(lcFolder) << u"the last" << _consecutiveFailingSyncs << u"syncs failed";
     }
 
     if (syncStatus == SyncResult::Success && success) {
@@ -999,8 +999,7 @@ void Folder::slotSyncFinished(bool success)
     if (_engine->isAnotherSyncNeeded()) {
         _consecutiveFollowUpSyncs++;
         anotherSyncNeeded |= _consecutiveFollowUpSyncs <= retrySyncLimitC;
-        qCInfo(lcFolder) << "another sync was requested by the finished sync, this has"
-                         << "happened" << _consecutiveFollowUpSyncs << "times";
+        qCInfo(lcFolder) << u"another sync was requested by the finished sync, this has" << u"happened" << _consecutiveFollowUpSyncs << u"times";
     } else {
         _consecutiveFollowUpSyncs = 0;
     }
@@ -1087,7 +1086,7 @@ void Folder::warnOnNewExcludedItem(const SyncJournalFileRecord &record, QStringV
 
 void Folder::slotWatcherUnreliable(const QString &message)
 {
-    qCWarning(lcFolder) << "Folder watcher for" << path() << "became unreliable:" << message;
+    qCWarning(lcFolder) << u"Folder watcher for" << path() << u"became unreliable:" << message;
 
     QMessageBox *msgBox = new QMessageBox(QMessageBox::Information, Theme::instance()->appNameGUI(),
         tr("Changes in synchronized folders could not be tracked reliably.\n"

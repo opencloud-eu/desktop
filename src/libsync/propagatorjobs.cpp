@@ -156,7 +156,7 @@ void PropagateLocalMkdir::start()
     QFileInfo fi(newDirStr);
     if (fi.exists() && fi.isFile()) {
         if (_deleteExistingFile) {
-            qDebug(lcPropagateLocalMkdir) << "deleting existing file" << newDirStr << "to replace it with a dir";
+            qDebug(lcPropagateLocalMkdir) << u"deleting existing file" << newDirStr << u"to replace it with a dir";
             QString removeError;
             if (!FileSystem::remove(newDirStr, &removeError)) {
                 done(SyncFileItem::NormalError,
@@ -174,7 +174,7 @@ void PropagateLocalMkdir::start()
     }
 
     if (auto clash = propagator()->localFileNameClash(_item->localName())) {
-        qCWarning(lcPropagateLocalMkdir) << "New folder to create locally already exists with different case:" << _item->localName();
+        qCWarning(lcPropagateLocalMkdir) << u"New folder to create locally already exists with different case:" << _item->localName();
         done(SyncFileItem::NormalError, tr("Can not create local folder %1 because of a local file name clash with %2").arg(newDirStr, QDir::toNativeSeparators(clash.get())));
         return;
     }
@@ -222,7 +222,7 @@ void PropagateLocalRename::start()
     // to _item->renameTarget and the file is not moved as a result.
     if (_item->localName() != _item->_renameTarget) {
         propagator()->reportProgress(*_item, 0);
-        qCDebug(lcPropagateLocalRename) << "MOVE " << existingFile << " => " << targetFile;
+        qCDebug(lcPropagateLocalRename) << u"MOVE " << existingFile << u" => " << targetFile;
 
         if (QString::compare(_item->localName(), _item->_renameTarget, Qt::CaseInsensitive) != 0 && propagator()->localFileNameClash(_item->_renameTarget)) {
             // Only use localFileNameClash for the destination if we know that the source was not

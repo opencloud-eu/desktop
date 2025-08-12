@@ -68,8 +68,7 @@ void MkColJob::start()
 
 void MkColJob::finished()
 {
-    qCInfo(lcMkColJob) << "MKCOL of" << reply()->request().url() << "FINISHED WITH STATUS"
-                       << replyStatusString();
+    qCInfo(lcMkColJob) << u"MKCOL of" << reply()->request().url() << u"FINISHED WITH STATUS" << replyStatusString();
 
     if (reply()->error() != QNetworkReply::NoError) {
         Q_EMIT finishedWithError(reply());
@@ -133,7 +132,7 @@ bool LsColXMLParser::parse(const QByteArray &xml, QHash<QString, qint64> *sizes,
                 // but the result will have URL encoding..
                 QString hrefString = QString::fromUtf8(QByteArray::fromPercentEncoding(reader.readElementText().toUtf8()));
                 if (!hrefString.startsWith(expectedPath)) {
-                    qCWarning(lcPropfindJob) << "Invalid href" << hrefString << "expected starting with" << expectedPath;
+                    qCWarning(lcPropfindJob) << u"Invalid href" << hrefString << u"expected starting with" << expectedPath;
                     return false;
                 }
                 currentHref = hrefString;
@@ -196,10 +195,10 @@ bool LsColXMLParser::parse(const QByteArray &xml, QHash<QString, qint64> *sizes,
 
     if (reader.hasError()) {
         // XML Parser error? Whatever had been emitted before will come as directoryListingIterated
-        qCWarning(lcPropfindJob) << "ERROR" << reader.errorString() << xml;
+        qCWarning(lcPropfindJob) << u"ERROR" << reader.errorString() << xml;
         return false;
     } else if (!insideMultiStatus) {
-        qCWarning(lcPropfindJob) << "ERROR no WebDAV response?" << xml;
+        qCWarning(lcPropfindJob) << u"ERROR no WebDAV response?" << xml;
         return false;
     } else {
         Q_EMIT directoryListingSubfolders(folders);
@@ -237,7 +236,7 @@ void PropfindJob::start()
     req.setRawHeader(QByteArrayLiteral("Prefer"), QByteArrayLiteral("return=minimal"));
 
     if (_properties.isEmpty()) {
-        qCWarning(lcPropfindJob) << "Propfind with no properties!";
+        qCWarning(lcPropfindJob) << u"Propfind with no properties!";
     }
     QByteArray data;
     {
@@ -271,8 +270,7 @@ void PropfindJob::start()
 // not all in one big blob at the end.
 void PropfindJob::finished()
 {
-    qCInfo(lcPropfindJob) << "LSCOL of" << reply()->request().url() << "FINISHED WITH STATUS"
-                          << replyStatusString();
+    qCInfo(lcPropfindJob) << u"LSCOL of" << reply()->request().url() << u"FINISHED WITH STATUS" << replyStatusString();
 
     const QString contentType = reply()->header(QNetworkRequest::ContentTypeHeader).toString();
     if (httpStatusCode() == 207) {
@@ -289,7 +287,7 @@ void PropfindJob::finished()
                         if (OC_ENSURE(counter == 1)) {
                             disconnect(&parser, &LsColXMLParser::directoryListingIterated, this, &PropfindJob::directoryListingIterated);
                         } else {
-                            qCCritical(lcPropfindJob) << "Received superfluous directory listing for depth 0 propfind" << counter << "Path:" << name;
+                            qCCritical(lcPropfindJob) << u"Received superfluous directory listing for depth 0 propfind" << counter << u"Path:" << name;
                         }
                     });
             }
@@ -301,7 +299,7 @@ void PropfindJob::finished()
             }
         } else {
             // wrong content type
-            qCWarning(lcPropfindJob) << "Unexpected ContentTypeHeader:" << contentType;
+            qCWarning(lcPropfindJob) << u"Unexpected ContentTypeHeader:" << contentType;
             Q_EMIT finishedWithError();
         }
     } else {

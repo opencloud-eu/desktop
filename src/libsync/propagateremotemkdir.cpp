@@ -114,7 +114,7 @@ void PropagateRemoteMkdir::slotMkcolJobFinished()
     auto propfindJob = new PropfindJob(_job->account(), _job->baseUrl(), _job->path(), PropfindJob::Depth::Zero, this);
     QList<QByteArray> properties{{"http://owncloud.org/ns:permissions"_ba}};
     if (_item->_fileId.isNull()) {
-        properties << "http://owncloud.org/ns:fileid"_ba;
+        properties.append("http://owncloud.org/ns:fileid"_ba);
     }
     propfindJob->setProperties(properties);
     connect(propfindJob, &PropfindJob::directoryListingIterated, this, [this](const QString &, const QMap<QString, QString> &result) {

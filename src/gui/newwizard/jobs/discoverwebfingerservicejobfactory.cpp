@@ -50,7 +50,7 @@ CoreJob *DiscoverWebFingerServiceJobFactory::startJob(const QUrl &url, QObject *
 
         const QString contentTypeHeader = job->reply()->header(QNetworkRequest::ContentTypeHeader).toString();
         if (!contentTypeHeader.toLower().contains(QStringLiteral("application/json"))) {
-            qCWarning(lcDiscoverWebFingerService) << "server sent invalid content type:" << contentTypeHeader;
+            qCWarning(lcDiscoverWebFingerService) << u"server sent invalid content type:" << contentTypeHeader;
             setInvalidReplyError();
             return;
         }
@@ -60,7 +60,7 @@ CoreJob *DiscoverWebFingerServiceJobFactory::startJob(const QUrl &url, QObject *
         const auto doc = QJsonDocument::fromJson(job->reply()->readAll(), &error);
         // empty or invalid response
         if (error.error != QJsonParseError::NoError || doc.isNull()) {
-            qCWarning(lcDiscoverWebFingerService) << "could not parse JSON response from server";
+            qCWarning(lcDiscoverWebFingerService) << u"could not parse JSON response from server";
             setInvalidReplyError();
             return;
         }
@@ -68,7 +68,7 @@ CoreJob *DiscoverWebFingerServiceJobFactory::startJob(const QUrl &url, QObject *
         // make sure the reported subject matches the requested resource
         const auto subject = doc.object().value(QStringLiteral("subject"));
         if (subject != url.toString()) {
-            qCWarning(lcDiscoverWebFingerService) << "reply sent for different subject (server):" << subject;
+            qCWarning(lcDiscoverWebFingerService) << u"reply sent for different subject (server):" << subject;
             setInvalidReplyError();
             return;
         }
@@ -86,7 +86,7 @@ CoreJob *DiscoverWebFingerServiceJobFactory::startJob(const QUrl &url, QObject *
             }
         }
 
-        qCWarning(lcDiscoverWebFingerService) << "could not find suitable relation in WebFinger response";
+        qCWarning(lcDiscoverWebFingerService) << u"could not find suitable relation in WebFinger response";
         setInvalidReplyError();
     });
 

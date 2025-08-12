@@ -37,8 +37,7 @@ void DeleteJob::start()
 
 void DeleteJob::finished()
 {
-    qCInfo(lcDeleteJob) << "DELETE of" << reply()->request().url() << "FINISHED WITH STATUS"
-                       << replyStatusString();
+    qCInfo(lcDeleteJob) << u"DELETE of" << reply()->request().url() << u"FINISHED WITH STATUS" << replyStatusString();
 }
 
 void PropagateRemoteDelete::start()

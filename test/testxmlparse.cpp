@@ -22,13 +22,13 @@ private:
 public Q_SLOTS:
     void slotDirectoryListingSubFolders(const QStringList &list)
     {
-        qDebug() << "subfolders: " << list;
+        qDebug() << u"subfolders: " << list;
         _subdirs.append(list);
     }
 
     void slotDirectoryListingIterated(const QString &item, const QMap<QString, QString> &)
     {
-        qDebug() << "     item: " << item;
+        qDebug() << u"     item: " << item;
         _items.append(item);
     }
 

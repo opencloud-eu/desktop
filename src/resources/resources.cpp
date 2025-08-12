@@ -97,7 +97,7 @@ QIcon OCC::Resources::loadIcon(const QString &flavor, const QString &name, IconT
                 cached.addFile(pixmapName, {size, size});
             } else if (size >= 128) {
                 if (!previousIcon.isEmpty()) {
-                    qCWarning(lcResources) << "Upscaling:" << previousIcon << "to" << size;
+                    qCWarning(lcResources) << u"Upscaling:" << previousIcon << u"to" << size;
                     cached.addPixmap(QPixmap(previousIcon).scaled({size, size}, Qt::KeepAspectRatio, Qt::SmoothTransformation));
                 }
             }
@@ -107,7 +107,7 @@ QIcon OCC::Resources::loadIcon(const QString &flavor, const QString &name, IconT
         if (!useCoreIcon && iconType == IconType::BrandedIconWithFallbackToVanillaIcon) {
             return loadIcon(flavor, name, IconType::VanillaIcon);
         }
-        qCWarning(lcResources) << "Failed to locate the icon" << path;
+        qCWarning(lcResources) << u"Failed to locate the icon" << path;
         Q_ASSERT(false);
     }
     return cached;
@@ -154,7 +154,7 @@ QUrl Resources::iconToFileSystemUrl(const QIcon &icon, QAnyStringView type)
     QFileInfo info(QStringLiteral("%1/%2.%3").arg(iconCache->tmpDir.path(), QString::number(icon.cacheKey()), type.toString()));
     if (!info.exists()) {
         if (!icon.pixmap(icon.actualSize({512, 512})).save(info.absoluteFilePath())) {
-            qCWarning(lcResources) << "Failed to save icon to " << info.absoluteFilePath() << info.size();
+            qCWarning(lcResources) << u"Failed to save icon to " << info.absoluteFilePath() << info.size();
         }
     }
     return QUrl::fromLocalFile(info.absoluteFilePath());

@@ -135,13 +135,13 @@ void OCC::HydrationJob::start()
         const auto server = new QLocalServer(this);
         const auto listenResult = server->listen(serverName);
         if (!listenResult) {
-            qCCritical(lcHydration) << "Couldn't get server to listen" << serverName << _localRoot << _context;
+            qCCritical(lcHydration) << u"Couldn't get server to listen" << serverName << _localRoot << _context;
             if (!_isCancelled) {
                 emitFinished(Status::Error);
             }
             return nullptr;
         }
-        qCInfo(lcHydration) << "Server ready, waiting for connections" << serverName << _localRoot << _context;
+        qCInfo(lcHydration) << u"Server ready, waiting for connections" << serverName << _localRoot << _context;
         return server;
     };
 
@@ -209,7 +209,7 @@ void OCC::HydrationJob::onCancellationServerNewConnection()
 {
     Q_ASSERT(!_signalSocket);
 
-    qCInfo(lcHydration) << "Got new connection on cancellation server" << _context;
+    qCInfo(lcHydration) << u"Got new connection on cancellation server" << _context;
     _signalSocket = _signalServer->nextPendingConnection();
 }
 
@@ -246,10 +246,10 @@ void OCC::HydrationJob::finalize(OCC::VfsCfApi *vfs)
         FileSystem::getInode(FileSystem::toFilesystemPath(localFilePathAbs()), &item->_inode);
         const auto result = _journal->setFileRecord(SyncJournalFileRecord::fromSyncFileItem(*item));
         if (!result) {
-            qCWarning(lcHydration) << "Error when setting the file record to the database" << _context << result.error();
+            qCWarning(lcHydration) << u"Error when setting the file record to the database" << _context << result.error();
         }
     } else {
-        qCWarning(lcHydration) << "Hydration succeeded but the file appears to be moved" << _context;
+        qCWarning(lcHydration) << u"Hydration succeeded but the file appears to be moved" << _context;
     }
 }
 
@@ -271,9 +271,9 @@ void OCC::HydrationJob::onGetFinished()
         }
     }
     if (!_errorString.isEmpty()) {
-        qCInfo(lcHydration) << "GETFileJob finished" << _context << _errorCode << _statusCode << _errorString;
+        qCInfo(lcHydration) << u"GETFileJob finished" << _context << _errorCode << _statusCode << _errorString;
     } else {
-        qCInfo(lcHydration) << "GETFileJob finished" << _context;
+        qCInfo(lcHydration) << u"GETFileJob finished" << _context;
     }
     if (_isCancelled) {
         _errorCode = QNetworkReply::NoError;
@@ -292,7 +292,7 @@ void OCC::HydrationJob::onGetFinished()
 
 void OCC::HydrationJob::handleNewConnection()
 {
-    qCInfo(lcHydration) << "Got new connection starting GETFileJob" << _context;
+    qCInfo(lcHydration) << u"Got new connection starting GETFileJob" << _context;
     _transferDataSocket = _transferDataServer->nextPendingConnection();
     _job = new GETFileJob(_account, _remoteSyncRootPath, _remoteFilePathRel, _transferDataSocket, {}, {}, 0, this);
     _job->setExpectedContentLength(_record.size());

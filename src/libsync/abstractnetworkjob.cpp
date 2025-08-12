@@ -107,11 +107,11 @@ void AbstractNetworkJob::setAuthenticationJob(bool b)
 bool AbstractNetworkJob::needsRetry() const
 {
     if (isAuthenticationJob()) {
-        qCDebug(lcNetworkJob) << "Not Retry auth job" << this << url();
+        qCDebug(lcNetworkJob) << u"Not Retry auth job" << this << url();
         return false;
     }
     if (retryCount() >= MaxRetryCount) {
-        qCDebug(lcNetworkJob) << "Not Retry too many retries" << retryCount() << this << url();
+        qCDebug(lcNetworkJob) << u"Not Retry too many retries" << retryCount() << this << url();
         return false;
     }
 
@@ -197,7 +197,7 @@ void AbstractNetworkJob::slotFinished()
 
     if (_reply->error() != QNetworkReply::NoError) {
         if (_account->jobQueue()->retry(this)) {
-            qCDebug(lcNetworkJob) << "Queued:" << this << "for retry";
+            qCDebug(lcNetworkJob) << u"Queued:" << this << u"for retry";
             return;
         }
 
@@ -212,19 +212,20 @@ void AbstractNetworkJob::slotFinished()
 
     if (!reply()->attribute(QNetworkRequest::RedirectionTargetAttribute).isNull() && !(isAuthenticationJob() || reply()->request().hasRawHeader(QByteArrayLiteral("OC-Connection-Validator")))) {
         Q_EMIT _account->unknownConnectionState();
-        qCWarning(lcNetworkJob) << this << "Unsupported redirect on" << _reply->url().toString() << "to" << reply()->attribute(QNetworkRequest::RedirectionTargetAttribute).toString();
+        qCWarning(lcNetworkJob) << this << u"Unsupported redirect on" << _reply->url().toString() << u"to"
+                                << reply()->attribute(QNetworkRequest::RedirectionTargetAttribute).toString();
         Q_EMIT networkError(_reply);
         if (_account->jobQueue()->retry(this)) {
-            qCWarning(lcNetworkJob) << "Retry Nr:" << _retryCount << _reply->url();
+            qCWarning(lcNetworkJob) << u"Retry Nr:" << _retryCount << _reply->url();
             return;
         } else {
-            qCWarning(lcNetworkJob) << "Don't retry:" << _reply->url();
+            qCWarning(lcNetworkJob) << u"Don't retry:" << _reply->url();
         }
     }
     Q_EMIT aboutToFinishSignal(AbstractNetworkJob::QPrivateSignal());
     finished();
     Q_EMIT finishedSignal(AbstractNetworkJob::QPrivateSignal());
-    qCDebug(lcNetworkJob) << "Network job finished" << this;
+    qCDebug(lcNetworkJob) << u"Network job finished" << this;
     deleteLater();
 }
 
@@ -281,7 +282,7 @@ QString AbstractNetworkJob::errorStringParsingBody(QByteArray *body)
 AbstractNetworkJob::~AbstractNetworkJob()
 {
     if (!_finished && !_aborted && !_timedout) {
-        qCCritical(lcNetworkJob) << "Deleting running job" << this;
+        qCCritical(lcNetworkJob) << u"Deleting running job" << this;
     }
     if (_reply) {
         _reply->disconnect();
@@ -293,7 +294,7 @@ AbstractNetworkJob::~AbstractNetworkJob()
 
 void AbstractNetworkJob::start()
 {
-    qCInfo(lcNetworkJob) << "Created" << this << "for" << parent();
+    qCInfo(lcNetworkJob) << u"Created" << this << u"for" << parent();
 }
 
 QString AbstractNetworkJob::replyStatusString() {
@@ -357,13 +358,13 @@ void AbstractNetworkJob::retry()
 {
     OC_ENFORCE(!_verb.isEmpty());
     _retryCount++;
-    qCInfo(lcNetworkJob) << "Restarting" << this << "for the" << _retryCount << "time";
+    qCInfo(lcNetworkJob) << u"Restarting" << this << u"for the" << _retryCount << u"time";
     if (_requestBody) {
         if (!_requestBody->isSequential()) {
             Q_ASSERT(_requestBody->isOpen());
             _requestBody->seek(0);
         } else {
-            qCWarning(lcNetworkJob) << "Can't resend request, body not suitable" << this;
+            qCWarning(lcNetworkJob) << u"Can't resend request, body not suitable" << this;
             abort();
             return;
         }
@@ -416,23 +417,22 @@ QDebug operator<<(QDebug debug, const OCC::AbstractNetworkJob *job)
 {
     QDebugStateSaver saver(debug);
     debug.setAutoInsertSpaces(false);
-    debug << job->metaObject()->className() << "(" << job->account().data() << ", " << job->url().toDisplayString()
-          << ", " << job->_verb;
+    debug << job->metaObject()->className() << u"(" << job->account().data() << u", " << job->url().toDisplayString() << u", " << job->_verb;
     if (auto reply = job->_reply) {
-        debug << ", Original-Request-ID: " << reply->request().rawHeader("Original-Request-ID")
-              << ", X-Request-ID: " << reply->request().rawHeader("X-Request-ID");
+        debug << u", Original-Request-ID: " << reply->request().rawHeader("Original-Request-ID") << u", X-Request-ID: "
+              << reply->request().rawHeader("X-Request-ID");
 
         const auto errorString = reply->rawHeader(QByteArrayLiteral("OC-ErrorString"));
         if (!errorString.isEmpty()) {
-            debug << ", Error:" << errorString;
+            debug << u", Error:" << errorString;
         }
         if (reply->error() != QNetworkReply::NoError) {
-            debug << ", NetworkError: " << reply->errorString();
+            debug << u", NetworkError: " << reply->errorString();
         }
     }
     if (job->_timedout) {
-        debug << ", timedout";
+        debug << u", timedout";
     }
-    debug << ")";
+    debug << u")";
     return debug.maybeSpace();
 }

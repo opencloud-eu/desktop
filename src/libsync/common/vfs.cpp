@@ -123,7 +123,7 @@ void Vfs::wipeDehydratedVirtualFiles()
             return;
         }
         const QString relativePath = rec.path();
-        qCDebug(lcVfs) << "Removing db record for dehydrated file" << relativePath;
+        qCDebug(lcVfs) << u"Removing db record for dehydrated file" << relativePath;
         _setupParams->journal->deleteFileRecord(relativePath);
 
         // If the local file is a dehydrated placeholder, wipe it too.
@@ -132,7 +132,7 @@ void Vfs::wipeDehydratedVirtualFiles()
         if (QFile::exists(absolutePath)) {
             // according to our db this is a dehydrated file, check it  to be sure
             if (isDehydratedPlaceholder(absolutePath)) {
-                qCDebug(lcVfs) << "Removing local dehydrated placeholder" << relativePath;
+                qCDebug(lcVfs) << u"Removing local dehydrated placeholder" << relativePath;
                 FileSystem::remove(absolutePath);
             }
         }
@@ -166,28 +166,28 @@ bool OCC::VfsPluginManager::isVfsPluginAvailable(Vfs::Mode mode) const
 
         auto basemeta = loader.metaData();
         if (basemeta.isEmpty() || !basemeta.contains(QStringLiteral("IID"))) {
-            qCDebug(lcPlugin) << "Plugin doesn't exist:" << loader.fileName() << "LibraryPath:" << QCoreApplication::libraryPaths();
+            qCDebug(lcPlugin) << u"Plugin doesn't exist:" << loader.fileName() << u"LibraryPath:" << QCoreApplication::libraryPaths();
             return false;
         }
         if (basemeta[QStringLiteral("IID")].toString() != QLatin1String("eu.opencloud.PluginFactory")) {
-            qCWarning(lcPlugin) << "Plugin has wrong IID" << loader.fileName() << basemeta[QStringLiteral("IID")];
+            qCWarning(lcPlugin) << u"Plugin has wrong IID" << loader.fileName() << basemeta[QStringLiteral("IID")];
             return false;
         }
 
         auto metadata = basemeta[QStringLiteral("MetaData")].toObject();
         if (metadata[QStringLiteral("type")].toString() != QLatin1String("vfs")) {
-            qCWarning(lcPlugin) << "Plugin has wrong type" << loader.fileName() << metadata[QStringLiteral("type")];
+            qCWarning(lcPlugin) << u"Plugin has wrong type" << loader.fileName() << metadata[QStringLiteral("type")];
             return false;
         }
         if (metadata[QStringLiteral("version")].toString() != OCC::Version::version().toString()) {
-            qCWarning(lcPlugin) << "Plugin has wrong version" << loader.fileName() << metadata[QStringLiteral("version")];
+            qCWarning(lcPlugin) << u"Plugin has wrong version" << loader.fileName() << metadata[QStringLiteral("version")];
             return false;
         }
 
         // Attempting to load the plugin is essential as it could have dependencies that
         // can't be resolved and thus not be available after all.
         if (!loader.load()) {
-            qCWarning(lcPlugin) << "Plugin failed to load:" << loader.errorString();
+            qCWarning(lcPlugin) << u"Plugin failed to load:" << loader.errorString();
             return false;
         }
 
@@ -215,30 +215,30 @@ std::unique_ptr<Vfs> OCC::VfsPluginManager::createVfsFromPlugin(Vfs::Mode mode) 
     auto pluginPath = pluginFileName(QStringLiteral("vfs"), name);
 
     if (!isVfsPluginAvailable(mode)) {
-        qCCritical(lcPlugin) << "Could not load plugin: not existant or bad metadata" << pluginPath;
+        qCCritical(lcPlugin) << u"Could not load plugin: not existant or bad metadata" << pluginPath;
         return nullptr;
     }
 
     QPluginLoader loader(pluginPath);
     auto plugin = loader.instance();
     if (!plugin) {
-        qCCritical(lcPlugin) << "Could not load plugin" << pluginPath << loader.errorString();
+        qCCritical(lcPlugin) << u"Could not load plugin" << pluginPath << loader.errorString();
         return nullptr;
     }
 
     auto factory = qobject_cast<PluginFactory *>(plugin);
     if (!factory) {
-        qCCritical(lcPlugin) << "Plugin" << loader.fileName() << "does not implement PluginFactory";
+        qCCritical(lcPlugin) << u"Plugin" << loader.fileName() << u"does not implement PluginFactory";
         return nullptr;
     }
 
     auto vfs = std::unique_ptr<Vfs>(qobject_cast<Vfs *>(factory->create(nullptr)));
     if (!vfs) {
-        qCCritical(lcPlugin) << "Plugin" << loader.fileName() << "does not create a Vfs instance";
+        qCCritical(lcPlugin) << u"Plugin" << loader.fileName() << u"does not create a Vfs instance";
         return nullptr;
     }
 
-    qCInfo(lcPlugin) << "Created VFS instance from plugin" << pluginPath;
+    qCInfo(lcPlugin) << u"Created VFS instance from plugin" << pluginPath;
     return vfs;
 }
 

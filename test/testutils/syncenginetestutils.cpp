@@ -95,21 +95,20 @@ public:
         processArguments.prepend(rootDir.absolutePath());
         QObject::connect(this, &QProcess::readyRead, [this]() {
             while (canReadLine()) {
-                qDebug() << "helper output:" << readLine();
+                qDebug() << u"helper output:" << readLine();
             }
         });
-        QObject::connect(this, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
-            [this](int exitCode, QProcess::ExitStatus exitStatus) {
-                qDebug() << "helper finished:" << exitCode << exitStatus;
-                this->finished = true;
-                this->succeeded = exitStatus == QProcess::NormalExit && exitCode == 0;
-            });
+        QObject::connect(this, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), [this](int exitCode, QProcess::ExitStatus exitStatus) {
+            qDebug() << u"helper finished:" << exitCode << exitStatus;
+            this->finished = true;
+            this->succeeded = exitStatus == QProcess::NormalExit && exitCode == 0;
+        });
 
-        qDebug() << "Starting helper:" << TEST_HELPER_EXE << processArguments;
+        qDebug() << u"Starting helper:" << TEST_HELPER_EXE << processArguments;
         start(QStringLiteral(TEST_HELPER_EXE), processArguments);
         QTimer::singleShot(10s, this, [this] {
             if (!finished) {
-                qWarning() << "Helper:" << TEST_HELPER_EXE << arguments() << "timed out.";
+                qWarning() << u"Helper:" << TEST_HELPER_EXE << arguments() << u"timed out.";
                 kill();
             }
         });
@@ -134,7 +133,7 @@ bool DiskFileModifier::applyModifications()
         QThread::currentThread()->eventDispatcher()->processEvents(QEventLoop::AllEvents);
     } while (!helper.finished);
     if (!helper.succeeded) {
-        qWarning() << Q_FUNC_INFO << "failed";
+        qWarning() << Q_FUNC_INFO << u"failed";
     }
     return helper.succeeded;
 }
@@ -281,42 +280,42 @@ bool FileInfo::equals(const FileInfo &other, CompareWhat compareWhat) const
     // Only check the content and contentSize if both files are hydrated:
     if (!isDehydratedPlaceholder && !other.isDehydratedPlaceholder) {
         if (contentSize != other.contentSize || contentChar != other.contentChar) {
-            qDebug() << "1" << name << "!=" << other.name;
+            qDebug() << u"1" << name << u"!=" << other.name;
             return false;
         }
     }
 
     // We need to check this before we use isDir in the next if-statement:
     if (isDir != other.isDir) {
-        qDebug() << "2" << name << "!=" << other.name;
+        qDebug() << u"2" << name << u"!=" << other.name;
         return false;
     }
 
     if (compareWhat == CompareLastModified) {
         // Don't check directory mtime: it might change when (unsynced) files get created.
         if (!isDir && _lastModifiedInSecondsUTC != other._lastModifiedInSecondsUTC) {
-            qDebug() << "3" << name << "!=" << other.name;
+            qDebug() << u"3" << name << u"!=" << other.name;
             return false;
         }
     }
 
     if (name != other.name || fileSize != other.fileSize) {
-        qDebug() << "4" << name << "!=" << other.name;
+        qDebug() << u"4" << name << u"!=" << other.name;
         return false;
     }
 
     if (children.size() != other.children.size()) {
-        qDebug() << "5" << name << "!=" << other.name;
+        qDebug() << u"5" << name << u"!=" << other.name;
         return false;
     }
 
     for (auto it = children.constBegin(), eit = children.constEnd(); it != eit; ++it) {
         auto oit = other.children.constFind(it.key());
         if (oit == other.children.constEnd()) {
-            qDebug() << "6" << name << "!=" << other.name;
+            qDebug() << u"6" << name << u"!=" << other.name;
             return false;
         } else if (!it.value().equals(oit.value(), compareWhat)) {
-            qDebug() << "7" << name << "!=" << other.name;
+            qDebug() << u"7" << name << u"!=" << other.name;
             return false;
         }
     }
@@ -591,7 +590,7 @@ FakeGetReply::FakeGetReply(FileInfo &remoteRootFileInfo, QNetworkAccessManager::
     Q_ASSERT(!fileName.isEmpty());
     fileInfo = remoteRootFileInfo.find(fileName);
     if (!fileInfo) {
-        qDebug() << "Could not find file" << fileName << "on the remote";
+        qDebug() << u"Could not find file" << fileName << u"on the remote";
         state = State::FileNotFound;
     }
     QMetaObject::invokeMethod(this, &FakeGetReply::respond, Qt::QueuedConnection);
@@ -799,7 +798,7 @@ QNetworkReply *FakeAM::createRequest(QNetworkAccessManager::Operation op, const 
         if (fileName.isNull()) {
             // we don't actually handle this case but thats ok for now
             newRequest.setTransferTimeout(duration_cast<milliseconds>(5min).count());
-            qWarning() << "Ignoring request to" << newRequest.url();
+            qWarning() << u"Ignoring request to" << newRequest.url();
             reply = new FakeHangingReply(op, newRequest, this);
         } else if (_errorPaths.contains(fileName)) {
             reply = new FakeErrorReply { op, newRequest, this, _errorPaths[fileName] };
@@ -844,7 +843,7 @@ FakeFolder::FakeFolder(const FileInfo &fileTemplate, OCC::Vfs::Mode vfsMode, boo
     OCC::SyncEngine::minimumFileAgeForUpload = 0s;
 
     QDir rootDir { _tempDir.path() };
-    qDebug() << "FakeFolder operating on" << rootDir;
+    qDebug() << u"FakeFolder operating on" << rootDir;
     toDisk(rootDir, filesAreDehydrated ? FileInfo() : fileTemplate);
 
     _fakeAm = new FakeAM(fileTemplate, this);
@@ -1019,7 +1018,7 @@ void FakeFolder::fromDisk(QDir &dir, FileInfo &templateFi)
                 OC_ENFORCE(f.open(QFile::ReadOnly));
                 auto content = f.read(1);
                 if (content.size() == 0) {
-                    qWarning() << "Empty file at:" << diskChild.filePath();
+                    qWarning() << u"Empty file at:" << diskChild.filePath();
                     fi.contentChar = FileInfo::DefaultContentChar;
                 } else {
                     fi.contentChar = content.at(0);
@@ -1088,7 +1087,7 @@ bool FakeFolder::syncOnce()
     scheduleSync();
     const bool ok = execUntilFinished();
     if (!ok) {
-        qWarning() << Q_FUNC_INFO << "failed. Errors:" << errors << "Another sync needed:" << _syncEngine->isAnotherSyncNeeded() << result.errorStrings();
+        qWarning() << Q_FUNC_INFO << u"failed. Errors:" << errors << u"Another sync needed:" << _syncEngine->isAnotherSyncNeeded() << result.errorStrings();
     }
     return ok;
 }

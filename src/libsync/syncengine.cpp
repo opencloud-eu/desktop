@@ -92,7 +92,7 @@ SyncEngine::~SyncEngine()
 bool SyncEngine::checkErrorBlacklisting(SyncFileItem &item)
 {
     if (!_journal) {
-        qCCritical(lcEngine) << "Journal is undefined!";
+        qCCritical(lcEngine) << u"Journal is undefined!";
         return false;
     }
 
@@ -108,7 +108,7 @@ bool SyncEngine::checkErrorBlacklisting(SyncFileItem &item)
     // If duration has expired, it's not blacklisted anymore
     time_t now = Utility::qDateTimeToTime_t(QDateTime::currentDateTimeUtc());
     if (now >= entry._lastTryTime + entry._ignoreDuration) {
-        qCInfo(lcEngine) << "blacklist entry for " << item.localName() << " has expired!";
+        qCInfo(lcEngine) << u"blacklist entry for " << item.localName() << u" has expired!";
         return false;
     }
 
@@ -118,27 +118,25 @@ bool SyncEngine::checkErrorBlacklisting(SyncFileItem &item)
         if (item._modtime == 0 || entry._lastTryModtime == 0) {
             return false;
         } else if (item._modtime != entry._lastTryModtime) {
-            qCInfo(lcEngine) << item.localName() << " is blacklisted, but has changed mtime!";
+            qCInfo(lcEngine) << item.localName() << u" is blacklisted, but has changed mtime!";
             return false;
         } else if (item._renameTarget != entry._renameTarget) {
-            qCInfo(lcEngine) << item.localName() << " is blacklisted, but rename target changed from" << entry._renameTarget;
+            qCInfo(lcEngine) << item.localName() << u" is blacklisted, but rename target changed from" << entry._renameTarget;
             return false;
         }
     } else if (item._direction == SyncFileItem::Down) {
         // download, check the etag.
         if (item._etag.isEmpty() || entry._lastTryEtag.isEmpty()) {
-            qCInfo(lcEngine) << item.localName() << "one ETag is empty, no blacklisting";
+            qCInfo(lcEngine) << item.localName() << u"one ETag is empty, no blacklisting";
             return false;
         } else if (item._etag.toUtf8() != entry._lastTryEtag) {
-            qCInfo(lcEngine) << item.localName() << " is blacklisted, but has changed etag!";
+            qCInfo(lcEngine) << item.localName() << u" is blacklisted, but has changed etag!";
             return false;
         }
     }
 
     int waitSeconds = entry._lastTryTime + entry._ignoreDuration - now;
-    qCInfo(lcEngine) << "Item is on blacklist: " << entry._file
-                     << "retries:" << entry._retryCount
-                     << "for another" << waitSeconds << "s";
+    qCInfo(lcEngine) << u"Item is on blacklist: " << entry._file << u"retries:" << entry._retryCount << u"for another" << waitSeconds << u"s";
     // We need to indicate that we skip this file due to blacklisting
     // for reporting and for making sure we don't update the blacklist
     // entry yet.
@@ -183,7 +181,7 @@ void SyncEngine::deleteStaleDownloadInfos(const SyncFileItemSet &syncItems)
         _journal->getAndDeleteStaleDownloadInfos(download_file_paths);
     for (const auto &deleted_info : deleted_infos) {
         const QString tmppath = _propagator->fullLocalPath(deleted_info._tmpfile);
-        qCInfo(lcEngine) << "Deleting stale temporary file: " << tmppath;
+        qCInfo(lcEngine) << u"Deleting stale temporary file: " << tmppath;
         FileSystem::remove(tmppath);
     }
 }
@@ -279,7 +277,7 @@ void OCC::SyncEngine::slotItemDiscovered(const OCC::SyncFileItemPtr &item)
         const auto it = _syncItems.find(item);
         if (it != _syncItems.cend()) {
             const auto &item2 = it->get();
-            qCWarning(lcEngine) << "We already have an item for " << item2->localName() << ":" << item2->instruction() << item2->_direction << "|"
+            qCWarning(lcEngine) << u"We already have an item for " << item2->localName() << u":" << item2->instruction() << item2->_direction << u"|"
                                 << item->instruction() << item->_direction;
             return false;
         }
@@ -321,8 +319,8 @@ void SyncEngine::startSync()
     const qint64 freeBytes = Utility::freeDiskSpace(_localPath);
     if (freeBytes >= 0) {
         if (freeBytes < minFree) {
-            qCWarning(lcEngine()) << "Too little space available at" << _localPath << ". Have" << freeBytes << "bytes and require at least" << minFree
-                                  << "bytes";
+            qCWarning(lcEngine()) << u"Too little space available at" << _localPath << u". Have" << freeBytes << u"bytes and require at least" << minFree
+                                  << u"bytes";
             Q_EMIT syncError(tr("Only %1 are available, need at least %2 to start",
                 "Placeholders are postfixed with file sizes using Utility::octetsToString()")
                                  .arg(
@@ -331,26 +329,26 @@ void SyncEngine::startSync()
             finalize(false);
             return;
         } else {
-            qCInfo(lcEngine) << "There are" << Utility::octetsToString(freeBytes) << "available at" << _localPath;
+            qCInfo(lcEngine) << u"There are" << Utility::octetsToString(freeBytes) << u"available at" << _localPath;
         }
     } else {
-        qCWarning(lcEngine) << "Could not determine free space available at" << _localPath;
+        qCWarning(lcEngine) << u"Could not determine free space available at" << _localPath;
     }
 
     _syncItems.clear();
     _needsUpdate = false;
 
     if (!_journal->exists()) {
-        qCInfo(lcEngine) << "New sync (no sync journal exists)";
+        qCInfo(lcEngine) << u"New sync (no sync journal exists)";
     } else {
-        qCInfo(lcEngine) << "Sync with existing sync journal";
+        qCInfo(lcEngine) << u"Sync with existing sync journal";
     }
 
-    qCInfo(lcEngine) << "Using Qt " << qVersion() << " SSL library " << QSslSocket::sslLibraryVersionString() << " on " << Utility::platformName();
+    qCInfo(lcEngine) << u"Using Qt " << qVersion() << u" SSL library " << QSslSocket::sslLibraryVersionString() << u" on " << Utility::platformName();
 
     // This creates the DB if it does not exist yet.
     if (!_journal->open()) {
-        qCWarning(lcEngine) << "No way to create a sync journal!";
+        qCWarning(lcEngine) << u"No way to create a sync journal!";
         Q_EMIT syncError(tr("Unable to open or create the local sync database. Make sure you have write access in the sync folder."));
         finalize(false);
         return;
@@ -372,15 +370,14 @@ void SyncEngine::startSync()
         bool usingSelectiveSync = (!selectiveSyncBlackList.isEmpty());
         qCInfo(lcEngine) << (usingSelectiveSync ? "Using Selective Sync" : "NOT Using Selective Sync");
     } else {
-        qCWarning(lcEngine) << "Could not retrieve selective sync list from DB";
+        qCWarning(lcEngine) << u"Could not retrieve selective sync list from DB";
         Q_EMIT syncError(tr("Unable to read the blacklist from the local database"));
         finalize(false);
         return;
     }
 
-    qCInfo(lcEngine) << "#### Discovery start ####################################################" << _duration;
-    qCInfo(lcEngine) << "Server" << account()->capabilities().status().versionString()
-                     << (account()->isHttp2Supported() ? "Using HTTP/2" : "");
+    qCInfo(lcEngine) << u"#### Discovery start ####################################################" << _duration;
+    qCInfo(lcEngine) << u"Server" << account()->capabilities().status().versionString() << (account()->isHttp2Supported() ? "Using HTTP/2" : "");
     _progressInfo->_status = ProgressInfo::Discovery;
     Q_EMIT transmissionProgress(*_progressInfo);
 
@@ -399,7 +396,7 @@ void SyncEngine::startSync()
     _discoveryPhase->setSelectiveSyncBlackList(selectiveSyncBlackList);
     _discoveryPhase->setSelectiveSyncWhiteList(_journal->getSelectiveSyncList(SyncJournalDb::SelectiveSyncWhiteList, &ok));
     if (!ok) {
-        qCWarning(lcEngine) << "Unable to read selective sync list, aborting.";
+        qCWarning(lcEngine) << u"Unable to read selective sync list, aborting.";
         Q_EMIT syncError(tr("Unable to read from the sync journal."));
         finalize(false);
         return;
@@ -451,7 +448,7 @@ void SyncEngine::slotFolderDiscovered(bool local, const QString &folder)
 void SyncEngine::slotRootEtagReceived(const QString &e, const QDateTime &time)
 {
     if (_remoteRootEtag.isEmpty()) {
-        qCDebug(lcEngine) << "Root etag:" << e;
+        qCDebug(lcEngine) << u"Root etag:" << e;
         _remoteRootEtag = e;
         Q_EMIT rootEtag(_remoteRootEtag, time);
     }
@@ -469,11 +466,11 @@ void SyncEngine::slotDiscoveryFinished()
         return;
     }
 
-    qCInfo(lcEngine) << "#### Discovery end ####################################################" << _duration;
+    qCInfo(lcEngine) << u"#### Discovery end ####################################################" << _duration;
 
     // Sanity check
     if (!_journal->open()) {
-        qCWarning(lcEngine) << "Bailing out, DB failure";
+        qCWarning(lcEngine) << u"Bailing out, DB failure";
         Q_EMIT syncError(tr("Cannot open the sync journal"));
         finalize(false);
         return;
@@ -487,7 +484,7 @@ void SyncEngine::slotDiscoveryFinished()
     _progressInfo->_status = ProgressInfo::Reconcile;
     Q_EMIT transmissionProgress(*_progressInfo);
 
-    //    qCInfo(lcEngine) << "Permissions of the root folder: " << _csync_ctx->remote.root_perms.toString();
+    //    qCInfo(lcEngine) << u"Permissions of the root folder: " << _csync_ctx->remote.root_perms.toString();
     auto finish = [this] {
         if (_discoveryPhase->_anotherSyncNeeded) {
             _anotherSyncNeeded = true;
@@ -525,14 +522,14 @@ void SyncEngine::slotDiscoveryFinished()
             erase_if(_syncItems, [&names](const SyncFileItemPtr &i) { return !names.contains(QStringView{i->localName()}); });
         }
 
-        qCInfo(lcEngine) << "#### Reconcile (aboutToPropagate) ####################################################" << _duration;
+        qCInfo(lcEngine) << u"#### Reconcile (aboutToPropagate) ####################################################" << _duration;
 
         _localDiscoveryPaths.clear();
 
         // To announce the beginning of the sync
         Q_EMIT aboutToPropagate(_syncItems);
 
-        qCInfo(lcEngine) << "#### Reconcile (aboutToPropagate OK) ####################################################" << _duration;
+        qCInfo(lcEngine) << u"#### Reconcile (aboutToPropagate OK) ####################################################" << _duration;
 
         // it's important to do this before ProgressInfo::start(), to announce start of new sync
         _progressInfo->_status = ProgressInfo::Propagation;
@@ -570,7 +567,7 @@ void SyncEngine::slotDiscoveryFinished()
         _propagator->start(std::move(_syncItems));
 
 
-        qCInfo(lcEngine) << "#### Post-Reconcile end ####################################################" << _duration;
+        qCInfo(lcEngine) << u"#### Post-Reconcile end ####################################################" << _duration;
     };
 
     finish();
@@ -583,7 +580,7 @@ void SyncEngine::setNetworkLimits(int upload, int download)
 
     if (_propagator) {
         if (upload != 0 || download != 0) {
-            qCInfo(lcEngine) << "Network Limits (down/up) " << upload << download;
+            qCInfo(lcEngine) << u"Network Limits (down/up) " << upload << download;
             if (!_propagator->_bandwidthManager) {
                 _propagator->_bandwidthManager = new BandwidthManager(_propagator.data());
             }
@@ -619,7 +616,7 @@ void SyncEngine::slotPropagationFinished(bool success)
     conflictRecordMaintenance();
 
     // update placeholders for files that where marked as dirty in a previous run
-    qCInfo(lcEngine) << "Updating files marked as dirty";
+    qCInfo(lcEngine) << u"Updating files marked as dirty";
     for (const auto &record : _journal->getFileRecordsWithDirtyPlaceholders()) {
         _propagator->updateMetadata(*SyncFileItem::fromSyncJournalFileRecord(record));
     }
@@ -638,7 +635,7 @@ void SyncEngine::slotPropagationFinished(bool success)
 
 void SyncEngine::finalize(bool success)
 {
-    qCInfo(lcEngine) << "Sync run for" << _localPath << "took" << _duration;
+    qCInfo(lcEngine) << u"Sync run for" << _localPath << u"took" << _duration;
     _duration.stop();
 
     if (_discoveryPhase) {
@@ -680,11 +677,11 @@ void SyncEngine::restoreOldFiles(SyncFileItemSet &syncItems)
 
         switch ((*it)->instruction()) {
         case CSYNC_INSTRUCTION_SYNC:
-            qCWarning(lcEngine) << "restoreOldFiles: RESTORING" << (*it)->localName();
+            qCWarning(lcEngine) << u"restoreOldFiles: RESTORING" << (*it)->localName();
             (*it)->setInstruction(CSYNC_INSTRUCTION_CONFLICT);
             break;
         case CSYNC_INSTRUCTION_REMOVE:
-            qCWarning(lcEngine) << "restoreOldFiles: RESTORING" << (*it)->localName();
+            qCWarning(lcEngine) << u"restoreOldFiles: RESTORING" << (*it)->localName();
             (*it)->setInstruction(CSYNC_INSTRUCTION_NEW);
             (*it)->_direction = SyncFileItem::Up;
             break;
@@ -786,7 +783,7 @@ void SyncEngine::abort(const QString &reason)
         disconnect(_discoveryPhase.get(), nullptr, this, nullptr);
     }
     if (aborting) {
-        qCInfo(lcEngine) << "Aborting sync";
+        qCInfo(lcEngine) << u"Aborting sync";
         if (!_goingDown) {
             Q_EMIT syncError(tr("Aborted due to %1").arg(reason));
         }

@@ -65,7 +65,7 @@ static void callback(
         const auto qPath = QString::fromCFString(cfPath).normalized(QString::NormalizationForm_C);
 
         if (!(eventFlags[i] & c_interestingFlags)) {
-            qCDebug(lcFolderWatcher) << "Ignoring non-content changes for" << qPath;
+            qCDebug(lcFolderWatcher) << u"Ignoring non-content changes for" << qPath;
             continue;
         }
 
@@ -79,7 +79,7 @@ static void callback(
 
 void FolderWatcherPrivate::startWatching()
 {
-    qCDebug(lcFolderWatcher) << "FolderWatcherPrivate::startWatching()" << _folder;
+    qCDebug(lcFolderWatcher) << u"FolderWatcherPrivate::startWatching()" << _folder;
 
     CFStringRef cfFolder = _folder.toCFString();
     QScopeGuard freeFolder([cfFolder]() { CFRelease(cfFolder); });
