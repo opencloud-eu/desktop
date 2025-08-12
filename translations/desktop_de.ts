@@ -47,7 +47,7 @@
     <message>
         <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.ui" line="147"/>
         <source>Synchronize all exisitng spaces</source>
-        <translation type="unfinished"/>
+        <translation>Alle vorhandenen Spaces synchronisieren</translation>
     </message>
     <message>
         <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.ui" line="157"/>
@@ -406,7 +406,7 @@ Dateisynchronisierung Desktop-Client .</translation>
     <message>
         <location filename="../src/gui/folderwizard/folderwizardsourcepage.ui" line="39"/>
         <source>Click to select the Spaces root folder.</source>
-        <translation type="unfinished"/>
+        <translation>Klicke, um den Stammordner der Spaces auszuwählen.</translation>
     </message>
     <message>
         <location filename="../src/gui/folderwizard/folderwizardsourcepage.ui" line="42"/>
@@ -1735,7 +1735,7 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="382"/>
         <source>&lt;h1&gt;Incorrect user&lt;/h1&gt;&lt;p&gt;You logged-in as user &lt;em&gt;%1&lt;/em&gt;, but must login with user &lt;em&gt;%2&lt;/em&gt;.&lt;br&gt;Please return to the %3 and restart the authentication.&lt;/p&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;h1&gt;Falscher Benutzer&lt;/h1&gt;&lt;p&gt;Du bist als Benutzer &lt;em&gt;%1&lt;/em&gt; angemeldet, du musst dich aber als Benutzer &lt;em&gt;%2&lt;/em&gt; anmelden.&lt;br&gt;Bitte kehre zu %3 zurück und starte die Authentifizierung erneut.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="387"/>
@@ -2165,7 +2165,7 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
     <message>
         <location filename="../src/libsync/owncloudpropagator.cpp" line="1281"/>
         <source>Could not update file: %1</source>
-        <translation type="unfinished"/>
+        <translation>Datei konnte nicht aktualisiert werden: %1</translation>
     </message>
     <message>
         <location filename="../src/libsync/owncloudpropagator.cpp" line="1284"/>
@@ -2241,7 +2241,7 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
     <message>
         <location filename="../src/libsync/propagateuploadv1.cpp" line="112"/>
         <source>The server did ask for a removed legacy feature (polling)</source>
-        <translation type="unfinished"/>
+        <translation>Der Server hat nach einem entfernten Legacy-Feature (Polling) gefragt</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagateuploadv1.cpp" line="132"/>
@@ -2346,7 +2346,7 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
     <message>
         <location filename="../src/gui/selectivesyncwidget.cpp" line="69"/>
         <source>Loading...</source>
-        <translation type="unfinished"/>
+        <translation>Laden …</translation>
     </message>
     <message>
         <location filename="../src/gui/selectivesyncwidget.cpp" line="75"/>
@@ -2753,7 +2753,7 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
     <message>
         <location filename="../src/libsync/common/vfs.cpp" line="85"/>
         <source>ReFS is currently not supported.</source>
-        <translation type="unfinished"/>
+        <translation>ReFS wird momentan nicht unterstützt.</translation>
     </message>
     <message>
         <location filename="../src/libsync/common/vfs.cpp" line="89"/>
@@ -2986,7 +2986,7 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
     <message>
         <location filename="../src/plugins/vfs/cfapi/cfapiwrapper.cpp" line="68"/>
         <source>Paths beginning with &apos;#&apos; character are not supported in VFS mode.</source>
-        <translation type="unfinished"/>
+        <translation>Mit dem Zeichen „#“ beginnende Pfade werden im VFS-Modus nicht unterstützt.</translation>
     </message>
 </context>
 <context>
@@ -2994,7 +2994,7 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
     <message>
         <location filename="../src/libsync/discoveryremoteinfo.cpp" line="67"/>
         <source>server reported no %1</source>
-        <translation type="unfinished"/>
+        <translation>Server meldet keine %1</translation>
     </message>
 </context>
 <context>
