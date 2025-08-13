@@ -403,10 +403,14 @@ void Folder::setSyncPaused(bool paused)
 
 void Folder::setSyncState(SyncResult::Status state)
 {
+    const auto oldIsRunnign = isSyncRunning();
     if (state != _syncResult.status()) {
         _syncResult.setStatus(state);
         qCDebug(lcFolder) << u"State of" << path() << u"changed to" << state;
         Q_EMIT syncStateChange();
+        if (oldIsRunnign != isSyncRunning()) {
+            Q_EMIT isSyncRunningChanged();
+        }
     }
 }
 
@@ -930,7 +934,6 @@ void Folder::slotSyncStarted()
 {
     qCInfo(lcFolder) << u"#### Propagation start ####################################################";
     setSyncState(SyncResult::SyncRunning);
-    Q_EMIT isSyncRunningChanged();
 }
 
 void Folder::slotSyncFinished(bool success)
@@ -940,7 +943,6 @@ void Folder::slotSyncFinished(bool success)
         return;
     }
     qCInfo(lcFolder) << u"Client version" << Theme::instance()->aboutVersions(Theme::VersionFormat::OneLiner);
-    Q_EMIT isSyncRunningChanged();
 
     bool syncError = !_syncResult.errorStrings().isEmpty();
     if (syncError) {
