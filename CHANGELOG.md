@@ -4,7 +4,7 @@
 
 ### ❤️ Thanks to all contributors! ❤️
 
-@Svanvith, @TheOneRing, @anon-pradip, @fschade, @individual-it, @kulmann
+@TheOneRing, @anon-pradip, @fschade, @individual-it, @kulmann
 
 ### 💥 Breaking changes
 
@@ -15,7 +15,6 @@
 ### 📈 Enhancement
 
 - Use utf16 for the rotating log, to reduce string conversions [[#467](https://github.com/opencloud-eu/desktop/pull/467)]
-- change help URL to the right docs URL [[#466](https://github.com/opencloud-eu/desktop/pull/466)]
 - Folder watcher: ignore changes in short lived files [[#455](https://github.com/opencloud-eu/desktop/pull/455)]
 - Fix assert in httplogger if a cached request is actuall send [[#456](https://github.com/opencloud-eu/desktop/pull/456)]
 - Sync description and space name to Windows [[#443](https://github.com/opencloud-eu/desktop/pull/443)]
@@ -24,7 +23,6 @@
 
 ### 🐛 Bug Fixes
 
-- Sync Scheduler: Ensure the current sync is actually running [[#452](https://github.com/opencloud-eu/desktop/pull/452)]
 - Fix leak of accountstates [[#445](https://github.com/opencloud-eu/desktop/pull/445)]
 - Fix color for selected space [[#437](https://github.com/opencloud-eu/desktop/pull/437)]
 - Don't truncate inode on Windows [[#412](https://github.com/opencloud-eu/desktop/pull/412)]
