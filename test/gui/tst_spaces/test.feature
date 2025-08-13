@@ -57,3 +57,12 @@ Feature: Project spaces
         And the user waits for file "renamedFile.txt" to be synced
         Then as "Alice" the space "Project101" should have file "renamedFile.txt" in the server
         And as "Alice" the file "renamedFile.txt" in the space "Project101" should have content "some content" in the server
+
+
+    Scenario: Remove folder sync connection (Project Space)
+        Given the administrator has uploaded a file "testfile.txt" with content "some content" inside space "Project101"
+        And the administrator has added user "Alice" to space "Project101" with role "manager"
+        And user "Alice" has set up a client with space "Project101"
+        When the user removes the folder sync connection
+        Then the sync folder list should be empty
+        But the file "testfile.txt" should exist on the file system

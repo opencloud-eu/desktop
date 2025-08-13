@@ -487,7 +487,7 @@ Feature: Syncing files
         Then as "Alice" folder "~`!@#$^&()-_=+{[}];',)💥🫨❤️‍🔥" should exist in the server
 
     @issue-11814
-    Scenario: remove folder sync connection
+    Scenario: Remove folder sync connection (Personal Space)
         Given user "Alice" has created folder "simple-folder" in the server
         And user "Alice" has set up a client with default settings
         When the user removes the folder sync connection
