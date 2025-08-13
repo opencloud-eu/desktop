@@ -104,7 +104,10 @@ jobs:
       run: |
         New-Item -ItemType Directory "${env:GITHUB_WORKSPACE}/binaries/"
         # settings
-        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --set "forceAsserts=${{ github.ref_type == 'branch' }}" opencloud/opencloud-desktop
+        if ("${{ github.ref_type }}" -ne "tag"  ) {
+          & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --set "forceAsserts=true" opencloud/opencloud-desktop
+          & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --set "buildBeta=true" opencloud/opencloud-desktop
+        }
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --set "srcDir=${env:GITHUB_WORKSPACE}" opencloud/opencloud-desktop
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --set "buildNumber=${{ github.run_number }}" opencloud/opencloud-desktop
         # optional deployment dependencies
