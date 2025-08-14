@@ -18,14 +18,12 @@
 - change help URL to the right docs URL [[#466](https://github.com/opencloud-eu/desktop/pull/466)]
 - Folder watcher: ignore changes in short lived files [[#455](https://github.com/opencloud-eu/desktop/pull/455)]
 - Fix assert in httplogger if a cached request is actuall send [[#456](https://github.com/opencloud-eu/desktop/pull/456)]
-- Sync description and space name to Windows [[#443](https://github.com/opencloud-eu/desktop/pull/443)]
 - Replace csync C code with std::filesystem [[#393](https://github.com/opencloud-eu/desktop/pull/393)]
 - Remove margins around the content widgets [[#377](https://github.com/opencloud-eu/desktop/pull/377)]
 
 ### 🐛 Bug Fixes
 
 - Sync Scheduler: Ensure the current sync is actually running [[#452](https://github.com/opencloud-eu/desktop/pull/452)]
-- Fix leak of accountstates [[#445](https://github.com/opencloud-eu/desktop/pull/445)]
 - Fix color for selected space [[#437](https://github.com/opencloud-eu/desktop/pull/437)]
 - Don't truncate inode on Windows [[#412](https://github.com/opencloud-eu/desktop/pull/412)]
 - Fix printing of duration [[#400](https://github.com/opencloud-eu/desktop/pull/400)]
