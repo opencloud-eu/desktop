@@ -403,12 +403,12 @@ void Folder::setSyncPaused(bool paused)
 
 void Folder::setSyncState(SyncResult::Status state)
 {
-    const auto oldIsRunnign = isSyncRunning();
+    const auto oldIsRunning = isSyncRunning();
     if (state != _syncResult.status()) {
         _syncResult.setStatus(state);
         qCDebug(lcFolder) << u"State of" << path() << u"changed to" << state;
         Q_EMIT syncStateChange();
-        if (oldIsRunnign != isSyncRunning()) {
+        if (oldIsRunning != isSyncRunning()) {
             Q_EMIT isSyncRunningChanged();
         }
     }
