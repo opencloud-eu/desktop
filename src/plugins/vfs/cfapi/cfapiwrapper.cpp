@@ -576,7 +576,7 @@ void OCC::CfApiWrapper::registerSyncRoot(const VfsSetupParams &params, const std
                 }
                 callback({});
             } catch (const winrt::hresult_error &ex) {
-                callback(u"Failed to register sync root %1"_s.arg(Utility::formatWinError(ex.code())));
+                callback(u"Failed to register sync root %1: %2"_s.arg(params.filesystemPath, Utility::formatWinError(ex.code())));
             }
         });
 }
