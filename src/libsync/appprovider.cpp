@@ -86,7 +86,7 @@ bool AppProvider::open(const AccountPtr &account, const QString &localPath, cons
                 qCDebug(lcAppProvider) << u"start browser" << url << result;
             } else {
                 Q_EMIT account->appProviderErrorOccured(
-                    QCoreApplication::translate("AppProvider", "Failed to open %1 in web. Error: %2.").arg(localPath, job->reply()->errorString()));
+                    QCoreApplication::translate("AppProvider", "Failed to open »%1« in web. Error: %2.").arg(localPath, job->reply()->errorString()));
             }
         });
         job->start();

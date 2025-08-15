@@ -186,7 +186,7 @@ void Application::slotAccountStateAdded(AccountStatePtr accountState) const
     connect(accountState->account().data(), &Account::serverVersionChanged, ocApp(), [account = accountState->account().data()] {
         if (account->serverSupportLevel() != Account::ServerSupportLevel::Supported) {
             ocApp()->systemNotificationManager()->notify({tr("Unsupported Server Version"),
-                tr("The server on account %1 runs an unsupported version %2. "
+                tr("The server on account »%1« runs an unsupported version %2. "
                    "Using this client with unsupported server versions is untested and "
                    "potentially dangerous. Proceed at your own risk.")
                     .arg(account->displayNameWithHost(), account->capabilities().status().versionString()),

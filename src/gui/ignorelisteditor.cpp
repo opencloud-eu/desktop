@@ -108,7 +108,7 @@ void IgnoreListEditor::slotUpdateLocalIgnoreList()
         }
     } else {
         QMessageBox::warning(this, tr("Could not open file"),
-            tr("Cannot write changes to '%1'.").arg(ignoreFile));
+            tr("Cannot write changes to »%1«.").arg(ignoreFile));
     }
     ignores.close(); //close the file before reloading stuff.
 
