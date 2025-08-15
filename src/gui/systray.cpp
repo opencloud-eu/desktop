@@ -125,7 +125,7 @@ void Systray::slotComputeOverallSyncStatus()
     QStringList allStatusStrings;
     for (auto *folder : map) {
         QString folderMessage = FolderMan::trayTooltipStatusString(folder->syncResult(), folder->isSyncPaused());
-        allStatusStrings += tr("Folder %1: %2").arg(folder->shortGuiLocalPath(), folderMessage);
+        allStatusStrings += tr("Folder »%1«: %2").arg(folder->shortGuiLocalPath(), folderMessage);
     }
     trayMessage = allStatusStrings.join(QLatin1String("\n"));
 #endif

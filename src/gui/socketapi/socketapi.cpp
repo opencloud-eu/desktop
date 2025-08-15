@@ -585,8 +585,8 @@ void SocketApi::command_DELETE_ITEM(const QString &localFile, SocketListener *)
     auto result = QMessageBox::question(
         nullptr, tr("Confirm deletion"),
         info.isDir()
-            ? tr("Do you want to delete the directory <i>%1</i> and all its contents permanently?").arg(info.dir().dirName())
-            : tr("Do you want to delete the file <i>%1</i> permanently?").arg(info.fileName()),
+            ? tr("Do you want to delete the directory »%1« and all its contents permanently?").arg(info.dir().dirName())
+            : tr("Do you want to delete the file »%1« permanently?").arg(info.fileName()),
         QMessageBox::Yes, QMessageBox::No);
     if (result != QMessageBox::Yes)
         return;

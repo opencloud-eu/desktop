@@ -194,7 +194,7 @@ void AccountSettings::slotRemoveCurrentFolder(Folder *folder)
     // TODO: move to qml
     qCInfo(lcAccountSettings) << u"Remove Folder " << folder->path();
     auto messageBox = new QMessageBox(QMessageBox::Question, tr("Confirm removal of Space"),
-        tr("<p>Do you really want to stop syncing the Space <i>\"%1\"</i>?</p>"
+        tr("<p>Do you really want to stop syncing the Space »%1«?</p>"
            "<p><b>Note:</b> This will <b>not</b> delete any files.</p>")
             .arg(folder->displayName()),
         QMessageBox::NoButton, ocApp()->settingsDialog());
@@ -556,7 +556,7 @@ void AccountSettings::slotDeleteAccount()
     // Deleting the account potentially deletes 'this', so
     // the QMessageBox should be destroyed before that happens.
     auto messageBox = new QMessageBox(QMessageBox::Question, tr("Confirm Account Removal"),
-        tr("<p>Do you really want to remove the connection to the account <i>%1</i>?</p>"
+        tr("<p>Do you really want to remove the connection to the account %1«?</p>"
            "<p><b>Note:</b> This will <b>not</b> delete any files.</p>")
             .arg(_accountState->account()->displayNameWithHost()),
         QMessageBox::NoButton, this);

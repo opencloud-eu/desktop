@@ -102,7 +102,7 @@ void Utility::markDirectoryAsSyncRoot(const QString &path, const QUuid &accountU
 
     auto result1 = FileSystem::Tags::set(path, dirTag(), Theme::instance()->orgDomainName().toUtf8());
     if (!result1) {
-        qCWarning(lcGuiUtility) << QStringLiteral("Failed to set tag on '%1': %2").arg(path, result1.error())
+        qCWarning(lcGuiUtility) << QStringLiteral("Failed to set tag on »%1«: %2").arg(path, result1.error())
 #ifdef Q_OS_WIN
                                 << QStringLiteral("(filesystem %1)").arg(FileSystem::fileSystemForPath(path))
 #endif // Q_OS_WIN
@@ -112,7 +112,7 @@ void Utility::markDirectoryAsSyncRoot(const QString &path, const QUuid &accountU
 
     auto result2 = FileSystem::Tags::set(path, uuidTag(), accountUuid.toString().toUtf8());
     if (!result2) {
-        qCWarning(lcGuiUtility) << QStringLiteral("Failed to set tag on '%1': %2").arg(path, result2.error())
+        qCWarning(lcGuiUtility) << QStringLiteral("Failed to set tag on »%1«: %2").arg(path, result2.error())
 #ifdef Q_OS_WIN
                                 << QStringLiteral("(filesystem %1)").arg(FileSystem::fileSystemForPath(path))
 #endif // Q_OS_WIN

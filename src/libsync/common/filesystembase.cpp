@@ -185,9 +185,9 @@ bool FileSystem::rename(const QString &originFileName, const QString &destinatio
     const QString originalFileNameLong = longWinPath(originFileName);
     const QString dest = longWinPath(destinationFileName);
     if (FileSystem::isFileLocked(dest, FileSystem::LockMode::Exclusive)) {
-        error = QCoreApplication::translate("FileSystem", "Can't rename %1, the file is currently in use").arg(destinationFileName);
+        error = QCoreApplication::translate("FileSystem", "Can't rename »%1«, the file is currently in use").arg(destinationFileName);
     } else if (FileSystem::isFileLocked(originalFileNameLong, FileSystem::LockMode::Exclusive)) {
-        error = QCoreApplication::translate("FileSystem", "Can't rename %1, the file is currently in use").arg(originFileName);
+        error = QCoreApplication::translate("FileSystem", "Can't rename »%1«, the file is currently in use").arg(originFileName);
     } else if (isLnkFile(originFileName) || isLnkFile(destinationFileName)) {
         success = MoveFileEx((wchar_t *)originalFileNameLong.utf16(), (wchar_t *)dest.utf16(), MOVEFILE_COPY_ALLOWED | MOVEFILE_WRITE_THROUGH);
         if (!success) {
@@ -246,12 +246,12 @@ bool FileSystem::uncheckedRenameReplace(const QString &originFileName, const QSt
     const QString orig = longWinPath(originFileName);
     const QString dest = longWinPath(destinationFileName);
     if (FileSystem::isFileLocked(dest, FileSystem::LockMode::Exclusive)) {
-        *errorString = QCoreApplication::translate("FileSystem", "Can't rename %1, the file is currently in use").arg(destinationFileName);
+        *errorString = QCoreApplication::translate("FileSystem", "Can't rename »%1«, the file is currently in use").arg(destinationFileName);
         qCWarning(lcFileSystem) << u"Renaming failed: " << *errorString;
         return false;
     }
     if (FileSystem::isFileLocked(orig, FileSystem::LockMode::Exclusive)) {
-        *errorString = QCoreApplication::translate("FileSystem", "Can't rename %1, the file is currently in use").arg(originFileName);
+        *errorString = QCoreApplication::translate("FileSystem", "Can't rename »%1«, the file is currently in use").arg(originFileName);
         qCWarning(lcFileSystem) << u"Renaming failed: " << *errorString;
         return false;
     }
