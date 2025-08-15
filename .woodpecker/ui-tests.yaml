@@ -2,6 +2,7 @@
 variables:
   - &squish_image 'opencloudeu/squish@sha256:6eaecc218044020f49f24fd29b6bdc052e8170699a762687b10398b353e5fcda'
   - &minio_image 'minio/mc:RELEASE.2021-10-07T04-19-58Z'
+  - &ubuntu_image 'owncloud/ubuntu:20.04'
   - &minio_environment
     AWS_ACCESS_KEY_ID:
       from_secret: cache_s3_access_key
@@ -10,6 +11,7 @@ variables:
     CACHE_BUCKET:
       from_secret: cache_s3_bucket
     MC_HOST: "https://s3.ci.opencloud.eu"
+    PUBLIC_BUCKET: public
 
 depends_on:
   - cache-opencloud
@@ -93,14 +95,16 @@ steps:
       <<: *minio_environment
     image: *minio_image
 
-  - name: create-gui-test-report-directory
-    image: owncloud/ubuntu:20.04
+  - name: create-extra-directories
+    image: *ubuntu_image
     commands:
       - mkdir /woodpecker/desktop/test/gui/guiReportUpload/screenshots -p
+      - mkdir /woodpecker/desktop/test/gui/tmp -p
+      - mkdir /woodpecker/desktop/test/gui/clientLog -p
       - chmod 777 /woodpecker/desktop/test/gui/ -R
 
   - name: monitor-server-logs
-    image: owncloud/ubuntu:20.04
+    image: *ubuntu_image
     detach: true
     commands:
       - touch /woodpecker/desktop/test/gui/guiReportUpload/serverlog.log
@@ -111,6 +115,8 @@ steps:
     image: *squish_image
     environment:
       PYTHONUSERBASE: /woodpecker/desktop/
+      TMPDIR: /woodpecker/desktop/test/gui/tmp/
+      CLIENT_LOG_DIR: /woodpecker/desktop/test/gui/clientLog/
       PLAYWRIGHT_BROWSERS_PATH: /woodpecker/desktop/.playwright
       SQUISH_LICENSE_SERVER:
         from_secret: squish_license_key
@@ -121,6 +127,28 @@ steps:
       GUI_TEST_REPORT_DIR: /woodpecker/desktop/test/gui/guiReportUpload
       SERVER_INI: /woodpecker/desktop/test/gui/woodpecker/server.ini
       SQUISH_PARAMETERS: --testsuite /woodpecker/desktop/test/gui --reportgen html,/woodpecker/desktop/test/gui/guiReportUpload --envvar QT_LOGGING_RULES=sync.httplogger=true;gui.socketapi=false --tags ~@skip --tags ~@skipOnLinux
+
+  - name: crash-log
+    image: *ubuntu_image
+    when:
+      - status: [ success, failure ]
+    commands:
+      - cat /woodpecker/desktop/test/gui/tmp/OpenCloud-crash.log 2>/dev/null || exit 0
+
+  - name: client-log
+    environment:
+      <<: *minio_environment
+    image: *minio_image
+    when:
+      - status: [ success, failure ]
+    commands:
+      - find /woodpecker/desktop/test/gui/clientLog/
+      - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
+      - mc cp -a /woodpecker/desktop/test/gui/clientLog/* s3/$PUBLIC_BUCKET/desktop/$CI_PIPELINE_NUMBER/logs/
+      - cd /woodpecker/desktop/test/gui/clientLog/
+      - echo "To download the logs, access the following links:"
+      - "for f in *; do echo \"$MC_HOST/$PUBLIC_BUCKET/desktop/$CI_PIPELINE_NUMBER/logs/$f \n\"; done"
+
 
 when:
   - branch:
