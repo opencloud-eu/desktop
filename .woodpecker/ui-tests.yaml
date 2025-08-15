@@ -131,6 +131,7 @@ when:
       - manual
   - event: pull_request
   - event: tag
+  - event: cron
 workspace:
   base: /woodpecker
   path: desktop
