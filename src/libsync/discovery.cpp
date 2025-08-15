@@ -178,7 +178,7 @@ bool ProcessDirectoryJob::handleExcluded(const QString &path, const QString &loc
         case CSYNC_FILE_EXCLUDE_RESERVED:
             qFatal("These were handled earlier");
         case CSYNC_FILE_EXCLUDE_LIST:
-            item->_errorString = tr("The fileis listed on the ignore list.");
+            item->_errorString = tr("The file is listed on the ignore list.");
             item->_status = SyncFileItem::Excluded;
             break;
         case CSYNC_FILE_EXCLUDE_INVALID_CHAR:
@@ -1255,7 +1255,7 @@ DiscoverySingleDirectoryJob *ProcessDirectoryJob::startAsyncServerQuery()
             }
             // Fatal for the root job since it has no SyncFileItem, or for the network errors
             Q_EMIT _discoveryData->fatalError(
-                tr("Server replied with an error while reading directory %1 : %2")
+                tr("Server replied with an error while reading directory »%1«: %2")
                     .arg(_currentFolder._server.isEmpty() ? QStringLiteral("/") : _currentFolder._server, results.error().message));
         }
     });
