@@ -299,7 +299,7 @@ HydrationJob *VfsCfApi::findHydrationJob(int64_t requestId) const
 void VfsCfApi::cancelHydration(const OCC::CfApiWrapper::CallBackContext &context)
 {
     // Find matching hydration job for request id
-    const auto hydrationJob = d->hydrationJobs.take(context.requestId);
+    const auto hydrationJob = findHydrationJob(context.requestId);
     // If found, cancel it
     if (hydrationJob) {
         qCInfo(lcCfApi) << u"Cancel hydration" << hydrationJob->context();
