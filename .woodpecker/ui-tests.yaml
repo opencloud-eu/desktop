@@ -11,6 +11,7 @@ variables:
     CACHE_BUCKET:
       from_secret: cache_s3_bucket
     MC_HOST: "https://s3.ci.opencloud.eu"
+    PUBLIC_BUCKET: public
 
 depends_on:
   - cache-opencloud
@@ -99,6 +100,7 @@ steps:
     commands:
       - mkdir /woodpecker/desktop/test/gui/guiReportUpload/screenshots -p
       - mkdir /woodpecker/desktop/test/gui/tmp -p
+      - mkdir /woodpecker/desktop/test/gui/clientLog -p
       - chmod 777 /woodpecker/desktop/test/gui/ -R
 
   - name: monitor-server-logs
@@ -114,7 +116,7 @@ steps:
     environment:
       PYTHONUSERBASE: /woodpecker/desktop/
       TMPDIR: /woodpecker/desktop/test/gui/tmp/
-      CLIENT_LOG_FILE: /woodpecker/desktop/test/gui/tmp/guiReportUpload/
+      CLIENT_LOG_DIR: /woodpecker/desktop/test/gui/clientLog/
       PLAYWRIGHT_BROWSERS_PATH: /woodpecker/desktop/.playwright
       SQUISH_LICENSE_SERVER:
         from_secret: squish_license_key
@@ -134,11 +136,18 @@ steps:
       - cat /woodpecker/desktop/test/gui/tmp/OpenCloud-crash.log 2>/dev/null || exit 0
 
   - name: client-log
-    image: *ubuntu_image
+    environment:
+      <<: *minio_environment
+    image: *minio_image
     when:
       - status: [ success, failure ]
     commands:
-      - ls -lha /woodpecker/desktop/test/gui/tmp/guiReportUpload/
+      - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
+      - mc cp -a --recursive /woodpecker/desktop/test/gui/clientLog/* s3/$PUBLIC_BUCKET/desktop/$CI_PIPELINE_NUMBER/logs/
+      - cd /woodpecker/desktop/test/gui/clientLog/
+      - echo "To download the logs, access the following links:"
+      - logs=$(mc find s3/$PUBLIC_BUCKET/desktop/$CI_PIPELINE_NUMBER/logs/)
+      - "for f in $logs; do echo \"$MC_HOST/$f \n \" | cut -d '/' -f1-3,5-99; done"
 
 when:
   - branch:
