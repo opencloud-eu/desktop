@@ -69,6 +69,7 @@ CONFIG_ENV_MAP = {
     'minSyncTimeout': 'MIN_SYNC_TIMEOUT',
     'lowestSyncTimeout': 'LOWEST_SYNC_TIMEOUT',
     'clientLogFile': 'CLIENT_LOG_FILE',
+    'clientLogDir': 'CLIENT_LOG_DIR',
     'clientRootSyncPath': 'CLIENT_ROOT_SYNC_PATH',
     'tempFolderPath': 'TEMP_FOLDER_PATH',
     'guiTestReportDir': 'GUI_TEST_REPORT_DIR',

@@ -102,9 +102,17 @@ def get_current_user_sync_path():
 
 
 def start_client():
+    log_command_suffix = ""
+    logfile = get_config("clientLogFile")
+    logdir = get_config("clientLogDir")
+    if logfile != "":
+        log_command_suffix = f' --logfile {logfile}'
+    elif logdir != "":
+        log_command_suffix = f' --logdir {logdir}'
+
     squish.startApplication(
         'opencloud -s'
-        + f' --logdir {get_config("clientLogFile")}'
+        + f' {log_command_suffix}'
         + ' --logdebug'
     )
     if is_video_enabled():
