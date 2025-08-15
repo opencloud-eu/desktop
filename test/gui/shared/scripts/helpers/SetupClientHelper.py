@@ -106,7 +106,6 @@ def start_client():
     log_command_suffix = ""
     logfile = get_config("clientLogFile")
     logdir = get_config("clientLogDir") + "/" + squishinfo.testCaseName
-        
     if logfile != "":
         log_command_suffix = f' --logfile {logfile}'
     elif logdir != "":
