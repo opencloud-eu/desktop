@@ -7,6 +7,7 @@ from os.path import exists, join
 import test
 import psutil
 import squish
+import squishinfo
 from PySide6.QtCore import QSettings, QUuid, QUrl, QJsonValue
 
 from helpers.SpaceHelper import get_space_id, get_personal_space_id
@@ -104,7 +105,8 @@ def get_current_user_sync_path():
 def start_client():
     log_command_suffix = ""
     logfile = get_config("clientLogFile")
-    logdir = get_config("clientLogDir")
+    logdir = get_config("clientLogDir") + "/" + squishinfo.testCaseName
+        
     if logfile != "":
         log_command_suffix = f' --logfile {logfile}'
     elif logdir != "":
