@@ -367,7 +367,14 @@ void VfsCfApi::fileStatusChanged(const QString &systemFileName, SyncFileStatus f
         return;
     }
     if (fileStatus.tag() == SyncFileStatus::StatusUpToDate) {
-        std::ignore = cfapi::updatePlaceholderMarkInSync(systemFileName);
+        if (auto info = CfApiWrapper::findPlaceholderInfo<CF_PLACEHOLDER_BASIC_INFO>(systemFileName)) {
+            std::ignore = cfapi::updatePlaceholderMarkInSync(info.handle());
+            if (info.pinState() == PinState::Excluded) {
+                // clear possible exclude flag
+                // a file usually does not change from excluded to not excluded, but ...
+                cfapi::setPinState(systemFileName, PinState::Inherited, CfApiWrapper::Recurse);
+            }
+        }
     } else if (fileStatus.tag() == SyncFileStatus::StatusExcluded) {
         cfapi::setPinState(systemFileName, PinState::Excluded, CfApiWrapper::Recurse);
     }
