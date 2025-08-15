@@ -78,8 +78,7 @@ static inline bool hasErrorStatus(const SyncFileItem &item)
 static inline bool hasExcludedStatus(const SyncFileItem &item)
 {
     const auto status = item._status;
-    return item.instruction() == CSYNC_INSTRUCTION_IGNORE || status == SyncFileItem::FileIgnored || status == SyncFileItem::Conflict
-        || status == SyncFileItem::Restoration;
+    return item.instruction() == CSYNC_INSTRUCTION_IGNORE || status == SyncFileItem::FileIgnored || status == SyncFileItem::Conflict;
 }
 
 SyncFileStatusTracker::SyncFileStatusTracker(SyncEngine *syncEngine)
