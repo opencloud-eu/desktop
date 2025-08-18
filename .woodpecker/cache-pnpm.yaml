@@ -60,6 +60,7 @@ when:
   - event: tag
   - event: pull_request
   - event: cron
+    cron: nightly*
 workspace:
   base: /woodpecker/
   path: desktop
