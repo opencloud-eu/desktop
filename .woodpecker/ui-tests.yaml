@@ -146,7 +146,8 @@ steps:
       - mc cp -a --recursive /woodpecker/desktop/test/gui/clientLog/* s3/$PUBLIC_BUCKET/desktop/$CI_PIPELINE_NUMBER/logs/
       - cd /woodpecker/desktop/test/gui/clientLog/
       - echo "To download the logs, access the following links:"
-      - "for f in *; do echo \"$MC_HOST/$PUBLIC_BUCKET/desktop/$CI_PIPELINE_NUMBER/logs/$f \n\"; done"
+      - logs=$(mc find s3/desktop/$CI_PIPELINE_NUMBER/logs/)
+      - "for f in $logs; do echo \"$MC_HOST/$f \n\"; done"
 
 
 when:
