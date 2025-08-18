@@ -65,3 +65,4 @@ when:
   - event: pull_request
   - event: tag
   - event: cron
+    cron: nightly*
