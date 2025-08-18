@@ -238,7 +238,7 @@ bool FolderMan::ensureJournalGone(const QString &journalDbFile)
     while (QFile::exists(journalDbFile) && !QFile::remove(journalDbFile)) {
         qCWarning(lcFolderMan) << u"Could not remove old db file at" << journalDbFile;
         int ret = QMessageBox::warning(nullptr, tr("Could not reset folder state"),
-            tr("An old sync journal '%1' was found, "
+            tr("An old sync journal %1 was found, "
                "but could not be removed. Please make sure "
                "that no application is currently using it.")
                 .arg(QDir::fromNativeSeparators(QDir::cleanPath(journalDbFile))),
@@ -627,7 +627,7 @@ static QString checkPathForSyncRootMarkingRecursive(const QString &path, FolderM
     if (!existingTags.first.isEmpty()) {
         if (existingTags.first != Theme::instance()->orgDomainName()) {
             // another application uses this as spaces root folder
-            return FolderMan::tr("Folder '%1' is already in use by application %2!").arg(path, existingTags.first);
+            return FolderMan::tr("The folder »%1« is already in use by application %2!").arg(path, existingTags.first);
         }
 
         // Looks good, it's our app, let's check the account tag:
@@ -640,7 +640,7 @@ static QString checkPathForSyncRootMarkingRecursive(const QString &path, FolderM
             [[fallthrough]];
         case FolderMan::NewFolderType::SpacesSyncRoot:
             // It's our application but we don't want to create a spaces folder, so it must be another space root
-            return FolderMan::tr("Folder '%1' is already in use by another account.").arg(path);
+            return FolderMan::tr("The folder »%1« is already in use by another account.").arg(path);
         }
     }
 
@@ -677,7 +677,7 @@ QString FolderMan::checkPathValidityRecursive(const QString &path, FolderMan::Ne
     }
 
     if (numberOfSyncJournals(selectedPathInfo.filePath()) != 0) {
-        return FolderMan::tr("The folder %1 is used in a folder sync connection!").arg(QDir::toNativeSeparators(selectedPathInfo.filePath()));
+        return FolderMan::tr("The folder »%1« is used in a folder sync connection!").arg(QDir::toNativeSeparators(selectedPathInfo.filePath()));
     }
 
     // At this point we know there is no syncdb in the parent hyrarchy, check for spaces sync root.
@@ -715,13 +715,13 @@ QString FolderMan::checkPathValidityForNewFolder(const QString &path, NewFolderT
                       "Please pick another local folder!");
         }
         if (FileSystem::isChildPathOf(folderDir, userDir)) {
-            return tr("The local folder %1 already contains a folder used in a folder sync connection. "
+            return tr("The local folder »%1« already contains a folder used in a folder sync connection. "
                       "Please pick another local folder!")
                 .arg(QDir::toNativeSeparators(path));
         }
 
         if (FileSystem::isChildPathOf(userDir, folderDir)) {
-            return tr("The local folder %1 is already contained in a folder used in a folder sync connection. "
+            return tr("The local folder »%1« is already contained in a folder used in a folder sync connection. "
                       "Please pick another local folder!")
                 .arg(QDir::toNativeSeparators(path));
         }
@@ -729,7 +729,7 @@ QString FolderMan::checkPathValidityForNewFolder(const QString &path, NewFolderT
 
     const auto result = checkPathValidityRecursive(path, folderType, accountUuid);
     if (!result.isEmpty()) {
-        return tr("%1 Please pick another local folder!").arg(result);
+        return tr("Please pick another local folder for »%1«.").arg(result);
     }
     return {};
 }
@@ -790,7 +790,7 @@ Result<void, QString> FolderMan::unsupportedConfiguration(const QString &path) c
     if (it == _unsupportedConfigurationError.end()) {
         it = _unsupportedConfigurationError.insert(path, [&]() -> Result<void, QString> {
             if (numberOfSyncJournals(path) > 1) {
-                const QString error = tr("Multiple accounts are sharing the folder %1.\n"
+                const QString error = tr("Multiple accounts are sharing the folder »%1«.\n"
                                          "This configuration is know to lead to dataloss and is no longer supported.\n"
                                          "Please consider removing this folder from the account and adding it again.")
                                           .arg(path);

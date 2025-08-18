@@ -84,7 +84,7 @@ bool PropagateLocalRemove::removeRecursively(const QString &absolute)
             for (const auto &l : locked) {
                 // unlock is handled in hack in `void Folder::slotWatchedPathChanged`
                 Q_EMIT propagator()->seenLockedFile(l.path, FileSystem::LockMode::Exclusive);
-                errorList.append(tr("%1 the file is currently in use").arg(QDir::toNativeSeparators(l.path)));
+                errorList.append(tr("The file »%1« is currently in use").arg(QDir::toNativeSeparators(l.path)));
             }
             done(SyncFileItem::SoftError, errorList.join(QStringLiteral(", ")));
             return false;
@@ -104,14 +104,14 @@ void PropagateLocalRemove::start()
     qCDebug(lcPropagateLocalRemove) << filename;
 
     if (auto clash = propagator()->localFileNameClash(_item->localName())) {
-        done(SyncFileItem::NormalError, tr("Could not remove %1 because of a local file name clash with %2!").arg(QDir::toNativeSeparators(filename), QDir::toNativeSeparators(clash.get())));
+        done(SyncFileItem::NormalError, tr("Could not remove »%1« because of a local file name clash with »%2«!").arg(QDir::toNativeSeparators(filename), QDir::toNativeSeparators(clash.get())));
         return;
     }
 
     if (FileSystem::fileExists(filename)) {
         if (FileSystem::isFileLocked(filename, FileSystem::LockMode::Exclusive)) {
             Q_EMIT propagator()->seenLockedFile(filename, FileSystem::LockMode::Exclusive);
-            done(SyncFileItem::SoftError, tr("%1 the file is currently in use").arg(QDir::toNativeSeparators(filename)));
+            done(SyncFileItem::SoftError, tr("The file »%1« is currently in use").arg(QDir::toNativeSeparators(filename)));
             return;
         }
 
@@ -120,7 +120,7 @@ void PropagateLocalRemove::start()
         if (_moveToTrash) {
             ok = QFile(filename).moveToTrash();
             if (!ok) {
-                removeError = tr("Could not move '%1' to the trash bin").arg(filename);
+                removeError = tr("Could not move »%1« to the trash bin").arg(filename);
             }
         } else {
             if (_item->isDirectory()) {
@@ -160,7 +160,7 @@ void PropagateLocalMkdir::start()
             QString removeError;
             if (!FileSystem::remove(newDirStr, &removeError)) {
                 done(SyncFileItem::NormalError,
-                    tr("could not delete file %1, error: %2")
+                    tr("could not delete file »%1«, error: %2")
                         .arg(newDirStr, removeError));
                 return;
             }
@@ -175,12 +175,12 @@ void PropagateLocalMkdir::start()
 
     if (auto clash = propagator()->localFileNameClash(_item->localName())) {
         qCWarning(lcPropagateLocalMkdir) << u"New folder to create locally already exists with different case:" << _item->localName();
-        done(SyncFileItem::NormalError, tr("Can not create local folder %1 because of a local file name clash with %2").arg(newDirStr, QDir::toNativeSeparators(clash.get())));
+        done(SyncFileItem::NormalError, tr("Cannot create local folder »%1« because of a local file name clash with »%2«").arg(newDirStr, QDir::toNativeSeparators(clash.get())));
         return;
     }
     QDir localDir(propagator()->localPath());
     if (!localDir.mkpath(_item->localName())) {
-        done(SyncFileItem::NormalError, tr("could not create folder %1").arg(newDirStr));
+        done(SyncFileItem::NormalError, tr("Could not create folder »%1«").arg(newDirStr));
         return;
     }
 
@@ -196,7 +196,7 @@ void PropagateLocalMkdir::start()
         done(SyncFileItem::FatalError, tr("Error updating metadata: %1").arg(result.error()));
         return;
     } else if (result.get() == Vfs::ConvertToPlaceholderResult::Locked) {
-        done(SyncFileItem::SoftError, tr("The file %1 is currently in use").arg(newItem.localName()));
+        done(SyncFileItem::SoftError, tr("The file »%1« is currently in use").arg(newItem.localName()));
         return;
     }
     propagator()->_journal->commit(QStringLiteral("localMkdir"));
@@ -231,13 +231,13 @@ void PropagateLocalRename::start()
             // Fixme: the file that is the reason for the clash could be named here,
             // it would have to come out the localFileNameClash function
             done(SyncFileItem::NormalError,
-                tr("File %1 can not be renamed to %2 because of a local file name clash")
+                tr("The file »%1« can not be renamed to »%2« because of a local file name clash")
                     .arg(QDir::toNativeSeparators(_item->localName()), QDir::toNativeSeparators(_item->_renameTarget)));
             return;
         }
         if (FileSystem::isFileLocked(existingFile, FileSystem::LockMode::Exclusive)) {
             Q_EMIT propagator()->seenLockedFile(existingFile, FileSystem::LockMode::Exclusive);
-            done(SyncFileItem::SoftError, tr("Could not rename %1 to %2, the file is currently in use").arg(existingFile, targetFile));
+            done(SyncFileItem::SoftError, tr("Could not rename »%1« to »%2«, the file is currently in use").arg(existingFile, targetFile));
             return;
         }
         QString renameError;
@@ -262,7 +262,7 @@ void PropagateLocalRename::start()
             done(SyncFileItem::FatalError, tr("Error updating metadata: %1").arg(result.error()));
             return;
         } else if (result.get() == Vfs::ConvertToPlaceholderResult::Locked) {
-            done(SyncFileItem::SoftError, tr("The file %1 is currently in use").arg(newItem.localName()));
+            done(SyncFileItem::SoftError, tr("The file »%1« is currently in use").arg(newItem.localName()));
             return;
         }
     } else {

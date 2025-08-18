@@ -44,7 +44,7 @@ QString Progress::asResultString(const SyncFileItem &item)
     case CSYNC_INSTRUCTION_REMOVE:
         return QCoreApplication::translate("progress", "Deleted");
     case CSYNC_INSTRUCTION_RENAME:
-        return QCoreApplication::translate("progress", "%1 moved to %2").arg(item.localName(), item._renameTarget);
+        return QCoreApplication::translate("progress", "»%1« moved to »%2«").arg(item.localName(), item._renameTarget);
     case CSYNC_INSTRUCTION_IGNORE:
         return QCoreApplication::translate("progress", "Ignored");
     case CSYNC_INSTRUCTION_ERROR:

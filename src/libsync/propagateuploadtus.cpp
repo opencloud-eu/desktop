@@ -57,7 +57,7 @@ UploadDevice *PropagateUploadFileTUS::prepareDevice(const quint64 &chunkSize)
     // when it becomes available again.
     if (FileSystem::isFileLocked(localFileName, FileSystem::LockMode::SharedRead)) {
         Q_EMIT propagator()->seenLockedFile(localFileName, FileSystem::LockMode::SharedRead);
-        abortWithError(SyncFileItem::SoftError, tr("%1 the file is currently in use").arg(localFileName));
+        abortWithError(SyncFileItem::SoftError, tr("The file »%1« is currently in use").arg(localFileName));
         return nullptr;
     }
     auto device = std::make_unique<UploadDevice>(localFileName, _currentOffset, chunkSize, propagator()->_bandwidthManager);

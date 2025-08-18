@@ -123,7 +123,7 @@ void PropagateUploadFileCommon::start()
     // Check if the specific file can be accessed
     if (propagator()->hasCaseClashAccessibilityProblem(_item->localName())) {
         done(SyncFileItem::NormalError,
-            tr("File %1 cannot be uploaded because another file with the same name, differing only in case, exists")
+            tr("The file »%1« cannot be uploaded because another file with the same name, differing only in case, exists")
                 .arg(QDir::toNativeSeparators(_item->localName())));
         return;
     }
@@ -174,7 +174,7 @@ void PropagateUploadFileCommon::slotComputeContentChecksum()
     // we must be able to read the file
     if (FileSystem::isFileLocked(filePath, FileSystem::LockMode::SharedRead)) {
         Q_EMIT propagator()->seenLockedFile(filePath, FileSystem::LockMode::SharedRead);
-        abortWithError(SyncFileItem::SoftError, tr("%1 the file is currently in use").arg(filePath));
+        abortWithError(SyncFileItem::SoftError, tr("The file »%1« is currently in use").arg(filePath));
         return;
     }
 
@@ -205,7 +205,7 @@ void PropagateUploadFileCommon::slotComputeTransmissionChecksum(CheckSums::Algor
     // we must be able to read the file
     if (FileSystem::isFileLocked(filePath, FileSystem::LockMode::SharedRead)) {
         Q_EMIT propagator()->seenLockedFile(filePath, FileSystem::LockMode::SharedRead);
-        abortWithError(SyncFileItem::SoftError, tr("%1 the file is currently in use").arg(filePath));
+        abortWithError(SyncFileItem::SoftError, tr("The file »%1« is currently in use").arg(filePath));
         return;
     }
 

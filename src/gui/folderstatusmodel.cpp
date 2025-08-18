@@ -383,9 +383,9 @@ void FolderStatusModel::slotSetProgress(const ProgressInfo &progress, Folder *f)
             break;
         case ProgressInfo::Discovery:
             if (!progress._currentDiscoveredRemoteFolder.isEmpty()) {
-                pi->_overallSyncString = tr("Checking for changes in remote '%1'").arg(progress._currentDiscoveredRemoteFolder);
+                pi->_overallSyncString = tr("Checking for changes in remote »%1«").arg(progress._currentDiscoveredRemoteFolder);
             } else if (!progress._currentDiscoveredLocalFolder.isEmpty()) {
-                pi->_overallSyncString = tr("Checking for changes in local '%1'").arg(progress._currentDiscoveredLocalFolder);
+                pi->_overallSyncString = tr("Checking for changes in local »%1«").arg(progress._currentDiscoveredLocalFolder);
             }
             break;
         case ProgressInfo::Reconcile:

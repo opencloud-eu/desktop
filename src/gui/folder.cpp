@@ -153,7 +153,7 @@ Result<void, QString> Folder::checkPathLength(const QString &path)
 #ifdef Q_OS_WIN
     if (path.size() > MAX_PATH) {
         if (!FileSystem::longPathsEnabledOnWindows()) {
-            return tr("The path '%1' is too long. Please enable long paths in the Windows settings or choose a different folder.").arg(path);
+            return tr("The path »%1« is too long. Please enable long paths in the Windows settings or choose a different folder.").arg(path);
         }
     }
 #else
@@ -195,19 +195,19 @@ bool Folder::checkLocalPath()
         if (error.isEmpty()) {
             qCDebug(lcFolder) << u"Checked local path ok";
             if (!_journal.open()) {
-                error = tr("%1 failed to open the database.").arg(_definition.localPath());
+                error = tr("Failed to open the database for »%1«.").arg(_definition.localPath());
             }
         }
     } else {
         // Check directory again
         if (!FileSystem::fileExists(_definition.localPath(), fi)) {
-            error = tr("Local folder %1 does not exist.").arg(_definition.localPath());
+            error = tr("Local folder »%1« does not exist.").arg(_definition.localPath());
         } else if (!fi.isDir()) {
-            error = tr("%1 should be a folder but is not.").arg(_definition.localPath());
+            error = tr("»%1« should be a folder but is not.").arg(_definition.localPath());
         } else if (!fi.isReadable()) {
-            error = tr("%1 is not readable.").arg(_definition.localPath());
+            error = tr("»%1« is not readable.").arg(_definition.localPath());
         } else if (!fi.isWritable()) {
-            error = tr("%1 is not writable.").arg(_definition.localPath());
+            error = tr("»%1« is not writable.").arg(_definition.localPath());
         }
     }
     if (!error.isEmpty()) {
@@ -462,51 +462,51 @@ void Folder::createGuiLog(const QString &filename, LogStatus status, int count,
         switch (status) {
         case LogStatusRemove:
             if (count > 1) {
-                text = tr("%1 and %n other file(s) have been removed.", "", count - 1).arg(file);
+                text = tr("»%1« and %n other file(s) have been removed.", "", count - 1).arg(file);
             } else {
-                text = tr("%1 has been removed.", "%1 names a file.").arg(file);
+                text = tr("»%1« has been removed.", "%1 names a file.").arg(file);
             }
             break;
         case LogStatusNew:
             if (count > 1) {
-                text = tr("%1 and %n other file(s) have been added.", "", count - 1).arg(file);
+                text = tr("»%1« and %n other file(s) have been added.", "", count - 1).arg(file);
             } else {
-                text = tr("%1 has been added.", "%1 names a file.").arg(file);
+                text = tr("»%1« has been added.", "%1 names a file.").arg(file);
             }
             break;
         case LogStatusUpdated:
             if (count > 1) {
-                text = tr("%1 and %n other file(s) have been updated.", "", count - 1).arg(file);
+                text = tr("»%1« and %n other file(s) have been updated.", "", count - 1).arg(file);
             } else {
-                text = tr("%1 has been updated.", "%1 names a file.").arg(file);
+                text = tr("»%1« has been updated.", "%1 names a file.").arg(file);
             }
             break;
         case LogStatusRename:
             if (count > 1) {
-                text = tr("%1 has been renamed to %2 and %n other file(s) have been renamed.", "", count - 1).arg(file, renameTarget);
+                text = tr("»%1« has been renamed to »%2« and %n other file(s) have been renamed.", "", count - 1).arg(file, renameTarget);
             } else {
-                text = tr("%1 has been renamed to %2.", "%1 and %2 name files.").arg(file, renameTarget);
+                text = tr("»%1« has been renamed to »%2«.", "%1 and %2 name files.").arg(file, renameTarget);
             }
             break;
         case LogStatusMove:
             if (count > 1) {
-                text = tr("%1 has been moved to %2 and %n other file(s) have been moved.", "", count - 1).arg(file, renameTarget);
+                text = tr("»%1« has been moved to »%2« and %n other file(s) have been moved.", "", count - 1).arg(file, renameTarget);
             } else {
-                text = tr("%1 has been moved to %2.").arg(file, renameTarget);
+                text = tr("»%1« has been moved to »%2«.").arg(file, renameTarget);
             }
             break;
         case LogStatusConflict:
             if (count > 1) {
-                text = tr("%1 and %n other file(s) have sync conflicts.", "", count - 1).arg(file);
+                text = tr("»%1« and %n other file(s) have sync conflicts.", "", count - 1).arg(file);
             } else {
-                text = tr("%1 has a sync conflict. Please check the conflict file!").arg(file);
+                text = tr("»%1« has a sync conflict. Please check the conflict file!").arg(file);
             }
             break;
         case LogStatusError:
             if (count > 1) {
-                text = tr("%1 and %n other file(s) could not be synced due to errors. See the log for details.", "", count - 1).arg(file);
+                text = tr("»%1« and %n other file(s) could not be synced due to errors. See the log for details.", "", count - 1).arg(file);
             } else {
-                text = tr("%1 could not be synced due to an error. See the log for details.").arg(file);
+                text = tr("»%1« could not be synced due to an error. See the log for details.").arg(file);
             }
             break;
         }
@@ -713,7 +713,7 @@ void Folder::setVirtualFilesEnabled(bool enabled)
         };
         if (isSyncRunning()) {
             connect(this, &Folder::syncFinished, this, finalizeVfsSwitch, Qt::SingleShotConnection);
-            slotTerminateSync(tr("Switching VFS mode on folder '%1'").arg(displayName()));
+            slotTerminateSync(tr("Switching VFS mode on folder »%1«").arg(displayName()));
         } else {
             finalizeVfsSwitch();
         }
@@ -1077,14 +1077,14 @@ void Folder::warnOnNewExcludedItem(const SyncJournalFileRecord &record, QStringV
     if (!fi.exists())
         return;
 
-    const QString message = fi.isDir() ? tr("The folder %1 was created but was excluded from synchronization previously. "
+    const QString message = fi.isDir() ? tr("The folder »%1« was created but was excluded from synchronization previously. "
                                             "Data inside it will not be synchronized.")
                                              .arg(fi.filePath())
-                                       : tr("The file %1 was created but was excluded from synchronization previously. "
+                                       : tr("The file »%1« was created but was excluded from synchronization previously. "
                                             "It will not be synchronized.")
                                              .arg(fi.filePath());
 
-    ocApp()->systemNotificationManager()->notify({tr("%1 is not synchronized").arg(fi.fileName()), message, Resources::FontIcon(u'')});
+    ocApp()->systemNotificationManager()->notify({tr("»%1« is not synchronized").arg(fi.fileName()), message, Resources::FontIcon(u'')});
 }
 
 void Folder::slotWatcherUnreliable(const QString &message)
