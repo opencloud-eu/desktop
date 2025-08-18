@@ -143,7 +143,7 @@ steps:
       - status: [ success, failure ]
     commands:
       - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-      - mc cp -a /woodpecker/desktop/test/gui/clientLog/* s3/$PUBLIC_BUCKET/desktop/$CI_PIPELINE_NUMBER/logs/
+      - mc cp -a --recursive /woodpecker/desktop/test/gui/clientLog/* s3/$PUBLIC_BUCKET/desktop/$CI_PIPELINE_NUMBER/logs/
       - cd /woodpecker/desktop/test/gui/clientLog/
       - echo "To download the logs, access the following links:"
       - "for f in *; do echo \"$MC_HOST/$PUBLIC_BUCKET/desktop/$CI_PIPELINE_NUMBER/logs/$f \n\"; done"
