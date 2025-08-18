@@ -38,7 +38,7 @@ IgnoreListEditor::IgnoreListEditor(QWidget *parent)
     ui->setupUi(this);
 
     ConfigFile cfgFile;
-    readOnlyTooltip = tr("This entry is provided by the system at '%1' "
+    readOnlyTooltip = tr("This entry is provided by the system at %1 "
                          "and cannot be modified in this view.")
                           .arg(QDir::toNativeSeparators(cfgFile.excludeFile(ConfigFile::SystemScope)));
 
@@ -108,7 +108,7 @@ void IgnoreListEditor::slotUpdateLocalIgnoreList()
         }
     } else {
         QMessageBox::warning(this, tr("Could not open file"),
-            tr("Cannot write changes to '%1'.").arg(ignoreFile));
+            tr("Cannot write changes to »%1«.").arg(ignoreFile));
     }
     ignores.close(); //close the file before reloading stuff.
 

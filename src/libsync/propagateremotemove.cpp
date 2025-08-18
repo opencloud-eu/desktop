@@ -136,7 +136,7 @@ void PropagateRemoteMove::finalize()
     if (oldRecord.isValid()) {
         newItem._checksumHeader = oldRecord.checksumHeader();
         if (newItem._size != oldRecord.size()) {
-            qCWarning(lcPropagateRemoteMove) << u"File sizes differ on server vs sync journal: " << newItem._size << oldRecord.size();
+            qCWarning(lcPropagateRemoteMove) << u"The file sizes differ on server vs sync journal: " << newItem._size << oldRecord.size();
 
             // the server might have claimed a different size, we take the old one from the DB
             newItem._size = oldRecord.size();
@@ -147,7 +147,7 @@ void PropagateRemoteMove::finalize()
         done(SyncFileItem::FatalError, tr("Error updating metadata: %1").arg(result.error()));
         return;
     } else if (result.get() == Vfs::ConvertToPlaceholderResult::Locked) {
-        done(SyncFileItem::SoftError, tr("The file %1 is currently in use").arg(newItem.localName()));
+        done(SyncFileItem::SoftError, tr("The file »%1« is currently in use").arg(newItem.localName()));
         return;
     }
 

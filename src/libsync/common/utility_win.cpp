@@ -116,7 +116,9 @@ Utility::Handle Utility::Handle::createHandle(const std::filesystem::path &path,
     if (p.async) {
         flags |= FILE_FLAG_OVERLAPPED;
     }
-    return Utility::Handle{CreateFileW(path.native().data(), p.accessMode, p.shareMode, nullptr, p.creationFlags, flags, nullptr)};
+    auto handle = Utility::Handle{CreateFileW(path.native().data(), p.accessMode, p.shareMode, nullptr, p.creationFlags, flags, nullptr)};
+    handle._path = path;
+    return handle;
 }
 
 Utility::Handle::Handle(HANDLE h)
@@ -145,6 +147,11 @@ uint32_t Utility::Handle::error() const
 bool Utility::Handle::hasError() const
 {
     return _error != NO_ERROR;
+}
+
+const std::filesystem::path &Utility::Handle::path() const
+{
+    return _path;
 }
 
 QString Utility::Handle::errorMessage() const

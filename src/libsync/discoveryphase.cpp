@@ -210,13 +210,13 @@ void DiscoverySingleLocalDirectoryJob::run() {
     }
     if (ec) {
         qCCritical(lcDiscovery) << u"Error while opening directory" << _localPath << ec.message();
-        QString errorString = tr("Error while opening directory %1").arg(_localPath);
+        QString errorString = tr("Error while opening directory »%1«").arg(_localPath);
         if (ec.value() == EACCES) {
             errorString = tr("Directory not accessible on client, permission denied");
             Q_EMIT finishedNonFatalError(errorString);
             return;
         } else if (ec.value() == ENOENT) {
-            errorString = tr("Directory not found: %1").arg(_localPath);
+            errorString = tr("Directory not found: »%1«").arg(_localPath);
         } else if (ec.value() == ENOTDIR) {
             // Not a directory..
             // Just consider it is empty

@@ -299,7 +299,7 @@ HydrationJob *VfsCfApi::findHydrationJob(int64_t requestId) const
 void VfsCfApi::cancelHydration(const OCC::CfApiWrapper::CallBackContext &context)
 {
     // Find matching hydration job for request id
-    const auto hydrationJob = d->hydrationJobs.take(context.requestId);
+    const auto hydrationJob = findHydrationJob(context.requestId);
     // If found, cancel it
     if (hydrationJob) {
         qCInfo(lcCfApi) << u"Cancel hydration" << hydrationJob->context();
@@ -367,7 +367,14 @@ void VfsCfApi::fileStatusChanged(const QString &systemFileName, SyncFileStatus f
         return;
     }
     if (fileStatus.tag() == SyncFileStatus::StatusUpToDate) {
-        std::ignore = cfapi::updatePlaceholderMarkInSync(systemFileName);
+        if (auto info = CfApiWrapper::findPlaceholderInfo<CF_PLACEHOLDER_BASIC_INFO>(systemFileName)) {
+            std::ignore = cfapi::updatePlaceholderMarkInSync(info.handle());
+            if (info.pinState() == PinState::Excluded) {
+                // clear possible exclude flag
+                // a file usually does not change from excluded to not excluded, but ...
+                cfapi::setPinState(systemFileName, PinState::Inherited, CfApiWrapper::Recurse);
+            }
+        }
     } else if (fileStatus.tag() == SyncFileStatus::StatusExcluded) {
         cfapi::setPinState(systemFileName, PinState::Excluded, CfApiWrapper::Recurse);
     }

@@ -9,7 +9,7 @@ runs_on: [ success, failure ]
 when:
   - event: [ push , manual ]
     branch: ${CI_REPO_DEFAULT_BRANCH}
-  - event: [ pull_request ]
+  - event: [ pull_request, cron ]
 skip_clone: true
 
 steps:
@@ -36,4 +36,5 @@ steps:
     commands:
       - git clone --single-branch --branch $QA_REPO_BRANCH $QA_REPO /tmp/qa
       - cd /tmp/qa/scripts/matrix-notification/
+      - if [ "$CI_PIPELINE_EVENT" = "cron" ]; then MESSAGE_SUFFIX_WHEN_FAILED="CC @artur @pradip.subedi @prashantgrg"; fi
       - go run matrix-notification.go

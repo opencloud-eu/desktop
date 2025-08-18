@@ -51,6 +51,7 @@ when:
       - manual
   - event: tag
   - event: pull_request
+  - event: cron
 workspace:
   base: /woodpecker/
   path: desktop

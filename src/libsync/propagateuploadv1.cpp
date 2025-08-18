@@ -39,7 +39,7 @@ void PropagateUploadFileV1::doStartUpload()
     // when it becomes available again.
     if (FileSystem::isFileLocked(fileName, FileSystem::LockMode::SharedRead)) {
         Q_EMIT propagator()->seenLockedFile(fileName, FileSystem::LockMode::SharedRead);
-        abortWithError(SyncFileItem::SoftError, tr("%1 the file is currently in use").arg(QDir::toNativeSeparators(fileName)));
+        abortWithError(SyncFileItem::SoftError, tr("The file »%1« is currently in use").arg(QDir::toNativeSeparators(fileName)));
         return;
     }
 

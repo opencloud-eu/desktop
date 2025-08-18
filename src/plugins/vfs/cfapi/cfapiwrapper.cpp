@@ -804,22 +804,18 @@ OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> OCC::CfApiWrapper::co
     return updatePlaceholderState(path, modtime, size, fileId, replacesPath);
 }
 
-OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> OCC::CfApiWrapper::updatePlaceholderMarkInSync(const QString &path)
+OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> OCC::CfApiWrapper::updatePlaceholderMarkInSync(const Utility::Handle &handle)
 {
-    auto handle = OCC::Utility::Handle::createHandle(OCC::FileSystem::toFilesystemPath(path));
-    if (handle) {
-        if (auto result = CfSetInSyncState(handle, CF_IN_SYNC_STATE_IN_SYNC, CF_SET_IN_SYNC_FLAG_NONE, nullptr); SUCCEEDED(result)) {
-            return OCC::Vfs::ConvertToPlaceholderResult::Ok;
-        } else {
-            if (result == HRESULT_FROM_WIN32(ERROR_NOT_A_CLOUD_FILE)) {
-                return u"%1 is not a cloud file"_s.arg(path);
-            }
-            const auto error = u"updatePlaceholderMarkInSync failed: %1"_s.arg(Utility::formatWinError(result));
-            qCWarning(lcCfApiWrapper) << error;
-            return error;
+    if (auto result = CfSetInSyncState(handle, CF_IN_SYNC_STATE_IN_SYNC, CF_SET_IN_SYNC_FLAG_NONE, nullptr); SUCCEEDED(result)) {
+        return OCC::Vfs::ConvertToPlaceholderResult::Ok;
+    } else {
+        if (result == HRESULT_FROM_WIN32(ERROR_NOT_A_CLOUD_FILE)) {
+            return u"»%1« is not a cloud file"_s.arg(FileSystem::fromFilesystemPath(handle.path()));
         }
+        const auto error = u"updatePlaceholderMarkInSync failed: %1"_s.arg(Utility::formatWinError(result));
+        qCWarning(lcCfApiWrapper) << error;
+        return error;
     }
-    return handle.errorMessage();
 }
 
 bool OCC::CfApiWrapper::isPlaceHolderInSync(const QString &filePath)

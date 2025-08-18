@@ -79,12 +79,24 @@ namespace Utility {
         uint32_t error() const;
         bool hasError() const;
 
+        /**
+         *
+         * Returns the file system path associated with this handle, if it was set during handle creation.
+         *
+         * This can be useful for error reporting, logging, or debugging, as it allows you to identify
+         * the file or resource that the handle refers to. If no path was set, the returned path may be empty.
+         *
+         * @return Reference to the associated std::filesystem::path, or an empty path if not set.
+         */
+        const std::filesystem::path &path() const;
+
         QString errorMessage() const;
 
     private:
         HANDLE _handle = INVALID_HANDLE_VALUE;
         std::function<void(HANDLE)> _close;
         uint32_t _error = NO_ERROR;
+        std::filesystem::path _path;
     };
 
     OPENCLOUD_SYNC_EXPORT void UnixTimeToLargeIntegerFiletime(time_t t, LARGE_INTEGER *hundredNSecs);
