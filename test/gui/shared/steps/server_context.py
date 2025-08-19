@@ -114,3 +114,22 @@ def step(context, user):
         file_name = row[0]
         file_content = row[1]
         webdav.create_file(user, file_name, file_content)
+
+
+@Given('user "|any|" has sent the following resource share invitation:')
+def step(context, user):
+    resource_details = {
+        'resource': '',
+        'sharee': '',
+        'permission_role': ''
+    }
+    for row in context.table[0:]:
+        if row[0] == 'resource':
+            resource_details.update({'resource': row[1]})
+            resource_details.update({'space': row[1]})
+        elif row[0] == 'sharee':
+            resource_details.update({'sharee': row[1]})
+        elif row[0] == 'permissionsRole':
+            resource_details.update({'permission_role': row[1]})
+    print(resource_details)
+    webdav.send_resource_share_invitation(user, resource_details['resource'], resource_details['sharee'], resource_details['permission_role'])

@@ -494,3 +494,13 @@ Feature: Syncing files
         Then the sync folder list should be empty
         And the folder "simple-folder" should exist on the file system
         And as "Alice" folder "simple-folder" should exist in the server
+
+
+    Scenario: Sync a received shared folder
+        Given user "Alice" has created folder "simple-folder" in the server
+        And user "Brian" has been created in the server with default attributes
+        And user "Alice" has uploaded file with content "test content" to "simple-folder/uploaded-lorem.txt" in the server
+        And user "Alice" has sent the following resource share invitation:
+            | resource        | simple-folder |
+            | sharee          | Brian         |
+            | permissionsRole | Secure Viewer |
