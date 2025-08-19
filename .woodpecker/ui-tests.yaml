@@ -27,7 +27,7 @@ steps:
     commands:
       - requirements_sha=$(sha1sum test/gui/requirements.txt | cut -d" " -f1)
       - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-      - mc cp -r -a s3/$CACHE_BUCKET/desktop-build/python-cache-$requirements_sha.tar.gz /woodpecker/desktop
+      - mc cp -a s3/$CACHE_BUCKET/desktop-build/python-cache-$requirements_sha.tar.gz /woodpecker/desktop
     environment:
       <<: *minio_environment
     image: *minio_image
