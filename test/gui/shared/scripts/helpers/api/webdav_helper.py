@@ -1,14 +1,29 @@
 from urllib.parse import quote
 import xml.etree.ElementTree as ET
+import json
 
 import helpers.api.http_helper as request
 from helpers.api.utils import url_join
 from helpers.ConfigHelper import get_config
 from helpers.FilesHelper import get_file_for_upload
+from helpers.SpaceHelper import get_space_id, get_personal_space_id
+from helpers.api import provisioning
+
+
+# Permission roles mapping
+PERMISSION_ROLES = {
+    'Secure Viewer': 'aa97fe03-7980-45ac-9e50-b325749fd7e6',
+    'Space Editor Without Versions': '3284f2d5-0070-4ad8-ac40-c247f7c1fb27',
+    'Denied': '63e64e19-8d43-42ec-a738-2b6af2610efa',
+}
 
 
 def get_webdav_url():
     return url_join(get_config('localBackendUrl'), 'remote.php/dav/files')
+
+
+def get_beta_graph_url():
+    return url_join(get_config("localBackendUrl"), "graph", "v1beta1")
 
 
 def get_resource_path(user, resource):
@@ -79,3 +94,65 @@ def delete_resource(user, resource):
     url = get_resource_path(user, resource)
     response = request.delete(url, user=user)
     assert response.status_code == 204, f"Could not delete folder '{resource}'"
+
+
+def get_resource_id(user, resource):
+    """Get the resource ID for a given resource path"""
+    path = get_resource_path(user, resource)
+    xml_response = request.propfind(path, user=user)
+
+    if xml_response.status_code != 207:
+        raise AssertionError(f'Failed to get resource properties: {xml_response.status_code}')
+
+    root_element = ET.fromstring(xml_response.content)
+
+    # Find the first response element (the resource itself)
+    for response_element in root_element:
+        if response_element.tag == '{DAV:}response':
+            for propstat in response_element:
+                if propstat.tag == '{DAV:}propstat':
+                    for prop in propstat:
+                        if prop.tag == '{DAV:}prop':
+                            for child in prop:
+                                if child.tag == '{http://owncloud.org/ns}fileid':
+                                    return child.text
+            break  # Only process the first response (the resource itself)
+
+    raise AssertionError(f'Could not find resource ID for {resource}')
+
+
+def get_permission_role_id(role_name):
+    """Get the permission role ID for a given role name"""
+    if role_name not in PERMISSION_ROLES:
+        raise ValueError(f"Unknown permission role: {role_name}")
+    return PERMISSION_ROLES[role_name]
+
+
+def get_user_id(username):
+    """Get the user ID for a given username from created users"""
+    if username in provisioning.created_users:
+        return provisioning.created_users[username]['id']
+
+    raise AssertionError(f'User {username} not found in created users. Make sure the user is created first.')
+
+
+def send_resource_share_invitation(user, resource, sharee, permission_role):
+    space_id = get_personal_space_id(user)
+    resource_id = get_resource_id(user, resource)
+    recipient_user_id = get_user_id(sharee)
+    role_id = get_permission_role_id(permission_role)
+
+    url = url_join(get_beta_graph_url(), "drives", space_id, "items", resource_id, "invite")
+
+    body = {
+        "roles": [role_id],
+        "recipients": [
+            {
+                "objectId": recipient_user_id,
+                "@libre.graph.recipient.type": "user"
+            }
+        ]
+    }
+
+    response = request.post(url, body=json.dumps(body), user=user)
+    assert response.status_code in [200, 201], f"Failed to send share invitation: {response.status_code}"
