@@ -4,18 +4,10 @@ import json
 
 import helpers.api.http_helper as request
 from helpers.api.utils import url_join
-from helpers.ConfigHelper import get_config
+from helpers.ConfigHelper import get_config, PERMISSION_ROLES
 from helpers.FilesHelper import get_file_for_upload
-from helpers.SpaceHelper import get_space_id, get_personal_space_id
+from helpers.SpaceHelper import get_personal_space_id
 from helpers.api import provisioning
-
-
-# Permission roles mapping
-PERMISSION_ROLES = {
-    'Secure Viewer': 'aa97fe03-7980-45ac-9e50-b325749fd7e6',
-    'Space Editor Without Versions': '3284f2d5-0070-4ad8-ac40-c247f7c1fb27',
-    'Denied': '63e64e19-8d43-42ec-a738-2b6af2610efa',
-}
 
 
 def get_webdav_url():
@@ -50,12 +42,21 @@ def get_file_content(user, resource):
     return response.content
 
 
+def get_propfind_root_element(user, resource):
+    """Get the root XML element from a PROPFIND request"""
+    path = get_resource_path(user, resource)
+    xml_response = request.propfind(path, user=user)
+
+    if xml_response.status_code != 207:
+        raise AssertionError(f'Failed to get resource properties: {xml_response.status_code}')
+
+    return ET.fromstring(xml_response.content)
+
+
 def get_folder_items_count(user, folder_name):
     folder_name = folder_name.strip('/')
-    path = get_resource_path(user, folder_name)
-    xml_response = request.propfind(path, user=user)
+    root_element = get_propfind_root_element(user, folder_name)
     total_items = 0
-    root_element = ET.fromstring(xml_response.content)
     for response_element in root_element:
         for href_element in response_element:
             # The first item is folder itself so excluding it
@@ -97,14 +98,7 @@ def delete_resource(user, resource):
 
 
 def get_resource_id(user, resource):
-    """Get the resource ID for a given resource path"""
-    path = get_resource_path(user, resource)
-    xml_response = request.propfind(path, user=user)
-
-    if xml_response.status_code != 207:
-        raise AssertionError(f'Failed to get resource properties: {xml_response.status_code}')
-
-    root_element = ET.fromstring(xml_response.content)
+    root_element = get_propfind_root_element(user, resource)
 
     # Find the first response element (the resource itself)
     for response_element in root_element:
@@ -116,7 +110,6 @@ def get_resource_id(user, resource):
                             for child in prop:
                                 if child.tag == '{http://owncloud.org/ns}fileid':
                                     return child.text
-            break  # Only process the first response (the resource itself)
 
     raise AssertionError(f'Could not find resource ID for {resource}')
 

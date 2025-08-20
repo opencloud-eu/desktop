@@ -115,6 +115,7 @@ class SyncConnectionWizard:
         "visible": 1,
     }
 
+
     @staticmethod
     def set_sync_path_oc(sync_path):
         if not sync_path:

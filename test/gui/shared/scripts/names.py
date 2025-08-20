@@ -73,3 +73,4 @@ add_Space_qt_passive_wizardbutton1_QPushButton = {"container": stackedWidget_Add
 remove_Space_MenuItem = {"checkable": False, "container": quickWidget_Overlay, "enabled": True, "text": "Remove Space", "type": "MenuItem", "unnamed": 1, "visible": True}
 confirm_removal_of_Space_QMessageBox = {"type": "QMessageBox", "unnamed": 1, "visible": 1, "windowTitle": "Confirm removal of Space"}
 deselect_remote_folders_you_do_not_wish_to_synchronize_OpenCloud_QModelIndex = {"column": 0, "container": add_Space_Deselect_remote_folders_you_do_not_wish_to_synchronize_QTreeWidget, "text": "Personal", "type": "QModelIndex"}
+folderError_Container = {"container": quickWidget_scrollView_ScrollView, "type": "FolderError"}

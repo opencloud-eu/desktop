@@ -2,8 +2,12 @@ import names
 import squish
 import object  # pylint: disable=redefined-builtin
 
+from helpers.ConfigHelper import get_config
+
 
 class SyncConnection:
+    PERMISSION_ERROR_WAIT_TIMEOUT = 10
+
     FOLDER_SYNC_CONNECTION_LIST = {
         "container": names.quickWidget_scrollView_ScrollView,
         "type": "ListView",
@@ -49,6 +53,11 @@ class SyncConnection:
         "unnamed": 1,
         "visible": 1,
         "window": names.confirm_removal_of_Space_QMessageBox,
+    }
+    PERMISSION_ERROR_LABEL = {
+        "container": names.folderError_Container,
+        "type": "Label",
+        "visible": True
     }
 
     @staticmethod
@@ -142,3 +151,16 @@ class SyncConnection:
         squish.clickButton(
             squish.waitForObject(SyncConnection.REMOVE_FOLDER_SYNC_CONNECTION_BUTTON)
         )
+
+
+    @staticmethod
+    def get_permission_error_message():
+        # Wait for permission error label to appear
+        result = squish.waitFor(
+            lambda: object.exists(SyncConnection.PERMISSION_ERROR_LABEL),
+            SyncConnection.PERMISSION_ERROR_WAIT_TIMEOUT * 1000
+        )
+        if result:
+            return str(squish.waitForObject(SyncConnection.PERMISSION_ERROR_LABEL, get_config("lowestSyncTimeout") * 1000).text)
+        else:
+            return ""
