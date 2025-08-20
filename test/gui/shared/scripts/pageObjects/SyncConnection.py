@@ -2,8 +2,12 @@ import names
 import squish
 import object  # pylint: disable=redefined-builtin
 
+from helpers.ConfigHelper import get_config
+
 
 class SyncConnection:
+    WAIT_ERROR_LABEL_TIMEOUT = 10
+
     FOLDER_SYNC_CONNECTION_LIST = {
         "container": names.quickWidget_scrollView_ScrollView,
         "type": "ListView",
@@ -49,6 +53,11 @@ class SyncConnection:
         "unnamed": 1,
         "visible": 1,
         "window": names.confirm_removal_of_Space_QMessageBox,
+    }
+    PERMISSION_ERROR_LABEL = {
+        "container": names.folderError_Container,
+        "type": "Label",
+        "visible": True
     }
 
     @staticmethod
@@ -142,3 +151,20 @@ class SyncConnection:
         squish.clickButton(
             squish.waitForObject(SyncConnection.REMOVE_FOLDER_SYNC_CONNECTION_BUTTON)
         )
+
+    @staticmethod
+    def wait_for_error_label(to_exist=True):
+        """Wait for permission error label to appear or disappear"""
+        status = squish.waitFor(
+            lambda: object.exists(SyncConnection.PERMISSION_ERROR_LABEL) == to_exist,
+            SyncConnection.WAIT_ERROR_LABEL_TIMEOUT * 1000
+        )
+        if not status:
+            action = "appear" if to_exist else "disappear"
+            raise AssertionError(f"Permission error label did not {action}")
+
+    @staticmethod
+    def get_permission_error_message():
+        """Get the permission error message text"""
+        SyncConnection.wait_for_error_label(True)  # Wait for label to appear
+        return str(squish.waitForObject(SyncConnection.PERMISSION_ERROR_LABEL).text)
