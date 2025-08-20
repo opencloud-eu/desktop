@@ -121,7 +121,12 @@ const AccountStatePtr &FolderWizardPrivate::accountState()
 
 bool FolderWizardPrivate::useVirtualFiles() const
 {
-    return VfsPluginManager::instance().bestAvailableVfsMode() == Vfs::WindowsCfApi;
+    const auto bavm = VfsPluginManager::instance().bestAvailableVfsMode();
+    if (Utility::isWindows())
+        return  bavm == Vfs::WindowsCfApi;
+    if (Utility::isLinux())
+        return bavm == Vfs::XAttr;
+    return false;
 }
 
 FolderWizard::FolderWizard(const AccountStatePtr &account, QWidget *parent)
