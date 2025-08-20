@@ -5,6 +5,8 @@ import os
 
 from pageObjects.EnterPassword import EnterPassword
 
+from objectmaphelper import RegularExpression
+
 from helpers.WebUIHelper import authorize_via_webui
 from helpers.ConfigHelper import get_config
 from helpers.SetupClientHelper import (
@@ -60,11 +62,12 @@ class AccountConnectionWizard:
         "visible": 1,
         "window": names.qFileDialog_QFileDialog,
     }
-    ERROR_LABEL = {
-        "name": "errorMessageLabel",
-        "type": "QLabel",
-        "visible": 1,
-        "window": names.setupWizardWindow_OCC_Wizard_SetupWizardWindow,
+    PERMISSION_ERROR_LABEL = {
+        "container": names.quickWidget_scrollView_ScrollView,
+        "text": RegularExpression(".*permission.*"),
+        "type": "Label",
+        "unnamed": 1,
+        "visible": True
     }
     OAUTH_CREDENTIAL_PAGE = {
         "container": names.contentWidget_contentWidget_QStackedWidget,
@@ -219,8 +222,11 @@ class AccountConnectionWizard:
         )
 
     @staticmethod
-    def get_error_message():
-        return str(squish.waitForObjectExists(AccountConnectionWizard.ERROR_LABEL).text)
+    def get_permission_error_message():
+        try:
+            return str(squish.waitForObject(AccountConnectionWizard.PERMISSION_ERROR_LABEL, get_config("maxSyncTimeout") * 1000).text)
+        except Exception as e:
+            raise AssertionError(f"Permission error locator not found. Reason: {e}")
 
     @staticmethod
     def is_new_connection_window_visible():

@@ -98,6 +98,12 @@ CONFIG = {
     'files_for_upload': os.path.join(CURRENT_DIR.parent.parent, 'files-for-upload'),
     'syncConnectionName': 'Personal'
 }
+
+# Permission roles mapping
+PERMISSION_ROLES = {
+    'Viewer': 'b1e2218d-eef8-4d4c-b82d-0f1a1b48f3b5'
+}
+
 CONFIG.update(DEFAULT_PATH_CONFIG)
 
 READONLY_CONFIG = list(CONFIG_ENV_MAP.keys()) + list(DEFAULT_PATH_CONFIG.keys())

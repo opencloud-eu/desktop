@@ -5,6 +5,7 @@ from pageObjects.SyncConnection import SyncConnection
 from pageObjects.Toolbar import Toolbar
 from pageObjects.Activity import Activity
 from pageObjects.Settings import Settings
+from pageObjects.AccountConnectionWizard import AccountConnectionWizard
 
 from helpers.ConfigHelper import get_config, is_windows, set_config
 from helpers.SyncHelper import (
@@ -296,3 +297,16 @@ def step(context, should_or_should_not):
 @When('the user unchecks the "|any|" filter')
 def step(context, filter_option):
     Activity.select_not_synced_filter(filter_option)
+
+
+@Then('the following error message should appear in the client')
+def step(context):
+    expected_error_message = '\n'.join(context.multiLineText)
+
+    actual_error_message = AccountConnectionWizard.get_permission_error_message()
+
+    test.compare(
+        actual_error_message,
+        expected_error_message,
+        f'Expected error message: "{expected_error_message}" but got: "{actual_error_message}"'
+    )
