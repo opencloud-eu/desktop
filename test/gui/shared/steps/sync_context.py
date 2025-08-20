@@ -296,3 +296,19 @@ def step(context, should_or_should_not):
 @When('the user unchecks the "|any|" filter')
 def step(context, filter_option):
     Activity.select_not_synced_filter(filter_option)
+
+
+@Then('the following error message should appear in the client')
+def step(context):
+    expected_error_message = '\n'.join(context.multiLineText)
+
+    actual_error_message = SyncConnection.get_permission_error_message()
+
+    # wait for error message to disappear
+    SyncConnection.wait_for_error_label(False)
+
+    test.compare(
+        actual_error_message,
+        expected_error_message,
+        f'Expected error message: "{expected_error_message}" but got: "{actual_error_message}"'
+    )

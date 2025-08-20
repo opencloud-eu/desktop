@@ -60,12 +60,6 @@ class AccountConnectionWizard:
         "visible": 1,
         "window": names.qFileDialog_QFileDialog,
     }
-    ERROR_LABEL = {
-        "name": "errorMessageLabel",
-        "type": "QLabel",
-        "visible": 1,
-        "window": names.setupWizardWindow_OCC_Wizard_SetupWizardWindow,
-    }
     OAUTH_CREDENTIAL_PAGE = {
         "container": names.contentWidget_contentWidget_QStackedWidget,
         "type": "OCC::Wizard::OAuthCredentialsSetupWizardPage",
@@ -218,9 +212,6 @@ class AccountConnectionWizard:
             squish.waitForObject(AccountConnectionWizard.SYNC_EVERYTHING_RADIO_BUTTON)
         )
 
-    @staticmethod
-    def get_error_message():
-        return str(squish.waitForObjectExists(AccountConnectionWizard.ERROR_LABEL).text)
 
     @staticmethod
     def is_new_connection_window_visible():
