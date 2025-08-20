@@ -83,7 +83,7 @@
     <message>
         <location filename="../src/libsync/appprovider.cpp" line="89"/>
         <source>Failed to open »%1« in web. Error: %2.</source>
-        <translation type="unfinished"/>
+        <translation>Не удалось открыть »%1« в вебе. Ошибка: %2.</translation>
     </message>
 </context>
 <context>
@@ -126,22 +126,22 @@ File synchronization desktop utility.</source>
     <message>
         <location filename="../src/gui/main.cpp" line="129"/>
         <source>Write log to file (use - to write to stdout).</source>
-        <translation type="unfinished"/>
+        <translation>Писать лог в файл (использование - для записи в stdout).</translation>
     </message>
     <message>
         <location filename="../src/gui/main.cpp" line="131"/>
         <source>Write each sync log output in a new file in folder.</source>
-        <translation type="unfinished"/>
+        <translation>Писать каждый лог синхронизации в отдельный файл в папке</translation>
     </message>
     <message>
         <location filename="../src/gui/main.cpp" line="132"/>
         <source>Flush the log file after every write.</source>
-        <translation type="unfinished"/>
+        <translation>Сохранять файлы логов после каждой записи.</translation>
     </message>
     <message>
         <location filename="../src/gui/main.cpp" line="133"/>
         <source>Output debug-level messages in the log.</source>
-        <translation type="unfinished"/>
+        <translation>Записывать логи уровня debug.</translation>
     </message>
     <message>
         <location filename="../src/gui/main.cpp" line="134"/>
@@ -423,7 +423,7 @@ File synchronization desktop utility.</source>
     <message>
         <location filename="../src/gui/folderwizard/folderwizardtargetpage.ui" line="20"/>
         <source>Select a remote destination folder</source>
-        <translation type="unfinished"/>
+        <translation>Выберите папку на удаленном сервере</translation>
     </message>
     <message>
         <location filename="../src/gui/folderwizard/folderwizardtargetpage.ui" line="49"/>
@@ -581,7 +581,7 @@ File synchronization desktop utility.</source>
     <message>
         <location filename="../src/gui/accountsettings.ui" line="86"/>
         <source>Sync connections</source>
-        <translation type="unfinished"/>
+        <translation>Подключения для синхронизации</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="203"/>
@@ -603,7 +603,7 @@ File synchronization desktop utility.</source>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="197"/>
         <source>&lt;p&gt;Do you really want to stop syncing the Space »%1«?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; This will &lt;b&gt;not&lt;/b&gt; delete any files.&lt;/p&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;p&gt;Вы действительно хотите остановить синхронизацию Пространства »%1«? Примечание:&lt;/b&gt; Это &lt;b&gt;не&lt;/b&gt; приведет к удалению файлов.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="202"/>
@@ -613,7 +613,7 @@ File synchronization desktop utility.</source>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="233"/>
         <source>Disable virtual file support?</source>
-        <translation type="unfinished"/>
+        <translation>Выключить поддержку виртуальных файлов?</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="234"/>
@@ -622,7 +622,11 @@ File synchronization desktop utility.</source>
 The only advantage of disabling virtual file support is that the selective sync feature will become available again.
 
 This action will abort any currently running synchronization.</source>
-        <translation type="unfinished"/>
+        <translation>Это действие приведет к отключению поддержки виртуальных файлов. Вследствие этого файлы, помеченные как &apos;Доступен только онлайн&apos;, будут скачаны.
+
+Единственным преимуществом отключения поддержки виртуальных файлов является то, что функция выборочной синхронизации снова станет доступной.
+
+Это действие приведет к прерыванию всех текущих синхронизаций.</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="241"/>
@@ -647,12 +651,12 @@ This action will abort any currently running synchronization.</source>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="314"/>
         <source>Internet connection is metered</source>
-        <translation type="unfinished"/>
+        <translation>Оптимизация интернет трафика</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="315"/>
         <source>Synchronization is paused because the Internet connection is a metered connection&lt;p&gt;Do you really want to force a Synchronization now?</source>
-        <translation type="unfinished"/>
+        <translation>Синхронизация приостановлена из-за включенной настройки оптимизации интернет трафика. &lt;p&gt; Вы уверены, что хотите запустить принудительную Синхронизацию? </translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="339"/>
@@ -697,7 +701,7 @@ This action will abort any currently running synchronization.</source>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="423"/>
         <source>Sync is paused due to metered internet connection</source>
-        <translation type="unfinished"/>
+        <translation>Синхронизация приостановлена из-за включенной оптимизации интернет трафика</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="425"/>
@@ -727,7 +731,7 @@ This action will abort any currently running synchronization.</source>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="563"/>
         <source>Remove connection</source>
-        <translation type="unfinished"/>
+        <translation>Удалить подключение</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="396"/>
@@ -740,7 +744,7 @@ This action will abort any currently running synchronization.</source>
     <message>
         <location filename="../src/gui/activitywidget.cpp" line="44"/>
         <source>Local Activity</source>
-        <translation type="unfinished"/>
+        <translation>Локальная активность</translation>
     </message>
     <message>
         <location filename="../src/gui/activitywidget.cpp" line="47"/>
@@ -808,7 +812,7 @@ The update will be performed in the background, and overwrite the current AppIma
     <message>
         <location filename="../src/gui/commonstrings.cpp" line="36"/>
         <source>Show »%1« in %2</source>
-        <translation type="unfinished"/>
+        <translation>Показать »%1« в %2</translation>
     </message>
     <message>
         <location filename="../src/gui/commonstrings.cpp" line="41"/>
@@ -856,7 +860,7 @@ The update will be performed in the background, and overwrite the current AppIma
     <message>
         <location filename="../src/libsync/discoveryphase.cpp" line="213"/>
         <source>Error while opening directory »%1«</source>
-        <translation type="unfinished"/>
+        <translation>Ошибка при попытке открыть директорию »%1«</translation>
     </message>
     <message>
         <location filename="../src/libsync/discoveryphase.cpp" line="215"/>
@@ -866,7 +870,7 @@ The update will be performed in the background, and overwrite the current AppIma
     <message>
         <location filename="../src/libsync/discoveryphase.cpp" line="219"/>
         <source>Directory not found: »%1«</source>
-        <translation type="unfinished"/>
+        <translation>Директория не найдена: »%1«</translation>
     </message>
 </context>
 <context>
@@ -882,32 +886,32 @@ The update will be performed in the background, and overwrite the current AppIma
     <message>
         <location filename="../src/gui/folder.cpp" line="156"/>
         <source>The path »%1« is too long. Please enable long paths in the Windows settings or choose a different folder.</source>
-        <translation type="unfinished"/>
+        <translation>Путь »%1« слишком длинный. Пожалуйста, включите длинные пути в настройках Windows или выберите другую папку.</translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="198"/>
         <source>Failed to open the database for »%1«.</source>
-        <translation type="unfinished"/>
+        <translation>Не удалось открыть базу данных для »%1«.</translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="204"/>
         <source>Local folder »%1« does not exist.</source>
-        <translation type="unfinished"/>
+        <translation>Локальной папки »%1« не существует.</translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="206"/>
         <source>»%1« should be a folder but is not.</source>
-        <translation type="unfinished"/>
+        <translation>»%1« должна быть папкой, но это не так.</translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="208"/>
         <source>»%1« is not readable.</source>
-        <translation type="unfinished"/>
+        <translation>Невозможно прочитать »%1«.</translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="210"/>
         <source>»%1« is not writable.</source>
-        <translation type="unfinished"/>
+        <translation>Объект недоступен для записи - »%1«.</translation>
     </message>
     <message numerus="yes">
         <location filename="../src/gui/folder.cpp" line="465"/>
@@ -1063,17 +1067,17 @@ This means that the synchronization client might not upload local changes immedi
     <message>
         <location filename="../src/gui/folderman.cpp" line="598"/>
         <source>%1 (Sync is paused)</source>
-        <translation type="unfinished"/>
+        <translation>%1 (Синхронизация приостановлена)</translation>
     </message>
     <message>
         <location filename="../src/gui/folderman.cpp" line="630"/>
         <source>The folder »%1« is already in use by application %2!</source>
-        <translation type="unfinished"/>
+        <translation>Папка »%1« уже используется приложением %2!</translation>
     </message>
     <message>
         <location filename="../src/gui/folderman.cpp" line="643"/>
         <source>The folder »%1« is already in use by another account.</source>
-        <translation type="unfinished"/>
+        <translation>Папка »%1« уже используется другим аккаунтом.</translation>
     </message>
     <message>
         <location filename="../src/gui/folderman.cpp" line="718"/>
@@ -1088,19 +1092,21 @@ This means that the synchronization client might not upload local changes immedi
     <message>
         <location filename="../src/gui/folderman.cpp" line="732"/>
         <source>Please pick another local folder for »%1«.</source>
-        <translation type="unfinished"/>
+        <translation>Пожалуйста, выберите другую локальную папку для »%1«.</translation>
     </message>
     <message>
         <location filename="../src/gui/folderman.cpp" line="793"/>
         <source>Multiple accounts are sharing the folder »%1«.
 This configuration is know to lead to dataloss and is no longer supported.
 Please consider removing this folder from the account and adding it again.</source>
-        <translation type="unfinished"/>
+        <translation>Несколько аккаунтов делят папку »%1«.
+Данная конфигурация приводит к потере информации и более не поддерживается.
+Пожалуйста, уберите данную папку из профиля и добавьте ее повторно.</translation>
     </message>
     <message>
         <location filename="../src/gui/folderman.cpp" line="658"/>
         <source>No valid folder selected!</source>
-        <translation type="unfinished"/>
+        <translation>Не выбрано ни одной валидной папки!</translation>
     </message>
     <message>
         <location filename="../src/gui/folderman.cpp" line="676"/>
@@ -1143,12 +1149,12 @@ Please consider removing this folder from the account and adding it again.</sour
     <message>
         <location filename="../src/gui/folderstatusmodel.cpp" line="386"/>
         <source>Checking for changes in remote »%1«</source>
-        <translation type="unfinished"/>
+        <translation>Проверка наличия изменений в серверной версии »%1«</translation>
     </message>
     <message>
         <location filename="../src/gui/folderstatusmodel.cpp" line="388"/>
         <source>Checking for changes in local »%1«</source>
-        <translation type="unfinished"/>
+        <translation>Проверка наличия изменений в локальной версии »%1«</translation>
     </message>
     <message>
         <location filename="../src/gui/folderstatusmodel.cpp" line="392"/>
@@ -1634,25 +1640,25 @@ Note that using any logging command line options will override the settings.</so
         <location filename="../src/gui/networksettings.ui" line="259"/>
         <location filename="../src/gui/networksettings.ui" line="341"/>
         <source>Limit automatically</source>
-        <translation type="unfinished"/>
+        <translation>Ограничивать автоматически</translation>
     </message>
     <message>
         <location filename="../src/gui/networksettings.cpp" line="49"/>
         <location filename="../src/gui/networksettings.cpp" line="50"/>
         <source>Hostname of proxy server</source>
-        <translation type="unfinished"/>
+        <translation>Имя хоста прокси-сервера</translation>
     </message>
     <message>
         <location filename="../src/gui/networksettings.cpp" line="51"/>
         <location filename="../src/gui/networksettings.cpp" line="52"/>
         <source>Username for proxy server</source>
-        <translation type="unfinished"/>
+        <translation>Имя пользователя для прокси-сервера</translation>
     </message>
     <message>
         <location filename="../src/gui/networksettings.cpp" line="53"/>
         <location filename="../src/gui/networksettings.cpp" line="54"/>
         <source>Password for proxy server</source>
-        <translation type="unfinished"/>
+        <translation>Пароль для прокси-сервера</translation>
     </message>
     <message>
         <location filename="../src/gui/networksettings.cpp" line="56"/>
@@ -1894,7 +1900,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/discovery.cpp" line="181"/>
         <source>The file is listed on the ignore list.</source>
-        <translation type="unfinished"/>
+        <translation>Файл входит в список игнорируемых.</translation>
     </message>
     <message>
         <location filename="../src/libsync/discovery.cpp" line="526"/>
@@ -1937,7 +1943,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/owncloudpropagator.cpp" line="1102"/>
         <source>The folder »%1« is currently in use</source>
-        <translation type="unfinished"/>
+        <translation>Папка »%1« сейчас используется</translation>
     </message>
 </context>
 <context>
@@ -1980,7 +1986,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/propagatedownload.cpp" line="697"/>
         <source>The file was deleted from server</source>
-        <translation type="unfinished"/>
+        <translation>Файл был удален с сервера</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatedownload.cpp" line="756"/>
@@ -2021,17 +2027,17 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="163"/>
         <source>could not delete file »%1«, error: %2</source>
-        <translation type="unfinished"/>
+        <translation>не удалось удалить файл »%1«, ошибка: %2</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="178"/>
         <source>Cannot create local folder »%1« because of a local file name clash with »%2«</source>
-        <translation type="unfinished"/>
+        <translation>Не удалось создать локальную папку »%1« из-за конфликта имен с »%2«!</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="183"/>
         <source>Could not create folder »%1«</source>
-        <translation type="unfinished"/>
+        <translation>Не удалось создать папку »%1«</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="196"/>
@@ -2041,7 +2047,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="199"/>
         <source>The file »%1« is currently in use</source>
-        <translation type="unfinished"/>
+        <translation>Файл »%1« сейчас используется</translation>
     </message>
 </context>
 <context>
@@ -2055,17 +2061,17 @@ Note that using any logging command line options will override the settings.</so
         <location filename="../src/libsync/propagatorjobs.cpp" line="87"/>
         <location filename="../src/libsync/propagatorjobs.cpp" line="114"/>
         <source>The file »%1« is currently in use</source>
-        <translation type="unfinished"/>
+        <translation>Файл »%1« сейчас используется</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="107"/>
         <source>Could not remove »%1« because of a local file name clash with »%2«!</source>
-        <translation type="unfinished"/>
+        <translation>Не удалось удалить »%1« из-за конфликта имен с локальным файлом »%2«</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="123"/>
         <source>Could not move »%1« to the trash bin</source>
-        <translation type="unfinished"/>
+        <translation>Не удалось переместить »%1« в корзину</translation>
     </message>
 </context>
 <context>
@@ -2073,12 +2079,12 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="234"/>
         <source>The file »%1« can not be renamed to »%2« because of a local file name clash</source>
-        <translation type="unfinished"/>
+        <translation>Файл »%1« не может быть переименован в »%2« из-за конфликта имен с локальным файлом</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="240"/>
         <source>Could not rename »%1« to »%2«, the file is currently in use</source>
-        <translation type="unfinished"/>
+        <translation>Не удалось переименовать »%1« в »%2«, файл сейчас используется</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="262"/>
@@ -2088,7 +2094,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="265"/>
         <source>The file »%1« is currently in use</source>
-        <translation type="unfinished"/>
+        <translation>Файл »%1« сейчас используется</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="271"/>
@@ -2137,7 +2143,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/propagateremotemove.cpp" line="150"/>
         <source>The file »%1« is currently in use</source>
-        <translation type="unfinished"/>
+        <translation>Файл »%1« сейчас используется</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagateremotemove.cpp" line="157"/>
@@ -2155,7 +2161,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/owncloudpropagator.cpp" line="1285"/>
         <source>The file »%1« is currently in use</source>
-        <translation type="unfinished"/>
+        <translation>Файл »%1« сейчас используется</translation>
     </message>
 </context>
 <context>
@@ -2173,13 +2179,13 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/propagateupload.cpp" line="126"/>
         <source>The file »%1« cannot be uploaded because another file with the same name, differing only in case, exists</source>
-        <translation type="unfinished"/>
+        <translation>Невозможно обновить файл »%1«, потому что существует другой файл с таким же именем, отличающимся только регистром</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagateupload.cpp" line="177"/>
         <location filename="../src/libsync/propagateupload.cpp" line="208"/>
         <source>The file »%1« is currently in use</source>
-        <translation type="unfinished"/>
+        <translation>Файл »%1« сейчас используется</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagateupload.cpp" line="579"/>
@@ -2203,7 +2209,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/propagateuploadtus.cpp" line="60"/>
         <source>The file »%1« is currently in use</source>
-        <translation type="unfinished"/>
+        <translation>Файл »%1« сейчас используется</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagateuploadtus.cpp" line="116"/>
@@ -2221,7 +2227,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/propagateuploadv1.cpp" line="42"/>
         <source>The file »%1« is currently in use</source>
-        <translation type="unfinished"/>
+        <translation>Файл »%1« сейчас используется</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagateuploadv1.cpp" line="112"/>
@@ -2439,7 +2445,7 @@ Note that using any logging command line options will override the settings.</so
         <location filename="../src/gui/socketapi/socketapi.cpp" line="728"/>
         <location filename="../src/gui/socketapi/socketapi.cpp" line="758"/>
         <source>Share...</source>
-        <translation type="unfinished"/>
+        <translation>Поделиться...</translation>
     </message>
     <message>
         <location filename="../src/gui/socketapi/socketapi.cpp" line="730"/>
@@ -2530,17 +2536,17 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/syncengine.cpp" line="788"/>
         <source>Aborted due to %1</source>
-        <translation type="unfinished"/>
+        <translation>Прервано из-за %1</translation>
     </message>
     <message>
         <location filename="../src/libsync/syncengine.cpp" line="806"/>
         <source>Disk space is low: Downloads that would reduce free space below %1 were skipped.</source>
-        <translation type="unfinished"/>
+        <translation>Недостаточно места на диске: были пропущены загрузки, которые привели бы к сокращению свободного места до значения ниже %1.</translation>
     </message>
     <message>
         <location filename="../src/libsync/syncengine.cpp" line="813"/>
         <source>Space quota exceeded. Please contact the Administrator of this space.</source>
-        <translation type="unfinished"/>
+        <translation>Превышена квота для Пространства. Пожалуйста, обратитесь к Администратору этого пространства.</translation>
     </message>
     <message>
         <location filename="../src/libsync/syncengine.cpp" line="264"/>
@@ -2612,7 +2618,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/gui/systray.cpp" line="128"/>
         <source>Folder »%1«: %2</source>
-        <translation type="unfinished"/>
+        <translation>Папка »%1«: %2</translation>
     </message>
     <message>
         <location filename="../src/gui/systray.cpp" line="140"/>
@@ -2834,7 +2840,7 @@ Note that using any logging command line options will override the settings.</so
         <location filename="../src/gui/newwizard/pages/serverurlsetupwizardpage.cpp" line="66"/>
         <source>%1 logo</source>
         <extracomment>This is the accessibility text for the logo in the setup wizard page. The parameter is the name for the (branded) application.</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 лого</translation>
     </message>
 </context>
 <context>
@@ -2935,7 +2941,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/common/utility.cpp" line="302"/>
         <source>in the future</source>
-        <translation type="unfinished"/>
+        <translation>в будущем</translation>
     </message>
     <message numerus="yes">
         <location filename="../src/libsync/common/utility.cpp" line="297"/>
@@ -3289,7 +3295,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/common/utility.cpp" line="230"/>
         <source>%1 %2</source>
-        <translation type="unfinished"/>
+        <translation>%1 %2</translation>
     </message>
     <message>
         <location filename="../src/libsync/platform_win.cpp" line="112"/>
@@ -3302,7 +3308,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/gui/newwizard/jobs/webfingeruserinfojobfactory.cpp" line="60"/>
         <source>Failed to retrieve user info</source>
-        <translation type="unfinished"/>
+        <translation>Не удалось получить информацию о пользователе</translation>
     </message>
 </context>
 <context>
@@ -3310,7 +3316,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/gui/main.cpp" line="467"/>
         <source>Error accessing the configuration file</source>
-        <translation type="unfinished"/>
+        <translation>Ошибка при обращении к файлу конфигураций</translation>
     </message>
     <message>
         <location filename="../src/gui/main.cpp" line="468"/>

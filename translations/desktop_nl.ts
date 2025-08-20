@@ -83,7 +83,7 @@
     <message>
         <location filename="../src/libsync/appprovider.cpp" line="89"/>
         <source>Failed to open »%1« in web. Error: %2.</source>
-        <translation type="unfinished"/>
+        <translation>Openen van »%1« in web is mislukt. Fout: %2.</translation>
     </message>
 </context>
 <context>
@@ -211,7 +211,7 @@ Hulpprogramma voor desktop bestandssynchronisatie.</translation>
         <location filename="../src/libsync/common/filesystembase.cpp" line="249"/>
         <location filename="../src/libsync/common/filesystembase.cpp" line="254"/>
         <source>Can&apos;t rename »%1«, the file is currently in use</source>
-        <translation type="unfinished"/>
+        <translation>Hernoemen van »%1« is mislukt, het bestand is momenteel in gebruik</translation>
     </message>
 </context>
 <context>
@@ -604,7 +604,7 @@ Hulpprogramma voor desktop bestandssynchronisatie.</translation>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="197"/>
         <source>&lt;p&gt;Do you really want to stop syncing the Space »%1«?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; This will &lt;b&gt;not&lt;/b&gt; delete any files.&lt;/p&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;p&gt;Wil je echt stoppen met het synchroniseren van de ruimte »%1«?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Opmerking:&lt;/b&gt; Er worden &lt;b&gt;geen&lt;/b&gt; bestanden verwijderd.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="202"/>
@@ -727,7 +727,7 @@ Deze actie zal elke momenteel lopende synchronisatie onderbreken.</translation>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="559"/>
         <source>&lt;p&gt;Do you really want to remove the connection to the account %1«?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; This will &lt;b&gt;not&lt;/b&gt; delete any files.&lt;/p&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;p&gt;Wil je echt de verbinding met het account »%1« verwijderen?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Opmerking:&lt;/b&gt; Er worden &lt;b&gt;geen&lt;/b&gt; bestanden verwijderd.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="563"/>
@@ -797,7 +797,7 @@ De update wordt op de achtergrond uitgevoerd en overschrijft het huidige AppImag
     <message>
         <location filename="../src/gui/application.cpp" line="189"/>
         <source>The server on account »%1« runs an unsupported version %2. Using this client with unsupported server versions is untested and potentially dangerous. Proceed at your own risk.</source>
-        <translation type="unfinished"/>
+        <translation>De server op account »%1« voert een niet-ondersteunde versie %2 uit. Het gebruik van deze client met niet-ondersteunde serverversies is niet getest en potentieel gevaarlijk. Doorgaan op eigen risico.</translation>
     </message>
 </context>
 <context>
@@ -815,7 +815,7 @@ De update wordt op de achtergrond uitgevoerd en overschrijft het huidige AppImag
     <message>
         <location filename="../src/gui/commonstrings.cpp" line="36"/>
         <source>Show »%1« in %2</source>
-        <translation type="unfinished"/>
+        <translation>»%1« weergeven in %2</translation>
     </message>
     <message>
         <location filename="../src/gui/commonstrings.cpp" line="41"/>
@@ -863,7 +863,7 @@ De update wordt op de achtergrond uitgevoerd en overschrijft het huidige AppImag
     <message>
         <location filename="../src/libsync/discoveryphase.cpp" line="213"/>
         <source>Error while opening directory »%1«</source>
-        <translation type="unfinished"/>
+        <translation>Fout bij het openen van map »%1«</translation>
     </message>
     <message>
         <location filename="../src/libsync/discoveryphase.cpp" line="215"/>
@@ -873,7 +873,7 @@ De update wordt op de achtergrond uitgevoerd en overschrijft het huidige AppImag
     <message>
         <location filename="../src/libsync/discoveryphase.cpp" line="219"/>
         <source>Directory not found: »%1«</source>
-        <translation type="unfinished"/>
+        <translation>Map niet gevonden: »%1«</translation>
     </message>
 </context>
 <context>
@@ -889,106 +889,106 @@ De update wordt op de achtergrond uitgevoerd en overschrijft het huidige AppImag
     <message>
         <location filename="../src/gui/folder.cpp" line="156"/>
         <source>The path »%1« is too long. Please enable long paths in the Windows settings or choose a different folder.</source>
-        <translation type="unfinished"/>
+        <translation>Het pad »%1« is te lang. Schakel lange paden in de Windows-instellingen in of kies een andere map.</translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="198"/>
         <source>Failed to open the database for »%1«.</source>
-        <translation type="unfinished"/>
+        <translation>Het openen van de database is mislukt voor »%1«.</translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="204"/>
         <source>Local folder »%1« does not exist.</source>
-        <translation type="unfinished"/>
+        <translation>Lokale map »%1« bestaat niet.</translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="206"/>
         <source>»%1« should be a folder but is not.</source>
-        <translation type="unfinished"/>
+        <translation>»%1« zou een map moeten zijn, maar is het niet.</translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="208"/>
         <source>»%1« is not readable.</source>
-        <translation type="unfinished"/>
+        <translation>»%1« is niet leesbaar.</translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="210"/>
         <source>»%1« is not writable.</source>
-        <translation type="unfinished"/>
+        <translation>»%1« is niet schrijfbaar.</translation>
     </message>
     <message numerus="yes">
         <location filename="../src/gui/folder.cpp" line="465"/>
         <source>»%1« and %n other file(s) have been removed.</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>»%1« en %n ander bestand zin verwijderd.</numerusform><numerusform>»%1« en %n andere bestanden zijn verwijderd.</numerusform></translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="467"/>
         <source>»%1« has been removed.</source>
         <comment>%1 names a file.</comment>
-        <translation type="unfinished"/>
+        <translation>»%1« is verwijderd.</translation>
     </message>
     <message numerus="yes">
         <location filename="../src/gui/folder.cpp" line="472"/>
         <source>»%1« and %n other file(s) have been added.</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>»%1« en %n ander bestand zijn toegevoegd.</numerusform><numerusform>»%1« en %n andere bestanden zijn toegevoegd.</numerusform></translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="474"/>
         <source>»%1« has been added.</source>
         <comment>%1 names a file.</comment>
-        <translation type="unfinished"/>
+        <translation>»%1« is toegevoegd.</translation>
     </message>
     <message numerus="yes">
         <location filename="../src/gui/folder.cpp" line="479"/>
         <source>»%1« and %n other file(s) have been updated.</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>»%1« en %n ander bestand zijn bijgewerkt.</numerusform><numerusform>»%1« en %n andere bestanden zijn bijgewerkt.</numerusform></translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="481"/>
         <source>»%1« has been updated.</source>
         <comment>%1 names a file.</comment>
-        <translation type="unfinished"/>
+        <translation>»%1« is bijgewerkt.</translation>
     </message>
     <message numerus="yes">
         <location filename="../src/gui/folder.cpp" line="486"/>
         <source>»%1« has been renamed to »%2« and %n other file(s) have been renamed.</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>»%1« is hernoemd naar »%2« and %n ander bestand is hernoemd.</numerusform><numerusform>»%1« is hernoemd naar »%2« and %n andere bestanden zijn hernoemd.</numerusform></translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="488"/>
         <source>»%1« has been renamed to »%2«.</source>
         <comment>%1 and %2 name files.</comment>
-        <translation type="unfinished"/>
+        <translation>»%1« is hernoemd naar »%2«.</translation>
     </message>
     <message numerus="yes">
         <location filename="../src/gui/folder.cpp" line="493"/>
         <source>»%1« has been moved to »%2« and %n other file(s) have been moved.</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>»%1« is verplaatst naar »%2« en %n ander bestand is verplaatst.</numerusform><numerusform>»%1« is verplaatst naar »%2« en %n andere bestanden zijn verplaatst.</numerusform></translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="495"/>
         <source>»%1« has been moved to »%2«.</source>
-        <translation type="unfinished"/>
+        <translation>»%1« is verplaatst naar »%2«.</translation>
     </message>
     <message numerus="yes">
         <location filename="../src/gui/folder.cpp" line="500"/>
         <source>»%1« and %n other file(s) have sync conflicts.</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>»%1« en %n ander bestand hebben synchronisatieconflicten</numerusform><numerusform>»%1« en %n andere bestanden hebben synchronisatieconflicten.</numerusform></translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="502"/>
         <source>»%1« has a sync conflict. Please check the conflict file!</source>
-        <translation type="unfinished"/>
+        <translation>»%1« heeft een synchronisatieconflict. Controleer het conflictbestand!</translation>
     </message>
     <message numerus="yes">
         <location filename="../src/gui/folder.cpp" line="507"/>
         <source>»%1« and %n other file(s) could not be synced due to errors. See the log for details.</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>»%1« en %n ander bestand zijn niet gesynchroniseerd t.g.v. fouten. Bekijk het logboek voor details.</numerusform><numerusform>»%1« en %n andere bestanden zijn niet gesynchroniseerd t.g.v. fouten. Bekijk het logboek voor meer details.</numerusform></translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="509"/>
         <source>»%1« could not be synced due to an error. See the log for details.</source>
-        <translation type="unfinished"/>
+        <translation>»%1« is niet gesynchroniseerd t.g.v. een fout. Bekijk het logboek voor meer details.</translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="515"/>
@@ -998,22 +998,22 @@ De update wordt op de achtergrond uitgevoerd en overschrijft het huidige AppImag
     <message>
         <location filename="../src/gui/folder.cpp" line="716"/>
         <source>Switching VFS mode on folder »%1«</source>
-        <translation type="unfinished"/>
+        <translation>Overschakelen naar VFS-modus voor map »%1«</translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="1080"/>
         <source>The folder »%1« was created but was excluded from synchronization previously. Data inside it will not be synchronized.</source>
-        <translation type="unfinished"/>
+        <translation>De map »%1« is gemaakt, maar was eerder uitgesloten van synchronisatie. De inhoud wordt niet gesynchroniseerd.</translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="1083"/>
         <source>The file »%1« was created but was excluded from synchronization previously. It will not be synchronized.</source>
-        <translation type="unfinished"/>
+        <translation>Het bestand »%1« is gemaakt, maar was eerder uitgesloten van synchronisatie. Het wordt niet gesynchroniseerd.</translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="1087"/>
         <source>»%1« is not synchronized</source>
-        <translation type="unfinished"/>
+        <translation>»%1« wordt niet gesynchroniseerd</translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="862"/>
@@ -1044,7 +1044,7 @@ Dit betekent dat de synchronisatie-client mogelijk niet onmiddellijk lokale wijz
     <message>
         <location filename="../src/gui/folderman.cpp" line="241"/>
         <source>An old sync journal %1 was found, but could not be removed. Please make sure that no application is currently using it.</source>
-        <translation type="unfinished"/>
+        <translation>Er is een oud synchronisatielogboek %1 gevonden, maar dit kan niet worden verwijderd. Zorg ervoor dat het niet gebruikt wordt door een andere applicatie.</translation>
     </message>
     <message>
         <location filename="../src/gui/folderman.cpp" line="327"/>
@@ -1079,34 +1079,36 @@ Dit betekent dat de synchronisatie-client mogelijk niet onmiddellijk lokale wijz
     <message>
         <location filename="../src/gui/folderman.cpp" line="630"/>
         <source>The folder »%1« is already in use by application %2!</source>
-        <translation type="unfinished"/>
+        <translation>De map »%1« is al in gebruik door een andere app %2!.</translation>
     </message>
     <message>
         <location filename="../src/gui/folderman.cpp" line="643"/>
         <source>The folder »%1« is already in use by another account.</source>
-        <translation type="unfinished"/>
+        <translation>De map »%1« is al in gebruik door een ander account.</translation>
     </message>
     <message>
         <location filename="../src/gui/folderman.cpp" line="718"/>
         <source>The local folder »%1« already contains a folder used in a folder sync connection. Please pick another local folder!</source>
-        <translation type="unfinished"/>
+        <translation>De lokale map »%1« already contains a folder used in a folder sync connection. bevat al een map die wordt gebruikt in een mapsynchronisatieverbinding. Kies een andere lokale map!</translation>
     </message>
     <message>
         <location filename="../src/gui/folderman.cpp" line="724"/>
         <source>The local folder »%1« is already contained in a folder used in a folder sync connection. Please pick another local folder!</source>
-        <translation type="unfinished"/>
+        <translation>De lokale map »%1« is al opgenomen in een map die wordt gebruikt in een mapsynchronisatieverbinding. Kies een andere lokale map!</translation>
     </message>
     <message>
         <location filename="../src/gui/folderman.cpp" line="732"/>
         <source>Please pick another local folder for »%1«.</source>
-        <translation type="unfinished"/>
+        <translation>Kies een andere lokale map voor »%1«.</translation>
     </message>
     <message>
         <location filename="../src/gui/folderman.cpp" line="793"/>
         <source>Multiple accounts are sharing the folder »%1«.
 This configuration is know to lead to dataloss and is no longer supported.
 Please consider removing this folder from the account and adding it again.</source>
-        <translation type="unfinished"/>
+        <translation>Meerdere accounts delen de map »%1«.
+Deze configuratie kan leiden tot verlies van gegevens en wordt niet langer ondersteund 
+Overweeg om deze map uit het account te verwijderen en deze opnieuw toe te voegen.</translation>
     </message>
     <message>
         <location filename="../src/gui/folderman.cpp" line="658"/>
@@ -1121,7 +1123,7 @@ Please consider removing this folder from the account and adding it again.</sour
     <message>
         <location filename="../src/gui/folderman.cpp" line="680"/>
         <source>The folder »%1« is used in a folder sync connection!</source>
-        <translation type="unfinished"/>
+        <translation>De map »%1« wordt gebruikt in een mapsynchronisatieverbinding!</translation>
     </message>
     <message>
         <location filename="../src/gui/folderman.cpp" line="686"/>
@@ -1154,12 +1156,12 @@ Please consider removing this folder from the account and adding it again.</sour
     <message>
         <location filename="../src/gui/folderstatusmodel.cpp" line="386"/>
         <source>Checking for changes in remote »%1«</source>
-        <translation type="unfinished"/>
+        <translation>Controleren op wijzigingen op externe »%1«</translation>
     </message>
     <message>
         <location filename="../src/gui/folderstatusmodel.cpp" line="388"/>
         <source>Checking for changes in local »%1«</source>
-        <translation type="unfinished"/>
+        <translation>Controleren op wijzigingen in lokale »%1«</translation>
     </message>
     <message>
         <location filename="../src/gui/folderstatusmodel.cpp" line="392"/>
@@ -1396,12 +1398,12 @@ Items waarvan verwijdering is toegestaan, zullen worden verwijderd indien ze voo
     <message>
         <location filename="../src/gui/ignorelisteditor.cpp" line="41"/>
         <source>This entry is provided by the system at %1 and cannot be modified in this view.</source>
-        <translation type="unfinished"/>
+        <translation>Deze invoer wordt geleverd door het systeem op %1 en kan in deze weergave niet worden gewijzigd.</translation>
     </message>
     <message>
         <location filename="../src/gui/ignorelisteditor.cpp" line="111"/>
         <source>Cannot write changes to »%1«.</source>
-        <translation type="unfinished"/>
+        <translation>Kan geen wijzigingen schrijven naar »%1«.</translation>
     </message>
     <message>
         <location filename="../src/gui/ignorelisteditor.cpp" line="133"/>
@@ -1434,7 +1436,7 @@ Items waarvan verwijdering is toegestaan, zullen worden verwijderd indien ze voo
     <message>
         <location filename="../src/gui/issueswidget.cpp" line="208"/>
         <source>The file »%1« was ignored as its name is reserved by %2</source>
-        <translation type="unfinished"/>
+        <translation>Het bestand »%1« werd genegeerd omdat de naam is gereserveerd door %2</translation>
     </message>
     <message>
         <location filename="../src/gui/issueswidget.cpp" line="234"/>
@@ -1828,7 +1830,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/owncloudpropagator.cpp" line="732"/>
         <source>The file »%1« is currently in use</source>
-        <translation type="unfinished"/>
+        <translation>Het bestand »%1« is momenteel in gebruik</translation>
     </message>
 </context>
 <context>
@@ -1896,7 +1898,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/discovery.cpp" line="1258"/>
         <source>Server replied with an error while reading directory »%1«: %2</source>
-        <translation type="unfinished"/>
+        <translation>Server reageerde met een fout bij het lezen van de map »%1«: %2</translation>
     </message>
     <message>
         <location filename="../src/libsync/discovery.cpp" line="1048"/>
@@ -1906,7 +1908,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/discovery.cpp" line="181"/>
         <source>The file is listed on the ignore list.</source>
-        <translation type="unfinished"/>
+        <translation>Het bestand staat vermeld op de negeerlijst.</translation>
     </message>
     <message>
         <location filename="../src/libsync/discovery.cpp" line="526"/>
@@ -1949,7 +1951,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/owncloudpropagator.cpp" line="1102"/>
         <source>The folder »%1« is currently in use</source>
-        <translation type="unfinished"/>
+        <translation>De map »%1« is momenteel in gebruik</translation>
     </message>
 </context>
 <context>
@@ -1968,18 +1970,18 @@ Note that using any logging command line options will override the settings.</so
         <location filename="../src/libsync/propagatedownload.cpp" line="426"/>
         <location filename="../src/libsync/propagatedownload.cpp" line="925"/>
         <source>The file has changed since discovery</source>
-        <translation type="unfinished"/>
+        <translation>Het bestand is sinds de ontdekking gewijzigd</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatedownload.cpp" line="431"/>
         <source>Failed to free up space, the file »%1« is currently in use</source>
-        <translation type="unfinished"/>
+        <translation>Ruimte vrijmaken is mislukt, het bestand »%1« is momenteel in gebruik</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatedownload.cpp" line="457"/>
         <location filename="../src/libsync/propagatedownload.cpp" line="540"/>
         <source>The file »%1« can not be downloaded because of a local file name clash with %2!</source>
-        <translation type="unfinished"/>
+        <translation>Het bestand »%1« kan niet worden gedownload vanwege een lokaal bestandsnaamconflict met %2!</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatedownload.cpp" line="549"/>
@@ -1987,12 +1989,12 @@ Note that using any logging command line options will override the settings.</so
         <location filename="../src/libsync/propagatedownload.cpp" line="933"/>
         <location filename="../src/libsync/propagatedownload.cpp" line="968"/>
         <source>The file »%1« is currently in use</source>
-        <translation type="unfinished"/>
+        <translation>Het bestand »%1« is momenteel in gebruik</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatedownload.cpp" line="697"/>
         <source>The file was deleted from server</source>
-        <translation type="unfinished"/>
+        <translation>Het bestand is van de server verwijderd</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatedownload.cpp" line="756"/>
@@ -2012,7 +2014,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/propagatedownload.cpp" line="878"/>
         <source>The file »%1« cannot be saved because of a local file name clash with »%2«!</source>
-        <translation type="unfinished"/>
+        <translation>Het bestand »%1« kan niet worden opgeslagen vanwege een lokaal bestandsnaamconflict met »%2«!</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatedownload.cpp" line="965"/>
@@ -2033,17 +2035,17 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="163"/>
         <source>could not delete file »%1«, error: %2</source>
-        <translation type="unfinished"/>
+        <translation>kan bestand »%1« niet verwijderen, fout: %2</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="178"/>
         <source>Cannot create local folder »%1« because of a local file name clash with »%2«</source>
-        <translation type="unfinished"/>
+        <translation>Kan lokale map »%1« niet aanmaken vanwege een lokaal bestandsnaamconflict met »%2«</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="183"/>
         <source>Could not create folder »%1«</source>
-        <translation type="unfinished"/>
+        <translation>Kan map »%1« niet aanmaken</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="196"/>
@@ -2053,7 +2055,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="199"/>
         <source>The file »%1« is currently in use</source>
-        <translation type="unfinished"/>
+        <translation>Het bestand »%1« is momenteel in gebruik</translation>
     </message>
 </context>
 <context>
@@ -2067,17 +2069,17 @@ Note that using any logging command line options will override the settings.</so
         <location filename="../src/libsync/propagatorjobs.cpp" line="87"/>
         <location filename="../src/libsync/propagatorjobs.cpp" line="114"/>
         <source>The file »%1« is currently in use</source>
-        <translation type="unfinished"/>
+        <translation>Het bestand »%1« is momenteel in gebruik</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="107"/>
         <source>Could not remove »%1« because of a local file name clash with »%2«!</source>
-        <translation type="unfinished"/>
+        <translation>Kan »%1« niet verwijderen vanwege een lokaal bestandsnaamconflict met »%2«!</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="123"/>
         <source>Could not move »%1« to the trash bin</source>
-        <translation type="unfinished"/>
+        <translation>Kan »%1« niet verplaatsen naar de prullenbak</translation>
     </message>
 </context>
 <context>
@@ -2085,12 +2087,12 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="234"/>
         <source>The file »%1« can not be renamed to »%2« because of a local file name clash</source>
-        <translation type="unfinished"/>
+        <translation>Het bestand »%1« kan niet worden hernoemd naar »%2« in verband met een conflict met een lokale bestandsnaam</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="240"/>
         <source>Could not rename »%1« to »%2«, the file is currently in use</source>
-        <translation type="unfinished"/>
+        <translation>Kan »%1« niet hernoemen naar »%2«, het bestand is momenteel in gebruik</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="262"/>
@@ -2100,7 +2102,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="265"/>
         <source>The file »%1« is currently in use</source>
-        <translation type="unfinished"/>
+        <translation>Het bestand »%1« is is momenteel in gebruik</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="271"/>
@@ -2149,7 +2151,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/propagateremotemove.cpp" line="150"/>
         <source>The file »%1« is currently in use</source>
-        <translation type="unfinished"/>
+        <translation>Het bestand »%1« is momenteel in gebruik</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagateremotemove.cpp" line="157"/>
@@ -2167,7 +2169,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/owncloudpropagator.cpp" line="1285"/>
         <source>The file »%1« is currently in use</source>
-        <translation type="unfinished"/>
+        <translation>Het bestand »%1« is momenteel in gebruik</translation>
     </message>
 </context>
 <context>
@@ -2185,13 +2187,13 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/propagateupload.cpp" line="126"/>
         <source>The file »%1« cannot be uploaded because another file with the same name, differing only in case, exists</source>
-        <translation type="unfinished"/>
+        <translation>Het bestand »%1« kan niet worden geüpload omdat er een ander bestand met dezelfde naam en andere hoofdletters bestaat</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagateupload.cpp" line="177"/>
         <location filename="../src/libsync/propagateupload.cpp" line="208"/>
         <source>The file »%1« is currently in use</source>
-        <translation type="unfinished"/>
+        <translation>Het bestand »%1« is momenteel in gebruik</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagateupload.cpp" line="579"/>
@@ -2215,7 +2217,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/propagateuploadtus.cpp" line="60"/>
         <source>The file »%1« is currently in use</source>
-        <translation type="unfinished"/>
+        <translation>Het bestand »%1« is momenteel in gebruik</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagateuploadtus.cpp" line="116"/>
@@ -2233,7 +2235,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/propagateuploadv1.cpp" line="42"/>
         <source>The file »%1« is currently in use</source>
-        <translation type="unfinished"/>
+        <translation>Het bestand »%1« is momenteel in gebruik</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagateuploadv1.cpp" line="112"/>
@@ -2416,12 +2418,12 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/gui/socketapi/socketapi.cpp" line="588"/>
         <source>Do you want to delete the directory »%1« and all its contents permanently?</source>
-        <translation type="unfinished"/>
+        <translation>Wil je de map »%1« en alle inhoud definitief verwijderen?</translation>
     </message>
     <message>
         <location filename="../src/gui/socketapi/socketapi.cpp" line="589"/>
         <source>Do you want to delete the file »%1« permanently?</source>
-        <translation type="unfinished"/>
+        <translation>Wil je het bestand »%1« definitief verwijderen?</translation>
     </message>
     <message>
         <location filename="../src/gui/socketapi/socketapi.cpp" line="631"/>
@@ -2573,12 +2575,12 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/syncengine.cpp" line="400"/>
         <source>Unable to read from the sync journal.</source>
-        <translation>Kan niet lezen uit het synchronisatiejournal.</translation>
+        <translation>Kan niet lezen uit het synchronisatielogboek.</translation>
     </message>
     <message>
         <location filename="../src/libsync/syncengine.cpp" line="474"/>
         <source>Cannot open the sync journal</source>
-        <translation>Kan het synchronisatiedagboek niet openen</translation>
+        <translation>Kan het synchronisatielogboek niet openen</translation>
     </message>
 </context>
 <context>
@@ -2624,7 +2626,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/gui/systray.cpp" line="128"/>
         <source>Folder »%1«: %2</source>
-        <translation type="unfinished"/>
+        <translation>Map »%1«: %2</translation>
     </message>
     <message>
         <location filename="../src/gui/systray.cpp" line="140"/>
@@ -2783,12 +2785,12 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/gui/updater/ocupdater.cpp" line="376"/>
         <source>&lt;p&gt;A new version of the %1 Desktop App is available.&lt;/p&gt;&lt;p&gt;&lt;b&gt;%2&lt;/b&gt; is available for download. The installed version is %3.&lt;/p&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;p&gt;Er is een nieuwe versie van de %1 Desktop App beschikbaar.&lt;/p&gt;&lt;p&gt;&lt;b&gt;%2&lt;/b&gt; kan worden gedownload. De geïnstalleerd versie is %3.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/gui/updater/ocupdater.cpp" line="409"/>
         <source>&lt;p&gt;A new version of the %1 Desktop App is available but the updating process failed.&lt;/p&gt;&lt;p&gt;&lt;b&gt;%2&lt;/b&gt; has been downloaded. The installed version is %3.&lt;/p&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;p&gt;Er is een nieuwe versie van de %1 Desktop App beschikbaar, maar de update is mislukt.&lt;/p&gt;&lt;p&gt;&lt;b&gt;%2&lt;/b&gt; is gedownload. De geïnstalleerde versie is %3.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/gui/updater/ocupdater.cpp" line="423"/>
@@ -3393,7 +3395,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="47"/>
         <source>»%1« moved to »%2«</source>
-        <translation type="unfinished"/>
+        <translation>»%1« is verplaatst naar »%2«</translation>
     </message>
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="51"/>
