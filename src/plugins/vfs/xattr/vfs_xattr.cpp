@@ -73,6 +73,7 @@ OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> VfsXAttr::updateMetad
         if (attribs.itsMe()) { // checks if there are placeholder Attribs at all
             FileSystem::setModTime(localPath, syncItem._modtime);
 
+            // FIXME only write attribs if they're different
             XAttrWrapper::addPlaceholderAttribute(localPath, "user.openvfs.fsize", QByteArray::number(syncItem._size));
             XAttrWrapper::addPlaceholderAttribute(localPath, "user.openvfs.state", "dehydrated");
             XAttrWrapper::addPlaceholderAttribute(localPath, "user.openvfs.fileid", syncItem._fileId);
@@ -198,7 +199,7 @@ bool VfsXAttr::setPinState(const QString &folderPath, PinState state)
     qCDebug(lcVfsXAttr()) << folderPath << state;
     auto stateStr = Utility::enumToDisplayName(state);
     auto res = XAttrWrapper::addPlaceholderAttribute(folderPath, "user.openvfs.pinstate", stateStr.toUtf8());
-    if (res) {
+    if (!res) {
         qCDebug(lcVfsXAttr()) << "Failed to set pin state";
         return false;
     }
