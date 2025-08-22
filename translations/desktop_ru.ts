@@ -121,7 +121,7 @@ File synchronization desktop utility.</source>
     <message>
         <location filename="../src/gui/main.cpp" line="127"/>
         <source>Quit the running instance.</source>
-        <translation type="unfinished"/>
+        <translation>Выйти из запущенного инстанса</translation>
     </message>
     <message>
         <location filename="../src/gui/main.cpp" line="129"/>
@@ -164,7 +164,7 @@ File synchronization desktop utility.</source>
     <message>
         <location filename="../src/gui/qml/credentials/Credentials.qml" line="47"/>
         <source>Stay logged out</source>
-        <translation type="unfinished"/>
+        <translation>Оставаться не авторизованным</translation>
     </message>
     <message>
         <location filename="../src/gui/qml/credentials/Credentials.qml" line="85"/>
@@ -210,7 +210,7 @@ File synchronization desktop utility.</source>
         <location filename="../src/libsync/common/filesystembase.cpp" line="249"/>
         <location filename="../src/libsync/common/filesystembase.cpp" line="254"/>
         <source>Can&apos;t rename »%1«, the file is currently in use</source>
-        <translation type="unfinished"/>
+        <translation>Невозможно переименовать »%1«, файл сейчас используется</translation>
     </message>
 </context>
 <context>
@@ -484,12 +484,12 @@ File synchronization desktop utility.</source>
     <message>
         <location filename="../src/gui/aboutdialog.ui" line="108"/>
         <source>&amp;Update Channel</source>
-        <translation type="unfinished"/>
+        <translation>&amp;Канал Обновления</translation>
     </message>
     <message>
         <location filename="../src/gui/aboutdialog.ui" line="137"/>
         <source>&amp;Restart &amp;&amp; Update</source>
-        <translation type="unfinished"/>
+        <translation>&amp;Перезапустить &amp;&amp; Обновить</translation>
     </message>
     <message>
         <location filename="../src/gui/aboutdialog.ui" line="148"/>
@@ -504,22 +504,22 @@ File synchronization desktop utility.</source>
     <message>
         <location filename="../src/gui/aboutdialog.cpp" line="158"/>
         <source>Change update channel?</source>
-        <translation type="unfinished"/>
+        <translation>Изменить канал обновления?</translation>
     </message>
     <message>
         <location filename="../src/gui/aboutdialog.cpp" line="159"/>
         <source>&lt;html&gt;The update channel determines which client updates will be offered for installation.&lt;ul&gt;&lt;li&gt;&quot;stable&quot; contains only upgrades that are considered reliable&lt;/li&gt;%1&lt;/ul&gt;&lt;br&gt;⚠️Downgrades are not supported. If you switch to a stable channel this change will only be applied with the next major release.&lt;/html&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;html&gt;Канал обновления определяет, какие обновления клиента будут предлагаться для установки.&lt;ul&gt;&lt;li&gt;&quot;stable&quot; содержит только обновления, которые считаются надежными &lt;/li&gt;%1&lt;/ul&gt;&lt;br&gt;⚠️Откат на старые версии не поддерживается. Если вы переключитесь на канал stable, то изменение будет применено только со следующим релизом.&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../src/gui/aboutdialog.cpp" line="165"/>
         <source>&lt;li&gt;&quot;beta&quot; may contain newer features and bugfixes, but have not yet been tested thoroughly&lt;/li&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;li&gt;&quot;beta&quot; может содержать новые фичи и исправления ошибок, но данная версия еще не была полностью протестирована&lt;/li&gt;</translation>
     </message>
     <message>
         <location filename="../src/gui/aboutdialog.cpp" line="167"/>
         <source>Change update channel</source>
-        <translation type="unfinished"/>
+        <translation>Изменить канал обновления</translation>
     </message>
     <message>
         <location filename="../src/gui/aboutdialog.cpp" line="168"/>
@@ -726,7 +726,7 @@ This action will abort any currently running synchronization.</source>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="559"/>
         <source>&lt;p&gt;Do you really want to remove the connection to the account %1«?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; This will &lt;b&gt;not&lt;/b&gt; delete any files.&lt;/p&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;p&gt;Вы действительно хотите удалить подключение к аккаунту %1«?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Примечание:&lt;/b&gt; Это &lt;b&gt;не&lt;/b&gt; приведет к удалению файлов.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="563"/>
@@ -776,7 +776,9 @@ This action will abort any currently running synchronization.</source>
         <source>An update is available for this AppImage of %1. Do you want to install this update?
 
 The update will be performed in the background, and overwrite the current AppImage file. You need to restart the app to complete the update.</source>
-        <translation type="unfinished"/>
+        <translation>Доступно обновление для AppImage %1. Хотите установить данное обновление?
+
+Обновление будет происходить в фоновом режиме и перезапишет существующий AppImage. Для завершения обновления потребуется перезапуск приложения.</translation>
     </message>
 </context>
 <context>
@@ -1010,7 +1012,7 @@ The update will be performed in the background, and overwrite the current AppIma
     <message>
         <location filename="../src/gui/folder.cpp" line="1087"/>
         <source>»%1« is not synchronized</source>
-        <translation type="unfinished"/>
+        <translation>Объект не синхронизирован - »%1«</translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="862"/>
@@ -1172,7 +1174,7 @@ Please consider removing this folder from the account and adding it again.</sour
     <message>
         <location filename="../src/gui/folderwatcher.cpp" line="135"/>
         <source>The watcher did not receive a test notification.</source>
-        <translation type="unfinished"/>
+        <translation>Watcher не получил тестовое уведомление.</translation>
     </message>
 </context>
 <context>
@@ -1352,7 +1354,7 @@ Please consider removing this folder from the account and adding it again.</sour
     <message>
         <location filename="../src/gui/ignorelisteditor.ui" line="20"/>
         <source>Files Ignored by Patterns</source>
-        <translation type="unfinished"/>
+        <translation>Файлы, проигнорированные согласно Шаблону</translation>
     </message>
     <message>
         <location filename="../src/gui/ignorelisteditor.ui" line="59"/>
@@ -1362,7 +1364,7 @@ Please consider removing this folder from the account and adding it again.</sour
     <message>
         <location filename="../src/gui/ignorelisteditor.ui" line="41"/>
         <source>Pattern</source>
-        <translation type="unfinished"/>
+        <translation>Шаблон</translation>
     </message>
     <message>
         <location filename="../src/gui/ignorelisteditor.ui" line="46"/>
@@ -1379,7 +1381,9 @@ Please consider removing this folder from the account and adding it again.</sour
         <source>Files or folders matching a pattern will not be synchronized. Changes take effect the next time folders are synchronized.
 
 Items where deletion is allowed will be deleted if they prevent a directory from being removed. This is useful for meta data.</source>
-        <translation type="unfinished"/>
+        <translation>Файлы или папки, соответствующие шаблону, синхронизированы не будут. Изменения вступят в силу при следующей синхронизации папок.
+
+Элементы, удаление которых разрешено, будут удалены, если они препятствуют удалению каталога. Это полезно для метаданных.</translation>
     </message>
     <message>
         <location filename="../src/gui/ignorelisteditor.cpp" line="110"/>
@@ -1389,7 +1393,7 @@ Items where deletion is allowed will be deleted if they prevent a directory from
     <message>
         <location filename="../src/gui/ignorelisteditor.cpp" line="41"/>
         <source>This entry is provided by the system at %1 and cannot be modified in this view.</source>
-        <translation type="unfinished"/>
+        <translation>Эта запись предоставляется системой по адресу %1 и не может быть изменена в этом представлении.</translation>
     </message>
     <message>
         <location filename="../src/gui/ignorelisteditor.cpp" line="111"/>
@@ -1399,12 +1403,12 @@ Items where deletion is allowed will be deleted if they prevent a directory from
     <message>
         <location filename="../src/gui/ignorelisteditor.cpp" line="133"/>
         <source>Add Ignore Pattern</source>
-        <translation type="unfinished"/>
+        <translation>Добавить шаблон игнорирования</translation>
     </message>
     <message>
         <location filename="../src/gui/ignorelisteditor.cpp" line="134"/>
         <source>Add a new ignore pattern:</source>
-        <translation type="unfinished"/>
+        <translation>Добавить новый шаблон игнорирования:</translation>
     </message>
 </context>
 <context>
@@ -1535,7 +1539,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/gui/networksettings.ui" line="20"/>
         <source>Pause synchronization when the Internet connection is metered</source>
-        <translation type="unfinished"/>
+        <translation>Приостанавливать синхронизацию, когда включена оптимизация интернет трафика</translation>
     </message>
     <message>
         <location filename="../src/gui/networksettings.ui" line="30"/>
@@ -1699,7 +1703,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="363"/>
         <source>There was an error accessing the &apos;token&apos; endpoint: &lt;br&gt;&lt;em&gt;%1&lt;/em&gt;</source>
-        <translation type="unfinished"/>
+        <translation>При обращении к эндпоинту &apos;token&apos; произошла ошибка: &lt;br&gt;&lt;em&gt;%1&lt;/em&gt;</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="365"/>
@@ -1890,7 +1894,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/discovery.cpp" line="1258"/>
         <source>Server replied with an error while reading directory »%1«: %2</source>
-        <translation type="unfinished"/>
+        <translation>Сервер ответил ошибкой при попытке прочесть директорию »%1«: %2</translation>
     </message>
     <message>
         <location filename="../src/libsync/discovery.cpp" line="1048"/>
@@ -2006,7 +2010,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/propagatedownload.cpp" line="878"/>
         <source>The file »%1« cannot be saved because of a local file name clash with »%2«!</source>
-        <translation type="unfinished"/>
+        <translation>Файл »%1« не может быть сохранен из-за конфликта имен с »%2«!</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatedownload.cpp" line="965"/>
@@ -2777,12 +2781,12 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/gui/updater/ocupdater.cpp" line="376"/>
         <source>&lt;p&gt;A new version of the %1 Desktop App is available.&lt;/p&gt;&lt;p&gt;&lt;b&gt;%2&lt;/b&gt; is available for download. The installed version is %3.&lt;/p&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;p&gt;Доступна новая версия %1 Desktop App.&lt;/p&gt;&lt;p&gt;&lt;b&gt;%2&lt;/b&gt; доступна для загрузки. Текущая версия - %3.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/gui/updater/ocupdater.cpp" line="409"/>
         <source>&lt;p&gt;A new version of the %1 Desktop App is available but the updating process failed.&lt;/p&gt;&lt;p&gt;&lt;b&gt;%2&lt;/b&gt; has been downloaded. The installed version is %3.&lt;/p&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;p&gt;Доступна новая версия %1 Desktop App, но при обновлении произошла ошибка.&lt;/p&gt;&lt;p&gt;&lt;b&gt;%2&lt;/b&gt; была загружена. Текущая установленная версия - %3.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/gui/updater/ocupdater.cpp" line="423"/>
@@ -2993,12 +2997,12 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/gui/newwizard/jobs/resolveurljobfactory.cpp" line="57"/>
         <source>Could not detect compatible server at %1</source>
-        <translation type="unfinished"/>
+        <translation>Не удалось обнаружить совместимый сервер на %1</translation>
     </message>
     <message>
         <location filename="../src/gui/newwizard/jobs/resolveurljobfactory.cpp" line="95"/>
         <source>User rejected redirect from %1 to %2</source>
-        <translation type="unfinished"/>
+        <translation>Пользователь отклонил перенаправление с %1 на %2</translation>
     </message>
     <message>
         <location filename="../src/gui/newwizard/jobs/resolveurljobfactory.cpp" line="119"/>
@@ -3321,7 +3325,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/gui/main.cpp" line="468"/>
         <source>There was an error while accessing the configuration file at %1.</source>
-        <translation type="unfinished"/>
+        <translation>Возникла ошибка при попытке обратиться к файлу конфигураций по пути %1</translation>
     </message>
 </context>
 <context>
@@ -3329,17 +3333,17 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/common/pinstate.cpp" line="27"/>
         <source>Always available locally</source>
-        <translation type="unfinished"/>
+        <translation>Всегда доступно локально</translation>
     </message>
     <message>
         <location filename="../src/libsync/common/pinstate.cpp" line="29"/>
         <source>Currently available locally</source>
-        <translation type="unfinished"/>
+        <translation>Сейчас доступно локально</translation>
     </message>
     <message>
         <location filename="../src/libsync/common/pinstate.cpp" line="31"/>
         <source>Some available online only</source>
-        <translation type="unfinished"/>
+        <translation>Часть доступна только онлайн</translation>
     </message>
     <message>
         <location filename="../src/libsync/common/pinstate.cpp" line="35"/>
@@ -3382,12 +3386,12 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="43"/>
         <source>Server version downloaded, local copy was backed up as conflict file</source>
-        <translation type="unfinished"/>
+        <translation>Скачана серверная версия, локальная копия была сохранена как конфликтующий файл</translation>
     </message>
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="47"/>
         <source>»%1« moved to »%2«</source>
-        <translation type="unfinished"/>
+        <translation>»%1« перемещен в »%2«</translation>
     </message>
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="51"/>
