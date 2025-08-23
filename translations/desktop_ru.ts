@@ -1212,7 +1212,7 @@ Please consider removing this folder from the account and adding it again.</sour
     <message>
         <location filename="../src/libsync/propagatedownload.cpp" line="254"/>
         <source>No E-Tag received from server, check Proxy/Gateway</source>
-        <translation type="unfinished"/>
+        <translation>От сервера не пришел E-Tag, проверьте Proxy/Gateway</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatedownload.cpp" line="260"/>
@@ -1798,7 +1798,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/gui/updater/ocupdater.cpp" line="162"/>
         <source>New %1 available. Please click &lt;a href=&apos;%2&apos;&gt;here&lt;/a&gt; to download the new AppImage manually.</source>
-        <translation type="unfinished"/>
+        <translation>Доступна новая версия %1. Пожалуйста, нажмите &lt;a href=&apos;%2&apos;&gt;сюда&lt;/a&gt; для того, чтобы вручную скачать новый AppImage.</translation>
     </message>
     <message>
         <location filename="../src/gui/updater/ocupdater.cpp" line="165"/>
@@ -2059,7 +2059,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="77"/>
         <source>%1 failed with: %2</source>
-        <translation type="unfinished"/>
+        <translation>%1 упал с ошибкой: %2</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="87"/>
@@ -2414,12 +2414,12 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/gui/socketapi/socketapi.cpp" line="588"/>
         <source>Do you want to delete the directory »%1« and all its contents permanently?</source>
-        <translation type="unfinished"/>
+        <translation>Вы хотите удалить директорию »%1« и все ее содержимое без возможности восстановления?</translation>
     </message>
     <message>
         <location filename="../src/gui/socketapi/socketapi.cpp" line="589"/>
         <source>Do you want to delete the file »%1« permanently?</source>
-        <translation type="unfinished"/>
+        <translation>Вы хотите удалить файл »%1« без возможности восстановления?</translation>
     </message>
     <message>
         <location filename="../src/gui/socketapi/socketapi.cpp" line="631"/>
@@ -2465,12 +2465,12 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/gui/socketapi/socketapi.cpp" line="756"/>
         <source>Resharing this file is not allowed</source>
-        <translation type="unfinished"/>
+        <translation>Повторный перевод данного файла в совместный доступ не разрешен</translation>
     </message>
     <message>
         <location filename="../src/gui/socketapi/socketapi.cpp" line="756"/>
         <source>Resharing this folder is not allowed</source>
-        <translation type="unfinished"/>
+        <translation>Повторный перевод данной папки в совместный доступ не разрешен</translation>
     </message>
     <message>
         <location filename="../src/gui/socketapi/socketapi.cpp" line="832"/>
@@ -2822,7 +2822,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.cpp" line="42"/>
         <source>Sync location not supported</source>
-        <translation type="unfinished"/>
+        <translation>Расположение недоступно для синхронизации</translation>
     </message>
 </context>
 <context>
@@ -2830,12 +2830,12 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="52"/>
         <source>Error while trying to log in to OAuth2-enabled server.</source>
-        <translation type="unfinished"/>
+        <translation>Ошибка при попытке входа в систему на сервере с включенной OAuth2-авторизацией.</translation>
     </message>
     <message>
         <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="56"/>
         <source>Oauth2 authentication requires a secured connection.</source>
-        <translation type="unfinished"/>
+        <translation>Oauth2 авторизация требует безопасного соединения.</translation>
     </message>
 </context>
 <context>
@@ -3177,7 +3177,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/syncfileitem.cpp" line="86"/>
         <source>Filename Reserved</source>
-        <translation type="unfinished"/>
+        <translation>Имя файла зарезервировано</translation>
     </message>
 </context>
 <context>
