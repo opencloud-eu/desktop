@@ -494,3 +494,34 @@ Feature: Syncing files
         Then the sync folder list should be empty
         And the folder "simple-folder" should exist on the file system
         And as "Alice" folder "simple-folder" should exist in the server
+
+
+    Scenario: Sync a received shared folder with Viewer permission role
+        Given user "Brian" has been created in the server with default attributes
+        And user "Alice" has created folder "simple-folder" in the server
+        And user "Alice" has uploaded file with content "test content" to "simple-folder/uploaded-lorem.txt" in the server
+        And user "Alice" has sent the following resource share invitation:
+            | resource        | simple-folder |
+            | sharee          | Brian         |
+            | permissionsRole | Viewer        |
+        And user "Brian" has set up a client with space "Shares"
+        When user "Brian" creates a folder "simple-folder/sub-folder" inside the sync folder
+        Then the folder "simple-folder/sub-folder" should exist on the file system
+        But the following error message should appear in the client
+            """
+            simple-folder/sub-folder: Not allowed because you don't have permission to add subfolders to that folder
+            """
+        When the user copies file "simple.pdf" from outside the sync folder to "simple-folder/simple.pdf" in the sync folder
+        Then the file "simple-folder/simple.pdf" should exist on the file system
+        But the following error message should appear in the client
+            """
+            simple-folder/simple.pdf: Not allowed because you don't have permission to add files in that folder
+            """
+        And as "Brian" folder "simple-folder/sub-folder" should not exist in the server
+        And as "Brian" file "simple-folder/simple.pdf" should not exist in the server
+        When the user clicks on the activity tab
+        And the user selects "Not Synced" tab in the activity
+        Then the following activities should be displayed in not synced table
+            | resource                 | status      | account                              |
+            | simple-folder/sub-folder | Blacklisted | Brian Murphy@%local_server_hostname% |
+            | simple-folder/simple.pdf | Blacklisted | Brian Murphy@%local_server_hostname% |

@@ -114,3 +114,14 @@ def step(context, user):
         file_name = row[0]
         file_content = row[1]
         webdav.create_file(user, file_name, file_content)
+
+
+@Given('user "|any|" has sent the following resource share invitation:')
+def step(context, user):
+    resource_details = {row[0]: row[1] for row in context.table}
+    webdav.send_resource_share_invitation(
+        user, 
+        resource_details['resource'], 
+        resource_details['sharee'], 
+        resource_details['permissionsRole']
+    )
