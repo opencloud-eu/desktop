@@ -102,7 +102,8 @@ CONFIG = {
 
 # Permission roles mapping
 PERMISSION_ROLES = {
-    'Viewer': 'b1e2218d-eef8-4d4c-b82d-0f1a1b48f3b5'
+    'Viewer': 'b1e2218d-eef8-4d4c-b82d-0f1a1b48f3b5',
+    'Editor': 'fb6c3e19-e378-47e5-b277-9732f9de6e21'
 }
 
 CONFIG.update(DEFAULT_PATH_CONFIG)

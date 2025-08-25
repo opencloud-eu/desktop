@@ -544,3 +544,23 @@ Feature: Syncing files
         Examples:
             | filename                                                                    |
             | 𒁰𒁱𒁲𒁳𒁴𒁵𒁶𒁷𒁸𒁹𒁺𒁻𒁼𒁾𒁿𒁰𒁱𒁲𒁳𒁴𒁵𒁶𒁷𒁸𒁹𒁺𒁻𒁼𒁾𒁿𒁰𒁱𒁲𒁳𒁴𒁵𒁶𒁷𒁸𒁹𒁺abôǣฎพฒฆ๘ตกกผพฒณญไใๅำ๊๒๔๗๘รศฬอฮ.txt |
+
+
+	Scenario: Sync a received shared folder with Editor permission role
+        Given user "Brian" has been created in the server with default attributes
+        And user "Alice" has created folder "simple-folder" in the server
+        And user "Alice" has uploaded file with content "test content" to "simple-folder/uploaded-lorem.txt" in the server
+        And user "Alice" has sent the following resource share invitation:
+            | resource        | simple-folder |
+            | sharee          | Brian         |
+            | permissionsRole | Editor        |
+        And user "Brian" has set up a client with space "Shares"
+        When user "Brian" creates a folder "simple-folder/sub-folder" inside the sync folder
+        And the user copies file "simple.pdf" from outside the sync folder to "simple-folder/simple.pdf" in the sync folder
+        And the user overwrites the file "simple-folder/uploaded-lorem.txt" with content "overwrite openCloud test text file"
+        And the user waits for the files to sync
+        Then the folder "simple-folder/sub-folder" should exist on the file system
+        And the file "simple-folder/simple.pdf" should exist on the file system
+        And as "Brian" folder "Shares/simple-folder/sub-folder" should exist in the server
+        And as "Brian" file "Shares/simple-folder/simple.pdf" should exist in the server
+        And as "Brian" the file "Shares/simple-folder/uploaded-lorem.txt" should have the content "overwrite openCloud test text file" in the server
