@@ -105,7 +105,8 @@
         <location filename="../src/gui/main.cpp" line="98"/>
         <source>%1 version %2<byte value="xd"/>
 File synchronization desktop utility.</source>
-        <translation type="unfinished"/>
+        <translation>%1 версия %2&lt;byte value=&quot;xd&quot;/&gt;
+Десктопная утилита синхронизации файлов.</translation>
     </message>
     <message>
         <location filename="../src/gui/main.cpp" line="106"/>
@@ -116,7 +117,7 @@ File synchronization desktop utility.</source>
     <message>
         <location filename="../src/gui/main.cpp" line="125"/>
         <source>Start with the main window visible, or if it is already running, bring it to the front. By default, the client launches in the background.</source>
-        <translation type="unfinished"/>
+        <translation>Начните с отображения главного окна или, если оно уже запущено, выведите его на передний план. По умолчанию клиент запускается в фоновом режиме.</translation>
     </message>
     <message>
         <location filename="../src/gui/main.cpp" line="127"/>
@@ -151,12 +152,12 @@ File synchronization desktop utility.</source>
     <message>
         <location filename="../src/gui/main.cpp" line="135"/>
         <source>Forward all arguments to the cmd client. This argument must be the first.</source>
-        <translation type="unfinished"/>
+        <translation>Forward all arguments to the cmd client. This argument must be the first.</translation>
     </message>
     <message>
         <location filename="../src/gui/main.cpp" line="151"/>
         <source>--logfile and --logdir are mutually exclusive</source>
-        <translation type="unfinished"/>
+        <translation>Опции --logfile и --logdir взаимно исключающие</translation>
     </message>
 </context>
 <context>
@@ -696,7 +697,7 @@ This action will abort any currently running synchronization.</source>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="421"/>
         <source>Captive portal prevents connections to the server.</source>
-        <translation type="unfinished"/>
+        <translation>Портал авторизации предотвращает подключение к серверу.</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="423"/>
@@ -796,7 +797,7 @@ The update will be performed in the background, and overwrite the current AppIma
     <message>
         <location filename="../src/gui/application.cpp" line="189"/>
         <source>The server on account »%1« runs an unsupported version %2. Using this client with unsupported server versions is untested and potentially dangerous. Proceed at your own risk.</source>
-        <translation type="unfinished"/>
+        <translation>Сервер под учетной записью »%1« работает на неподдерживаемой версии %2. Использование данного клиента с неподдерживаемыми версиями может повлечь за собой сложности и ошибки. Действуйте на свой страх и риск.</translation>
     </message>
 </context>
 <context>
@@ -829,7 +830,7 @@ The update will be performed in the background, and overwrite the current AppIma
     <message numerus="yes">
         <location filename="../src/gui/commonstrings.cpp" line="51"/>
         <source>%n Filter(s)</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>%n Фильтр</numerusform><numerusform>%n Фильтра</numerusform><numerusform>%n Фильтры</numerusform><numerusform>%n Фильтры</numerusform></translation>
     </message>
 </context>
 <context>
@@ -1017,7 +1018,7 @@ The update will be performed in the background, and overwrite the current AppIma
     <message>
         <location filename="../src/gui/folder.cpp" line="862"/>
         <source>Could not read system exclude file</source>
-        <translation type="unfinished"/>
+        <translation>Не удалось прочесть список файлов-исключений</translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="1095"/>
@@ -1026,7 +1027,11 @@ The update will be performed in the background, and overwrite the current AppIma
 This means that the synchronization client might not upload local changes immediately and will instead only scan for local changes and upload them occasionally (every two hours by default).
 
 %1</source>
-        <translation type="unfinished"/>
+        <translation>Не удалось однозначно отследить изменения в синхронизированных папках.
+
+Это означает, что синхронизация локальных изменений будет происходить не мгновенно, вместо этого клиент будет сканировать систему на наличие локальных изменений и загружать их с заданной периодичностью (по умолчанию раз в два часа).
+
+%1</translation>
     </message>
 </context>
 <context>
@@ -1064,7 +1069,7 @@ This means that the synchronization client might not upload local changes immedi
     <message>
         <location filename="../src/gui/folderman.cpp" line="589"/>
         <source>Sync was successful, unresolved conflicts.</source>
-        <translation type="unfinished"/>
+        <translation>Синхронизация прошла успешно, конфликты не были разрешены.</translation>
     </message>
     <message>
         <location filename="../src/gui/folderman.cpp" line="598"/>
@@ -1182,7 +1187,7 @@ Please consider removing this folder from the account and adding it again.</sour
     <message>
         <location filename="../src/gui/folderwatcher_linux.cpp" line="81"/>
         <source>This problem usually happens when the inotify watches are exhausted. Check the FAQ for details.</source>
-        <translation type="unfinished"/>
+        <translation>Это проблема обычно связана с переходом inotify watches в состояние exhausted. Подробнее в FAQ.</translation>
     </message>
 </context>
 <context>
@@ -1217,7 +1222,7 @@ Please consider removing this folder from the account and adding it again.</sour
     <message>
         <location filename="../src/libsync/propagatedownload.cpp" line="260"/>
         <source>We received a different E-Tag for resuming. Retrying next time.</source>
-        <translation type="unfinished"/>
+        <translation>Мы получили другой E-Tag для возобновления. Попробуем в следующий раз.</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatedownload.cpp" line="270"/>
@@ -1265,7 +1270,7 @@ Please consider removing this folder from the account and adding it again.</sour
     <message>
         <location filename="../src/gui/generalsettings.ui" line="111"/>
         <source>Show crash reporter</source>
-        <translation type="unfinished"/>
+        <translation>Показать отчет об ошибке</translation>
     </message>
     <message>
         <location filename="../src/gui/generalsettings.ui" line="118"/>
@@ -1315,7 +1320,7 @@ Please consider removing this folder from the account and adding it again.</sour
     <message>
         <location filename="../src/gui/generalsettings.cpp" line="178"/>
         <source>unknown (%1)</source>
-        <translation type="unfinished"/>
+        <translation>неизвестно (%1)</translation>
     </message>
     <message>
         <location filename="../src/gui/generalsettings.cpp" line="162"/>
@@ -1622,7 +1627,7 @@ Note that using any logging command line options will override the settings.</so
         <location filename="../src/gui/networksettings.ui" line="256"/>
         <location filename="../src/gui/networksettings.ui" line="338"/>
         <source>Limit to 3/4 of estimated bandwidth</source>
-        <translation type="unfinished"/>
+        <translation>Ограничить до 3/4 от пропускной способности</translation>
     </message>
     <message>
         <location filename="../src/gui/networksettings.ui" line="268"/>
@@ -1633,12 +1638,12 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/gui/networksettings.ui" line="278"/>
         <source>Download bandwidth in kilobytes per second</source>
-        <translation type="unfinished"/>
+        <translation>Пропускная способность скачивания в килобайтах в секунду</translation>
     </message>
     <message>
         <location filename="../src/gui/networksettings.ui" line="322"/>
         <source>Upload Bandwidth</source>
-        <translation type="unfinished"/>
+        <translation>Скорость загрузки</translation>
     </message>
     <message>
         <location filename="../src/gui/networksettings.ui" line="259"/>
@@ -1730,12 +1735,12 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="382"/>
         <source>&lt;h1&gt;Incorrect user&lt;/h1&gt;&lt;p&gt;You logged-in as user &lt;em&gt;%1&lt;/em&gt;, but must login with user &lt;em&gt;%2&lt;/em&gt;.&lt;br&gt;Please return to the %3 and restart the authentication.&lt;/p&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;h1&gt;Неверный пользователь&lt;/h1&gt;&lt;p&gt;Вы зашли как &lt;em&gt;%1&lt;/em&gt;, но должны входить в систему как &lt;em&gt;%2&lt;/em&gt;.&lt;br&gt;Пожалуйста, вернитесь к %3 и пройдите авторизацию заново.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="387"/>
         <source>&lt;h1&gt;Incorrect user&lt;/h1&gt;&lt;p&gt;You logged-in as a different user than is associated with this account.&lt;br&gt;Please return to the %1 and restart the authentication.&lt;/p&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;h1&gt;Неверный пользователь&lt;/h1&gt;&lt;p&gt;Вы зашли не как пользователь, который связан с данным аккаунтом.&lt;br&gt;Пожалуйста, вернитесь к %1 и пройдите авторизацию заново.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="392"/>
@@ -1760,7 +1765,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="374"/>
         <source>The audience of the id_token did not contain &quot;%1&quot;</source>
-        <translation type="unfinished"/>
+        <translation>Список получателей id_token не содержит &quot;%1&quot;</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="348"/>
@@ -1914,7 +1919,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/discovery.cpp" line="1016"/>
         <source>Selective sync: Ignored because its path is deselected</source>
-        <translation type="unfinished"/>
+        <translation>Выборочная синхронизация: Проигнорировано, потому что текущий путь был исключен.</translation>
     </message>
     <message>
         <location filename="../src/libsync/discovery.cpp" line="1053"/>
@@ -1966,18 +1971,18 @@ Note that using any logging command line options will override the settings.</so
         <location filename="../src/libsync/propagatedownload.cpp" line="426"/>
         <location filename="../src/libsync/propagatedownload.cpp" line="925"/>
         <source>The file has changed since discovery</source>
-        <translation type="unfinished"/>
+        <translation>Данный файл был изменен после его обнаружения</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatedownload.cpp" line="431"/>
         <source>Failed to free up space, the file »%1« is currently in use</source>
-        <translation type="unfinished"/>
+        <translation>Не удалось освободить место, файл »%1« сейчас используется</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatedownload.cpp" line="457"/>
         <location filename="../src/libsync/propagatedownload.cpp" line="540"/>
         <source>The file »%1« can not be downloaded because of a local file name clash with %2!</source>
-        <translation type="unfinished"/>
+        <translation>Файл »%1« не может быть скачан из-за конфликта имен с »%2«!</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatedownload.cpp" line="549"/>
@@ -1995,7 +2000,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/propagatedownload.cpp" line="756"/>
         <source>Broken webserver returned empty content length for non-empty file on resume</source>
-        <translation type="unfinished"/>
+        <translation>Сломанный веб-сервер вернул пустое значение в content length для непустого файла при возобновлении</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatedownload.cpp" line="763"/>
@@ -2023,7 +2028,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/owncloudpropagator.cpp" line="211"/>
         <source>; Restoration Failed: %1</source>
-        <translation type="unfinished"/>
+        <translation>; Не удалось восстановить: %1</translation>
     </message>
 </context>
 <context>
@@ -2246,7 +2251,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/propagateuploadv1.cpp" line="149"/>
         <source>The server did not acknowledge the last chunk. (No e-tag was present)</source>
-        <translation type="unfinished"/>
+        <translation>Сервер не подтвердил получение последнего фрагмента. (Отсутствовал e-tag)</translation>
     </message>
 </context>
 <context>
@@ -2346,7 +2351,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/gui/selectivesyncwidget.cpp" line="75"/>
         <source>Deselect remote folders you do not wish to synchronize.</source>
-        <translation type="unfinished"/>
+        <translation>Отмените выбор удаленных папок, которые вы не хотите синхронизировать</translation>
     </message>
     <message>
         <location filename="../src/gui/selectivesyncwidget.cpp" line="89"/>
@@ -2670,7 +2675,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/theme.cpp" line="251"/>
         <source>&lt;p&gt;Version %1. For more information visit &lt;a href=&quot;https://opencloud.eu/&quot;&gt;https://opencloud.eu/&lt;/a&gt;&lt;/p&gt;&lt;p&gt;For known issues and help, please visit: &lt;a href=&quot;https://github.com/opencloud-eu/desktop&quot;&gt;GitHub&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Copyright OpenCloud GmbH&lt;br/&gt;Copyright ownCloud GmbH&lt;/p&gt;&lt;p&gt;Distributed by OpenCloud GmbH and licensed under the GNU General Public License (GPL) Version 2.0.&lt;br/&gt;&lt;p&gt;&lt;small&gt;%2&lt;/small&gt;&lt;/p&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;p&gt;Версия %1. Чтобы получить больше информации, перейдите на &lt;a href=&quot;https://opencloud.eu/&quot;&gt;https://opencloud.eu/&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Для получения информации об известных проблемах и их решении, пожалуйста, перейдите сюда: &lt;a href=&quot;https://github.com/opencloud-eu/desktop&quot;&gt;GitHub&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Copyright OpenCloud GmbH&lt;br/&gt;Copyright ownCloud GmbH&lt;/p&gt;&lt;p&gt;Distributed by OpenCloud GmbH and licensed under the GNU General Public License (GPL) Version 2.0.&lt;br/&gt;&lt;p&gt;&lt;small&gt;%2&lt;/small&gt;&lt;/p&gt;</translation>
     </message>
 </context>
 <context>
@@ -2693,12 +2698,12 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/gui/tlserrordialog.cpp" line="66"/>
         <source>&amp;lt;not specified&amp;gt;</source>
-        <translation type="unfinished"/>
+        <translation>&amp;lt;не выбрано&amp;gt;</translation>
     </message>
     <message>
         <location filename="../src/gui/tlserrordialog.cpp" line="72"/>
         <source>&lt;div id=&quot;cert&quot;&gt;&lt;h3&gt;with Certificate %1&lt;/h3&gt;&lt;div id=&quot;ccert&quot;&gt;&lt;p&gt;Organization: %2&lt;br/&gt;Unit: %3&lt;br/&gt;Country: %4&lt;/p&gt;&lt;p&gt;Fingerprint (MD5): &lt;tt&gt;%5&lt;/tt&gt;&lt;br/&gt;Fingerprint (SHA1): &lt;tt&gt;%6&lt;/tt&gt;&lt;br/&gt;Fingerprint (SHA256): &lt;tt&gt;%7&lt;/tt&gt;&lt;br/&gt;&lt;br/&gt;Effective Date: %8&lt;br/&gt;Expiration Date: %9&lt;/div&gt;&lt;h3&gt;Issuer: %10&lt;/h3&gt;&lt;div id=&quot;issuer&quot;&gt;&lt;p&gt;Organization: %11&lt;br/&gt;Unit: %12&lt;br/&gt;Country: %13&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;div id=&quot;cert&quot;&gt;&lt;h3&gt;with Certificate %1&lt;/h3&gt;&lt;div id=&quot;ccert&quot;&gt;&lt;p&gt;Organization: %2&lt;br/&gt;Unit: %3&lt;br/&gt;Country: %4&lt;/p&gt;&lt;p&gt;Fingerprint (MD5): &lt;tt&gt;%5&lt;/tt&gt;&lt;br/&gt;Fingerprint (SHA1): &lt;tt&gt;%6&lt;/tt&gt;&lt;br/&gt;Fingerprint (SHA256): &lt;tt&gt;%7&lt;/tt&gt;&lt;br/&gt;&lt;br/&gt;Effective Date: %8&lt;br/&gt;Expiration Date: %9&lt;/div&gt;&lt;h3&gt;Issuer: %10&lt;/h3&gt;&lt;div id=&quot;issuer&quot;&gt;&lt;p&gt;Organization: %11&lt;br/&gt;Unit: %12&lt;br/&gt;Country: %13&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;</translation>
     </message>
 </context>
 <context>
@@ -2740,7 +2745,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/common/checksums.cpp" line="376"/>
         <source>The downloaded file does not match the checksum, it will be resumed. &apos;%1&apos; != &apos;%2&apos;</source>
-        <translation type="unfinished"/>
+        <translation>Скачанный файл не соответствует контрольной сумме, он будет восстановлен. &apos;%1&apos; != &apos;%2&apos;</translation>
     </message>
 </context>
 <context>
@@ -2876,12 +2881,12 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/gui/newwizard/setupwizardwidget.cpp" line="48"/>
         <source>Cancel Setup</source>
-        <translation type="unfinished"/>
+        <translation>Отменить Настройку</translation>
     </message>
     <message>
         <location filename="../src/gui/newwizard/setupwizardwidget.cpp" line="48"/>
         <source>Do you really want to cancel the account setup?</source>
-        <translation type="unfinished"/>
+        <translation>Вы действительно хотите отменить настройку аккаунта?</translation>
     </message>
     <message>
         <location filename="../src/gui/newwizard/setupwizardwidget.cpp" line="106"/>
@@ -2921,7 +2926,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/theme.cpp" line="238"/>
         <source>%1 %2%7%8Libraries Qt %3, %4%7Using virtual files plugin: %5%7%6</source>
-        <translation type="unfinished"/>
+        <translation>%1 %2%7%8Библиотеки Qt %3, %4%7С использованием плагина виртуальных файлов: %5%7%6</translation>
     </message>
 </context>
 <context>
@@ -2929,7 +2934,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/theme.cpp" line="221"/>
         <source>%1 (Built against Qt %2)</source>
-        <translation type="unfinished"/>
+        <translation>%1 (Built against Qt %2)</translation>
     </message>
 </context>
 <context>
@@ -2989,7 +2994,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/discoveryremoteinfo.cpp" line="67"/>
         <source>server reported no %1</source>
-        <translation type="unfinished"/>
+        <translation>сервер сообщил об отсутствии %1</translation>
     </message>
 </context>
 <context>
@@ -3074,7 +3079,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/gui/newwizard/setupwizardwidget.ui" line="101"/>
         <source>&amp;Dismiss</source>
-        <translation type="unfinished"/>
+        <translation>&amp;Отклонить</translation>
     </message>
     <message>
         <location filename="../src/gui/newwizard/setupwizardwidget.ui" line="116"/>
@@ -3121,7 +3126,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/syncfileitem.cpp" line="62"/>
         <source>Undefined</source>
-        <translation type="unfinished"/>
+        <translation>Не определено</translation>
     </message>
     <message>
         <location filename="../src/libsync/syncfileitem.cpp" line="64"/>
@@ -3185,7 +3190,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/syncresult.cpp" line="43"/>
         <source>Undefined</source>
-        <translation type="unfinished"/>
+        <translation>Не определено</translation>
     </message>
     <message>
         <location filename="../src/libsync/syncresult.cpp" line="45"/>
@@ -3210,7 +3215,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/syncresult.cpp" line="53"/>
         <source>Setup error</source>
-        <translation type="unfinished"/>
+        <translation>Ошибка настройки</translation>
     </message>
     <message>
         <location filename="../src/libsync/syncresult.cpp" line="55"/>
@@ -3269,32 +3274,32 @@ Note that using any logging command line options will override the settings.</so
     <message numerus="yes">
         <location filename="../src/libsync/common/utility.cpp" line="201"/>
         <source>%n year(s)</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>%n год</numerusform><numerusform>%n года</numerusform><numerusform>%n лет</numerusform><numerusform>%n лет</numerusform></translation>
     </message>
     <message numerus="yes">
         <location filename="../src/libsync/common/utility.cpp" line="202"/>
         <source>%n month(s)</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>%n месяц</numerusform><numerusform>%n месяца</numerusform><numerusform>%n месяцев</numerusform><numerusform>%n месяцев</numerusform></translation>
     </message>
     <message numerus="yes">
         <location filename="../src/libsync/common/utility.cpp" line="203"/>
         <source>%n day(s)</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>%n день</numerusform><numerusform>%n дня</numerusform><numerusform>%n дней</numerusform><numerusform>%n дней</numerusform></translation>
     </message>
     <message numerus="yes">
         <location filename="../src/libsync/common/utility.cpp" line="204"/>
         <source>%n hour(s)</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>%n час</numerusform><numerusform>%n часа</numerusform><numerusform>%n часов</numerusform><numerusform>%n часов</numerusform></translation>
     </message>
     <message numerus="yes">
         <location filename="../src/libsync/common/utility.cpp" line="205"/>
         <source>%n minute(s)</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>%n минута</numerusform><numerusform>%n минуты</numerusform><numerusform>%n минут</numerusform><numerusform>%n минут</numerusform></translation>
     </message>
     <message numerus="yes">
         <location filename="../src/libsync/common/utility.cpp" line="206"/>
         <source>%n second(s)</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>%n секунда</numerusform><numerusform>%n секунды</numerusform><numerusform>%n секунд</numerusform><numerusform>%n секунд</numerusform></translation>
     </message>
     <message>
         <location filename="../src/libsync/common/utility.cpp" line="230"/>
@@ -3304,7 +3309,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/platform_win.cpp" line="112"/>
         <source>Shutting down %1</source>
-        <translation type="unfinished"/>
+        <translation>Выключение %1</translation>
     </message>
 </context>
 <context>
