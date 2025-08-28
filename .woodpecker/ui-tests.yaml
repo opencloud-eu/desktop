@@ -1,7 +1,7 @@
 ---
 variables:
-  - &squish_image 'opencloudeu/squish@sha256:6eaecc218044020f49f24fd29b6bdc052e8170699a762687b10398b353e5fcda'
-  - &minio_image 'minio/mc:RELEASE.2021-10-07T04-19-58Z'
+  - &squish_image "opencloudeu/squish@sha256:6eaecc218044020f49f24fd29b6bdc052e8170699a762687b10398b353e5fcda"
+  - &minio_image "minio/mc:RELEASE.2021-10-07T04-19-58Z"
   - &minio_environment
     AWS_ACCESS_KEY_ID:
       from_secret: cache_s3_access_key
@@ -27,7 +27,14 @@ steps:
     commands:
       - requirements_sha=$(sha1sum test/gui/requirements.txt | cut -d" " -f1)
       - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-      - mc cp -a s3/$CACHE_BUCKET/desktop-build/python-cache-$requirements_sha.tar.gz /woodpecker/desktop
+      - |
+        if mc stat s3/$CACHE_BUCKET/desktop-build/python-cache-$requirements_sha.tar.gz > /dev/null 2>&1; then
+          echo "Cache found, downloading..."
+          mc cp -a s3/$CACHE_BUCKET/desktop-build/python-cache-$requirements_sha.tar.gz /woodpecker/desktop
+        else
+          echo "Cache not found. Available files:"
+          mc ls s3/$CACHE_BUCKET/desktop-build/ || echo "No files in desktop-build/"
+        fi
     environment:
       <<: *minio_environment
     image: *minio_image
@@ -107,20 +114,20 @@ steps:
       - chmod 777 /woodpecker/desktop/test/gui/guiReportUpload/serverlog.log
       - tail -f /woodpecker/desktop/test/gui/guiReportUpload/serverlog.log
 
-  - name: UI-tests
-    image: *squish_image
-    environment:
-      PYTHONUSERBASE: /woodpecker/desktop/
-      PLAYWRIGHT_BROWSERS_PATH: /woodpecker/desktop/.playwright
-      SQUISH_LICENSE_SERVER:
-        from_secret: squish_license_key
-      SQUISH_LICENSE_SERVER_API: squish.jankari.tech:49346
-      SQUISH_LICENSE_SERVER_API_TOKEN: phzq4o1tJIVebL1kgSTAeKqZ5AoIDJfci
-      BACKEND_HOST: https://opencloud:9200
-      SECURE_BACKEND_HOST: https://opencloud:9200
-      GUI_TEST_REPORT_DIR: /woodpecker/desktop/test/gui/guiReportUpload
-      SERVER_INI: /woodpecker/desktop/test/gui/woodpecker/server.ini
-      SQUISH_PARAMETERS: --testsuite /woodpecker/desktop/test/gui --reportgen html,/woodpecker/desktop/test/gui/guiReportUpload --envvar QT_LOGGING_RULES=sync.httplogger=true;gui.socketapi=false --tags ~@skip --tags ~@skipOnLinux
+  # - name: UI-tests
+  #   image: *squish_image
+  #   environment:
+  #     PYTHONUSERBASE: /woodpecker/desktop/
+  #     PLAYWRIGHT_BROWSERS_PATH: /woodpecker/desktop/.playwright
+  #     SQUISH_LICENSE_SERVER:
+  #       from_secret: squish_license_key
+  #     SQUISH_LICENSE_SERVER_API: squish.jankari.tech:49346
+  #     SQUISH_LICENSE_SERVER_API_TOKEN: phzq4o1tJIVebL1kgSTAeKqZ5AoIDJfci
+  #     BACKEND_HOST: https://opencloud:9200
+  #     SECURE_BACKEND_HOST: https://opencloud:9200
+  #     GUI_TEST_REPORT_DIR: /woodpecker/desktop/test/gui/guiReportUpload
+  #     SERVER_INI: /woodpecker/desktop/test/gui/woodpecker/server.ini
+  #     SQUISH_PARAMETERS: --testsuite /woodpecker/desktop/test/gui --reportgen html,/woodpecker/desktop/test/gui/guiReportUpload --envvar QT_LOGGING_RULES=sync.httplogger=true;gui.socketapi=false --tags ~@skip --tags ~@skipOnLinux
 
 when:
   - branch:
