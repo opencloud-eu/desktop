@@ -81,3 +81,17 @@ Feature: Project spaces
         Then the following activities should be displayed in not synced table
             | resource      | status      | account                              |
             | simple-folder | Blacklisted | Alice Hansen@%local_server_hostname% |
+
+    @issue-435
+    Scenario: Sharee with Editor role deletes the shared resource
+        Given user "Brian" has been created in the server with default attributes
+        And user "Alice" has created folder "simple-folder" in the server
+        And user "Alice" has uploaded file with content "test content" to "simple-folder/uploaded-lorem.txt" in the server
+        And user "Alice" has sent the following resource share invitation:
+            | resource        | simple-folder |
+            | sharee          | Brian         |
+            | permissionsRole | Editor        |
+        And user "Brian" has set up a client with space "Shares"
+        When user "Brian" deletes the folder "Shares/simple-folder" in the server
+        And the user waits for the files to sync
+        Then the folder "simple-folder" should not exist on the file system
