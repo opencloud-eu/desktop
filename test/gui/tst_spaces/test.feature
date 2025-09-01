@@ -66,3 +66,18 @@ Feature: Project spaces
         When the user removes the folder sync connection
         Then the sync folder list should be empty
         But the file "testfile.txt" should exist on the file system
+
+    @issue-435
+    Scenario: User with Viewer role cannot create resource
+        Given the administrator has added user "Alice" to space "Project101" with role "viewer"
+        And user "Alice" has set up a client with space "Project101"
+        When user "Alice" creates a folder "simple-folder" inside the sync folder
+        Then the following error message should appear in the client
+            """
+            simple-folder: Not allowed because you don't have permission to add subfolders to that folder
+            """
+        When the user clicks on the activity tab
+        And the user selects "Not Synced" tab in the activity
+        Then the following activities should be displayed in not synced table
+            | resource      | status      | account                              |
+            | simple-folder | Blacklisted | Alice Hansen@%local_server_hostname% |
