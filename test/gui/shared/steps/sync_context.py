@@ -312,3 +312,12 @@ def step(context):
         expected_error_message,
         f'Expected error message: "{expected_error_message}" but got: "{actual_error_message}"'
     )
+
+
+@When('the user unselects the following folders to sync:')
+def step(context):
+    SyncConnection.choose_what_to_sync()
+    folders = []
+    for row in context.table[1:]:
+        folders.append(row[0])
+    SyncConnectionWizard.unselect_folders_to_sync(folders)
