@@ -74,3 +74,7 @@ remove_Space_MenuItem = {"checkable": False, "container": quickWidget_Overlay, "
 confirm_removal_of_Space_QMessageBox = {"type": "QMessageBox", "unnamed": 1, "visible": 1, "windowTitle": "Confirm removal of Space"}
 deselect_remote_folders_you_do_not_wish_to_synchronize_OpenCloud_QModelIndex = {"column": 0, "container": add_Space_Deselect_remote_folders_you_do_not_wish_to_synchronize_QTreeWidget, "text": "Personal", "type": "QModelIndex"}
 folderError_Container = {"container": quickWidget_scrollView_ScrollView, "type": "FolderError"}
+groupBox_Deselect_remote_folders_you_do_not_wish_to_synchronize_QLabel = {"container": stackedWidget_groupBox_QGroupBox, "text": "Deselect remote folders you do not wish to synchronize.", "type": "QLabel", "unnamed": 1, "visible": 1}
+groupBox_Deselect_remote_folders_you_do_not_wish_to_synchronize_QTreeWidget = {"aboveWidget": groupBox_Deselect_remote_folders_you_do_not_wish_to_synchronize_QLabel, "container": stackedWidget_groupBox_QGroupBox, "type": "QTreeWidget", "unnamed": 1, "visible": 1}
+deselect_remote_folders_you_do_not_wish_to_synchronize_Personal_QModelIndex = {"column": 0, "container": groupBox_Deselect_remote_folders_you_do_not_wish_to_synchronize_QTreeWidget, "text": "Personal", "type": "QModelIndex"}
+stackedWidget_OK_QPushButton = {"container": stack_stackedWidget_QStackedWidget, "text": "OK", "type": "QPushButton", "unnamed": 1, "visible": 1}

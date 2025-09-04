@@ -317,3 +317,12 @@ def step(context):
 @Given('the user has waited for "|any|" seconds')
 def step(context, wait_for):
     squish.snooze(float(wait_for))
+
+
+@When('the user unselects the following folders to sync:')
+def step(context):
+    SyncConnection.choose_what_to_sync()
+    folders = []
+    for row in context.table[1:]:
+        folders.append(row[0])
+    SyncConnectionWizard.unselect_folders_to_sync(folders)
