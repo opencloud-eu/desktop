@@ -40,31 +40,18 @@ public:
     bool setPinState(const QString &folderPath, PinState state) override;
     Optional<PinState> pinState(const QString &folderPath) override;
     AvailabilityResult availability(const QString &folderPath) override;
-
-    void cancelHydration(const OCC::CfApiWrapper::CallBackContext &context);
-
-    HydrationJob::Status finalizeHydrationJob(int64_t requestId);
+    bool handleXAttrChange(const QSet<QString> &) override;
 
     LocalInfo statTypeVirtualFile(const std::filesystem::directory_entry &path, ItemType type) override;
 
 public Q_SLOTS:
-    void requestHydration(const CfApiWrapper::CallBackContext &context, qint64 requestedFileSize);
     void fileStatusChanged(const QString &systemFileName, OCC::SyncFileStatus fileStatus) override;
-
-Q_SIGNALS:
-    void hydrationRequestReady(int64_t requestId);
-    void hydrationRequestFailed(int64_t requestId);
-    void hydrationRequestFinished(int64_t requestId);
 
 protected:
     Result<ConvertToPlaceholderResult, QString> updateMetadata(const SyncFileItem &, const QString &, const QString &) override;
     void startImpl(const VfsSetupParams &params) override;
 
 private:
-    void scheduleHydrationJob(const OCC::CfApiWrapper::CallBackContext &context, SyncJournalFileRecord &&record);
-    void onHydrationJobFinished(HydrationJob *job);
-    HydrationJob *findHydrationJob(int64_t requestId) const;
-
     QScopedPointer<VfsCfApiPrivate> d;
 };
 

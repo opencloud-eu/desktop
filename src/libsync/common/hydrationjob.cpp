@@ -3,10 +3,7 @@
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
-#include "plugins/vfs/cfapi/hydrationjob.h"
-
-#include "plugins/vfs/cfapi/cfapiwrapper.h"
-#include "plugins/vfs/cfapi/vfs_cfapi.h"
+#include "hydrationjob.h"
 
 #include "libsync/common/syncjournaldb.h"
 #include "libsync/filesystem.h"
@@ -19,7 +16,7 @@ using namespace Qt::Literals::StringLiterals;
 
 Q_LOGGING_CATEGORY(lcHydration, "sync.vfs.hydrationjob", QtDebugMsg)
 
-OCC::HydrationJob::HydrationJob(const CfApiWrapper::CallBackContext &context)
+OCC::HydrationJob::HydrationJob(const CallBackContext &context)
     : QObject(context.vfs)
     , _context(context)
 {
@@ -103,7 +100,7 @@ OCC::HydrationJob::Status OCC::HydrationJob::status() const
     return _status;
 }
 
-const OCC::CfApiWrapper::CallBackContext OCC::HydrationJob::context() const
+const OCC::CallBackContext OCC::HydrationJob::context() const
 {
     return _context;
 }
@@ -132,21 +129,22 @@ void OCC::HydrationJob::start()
     Q_ASSERT(_localRoot.endsWith('/'_L1));
 
     const auto startServer = [this](const QString &serverName) -> QLocalServer * {
+        QLocalServer::removeServer(serverName);
         const auto server = new QLocalServer(this);
         const auto listenResult = server->listen(serverName);
         if (!listenResult) {
-            qCCritical(lcHydration) << u"Couldn't get server to listen" << serverName << _localRoot << _context;
+            //qCCritical(lcHydration) << u"Couldn't get server to listen" << serverName << _localRoot << _context;
             if (!_isCancelled) {
                 emitFinished(Status::Error);
             }
             return nullptr;
         }
-        qCInfo(lcHydration) << u"Server ready, waiting for connections" << serverName << _localRoot << _context;
+        // qCInfo(lcHydration) << u"Server ready, waiting for connections" << serverName << _localRoot << _context;
         return server;
     };
 
     // Start cancellation server
-    _signalServer = startServer(_context.requestHexId() + u":cancellation"_s);
+    _signalServer = startServer(_context.requestHexId() + QStringLiteral(":cancellation"));
     Q_ASSERT(_signalServer);
     if (!_signalServer) {
         return;
@@ -209,7 +207,7 @@ void OCC::HydrationJob::onCancellationServerNewConnection()
 {
     Q_ASSERT(!_signalSocket);
 
-    qCInfo(lcHydration) << u"Got new connection on cancellation server" << _context;
+    // qCInfo(lcHydration) << u"Got new connection on cancellation server" << _context;
     _signalSocket = _signalServer->nextPendingConnection();
 }
 
@@ -220,7 +218,7 @@ void OCC::HydrationJob::onNewConnection()
     handleNewConnection();
 }
 
-void OCC::HydrationJob::finalize(OCC::VfsCfApi *vfs)
+void OCC::HydrationJob::finalize(OCC::Vfs *vfs)
 {
     auto item = SyncFileItem::fromSyncJournalFileRecord(_record);
     if (_isCancelled) {
@@ -246,10 +244,10 @@ void OCC::HydrationJob::finalize(OCC::VfsCfApi *vfs)
         FileSystem::getInode(FileSystem::toFilesystemPath(localFilePathAbs()), &item->_inode);
         const auto result = _journal->setFileRecord(SyncJournalFileRecord::fromSyncFileItem(*item));
         if (!result) {
-            qCWarning(lcHydration) << u"Error when setting the file record to the database" << _context << result.error();
+           // qCWarning(lcHydration) << u"Error when setting the file record to the database" << _context << result.error();
         }
     } else {
-        qCWarning(lcHydration) << u"Hydration succeeded but the file appears to be moved" << _context;
+        // qCWarning(lcHydration) << u"Hydration succeeded but the file appears to be moved" << _context;
     }
 }
 
@@ -271,9 +269,9 @@ void OCC::HydrationJob::onGetFinished()
         }
     }
     if (!_errorString.isEmpty()) {
-        qCInfo(lcHydration) << u"GETFileJob finished" << _context << _errorCode << _statusCode << _errorString;
+        // qCInfo(lcHydration) << u"GETFileJob finished" << _context << _errorCode << _statusCode << _errorString;
     } else {
-        qCInfo(lcHydration) << u"GETFileJob finished" << _context;
+        // qCInfo(lcHydration) << u"GETFileJob finished" << _context;
     }
     if (_isCancelled) {
         _errorCode = QNetworkReply::NoError;
@@ -292,7 +290,8 @@ void OCC::HydrationJob::onGetFinished()
 
 void OCC::HydrationJob::handleNewConnection()
 {
-    qCInfo(lcHydration) << u"Got new connection starting GETFileJob" << _context;
+    // FIXME: Fix all the loggings which require the operator<< from vfs.cpp for CallBackContext
+    // qCInfo(lcHydration) << u"Got new connection starting GETFileJob" << _context;
     _transferDataSocket = _transferDataServer->nextPendingConnection();
     _job = new GETFileJob(_account, _remoteSyncRootPath, _remoteFilePathRel, _transferDataSocket, {}, {}, 0, this);
     _job->setExpectedContentLength(_record.size());

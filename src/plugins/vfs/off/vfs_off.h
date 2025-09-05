@@ -44,6 +44,7 @@ public:
     bool setPinState(const QString &, PinState) override;
     Optional<PinState> pinState(const QString &) override;
     AvailabilityResult availability(const QString &) override;
+    bool handleXAttrChange(const QSet<QString> &) override;
 
     LocalInfo statTypeVirtualFile(const std::filesystem::directory_entry &path, ItemType type) override;
 

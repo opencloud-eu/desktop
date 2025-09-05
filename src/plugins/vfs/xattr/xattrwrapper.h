@@ -19,6 +19,7 @@ public:
     time_t modTime() const {return _modtime; }
     QString eTag() const { return _etag; }
     QByteArray pinState() const { return _pinState; }
+    QByteArray action() const { return _action; }
 
     bool itsMe() const { return !_executor.isEmpty() && _executor == QByteArrayLiteral(APPLICATION_EXECUTABLE);}
 
@@ -28,6 +29,7 @@ public:
     QString _etag;
     QByteArray _executor;
     QByteArray _pinState;
+    QByteArray _action;
 
 };
 

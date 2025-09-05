@@ -13,9 +13,33 @@
 
 #include <QDir>
 #include <QFile>
+#include <QLocalSocket>
 #include <QLoggingCategory>
 
 Q_LOGGING_CATEGORY(lcVfsXAttr, "sync.vfs.xattr", QtInfoMsg)
+
+QDebug operator<<(QDebug debug, const OCC::CallBackContext &context)
+{
+    QDebugStateSaver saver(debug);
+    debug.setAutoInsertSpaces(false);
+    debug << u"cfapiCallback(" << context.path << u", " << context.requestHexId();
+    for (const auto &[k, v] : context.extraArgs.asKeyValueRange()) {
+        debug << u", ";
+        debug.noquote() << k << u"=";
+        debug.quote() << v;
+    };
+    debug << u")";
+    return debug.maybeSpace();
+}
+
+namespace {
+std::atomic<int> id{1};
+
+int requestId() {
+    return id++;
+}
+
+}
 
 namespace xattr {
 // using namespace XAttrWrapper;
@@ -156,6 +180,213 @@ OCC::Result<Vfs::ConvertToPlaceholderResult, QString> VfsXAttr::convertToPlaceho
     return {ConvertToPlaceholderResult::Ok};
 }
 
+bool VfsXAttr::handleAction(const QString& path, const XAttrWrapper::PlaceHolderAttribs& attribs)
+{
+    bool re{false};
+
+    const auto sendTransferError = [=] {
+        qCWarning(lcVfsXAttr) << u"Transfer ERROR detected";
+    };
+
+    const auto sendTransferInfo = [=](qint64 size) {
+        qCInfo(lcVfsXAttr) << u"Received" << size << u"bytes";
+    };
+
+    if (attribs.action() == QByteArrayLiteral("hydrate")) {
+        qCInfo(lcVfsXAttr) << u"Received request to hydrate";
+        const auto root = QDir::toNativeSeparators(params().filesystemPath);
+        Q_ASSERT(path.startsWith(root));
+
+        SyncJournalFileRecord record;
+        params().journal->getFileRecordsByFileId(attribs.fileId(), [&record](const auto &r) {
+            Q_ASSERT(!record.isValid());
+            record = r;
+        });
+        if (!record.isValid()) {
+            qCInfo(lcVfsXAttr) << u"Couldn't hydrate, did not find file in db";
+            Q_ASSERT(false); // how did we end up here if it's not  a cloud file
+            Q_EMIT hydrationRequestFailed(-1);
+            Q_EMIT needSync();
+            return false;
+        }
+
+        bool isNotVirtualFileFailure = false;
+        if (!record.isVirtualFile()) {
+            if (isDehydratedPlaceholder(path)) {
+                qCWarning(lcVfsXAttr) << u"Hydration requested for a placeholder file that is incorrectly not marked as a virtual file in the local database. "
+                                         u"Attempting to correct this inconsistency...";
+                auto item = SyncFileItem::fromSyncJournalFileRecord(record);
+                item->_type = ItemTypeVirtualFileDownload;
+                isNotVirtualFileFailure = !params().journal->setFileRecord(SyncJournalFileRecord::fromSyncFileItem(*item));
+            } else {
+                isNotVirtualFileFailure = true;
+            }
+        }
+        if (isNotVirtualFileFailure) {
+            qCWarning(lcVfsXAttr) << u"Couldn't hydrate, the file is not virtual";
+            Q_ASSERT(false); // this should not happen
+            Q_EMIT hydrationRequestFailed(-1);
+            Q_EMIT needSync();
+            return false;
+        }
+
+        OCC::CallBackContext context{.vfs = this,
+            .path = path,
+            .requestId = requestId(),
+            .fileId = attribs.fileId(),
+            .extraArgs = {}};
+            // .extraArgs = std::move(extraArgs)};
+        // All good, let's hydrate now
+
+        const auto invokeResult = QMetaObject::invokeMethod(context.vfs, [=]
+        {
+            context.vfs->requestHydration(context, attribs.size());
+        }, Qt::QueuedConnection);
+        if (!invokeResult) {
+            // qCCritical(lcVfsXAttr) << u"Failed to trigger hydration for" << context;
+            sendTransferError();
+            return false;
+        }
+
+        qCDebug(lcVfsXAttr) << u"Successfully triggered hydration for" << context;
+
+        // Block and wait for vfs to signal back the hydration is ready
+        bool hydrationRequestResult = false;
+        QEventLoop loop;
+        QObject::connect(context.vfs, &OCC::Vfs::hydrationRequestReady, &loop, [&](int64_t id) {
+            if (context.requestId == id) {
+                hydrationRequestResult = true;
+                qCDebug(lcVfsXAttr) << u"Hydration request ready for" << context;
+                loop.quit();
+            }
+        });
+        QObject::connect(context.vfs, &OCC::Vfs::hydrationRequestFailed, &loop, [&](int64_t id) {
+            if (context.requestId == id) {
+                hydrationRequestResult = false;
+                qCWarning(lcVfsXAttr) << u"Hydration request failed for" << context;
+                loop.quit();
+            }
+        });
+
+        qCDebug(lcVfsXAttr) << u"Starting event loop 1";
+        loop.exec();
+        QObject::disconnect(context.vfs, nullptr, &loop, nullptr); // Ensure we properly cancel hydration on server errors
+
+        qCInfo(lcVfsXAttr) << u"VFS replied for hydration of" << context << u"status was:" << hydrationRequestResult;
+        if (!hydrationRequestResult) {
+            qCCritical(lcVfsXAttr) << u"Failed to trigger hydration for" << context;
+            sendTransferError();
+            return false;
+        }
+
+        QLocalSocket socket;
+        socket.connectToServer(context.requestHexId());
+        const auto connectResult = socket.waitForConnected();
+        if (!connectResult) {
+            qCWarning(lcVfsXAttr) << u"Couldn't connect the socket" << context << socket.error() << socket.errorString();
+            sendTransferError();
+            return false;
+        }
+
+        QLocalSocket signalSocket;
+        const QString signalSocketName = context.requestHexId() + QStringLiteral(":cancellation");
+        signalSocket.connectToServer(signalSocketName);
+        const auto cancellationSocketConnectResult = signalSocket.waitForConnected();
+        if (!cancellationSocketConnectResult) {
+            qCWarning(lcVfsXAttr) << u"Couldn't connect the socket" << signalSocketName << signalSocket.error() << signalSocket.errorString();
+            sendTransferError();
+            return false;
+        }
+
+        auto hydrationRequestCancelled = false;
+        QObject::connect(&signalSocket, &QLocalSocket::readyRead, &loop, [&] {
+            hydrationRequestCancelled = true;
+            qCCritical(lcVfsXAttr) << u"Hydration canceled for " << context;
+        });
+
+        // Create a save file to store received data into
+        QSaveFile targetFile(context.path);
+        if (!targetFile.open(QFile::WriteOnly | QFile::Truncate)) {
+            sendTransferError();
+        }
+
+        QObject::connect(&socket, &QLocalSocket::readyRead, &loop, [&] {
+            if (hydrationRequestCancelled) {
+                qCDebug(lcVfsXAttr) << u"Don't transfer data because request" << context << u"was cancelled";
+                return;
+            }
+
+            const auto receivedData = socket.readAll();
+            if (receivedData.isEmpty()) {
+                qCWarning(lcVfsXAttr) << u"Unexpected empty data received" << context;
+                sendTransferError();
+                loop.quit();
+                return;
+            }
+
+            // Put received data to target file
+            targetFile.write(receivedData);
+            sendTransferInfo(receivedData.size());
+        });
+
+        QObject::connect(context.vfs, &OCC::Vfs::hydrationRequestFinished, this, [&](int64_t id) {
+            qDebug(lcVfsXAttr) << u"Hydration finished for request" << id << "IN MY THREAD";
+            if (context.requestId == id) {
+                const auto receivedData = socket.readAll();
+                targetFile.write(receivedData);
+                sendTransferInfo(receivedData.size());
+            }
+            targetFile.commit();
+            loop.quit();
+        });
+
+        QObject::connect(context.vfs, &OCC::Vfs::hydrationRequestFinished, &loop, [&](int64_t id) {
+            qDebug(lcVfsXAttr) << u"Hydration finished for request" << id << "IN LOOP";
+            if (context.requestId == id) {
+                const auto receivedData = socket.readAll();
+                targetFile.write(receivedData);
+                sendTransferInfo(receivedData.size());
+            }
+            targetFile.commit();
+            loop.quit();
+        });
+
+        qCDebug(lcVfsXAttr) << u"Starting event loop 2";
+        loop.exec();
+
+        OCC::HydrationJob::Status hydrationJobResult = OCC::HydrationJob::Status::Error;
+        const auto invokeFinalizeResult = QMetaObject::invokeMethod(
+            context.vfs, [&hydrationJobResult, &context] {
+            hydrationJobResult = context.vfs->finalizeHydrationJob(context.requestId);
+        } /* , Qt::BlockingQueuedConnection */);
+        if (!invokeFinalizeResult) {
+            qCritical(lcVfsXAttr) << u"Failed to finalize hydration job for" << context;
+        }
+
+        if (hydrationJobResult != OCC::HydrationJob::Status::Success) {
+            sendTransferError();
+        }
+    }
+
+    return re;
+}
+
+// if an extended attribute was changed.
+bool VfsXAttr::handleXAttrChange(const QSet<QString> &paths)
+{
+    bool re{false};
+
+    for(const auto &p : paths) {
+        // check if an "action xattr" was set
+        const XAttrWrapper::PlaceHolderAttribs attribs = XAttrWrapper::placeHolderAttributes(p);
+        if (!attribs.action().isEmpty()) {
+            handleAction(p, attribs);
+        }
+    }
+
+    return re;
+}
+
 bool VfsXAttr::needsMetadataUpdate(const SyncFileItem &)
 {
     qCDebug(lcVfsXAttr()) << "returns false by default DOUBLECHECK";
@@ -213,12 +444,13 @@ Optional<PinState> VfsXAttr::pinState(const QString &folderPath)
     XAttrWrapper::PlaceHolderAttribs attribs = XAttrWrapper::placeHolderAttributes(folderPath);
 
     const QString pin = QString::fromUtf8(attribs.pinState());
-    PinState pState;
+    PinState pState{PinState::Unspecified};
+
     if (pin == Utility::enumToDisplayName(PinState::AlwaysLocal)) {
         pState = PinState::AlwaysLocal;
     } else if (pin == Utility::enumToDisplayName(PinState::Excluded)) {
         pState = PinState::Excluded;
-    } else if (pin == Utility::enumToDisplayName(PinState::Inherited)) {
+    } else if (pin.isEmpty() || pin == Utility::enumToDisplayName(PinState::Inherited)) {
         pState = PinState::Inherited;
     } else if (pin == Utility::enumToDisplayName(PinState::OnlineOnly)) {
         pState = PinState::OnlineOnly;
@@ -234,6 +466,7 @@ Vfs::AvailabilityResult VfsXAttr::availability(const QString &folderPath)
     qCDebug(lcVfsXAttr()) << folderPath;
 
     const auto basePinState = pinState(folderPath);
+
     if (basePinState) {
         switch (*basePinState) {
         case OCC::PinState::AlwaysLocal:
@@ -257,11 +490,12 @@ Vfs::AvailabilityResult VfsXAttr::availability(const QString &folderPath)
 
 void VfsXAttr::fileStatusChanged(const QString& systemFileName, SyncFileStatus fileStatus)
 {
-    qCDebug(lcVfsXAttr()) << systemFileName << fileStatus;
-
     if (fileStatus.tag() == SyncFileStatus::StatusExcluded) {
-            setPinState(systemFileName, PinState::Excluded);
-        }
+        setPinState(systemFileName, PinState::Excluded);
+        return;
+    }
+
+    qCDebug(lcVfsXAttr()) << systemFileName << fileStatus;
 }
 
 } // namespace OCC

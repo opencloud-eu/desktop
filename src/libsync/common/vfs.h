@@ -21,6 +21,7 @@
 #include "result.h"
 #include "syncfilestatus.h"
 #include "utility.h"
+#include "hydrationjob.h"
 
 #include <QObject>
 #include <QSharedPointer>
@@ -36,6 +37,7 @@ class Account;
 class SyncJournalDb;
 class SyncFileItem;
 class SyncEngine;
+class VfsApiPrivate;
 
 /** Collection of parameters for initializing a Vfs instance. */
 struct OPENCLOUD_SYNC_EXPORT VfsSetupParams
@@ -202,7 +204,25 @@ public:
      */
     void wipeDehydratedVirtualFiles();
 
+    /**
+     * Any type of change to the extended file attributes was detected by the
+     * folderwatcher. The vfs might want react to that.
+     */
+    virtual bool handleXAttrChange(const QSet<QString> &) = 0;
+
+    // === Hydration
+    HydrationJob *findHydrationJob(int64_t requestId) const;
+    void cancelHydration(const OCC::CallBackContext &context);
+
+    void requestHydration(const OCC::CallBackContext &context, qint64 requestedFileSize);
+
+    void scheduleHydrationJob(const OCC::CallBackContext &context, SyncJournalFileRecord &&record);
+
 public Q_SLOTS:
+    void onHydrationJobFinished(HydrationJob *job);
+    HydrationJob::Status finalizeHydrationJob(int64_t requestId);
+
+
     /** Update in-sync state based on SyncFileStatusTracker signal.
      *
      * For some vfs plugins the icons aren't based on SocketAPI but rather on data shared
@@ -220,6 +240,11 @@ Q_SIGNALS:
 
     /// The vfs plugin detected that the meta data are out of sync and requests a sync with the server
     void needSync();
+
+Q_SIGNALS:
+    void hydrationRequestReady(int64_t requestId);
+    void hydrationRequestFailed(int64_t requestId);
+    void hydrationRequestFinished(int64_t requestId);
 
 protected:
     /** Update placeholder metadata during discovery.
@@ -244,6 +269,7 @@ protected:
 private:
     // the parameters passed to start()
     std::unique_ptr<VfsSetupParams> _setupParams;
+    QScopedPointer<VfsApiPrivate> d;
 
     friend class OwncloudPropagator;
 };

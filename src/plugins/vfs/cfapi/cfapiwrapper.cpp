@@ -311,6 +311,7 @@ void CALLBACK cfApiFetchDataCallback(const CF_CALLBACK_INFO *callbackInfo, const
     if (hydrationJobResult != OCC::HydrationJob::Status::Success) {
         sendTransferError();
     }
+
 }
 
 OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> updatePlaceholderState(
@@ -826,16 +827,4 @@ bool OCC::CfApiWrapper::isPlaceHolderInSync(const QString &filePath)
     return true;
 }
 
-QDebug operator<<(QDebug debug, const OCC::CfApiWrapper::CallBackContext &context)
-{
-    QDebugStateSaver saver(debug);
-    debug.setAutoInsertSpaces(false);
-    debug << u"cfapiCallback(" << context.path << u", " << context.requestHexId();
-    for (const auto &[k, v] : context.extraArgs.asKeyValueRange()) {
-        debug << u", ";
-        debug.noquote() << k << u"=";
-        debug.quote() << v;
-    };
-    debug << u")";
-    return debug.maybeSpace();
-}
+

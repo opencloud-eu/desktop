@@ -20,12 +20,17 @@ constexpr auto hydrateExecAttributeName = "user.openvfs.hydrate_exec";
 
 OCC::Optional<QByteArray> xattrGet(const QByteArray &path, const QByteArray &name)
 {
-    constexpr auto bufferSize = 256;
-    QByteArray result;
-    result.resize(bufferSize);
-    const auto count = getxattr(path.constData(), name.constData(), result.data(), bufferSize);
-    if (count >= 0) {
-        result.resize(static_cast<int>(count) - 1);
+    QByteArray result(512, Qt::Initialization::Uninitialized);
+    auto count = getxattr(path.constData(), name.constData(), result.data(), result.size());
+    if (count > 0) {
+        // xattr is special. It does not store C-Strings, but blobs.
+        // So it needs to be checked, if a trailing \0 was added when writing
+        // (as this software does) or not as the standard setfattr-tool
+        // the following will handle both cases correctly.
+        if (result[count-1] == '\0') {
+            count--;
+        }
+        result.truncate(count);
         return result;
     } else {
         return {};
@@ -34,7 +39,7 @@ OCC::Optional<QByteArray> xattrGet(const QByteArray &path, const QByteArray &nam
 
 bool xattrSet(const QByteArray &path, const QByteArray &name, const QByteArray &value)
 {
-    const auto returnCode = setxattr(path.constData(), name.constData(), value.constData(), value.size() + 1, 0);
+    const auto returnCode = setxattr(path.constData(), name.constData(), value.constData(), value.size()+1, 0);
     return returnCode == 0;
 }
 
@@ -48,13 +53,13 @@ PlaceHolderAttribs placeHolderAttributes(const QString& path)
 
     // lambda to handle the Optional return val of xattrGet
     auto xattr = [](const QByteArray& p, const QByteArray& name) {
-            const auto value = xattrGet(p, name);
-            if (value) {
-                return *value;
-            } else {
-                return QByteArray();
-            }
-        };
+        const auto value = xattrGet(p, name);
+        if (value) {
+            return *value;
+        } else {
+            return QByteArray();
+        }
+    };
 
     const auto p = path.toUtf8();
 
@@ -64,6 +69,8 @@ PlaceHolderAttribs placeHolderAttributes(const QString& path)
 
     const QByteArray& tt = xattr(p, "user.openvfs.modtime");
     attribs._modtime = tt.toLongLong();
+
+    attribs._action = xattr(p, "user.openvfs.action");
     attribs._size = xattr(p, "user.openvfs.fsize").toLongLong();
     attribs._pinState = xattr(p, "user.openvfs.pinstate");
 

@@ -22,16 +22,6 @@ namespace OCC {
 class VfsCfApi;
 
 namespace CfApiWrapper {
-    struct CallBackContext
-    {
-        OCC::VfsCfApi *vfs;
-        QString path;
-        int64_t requestId;
-        QByteArray fileId;
-        QMap<QByteArray, QVariant> extraArgs;
-
-        inline QString requestHexId() const { return QString::number(requestId, 16); }
-    };
 
     template <typename T>
     class PlaceHolderInfo
