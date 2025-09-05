@@ -48,8 +48,14 @@ FolderWatcher::FolderWatcher(Folder *folder)
     _timer.setInterval(notificationTimeoutC);
     _timer.setSingleShot(true);
     connect(&_timer, &QTimer::timeout, this, [this] {
-        auto paths = popChangeSet();
+        _timer.stop();
+        auto paths = std::move(_changeSet);
         Q_ASSERT(!paths.empty());
+        if (_xattrChangeSet.size() > 0) {
+            auto xattrChangesPaths = std::move(_xattrChangeSet);
+            qCInfo(lcFolderWatcher) << u"Detected XAttr changes in paths:" << paths;
+            Q_EMIT xattrChanged(xattrChangesPaths);
+        }
         if (!paths.isEmpty()) {
             qCInfo(lcFolderWatcher) << u"Detected changes in paths:" << paths;
             Q_EMIT pathChanged(paths);
@@ -172,6 +178,31 @@ void FolderWatcher::addChanges(QSet<QString> &&paths)
             _timer.start();
             // promote that we will report changes once _timer times out
             Q_EMIT changesDetected();
+        }
+    }
+}
+
+void FolderWatcher::addXAttrChanges(QSet<QString> && paths)
+{
+    auto it = paths.cbegin();
+    while (it != paths.cend()) {
+        // we cause a file change from time to time to check whether the folder watcher works as expected
+        if (!_testNotificationPath.isEmpty() && Utility::fileNamesEqual(*it, _testNotificationPath)) {
+            _testNotificationPath.clear();
+        }
+        if (pathIsIgnored(*it)) {
+            it = paths.erase(it);
+        } else {
+            ++it;
+        }
+    }
+    if (!paths.isEmpty()) {
+        _xattrChangeSet.unite(paths);
+        if (!_timer.isActive()) {
+            _timer.start();
+            // promote that we will report changes once _timer times out
+            // not needed for the changes of xattr probably
+            // Q_EMIT changesDetected();
         }
     }
 }

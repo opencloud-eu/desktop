@@ -66,7 +66,8 @@ class OPENCLOUD_GUI_EXPORT Folder : public QObject
 public:
     enum class ChangeReason {
         Other,
-        UnLock
+        UnLock,
+        XAttr
     };
     Q_ENUM(ChangeReason)
 

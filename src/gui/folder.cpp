@@ -604,6 +604,10 @@ void Folder::slotWatchedPathsChanged(const QSet<QString> &paths, ChangeReason re
         Q_ASSERT(FileSystem::isChildPathOf(path, this->path()));
 
         const QString relativePath = path.mid(this->path().size());
+        if (reason == ChangeReason::XAttr) {
+            // Changes to the extended file attributes. Maybe the VFS has something to do with it
+            _vfs->handleXAttrChange(paths);
+        }
         if (reason == ChangeReason::UnLock) {
             journalDb()->wipeErrorBlacklistEntry(relativePath, SyncJournalErrorBlacklistRecord::Category::LocalSoftError);
 
@@ -1116,6 +1120,9 @@ void Folder::registerFolderWatcher()
     _folderWatcher.reset(new FolderWatcher(this));
     connect(_folderWatcher.data(), &FolderWatcher::pathChanged, this,
         [this](const QSet<QString> &paths) { slotWatchedPathsChanged(paths, Folder::ChangeReason::Other); });
+    connect(_folderWatcher.data(), &FolderWatcher::xattrChanged, this,
+        [this](const QSet<QString> &paths) { slotWatchedPathsChanged(paths, Folder::ChangeReason::XAttr); });
+
     connect(_folderWatcher.data(), &FolderWatcher::changesDetected, this, [this] {
         // don't set to not yet started if a sync is already running
         if (!isSyncRunning()) {
