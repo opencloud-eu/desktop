@@ -1,6 +1,6 @@
 # Changelog
 
-## [3.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v3.0.0) - 2025-09-06
+## [3.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v3.0.0) - 2025-09-08
 
 ### ❤️ Thanks to all contributors! ❤️
 
@@ -31,6 +31,10 @@
 - Fix printing of duration [[#400](https://github.com/opencloud-eu/desktop/pull/400)]
 - Don't try LockFile on directories [[#366](https://github.com/opencloud-eu/desktop/pull/366)]
 - OAuth: Only display user name in an error if we have one [[#355](https://github.com/opencloud-eu/desktop/pull/355)]
+
+### 📦️ Dependencies
+
+- Bump actions/stale from 9 to 10 [[#520](https://github.com/opencloud-eu/desktop/pull/520)]
 
 ## [2.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v2.0.0) - 2025-07-03
 
