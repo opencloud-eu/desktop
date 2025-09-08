@@ -164,7 +164,7 @@ jobs:
 
     - name: Clang tidy
       # disable for now
-      if: ${{ false && github.event_name != 'pull_request' }}
+      if: ${{ true || github.event_name != 'pull_request' }}
       run: |
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c libs/llvm python-modules/pip
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --run python3 -m pip install clang-html
