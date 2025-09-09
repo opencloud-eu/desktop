@@ -1,4 +1,3 @@
----
 variables:
   - &minio_image 'minio/mc:RELEASE.2021-10-07T04-19-58Z'
   - &minio_environment
@@ -9,6 +8,8 @@ variables:
     CACHE_BUCKET:
       from_secret: cache_s3_bucket
     MC_HOST: "https://s3.ci.opencloud.eu"
+  # Dynamic cache configurations: "prefix:age" pairs (space-separated)
+  - CACHE_CONFIGS: "desktop-build:1d web/browsers-cache:14d desktop-build/python-cache:14d opencloud-build"
 
 when:
   - event: [ push , manual ]
@@ -19,13 +20,36 @@ when:
 
 skip_clone: true
 steps:
-  purge-opencloud-build:
+  purge-caches:
     image: *minio_image
     commands:
+      # Set MinIO alias once
       - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-      - to_delete=$(mc find s3/$CACHE_BUCKET/desktop-build/ --older-than 1d)
-      - if [ "$to_delete" = "" ]; then exit 0; fi
-      - mc rm $to_delete
+      
+      # Define generic purge function (now accepts prefix and age)
+      - |
+        purge_cache() {
+          local prefix=$1
+          local age=$2
+          local to_delete
+          to_delete=$(mc find s3/$CACHE_BUCKET/$prefix/ --older-than $age)
+          if [ "$to_delete" = "" ]; then
+            echo "No objects older than $age in $prefix/; skipping."
+            return 0
+          fi
+          echo "Purging $prefix cache (older than $age): $to_delete"
+          mc rm $to_delete
+        }
+      
+      # Loop over configurations for dynamic "steps"
+      - |
+        for config in $CACHE_CONFIGS; do
+          prefix=$(echo $config | cut -d: -f1)
+          age=$(echo $config | cut -d: -f2)
+          echo "=== Starting purge step for $prefix (age: $age) ==="
+          purge_cache "$prefix" "$age"
+          echo "=== Completed purge step for $prefix ==="
+        done
     environment:
       <<: *minio_environment
 
