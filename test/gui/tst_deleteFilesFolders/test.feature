@@ -64,3 +64,14 @@ Feature: deleting files and folders
             | textfile0.txt |
             | textfile1.txt |
         And as "Alice" file "textfile2.txt" should exist in the server
+
+
+    Scenario: Create and delete a file with special characters in the name
+        Given user "Alice" has set up a client with default settings
+        When user "Alice" creates a file "~`!@#$^&()-_=+{[}];',$%ñ&💥🫨❤️‍🔥.txt" with the following content inside the sync folder
+            """
+            special characters
+            """
+        And the user deletes the file "~`!@#$^&()-_=+{[}];',$%ñ&💥🫨❤️‍🔥.txt"
+        And the user waits for the files to sync
+        Then as "Alice" file "~`!@#$^&()-_=+{[}];',$%ñ&💥🫨❤️‍🔥.txt" should not exist in the server
