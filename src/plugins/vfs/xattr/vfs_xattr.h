@@ -39,7 +39,6 @@ public:
             const QString &path, time_t modtime, qint64 size, const QByteArray &fileId, const QString &replacesPath);
 
     bool handleAction(const QString& path, const XAttrWrapper::PlaceHolderAttribs &attribs);
-    bool handleXAttrChange(const QSet<QString> &) override;
     bool needsMetadataUpdate(const SyncFileItem &item) override;
     bool isDehydratedPlaceholder(const QString &filePath) override;
     LocalInfo statTypeVirtualFile(const std::filesystem::directory_entry &path, ItemType type) override;

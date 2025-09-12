@@ -721,8 +721,13 @@ void SocketApi::command_V2_HYDRATE_FILE(const QSharedPointer<SocketApiJobV2> &jo
     OC_ASSERT(job);
     const auto &arguments = job->arguments();
 
-    hydrate_the_file ähnlich zu VfsXattr::handleAction.
+    const auto &file = arguments[QStringLiteral("file")].toString();
 
+    auto fileData = FileData::get(file);
+
+    if (fileData.folder) {
+        // call the getfile job to hydrate
+    }
     job->success({ {QStringLiteral("hydration"), QStringLiteral("STARTED") } });
 }
 

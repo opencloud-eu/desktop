@@ -60,11 +60,6 @@ bool VfsOff::setPinState(const QString &, PinState)
     return true;
 }
 
-bool VfsOff::handleXAttrChange(const QSet<QString> &)
-{
-    return false;
-}
-
 Optional<PinState> VfsOff::pinState(const QString &)
 {
     return PinState::AlwaysLocal;

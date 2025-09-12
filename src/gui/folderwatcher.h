@@ -119,13 +119,11 @@ private Q_SLOTS:
 protected:
     // called from the implementations to indicate a change in path
     void addChanges(QSet<QString> &&paths);
-    void addXAttrChanges(QSet<QString> &&paths);
 
 private:
     QScopedPointer<FolderWatcherPrivate> _d;
     QTimer _timer;
     QSet<QString> _changeSet;
-    QSet<QString> _xattrChangeSet;
     Folder *_folder;
     bool _isReliable = true;
 

@@ -149,7 +149,7 @@ void FolderWatcherPrivate::slotReceivedNotification(int fd)
         }
     }
 
-    QSet<QString> paths, xattrPaths;
+    QSet<QString> paths;
     // iterate over events in buffer
     struct inotify_event *event = nullptr;
     for (size_t bytePosition = 0; // start at the beginning of the buffer
@@ -189,17 +189,10 @@ void FolderWatcherPrivate::slotReceivedNotification(int fd)
         if (event->mask & (IN_MOVED_FROM | IN_DELETE)) {
             removeFoldersBelow(p);
         }
-        if (event->mask & (IN_ATTRIB)) {
-            xattrPaths.insert(p);
-        }
     }
     if (!paths.isEmpty()) {
         _parent->addChanges(std::move(paths));
     }
-    if (!xattrPaths.isEmpty()) {
-        _parent->addXAttrChanges(std::move(xattrPaths));
-    }
-
 }
 
 void FolderWatcherPrivate::removeFoldersBelow(const QString &path)

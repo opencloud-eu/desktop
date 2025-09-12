@@ -204,12 +204,6 @@ public:
      */
     void wipeDehydratedVirtualFiles();
 
-    /**
-     * Any type of change to the extended file attributes was detected by the
-     * folderwatcher. The vfs might want react to that.
-     */
-    virtual bool handleXAttrChange(const QSet<QString> &) = 0;
-
     // === Hydration
     HydrationJob *findHydrationJob(int64_t requestId) const;
     void cancelHydration(const OCC::CallBackContext &context);
