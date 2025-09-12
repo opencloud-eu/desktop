@@ -6,6 +6,7 @@
 #include "hydrationjob.h"
 
 #include "libsync/common/syncjournaldb.h"
+#include "libsync/common/vfs.h"
 #include "libsync/filesystem.h"
 #include "libsync/networkjobs/getfilejob.h"
 
