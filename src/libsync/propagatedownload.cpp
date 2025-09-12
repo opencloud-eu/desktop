@@ -545,10 +545,7 @@ void PropagateDownloadFile::slotGetFinished()
         this, &PropagateDownloadFile::transmissionChecksumValidated);
     connect(validator, &ValidateChecksumHeader::validationFailed,
         this, &PropagateDownloadFile::slotChecksumFail);
-    auto checksumHeader = findBestChecksum(job->reply()->rawHeader(checkSumHeaderC));
-    auto contentMd5Header = job->reply()->rawHeader(contentMd5HeaderC);
-    if (checksumHeader.isEmpty() && !contentMd5Header.isEmpty())
-        checksumHeader = "MD5:" + contentMd5Header;
+    const auto checksumHeader = findBestChecksum(job->reply()->rawHeader(checkSumHeaderC));
     validator->start(_tmpFile.fileName(), checksumHeader);
 }
 
