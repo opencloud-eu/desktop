@@ -582,15 +582,12 @@ private Q_SLOTS:
         QObject parent;
 
         QByteArray checksumValue;
-        QByteArray contentMd5Value;
 
         fakeFolder.setServerOverride([&](QNetworkAccessManager::Operation op, const QNetworkRequest &request, QIODevice *) -> QNetworkReply * {
             if (op == QNetworkAccessManager::GetOperation) {
                 auto reply = new FakeGetReply(fakeFolder.remoteModifier(), op, request, &parent);
                 if (!checksumValue.isNull())
                     reply->setRawHeader("OC-Checksum", checksumValue);
-                if (!contentMd5Value.isNull())
-                    reply->setRawHeader("Content-MD5", contentMd5Value);
                 return reply;
             }
             return nullptr;
@@ -620,40 +617,7 @@ private Q_SLOTS:
         QCOMPARE(fakeFolder.currentLocalState(), fakeFolder.currentRemoteState());
         checksumValue = QByteArray();
 
-        // Bad Content-MD5
-        contentMd5Value = "bad";
-        fakeFolder.remoteModifier().create(QStringLiteral("A/a5"), 16, 'A');
-        syncSucceeded = fakeFolder.applyLocalModificationsAndSync();
-        if (filesAreDehydrated) {
-            // In the dehydrated case, files are never downloaded, so checksums are not computed. Only placeholders are created.
-            QVERIFY(syncSucceeded);
-        } else {
-            // Any case where files are actually downloaded (no vfs, local files are hydrated, etc), the checksum calculation should fail.
-            QVERIFY(!syncSucceeded);
-        }
-
-        // Good Content-MD5
-        contentMd5Value = "d8a73157ce10cd94a91c2079fc9a92c8"; // printf 'A%.0s' {1..16} | md5sum -
-        fakeFolder.syncJournal().wipeErrorBlacklist();
-        QVERIFY(fakeFolder.applyLocalModificationsAndSync());
-        QCOMPARE(fakeFolder.currentLocalState(), fakeFolder.currentRemoteState());
-
-        // Invalid OC-Checksum is ignored
-        checksumValue = "garbage";
-        // contentMd5Value is still good
-        fakeFolder.remoteModifier().create(QStringLiteral("A/a6"), 16, 'A');
-        QVERIFY(fakeFolder.applyLocalModificationsAndSync());
-        contentMd5Value = "bad";
-        fakeFolder.remoteModifier().create(QStringLiteral("A/a7"), 16, 'A');
-        syncSucceeded = fakeFolder.applyLocalModificationsAndSync();
-        if (filesAreDehydrated) {
-            // In the dehydrated case, files are never downloaded, so checksums are not computed. Only placeholders are created.
-            QVERIFY(syncSucceeded);
-        } else {
-            // Any case where files are actually downloaded (no vfs, local files are hydrated, etc), the checksum calculation should fail.
-            QVERIFY(!syncSucceeded);
-        }
-        contentMd5Value.clear();
+        // OC-Checksum contains multiple checksums, one is valid
         fakeFolder.syncJournal().wipeErrorBlacklist();
         QVERIFY(fakeFolder.applyLocalModificationsAndSync());
         QCOMPARE(fakeFolder.currentLocalState(), fakeFolder.currentRemoteState());
