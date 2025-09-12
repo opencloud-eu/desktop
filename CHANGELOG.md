@@ -34,6 +34,7 @@
 
 ### 📦️ Dependencies
 
+- Bump actions/checkout from 4 to 5 [[#502](https://github.com/opencloud-eu/desktop/pull/502)]
 - Bump actions/stale from 9 to 10 [[#520](https://github.com/opencloud-eu/desktop/pull/520)]
 
 ## [2.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v2.0.0) - 2025-07-03
