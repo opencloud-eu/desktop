@@ -98,6 +98,14 @@ public:
         return std::make_pair(out.folder, out.priority);
     }
 
+    Folder *peek() const
+    {
+        if (_queue.empty()) {
+            return nullptr;
+        }
+        return _queue.top().folder;
+    }
+
 private:
     // the actual queue
     std::priority_queue<Element> _queue;
@@ -176,16 +184,31 @@ void SyncScheduler::startNext()
     }
 
     Priority syncPriority = Priority::Low;
+    QSet<Folder *> seen;
+    seen.reserve(_queue->size());
     while (!_currentSync) {
         if (_queue->empty()) {
             qCInfo(lcSyncScheduler) << u"Queue is empty, no sync to start";
             return;
         }
+        if (auto *folder = _queue->peek()) {
+            if (seen.contains(folder)) {
+                // We have seen this folder already, it means all folders in the queue are not syncable
+                qCInfo(lcSyncScheduler) << u"Skipping sync of" << folder->path() << u"because it was already tried";
+                return;
+            }
+        } else {
+            std::ignore = _queue->pop();
+            continue;
+        }
         std::tie(_currentSync, syncPriority) = _queue->pop();
+        seen.insert(_currentSync);
         // If the folder is deleted in the meantime, we skip it
-        if (_currentSync && !_currentSync->isReady()) {
+        if (!_currentSync->canSync()) {
             qCInfo(lcSyncScheduler) << u"Skipping sync of" << _currentSync->path() << u"because it is not ready";
+            enqueueFolder(_currentSync, syncPriority);
             _currentSync.clear();
+            continue;
         }
     }
 
