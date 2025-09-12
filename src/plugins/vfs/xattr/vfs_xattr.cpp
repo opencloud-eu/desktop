@@ -238,8 +238,7 @@ bool VfsXAttr::handleAction(const QString& path, const XAttrWrapper::PlaceHolder
             // .extraArgs = std::move(extraArgs)};
         // All good, let's hydrate now
 
-        const auto invokeResult = QMetaObject::invokeMethod(context.vfs, [=]
-        {
+        const auto invokeResult = QMetaObject::invokeMethod(context.vfs, [=] {
             context.vfs->requestHydration(context, attribs.size());
         }, Qt::QueuedConnection);
         if (!invokeResult) {

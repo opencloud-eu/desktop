@@ -158,6 +158,13 @@ SocketApi::SocketApi(QObject *parent)
             unregisterAccount(accountState->account());
         }
     });
+
+    const QJsonObject args { { QStringLiteral("size"), 5 } };
+    const QJsonObject obj { { QStringLiteral("id"), QString::number(17) }, { QStringLiteral("arguments"), args } };
+    const auto json = QJsonDocument(obj).toJson(QJsonDocument::Indented);
+
+    qCDebug(lcSocketApi) << u"JSON:" << json;
+
 }
 
 SocketApi::~SocketApi()
@@ -283,7 +290,7 @@ void SocketApi::slotReadSocket()
             }
         } else if (command.startsWith(QLatin1String("V2/"))) {
             QJsonParseError error;
-            const auto json = QJsonDocument::fromJson(argument.toUtf8(), &error).object();
+            const auto json = QJsonDocument::fromJson(argument.trimmed().toUtf8(), &error).object();
             if (error.error != QJsonParseError::NoError) {
                 qCWarning(lcSocketApi()) << u"Invalid json" << argument << error.errorString();
                 listener->sendError(error.errorString());
@@ -707,6 +714,16 @@ void SocketApi::command_V2_GET_CLIENT_ICON(const QSharedPointer<SocketApiJobV2> 
         data = pngBuffer.data().toBase64();
     }
     job->success({ { QStringLiteral("png"), QString::fromUtf8(data) } });
+}
+
+void SocketApi::command_V2_HYDRATE_FILE(const QSharedPointer<SocketApiJobV2> &job) const
+{
+    OC_ASSERT(job);
+    const auto &arguments = job->arguments();
+
+    hydrate_the_file ähnlich zu VfsXattr::handleAction.
+
+    job->success({ {QStringLiteral("hydration"), QStringLiteral("STARTED") } });
 }
 
 void SocketApi::emailPrivateLink(const QUrl &link)
