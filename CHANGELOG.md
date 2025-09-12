@@ -12,6 +12,17 @@
 - Add Windows VFS [[#305](https://github.com/opencloud-eu/desktop/pull/305)]
 - Enable http2 support by default [[#333](https://github.com/opencloud-eu/desktop/pull/333)]
 
+### 🐛 Bug Fixes
+
+- Don't mark restorations as excluded [[#498](https://github.com/opencloud-eu/desktop/pull/498)]
+- Sync Scheduler: Ensure the current sync is actually running [[#452](https://github.com/opencloud-eu/desktop/pull/452)]
+- Fix leak of accountstates [[#445](https://github.com/opencloud-eu/desktop/pull/445)]
+- Fix color for selected space [[#437](https://github.com/opencloud-eu/desktop/pull/437)]
+- Don't truncate inode on Windows [[#412](https://github.com/opencloud-eu/desktop/pull/412)]
+- Fix printing of duration [[#400](https://github.com/opencloud-eu/desktop/pull/400)]
+- Don't try LockFile on directories [[#366](https://github.com/opencloud-eu/desktop/pull/366)]
+- OAuth: Only display user name in an error if we have one [[#355](https://github.com/opencloud-eu/desktop/pull/355)]
+
 ### 📈 Enhancement
 
 - Use utf16 for the rotating log, to reduce string conversions [[#467](https://github.com/opencloud-eu/desktop/pull/467)]
@@ -21,16 +32,6 @@
 - Sync description and space name to Windows [[#443](https://github.com/opencloud-eu/desktop/pull/443)]
 - Replace csync C code with std::filesystem [[#393](https://github.com/opencloud-eu/desktop/pull/393)]
 - Remove margins around the content widgets [[#377](https://github.com/opencloud-eu/desktop/pull/377)]
-
-### 🐛 Bug Fixes
-
-- Sync Scheduler: Ensure the current sync is actually running [[#452](https://github.com/opencloud-eu/desktop/pull/452)]
-- Fix leak of accountstates [[#445](https://github.com/opencloud-eu/desktop/pull/445)]
-- Fix color for selected space [[#437](https://github.com/opencloud-eu/desktop/pull/437)]
-- Don't truncate inode on Windows [[#412](https://github.com/opencloud-eu/desktop/pull/412)]
-- Fix printing of duration [[#400](https://github.com/opencloud-eu/desktop/pull/400)]
-- Don't try LockFile on directories [[#366](https://github.com/opencloud-eu/desktop/pull/366)]
-- OAuth: Only display user name in an error if we have one [[#355](https://github.com/opencloud-eu/desktop/pull/355)]
 
 ### 📦️ Dependencies
 
