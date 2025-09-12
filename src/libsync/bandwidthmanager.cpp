@@ -12,8 +12,8 @@
  * for more details.
  */
 
+#include "libsync/networkjobs/getfilejob.h"
 #include "owncloudpropagator.h"
-#include "propagatedownload.h"
 #include "propagateupload.h"
 
 #include <QLoggingCategory>

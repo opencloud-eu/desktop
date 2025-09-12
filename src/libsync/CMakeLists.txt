@@ -51,8 +51,9 @@ set(libsync_SRCS
     creds/webfinger.cpp
     creds/idtoken.cpp
 
-    networkjobs/fetchuserinfojobfactory.cpp
+    networkjobs/getfilejob.cpp
     networkjobs/checkserverjobfactory.cpp
+    networkjobs/fetchuserinfojobfactory.cpp
     networkjobs/jsonjob.cpp
     networkjobs/resources.cpp
 

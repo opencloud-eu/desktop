@@ -10,7 +10,7 @@
 
 #include "libsync/common/syncjournaldb.h"
 #include "libsync/filesystem.h"
-#include "libsync/propagatedownload.h"
+#include "libsync/networkjobs/getfilejob.h"
 
 #include <QLocalServer>
 #include <QLocalSocket>
