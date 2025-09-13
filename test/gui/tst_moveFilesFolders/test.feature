@@ -65,3 +65,12 @@ Feature: move file and folder
         And as "Alice" the file "folder1/folder2/file2.txt" should have the content "test file 2" in the server
         And as "Alice" file "folder1/file1.txt" should not exist in the server
         And as "Alice" file "folder1/file2.txt" should not exist in the server
+
+
+	Scenario: Syncing a 50MB file moved into the local sync folder
+        Given user "Alice" has set up a client with default settings
+        And user "Alice" has created a folder "Folder1" inside the sync folder
+        And user "Alice" has created a file "newfile.txt" with size "50MB" in the temp folder
+        When user "Alice" moves file "newfile.txt" from the temp folder to "Folder1" in the sync folder
+        And the user waits for file "Folder1/newfile.txt" to be synced
+        Then as "Alice" file "Folder1/newfile.txt" should exist in the server

@@ -123,6 +123,26 @@ def deleteResource(resource, resource_type):
         shutil.rmtree(resource_path)
 
 
+def move_resource(username, source, destination, to_temp_folder=False, from_temp_folder=False):
+        wait_for_client_to_be_ready()
+
+        # Determine source path
+        if from_temp_folder:
+            source_dir = join(get_config('tempFolderPath'), source)
+        else:
+            source_dir = get_resource_path(source, username)
+
+        # Determine destination path
+        if to_temp_folder:
+            destination_dir = get_temp_resource_path(destination or source)
+        else:
+            if destination in (None, '/'):
+                destination = ''
+            destination_dir = get_resource_path(destination, username)
+
+        shutil.move(source_dir, destination_dir)
+
+
 @When(
     'user "|any|" creates a file "|any|" with the following content inside the sync folder'
 )
@@ -298,9 +318,12 @@ def step(context, file_number, file_size, folder_name):
     regexp=True,
 )
 def step(context, username, _, resource_name):
-    source_dir = join(get_config('tempFolderPath'), resource_name)
-    destination_dir = get_resource_path('/', username)
-    shutil.move(source_dir, destination_dir)
+    move_resource(
+        username=username,
+        source=resource_name,
+        destination='/',
+        from_temp_folder=True
+    )
 
 
 @When(
@@ -308,9 +331,12 @@ def step(context, username, _, resource_name):
     regexp=True,
 )
 def step(context, _, resource_name):
-    source_dir = get_resource_path(resource_name)
-    destination_dir = get_temp_resource_path(resource_name)
-    shutil.move(source_dir, destination_dir)
+    move_resource(
+        _,
+        source=resource_name,
+        destination=None,
+        to_temp_folder=True
+    )
 
 
 @When(
@@ -318,12 +344,7 @@ def step(context, _, resource_name):
     regexp=True,
 )
 def step(context, username, source, destination):
-    wait_for_client_to_be_ready()
-    source_dir = get_resource_path(source, username)
-    if destination in (None, '/'):
-        destination = ''
-    destination_dir = get_resource_path(destination, username)
-    shutil.move(source_dir, destination_dir)
+    move_resource(username, source, destination)
 
 
 @Then('user "|any|" should be able to open the file "|any|" on the file system')
@@ -412,3 +433,16 @@ def step(context):
         filename = row[0]
         deleteResource(filename, 'file')
 
+
+@Given('user "|any|" has created a file "|any|" with size "|any|" in the temp folder')
+def step(context, _, filename, filesize):
+    create_file_with_size(filename, filesize, True)
+
+
+@When(
+    r'user "([^"]*)" moves (folder|file) "([^"]*)" from the temp folder to "([^"]*)" in the sync folder',
+    regexp=True,
+)
+def step(context, username, _, resource_name, destination):
+    # source_dir = join(get_config('tempFolderPath'), resource_name)
+    move_resource(username, resource_name, destination, from_temp_folder=True)
