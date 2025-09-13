@@ -662,7 +662,33 @@ void SocketApi::command_V2_LIST_ACCOUNTS(const QSharedPointer<SocketApiJobV2> &j
         out << QJsonObject(
             {{QStringLiteral("name"), acc->account()->displayNameWithHost()}, {QStringLiteral("uuid"), acc->account()->uuid().toString(QUuid::WithoutBraces)}});
     }
-    job->success({ { QStringLiteral("accounts"), out } });
+    job->success({{QStringLiteral("accounts"), out}});
+}
+
+void SocketApi::command_V2_HYDRATE_FILE(const QSharedPointer<SocketApiJobV2> &job) const
+{
+    const auto &arguments = job->arguments();
+
+    const QString file = arguments[QStringLiteral("file")].toString();
+    const QByteArray fileId = arguments[QStringLiteral("fileId")].toString().toUtf8();
+
+    auto fileData = FileData::get(file);
+
+    if (fileData.folder) {
+        auto watcher = new QFutureWatcher<Result<void, QString>>();
+        connect(watcher, &QFutureWatcher<Result<void, QString>>::finished, this, [job, watcher] {
+            const auto resut = watcher->result<Result<void, QString>>();
+            watcher->deleteLater();
+            if (!resut) {
+                job->success({{QStringLiteral("status"), QStringLiteral("ERROR")}, {QStringLiteral("error"), resut.error()}});
+            } else {
+                job->success({{QStringLiteral("status"), QStringLiteral("OK")}});
+            }
+        });
+        watcher->setFuture(fileData.folder->vfs().hydrateFile(fileId));
+    } else {
+        job->failure(QStringLiteral("cannot hydrate unknown file"));
+    }
 }
 
 void SocketApi::command_V2_GET_CLIENT_ICON(const QSharedPointer<SocketApiJobV2> &job) const

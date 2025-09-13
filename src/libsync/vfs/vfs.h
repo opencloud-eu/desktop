@@ -27,6 +27,7 @@
 #include <QUrl>
 #include <QVersionNumber>
 
+#include <QFuture>
 #include <filesystem>
 #include <memory>
 
@@ -201,6 +202,15 @@ public:
      * different kind of vfs.
      */
     void wipeDehydratedVirtualFiles();
+
+
+    /** Start a hydration (download of remote contents) of a file.
+     *
+     * The fileId is the SyncFileItem::id() value of the file to hydrate.
+     *
+     * Returns a QFuture<Result> void if successful and QFuture<Result> QString if an error occurs.
+     */
+    [[nodiscard]] virtual QFuture<Result<void, QString>> hydrateFile(const QByteArray &fileId);
 
 public Q_SLOTS:
     /** Update in-sync state based on SyncFileStatusTracker signal.
