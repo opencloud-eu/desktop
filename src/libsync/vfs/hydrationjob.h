@@ -32,6 +32,7 @@ Q_SIGNALS:
 
 private:
     Vfs *_vfs;
+    QByteArray _fileId;
     std::unique_ptr<QIODevice> _device;
     SyncJournalFileRecord _record;
     GETFileJob *_job = nullptr;

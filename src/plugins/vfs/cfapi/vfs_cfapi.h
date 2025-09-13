@@ -5,8 +5,9 @@
 #pragma once
 
 #include "common/plugin.h"
-#include "hydrationjob.h"
+#include "libsync/vfs/hydrationjob.h"
 #include "libsync/vfs/vfs.h"
+#include "plugins/vfs/cfapi/cfapiwrapper.h"
 
 #include <QScopedPointer>
 
@@ -16,7 +17,21 @@ class VfsCfApiPrivate;
 class SyncJournalFileRecord;
 namespace CfApiWrapper {
     struct CallBackContext;
+    class HydrationDevice;
 }
+class CfApiHydrationJob : public HydrationJob
+{
+    Q_OBJECT
+public:
+    using HydrationJob::HydrationJob;
+    void setContext(const CfApiWrapper::CallBackContext &context) { _context = context; }
+
+    CfApiWrapper::CallBackContext context() const { return _context; }
+
+private:
+    CfApiWrapper::CallBackContext _context;
+};
+
 class VfsCfApi : public Vfs
 {
     Q_OBJECT
@@ -43,29 +58,19 @@ public:
 
     void cancelHydration(const OCC::CfApiWrapper::CallBackContext &context);
 
-    HydrationJob::Status finalizeHydrationJob(int64_t requestId);
-
     LocalInfo statTypeVirtualFile(const std::filesystem::directory_entry &path, ItemType type) override;
 
 public Q_SLOTS:
-    void requestHydration(const CfApiWrapper::CallBackContext &context, qint64 requestedFileSize);
     void fileStatusChanged(const QString &systemFileName, OCC::SyncFileStatus fileStatus) override;
-
-Q_SIGNALS:
-    void hydrationRequestReady(int64_t requestId);
-    void hydrationRequestFailed(int64_t requestId);
-    void hydrationRequestFinished(int64_t requestId);
 
 protected:
     Result<ConvertToPlaceholderResult, QString> updateMetadata(const SyncFileItem &, const QString &, const QString &) override;
     void startImpl(const VfsSetupParams &params) override;
 
 private:
-    void scheduleHydrationJob(const OCC::CfApiWrapper::CallBackContext &context, SyncJournalFileRecord &&record);
-    void onHydrationJobFinished(HydrationJob *job);
-    HydrationJob *findHydrationJob(int64_t requestId) const;
-
-    QScopedPointer<VfsCfApiPrivate> d;
+    QMap<uint64_t, CfApiHydrationJob *> _hydrationJobs;
+    CF_CONNECTION_KEY _connectionKey = {};
+    friend class CfApiWrapper::HydrationDevice;
 };
 
 class CfApiVfsPluginFactory : public QObject, public DefaultPluginFactory<VfsCfApi>

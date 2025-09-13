@@ -6,15 +6,15 @@
 #include "vfs_cfapi.h"
 
 #include <QDir>
-#include <QFile>
 
 #include "cfapiwrapper.h"
 #include "common/filesystembase.h"
 #include "common/syncjournaldb.h"
-#include "config.h"
 #include "filesystem.h"
-#include "hydrationjob.h"
 #include "syncfileitem.h"
+
+#include <QCoreApplication>
+#include <QThread>
 
 // include order is important, this must be included before cfapi
 #include <windows.h>
@@ -100,16 +100,8 @@ void unregisterShellExtensions()
 
 namespace OCC {
 
-class VfsCfApiPrivate
-{
-public:
-    QMap<uint64_t, HydrationJob *> hydrationJobs;
-    CF_CONNECTION_KEY connectionKey = {};
-};
-
 VfsCfApi::VfsCfApi(QObject *parent)
     : Vfs(parent)
-    , d(new VfsCfApiPrivate)
 {
 }
 
@@ -132,7 +124,7 @@ void VfsCfApi::startImpl(const VfsSetupParams &params)
                 return;
             }
 
-            d->connectionKey = *std::move(connectResult);
+            _connectionKey = *std::move(connectResult);
             Q_EMIT started();
         } else {
             qCCritical(lcCfApi) << errorMessage;
@@ -144,8 +136,8 @@ void VfsCfApi::startImpl(const VfsSetupParams &params)
 
 void VfsCfApi::stop()
 {
-    if (d->connectionKey.Internal != 0) {
-        const auto result = cfapi::disconnectSyncRoot(std::move(d->connectionKey));
+    if (_connectionKey.Internal != 0) {
+        const auto result = cfapi::disconnectSyncRoot(std::move(_connectionKey));
         if (!result) {
             qCCritical(lcCfApi) << u"Disconnect failed for" << params().filesystemPath << u":" << result.error();
         }
@@ -290,75 +282,16 @@ Vfs::AvailabilityResult VfsCfApi::availability(const QString &folderPath)
     }
 }
 
-HydrationJob *VfsCfApi::findHydrationJob(int64_t requestId) const
-{
-    // Find matching hydration job for request id
-    return d->hydrationJobs.value(requestId);
-}
-
 void VfsCfApi::cancelHydration(const OCC::CfApiWrapper::CallBackContext &context)
 {
+    Q_ASSERT(QThread::currentThread() == QCoreApplication::instance()->thread());
     // Find matching hydration job for request id
-    const auto hydrationJob = findHydrationJob(context.requestId);
-    // If found, cancel it
-    if (hydrationJob) {
-        qCInfo(lcCfApi) << u"Cancel hydration" << hydrationJob->context();
-        hydrationJob->cancel();
+    auto hydrationJob = _hydrationJobs.find(context.transferKey);
+    if (hydrationJob != _hydrationJobs.end()) {
+        qCInfo(lcCfApi) << u"Cancel hydration" << hydrationJob.value()->context();
+        // the job itself will take care of _hydrationJobs and its deletion
+        hydrationJob.value()->abort();
     }
-}
-
-void VfsCfApi::requestHydration(const OCC::CfApiWrapper::CallBackContext &context, qint64 requestedFileSize)
-{
-    qCInfo(lcCfApi) << u"Received request to hydrate" << context;
-    const auto root = QDir::toNativeSeparators(params().filesystemPath);
-    Q_ASSERT(context.path.startsWith(root));
-
-
-    // Set in the database that we should download the file
-    SyncJournalFileRecord record;
-    params().journal->getFileRecordsByFileId(context.fileId, [&record](const auto &r) {
-        Q_ASSERT(!record.isValid());
-        record = r;
-    });
-    if (!record.isValid()) {
-        qCInfo(lcCfApi) << u"Couldn't hydrate, did not find file in db";
-        Q_ASSERT(false); // how did we end up here if it's not  a cloud file
-        Q_EMIT hydrationRequestFailed(context.requestId);
-        Q_EMIT needSync();
-        return;
-    }
-
-    bool isNotVirtualFileFailure = false;
-    if (!record.isVirtualFile()) {
-        if (isDehydratedPlaceholder(context.path)) {
-            qCWarning(lcCfApi) << u"Hydration requested for a placeholder file that is incorrectly not marked as a virtual file in the local database. "
-                                  u"Attempting to correct this inconsistency...";
-            auto item = SyncFileItem::fromSyncJournalFileRecord(record);
-            item->_type = ItemTypeVirtualFileDownload;
-            isNotVirtualFileFailure = !params().journal->setFileRecord(SyncJournalFileRecord::fromSyncFileItem(*item));
-        } else {
-            isNotVirtualFileFailure = true;
-        }
-    }
-    if (requestedFileSize != record.size()) {
-        // we are out of sync
-        qCWarning(lcCfApi) << u"The db size and the placeholder meta data are out of sync, request resync";
-        Q_ASSERT(false); // this should not happen
-        Q_EMIT hydrationRequestFailed(context.requestId);
-        Q_EMIT needSync();
-        return;
-    }
-
-    if (isNotVirtualFileFailure) {
-        qCWarning(lcCfApi) << u"Couldn't hydrate, the file is not virtual";
-        Q_ASSERT(false); // this should not happen
-        Q_EMIT hydrationRequestFailed(context.requestId);
-        Q_EMIT needSync();
-        return;
-    }
-
-    // All good, let's hydrate now
-    scheduleHydrationJob(context, std::move(record));
 }
 
 void VfsCfApi::fileStatusChanged(const QString &systemFileName, SyncFileStatus fileStatus)
@@ -378,53 +311,6 @@ void VfsCfApi::fileStatusChanged(const QString &systemFileName, SyncFileStatus f
     } else if (fileStatus.tag() == SyncFileStatus::StatusExcluded) {
         cfapi::setPinState(systemFileName, PinState::Excluded, CfApiWrapper::Recurse);
     }
-}
-
-void VfsCfApi::scheduleHydrationJob(const OCC::CfApiWrapper::CallBackContext &context, SyncJournalFileRecord &&record)
-{
-    // after a local move, the remotePath and the targetPath might not match
-    if (findHydrationJob(context.requestId)) {
-        qCWarning(lcCfApi) << u"The OS submitted again a hydration request which is already on-going" << context;
-        Q_EMIT hydrationRequestFailed(context.requestId);
-        return;
-    }
-    Q_ASSERT(!std::any_of(std::cbegin(d->hydrationJobs), std::cend(d->hydrationJobs),
-        [=](HydrationJob *job) { return job->requestId() == context.requestId || job->localFilePathAbs() == context.path; }));
-    auto job = new HydrationJob(context);
-    job->setAccount(params().account);
-    job->setRemoteSyncRootPath(params().baseUrl());
-    job->setLocalRoot(params().filesystemPath);
-    job->setJournal(params().journal);
-    job->setRemoteFilePathRel(record.path());
-    job->setRecord(std::move(record));
-    connect(job, &HydrationJob::finished, this, &VfsCfApi::onHydrationJobFinished);
-    d->hydrationJobs.insert(context.requestId, job);
-    job->start();
-    Q_EMIT hydrationRequestReady(context.requestId);
-}
-
-void VfsCfApi::onHydrationJobFinished(HydrationJob *job)
-{
-    Q_ASSERT(findHydrationJob(job->requestId()));
-    qCInfo(lcCfApi) << u"Hydration job finished" << job->requestId() << job->localFilePathAbs() << job->status();
-    Q_EMIT hydrationRequestFinished(job->requestId());
-    if (!job->errorString().isEmpty()) {
-        qCWarning(lcCfApi) << job->errorString();
-    }
-}
-
-HydrationJob::Status VfsCfApi::finalizeHydrationJob(int64_t requestId)
-{
-    // Find matching hydration job for request id
-    if (const auto hydrationJob = findHydrationJob(requestId)) {
-        qCDebug(lcCfApi) << u"Finalize hydration job" << hydrationJob->context();
-        hydrationJob->finalize(this);
-        d->hydrationJobs.take(hydrationJob->requestId());
-        hydrationJob->deleteLater();
-        return hydrationJob->status();
-    }
-    qCCritical(lcCfApi) << u"Failed to finalize hydration job" << requestId << u". Job not found.";
-    return HydrationJob::Status::Error;
 }
 
 
