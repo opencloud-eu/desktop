@@ -36,6 +36,7 @@ class Account;
 class SyncJournalDb;
 class SyncFileItem;
 class SyncEngine;
+class HydrationJob;
 
 /** Collection of parameters for initializing a Vfs instance. */
 struct OPENCLOUD_SYNC_EXPORT VfsSetupParams
@@ -201,6 +202,16 @@ public:
      * different kind of vfs.
      */
     void wipeDehydratedVirtualFiles();
+
+
+    /** Start a hydration (download of remote contents) of a file.
+     *
+     * The fileId is the SyncFileItem::id() value of the file to hydrate.
+     *
+     * The returned HydrationJob must be started by the caller.
+     * Returns nullptr if not supported.
+     */
+    [[nodiscard]] virtual HydrationJob *hydrateFile(const QByteArray &fileId) = 0;
 
 public Q_SLOTS:
     /** Update in-sync state based on SyncFileStatusTracker signal.

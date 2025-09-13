@@ -29,6 +29,7 @@
 #include "folder.h"
 #include "folderman.h"
 #include "guiutility.h"
+#include "libsync/vfs/hydrationjob.h"
 #include "syncengine.h"
 #include "syncfileitem.h"
 #include "theme.h"
@@ -662,7 +663,36 @@ void SocketApi::command_V2_LIST_ACCOUNTS(const QSharedPointer<SocketApiJobV2> &j
         out << QJsonObject(
             {{QStringLiteral("name"), acc->account()->displayNameWithHost()}, {QStringLiteral("uuid"), acc->account()->uuid().toString(QUuid::WithoutBraces)}});
     }
-    job->success({ { QStringLiteral("accounts"), out } });
+    job->success({{QStringLiteral("accounts"), out}});
+}
+
+void SocketApi::command_V2_HYDRATE_FILE(const QSharedPointer<SocketApiJobV2> &job) const
+{
+    const auto &arguments = job->arguments();
+
+    const QString file = arguments[QStringLiteral("file")].toString();
+    const QByteArray fileId = arguments[QStringLiteral("fileId")].toString().toUtf8();
+
+    auto fileData = FileData::get(file);
+
+    if (fileData.folder) {
+        auto sendOk = [job]() { job->success({{QStringLiteral("status"), QStringLiteral("OK")}}); };
+        if (auto *hydrationJob = fileData.folder->vfs().hydrateFile(fileId)) {
+            connect(hydrationJob, &HydrationJob::finished, this, [sendOk, hydrationJob]() {
+                sendOk();
+                hydrationJob->deleteLater();
+            });
+            connect(hydrationJob, &HydrationJob::error, this, [job, hydrationJob](const QString &error) {
+                job->success({{QStringLiteral("status"), QStringLiteral("ERROR")}, {QStringLiteral("error"), error}});
+                hydrationJob->deleteLater();
+            });
+            hydrationJob->start();
+        } else {
+            sendOk();
+        }
+    } else {
+        job->failure(QStringLiteral("cannot hydrate unknown file"));
+    }
 }
 
 void SocketApi::command_V2_GET_CLIENT_ICON(const QSharedPointer<SocketApiJobV2> &job) const
