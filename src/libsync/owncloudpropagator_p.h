@@ -35,8 +35,8 @@ inline QString getEtagFromReply(QNetworkReply *reply)
 /**
  * Given an error from the network, map to a SyncFileItem::Status error
  */
-inline SyncFileItem::Status classifyError(QNetworkReply::NetworkError nerror,
-    int httpCode, bool *anotherSyncNeeded = nullptr, const QByteArray &errorBody = QByteArray())
+inline SyncFileItem::Status classifyError(
+    QNetworkReply::NetworkError nerror, int httpCode, bool *anotherSyncNeeded = nullptr, const QByteArray &errorBody = QByteArray())
 {
     Q_ASSERT(nerror != QNetworkReply::NoError); // we should only be called when there is an error
 
