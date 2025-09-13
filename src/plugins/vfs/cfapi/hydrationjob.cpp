@@ -11,6 +11,7 @@
 #include "libsync/common/syncjournaldb.h"
 #include "libsync/filesystem.h"
 #include "libsync/networkjobs/getfilejob.h"
+#include "libsync/vfs/hydrationjob.h"
 
 #include <QLocalServer>
 #include <QLocalSocket>
@@ -28,45 +29,6 @@ OCC::HydrationJob::HydrationJob(const CfApiWrapper::CallBackContext &context)
 
 OCC::HydrationJob::~HydrationJob() = default;
 
-OCC::AccountPtr OCC::HydrationJob::account() const
-{
-    return _account;
-}
-
-void OCC::HydrationJob::setAccount(const AccountPtr &account)
-{
-    _account = account;
-}
-
-QUrl OCC::HydrationJob::remoteSyncRootPath() const
-{
-    return _remoteSyncRootPath;
-}
-
-void OCC::HydrationJob::setRemoteSyncRootPath(const QUrl &url)
-{
-    _remoteSyncRootPath = url;
-}
-
-QString OCC::HydrationJob::localRoot() const
-{
-    return _localRoot;
-}
-
-void OCC::HydrationJob::setLocalRoot(const QString &localPath)
-{
-    _localRoot = localPath;
-}
-
-OCC::SyncJournalDb *OCC::HydrationJob::journal() const
-{
-    return _journal;
-}
-
-void OCC::HydrationJob::setJournal(SyncJournalDb *journal)
-{
-    _journal = journal;
-}
 
 int64_t OCC::HydrationJob::requestId() const
 {
@@ -78,52 +40,24 @@ QString OCC::HydrationJob::localFilePathAbs() const
     return _context.path;
 }
 
-QString OCC::HydrationJob::remotePathRel() const
-{
-    return _remoteFilePathRel;
-}
+QString OCC::HydrationJob::remotePathRel() const {return record}
 
-void OCC::HydrationJob::setRemoteFilePathRel(const QString &path)
-{
-    _remoteFilePathRel = path;
-}
-
-const OCC::SyncJournalFileRecord &OCC::HydrationJob::record() const
-{
-    return _record;
-}
-
-void OCC::HydrationJob::setRecord(SyncJournalFileRecord &&record)
-{
-    _record = record;
-}
-
-OCC::HydrationJob::Status OCC::HydrationJob::status() const
+HydrationJob::Status HydrationJob::status() const
 {
     return _status;
 }
 
-const OCC::CfApiWrapper::CallBackContext OCC::HydrationJob::context() const
+const CfApiWrapper::CallBackContext HydrationJob::context() const
 {
     return _context;
 }
 
-int OCC::HydrationJob::errorCode() const
-{
-    return _errorCode;
-}
-
-int OCC::HydrationJob::statusCode() const
-{
-    return _statusCode;
-}
-
-QString OCC::HydrationJob::errorString() const
+QString HydrationJob::errorString() const
 {
     return _errorString;
 }
 
-void OCC::HydrationJob::start()
+void HydrationJob::start()
 {
     Q_ASSERT(_account);
     Q_ASSERT(_journal);
@@ -162,7 +96,7 @@ void OCC::HydrationJob::start()
     connect(_transferDataServer, &QLocalServer::newConnection, this, &HydrationJob::onNewConnection);
 }
 
-void OCC::HydrationJob::cancel()
+void HydrationJob::cancel()
 {
     _isCancelled = true;
     if (_job) {
@@ -180,7 +114,7 @@ void OCC::HydrationJob::cancel()
     emitFinished(Status::Cancelled);
 }
 
-void OCC::HydrationJob::emitFinished(Status status)
+void HydrationJob::emitFinished(Status status)
 {
     _status = status;
     if (_signalSocket) {
@@ -205,7 +139,7 @@ void OCC::HydrationJob::emitFinished(Status status)
     Q_EMIT finished(this);
 }
 
-void OCC::HydrationJob::onCancellationServerNewConnection()
+void HydrationJob::onCancellationServerNewConnection()
 {
     Q_ASSERT(!_signalSocket);
 
@@ -213,14 +147,14 @@ void OCC::HydrationJob::onCancellationServerNewConnection()
     _signalSocket = _signalServer->nextPendingConnection();
 }
 
-void OCC::HydrationJob::onNewConnection()
+void HydrationJob::onNewConnection()
 {
     Q_ASSERT(!_transferDataSocket);
     Q_ASSERT(!_job);
     handleNewConnection();
 }
 
-void OCC::HydrationJob::finalize(OCC::VfsCfApi *vfs)
+void HydrationJob::finalize(VfsCfApi *vfs)
 {
     auto item = SyncFileItem::fromSyncJournalFileRecord(_record);
     if (_isCancelled) {
@@ -253,49 +187,15 @@ void OCC::HydrationJob::finalize(OCC::VfsCfApi *vfs)
     }
 }
 
-void OCC::HydrationJob::onGetFinished()
-{
-    _errorCode = _job->reply()->error();
-    _statusCode = _job->httpStatusCode();
-    if (_errorCode != 0 || (_statusCode != 200 && _statusCode != 204)) {
-        _errorString = _job->reply()->errorString();
-    }
-
-    if (_job->contentLength() != -1) {
-        const auto size = _job->resumeStart() + _job->contentLength();
-        if (size != _record.size()) {
-            _errorCode = QNetworkReply::UnknownContentError;
-            _errorString = u"Unexpected file size transfered. Expected %1 received %2"_s.arg(QString::number(_record.size()), QString::number(size));
-            // assume that the local and the remote metadate are out of sync
-            Q_EMIT _context.vfs->needSync();
-        }
-    }
-    if (!_errorString.isEmpty()) {
-        qCInfo(lcHydration) << u"GETFileJob finished" << _context << _errorCode << _statusCode << _errorString;
-    } else {
-        qCInfo(lcHydration) << u"GETFileJob finished" << _context;
-    }
-    if (_isCancelled) {
-        _errorCode = QNetworkReply::NoError;
-        _statusCode = 0;
-        _errorString.clear();
-        return;
-    }
-
-    if (_errorCode) {
-        emitFinished(Status::Error);
-        return;
-    }
-
-    emitFinished(Status::Success);
-}
-
-void OCC::HydrationJob::handleNewConnection()
+void HydrationJob::handleNewConnection()
 {
     qCInfo(lcHydration) << u"Got new connection starting GETFileJob" << _context;
-    _transferDataSocket = _transferDataServer->nextPendingConnection();
-    _job = new GETFileJob(_account, _remoteSyncRootPath, _remoteFilePathRel, _transferDataSocket, {}, {}, 0, this);
-    _job->setExpectedContentLength(_record.size());
-    connect(_job, &GETFileJob::finishedSignal, this, &HydrationJob::onGetFinished);
-    _job->start();
+    _hydrationJob = new OCC::HydrationJob(context().vfs, _remoteFilePathRel, std::unique_ptr(_transferDataServer->nextPendingConnection()), this);
+    _hydrationJob->start();
+    connect(_hydrationJob, &OCC::HydrationJob::finished, this, [this] { emitFinished(Status::Success); });
+    connect(_hydrationJob, &OCC::HydrationJob::error, this, [this](const QString &error) {
+        _errorString = error;
+        qCWarning(lcHydration) << u"HydrationJob error" << _context << error;
+        emitFinished(Status::Error);
+    });
 }
