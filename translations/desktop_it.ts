@@ -1210,27 +1210,27 @@ Please consider removing this folder from the account and adding it again.</sour
 <context>
     <name>OCC::GETFileJob</name>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="169"/>
+        <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="27"/>
         <source>Connection Timeout</source>
         <translation>Connessione sospesa</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="254"/>
+        <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="111"/>
         <source>No E-Tag received from server, check Proxy/Gateway</source>
         <translation>Nessun E-Tag ricevuto dal server, controllare Proxy/Gateway</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="260"/>
+        <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="117"/>
         <source>We received a different E-Tag for resuming. Retrying next time.</source>
         <translation>Abbiamo ricevuto un E-Tag diverso per la ripresa. Riproveremo la prossima volta.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="270"/>
+        <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="127"/>
         <source>We received an unexpected download Content-Length.</source>
         <translation>Abbiamo ricevuto un Content-Length inaspettato.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="298"/>
+        <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="155"/>
         <source>Server returned wrong content-range</source>
         <translation>Il server ha restituito un intervallo di contenuto errato.</translation>
     </message>
@@ -1958,67 +1958,67 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::PropagateDownloadFile</name>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="599"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="343"/>
         <source>The download would reduce free local disk space below the limit</source>
         <translation>Il download ridurrebbe lo spazio libero sul disco locale al di sotto del limite</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="603"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="347"/>
         <source>Free space on disk is less than %1</source>
         <translation>Lo spazio libero sul disco è inferiore a %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="426"/>
-        <location filename="../src/libsync/propagatedownload.cpp" line="925"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="170"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="666"/>
         <source>The file has changed since discovery</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="431"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="175"/>
         <source>Failed to free up space, the file »%1« is currently in use</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="457"/>
-        <location filename="../src/libsync/propagatedownload.cpp" line="540"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="201"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="284"/>
         <source>The file »%1« can not be downloaded because of a local file name clash with %2!</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="549"/>
-        <location filename="../src/libsync/propagatedownload.cpp" line="903"/>
-        <location filename="../src/libsync/propagatedownload.cpp" line="933"/>
-        <location filename="../src/libsync/propagatedownload.cpp" line="968"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="293"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="644"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="674"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="709"/>
         <source>The file »%1« is currently in use</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="697"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="441"/>
         <source>The file was deleted from server</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="756"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="500"/>
         <source>Broken webserver returned empty content length for non-empty file on resume</source>
         <translation>Il server web non funzionante ha restituito una lunghezza di contenuto vuota per il file non vuoto al momento della ripresa</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="763"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="507"/>
         <source>The file could not be downloaded completely.</source>
         <translation>Impossibile scaricare completamente il file.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="770"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="514"/>
         <source>The downloaded file is empty despite the server announced it should have been %1.</source>
         <translation>Il file scaricato è vuoto nonostante il server abbia annunciato che avrebbe dovuto essere %1.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="878"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="619"/>
         <source>The file »%1« cannot be saved because of a local file name clash with »%2«!</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="965"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="706"/>
         <source>Error updating metadata: %1</source>
         <translation>Errore durante l&apos;aggiornamento dei metadati: %1</translation>
     </message>
@@ -2478,48 +2478,48 @@ Note that using any logging command line options will override the settings.</so
         <translation>La ricondivisione di questa cartella non è consentita</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="832"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="827"/>
         <source>Open in %1</source>
         <translation>Apri in %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="843"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="838"/>
         <source>Show file versions in web browser</source>
         <translation>Mostra le versioni dei file nel browser web</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="865"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="860"/>
         <source>Rename...</source>
         <translation>Rinomina...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="868"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="863"/>
         <source>Rename and upload...</source>
         <translation>Rinomina e carica...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="873"/>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="877"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="868"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="872"/>
         <source>Move and rename...</source>
         <translation>Sposta e rinomina...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="880"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="875"/>
         <source>Move, rename and upload...</source>
         <translation>Sposta, rinomina e carica...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="883"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="878"/>
         <source>Delete local changes</source>
         <translation>Elimina le modifiche locali</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="888"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="883"/>
         <source>Move and upload...</source>
         <translation>Sposta e carica...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="889"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="884"/>
         <source>Delete</source>
         <translation>Elimina</translation>
     </message>

@@ -1210,27 +1210,27 @@ Overweeg om deze map uit het account te verwijderen en deze opnieuw toe te voege
 <context>
     <name>OCC::GETFileJob</name>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="169"/>
+        <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="27"/>
         <source>Connection Timeout</source>
         <translation>Verbinding is verlopen</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="254"/>
+        <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="111"/>
         <source>No E-Tag received from server, check Proxy/Gateway</source>
         <translation>Geen E-Tag ontvangen van de server, controleer Proxy/Gateway</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="260"/>
+        <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="117"/>
         <source>We received a different E-Tag for resuming. Retrying next time.</source>
         <translation>Andere E-Tag voor hervatting ontvangen. Volgende keer opnieuw proberen.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="270"/>
+        <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="127"/>
         <source>We received an unexpected download Content-Length.</source>
         <translation>Onverwachte download Content-Length ontvangen.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="298"/>
+        <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="155"/>
         <source>Server returned wrong content-range</source>
         <translation>Server gaf onjuiste content-range terug</translation>
     </message>
@@ -1957,67 +1957,67 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::PropagateDownloadFile</name>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="599"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="343"/>
         <source>The download would reduce free local disk space below the limit</source>
         <translation>De download zou de beschikbare lokale schijfruimte onder de limiet brengen.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="603"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="347"/>
         <source>Free space on disk is less than %1</source>
         <translation>De vrije schijfruimte is lager dan %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="426"/>
-        <location filename="../src/libsync/propagatedownload.cpp" line="925"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="170"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="666"/>
         <source>The file has changed since discovery</source>
         <translation>Het bestand is sinds de ontdekking gewijzigd</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="431"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="175"/>
         <source>Failed to free up space, the file »%1« is currently in use</source>
         <translation>Ruimte vrijmaken is mislukt, het bestand »%1« is momenteel in gebruik</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="457"/>
-        <location filename="../src/libsync/propagatedownload.cpp" line="540"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="201"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="284"/>
         <source>The file »%1« can not be downloaded because of a local file name clash with %2!</source>
         <translation>Het bestand »%1« kan niet worden gedownload vanwege een lokaal bestandsnaamconflict met %2!</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="549"/>
-        <location filename="../src/libsync/propagatedownload.cpp" line="903"/>
-        <location filename="../src/libsync/propagatedownload.cpp" line="933"/>
-        <location filename="../src/libsync/propagatedownload.cpp" line="968"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="293"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="644"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="674"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="709"/>
         <source>The file »%1« is currently in use</source>
         <translation>Het bestand »%1« is momenteel in gebruik</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="697"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="441"/>
         <source>The file was deleted from server</source>
         <translation>Het bestand is van de server verwijderd</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="756"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="500"/>
         <source>Broken webserver returned empty content length for non-empty file on resume</source>
         <translation>Defecte webserver retourneerde bij het hervatten een lege inhoudslengte voor een niet-leeg bestand.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="763"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="507"/>
         <source>The file could not be downloaded completely.</source>
         <translation>Het bestand kan niet volledig worden gedownload.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="770"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="514"/>
         <source>The downloaded file is empty despite the server announced it should have been %1.</source>
         <translation>Het gedownloade bestand is leeg ondanks dat de server aankondigde dat het %1 had moeten zijn.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="878"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="619"/>
         <source>The file »%1« cannot be saved because of a local file name clash with »%2«!</source>
         <translation>Het bestand »%1« kan niet worden opgeslagen vanwege een lokaal bestandsnaamconflict met »%2«!</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="965"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="706"/>
         <source>Error updating metadata: %1</source>
         <translation>Fout bij bijwerken metagegevens: %1</translation>
     </message>
@@ -2477,48 +2477,48 @@ Note that using any logging command line options will override the settings.</so
         <translation>Opnieuw delen van deze map is niet toegestaan.</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="832"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="827"/>
         <source>Open in %1</source>
         <translation>Openen in %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="843"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="838"/>
         <source>Show file versions in web browser</source>
         <translation>Bestandsversies weergeven in webbrowser</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="865"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="860"/>
         <source>Rename...</source>
         <translation>Hernoemen…</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="868"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="863"/>
         <source>Rename and upload...</source>
         <translation>Hernoemen en uploaden…</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="873"/>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="877"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="868"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="872"/>
         <source>Move and rename...</source>
         <translation>Verplaatsen en hernoemen…</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="880"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="875"/>
         <source>Move, rename and upload...</source>
         <translation>Verplaatsen, hernoemen en uploaden…</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="883"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="878"/>
         <source>Delete local changes</source>
         <translation>Lokale wijzigingen verwijderen</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="888"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="883"/>
         <source>Move and upload...</source>
         <translation>Verplaatsen en uploaden…</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="889"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="884"/>
         <source>Delete</source>
         <translation>Verwijderen</translation>
     </message>
