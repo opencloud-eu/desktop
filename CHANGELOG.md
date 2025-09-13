@@ -14,6 +14,7 @@
 
 ### 🐛 Bug Fixes
 
+- Fix: Attempted sync on non syncable Folder [[#533](https://github.com/opencloud-eu/desktop/pull/533)]
 - Don't mark restorations as excluded [[#498](https://github.com/opencloud-eu/desktop/pull/498)]
 - Sync Scheduler: Ensure the current sync is actually running [[#452](https://github.com/opencloud-eu/desktop/pull/452)]
 - Fix leak of accountstates [[#445](https://github.com/opencloud-eu/desktop/pull/445)]
