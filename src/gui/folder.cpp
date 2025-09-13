@@ -1116,6 +1116,7 @@ void Folder::registerFolderWatcher()
     _folderWatcher.reset(new FolderWatcher(this));
     connect(_folderWatcher.data(), &FolderWatcher::pathChanged, this,
         [this](const QSet<QString> &paths) { slotWatchedPathsChanged(paths, Folder::ChangeReason::Other); });
+
     connect(_folderWatcher.data(), &FolderWatcher::changesDetected, this, [this] {
         // don't set to not yet started if a sync is already running
         if (!isSyncRunning()) {

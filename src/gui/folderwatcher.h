@@ -80,14 +80,18 @@ public:
     /// For testing linux behavior only
     int testLinuxWatchCount() const;
 
+
     // pop the accumulated changes
     QSet<QString> popChangeSet();
-
 
 Q_SIGNALS:
     /** Emitted when one of the watched directories or one
      *  of the contained files is changed. */
     void pathChanged(const QSet<QString> &path);
+
+    /** Emitted when an extended file attribute changed on one
+     *  of the files in the list */
+    void xattrChanged(const QSet<QString> &path);
 
     /**
      * We detected a file change, this signal can be used to trigger the prepareSync state

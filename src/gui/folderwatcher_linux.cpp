@@ -173,7 +173,8 @@ void FolderWatcherPrivate::slotReceivedNotification(int fd)
         // Filter out journal changes - redundant with filtering in FolderWatcher::pathIsIgnored.
         if (fileName.startsWith("._sync_")
             || fileName.startsWith(".csync_journal.db")
-            || fileName.startsWith(".sync_")) {
+            || fileName.startsWith(".sync_")
+            || fileName == QByteArrayLiteral(".OpenCloudSync.log") ) {
             continue;
         }
 
