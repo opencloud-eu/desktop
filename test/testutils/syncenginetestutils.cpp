@@ -9,6 +9,7 @@
 
 #include "accessmanager.h"
 #include "httplogger.h"
+#include "libsync/cookiejar.h"
 #include "libsync/filesystem.h"
 #include "libsync/syncresult.h"
 #include "testutils.h"
