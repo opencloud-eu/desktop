@@ -15,8 +15,8 @@
 #pragma once
 
 #include "common/filesystembase.h"
-#include "common/vfs.h"
 #include "opencloudsynclib.h"
+#include "vfs/vfs.h"
 
 #include <QRegularExpression>
 #include <QSharedPointer>

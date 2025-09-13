@@ -19,7 +19,6 @@
 #include "common/syncfilestatus.h"
 #include "common/syncjournaldb.h"
 #include "common/syncjournalfilerecord.h"
-#include "common/vfs.h"
 #include "configfile.h"
 #include "creds/abstractcredentials.h"
 #include "csync_exclude.h"
@@ -29,6 +28,7 @@
 #include "owncloudpropagator.h"
 #include "propagatedownload.h"
 #include "propagateremotedelete.h"
+#include "vfs/vfs.h"
 
 #include <chrono>
 

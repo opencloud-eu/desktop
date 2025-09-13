@@ -9,12 +9,11 @@
 #include "account.h"
 #include "common/filesystembase.h"
 #include "common/syncjournaldb.h"
-#include "common/vfs.h"
 #include "creds/abstractcredentials.h"
 #include "folder.h"
+#include "libsync/vfs/vfs.h"
 #include "syncengine.h"
 #include "testutils.h"
-#include <cookiejar.h>
 
 
 #include <QDir>

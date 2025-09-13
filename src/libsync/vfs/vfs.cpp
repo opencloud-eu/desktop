@@ -17,10 +17,10 @@
  */
 
 #include "vfs.h"
+#include "../common/plugin.h"
+#include "../common/syncjournaldb.h"
 #include "common/filesystembase.h"
 #include "common/version.h"
-#include "plugin.h"
-#include "syncjournaldb.h"
 
 #include <QCoreApplication>
 #include <QDir>

@@ -11,7 +11,6 @@ target_sources(libsync PRIVATE
         syncjournalfilerecord.cpp
         utility.cpp
         remotepermissions.cpp
-        vfs.cpp
         pinstate.cpp
         plugin.cpp
         restartmanager.cpp
@@ -32,5 +31,3 @@ elseif(UNIX AND NOT APPLE)
             utility_unix.cpp
     )
 endif()
-
-configure_file(vfspluginmetadata.json.in ${CMAKE_CURRENT_BINARY_DIR}/vfspluginmetadata.json)

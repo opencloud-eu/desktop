@@ -26,8 +26,8 @@
 
 #include "libsync/theme.h"
 
-#include "common/vfs.h"
 #include "gui/settingsdialog.h"
+#include "libsync/vfs/vfs.h"
 
 #include <QCheckBox>
 #include <QVBoxLayout>

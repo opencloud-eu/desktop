@@ -17,7 +17,7 @@
 #include <QScopedPointer>
 
 #include "common/plugin.h"
-#include "common/vfs.h"
+#include "libsync/vfs/vfs.h"
 
 namespace OCC {
 
@@ -59,7 +59,7 @@ protected:
 class OffVfsPluginFactory : public QObject, public DefaultPluginFactory<VfsOff>
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID "eu.opencloud.PluginFactory" FILE "libsync/common/vfspluginmetadata.json")
+    Q_PLUGIN_METADATA(IID "eu.opencloud.PluginFactory" FILE "libsync/vfs/vfspluginmetadata.json")
     Q_INTERFACES(OCC::PluginFactory)
 };
 

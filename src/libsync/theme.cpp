@@ -16,9 +16,9 @@
 #include "common/depreaction.h"
 #include "common/utility.h"
 #include "common/version.h"
-#include "common/vfs.h"
 #include "config.h"
 #include "configfile.h"
+#include "vfs/vfs.h"
 
 #include "resources/qmlresources.h"
 #include "resources/resources.h"
