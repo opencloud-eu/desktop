@@ -75,6 +75,11 @@ LocalInfo VfsOff::statTypeVirtualFile(const std::filesystem::directory_entry &pa
     return LocalInfo(path, type);
 }
 
+OCC::HydrationJob *VfsOff::hydrateFile(const QByteArray &fileId)
+{
+    return nullptr;
+}
+
 void VfsOff::startImpl(const VfsSetupParams &)
 {
     Q_EMIT started();
