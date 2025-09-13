@@ -15,7 +15,12 @@
 #include "common/utility_win.h"
 #include "libsync/vfs/vfs.h"
 
+
 struct CF_PLACEHOLDER_BASIC_INFO;
+
+// see cloud mirror example
+#define FIELD_SIZE(type, field) (sizeof(((type *)0)->field))
+#define CF_SIZE_OF_OP_PARAM(field) (FIELD_OFFSET(CF_OPERATION_PARAMETERS, field) + FIELD_SIZE(CF_OPERATION_PARAMETERS, field))
 
 namespace OCC {
 
@@ -26,11 +31,12 @@ namespace CfApiWrapper {
     {
         OCC::VfsCfApi *vfs;
         QString path;
-        int64_t requestId;
+        int64_t transferKey;
+        CF_CONNECTION_KEY connectionKey;
         QByteArray fileId;
         QMap<QByteArray, QVariant> extraArgs;
 
-        inline QString requestHexId() const { return QString::number(requestId, 16); }
+        inline QString requestHexId() const { return QString::number(transferKey, 16); }
     };
 
     template <typename T>

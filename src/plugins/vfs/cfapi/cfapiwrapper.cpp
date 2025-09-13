@@ -8,14 +8,14 @@
 #include "common/filesystembase.h"
 #include "common/utility_win.h"
 #include "filesystem.h"
-#include "hydrationjob.h"
+#include "hydrationdevice.h"
+#include "libsync/account.h"
 #include "syncengine.h"
 #include "theme.h"
 #include "vfs_cfapi.h"
 
 #include <QCoreApplication>
 #include <QDir>
-#include <QEventLoop>
 #include <QFileInfo>
 #include <QLocalSocket>
 #include <QLoggingCategory>
@@ -28,7 +28,6 @@
 #include <winrt/Windows.Foundation.h>
 #include <winrt/Windows.Security.Cryptography.h>
 #include <winrt/windows.Storage.Streams.h>
-#include <winrt/windows.foundation.collections.h>
 #include <winrt/windows.storage.provider.h>
 
 Q_LOGGING_CATEGORY(lcCfApiWrapper, "sync.vfs.cfapi.wrapper", QtDebugMsg)
@@ -45,9 +44,18 @@ using namespace Windows::Foundation::Collections;
 using namespace Windows::Security::Cryptography;
 }
 
-
-#define FIELD_SIZE(type, field) (sizeof(((type *)0)->field))
-#define CF_SIZE_OF_OP_PARAM(field) (FIELD_OFFSET(CF_OPERATION_PARAMETERS, field) + FIELD_SIZE(CF_OPERATION_PARAMETERS, field))
+template <>
+QString OCC::Utility::enumToDisplayName(CF_CALLBACK_DEHYDRATION_REASON reason)
+{
+    switch (reason) {
+        OCC_UTIL_ENUM_DISPLAY_NAME(CF_CALLBACK_DEHYDRATION_REASON_NONE)
+        OCC_UTIL_ENUM_DISPLAY_NAME(CF_CALLBACK_DEHYDRATION_REASON_USER_MANUAL)
+        OCC_UTIL_ENUM_DISPLAY_NAME(CF_CALLBACK_DEHYDRATION_REASON_SYSTEM_LOW_SPACE)
+        OCC_UTIL_ENUM_DISPLAY_NAME(CF_CALLBACK_DEHYDRATION_REASON_SYSTEM_INACTIVITY)
+        OCC_UTIL_ENUM_DISPLAY_NAME(CF_CALLBACK_DEHYDRATION_REASON_SYSTEM_OS_UPGRADE)
+    }
+    Q_UNREACHABLE();
+}
 
 namespace {
 
@@ -94,53 +102,12 @@ OCC::Result<std::vector<char>, int64_t> getPlaceholderInfo(
     return {result};
 }
 
-void cfApiSendTransferInfo(const CF_CONNECTION_KEY &connectionKey, const CF_TRANSFER_KEY &transferKey, NTSTATUS status, void *buffer, qint64 offset,
-    qint64 currentBlockLength, qint64 totalLength)
-{
-    CF_OPERATION_INFO opInfo = {0};
-    CF_OPERATION_PARAMETERS opParams = {0};
-
-    opInfo.StructSize = sizeof(opInfo);
-    opInfo.Type = CF_OPERATION_TYPE_TRANSFER_DATA;
-    opInfo.ConnectionKey = connectionKey;
-    opInfo.TransferKey = transferKey;
-    opParams.ParamSize = CF_SIZE_OF_OP_PARAM(TransferData);
-    opParams.TransferData.CompletionStatus = status;
-    opParams.TransferData.Buffer = buffer;
-    opParams.TransferData.Offset.QuadPart = offset;
-    opParams.TransferData.Length.QuadPart = currentBlockLength;
-
-    const qint64 cfExecuteresult = CfExecute(&opInfo, &opParams);
-    if (cfExecuteresult != S_OK) {
-        qCCritical(lcCfApiWrapper) << u"Couldn't send transfer info" << QString::number(transferKey.QuadPart, 16) << u":" << cfExecuteresult
-                                   << OCC::Utility::formatWinError(cfExecuteresult);
-    }
-
-    const auto isDownloadFinished = ((offset + currentBlockLength) == totalLength);
-    if (isDownloadFinished) {
-        return;
-    }
-
-    // refresh Windows Copy Dialog progress
-    LARGE_INTEGER progressTotal;
-    progressTotal.QuadPart = totalLength;
-
-    LARGE_INTEGER progressCompleted;
-    progressCompleted.QuadPart = offset;
-
-    const qint64 cfReportProgressresult = CfReportProviderProgress(connectionKey, transferKey, progressTotal, progressCompleted);
-
-    if (cfReportProgressresult != S_OK) {
-        qCCritical(lcCfApiWrapper) << u"Couldn't report provider progress" << QString::number(transferKey.QuadPart, 16) << u":" << cfReportProgressresult
-                                   << OCC::Utility::formatWinError(cfReportProgressresult);
-    }
-}
-
 OCC::CfApiWrapper::CallBackContext logCallback(const char *function, const CF_CALLBACK_INFO *callbackInfo, QMap<QByteArray, QVariant> &&extraArgs = {})
 {
     OCC::CfApiWrapper::CallBackContext context{.vfs = reinterpret_cast<OCC::VfsCfApi *>(callbackInfo->CallbackContext),
         .path = QString(QString::fromWCharArray(callbackInfo->VolumeDosName) + QString::fromWCharArray(callbackInfo->NormalizedPath)),
-        .requestId = callbackInfo->TransferKey.QuadPart,
+        .transferKey = callbackInfo->TransferKey.QuadPart,
+        .connectionKey = callbackInfo->ConnectionKey,
         .fileId = QByteArray(reinterpret_cast<const char *>(callbackInfo->FileIdentity), callbackInfo->FileIdentityLength),
         .extraArgs = std::move(extraArgs)};
     Q_ASSERT(context.vfs->metaObject()->className() == QByteArrayLiteral("OCC::VfsCfApi"));
@@ -159,158 +126,23 @@ OCC::CfApiWrapper::CallBackContext logCallback(const char *function, const CF_CA
     return context;
 }
 
-void CALLBACK cfApiFetchDataCallback(const CF_CALLBACK_INFO *callbackInfo, const CF_CALLBACK_PARAMETERS *callbackParameters)
+void CALLBACK cfApiFetchDataCallback(const CF_CALLBACK_INFO *callbackInfo, const CF_CALLBACK_PARAMETERS *parameters)
 {
-    const auto context = logCallback(Q_FUNC_INFO, callbackInfo);
+    const auto context = logCallback(Q_FUNC_INFO, callbackInfo, {{"reason", OCC::Utility::enumToDisplayName(parameters->FetchData.LastDehydrationReason)}});
 
-    const auto sendTransferError = [=] {
-        cfApiSendTransferInfo(callbackInfo->ConnectionKey, callbackInfo->TransferKey, STATUS_UNSUCCESSFUL, nullptr,
-            callbackParameters->FetchData.RequiredFileOffset.QuadPart, callbackParameters->FetchData.RequiredLength.QuadPart, callbackInfo->FileSize.QuadPart);
-    };
-
-    const auto sendTransferInfo = [=](QByteArray &data, qint64 offset) {
-        cfApiSendTransferInfo(
-            callbackInfo->ConnectionKey, callbackInfo->TransferKey, STATUS_SUCCESS, data.data(), offset, data.length(), callbackInfo->FileSize.QuadPart);
-    };
-
-    if (QCoreApplication::applicationPid() == callbackInfo->ProcessInfo->ProcessId) {
+    if (callbackInfo->ProcessInfo && QCoreApplication::applicationPid() == callbackInfo->ProcessInfo->ProcessId) {
         qCCritical(lcCfApiWrapper) << u"implicit hydration triggered by the client itself. Will lead to a deadlock. Cancel" << context.path
-                                   << context.requestId;
+                                   << context.transferKey;
         Q_ASSERT(false);
-        sendTransferError();
         return;
-    }
-
-    const auto invokeResult =
-        QMetaObject::invokeMethod(context.vfs, [=] { context.vfs->requestHydration(context, callbackInfo->FileSize.QuadPart); }, Qt::QueuedConnection);
-    if (!invokeResult) {
-        qCCritical(lcCfApiWrapper) << u"Failed to trigger hydration for" << context;
-        sendTransferError();
-        return;
-    }
-
-    qCDebug(lcCfApiWrapper) << u"Successfully triggered hydration for" << context;
-
-    // Block and wait for vfs to signal back the hydration is ready
-    bool hydrationRequestResult = false;
-    QEventLoop loop;
-    QObject::connect(context.vfs, &OCC::VfsCfApi::hydrationRequestReady, &loop, [&](int64_t id) {
-        if (context.requestId == id) {
-            hydrationRequestResult = true;
-            qCDebug(lcCfApiWrapper) << u"Hydration request ready for" << context;
-            loop.quit();
-        }
-    });
-    QObject::connect(context.vfs, &OCC::VfsCfApi::hydrationRequestFailed, &loop, [&](int64_t id) {
-        if (context.requestId == id) {
-            hydrationRequestResult = false;
-            qCWarning(lcCfApiWrapper) << u"Hydration request failed for" << context;
-            loop.quit();
-        }
-    });
-
-    qCDebug(lcCfApiWrapper) << u"Starting event loop 1";
-    loop.exec();
-    QObject::disconnect(context.vfs, nullptr, &loop, nullptr); // Ensure we properly cancel hydration on server errors
-
-    qCInfo(lcCfApiWrapper) << u"VFS replied for hydration of" << context << u"status was:" << hydrationRequestResult;
-    if (!hydrationRequestResult) {
-        qCCritical(lcCfApiWrapper) << u"Failed to trigger hydration for" << context;
-        sendTransferError();
-        return;
-    }
-
-    QLocalSocket socket;
-    socket.connectToServer(context.requestHexId());
-    const auto connectResult = socket.waitForConnected();
-    if (!connectResult) {
-        qCWarning(lcCfApiWrapper) << u"Couldn't connect the socket" << context << socket.error() << socket.errorString();
-        sendTransferError();
-        return;
-    }
-
-    QLocalSocket signalSocket;
-    const QString signalSocketName = context.requestHexId() + u":cancellation"_s;
-    signalSocket.connectToServer(signalSocketName);
-    const auto cancellationSocketConnectResult = signalSocket.waitForConnected();
-    if (!cancellationSocketConnectResult) {
-        qCWarning(lcCfApiWrapper) << u"Couldn't connect the socket" << signalSocketName << signalSocket.error() << signalSocket.errorString();
-        sendTransferError();
-        return;
-    }
-
-    auto hydrationRequestCancelled = false;
-    QObject::connect(&signalSocket, &QLocalSocket::readyRead, &loop, [&] {
-        hydrationRequestCancelled = true;
-        qCCritical(lcCfApiWrapper) << u"Hydration canceled for " << context;
-    });
-
-    // CFAPI expects sent blocks to be of a multiple of a block size.
-    // Only the last sent block is allowed to be of a different size than
-    // a multiple of a block size
-
-    // TODO: this looks like it has optimisation potential
-    constexpr auto cfapiBlockSize = 4096;
-    qint64 dataOffset = 0;
-    QByteArray protrudingData;
-
-    const auto alignAndSendData = [&](const QByteArray &receivedData) {
-        QByteArray data = protrudingData + receivedData;
-        protrudingData.clear();
-        if (data.size() < cfapiBlockSize) {
-            protrudingData = data;
-            return;
-        }
-        const auto protudingSize = data.size() % cfapiBlockSize;
-        protrudingData = data.right(protudingSize);
-        data.chop(protudingSize);
-        sendTransferInfo(data, dataOffset);
-        dataOffset += data.size();
     };
-
-    QObject::connect(&socket, &QLocalSocket::readyRead, &loop, [&] {
-        if (hydrationRequestCancelled) {
-            qCDebug(lcCfApiWrapper) << u"Don't transfer data because request" << context << u"was cancelled";
-            return;
-        }
-
-        const auto receivedData = socket.readAll();
-        if (receivedData.isEmpty()) {
-            qCWarning(lcCfApiWrapper) << u"Unexpected empty data received" << context;
-            sendTransferError();
-            protrudingData.clear();
-            loop.quit();
-            return;
-        }
-        alignAndSendData(receivedData);
-    });
-
-    QObject::connect(context.vfs, &OCC::VfsCfApi::hydrationRequestFinished, &loop, [&](int64_t id) {
-        qDebug(lcCfApiWrapper) << u"Hydration finished for request" << id;
-        if (context.requestId == id) {
-            loop.quit();
+    // switch to main thread
+    QTimer::singleShot(0, context.vfs, [context, fileSize = callbackInfo->FileSize.QuadPart] {
+        Q_ASSERT(QThread::currentThread() == QCoreApplication::instance()->thread());
+        if (auto *hydration = OCC::CfApiWrapper::HydrationDevice::requestHydration(context, fileSize, context.vfs)) {
+            hydration->start();
         }
     });
-
-    qCDebug(lcCfApiWrapper) << u"Starting event loop 2";
-    loop.exec();
-
-    if (!hydrationRequestCancelled && !protrudingData.isEmpty()) {
-        qDebug(lcCfApiWrapper) << u"Send remaining protruding data. Size:" << protrudingData.size();
-        sendTransferInfo(protrudingData, dataOffset);
-    }
-
-    OCC::HydrationJob::Status hydrationJobResult = OCC::HydrationJob::Status::Error;
-    const auto invokeFinalizeResult = QMetaObject::invokeMethod(
-        context.vfs, [&hydrationJobResult, &context] { hydrationJobResult = context.vfs->finalizeHydrationJob(context.requestId); },
-        Qt::BlockingQueuedConnection);
-    if (!invokeFinalizeResult) {
-        qCritical(lcCfApiWrapper) << u"Failed to finalize hydration job for" << context;
-    }
-
-    if (hydrationJobResult != OCC::HydrationJob::Status::Success) {
-        sendTransferError();
-    }
 }
 
 OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> updatePlaceholderState(
@@ -366,10 +198,7 @@ void CALLBACK cfApiCancelFetchData(const CF_CALLBACK_INFO *callbackInfo, const C
     const auto context = logCallback(Q_FUNC_INFO, callbackInfo);
 
     qInfo(lcCfApiWrapper) << u"Cancel fetch data of" << context;
-    const auto invokeResult = QMetaObject::invokeMethod(context.vfs, [context] { context.vfs->cancelHydration(context); }, Qt::QueuedConnection);
-    if (!invokeResult) {
-        qCritical(lcCfApiWrapper) << u"Failed to cancel hydration for" << context;
-    }
+    QMetaObject::invokeMethod(context.vfs, [context] { context.vfs->cancelHydration(context); }, Qt::QueuedConnection);
 }
 
 void CALLBACK cfApiNotifyFileOpenCompletion(const CF_CALLBACK_INFO *callbackInfo, const CF_CALLBACK_PARAMETERS * /*callbackParameters*/)

@@ -12,17 +12,22 @@ using namespace OCC;
 HydrationJob::HydrationJob(Vfs *vfs, const QByteArray &fileId, std::unique_ptr<QIODevice> &&device, QObject *parent)
     : QObject(parent)
     , _vfs(vfs)
+    , _fileId(fileId)
     , _device(std::move(device))
 {
-    vfs->params().journal->getFileRecordsByFileId(fileId, [this](const SyncJournalFileRecord &record) {
-        Q_ASSERT(!_record.isValid());
-        _record = record;
-    });
-    Q_ASSERT(_record.isValid());
 }
 
 void HydrationJob::start()
 {
+    _vfs->params().journal->getFileRecordsByFileId(_fileId, [this](const SyncJournalFileRecord &record) {
+        Q_ASSERT(!_record.isValid());
+        _record = record;
+    });
+    if (!_record.isValid()) {
+        Q_EMIT error(tr("Failed to find fileId: %1 in db").arg(QString::fromUtf8(_fileId)));
+        Q_EMIT _vfs->needSync();
+        return;
+    }
     if (!OC_ENSURE(_device->open(QIODevice::WriteOnly))) {
         Q_EMIT error(_device->errorString());
         return;
