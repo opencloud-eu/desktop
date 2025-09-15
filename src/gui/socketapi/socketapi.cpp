@@ -676,20 +676,17 @@ void SocketApi::command_V2_HYDRATE_FILE(const QSharedPointer<SocketApiJobV2> &jo
     auto fileData = FileData::get(file);
 
     if (fileData.folder) {
-        auto sendOk = [job]() { job->success({{QStringLiteral("status"), QStringLiteral("OK")}}); };
-        if (auto *hydrationJob = fileData.folder->vfs().hydrateFile(fileId)) {
-            connect(hydrationJob, &HydrationJob::finished, this, [sendOk, hydrationJob]() {
-                sendOk();
-                hydrationJob->deleteLater();
-            });
-            connect(hydrationJob, &HydrationJob::error, this, [job, hydrationJob](const QString &error) {
-                job->success({{QStringLiteral("status"), QStringLiteral("ERROR")}, {QStringLiteral("error"), error}});
-                hydrationJob->deleteLater();
-            });
-            hydrationJob->start();
-        } else {
-            sendOk();
-        }
+        auto watcher = new QFutureWatcher<Result<void, QString>>();
+        connect(watcher, &QFutureWatcher<Result<void, QString>>::finished, this, [job, watcher] {
+            const auto resut = watcher->result<Result<void, QString>>();
+            watcher->deleteLater();
+            if (!resut) {
+                job->success({{QStringLiteral("status"), QStringLiteral("ERROR")}, {QStringLiteral("error"), resut.error()}});
+            } else {
+                job->success({{QStringLiteral("status"), QStringLiteral("OK")}});
+            }
+        });
+        watcher->setFuture(fileData.folder->vfs().hydrateFile(fileId));
     } else {
         job->failure(QStringLiteral("cannot hydrate unknown file"));
     }

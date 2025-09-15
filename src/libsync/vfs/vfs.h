@@ -27,6 +27,7 @@
 #include <QUrl>
 #include <QVersionNumber>
 
+#include <QFuture>
 #include <filesystem>
 #include <memory>
 
@@ -211,7 +212,7 @@ public:
      * The returned HydrationJob must be started by the caller.
      * Returns nullptr if not supported.
      */
-    [[nodiscard]] virtual HydrationJob *hydrateFile(const QByteArray &fileId) = 0;
+    [[nodiscard]] virtual QFuture<Result<void, QString>> hydrateFile(const QByteArray &fileId);
 
 public Q_SLOTS:
     /** Update in-sync state based on SyncFileStatusTracker signal.

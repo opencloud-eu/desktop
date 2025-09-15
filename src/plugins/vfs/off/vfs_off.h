@@ -47,7 +47,6 @@ public:
 
     LocalInfo statTypeVirtualFile(const std::filesystem::directory_entry &path, ItemType type) override;
 
-    HydrationJob *hydrateFile(const QByteArray &fileId) override;
 
 public Q_SLOTS:
     void fileStatusChanged(const QString &, SyncFileStatus) override;
