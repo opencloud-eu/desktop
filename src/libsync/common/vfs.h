@@ -260,9 +260,9 @@ protected:
      */
     virtual void startImpl(const VfsSetupParams &params) = 0;
 
+    std::unique_ptr<VfsSetupParams> _setupParams;
 private:
     // the parameters passed to start()
-    std::unique_ptr<VfsSetupParams> _setupParams;
     QScopedPointer<VfsApiPrivate> d;
 
     friend class OwncloudPropagator;
