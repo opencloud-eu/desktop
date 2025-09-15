@@ -403,21 +403,27 @@ Feature: Syncing files
         And the user waits for file "file with space.txt" to be synced
         Then as "Alice" file "file with space.txt" should exist in the server
 
-
-    Scenario: Syncing folders each having 500 files
+    @skipOnWindows @issue-435
+    Scenario: Syncing folders each having large number of files
         Given the user has created a folder "folder1" in temp folder
         And the user has created "500" files each of size "1048576" bytes inside folder "folder1" in temp folder
         And the user has created a folder "folder2" in temp folder
         And the user has created "500" files each of size "1048576" bytes inside folder "folder2" in temp folder
+        And the user has created a folder "folder3" in temp folder
+        And the user has created "1000" files each of size "1048576" bytes inside folder "folder3" in temp folder
         And user "Alice" has set up a client with default settings
         When user "Alice" moves folder "folder1" from the temp folder into the sync folder
         And user "Alice" moves folder "folder2" from the temp folder into the sync folder
+        And user "Alice" moves folder "folder3" from the temp folder into the sync folder
         And the user waits for folder "folder1" to be synced
         And the user waits for folder "folder2" to be synced
+        And the user waits for folder "folder3" to be synced
         Then as "Alice" folder "folder1" should exist in the server
         And as user "Alice" folder "folder1" should contain "500" items in the server
         And as "Alice" folder "folder2" should exist in the server
         And as user "Alice" folder "folder2" should contain "500" items in the server
+        And as "Alice" folder "folder3" should exist in the server
+        And as user "Alice" folder "folder3" should contain "1000" items in the server
 
 
     Scenario: Skip sync folder configuration
