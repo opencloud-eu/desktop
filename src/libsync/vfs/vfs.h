@@ -13,14 +13,14 @@
  */
 #pragma once
 
+#include "../common/pinstate.h"
+#include "../common/result.h"
+#include "../common/syncfilestatus.h"
+#include "../common/utility.h"
 #include "assert.h"
 #include "libsync/accountfwd.h"
 #include "libsync/discoveryinfo.h"
 #include "libsync/opencloudsynclib.h"
-#include "pinstate.h"
-#include "result.h"
-#include "syncfilestatus.h"
-#include "utility.h"
 
 #include <QObject>
 #include <QSharedPointer>

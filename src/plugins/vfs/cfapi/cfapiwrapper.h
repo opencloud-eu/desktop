@@ -13,7 +13,7 @@
 #include "common/pinstate.h"
 #include "common/result.h"
 #include "common/utility_win.h"
-#include "common/vfs.h"
+#include "libsync/vfs/vfs.h"
 
 struct CF_PLACEHOLDER_BASIC_INFO;
 

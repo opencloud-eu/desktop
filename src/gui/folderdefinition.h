@@ -14,8 +14,8 @@
 
 #pragma once
 
-#include "common/vfs.h"
 #include "gui/opencloudguilib.h"
+#include "libsync/vfs/vfs.h"
 
 #include <QString>
 #include <QUrl>

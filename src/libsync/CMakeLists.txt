@@ -44,6 +44,7 @@ set(libsync_SRCS
     syncresult.cpp
     syncoptions.cpp
     theme.cpp
+
     creds/credentialmanager.cpp
     creds/abstractcredentials.cpp
     creds/oauth.cpp
@@ -117,6 +118,7 @@ set_source_files_properties(configfile.cpp
 
 target_link_libraries(libsync PUBLIC $<BUILD_INTERFACE:OpenAPI::LibreGraphAPI>)
 add_subdirectory(graphapi)
+add_subdirectory(vfs)
 
 if ( APPLE )
     target_link_libraries(libsync PUBLIC
