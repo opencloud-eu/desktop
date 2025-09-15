@@ -1,7 +1,7 @@
 #include "accountconfiguredwizardpage.h"
 
-#include "common/vfs.h"
 #include "gui/messagebox.h"
+#include "libsync/vfs/vfs.h"
 #include "ui_accountconfiguredwizardpage.h"
 
 #include "libsync/theme.h"

@@ -25,7 +25,7 @@
 #include "common/syncjournaldb.h"
 #include "common/syncjournalfilerecord.h"
 #include "common/utility.h"
-#include "common/vfs.h"
+#include "vfs/vfs.h"
 
 #include "libsync/theme.h"
 
