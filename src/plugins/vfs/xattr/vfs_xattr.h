@@ -10,10 +10,41 @@
 
 #include "common/vfs.h"
 #include "common/plugin.h"
+#include "common/result.h"
 
-#include "xattrwrapper.h"
+#include "config.h"
+
+namespace xattr {
+struct PlaceHolderAttribs {
+public:
+    qint64 size() const { return _size; }
+    QByteArray fileId() const { return _fileId; }
+    time_t modTime() const {return _modtime; }
+    QString eTag() const { return _etag; }
+    QByteArray pinState() const { return _pinState; }
+    QByteArray action() const { return _action; }
+
+    bool itsMe() const { return !_executor.isEmpty() && _executor == QByteArrayLiteral(APPLICATION_EXECUTABLE);}
+
+    qint64 _size;
+    QByteArray _fileId;
+    time_t _modtime;
+    QString _etag;
+    QByteArray _executor;
+    QByteArray _pinState;
+    QByteArray _action;
+
+};
+
+PlaceHolderAttribs placeHolderAttributes(const QString& path);
+bool hasPlaceholderAttributes(const QString &path);
+
+OCC::Result<void, QString> addPlaceholderAttribute(const QString &path, const QByteArray &name = {}, const QByteArray &val = {});
+}
 
 namespace OCC {
+
+using namespace xattr;
 
 class VfsXAttr : public Vfs
 {
@@ -38,7 +69,7 @@ public:
     OCC::Result<Vfs::ConvertToPlaceholderResult, QString> convertToPlaceholder(
             const QString &path, time_t modtime, qint64 size, const QByteArray &fileId, const QString &replacesPath);
 
-    bool handleAction(const QString& path, const XAttrWrapper::PlaceHolderAttribs &attribs);
+    bool handleAction(const QString& path, const PlaceHolderAttribs &attribs);
     bool needsMetadataUpdate(const SyncFileItem &item) override;
     bool isDehydratedPlaceholder(const QString &filePath) override;
     LocalInfo statTypeVirtualFile(const std::filesystem::directory_entry &path, ItemType type) override;
