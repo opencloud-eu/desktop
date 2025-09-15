@@ -322,7 +322,7 @@ void VfsCfApi::requestHydration(const OCC::CfApiWrapper::CallBackContext &contex
     });
     if (!record.isValid()) {
         qCInfo(lcCfApi) << u"Couldn't hydrate, did not find file in db";
-        Q_ASSERT(false); // how did we end up here if it's not  a cloud file
+        Q_ASSERT(false); // how did we end up here if it's not a cloud file
         Q_EMIT hydrationRequestFailed(context.requestId);
         Q_EMIT needSync();
         return;

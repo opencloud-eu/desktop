@@ -47,6 +47,7 @@ public:
 
     LocalInfo statTypeVirtualFile(const std::filesystem::directory_entry &path, ItemType type) override;
 
+
 public Q_SLOTS:
     void fileStatusChanged(const QString &, SyncFileStatus) override;
 
