@@ -5,6 +5,7 @@
 include(OCAddVfsPlugin)
 
 foreach(vfsPlugin ${VIRTUAL_FILE_SYSTEM_PLUGINS})
+    message("checking vfs ${vfsPlugin}")
     set(vfsPluginPath ${vfsPlugin})
     set(vfsPluginPathOut ${vfsPlugin})
     get_filename_component(vfsPluginName ${vfsPlugin} NAME)

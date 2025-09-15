@@ -134,6 +134,8 @@ namespace PinStateEnums {
     Q_ENUM_NS(VfsItemAvailability)
 }
 using namespace PinStateEnums;
+template <>
+OPENCLOUD_SYNC_EXPORT QString Utility::enumToDisplayName(PinState state);
 
 template <>
 OPENCLOUD_SYNC_EXPORT QString Utility::enumToDisplayName(VfsItemAvailability availability);

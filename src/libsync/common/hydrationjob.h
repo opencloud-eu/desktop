@@ -4,7 +4,6 @@
  */
 #pragma once
 
-#include "cfapiwrapper.h"
 #include "libsync/account.h"
 #include "libsync/common/syncjournalfilerecord.h"
 
@@ -16,7 +15,18 @@ class QLocalSocket;
 namespace OCC {
 class GETFileJob;
 class SyncJournalDb;
-class VfsCfApi;
+class Vfs;
+
+struct CallBackContext
+{
+    OCC::Vfs *vfs;
+    QString path;
+    int64_t requestId;
+    QByteArray fileId;
+    QMap<QByteArray, QVariant> extraArgs;
+
+    inline QString requestHexId() const { return QString::number(requestId, 16); }
+};
 
 // TODO: check checksums
 class HydrationJob : public QObject
@@ -30,7 +40,7 @@ public:
     };
     Q_ENUM(Status)
 
-    explicit HydrationJob(const CfApiWrapper::CallBackContext &context);
+    explicit HydrationJob(const CallBackContext &context);
 
     ~HydrationJob() override;
 
@@ -58,7 +68,7 @@ public:
 
     Status status() const;
 
-    const CfApiWrapper::CallBackContext context() const;
+    const CallBackContext context() const;
 
     [[nodiscard]] int errorCode() const;
     [[nodiscard]] int statusCode() const;
@@ -66,7 +76,7 @@ public:
 
     void start();
     void cancel();
-    void finalize(OCC::VfsCfApi *vfs);
+    void finalize(OCC::Vfs *vfs);
 
 Q_SIGNALS:
     void finished(HydrationJob *job);
@@ -89,7 +99,7 @@ private:
     SyncJournalDb *_journal = nullptr;
     bool _isCancelled = false;
 
-    CfApiWrapper::CallBackContext _context;
+    OCC::CallBackContext _context;
     QString _remoteFilePathRel;
 
     SyncJournalFileRecord _record;

@@ -48,7 +48,8 @@ FolderWatcher::FolderWatcher(Folder *folder)
     _timer.setInterval(notificationTimeoutC);
     _timer.setSingleShot(true);
     connect(&_timer, &QTimer::timeout, this, [this] {
-        auto paths = popChangeSet();
+        _timer.stop();
+        auto paths = std::move(_changeSet);
         Q_ASSERT(!paths.empty());
         if (!paths.isEmpty()) {
             qCInfo(lcFolderWatcher) << u"Detected changes in paths:" << paths;

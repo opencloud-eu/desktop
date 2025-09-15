@@ -12,6 +12,7 @@ target_sources(libsync PRIVATE
         utility.cpp
         remotepermissions.cpp
         vfs.cpp
+	hydrationjob.cpp
         pinstate.cpp
         plugin.cpp
         restartmanager.cpp
