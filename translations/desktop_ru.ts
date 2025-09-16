@@ -2751,22 +2751,22 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::Vfs</name>
     <message>
-        <location filename="../src/libsync/common/vfs.cpp" line="85"/>
+        <location filename="../src/libsync/vfs/vfs.cpp" line="85"/>
         <source>ReFS is currently not supported.</source>
         <translation>ReFS сейчас не поддерживается.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/common/vfs.cpp" line="89"/>
+        <location filename="../src/libsync/vfs/vfs.cpp" line="89"/>
         <source>The Virtual filesystem feature does not support a drive as sync root</source>
         <translation>Функциональной Виртуальной файловой системы не поддерживает диск в качестве корня для синхронизации</translation>
     </message>
     <message>
-        <location filename="../src/libsync/common/vfs.cpp" line="93"/>
+        <location filename="../src/libsync/vfs/vfs.cpp" line="93"/>
         <source>The Virtual filesystem feature requires a NTFS file system, %1 is using %2</source>
         <translation>Функциональность Виртуальной файловой системы требует файловой системы NTFS, %1 использует %2</translation>
     </message>
     <message>
-        <location filename="../src/libsync/common/vfs.cpp" line="97"/>
+        <location filename="../src/libsync/vfs/vfs.cpp" line="97"/>
         <source>The Virtual filesystem feature is not supported on network drives</source>
         <translation>Функциональность Виртуальной файловой системы не поддерживается на сетевых дисках</translation>
     </message>

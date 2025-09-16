@@ -2748,22 +2748,22 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
 <context>
     <name>OCC::Vfs</name>
     <message>
-        <location filename="../src/libsync/common/vfs.cpp" line="85"/>
+        <location filename="../src/libsync/vfs/vfs.cpp" line="85"/>
         <source>ReFS is currently not supported.</source>
         <translation>ReFS n&apos;est actuellement pas pris en charge.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/common/vfs.cpp" line="89"/>
+        <location filename="../src/libsync/vfs/vfs.cpp" line="89"/>
         <source>The Virtual filesystem feature does not support a drive as sync root</source>
         <translation>La fonction de système de fichiers virtuel ne prend pas en charge un lecteur en tant que racine de synchronisation.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/common/vfs.cpp" line="93"/>
+        <location filename="../src/libsync/vfs/vfs.cpp" line="93"/>
         <source>The Virtual filesystem feature requires a NTFS file system, %1 is using %2</source>
         <translation>Le système de fichiers virtuel nécessite un système de fichiers NTFS, or %1 utilise %2</translation>
     </message>
     <message>
-        <location filename="../src/libsync/common/vfs.cpp" line="97"/>
+        <location filename="../src/libsync/vfs/vfs.cpp" line="97"/>
         <source>The Virtual filesystem feature is not supported on network drives</source>
         <translation>Le système de fichiers virtuel n’est pas pris en charge sur les disques réseau</translation>
     </message>
