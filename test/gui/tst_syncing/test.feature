@@ -531,3 +531,16 @@ Feature: Syncing files
             | resource                 | status      | account                              |
             | simple-folder/sub-folder | Blacklisted | Brian Murphy@%local_server_hostname% |
             | simple-folder/simple.pdf | Blacklisted | Brian Murphy@%local_server_hostname% |
+
+    @skipOnWindows @issue-435
+    Scenario Outline: File with long multi-byte characters name can be synced (76 characters, 255 bytes including extension)
+        Given user "Alice" has set up a client with default settings
+        When user "Alice" creates a file "<filename>" with the following content inside the sync folder
+            """
+            test content
+            """
+        And the user waits for file "<filename>" to be synced
+        Then as "Alice" file "<filename>" should exist in the server
+        Examples:
+            | filename                                                                    |
+            | 𒁰𒁱𒁲𒁳𒁴𒁵𒁶𒁷𒁸𒁹𒁺𒁻𒁼𒁾𒁿𒁰𒁱𒁲𒁳𒁴𒁵𒁶𒁷𒁸𒁹𒁺𒁻𒁼𒁾𒁿𒁰𒁱𒁲𒁳𒁴𒁵𒁶𒁷𒁸𒁹𒁺abôǣฎพฒฆ๘ตกกผพฒณญไใๅำ๊๒๔๗๘รศฬอฮ.txt |
