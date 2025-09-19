@@ -304,16 +304,6 @@ def step(context, username, _, resource_name):
 
 
 @When(
-    r'user "([^"]*)" moves (?:folder|file) "([^"]*)" to the temp folder',
-    regexp=True,
-)
-def step(context, _, resource_name):
-    source_dir = get_resource_path(resource_name)
-    destination_dir = get_temp_resource_path(resource_name)
-    shutil.move(source_dir, destination_dir)
-
-
-@When(
     r'user "([^"]*)" moves (?:file|folder) "([^"]*)" to "([^"]*)" in the sync folder',
     regexp=True,
 )
@@ -412,3 +402,7 @@ def step(context):
         filename = row[0]
         deleteResource(filename, 'file')
 
+
+@Given('user "|any|" has created a file "|any|" with size "|any|" in the sync folder')
+def step(context, _, filename, filesize):
+    create_file_with_size(filename, filesize)
