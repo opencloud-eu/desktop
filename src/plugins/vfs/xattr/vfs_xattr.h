@@ -15,6 +15,7 @@
 #include "config.h"
 
 namespace xattr {
+
 struct PlaceHolderAttribs {
 public:
     qint64 size() const { return _size; }
@@ -23,23 +24,27 @@ public:
     QString eTag() const { return _etag; }
     QByteArray pinState() const { return _pinState; }
     QByteArray action() const { return _action; }
+    QByteArray state() const { return _state; }
+    QByteArray owner() const { return _owner; }
 
-    bool itsMe() const { return !_executor.isEmpty() && _executor == QByteArrayLiteral(APPLICATION_EXECUTABLE);}
+    // the owner must not be empty but set to the ownerString, that consists
+    // of the app name and an instance ID
+    // If no xattrs are set at all, the method @placeHolderAttributes sets it
+    // to our name and claims the space
+
+    // Always check if we're the valid owner before accessing the xattrs.
+    bool validOwner() const { return !_owner.isEmpty(); }
 
     qint64 _size;
     QByteArray _fileId;
     time_t _modtime;
     QString _etag;
-    QByteArray _executor;
+    QByteArray _owner;
     QByteArray _pinState;
     QByteArray _action;
+    QByteArray _state;
 
 };
-
-PlaceHolderAttribs placeHolderAttributes(const QString& path);
-bool hasPlaceholderAttributes(const QString &path);
-
-OCC::Result<void, QString> addPlaceholderAttribute(const QString &path, const QByteArray &name = {}, const QByteArray &val = {});
 }
 
 namespace OCC {
@@ -83,6 +88,12 @@ public Q_SLOTS:
 
 protected:
     void startImpl(const VfsSetupParams &params) override;
+
+private:
+    QByteArray xattrOwnerString() const;
+    PlaceHolderAttribs placeHolderAttributes(const QString& path);
+    OCC::Result<void, QString> addPlaceholderAttribute(const QString &path, const QByteArray &name = {}, const QByteArray &val = {});
+
 };
 
 class XattrVfsPluginFactory : public QObject, public DefaultPluginFactory<VfsXAttr>

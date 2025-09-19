@@ -42,10 +42,15 @@ int requestId() {
 
 }
 
-Q_LOGGING_CATEGORY(lcXAttrWrapper, "sync.vfs.xattr.wrapper", QtInfoMsg)
-
 namespace xattr {
-constexpr auto hydrateExecAttributeName = "user.openvfs.hydrate_exec";
+constexpr auto ownerXAttrName = "user.openvfs.owner";
+constexpr auto etagXAttrName = "user.openvfs.etag";
+constexpr auto fileidXAttrName = "user.openvfs.fileid";
+constexpr auto modtimeXAttrName = "user.openvfs.modtime";
+constexpr auto fileSizeXAttrName = "user.openvfs.fsize";
+constexpr auto actionXAttrName = "user.openvfs.action";
+constexpr auto stateXAttrName = "user.openvfs.state";
+constexpr auto pinstateXAttrName = "user.openvfs.pinstate";
 
 OCC::Optional<QByteArray> get(const QByteArray &path, const QByteArray &name)
 {
@@ -70,61 +75,6 @@ bool set(const QByteArray &path, const QByteArray &name, const QByteArray &value
 {
     const auto returnCode = setxattr(path.constData(), name.constData(), value.constData(), value.size()+1, 0);
     return returnCode == 0;
-}
-
-PlaceHolderAttribs placeHolderAttributes(const QString& path)
-{
-    PlaceHolderAttribs attribs;
-
-    // lambda to handle the Optional return val of xattrGet
-    auto xattr = [](const QByteArray& p, const QByteArray& name) {
-        const auto value = xattr::get(p, name);
-        if (value) {
-            return *value;
-        } else {
-            return QByteArray();
-        }
-    };
-
-    const auto p = path.toUtf8();
-
-    attribs._executor = xattr(p, hydrateExecAttributeName);
-    attribs._etag = QString::fromUtf8(xattr(p, "user.openvfs.etag"));
-    attribs._fileId = xattr(p, "user.openvfs.fileid");
-
-    const QByteArray& tt = xattr(p, "user.openvfs.modtime");
-    attribs._modtime = tt.toLongLong();
-
-    attribs._action = xattr(p, "user.openvfs.action");
-    attribs._size = xattr(p, "user.openvfs.fsize").toLongLong();
-    attribs._pinState = xattr(p, "user.openvfs.pinstate");
-
-    return attribs;
-}
-
-bool hasPlaceholderAttributes(const QString &path)
-{
-    const PlaceHolderAttribs attribs = placeHolderAttributes(path);
-
-    // Only pretend to have attribs if they are from us...
-    return attribs.itsMe();
-}
-
-OCC::Result<void, QString> addPlaceholderAttribute(const QString &path, const QByteArray& name, const QByteArray& value)
-{
-    auto success = xattr::set(path.toUtf8(), hydrateExecAttributeName, APPLICATION_EXECUTABLE);
-    if (!success) {
-        return QStringLiteral("Failed to set the extended attribute hydrateExec");
-    }
-
-    if (!name.isEmpty()) {
-        success = xattr::set(path.toUtf8(), name, value);
-        if (!success) {
-            return QStringLiteral("Failed to set the extended attribute");
-        }
-    }
-
-    return {};
 }
 }
 
@@ -164,7 +114,79 @@ bool VfsXAttr::socketApiPinStateActionsShown() const
     return true;
 }
 
+QByteArray VfsXAttr::xattrOwnerString() const
+{
+    auto s = QByteArray(APPLICATION_EXECUTABLE);
+    s.append(":");
+    s.append(_setupParams->account->uuid().toByteArray(QUuid::WithoutBraces));
+    return s;
+}
 
+PlaceHolderAttribs VfsXAttr::placeHolderAttributes(const QString& path)
+{
+    PlaceHolderAttribs attribs;
+
+    // lambda to handle the Optional return val of xattrGet
+    auto xattr = [](const QByteArray& p, const QByteArray& name) {
+        const auto value = xattr::get(p, name);
+        if (value) {
+            return *value;
+        } else {
+            return QByteArray();
+        }
+    };
+
+    const auto p = path.toUtf8();
+
+    attribs._owner = xattr(p, ownerXAttrName);
+    if (attribs._owner.isEmpty()) {
+        // lets claim it
+        attribs._owner = xattrOwnerString();
+    } else {
+        if (attribs._owner != xattrOwnerString()) {
+            qCDebug(lcVfsXAttr) << "XAttributes not from our instance";
+            attribs._owner.clear();
+            return attribs;
+        }
+    }
+
+    attribs._etag = QString::fromUtf8(xattr(p, etagXAttrName));
+    attribs._fileId = xattr(p, fileidXAttrName);
+
+    const QByteArray& tt = xattr(p, modtimeXAttrName);
+    attribs._modtime = tt.toLongLong();
+
+    attribs._action = xattr(p, actionXAttrName);
+    attribs._size = xattr(p, fileSizeXAttrName).toLongLong();
+    attribs._state = xattr(p, stateXAttrName);
+    attribs._pinState = xattr(p, pinstateXAttrName);
+
+    return attribs;
+}
+
+OCC::Result<void, QString> VfsXAttr::addPlaceholderAttribute(const QString &path, const QByteArray& name, const QByteArray& value)
+{
+    const PlaceHolderAttribs attribs = placeHolderAttributes(path);
+
+    if (! attribs.validOwner()) {
+        return QStringLiteral("Can not overwrite attributes - not our placeholder");
+    }
+
+    // FIXME: this always sets the name, can be optimized
+    auto success = xattr::set(path.toUtf8(), ownerXAttrName, xattrOwnerString());
+    if (!success) {
+        return QStringLiteral("Failed to set the extended attribute for owner");
+    }
+
+    if (!name.isEmpty()) {
+        auto success = xattr::set(path.toUtf8(), name, value);
+        if (!success) {
+            return QStringLiteral("Failed to set the extended attribute");
+        }
+    }
+
+    return {};
+}
 
 OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> VfsXAttr::updateMetadata(const SyncFileItem &syncItem, const QString &filePath, const QString &replacesFile)
 {
@@ -179,16 +201,14 @@ OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> VfsXAttr::updateMetad
     } else {
         PlaceHolderAttribs attribs = placeHolderAttributes(localPath);
 
-        if (attribs.itsMe()) { // checks if there are placeholder Attribs at all
+        if (attribs.validOwner() && attribs.state().isEmpty()) { // No status
             FileSystem::setModTime(localPath, syncItem._modtime);
 
-            // FIXME only write attribs if they're different
-            addPlaceholderAttribute(localPath, "user.openvfs.owner", _setupParams->account->uuid().toByteArray(QUuid::WithoutBraces));
-            addPlaceholderAttribute(localPath, "user.openvfs.fsize", QByteArray::number(syncItem._size));
-            addPlaceholderAttribute(localPath, "user.openvfs.state", "dehydrated");
-            addPlaceholderAttribute(localPath, "user.openvfs.fileid", syncItem._fileId);
-            addPlaceholderAttribute(localPath, "user.openvfs.etag", syncItem._etag.toUtf8());
-
+            // FIXME only write attribs if they're different, and/or all together
+            addPlaceholderAttribute(localPath, fileSizeXAttrName, QByteArray::number(syncItem._size));
+            addPlaceholderAttribute(localPath, stateXAttrName, "dehydrated");
+            addPlaceholderAttribute(localPath, fileidXAttrName, syncItem._fileId);
+            addPlaceholderAttribute(localPath, etagXAttrName, syncItem._etag.toUtf8());
         } else {
             // FIXME use fileItem as parameter
             return convertToPlaceholder(localPath, syncItem._modtime, syncItem._size, syncItem._fileId, replacesPath);
@@ -262,7 +282,7 @@ OCC::Result<Vfs::ConvertToPlaceholderResult, QString> VfsXAttr::convertToPlaceho
     Q_UNUSED(replacesPath)
 
     // Nothing necessary - no idea why, taken from previews...
-    qCDebug(lcVfsXAttr()) << "empty function returning ok, DOUBLECHECK" << path ;
+    qCDebug(lcVfsXAttr) << "empty function returning ok, DOUBLECHECK" << path ;
     return {ConvertToPlaceholderResult::Ok};
 }
 
@@ -345,8 +365,12 @@ bool VfsXAttr::needsMetadataUpdate(const SyncFileItem &)
 bool VfsXAttr::isDehydratedPlaceholder(const QString &filePath)
 {
     const auto fi = QFileInfo(filePath);
-    return fi.exists() &&
-            hasPlaceholderAttributes(filePath);
+    if (fi.exists()) {
+        const auto attribs = placeHolderAttributes(filePath);
+        return (attribs.validOwner() &&
+                attribs.state() == QByteArrayLiteral("dehydrated"));
+    }
+    return false;
 }
 
 LocalInfo VfsXAttr::statTypeVirtualFile(const std::filesystem::directory_entry &path, ItemType type)
@@ -355,18 +379,18 @@ LocalInfo VfsXAttr::statTypeVirtualFile(const std::filesystem::directory_entry &
         const QString p = QString::fromUtf8(path.path().c_str()); //FIXME?
         qCDebug(lcVfsXAttr()) << p;
 
-        if (hasPlaceholderAttributes(p)) {
-            // const auto shouldDownload = pin && (*pin == PinState::AlwaysLocal);
+        auto attribs = placeHolderAttributes(p);
+        if (attribs.validOwner()) {
             bool shouldDownload{false};
+            if (attribs.pinState() == QByteArrayLiteral("alwayslocal")) {
+                shouldDownload = true;
+            }
+
+            // const auto shouldDownload = pin && (*pin == PinState::AlwaysLocal);
             if (shouldDownload) {
                 type = ItemTypeVirtualFileDownload;
             } else {
                 type = ItemTypeVirtualFile;
-            }
-        } else {
-            const auto shouldDehydrate = false; // pin && (*pin == PinState::OnlineOnly);
-            if (shouldDehydrate) {
-                type = ItemTypeVirtualFileDehydration;
             }
         }
     }
