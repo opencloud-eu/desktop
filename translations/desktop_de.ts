@@ -2446,80 +2446,80 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
 %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="715"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="741"/>
         <source>I shared something with you</source>
         <translation>Ich habe etwas mit Ihnen geteilt</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="728"/>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="758"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="754"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="784"/>
         <source>Share...</source>
         <translation>Teilen ...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="730"/>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="762"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="756"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="788"/>
         <source>Copy private link to clipboard</source>
         <translation>Kopiere privaten Link in Zwischenablage</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="731"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="757"/>
         <source>Send private link by email...</source>
         <translation>Sende privaten Link via E-Mail...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="756"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="782"/>
         <source>Resharing this file is not allowed</source>
         <translation>Weiteres Teilen dieser Datei ist nicht erlaubt</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="756"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="782"/>
         <source>Resharing this folder is not allowed</source>
         <translation>Weiteres Teilen des Ordners ist nicht erlaubt</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="827"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="853"/>
         <source>Open in %1</source>
         <translation>Öffne in %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="838"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="864"/>
         <source>Show file versions in web browser</source>
         <translation>Zeige Dateiversionen im Web-Browser</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="860"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="886"/>
         <source>Rename...</source>
         <translation>Umbenennen ...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="863"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="889"/>
         <source>Rename and upload...</source>
         <translation>Umbenennen und hochladen</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="868"/>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="872"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="894"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="898"/>
         <source>Move and rename...</source>
         <translation>Verschieben und umbennen...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="875"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="901"/>
         <source>Move, rename and upload...</source>
         <translation>Verschieben, umbenennen und hochladen...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="878"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="904"/>
         <source>Delete local changes</source>
         <translation>Lösche lokale Änderungen</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="883"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="909"/>
         <source>Move and upload...</source>
         <translation>Verschieben und hochladen...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="884"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="910"/>
         <source>Delete</source>
         <translation>Löschen</translation>
     </message>

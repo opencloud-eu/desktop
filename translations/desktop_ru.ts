@@ -2446,80 +2446,80 @@ Note that using any logging command line options will override the settings.</so
 %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="715"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="741"/>
         <source>I shared something with you</source>
         <translation>Я предоставил(-а) вам совместный доступ к ресурсу</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="728"/>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="758"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="754"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="784"/>
         <source>Share...</source>
         <translation>Предоставить совместный доступ...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="730"/>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="762"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="756"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="788"/>
         <source>Copy private link to clipboard</source>
         <translation>Скопировать приватную ссылку в буфер обмена</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="731"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="757"/>
         <source>Send private link by email...</source>
         <translation>Отправить приватную ссылку по email...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="756"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="782"/>
         <source>Resharing this file is not allowed</source>
         <translation>Повторный перевод данного файла в совместный доступ не разрешен</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="756"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="782"/>
         <source>Resharing this folder is not allowed</source>
         <translation>Повторный перевод данной папки в совместный доступ не разрешен</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="827"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="853"/>
         <source>Open in %1</source>
         <translation>Открыть в %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="838"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="864"/>
         <source>Show file versions in web browser</source>
         <translation>Показать версии файла в веб браузере</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="860"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="886"/>
         <source>Rename...</source>
         <translation>Переименовать...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="863"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="889"/>
         <source>Rename and upload...</source>
         <translation>Переименовать и загрузить...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="868"/>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="872"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="894"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="898"/>
         <source>Move and rename...</source>
         <translation>Переместить и переименовать...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="875"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="901"/>
         <source>Move, rename and upload...</source>
         <translation>Переместить, переименовать и загрузить...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="878"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="904"/>
         <source>Delete local changes</source>
         <translation>Удалить локальные изменения</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="883"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="909"/>
         <source>Move and upload...</source>
         <translation>Переместить и загрузить...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="884"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="910"/>
         <source>Delete</source>
         <translation>Удалить</translation>
     </message>
