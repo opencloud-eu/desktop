@@ -67,7 +67,7 @@ Feature: move file and folder
         And as "Alice" file "folder1/file2.txt" should not exist in the server
 
 
-    @skipOnWindows @issue-435
+    @issue-435
     Scenario: Move resources from different sub-levels to sync root
         Given user "Alice" has created folder "folder1/folder2/folder3/folder4/test-folder" in the server
         And user "Alice" has uploaded file with content "openCloud" to "folder1/folder2/lorem.txt" in the server
