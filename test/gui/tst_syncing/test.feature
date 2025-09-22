@@ -403,7 +403,7 @@ Feature: Syncing files
         And the user waits for file "file with space.txt" to be synced
         Then as "Alice" file "file with space.txt" should exist in the server
 
-    @skipOnWindows @issue-435
+    @issue-435
     Scenario: Syncing folders each having large number of files
         Given the user has created a folder "folder1" in temp folder
         And the user has created "500" files each of size "1048576" bytes inside folder "folder1" in temp folder

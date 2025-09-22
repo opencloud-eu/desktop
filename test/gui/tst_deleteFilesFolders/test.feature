@@ -65,7 +65,7 @@ Feature: deleting files and folders
             | textfile1.txt |
         And as "Alice" file "textfile2.txt" should exist in the server
 
-	@skipOnWindows @issue-435
+	@issue-435
     Scenario: Create and delete a file with special characters in the filename
         Given user "Alice" has set up a client with default settings
         When user "Alice" creates a file "~`!@#$^&()-_=+{[}];',$%ñ&💥🫨❤️‍🔥.txt" with the following content inside the sync folder
