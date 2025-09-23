@@ -359,3 +359,13 @@ constexpr bool Utility::isBSD()
 } // OCC namespace
 
 OPENCLOUD_SYNC_EXPORT QDebug operator<<(QDebug debug, std::chrono::nanoseconds in);
+
+
+/**
+ *
+ * Helper macro for enumToDisplayName(), it enables us to handle plain C++ enum values
+ * @param Enum an enum value
+ */
+#define OCC_UTIL_ENUM_DISPLAY_NAME(Enum)                                                                                                                       \
+    case Enum:                                                                                                                                                 \
+        return QStringLiteral(#Enum);
