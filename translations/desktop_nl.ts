@@ -1350,6 +1350,19 @@ Overweeg om deze map uit het account te verwijderen en deze opnieuw toe te voege
     </message>
 </context>
 <context>
+    <name>OCC::HydrationJob</name>
+    <message>
+        <location filename="../src/libsync/vfs/hydrationjob.cpp" line="44"/>
+        <source>Unexpected file size transferred. Expected %1 received %2</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/libsync/vfs/hydrationjob.cpp" line="50"/>
+        <source>Aborted.</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
     <name>OCC::IgnoreListEditor</name>
     <message>
         <location filename="../src/gui/ignorelisteditor.ui" line="14"/>
