@@ -195,13 +195,25 @@ OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> VfsXAttr::updateMetad
 
     qCDebug(lcVfsXAttr()) << localPath;
 
-    if (syncItem._type == ItemTypeVirtualFileDehydration) {
-        // FIXME: Error handling
-        dehydratePlaceholder(syncItem);
-    } else {
-        PlaceHolderAttribs attribs = placeHolderAttributes(localPath);
+    PlaceHolderAttribs attribs = placeHolderAttributes(localPath);
+    OCC::Vfs::ConvertToPlaceholderResult res{OCC::Vfs::ConvertToPlaceholderResult::Ok};
 
-        if (attribs.validOwner() && attribs.state().isEmpty()) { // No status
+    if (attribs.validOwner() && attribs.state().isEmpty()) { // No status
+        // There is no state, so it is a normal, hydrated file
+    }
+
+    if (syncItem._type == ItemTypeVirtualFileDehydration) { //
+        addPlaceholderAttribute(localPath, actionXAttrName, "dehydrate");
+        // FIXME: Error handling
+        auto r = createPlaceholder(syncItem);
+        if (!r) {
+            res = OCC::Vfs::ConvertToPlaceholderResult::Locked;
+        }
+
+    } else if (syncItem._type == ItemTypeVirtualFileDownload) {
+        addPlaceholderAttribute(localPath, actionXAttrName, "hydrate");
+        // start to download? FIXME
+    } else if (syncItem._type == ItemTypeVirtualFile) {
             FileSystem::setModTime(localPath, syncItem._modtime);
 
             // FIXME only write attribs if they're different, and/or all together
@@ -209,13 +221,13 @@ OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> VfsXAttr::updateMetad
             addPlaceholderAttribute(localPath, stateXAttrName, "dehydrated");
             addPlaceholderAttribute(localPath, fileidXAttrName, syncItem._fileId);
             addPlaceholderAttribute(localPath, etagXAttrName, syncItem._etag.toUtf8());
-        } else {
-            // FIXME use fileItem as parameter
-            return convertToPlaceholder(localPath, syncItem._modtime, syncItem._size, syncItem._fileId, replacesPath);
-        }
+    } else {
+            // FIXME anything to check for other types?
+        qCDebug(lcVfsXAttr) << "Unexpected syncItem Type";
     }
 
-    return {OCC::Vfs::ConvertToPlaceholderResult::Ok};
+    // FIXME Errorhandling
+    return res;
 }
 
 Result<void, QString> VfsXAttr::createPlaceholder(const SyncFileItem &item)
@@ -245,25 +257,8 @@ Result<void, QString> VfsXAttr::createPlaceholder(const SyncFileItem &item)
     /*
      * Only write the state and the executor, the rest is added in the updateMetadata() method
     */
-    addPlaceholderAttribute(path, "user.openvfs.state", "dehydrated");
-    return {};
-}
+    addPlaceholderAttribute(path, stateXAttrName, "dehydrated");
 
-OCC::Result<void, QString> VfsXAttr::dehydratePlaceholder(const SyncFileItem &item)
-{
-    /*
-     * const auto path = QDir::toNativeSeparators(params().filesystemPath + item.localName());
-     *
-     * QFile file(path);
-     *
-     * if (!file.remove()) {
-     *   return QStringLiteral("Couldn't remove the original file to dehydrate");
-     * }
-     */
-    auto r = createPlaceholder(item);
-    if (!r) {
-        return r;
-    }
 
     // Ensure the pin state isn't contradictory
     const auto pin = pinState(item.localName());
@@ -272,6 +267,7 @@ OCC::Result<void, QString> VfsXAttr::dehydratePlaceholder(const SyncFileItem &it
     }
     return {};
 }
+
 
 OCC::Result<Vfs::ConvertToPlaceholderResult, QString> VfsXAttr::convertToPlaceholder(
         const QString &path, time_t modtime, qint64 size, const QByteArray &fileId, const QString &replacesPath)
@@ -402,7 +398,7 @@ bool VfsXAttr::setPinState(const QString &folderPath, PinState state)
 {
     qCDebug(lcVfsXAttr()) << folderPath << state;
     auto stateStr = Utility::enumToDisplayName(state);
-    auto res = addPlaceholderAttribute(folderPath, "user.openvfs.pinstate", stateStr.toUtf8());
+    auto res = addPlaceholderAttribute(folderPath, pinstateXAttrName, stateStr.toUtf8());
     if (!res) {
         qCDebug(lcVfsXAttr()) << "Failed to set pin state";
         return false;
@@ -416,19 +412,19 @@ Optional<PinState> VfsXAttr::pinState(const QString &folderPath)
 
     PlaceHolderAttribs attribs = placeHolderAttributes(folderPath);
 
-    const QString pin = QString::fromUtf8(attribs.pinState());
     PinState pState{PinState::Unspecified};
+    if (attribs.validOwner()) {
+        const QString pin = QString::fromUtf8(attribs.pinState());
 
-    if (pin == Utility::enumToDisplayName(PinState::AlwaysLocal)) {
-        pState = PinState::AlwaysLocal;
-    } else if (pin == Utility::enumToDisplayName(PinState::Excluded)) {
-        pState = PinState::Excluded;
-    } else if (pin.isEmpty() || pin == Utility::enumToDisplayName(PinState::Inherited)) {
-        pState = PinState::Inherited;
-    } else if (pin == Utility::enumToDisplayName(PinState::OnlineOnly)) {
-        pState = PinState::OnlineOnly;
-    } else if (pin == Utility::enumToDisplayName(PinState::Unspecified)) {
-        pState = PinState::Unspecified;
+        if (pin == Utility::enumToDisplayName(PinState::AlwaysLocal)) {
+            pState = PinState::AlwaysLocal;
+        } else if (pin == Utility::enumToDisplayName(PinState::Excluded)) {
+            pState = PinState::Excluded;
+        } else if (pin.isEmpty() || pin == Utility::enumToDisplayName(PinState::Inherited)) {
+            pState = PinState::Inherited;
+        } else if (pin == Utility::enumToDisplayName(PinState::OnlineOnly)) {
+            pState = PinState::OnlineOnly;
+        }
     }
 
     return pState;

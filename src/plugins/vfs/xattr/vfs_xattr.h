@@ -70,7 +70,6 @@ public:
     // [[nodiscard]] bool isPlaceHolderInSync(const QString &filePath) const override { Q_UNUSED(filePath) return true; }
 
     Result<void, QString> createPlaceholder(const SyncFileItem &item) override;
-    OCC::Result<void, QString> dehydratePlaceholder(const SyncFileItem &item);
     OCC::Result<Vfs::ConvertToPlaceholderResult, QString> convertToPlaceholder(
             const QString &path, time_t modtime, qint64 size, const QByteArray &fileId, const QString &replacesPath);
 
