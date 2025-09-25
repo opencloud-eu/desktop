@@ -210,6 +210,8 @@ void Application::slotCleanup()
     // don't start async credentials jobs during shutdown
     AccountManager::instance()->save();
 
+    FolderMan::instance()->scheduler()->stop();
+    FolderMan::instance()->scheduler()->terminateCurrentSync(tr("Application is shutting down"));
     FolderMan::instance()->unloadAndDeleteAllFolders();
 
     // Remove the account from the account manager so it can be deleted.

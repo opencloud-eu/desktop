@@ -278,7 +278,7 @@ void AccountSettings::slotEnableCurrentFolder(Folder *folder, bool terminate)
     currentlyPaused = folder->isSyncPaused();
     if (!currentlyPaused && !terminate) {
         // check if a sync is still running and if so, ask if we should terminate.
-        if (folder->isSyncRunning()) { // its still running
+        if (FolderMan::instance()->scheduler()->currentSync() == folder) { // its still running
             auto msgbox = new QMessageBox(QMessageBox::Question, tr("Sync Running"), tr("The sync operation is running.<br/>Do you want to stop it?"),
                 QMessageBox::Yes | QMessageBox::No, this);
             msgbox->setAttribute(Qt::WA_DeleteOnClose);
@@ -295,8 +295,8 @@ void AccountSettings::slotEnableCurrentFolder(Folder *folder, bool terminate)
 
     // message box can return at any time while the thread keeps running,
     // so better check again after the user has responded.
-    if (folder->isSyncRunning() && terminate) {
-        folder->slotTerminateSync(tr("Sync paused by user"));
+    if (FolderMan::instance()->scheduler()->currentSync() == folder && terminate) {
+        FolderMan::instance()->scheduler()->terminateCurrentSync(tr("Sync paused by user"));
     }
     folder->slotNextSyncFullLocalDiscovery(); // ensure we don't forget about local errors
     folder->setSyncPaused(!currentlyPaused);
@@ -334,11 +334,9 @@ void AccountSettings::doForceSyncCurrentFolder(Folder *selectedFolder)
     FolderMan::instance()->scheduler()->stop();
 
     // Terminate and reschedule any running sync
-    for (auto *folder : FolderMan::instance()->folders()) {
-        if (folder->isSyncRunning()) {
-            folder->slotTerminateSync(tr("User triggered force sync"));
-            FolderMan::instance()->scheduler()->enqueueFolder(folder);
-        }
+    if (auto *currentSync = FolderMan::instance()->scheduler()->currentSync()) {
+        FolderMan::instance()->scheduler()->terminateCurrentSync(tr("User triggered force sync"));
+        FolderMan::instance()->scheduler()->enqueueFolder(currentSync);
     }
 
     selectedFolder->slotWipeErrorBlacklist(); // issue #6757

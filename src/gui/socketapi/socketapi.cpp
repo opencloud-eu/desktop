@@ -385,8 +385,6 @@ void SocketApi::slotUpdateFolderView(Folder *f)
             Q_FALLTHROUGH();
         case OCC::SyncResult::SyncRunning:
             Q_FALLTHROUGH();
-        case OCC::SyncResult::SyncAbortRequested:
-            [[fallthrough]];
         case OCC::SyncResult::Offline:
             qCDebug(lcSocketApi) << u"Not sending UPDATE_VIEW for" << f->path() << u"because status() is" << f->syncResult().status();
         }

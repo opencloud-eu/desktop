@@ -449,8 +449,6 @@ void FolderStatusModel::slotFolderSyncStateChange(Folder *f)
             [[fallthrough]];
         case SyncResult::SyncRunning:
             [[fallthrough]];
-        case SyncResult::SyncAbortRequested:
-            [[fallthrough]];
         case SyncResult::Paused:
             [[fallthrough]];
         case SyncResult::Offline:

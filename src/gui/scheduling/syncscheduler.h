@@ -54,9 +54,12 @@ public:
     bool hasCurrentRunningSyncRunning() const;
     Folder *currentSync();
 
+    void terminateCurrentSync(const QString &reason);
+
     void setPauseSyncWhenMetered(bool pauseSyncWhenMetered);
 
     bool isRunning() const;
+
 
 Q_SIGNALS:
     void isRunningChanged();

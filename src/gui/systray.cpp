@@ -144,10 +144,8 @@ void Systray::computeContextMenu()
     };
     connect(pauseResume, &QAction::triggered, FolderMan::instance()->scheduler(), [] {
         if (FolderMan::instance()->scheduler()->isRunning()) {
-            if (auto *currentSync = FolderMan::instance()->scheduler()->currentSync()) {
-                currentSync->slotTerminateSync(tr("Synchronization paused"));
-            }
             FolderMan::instance()->scheduler()->stop();
+            FolderMan::instance()->scheduler()->terminateCurrentSync(tr("Synchronization paused"));
         } else {
             FolderMan::instance()->scheduler()->start();
         }

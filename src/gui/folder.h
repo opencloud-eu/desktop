@@ -239,11 +239,6 @@ public Q_SLOTS:
     void openInWebBrowser();
 
     /**
-       * terminate the current sync run
-       */
-    void slotTerminateSync(const QString &reason);
-
-    /**
       * Starts a sync operation
       *
       * If the list of changed files is known, it is passed.
