@@ -137,6 +137,8 @@ using namespace PinStateEnums;
 
 template <>
 OPENCLOUD_SYNC_EXPORT QString Utility::enumToDisplayName(VfsItemAvailability availability);
+template <>
+OPENCLOUD_SYNC_EXPORT QString Utility::enumToDisplayName(PinState pState);
 }
 
 #endif
