@@ -51,6 +51,8 @@ Optional<Vfs::Mode> Vfs::modeFromString(const QString &str)
         return Off;
     } else if (str == QLatin1String("cfapi")) {
         return WindowsCfApi;
+    } else if (str == QLatin1String("xattr")) {
+        return XAttr;
     }
     return {};
 }
@@ -65,6 +67,8 @@ QString Utility::enumToString(Vfs::Mode mode)
         return QStringLiteral("cfapi");
     case Vfs::Mode::Off:
         return QStringLiteral("off");
+    case Vfs::Mode::XAttr:
+        return QStringLiteral("xattr");
     }
     Q_UNREACHABLE();
 }
@@ -146,6 +150,7 @@ void Vfs::wipeDehydratedVirtualFiles()
 
 QFuture<Result<void, QString>> Vfs::hydrateFile(const QByteArray &, const QString &)
 {
+    Q_UNUSED(fileId)
     // nothing to do
     return QtFuture::makeReadyValueFuture(Result<void, QString>{});
 }
@@ -207,6 +212,8 @@ Vfs::Mode OCC::VfsPluginManager::bestAvailableVfsMode() const
 {
     if (isVfsPluginAvailable(Vfs::WindowsCfApi)) {
         return Vfs::WindowsCfApi;
+    } else if (isVfsPluginAvailable(Vfs::XAttr)) {
+        return Vfs::XAttr;
     } else if (isVfsPluginAvailable(Vfs::Off)) {
         return Vfs::Off;
     }
