@@ -97,7 +97,7 @@ public:
      * Currently plugins and modes are one-to-one but that's not required.
      * The raw integer values are used in Qml
      */
-    enum Mode : uint8_t { Off = 0, WindowsCfApi = 1 };
+    enum Mode : uint8_t { Off = 0, WindowsCfApi = 1, XAttr = 2 };
     Q_ENUM(Mode)
     enum class ConvertToPlaceholderResult : uint8_t { Ok, Locked };
     Q_ENUM(ConvertToPlaceholderResult)
@@ -252,9 +252,9 @@ protected:
      */
     virtual void startImpl(const VfsSetupParams &params) = 0;
 
-private:
     // the parameters passed to start()
     std::unique_ptr<VfsSetupParams> _setupParams;
+private:
 
     friend class OwncloudPropagator;
 };
