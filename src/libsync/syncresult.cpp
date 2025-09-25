@@ -55,8 +55,6 @@ QString Utility::enumToDisplayName(SyncResult::Status status)
         return QApplication::translate("SyncResult::Status", "Preparing to sync");
     case SyncResult::Status::Problem:
         return QApplication::translate("SyncResult::Status", "Success, some files were ignored.");
-    case SyncResult::Status::SyncAbortRequested:
-        return QApplication::translate("SyncResult::Status", "Aborting sync");
     case SyncResult::Status::Paused:
         return QApplication::translate("SyncResult::Status", "Sync paused");
     case SyncResult::Status::Offline:
@@ -177,8 +175,6 @@ QChar SyncResult::glype() const
         [[fallthrough]];
     case SyncRunning:
         return u'';
-    case SyncAbortRequested:
-        [[fallthrough]];
     case Paused:
         return u'';
     case SyncPrepare:

@@ -224,13 +224,12 @@ void SyncScheduler::startNext()
 
     connect(
         _currentSync, &Folder::syncFinished, this,
-        [this](const SyncResult &result) {
-            qCInfo(lcSyncScheduler) << u"Sync finished for" << _currentSync->path() << u"with status" << result.status();
-            _currentSync = nullptr;
+        [sync = _currentSync, this](const SyncResult &result) {
+            qCInfo(lcSyncScheduler) << u"Sync finished for" << sync->path() << u"with status" << result.status();
+            _currentSync.clear();
             startNext();
         },
         Qt::SingleShotConnection);
-    connect(_currentSync, &Folder::destroyed, this, &SyncScheduler::startNext, Qt::SingleShotConnection);
     qCInfo(lcSyncScheduler) << u"Starting sync for" << _currentSync->path() << u"QueueSize:" << _queue->size();
     _currentSync->startSync();
     _syncTimer.reset();
@@ -239,7 +238,8 @@ void SyncScheduler::startNext()
 void SyncScheduler::start()
 {
     _running = true;
-    startNext();
+    // give aborted syncs a chance to trigger the above slots
+    QTimer::singleShot(0, this, &SyncScheduler::startNext);
     Q_EMIT isRunningChanged();
 }
 
@@ -257,6 +257,17 @@ bool SyncScheduler::hasCurrentRunningSyncRunning() const
 Folder *SyncScheduler::currentSync()
 {
     return _currentSync;
+}
+
+void SyncScheduler::terminateCurrentSync(const QString &reason)
+{
+    if (_currentSync && _currentSync->isReady()) {
+        qCInfo(lcSyncScheduler) << u"folder " << _currentSync->path() << u" Terminating!";
+        if (OC_ENSURE(_currentSync->syncEngine().isSyncRunning())) {
+            _currentSync->syncEngine().abort(reason);
+        }
+        _currentSync.clear();
+    }
 }
 
 void SyncScheduler::setPauseSyncWhenMetered(bool pauseSyncWhenMetered)

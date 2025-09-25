@@ -103,8 +103,8 @@ Folder::Folder(const FolderDefinition &definition, const AccountStatePtr &accoun
 
         connect(_accountState.data(), &AccountState::isConnectedChanged, this, &Folder::canSyncChanged);
 
-        connect(_engine.data(), &SyncEngine::started, this, &Folder::slotSyncStarted, Qt::QueuedConnection);
-        connect(_engine.data(), &SyncEngine::finished, this, &Folder::slotSyncFinished, Qt::QueuedConnection);
+        connect(_engine.data(), &SyncEngine::started, this, &Folder::slotSyncStarted);
+        connect(_engine.data(), &SyncEngine::finished, this, &Folder::slotSyncFinished);
 
         connect(_engine.data(), &SyncEngine::transmissionProgress, this,
             [this](const ProgressInfo &pi) { Q_EMIT ProgressDispatcher::instance()->progressInfo(this, pi); });
@@ -141,8 +141,9 @@ Folder::Folder(const FolderDefinition &definition, const AccountStatePtr &accoun
 Folder::~Folder()
 {
     // If wipeForRemoval() was called the vfs has already shut down.
-    if (_vfs)
+    if (_vfs) {
         _vfs->stop();
+    }
 
     // Reset then engine first as it will abort and try to access members of the Folder
     _engine.reset();
@@ -711,9 +712,10 @@ void Folder::setVirtualFilesEnabled(bool enabled)
             }
             startVfs();
         };
-        if (isSyncRunning()) {
+        if (FolderMan::instance()->scheduler()->currentSync() == this) {
             connect(this, &Folder::syncFinished, this, finalizeVfsSwitch, Qt::SingleShotConnection);
-            slotTerminateSync(tr("Switching VFS mode on folder »%1«").arg(displayName()));
+            FolderMan::instance()->scheduler()->terminateCurrentSync(tr("Switching VFS mode on folder »%1«").arg(displayName()));
+            FolderMan::instance()->scheduler()->enqueueFolder(this);
         } else {
             finalizeVfsSwitch();
         }
@@ -761,17 +763,6 @@ bool Folder::isFileExcludedRelative(const QString &relativePath) const
 void Folder::openInWebBrowser()
 {
     fetchPrivateLinkUrl(_accountState->account(), webDavUrl(), {}, this, [](const QUrl &url) { Utility::openBrowser(url, nullptr); });
-}
-
-void Folder::slotTerminateSync(const QString &reason)
-{
-    if (isReady()) {
-        qCInfo(lcFolder) << u"folder " << path() << u" Terminating!";
-        if (_engine->isSyncRunning()) {
-            _engine->abort(reason);
-            setSyncState(SyncResult::SyncAbortRequested);
-        }
-    }
 }
 
 void Folder::wipeForRemoval()

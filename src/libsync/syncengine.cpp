@@ -27,7 +27,6 @@
 #include "filesystem.h"
 #include "owncloudpropagator.h"
 #include "propagatedownload.h"
-#include "propagateremotedelete.h"
 #include "vfs/vfs.h"
 
 #include <chrono>
@@ -41,6 +40,7 @@
 #include <QUrl>
 
 using namespace std::chrono_literals;
+using namespace Qt::Literals::StringLiterals;
 
 namespace OCC {
 
@@ -78,8 +78,10 @@ SyncEngine::SyncEngine(AccountPtr account, const QUrl &baseUrl, const QString &l
 
 SyncEngine::~SyncEngine()
 {
-    _goingDown = true;
-    abort(tr("application exit", "abort reason"));
+    Q_ASSERT(!isSyncRunning());
+    if (isSyncRunning()) {
+        abort(u"application exit"_s);
+    }
     _excludedFiles.reset();
 }
 
@@ -784,9 +786,7 @@ void SyncEngine::abort(const QString &reason)
     }
     if (aborting) {
         qCInfo(lcEngine) << u"Aborting sync";
-        if (!_goingDown) {
-            Q_EMIT syncError(tr("Aborted due to %1").arg(reason));
-        }
+        Q_EMIT syncError(tr("Aborted due to %1").arg(reason));
         finalize(false);
     }
 }

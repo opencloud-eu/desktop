@@ -42,7 +42,6 @@ public:
         NotYetStarted,
         SyncPrepare,
         SyncRunning,
-        SyncAbortRequested,
         Paused,
         Offline,
         Problem,

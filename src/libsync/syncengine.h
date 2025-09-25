@@ -18,19 +18,15 @@
 #include "accountfwd.h"
 #include "common/checksums.h"
 #include "common/chronoelapsedtimer.h"
-#include "common/utility.h"
 #include "discoveryphase.h"
 #include "progressdispatcher.h"
 #include "syncfileitem.h"
 #include "syncfilestatustracker.h"
 
-#include <QMutex>
-#include <QThread>
-#include <QString>
 #include <QSet>
-#include <QMap>
-#include <QStringList>
 #include <QSharedPointer>
+#include <QString>
+#include <QThread>
 
 #include <optional>
 #include <set>
@@ -253,8 +249,5 @@ private:
 
     // must be ordered
     std::set<QString> _localDiscoveryPaths;
-
-    // destructor called
-    bool _goingDown = false;
 };
 }

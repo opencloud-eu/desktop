@@ -269,8 +269,6 @@ QString Theme::syncStateIconName(const SyncResult &result) const
         [[fallthrough]];
     case SyncResult::SyncRunning:
         return QStringLiteral("sync");
-    case SyncResult::SyncAbortRequested:
-        [[fallthrough]];
     case SyncResult::Paused:
         return QStringLiteral("pause");
     case SyncResult::SyncPrepare:
