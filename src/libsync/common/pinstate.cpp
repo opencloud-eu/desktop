@@ -19,6 +19,26 @@
 
 using namespace OCC;
 
+
+template <>
+QString Utility::enumToDisplayName(PinState pState)
+{
+    switch (pState) {
+    case PinState::AlwaysLocal:
+        return QStringLiteral("alwayslocal");
+    case PinState::Excluded:
+        return QStringLiteral("excluded");
+    case PinState::Inherited:
+        return QStringLiteral("inherited");
+    case PinState::OnlineOnly:
+        return QStringLiteral("onlineonly");
+    case PinState::Unspecified:
+        return QStringLiteral("unspecified");
+    }
+    Q_UNREACHABLE();
+}
+
+
 template <>
 QString Utility::enumToDisplayName(VfsItemAvailability availability)
 {
