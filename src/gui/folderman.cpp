@@ -310,9 +310,7 @@ void FolderMan::slotIsConnectedChanged()
         qCInfo(lcFolderMan) << u"Account" << accountName << u"connected, scheduling its folders";
 
         for (auto *f : std::as_const(_folders)) {
-            if (f
-                && f->canSync()
-                && f->accountState() == accountState) {
+            if (f->accountState() == accountState && f->canSync()) {
                 scheduler()->enqueueFolder(f);
             }
         }
