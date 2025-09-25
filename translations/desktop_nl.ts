@@ -1354,12 +1354,12 @@ Overweeg om deze map uit het account te verwijderen en deze opnieuw toe te voege
     <message>
         <location filename="../src/libsync/vfs/hydrationjob.cpp" line="44"/>
         <source>Unexpected file size transferred. Expected %1 received %2</source>
-        <translation type="unfinished"/>
+        <translation>Onverwachte bestandsgrootte overgedragen. Verwacht %1, ontvangen %2</translation>
     </message>
     <message>
         <location filename="../src/libsync/vfs/hydrationjob.cpp" line="50"/>
         <source>Aborted.</source>
-        <translation type="unfinished"/>
+        <translation>Afgebroken</translation>
     </message>
 </context>
 <context>
