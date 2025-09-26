@@ -85,7 +85,7 @@ AccountState::AccountState(AccountPtr account)
     });
 
     connect(account.data(), &Account::capabilitiesChanged, this, [this] {
-        if (_account->capabilities().checkForUpdates()) {
+        if (_account->capabilities().checkForUpdates() && isOcApp()) {
             ocApp()->updateNotifier()->checkForUpdates(_account);
         }
     });
