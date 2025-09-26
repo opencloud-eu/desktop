@@ -48,6 +48,7 @@ public:
 }
 
 namespace OCC {
+class HydrationJob;
 
 using namespace xattr;
 
@@ -81,6 +82,11 @@ public:
     Optional<PinState> pinState(const QString &folderPath) override;
     AvailabilityResult availability(const QString &folderPath) override;
 
+    HydrationJob* hydrateFile(const QByteArray &fileId) override;
+
+Q_SIGNALS:
+    void finished(Result<void, QString>);
+
 public Q_SLOTS:
     void fileStatusChanged(const QString &systemFileName, OCC::SyncFileStatus fileStatus) override;
 
@@ -92,6 +98,7 @@ private:
     PlaceHolderAttribs placeHolderAttributes(const QString& path);
     OCC::Result<void, QString> addPlaceholderAttribute(const QString &path, const QByteArray &name = {}, const QByteArray &val = {});
 
+    QMap<QByteArray, HydrationJob*> _hydrationJobs;
 };
 
 class XattrVfsPluginFactory : public QObject, public DefaultPluginFactory<VfsXAttr>

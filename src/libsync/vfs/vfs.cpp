@@ -148,11 +148,11 @@ void Vfs::wipeDehydratedVirtualFiles()
     // But hydrated placeholders may still be around.
 }
 
-QFuture<Result<void, QString>> Vfs::hydrateFile(const QByteArray &, const QString &)
+HydrationJob* Vfs::hydrateFile(const QByteArray &fileId)
 {
     Q_UNUSED(fileId)
     // nothing to do
-    return QtFuture::makeReadyValueFuture(Result<void, QString>{});
+    return nullptr;
 }
 
 Q_LOGGING_CATEGORY(lcPlugin, "sync.plugins", QtInfoMsg)
