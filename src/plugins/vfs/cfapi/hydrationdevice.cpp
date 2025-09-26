@@ -21,7 +21,7 @@ constexpr auto BufferSize = ChunkSize * 10;
 
 CfApiHydrationJob *CfApiWrapper::HydrationDevice::requestHydration(const CfApiWrapper::CallBackContext &context, qint64 totalSize, QObject *parent)
 {
-    qCWarning(lcCfApiHydrationDevice) << u"Requesting hydration" << context;
+    qCInfo(lcCfApiHydrationDevice) << u"Requesting hydration" << context;
     if (context.vfs->_hydrationJobs.contains(context.transferKey)) {
         qCWarning(lcCfApiHydrationDevice) << u"Ignoring hydration request for running hydration" << context;
         return {};
