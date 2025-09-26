@@ -155,7 +155,7 @@ void Logger::open(const QString &name)
     _logstream.reset(new QTextStream(&_logFile));
     _logstream->setGenerateByteOrderMark(true);
     _logstream->setEncoding(encoding);
-    (*_logstream) << Theme::instance()->aboutVersions(Theme::VersionFormat::OneLiner) << u" " << qApp->applicationName() << Qt::endl;
+    (*_logstream) << Theme::instance()->aboutVersions(Theme::VersionFormat::OneLiner) << u' ' << qApp->applicationName() << Qt::endl;
 }
 
 void Logger::close()
