@@ -187,6 +187,7 @@ public:
     int defaultPermissions() const;
 
     const Status &status() const;
+    bool checkForUpdates() const;
     const TusSupport &tusSupport() const;
     const SpaceSupport &spacesSupport() const;
 
@@ -290,6 +291,7 @@ private:
     TusSupport _tusSupport;
     SpaceSupport _spaces;
     Status _status;
+    bool _checkForUpdates = true;
     AppProviders _appProviders;
     FilesSharing _filesSharing;
     Migration _migration;
