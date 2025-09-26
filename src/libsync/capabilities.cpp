@@ -29,6 +29,7 @@ Capabilities::Capabilities(const QUrl &url, const QVariantMap &capabilities)
     , _tusSupport(_capabilities.value(QStringLiteral("files")).toMap().value(QStringLiteral("tus_support")).toMap())
     , _spaces(_capabilities.value(QStringLiteral("spaces")).toMap())
     , _status(_capabilities.value(QStringLiteral("core")).toMap().value(QStringLiteral("status")).toMap())
+    , _checkForUpdates(_capabilities.value(QStringLiteral("core")).toMap().value(QStringLiteral("check_for_updates"), _checkForUpdates).toBool())
     , _appProviders(AppProviders::findVersion(
           url, _capabilities.value(QStringLiteral("files")).toMap().value(QStringLiteral("app_providers")).toList(), QVersionNumber({1, 1, 0})))
     , _filesSharing(_fileSharingCapabilities)
@@ -163,6 +164,11 @@ CheckSums::Algorithm Capabilities::uploadChecksumType() const
 const Status &Capabilities::status() const
 {
     return _status;
+}
+
+bool Capabilities::checkForUpdates() const
+{
+    return _checkForUpdates;
 }
 
 const TusSupport &Capabilities::tusSupport() const
