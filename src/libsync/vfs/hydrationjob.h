@@ -26,6 +26,8 @@ public:
 
     SyncJournalFileRecord record() const;
 
+    QByteArray fileId() const { return _fileId; }
+
 Q_SIGNALS:
     void finished();
     void error(const QString &error);
