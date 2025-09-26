@@ -204,6 +204,7 @@ Q_SIGNALS:
     void wantsAccountSaved(Account *acc);
 
     void serverVersionChanged();
+    void capabilitiesChanged();
 
     void avatarChanged();
     void displayNameChanged();

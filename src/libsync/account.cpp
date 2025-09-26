@@ -292,10 +292,14 @@ bool Account::hasCapabilities() const
 
 void Account::setCapabilities(const Capabilities &caps)
 {
-    const bool versionChanged = caps.status().legacyVersion != _capabilities.status().legacyVersion || caps.status().productversion != _capabilities.status().productversion;
-    _capabilities = caps;
-    if (versionChanged) {
-        Q_EMIT serverVersionChanged();
+    if (_capabilities != caps) {
+        Q_EMIT capabilitiesChanged();
+        const bool versionChanged =
+            caps.status().legacyVersion != _capabilities.status().legacyVersion || caps.status().productversion != _capabilities.status().productversion;
+        _capabilities = caps;
+        if (versionChanged) {
+            Q_EMIT serverVersionChanged();
+        }
     }
 }
 

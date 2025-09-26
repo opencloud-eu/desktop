@@ -284,6 +284,9 @@ public:
 
     QVariantMap raw() const;
 
+    bool operator==(const Capabilities &other) const;
+    bool operator!=(const Capabilities &other) const { return !(*this == other); }
+
 private:
     QVariantMap _capabilities;
     QVariantMap _fileSharingCapabilities;
@@ -291,7 +294,7 @@ private:
     TusSupport _tusSupport;
     SpaceSupport _spaces;
     Status _status;
-    bool _checkForUpdates = true;
+    bool _checkForUpdates;
     AppProviders _appProviders;
     FilesSharing _filesSharing;
     Migration _migration;

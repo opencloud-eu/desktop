@@ -109,6 +109,7 @@ Application *Application::_instance = nullptr;
 Application::Application(const QString &displayLanguage, bool debugMode)
     : _debugMode(debugMode)
     , _displayLanguage(displayLanguage)
+    , _updateNotifier(new UpdateNotifier(this))
 {
     // ensure the singleton works
     {
@@ -387,6 +388,11 @@ void Application::runNewAccountWizard()
 QSystemTrayIcon *Application::systemTrayIcon() const
 {
     return _systray;
+}
+
+UpdateNotifier *Application::updateNotifier() const
+{
+    return _updateNotifier;
 }
 
 bool Application::debugMode()
