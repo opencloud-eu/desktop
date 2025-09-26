@@ -260,6 +260,10 @@ int main(int argc, char *argv[])
     app.setApplicationName(u"FontIcon Collector"_s);
     app.setApplicationVersion(u"1.0"_s);
 
+    const QString cascadiaCodeFontPath = u"Cascadia Code NF"_s;
+    if (QFontDatabase::hasFamily(cascadiaCodeFontPath)) {
+        QApplication::setFont(cascadiaCodeFontPath);
+    }
     QCommandLineParser parser;
     parser.setApplicationDescription(u"Collects and displays FontIcon usages from the OpenCloud Desktop codebase"_s);
     parser.addHelpOption();
