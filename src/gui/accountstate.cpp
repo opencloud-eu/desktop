@@ -84,6 +84,12 @@ AccountState::AccountState(AccountPtr account)
         }
     });
 
+    connect(account.data(), &Account::capabilitiesChanged, this, [this] {
+        if (_account->capabilities().checkForUpdates()) {
+            ocApp()->updateNotifier()->checkForUpdates(_account);
+        }
+    });
+
 
     connect(NetworkInformation::instance(), &NetworkInformation::reachabilityChanged, this, [this](NetworkInformation::Reachability reachability) {
         switch (reachability) {

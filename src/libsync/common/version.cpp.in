@@ -60,3 +60,8 @@ bool OCC::Version::isBeta()
     #cmakedefine01 BETA_CHANNEL_BUILD
     return BETA_CHANNEL_BUILD;
 }
+
+bool OCC::Version::withUpdateNotification(){
+    #cmakedefine01 WITH_UPDATE_NOTIFICATION
+    return WITH_UPDATE_NOTIFICATION;
+}

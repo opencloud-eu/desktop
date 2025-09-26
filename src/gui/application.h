@@ -15,6 +15,7 @@
 #pragma once
 
 #include "gui/opencloudguilib.h"
+#include "gui/updatenotifier.h"
 
 #include "common/asserts.h"
 #include "libsync/accountfwd.h"
@@ -58,6 +59,8 @@ public:
 
     QSystemTrayIcon *systemTrayIcon() const;
 
+    UpdateNotifier *updateNotifier() const;
+
 protected Q_SLOTS:
     void slotCleanup();
     void slotAccountStateAdded(AccountStatePtr accountState) const;
@@ -70,6 +73,8 @@ private:
 
     QString _displayLanguage;
     Systray *_systray;
+
+    UpdateNotifier *_updateNotifier;
 
     SystemNotificationManager *_systemNotificationManager = nullptr;
 

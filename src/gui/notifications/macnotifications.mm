@@ -96,6 +96,8 @@ private:
         case NSUserNotificationActivationTypeActionButtonClicked:
             if (!systemNotification->request().buttons().isEmpty()) {
                 result = OCC::SystemNotification::Result::ButtonClicked;
+                // TODO: get which button was clicked
+                // for now, we only support one button
                 Q_EMIT systemNotification->buttonClicked(systemNotification->request().buttons().first());
             } else {
                 // the show button was clicked

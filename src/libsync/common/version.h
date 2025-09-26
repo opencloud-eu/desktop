@@ -43,4 +43,6 @@ OPENCLOUD_SYNC_EXPORT QString gitSha();
 OPENCLOUD_SYNC_EXPORT QString displayString();
 
 OPENCLOUD_SYNC_EXPORT bool isBeta();
+
+OPENCLOUD_SYNC_EXPORT bool withUpdateNotification();
 }

@@ -70,6 +70,7 @@ target_sources(OpenCloudGui PRIVATE
     creds/httpcredentialsgui.cpp
     creds/qmlcredentials.cpp
     updateurldialog.cpp
+    updatenotifier.cpp
 
     models/expandingheaderview.cpp
     models/models.cpp

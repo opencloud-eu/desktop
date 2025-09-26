@@ -296,6 +296,7 @@ void Folder::prepareFolder(const QString &path, const std::optional<QString> &di
     }
 #else
     Q_UNUSED(path)
+    Q_UNUSED(displayName)
     Q_UNUSED(description)
 #endif
 }
