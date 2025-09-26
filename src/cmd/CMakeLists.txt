@@ -13,6 +13,7 @@ add_executable(fonticon_collector
     fonticon_collector.cpp
 )
 set_target_properties(fonticon_collector PROPERTIES OUTPUT_NAME "fonticon_collector")
+add_compile_definitions(SRC_DIR="${CMAKE_SOURCE_DIR}")
 
 target_link_libraries(fonticon_collector 
     OpenCloudResources 

@@ -24,6 +24,7 @@
 
 #include "fonticon.h"
 
+using namespace Qt::Literals::StringLiterals;
 using namespace OCC::Resources;
 
 struct FontIconUsage {
@@ -48,7 +49,7 @@ public:
         scanForFontIconUsages();
     }
 
-private slots:
+private Q_SLOTS:
     void onUsageSelected(int row)
     {
         if (row < 0 || row >= m_usages.size()) {
@@ -64,20 +65,20 @@ private slots:
         
         // Update the details
         m_detailsText->clear();
-        m_detailsText->append(QString("File: %1").arg(usage.filePath));
-        m_detailsText->append(QString("Line: %1").arg(usage.lineNumber));
-        m_detailsText->append(QString("Glyph: %1 (0x%2)").arg(usage.glyph).arg(usage.glyph.unicode(), 4, 16, QChar('0')));
-        m_detailsText->append(QString("Family: %1").arg(usage.family == FontIcon::FontFamily::FontAwesome ? "FontAwesome" : "RemixIcon"));
-        m_detailsText->append(QString("Size: %1").arg(usage.size == FontIcon::Size::Normal ? "Normal" : "Half"));
-        m_detailsText->append("");
-        m_detailsText->append("Context:");
+        m_detailsText->append(u"File: %1"_s.arg(usage.filePath));
+        m_detailsText->append(u"Line: %1"_s.arg(usage.lineNumber));
+        m_detailsText->append(u"Glyph: %1 (0x%2)"_s.arg(usage.glyph).arg(static_cast<uint16_t>(usage.glyph.unicode()), 4, 16, QChar('0'_L1)));
+        m_detailsText->append(u"Family: %1"_s.arg(usage.family == FontIcon::FontFamily::FontAwesome ? u"FontAwesome"_s : u"RemixIcon"_s));
+        m_detailsText->append(u"Size: %1"_s.arg(usage.size == FontIcon::Size::Normal ? u"Normal"_s : u"Half"_s));
+        m_detailsText->append(u"\n"_s);
+        m_detailsText->append(u"Context:"_s);
         m_detailsText->append(usage.sourceContext);
     }
 
 private:
     void setupUI()
     {
-        setWindowTitle("FontIcon Usage Collector");
+        setWindowTitle(u"FontIcon Usage Collector"_s);
         resize(1200, 800);
 
         auto *layout = new QHBoxLayout(this);
@@ -86,8 +87,8 @@ private:
         // Left side: List of usages
         auto *leftWidget = new QWidget;
         auto *leftLayout = new QVBoxLayout(leftWidget);
-        
-        leftLayout->addWidget(new QLabel("FontIcon Usages Found:"));
+
+        leftLayout->addWidget(new QLabel(u"FontIcon Usages Found:"_s));
         m_usagesList = new QListWidget;
         leftLayout->addWidget(m_usagesList);
         
@@ -98,17 +99,17 @@ private:
         auto *rightLayout = new QVBoxLayout(rightWidget);
         
         // Glyph display
-        auto *glyphGroup = new QGroupBox("Glyph Preview");
+        auto *glyphGroup = new QGroupBox(u"Glyph Preview"_s);
         auto *glyphLayout = new QVBoxLayout(glyphGroup);
         
         m_glyphLabel = new QLabel;
         m_glyphLabel->setAlignment(Qt::AlignCenter);
-        m_glyphLabel->setStyleSheet("border: 1px solid gray; padding: 10px;");
+        m_glyphLabel->setStyleSheet(u"border: 1px solid gray; padding: 10px;"_s);
         m_glyphLabel->setMinimumSize(100, 100);
         glyphLayout->addWidget(m_glyphLabel);
         
         // Details text
-        auto *detailsGroup = new QGroupBox("Details");
+        auto *detailsGroup = new QGroupBox(u"Details"_s);
         auto *detailsLayout = new QVBoxLayout(detailsGroup);
         
         m_detailsText = new QTextEdit;
@@ -128,21 +129,9 @@ private:
 
     void scanForFontIconUsages()
     {
-        QString basePath = QDir::current().absolutePath();
-        
-        // Look for src directory relative to current directory
-        QDir srcDir(basePath + "/src");
-        if (!srcDir.exists()) {
-            // Try parent directories
-            QDir parentDir = QDir::current();
-            while (parentDir.cdUp()) {
-                if (QDir(parentDir.path() + "/src").exists()) {
-                    srcDir = QDir(parentDir.path() + "/src");
-                    break;
-                }
-            }
-        }
-        
+        QDir srcDir = QDir(QStringLiteral(SRC_DIR));
+
+
         if (!srcDir.exists()) {
             qWarning() << "Could not find src directory";
             return;
@@ -151,8 +140,8 @@ private:
         qDebug() << "Scanning directory:" << srcDir.absolutePath();
         
         // Recursively scan for C++ files
-        QDirIterator it(srcDir.absolutePath(), QStringList() << "*.cpp" << "*.h", QDir::Files, QDirIterator::Subdirectories);
-        
+        QDirIterator it(srcDir.absolutePath(), QStringList() << u"*.cpp"_s << u"*.h"_s, QDir::Files, QDirIterator::Subdirectories);
+
         while (it.hasNext()) {
             QString filePath = it.next();
             scanFile(filePath);
@@ -162,11 +151,7 @@ private:
         
         // Populate the list widget
         for (const auto &usage : m_usages) {
-            QString displayText = QString("%1:%2 - %3").arg(
-                QFileInfo(usage.filePath).fileName(),
-                QString::number(usage.lineNumber),
-                usage.glyph
-            );
+            QString displayText = u"%1:%2 - %3"_s.arg(QFileInfo(usage.filePath).fileName(), QString::number(usage.lineNumber), usage.glyph);
             m_usagesList->addItem(displayText);
         }
         
@@ -184,14 +169,14 @@ private:
         
         QTextStream in(&file);
         QString content = in.readAll();
-        QStringList lines = content.split('\n');
-        
+        QStringList lines = content.split('\n'_L1);
+
         // Regular expressions to match FontIcon constructor calls
-        QRegularExpression fontIconRegex(R"(FontIcon\s*\(\s*([^)]+)\s*\))");
-        QRegularExpression glyphRegex(R"(u'(.)')");
-        QRegularExpression familyRegex(R"(FontIcon::FontFamily::(\w+))");
-        QRegularExpression sizeRegex(R"(FontIcon::Size::(\w+))");
-        
+        QRegularExpression fontIconRegex(uR"(FontIcon\s*\(\s*([^)]+)\s*\))"_s);
+        QRegularExpression glyphRegex(uR"(u'(.)')"_s);
+        QRegularExpression familyRegex(uR"(FontIcon::FontFamily::(\w+))"_s);
+        QRegularExpression sizeRegex(uR"(FontIcon::Size::(\w+))"_s);
+
         for (int lineNum = 0; lineNum < lines.size(); ++lineNum) {
             const QString &line = lines[lineNum];
             
@@ -211,7 +196,7 @@ private:
                     }
                 } else {
                     // Look for hex unicode like u'\uf015'
-                    QRegularExpression hexGlyphRegex(R"(u'\\u([0-9a-fA-F]{4})')");
+                    QRegularExpression hexGlyphRegex(uR"(u'\\u([0-9a-fA-F]{4})')"_s);
                     auto hexMatch = hexGlyphRegex.match(line);
                     if (hexMatch.hasMatch()) {
                         bool ok;
@@ -221,12 +206,12 @@ private:
                         }
                     } else {
                         // Try to find the glyph directly in the line
-                        QRegularExpression directGlyphRegex(R"(u'(.)')");
+                        QRegularExpression directGlyphRegex(uR"(u'(.)')"_s);
                         auto directMatch = directGlyphRegex.match(line);
                         if (directMatch.hasMatch()) {
                             usage.glyph = directMatch.captured(1)[0];
                         } else {
-                            usage.glyph = QChar('?'); // Unknown glyph
+                            usage.glyph = QChar('?'_L1); // Unknown glyph
                         }
                     }
                 }
@@ -235,7 +220,7 @@ private:
                 auto familyMatch = familyRegex.match(line);
                 if (familyMatch.hasMatch()) {
                     QString familyStr = familyMatch.captured(1);
-                    usage.family = (familyStr == "RemixIcon") ? FontIcon::FontFamily::RemixIcon : FontIcon::FontFamily::FontAwesome;
+                    usage.family = (familyStr == u"RemixIcon"_s) ? FontIcon::FontFamily::RemixIcon : FontIcon::FontFamily::FontAwesome;
                 } else {
                     usage.family = FontIcon::FontFamily::FontAwesome;
                 }
@@ -244,7 +229,7 @@ private:
                 auto sizeMatch = sizeRegex.match(line);
                 if (sizeMatch.hasMatch()) {
                     QString sizeStr = sizeMatch.captured(1);
-                    usage.size = (sizeStr == "Half") ? FontIcon::Size::Half : FontIcon::Size::Normal;
+                    usage.size = (sizeStr == u"Half"_s) ? FontIcon::Size::Half : FontIcon::Size::Normal;
                 } else {
                     usage.size = FontIcon::Size::Normal;
                 }
@@ -252,11 +237,11 @@ private:
                 // Get context (current line and a few lines around it)
                 QStringList contextLines;
                 for (int ctx = qMax(0, lineNum - 2); ctx <= qMin(lines.size() - 1, lineNum + 2); ++ctx) {
-                    QString prefix = (ctx == lineNum) ? ">>> " : "    ";
-                    contextLines << QString("%1%2: %3").arg(prefix, QString::number(ctx + 1), lines[ctx]);
+                    QString prefix = (ctx == lineNum) ? u">>> "_s : u"    "_s;
+                    contextLines << u"%1%2: %3"_s.arg(prefix, QString::number(ctx + 1), lines[ctx]);
                 }
-                usage.sourceContext = contextLines.join('\n');
-                
+                usage.sourceContext = contextLines.join('\n'_L1);
+
                 m_usages.append(usage);
             }
         }
@@ -272,11 +257,11 @@ private:
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-    app.setApplicationName("FontIcon Collector");
-    app.setApplicationVersion("1.0");
-    
+    app.setApplicationName(u"FontIcon Collector"_s);
+    app.setApplicationVersion(u"1.0"_s);
+
     QCommandLineParser parser;
-    parser.setApplicationDescription("Collects and displays FontIcon usages from the OpenCloud Desktop codebase");
+    parser.setApplicationDescription(u"Collects and displays FontIcon usages from the OpenCloud Desktop codebase"_s);
     parser.addHelpOption();
     parser.addVersionOption();
     
