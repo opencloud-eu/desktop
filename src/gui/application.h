@@ -83,11 +83,20 @@ private:
 
     static Application *_instance;
     friend Application *ocApp();
+    friend bool isOcApp();
 };
+/**
+ *
+ * @return whether the Application singleton is available, this must always be true unless we are a unit test...
+ */
+inline bool isOcApp()
+{
+    return Application::_instance;
+}
 
 inline Application *ocApp()
 {
-    OC_ENFORCE(Application::_instance);
+    Q_ASSERT(isOcApp());
     return Application::_instance;
 }
 
