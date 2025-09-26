@@ -1103,6 +1103,58 @@ OCC::SyncFileItemPtr ItemCompletedSpy::findItem(const QString &path) const
     return nullptr;
 }
 
+char *OCC::toString(const SyncFileStatus &s)
+{
+    return QTest::toString(QStringLiteral("SyncFileStatus(%1)").arg(s.toSocketAPIString()));
+}
+
+void addFiles(QStringList &dest, const FileInfo &fi)
+{
+    if (fi.isDir) {
+        dest += QStringLiteral("%1\t- dir").arg(fi.path());
+        for (const auto &child : fi.children)
+            addFiles(dest, child);
+    } else {
+        dest += QStringLiteral("%1\t- %2 %3-bytes\t(%4)")
+                    .arg(fi.path(), QString::number(fi.contentSize), fi.contentChar ? QChar::fromLatin1(fi.contentChar) : u"NULL"_s,
+                        fi.lastModifiedInUtc().toString());
+    }
+}
+
+QString toStringNoElide(const FileInfo &fi)
+{
+    QStringList files;
+    for (const auto &childInfo : fi.children) {
+        addFiles(files, childInfo);
+    }
+    files.sort();
+    return QStringLiteral("FileInfo with %1 files(\n\t%2\n)").arg(files.size()).arg(files.join(QStringLiteral("\n\t")));
+}
+
+void addFilesDbData(QStringList &dest, const FileInfo &fi)
+{
+    // could include etag, permissions etc, but would need extra work
+    if (fi.isDir) {
+        dest += QStringLiteral("%1 - %2 %3 %4")
+                    .arg(fi.name, fi.isDir ? QStringLiteral("dir") : QStringLiteral("file"), QString::number(fi.lastModifiedInSecondsUTC()),
+                        QString::fromUtf8(fi.fileId));
+        for (const auto &child : fi.children)
+            addFilesDbData(dest, child);
+    } else {
+        dest += QStringLiteral("%1 - %2 %3 %4 %5")
+                    .arg(fi.name, fi.isDir ? QStringLiteral("dir") : QStringLiteral("file"), QString::number(fi.contentSize),
+                        QString::number(fi.lastModifiedInSecondsUTC()), QString::fromUtf8(fi.fileId));
+    }
+}
+
+char *printDbData(const FileInfo &fi)
+{
+    QStringList files;
+    for (const auto &child : fi.children)
+        addFilesDbData(files, child);
+    return QTest::toString(QStringLiteral("FileInfo with %1 files(%2)").arg(files.size()).arg(files.join(QStringLiteral(", "))));
+}
+
 FakeReply::FakeReply(QObject *parent)
     : QNetworkReply(parent)
 {
