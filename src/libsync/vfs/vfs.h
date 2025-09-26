@@ -207,10 +207,11 @@ public:
     /** Start a hydration (download of remote contents) of a file.
      *
      * The fileId is the SyncFileItem::id() value of the file to hydrate.
+     * The targetPath is the absolute path to the local file to hydrate.
      *
      * Returns a QFuture<Result> void if successful and QFuture<Result> QString if an error occurs.
      */
-    [[nodiscard]] virtual QFuture<Result<void, QString>> hydrateFile(const QByteArray &fileId);
+    [[nodiscard]] virtual QFuture<Result<void, QString>> hydrateFile(const QByteArray &fileId, const QString &targetPath);
 
 public Q_SLOTS:
     /** Update in-sync state based on SyncFileStatusTracker signal.
