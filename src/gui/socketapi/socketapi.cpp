@@ -667,10 +667,10 @@ void SocketApi::command_V2_HYDRATE_FILE(const QSharedPointer<SocketApiJobV2> &jo
 {
     const auto &arguments = job->arguments();
 
-    const QString file = arguments[QStringLiteral("file")].toString();
+    const QString targetPath = arguments[QStringLiteral("file")].toString();
     const QByteArray fileId = arguments[QStringLiteral("fileId")].toString().toUtf8();
 
-    auto fileData = FileData::get(file);
+    auto fileData = FileData::get(targetPath);
 
     if (fileData.folder) {
         auto watcher = new QFutureWatcher<Result<void, QString>>();
@@ -683,7 +683,7 @@ void SocketApi::command_V2_HYDRATE_FILE(const QSharedPointer<SocketApiJobV2> &jo
                 job->success({{QStringLiteral("status"), QStringLiteral("OK")}});
             }
         });
-        watcher->setFuture(fileData.folder->vfs().hydrateFile(fileId));
+        watcher->setFuture(fileData.folder->vfs().hydrateFile(fileId, targetPath));
     } else {
         job->failure(QStringLiteral("cannot hydrate unknown file"));
     }
