@@ -8,20 +8,6 @@ ecm_mark_nongui_executable(cmd)
 target_link_libraries(cmd libsync Qt::Core Qt::Network ZLIB::ZLIB)
 apply_common_target_settings(cmd)
 
-# FontIcon Collector Tool
-add_executable(fonticon_collector
-    fonticon_collector.cpp
-)
-set_target_properties(fonticon_collector PROPERTIES OUTPUT_NAME "fonticon_collector")
-add_compile_definitions(SRC_DIR="${CMAKE_SOURCE_DIR}")
-
-target_link_libraries(fonticon_collector 
-    OpenCloudResources 
-    Qt::Core 
-    Qt::Widgets 
-    Qt::Gui
-)
-apply_common_target_settings(fonticon_collector)
 
 if(APPLE)
     set_target_properties(cmd PROPERTIES RUNTIME_OUTPUT_DIRECTORY "$<TARGET_FILE_DIR:opencloud>")
