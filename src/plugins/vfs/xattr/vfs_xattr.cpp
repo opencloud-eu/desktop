@@ -10,6 +10,7 @@
 #include "filesystem.h"
 #include "common/syncjournaldb.h"
 #include "account.h"
+#include "vfs/hydrationjob.h"
 
 #include <QDir>
 #include <QFile>
@@ -258,6 +259,48 @@ Result<void, QString> VfsXAttr::createPlaceholder(const SyncFileItem &item)
     return {};
 }
 
+HydrationJob* VfsXAttr::hydrateFile(const QByteArray &fileId)
+{
+    qCInfo(lcVfsXAttr) << u"Requesting hydration for" << fileId;
+    if (_hydrationJobs.contains(fileId)) {
+        qCWarning(lcVfsXAttr) << u"Ignoring hydration request for running hydration for fileId" << fileId;
+        return {};
+    }
+
+    QString fileName; // FIXME: Needs to come from outside
+    // Create a device to write in
+
+    HydrationJob *hydration = new HydrationJob(this, fileId, std::make_unique<QFile>(fileName), nullptr);
+    _hydrationJobs.insert(fileId, hydration);
+
+    connect(hydration, &HydrationJob::finished, this, [this, fileName, hydration] {
+
+        if (QFileInfo::exists(fileName)) {
+            auto item = OCC::SyncFileItem::fromSyncJournalFileRecord(hydration->record());
+            // the file is now downloaded
+            item->_type = ItemTypeFile;
+            FileSystem::getInode(fileName, &item->_inode);
+            const auto result = this->params().journal->setFileRecord(SyncJournalFileRecord::fromSyncFileItem(*item));
+            if (!result) {
+                qCWarning(lcVfsXAttr) << u"Error when setting the file record to the database" << result.error();
+            } else {
+                qCInfo(lcVfsXAttr) << u"Hydration succeeded" << fileName;
+            }
+        } else {
+            qCWarning(lcVfsXAttr) << u"Hydration succeeded but the file appears to be moved" << fileName;
+        }
+
+        hydration->deleteLater();
+        this->_hydrationJobs.remove(hydration->fileId());
+    });
+    connect(hydration, &HydrationJob::error, this, [this, hydration](const QString &error) {
+        qCWarning(lcVfsXAttr) << u"Hydration failed" << error;
+        hydration->deleteLater();
+        this->_hydrationJobs.remove(hydration->fileId());
+    });
+
+    return hydration;
+}
 
 OCC::Result<Vfs::ConvertToPlaceholderResult, QString> VfsXAttr::convertToPlaceholder(
         const QString &path, time_t modtime, qint64 size, const QByteArray &fileId, const QString &replacesPath)

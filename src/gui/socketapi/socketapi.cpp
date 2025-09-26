@@ -32,6 +32,7 @@
 #include "syncengine.h"
 #include "syncfileitem.h"
 #include "theme.h"
+#include "vfs/hydrationjob.h"
 
 #include <QApplication>
 #include <QDir>
@@ -671,17 +672,15 @@ void SocketApi::command_V2_HYDRATE_FILE(const QSharedPointer<SocketApiJobV2> &jo
     auto fileData = FileData::get(targetPath);
 
     if (fileData.folder) {
-        auto watcher = new QFutureWatcher<Result<void, QString>>();
-        connect(watcher, &QFutureWatcher<Result<void, QString>>::finished, this, [job, watcher] {
-            const auto resut = watcher->result<Result<void, QString>>();
-            watcher->deleteLater();
-            if (!resut) {
-                job->success({{QStringLiteral("status"), QStringLiteral("ERROR")}, {QStringLiteral("error"), resut.error()}});
-            } else {
-                job->success({{QStringLiteral("status"), QStringLiteral("OK")}});
-            }
+        HydrationJob *hydJob = fileData.folder->vfs().hydrateFile(fileId);
+        connect(hydJob, &HydrationJob::finished, this, [job, hydJob] {
+            job->success({{QStringLiteral("status"), QStringLiteral("OK")}});
+            hydJob->deleteLater();
         });
-        watcher->setFuture(fileData.folder->vfs().hydrateFile(fileId, targetPath));
+        connect(hydJob, &HydrationJob::error, this, [job, hydJob](const QString& err) {
+            job->success({{QStringLiteral("status"), QStringLiteral("ERROR")}, {QStringLiteral("error"), err}});
+            hydJob->deleteLater();
+        });
     } else {
         job->failure(QStringLiteral("cannot hydrate unknown file"));
     }

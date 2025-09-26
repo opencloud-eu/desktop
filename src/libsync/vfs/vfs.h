@@ -37,6 +37,7 @@ class Account;
 class SyncJournalDb;
 class SyncFileItem;
 class SyncEngine;
+class HydrationJob;
 
 /** Collection of parameters for initializing a Vfs instance. */
 struct OPENCLOUD_SYNC_EXPORT VfsSetupParams
@@ -211,7 +212,7 @@ public:
      *
      * Returns a QFuture<Result> void if successful and QFuture<Result> QString if an error occurs.
      */
-    [[nodiscard]] virtual QFuture<Result<void, QString>> hydrateFile(const QByteArray &fileId, const QString &targetPath);
+    [[nodiscard]] virtual HydrationJob* hydrateFile(const QByteArray &fileId);
 
 public Q_SLOTS:
     /** Update in-sync state based on SyncFileStatusTracker signal.
