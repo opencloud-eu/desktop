@@ -2740,18 +2740,18 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/gui/updatenotifier.cpp" line="43"/>
         <source>Update available</source>
-        <translation type="unfinished"/>
+        <translation>Update beschikbaar</translation>
     </message>
     <message>
         <location filename="../src/gui/updatenotifier.cpp" line="44"/>
         <source>A new version %1 is available. You are using version %2.</source>
         <comment>The first placeholder is the new version, the second one the current version</comment>
-        <translation type="unfinished"/>
+        <translation>Er is een nieuwe versie %1 beschikbaar. Je gebruikt versie %2.</translation>
     </message>
     <message>
         <location filename="../src/gui/updatenotifier.cpp" line="49"/>
         <source>Open Download Page</source>
-        <translation type="unfinished"/>
+        <translation>Downloadpagina openen</translation>
     </message>
 </context>
 <context>
