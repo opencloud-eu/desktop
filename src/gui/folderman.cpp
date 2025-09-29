@@ -314,7 +314,7 @@ void FolderMan::slotIsConnectedChanged()
                 scheduler()->enqueueFolder(f);
             }
         }
-    } else {
+    } else if (accountState->state() == AccountState::State::Disconnected || accountState->state() == AccountState::State::SignedOut) {
         qCInfo(lcFolderMan) << u"Account" << accountName
                             << u"disconnected or paused, "
                                "terminating or descheduling sync folders";

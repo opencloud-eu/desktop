@@ -195,7 +195,7 @@ AccountPtr AccountState::account() const
     return _account;
 }
 
-AccountState::ConnectionStatus AccountState::connectionStatus() const
+ConnectionValidator::Status AccountState::connectionStatus() const
 {
     return _connectionStatus;
 }
@@ -212,8 +212,9 @@ AccountState::State AccountState::state() const
 
 void AccountState::setState(State state)
 {
-    const State oldState = _state;
-    if (_state != state) {
+    const bool stateHasChanged = state != _state;
+    if (stateHasChanged) {
+        const State oldState = _state;
         qCInfo(lcAccountState) << u"AccountState state change: " << _state << u"->" << state;
         _state = state;
 
@@ -233,30 +234,31 @@ void AccountState::setState(State state)
     }
 
     // might not have changed but the underlying _connectionErrors might have
-    if (_state == Connected) {
-        QTimer::singleShot(0, this, [this, oldState] {
+    if (state == Connected) {
+        QTimer::singleShot(0, this, [stateHasChanged, this] {
             // ensure the connection validator is done
             _queueGuard.unblock();
 
             // update capabilites and fetch relevant settings
             if (!_fetchServerSettingsJob && _fetchCapabilitiesElapsedTimer.duration() > fetchSettingsTimeout) {
                 _fetchServerSettingsJob = new FetchServerSettingsJob(account(), this);
-                connect(_fetchServerSettingsJob, &FetchServerSettingsJob::finishedSignal, this, [oldState, this] {
+                connect(_fetchServerSettingsJob, &FetchServerSettingsJob::finishedSignal, this, [stateHasChanged, this] {
                     _fetchServerSettingsJob->deleteLater();
                     // clear the guard to make readyForSync return true
                     _fetchServerSettingsJob.clear();
                     _fetchCapabilitiesElapsedTimer.reset();
-                    if (oldState == Connected || _state == Connected) {
+                    if (stateHasChanged) {
                         Q_EMIT isConnectedChanged();
                     }
                 });
                 _fetchServerSettingsJob->start();
             }
         });
+    } else if (stateHasChanged) {
+        Q_EMIT isConnectedChanged();
     }
-    // don't anounce a state change from connected to connected
-    // https://github.com/owncloud/client/commit/2c6c21d7532f0cbba4b768fde47810f6673ed931
-    if (oldState != state || state != Connected) {
+
+    if (stateHasChanged) {
         Q_EMIT stateChanged(_state);
     }
 }
@@ -273,13 +275,6 @@ void AccountState::signOutByUi()
     setState(SignedOut);
     // persist that we are signed out
     Q_EMIT account()->wantsAccountSaved(account().data());
-}
-
-void AccountState::freshConnectionAttempt()
-{
-    if (isConnected())
-        setState(Disconnected);
-    checkConnectivity();
 }
 
 void AccountState::signIn()
