@@ -47,7 +47,7 @@ class OPENCLOUD_GUI_EXPORT AccountState : public QObject
     QML_UNCREATABLE("Only created by AccountManager")
 
 public:
-    enum State {
+    enum State : uint8_t {
         /// Not even attempting to connect, most likely because the
         /// user explicitly signed out or cancelled a credential dialog.
         SignedOut,
@@ -62,8 +62,6 @@ public:
     };
     Q_ENUM(State)
 
-    /// The actual current connectivity status.
-    typedef ConnectionValidator::Status ConnectionStatus;
 
     ~AccountState() override;
 
@@ -83,7 +81,7 @@ public:
 
     AccountPtr account() const;
 
-    ConnectionStatus connectionStatus() const;
+    ConnectionValidator::Status connectionStatus() const;
     QStringList connectionErrors() const;
 
     State state() const;
@@ -95,16 +93,6 @@ public:
     /** A user-triggered sign out which disconnects, stops syncs
      * for the account and forgets the password. */
     void signOutByUi();
-
-    /** Tries to connect from scratch.
-     *
-     * Does nothing for signed out accounts.
-     * Connected accounts will be disconnected and try anew.
-     * Disconnected accounts will go to checkConnectivity().
-     *
-     * Useful for when network settings (proxy) change.
-     */
-    void freshConnectionAttempt();
 
     /// Move from SignedOut state to Disconnected (attempting to connect)
     void signIn();
@@ -153,7 +141,7 @@ private:
     AccountPtr _account;
     JobQueueGuard _queueGuard;
     State _state;
-    ConnectionStatus _connectionStatus;
+    ConnectionValidator::Status _connectionStatus;
     QStringList _connectionErrors;
     bool _waitingForNewCredentials;
     QDateTime _timeOfLastETagCheck;
