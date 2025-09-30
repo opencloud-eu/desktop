@@ -39,8 +39,7 @@ public:
     enum Status : uint8_t {
         Undefined,
         Success,
-        NotYetStarted,
-        SyncPrepare,
+        Queued,
         SyncRunning,
         Paused,
         Offline,

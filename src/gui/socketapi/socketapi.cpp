@@ -362,8 +362,6 @@ void SocketApi::slotUpdateFolderView(Folder *f)
     if (f) {
         // do only send UPDATE_VIEW for a couple of status
         switch (f->syncResult().status()) {
-        case SyncResult::SyncPrepare:
-            Q_FALLTHROUGH();
         case SyncResult::Success:
             Q_FALLTHROUGH();
         case SyncResult::Paused:
@@ -381,7 +379,7 @@ void SocketApi::slotUpdateFolderView(Folder *f)
             [[fallthrough]];
         case OCC::SyncResult::Undefined:
             Q_FALLTHROUGH();
-        case OCC::SyncResult::NotYetStarted:
+        case OCC::SyncResult::Queued:
             Q_FALLTHROUGH();
         case OCC::SyncResult::SyncRunning:
             Q_FALLTHROUGH();
