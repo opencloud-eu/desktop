@@ -1,6 +1,6 @@
 # Changelog
 
-## [3.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v3.0.0) - 2025-09-29
+## [3.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v3.0.0) - 2025-09-30
 
 ### ❤️ Thanks to all contributors! ❤️
 
@@ -14,6 +14,7 @@
 
 ### 🐛 Bug Fixes
 
+- Abort sync if connection is lost [[#562](https://github.com/opencloud-eu/desktop/pull/562)]
 - Fix: Attempted sync on non syncable Folder [[#533](https://github.com/opencloud-eu/desktop/pull/533)]
 - Don't mark restorations as excluded [[#498](https://github.com/opencloud-eu/desktop/pull/498)]
 - Sync Scheduler: Ensure the current sync is actually running [[#452](https://github.com/opencloud-eu/desktop/pull/452)]
