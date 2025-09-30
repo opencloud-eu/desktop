@@ -160,6 +160,8 @@ void SyncScheduler::enqueueFolder(Folder *folder, Priority priority)
         qCInfo(lcSyncScheduler).noquote() << message;
     }
 
+    // TODO: setSyncState should not be public...
+    folder->setSyncState(SyncResult::Queued);
     _queue->enqueueFolder(folder, priority);
 
     if (!_currentSync) {
