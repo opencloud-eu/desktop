@@ -58,7 +58,6 @@ Q_LOGGING_CATEGORY(lcAccountSettings, "gui.account.settings", QtInfoMsg)
 AccountSettings::AccountSettings(const AccountStatePtr &accountState, QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::AccountSettings)
-    , _wasDisabledBefore(false)
     , _accountState(accountState)
 {
     ui->setupUi(this);
@@ -300,10 +299,6 @@ void AccountSettings::slotEnableCurrentFolder(Folder *folder, bool terminate)
     }
     folder->slotNextSyncFullLocalDiscovery(); // ensure we don't forget about local errors
     folder->setSyncPaused(!currentlyPaused);
-
-    // keep state for the icon setting.
-    if (currentlyPaused)
-        _wasDisabledBefore = true;
 
     _model->slotUpdateFolderState(folder);
 }
