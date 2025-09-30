@@ -252,6 +252,8 @@ void AccountState::setState(State state)
                     }
                 });
                 _fetchServerSettingsJob->start();
+            } else if (stateHasChanged) {
+                Q_EMIT isConnectedChanged();
             }
         });
     } else if (stateHasChanged) {
