@@ -117,7 +117,6 @@ private:
 
     FolderStatusModel *_model;
     QSortFilterProxyModel *_sortModel;
-    bool _wasDisabledBefore;
     AccountStatePtr _accountState;
     // are we already in the destructor
     bool _goingDown = false;
