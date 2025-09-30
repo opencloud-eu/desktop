@@ -58,25 +58,6 @@ public:
         /// The account is successfully talking to the server.
         Connected,
 
-        /// There's a temporary problem with talking to the server,
-        /// don't bother the user too much and try again.
-        ServiceUnavailable,
-
-        /// Similar to ServiceUnavailable, but we know the server is down
-        /// for maintenance
-        MaintenanceMode,
-
-        /// Could not communicate with the server for some reason.
-        /// We assume this may resolve itself over time and will try
-        /// again automatically.
-        NetworkError,
-
-        /// Server configuration error. (For example: unsupported version)
-        ConfigurationError,
-
-        /// We are currently asking the user for credentials
-        AskingCredentials,
-
         Connecting
     };
     Q_ENUM(State)
@@ -180,18 +161,6 @@ private:
     QPointer<TlsErrorDialog> _tlsDialog;
 
     bool _settingUp = false;
-
-    /**
-     * Starts counting when the server starts being back up after 503 or
-     * maintenance mode. The account will only become connected once this
-     * timer exceeds the _maintenanceToConnectedDelay value.
-     */
-    Utility::ChronoElapsedTimer _timeSinceMaintenanceOver = {false};
-
-    /**
-     * Milliseconds for which to delay reconnection after 503/maintenance.
-     */
-    std::chrono::milliseconds _maintenanceToConnectedDelay;
 
     Utility::ChronoElapsedTimer _fetchCapabilitiesElapsedTimer = {false};
     // guard against multiple fetches
