@@ -126,7 +126,7 @@ void ConnectionValidator::slotCheckServerAndAuth()
                 reportResult(NetworkInformation::instance()->isBehindCaptivePortal() ? CaptivePortal : SslError);
                 return;
             case QNetworkReply::TooManyRedirectsError:
-                reportResult(MaintenanceMode);
+                reportResult(StatusNotFound);
                 return;
             default:
                 break;
@@ -155,13 +155,6 @@ void ConnectionValidator::slotStatusFound(const QUrl &url, const QJsonObject &in
             reportResult(StatusNotFound);
             return;
         }
-    }
-
-    // Check for maintenance mode: Servers send "true", so go through QVariant
-    // to parse it correctly.
-    if (info[QStringLiteral("maintenance")].toVariant().toBool()) {
-        reportResult(MaintenanceMode);
-        return;
     }
 
     AbstractCredentials *creds = _account->credentials();
