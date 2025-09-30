@@ -270,7 +270,6 @@ public Q_SLOTS:
     bool reloadExcludes();
 
 private Q_SLOTS:
-    void slotSyncStarted();
     void slotSyncFinished(bool);
 
     /** Adds a error message that's not tied to a specific item.
@@ -278,8 +277,6 @@ private Q_SLOTS:
     void slotSyncError(const QString &message, ErrorCategory category = ErrorCategory::Normal);
 
     void slotItemCompleted(const SyncFileItemPtr &);
-
-    void slotLogPropagationStart();
 
     /** Adjust sync result based on conflict data from IssuesWidget.
      *

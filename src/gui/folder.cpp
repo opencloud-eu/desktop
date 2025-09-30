@@ -84,11 +84,7 @@ Folder::Folder(const FolderDefinition &definition, const AccountStatePtr &accoun
     _timeSinceLastSyncStart.start();
     _timeSinceLastSyncDone.start();
 
-    SyncResult::Status status = SyncResult::NotYetStarted;
-    if (definition.paused) {
-        status = SyncResult::Paused;
-    }
-    setSyncState(status);
+    setSyncState(definition.paused ? SyncResult::Paused : SyncResult::Queued);
     // check if the local path exists
     if (checkLocalPath()) {
         // those errors should not persist over sessions
@@ -103,15 +99,12 @@ Folder::Folder(const FolderDefinition &definition, const AccountStatePtr &accoun
 
         connect(_accountState.data(), &AccountState::isConnectedChanged, this, &Folder::canSyncChanged);
 
-        connect(_engine.data(), &SyncEngine::started, this, &Folder::slotSyncStarted);
         connect(_engine.data(), &SyncEngine::finished, this, &Folder::slotSyncFinished);
 
         connect(_engine.data(), &SyncEngine::transmissionProgress, this,
             [this](const ProgressInfo &pi) { Q_EMIT ProgressDispatcher::instance()->progressInfo(this, pi); });
         connect(_engine.data(), &SyncEngine::itemCompleted, this, &Folder::slotItemCompleted);
         connect(_engine.data(), &SyncEngine::seenLockedFile, FolderMan::instance(), &FolderMan::slotSyncOnceFileUnlocks);
-        connect(_engine.data(), &SyncEngine::aboutToPropagate,
-            this, &Folder::slotLogPropagationStart);
         connect(_engine.data(), &SyncEngine::syncError, this, &Folder::slotSyncError);
 
         connect(ProgressDispatcher::instance(), &ProgressDispatcher::folderConflicts,
@@ -354,7 +347,7 @@ QString Folder::cleanPath() const
 
 bool Folder::isSyncRunning() const
 {
-    return _syncResult.status() == SyncResult::SyncPrepare || _syncResult.status() == SyncResult::SyncRunning;
+    return _syncResult.status() == SyncResult::SyncRunning;
 }
 
 QUrl Folder::webDavUrl() const
@@ -396,7 +389,7 @@ void Folder::setSyncPaused(bool paused)
 
     Q_EMIT syncPausedChanged(this, paused);
     if (!paused) {
-        setSyncState(SyncResult::NotYetStarted);
+        setSyncState(SyncResult::Success);
     } else {
         setSyncState(SyncResult::Paused);
     }
@@ -844,7 +837,7 @@ void Folder::startSync()
 
     _timeSinceLastSyncStart.start();
     _syncResult.reset();
-    setSyncState(SyncResult::SyncPrepare);
+    setSyncState(SyncResult::SyncRunning);
 
     qCInfo(lcFolder) << u"*** Start syncing " << displayName() << u"client version" << Theme::instance()->aboutVersions(Theme::VersionFormat::OneLiner);
 
@@ -920,12 +913,6 @@ void Folder::slotSyncError(const QString &message, ErrorCategory category)
 {
     _syncResult.appendErrorString(message);
     Q_EMIT ProgressDispatcher::instance()->syncError(this, message, category);
-}
-
-void Folder::slotSyncStarted()
-{
-    qCInfo(lcFolder) << u"#### Propagation start ####################################################";
-    setSyncState(SyncResult::SyncRunning);
 }
 
 void Folder::slotSyncFinished(bool success)
@@ -1022,11 +1009,6 @@ void Folder::slotItemCompleted(const SyncFileItemPtr &item)
     Q_EMIT ProgressDispatcher::instance()->itemCompleted(this, item);
 }
 
-void Folder::slotLogPropagationStart()
-{
-    _fileLog->logLap(QStringLiteral("Propagation starts"));
-}
-
 void Folder::slotNextSyncFullLocalDiscovery()
 {
     _timeSinceLastFullLocalDiscovery.invalidate();
@@ -1111,7 +1093,7 @@ void Folder::registerFolderWatcher()
     connect(_folderWatcher.data(), &FolderWatcher::changesDetected, this, [this] {
         // don't set to not yet started if a sync is already running
         if (!isSyncRunning()) {
-            setSyncState(SyncResult::NotYetStarted);
+            setSyncState(SyncResult::Queued);
         }
     });
     connect(_folderWatcher.data(), &FolderWatcher::lostChanges,
