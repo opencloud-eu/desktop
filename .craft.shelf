@@ -3,11 +3,11 @@ version = 2
 blueprintrepositories = https://invent.kde.org/packaging/craft-blueprints-kde.git|master|;https://github.com/opencloud-eu/craft-blueprints-opencloud.git|main|
 
 [core/cacert]
-version = 2023-12-12
+version = 2025-09-09
 
 [craft/craft-blueprints-kde]
 version = master
-revision = 6561c24db
+revision = 26586a9e9
 
 [craft/craft-blueprints-opencloud]
 version = main
@@ -15,7 +15,7 @@ revision = d8e04f2
 
 [craft/craft-core]
 version = master
-revision = da83fb4a7
+revision = 3b9af473a
 
 [dev-utils/7zip-base]
 version = 25.00
@@ -24,7 +24,7 @@ version = 25.00
 version = latest
 
 [dev-utils/cmake-base]
-version = 3.30.0
+version = 3.31.9
 
 [dev-utils/icoutils]
 version = 0.32.3
@@ -39,7 +39,7 @@ version = 0.6.1
 version = 2.16.03
 
 [dev-utils/ninja]
-version = 1.13.0
+version = 1.13.1
 
 [dev-utils/nsis]
 version = 3.09
@@ -54,7 +54,7 @@ version = 2.4.3
 version = 0.9.0
 
 [kde/frameworks/extra-cmake-modules]
-version = 6.17.0
+version = 6.18.0
 
 [libs/brotli]
 version = 1.1.0
@@ -120,7 +120,7 @@ version = 20.1.7
 version = 3.11.2
 
 [libs/openssl]
-version = 3.5.1
+version = 3.5.4
 
 [libs/pcre2]
 version = 10.44
@@ -132,28 +132,28 @@ version = 0.46.4
 version = 3.11.11
 
 [libs/qt6/qtbase]
-version = 6.9.1
+version = 6.9.2
 
 [libs/qt6/qtdeclarative]
-version = 6.9.1
+version = 6.9.2
 
 [libs/qt6/qtimageformats]
-version = 6.9.1
+version = 6.9.2
 
 [libs/qt6/qtlanguageserver]
-version = 6.9.1
+version = 6.9.2
 
 [libs/qt6/qtshadertools]
-version = 6.9.1
+version = 6.9.2
 
 [libs/qt6/qtsvg]
-version = 6.9.1
+version = 6.9.2
 
 [libs/qt6/qttools]
-version = 6.9.1
+version = 6.9.2
 
 [libs/qt6/qttranslations]
-version = 6.9.1
+version = 6.9.2
 
 [libs/runtime]
 version = 17
@@ -202,4 +202,3 @@ version = latest
 
 [qt-libs/qtkeychain]
 version = 0.15.0
-
