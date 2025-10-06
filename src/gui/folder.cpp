@@ -409,6 +409,11 @@ void Folder::setSyncState(SyncResult::Status state)
     }
 }
 
+SyncResult::Status Folder::syncState() const
+{
+    return _syncResult.status();
+}
+
 SyncResult Folder::syncResult() const
 {
     return _syncResult;

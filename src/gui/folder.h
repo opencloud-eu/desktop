@@ -144,6 +144,8 @@ public:
 
     void setSyncState(SyncResult::Status state);
 
+    SyncResult::Status syncState() const;
+
     void setDirtyNetworkLimits();
 
     void reloadSyncOptions();
