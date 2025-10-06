@@ -98,8 +98,6 @@ protected Q_SLOTS:
     void slotEnableCurrentFolder(Folder *folder, bool terminate = false);
     void slotForceSyncCurrentFolder(Folder *folder);
     void slotRemoveCurrentFolder(Folder *folder);
-    void slotEnableVfsCurrentFolder(Folder *folder);
-    void slotDisableVfsCurrentFolder(Folder *folder);
     void showSelectiveSyncDialog(Folder *folder);
     void slotFolderWizardAccepted();
     void slotDeleteAccount();
