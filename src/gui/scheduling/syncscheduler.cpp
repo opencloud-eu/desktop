@@ -23,6 +23,7 @@
 #include <queue>
 
 using namespace std::chrono_literals;
+using namespace Qt::Literals::StringLiterals;
 
 using namespace OCC;
 
@@ -148,17 +149,10 @@ void SyncScheduler::enqueueFolder(Folder *folder, Priority priority)
         return;
     }
 
-    if (lcSyncScheduler().isInfoEnabled()) {
-        QString message;
-        QDebug d(&message);
-        d << u"Enqueue" << folder->path() << priority << u"QueueSize:" << _queue->size() << u"scheduler is active:" << isRunning();
-        if (_currentSync) {
-            d << u"current sync" << _currentSync->path() << u"for" << _syncTimer;
-        } else {
-            d << u"no current sync running";
-        }
-        qCInfo(lcSyncScheduler).noquote() << message;
-    }
+    qCInfo(lcSyncScheduler) << u"Enqueue" << folder->path() << priority << u"QueueSize:" << _queue->size() << u"scheduler is active:" << isRunning()
+                            << (_currentSync ? u"current sync %1 %2 for %3"_s.arg(
+                                                   _currentSync->path(), QDebug::toString(_currentSync->syncState()), QDebug::toString(_syncTimer))
+                                             : u"no current sync running"_s);
 
     // TODO: setSyncState should not be public...
     folder->setSyncState(SyncResult::Queued);
