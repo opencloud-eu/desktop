@@ -209,49 +209,6 @@ void AccountSettings::slotRemoveCurrentFolder(Folder *folder)
     messageBox->open();
 }
 
-void AccountSettings::slotEnableVfsCurrentFolder(Folder *folder)
-{
-    if (OC_ENSURE(VfsPluginManager::instance().bestAvailableVfsMode() == Vfs::WindowsCfApi)) {
-        if (!folder) {
-            return;
-        }
-        qCInfo(lcAccountSettings) << u"Enabling vfs support for folder" << folder->path();
-
-        // Change the folder vfs mode and load the plugin
-        folder->setVirtualFilesEnabled(true);
-
-        // don't schedule the folder, it might not be ready yet.
-        // it will schedule its self once set up
-    }
-}
-
-void AccountSettings::slotDisableVfsCurrentFolder(Folder *folder)
-{
-    auto msgBox = new QMessageBox(
-        QMessageBox::Question,
-        tr("Disable virtual file support?"),
-        tr("This action will disable virtual file support. As a consequence contents of folders that "
-           "are currently marked as 'available online only' will be downloaded."
-           "\n\n"
-           "The only advantage of disabling virtual file support is that the selective sync feature "
-           "will become available again."
-           "\n\n"
-           "This action will abort any currently running synchronization."));
-    auto acceptButton = msgBox->addButton(tr("Disable support"), QMessageBox::AcceptRole);
-    msgBox->addButton(tr("Cancel"), QMessageBox::RejectRole);
-    connect(msgBox, &QMessageBox::finished, msgBox, [msgBox, folder, acceptButton] {
-        msgBox->deleteLater();
-        if (msgBox->clickedButton() != acceptButton || !folder) {
-            return;
-        }
-
-        qCInfo(lcAccountSettings) << u"Disabling vfs support for folder" << folder->path();
-
-        // Also wipes virtual files, schedules remote discovery
-        folder->setVirtualFilesEnabled(false);
-    });
-    msgBox->open();
-}
 
 void AccountSettings::showConnectionLabel(const QString &message, SyncResult::Status status, QStringList errors)
 {
