@@ -14,6 +14,7 @@
 
 ### 🐛 Bug Fixes
 
+- Only count enabled spaces when computing the number of spaces to sync [[#571](https://github.com/opencloud-eu/desktop/pull/571)]
 - Abort sync if connection is lost [[#562](https://github.com/opencloud-eu/desktop/pull/562)]
 - Fix: Attempted sync on non syncable Folder [[#533](https://github.com/opencloud-eu/desktop/pull/533)]
 - Don't mark restorations as excluded [[#498](https://github.com/opencloud-eu/desktop/pull/498)]
