@@ -586,8 +586,7 @@ File synchronization desktop utility.</source>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="202"/>
-        <location filename="../src/gui/accountsettings.cpp" line="241"/>
-        <location filename="../src/gui/accountsettings.cpp" line="541"/>
+        <location filename="../src/gui/accountsettings.cpp" line="498"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
@@ -612,110 +611,87 @@ File synchronization desktop utility.</source>
         <translation>Удалить Пространство</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="232"/>
-        <source>Disable virtual file support?</source>
-        <translation>Выключить поддержку виртуальных файлов?</translation>
-    </message>
-    <message>
-        <location filename="../src/gui/accountsettings.cpp" line="233"/>
-        <source>This action will disable virtual file support. As a consequence contents of folders that are currently marked as 'available online only' will be downloaded.
-
-The only advantage of disabling virtual file support is that the selective sync feature will become available again.
-
-This action will abort any currently running synchronization.</source>
-        <translation>Это действие приведет к отключению поддержки виртуальных файлов. Вследствие этого файлы, помеченные как &apos;Доступен только онлайн&apos;, будут скачаны.
-
-Единственным преимуществом отключения поддержки виртуальных файлов является то, что функция выборочной синхронизации снова станет доступной.
-
-Это действие приведет к прерыванию всех текущих синхронизаций.</translation>
-    </message>
-    <message>
-        <location filename="../src/gui/accountsettings.cpp" line="240"/>
-        <source>Disable support</source>
-        <translation>Отключить поддержку</translation>
-    </message>
-    <message>
-        <location filename="../src/gui/accountsettings.cpp" line="281"/>
+        <location filename="../src/gui/accountsettings.cpp" line="238"/>
         <source>Sync Running</source>
         <translation>Идет синхронизация</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="281"/>
+        <location filename="../src/gui/accountsettings.cpp" line="238"/>
         <source>The sync operation is running.&lt;br/&gt;Do you want to stop it?</source>
         <translation>Идет синхронизация.&lt;br/&gt;Вы хотите остановить ее?</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="298"/>
+        <location filename="../src/gui/accountsettings.cpp" line="255"/>
         <source>Sync paused by user</source>
         <translation>Синхронизация приостановлена пользователем</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="309"/>
+        <location filename="../src/gui/accountsettings.cpp" line="266"/>
         <source>Internet connection is metered</source>
         <translation>Оптимизация интернет трафика</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="310"/>
+        <location filename="../src/gui/accountsettings.cpp" line="267"/>
         <source>Synchronization is paused because the Internet connection is a metered connection&lt;p&gt;Do you really want to force a Synchronization now?</source>
         <translation>Синхронизация приостановлена из-за включенной настройки оптимизации интернет трафика. &lt;p&gt; Вы уверены, что хотите запустить принудительную Синхронизацию? </translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="333"/>
+        <location filename="../src/gui/accountsettings.cpp" line="290"/>
         <source>User triggered force sync</source>
         <translation>Пользователь запустил принудительную синхронизацию</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="357"/>
+        <location filename="../src/gui/accountsettings.cpp" line="314"/>
         <source>Mark as read</source>
         <translation>Отметить прочитанным</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="392"/>
+        <location filename="../src/gui/accountsettings.cpp" line="349"/>
         <source>Connected</source>
         <translation>Подключено</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="400"/>
+        <location filename="../src/gui/accountsettings.cpp" line="357"/>
         <source>Signed out</source>
         <translation>Произведен выход из системы</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="404"/>
+        <location filename="../src/gui/accountsettings.cpp" line="361"/>
         <source>Captive portal prevents connections to the server.</source>
         <translation>Портал авторизации предотвращает подключение к серверу.</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="406"/>
+        <location filename="../src/gui/accountsettings.cpp" line="363"/>
         <source>Sync is paused due to metered internet connection</source>
         <translation>Синхронизация приостановлена из-за включенной оптимизации интернет трафика</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="408"/>
+        <location filename="../src/gui/accountsettings.cpp" line="365"/>
         <source>Connecting...</source>
         <translation>Подключение...</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="412"/>
+        <location filename="../src/gui/accountsettings.cpp" line="369"/>
         <source>Disconnected</source>
         <translation>Disconnected</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="535"/>
+        <location filename="../src/gui/accountsettings.cpp" line="492"/>
         <source>Confirm Account Removal</source>
         <translation>Подтвердите удаление аккаунта</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="536"/>
+        <location filename="../src/gui/accountsettings.cpp" line="493"/>
         <source>&lt;p&gt;Do you really want to remove the connection to the account %1«?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; This will &lt;b&gt;not&lt;/b&gt; delete any files.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Вы действительно хотите удалить подключение к аккаунту %1«?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Примечание:&lt;/b&gt; Это &lt;b&gt;не&lt;/b&gt; приведет к удалению файлов.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="540"/>
+        <location filename="../src/gui/accountsettings.cpp" line="497"/>
         <source>Remove connection</source>
         <translation>Удалить подключение</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="389"/>
+        <location filename="../src/gui/accountsettings.cpp" line="346"/>
         <source>The server version %1 is unsupported! Proceed at your own risk.</source>
         <translation>Версия сервера %1 не поддерживается! Продолжайте на свой страх и риск.</translation>
     </message>
@@ -902,111 +878,111 @@ The update will be performed in the background, and overwrite the current AppIma
         <translation>Объект недоступен для записи - »%1«.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="460"/>
+        <location filename="../src/gui/folder.cpp" line="465"/>
         <source>»%1« and %n other file(s) have been removed.</source>
         <translation><numerusform>»%1« и %n другой файл были удалены.</numerusform><numerusform>»%1« и %n других файла были удалены.</numerusform><numerusform>»%1« и %n других файлов были удалены.</numerusform><numerusform>»%1« и %n других файлов были удалены.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="462"/>
+        <location filename="../src/gui/folder.cpp" line="467"/>
         <source>»%1« has been removed.</source>
         <comment>%1 names a file.</comment>
         <translation>»%1« был удален.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="467"/>
+        <location filename="../src/gui/folder.cpp" line="472"/>
         <source>»%1« and %n other file(s) have been added.</source>
         <translation><numerusform>»%1« и %n другой файл были добавлены.</numerusform><numerusform>»%1« и %n других файла были добавлены.</numerusform><numerusform>»%1« и %n других файлов были добавлены.</numerusform><numerusform>»%1« и %n других файлов были добавлены.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="469"/>
+        <location filename="../src/gui/folder.cpp" line="474"/>
         <source>»%1« has been added.</source>
         <comment>%1 names a file.</comment>
         <translation>»%1« был добавлен.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="474"/>
+        <location filename="../src/gui/folder.cpp" line="479"/>
         <source>»%1« and %n other file(s) have been updated.</source>
         <translation><numerusform>»%1« и %n другой файл были обновлены.</numerusform><numerusform>»%1« и %n других файла были обновлены.</numerusform><numerusform>»%1« и %n других файлов были обновлены.</numerusform><numerusform>»%1« и %n других файлов были обновлены.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="476"/>
+        <location filename="../src/gui/folder.cpp" line="481"/>
         <source>»%1« has been updated.</source>
         <comment>%1 names a file.</comment>
         <translation>»%1« был обновлен.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="481"/>
+        <location filename="../src/gui/folder.cpp" line="486"/>
         <source>»%1« has been renamed to »%2« and %n other file(s) have been renamed.</source>
         <translation><numerusform>»%1« был переименован в %2 и %n другой файл был переименован.</numerusform><numerusform>»%1« был переименован в %2 и %n других файла были переименованы.</numerusform><numerusform>»%1« был переименован в %2 и %n других файлов были переименованы.</numerusform><numerusform>»%1« был переименован в %2 и %n других файлов были переименованы.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="483"/>
+        <location filename="../src/gui/folder.cpp" line="488"/>
         <source>»%1« has been renamed to »%2«.</source>
         <comment>%1 and %2 name files.</comment>
         <translation>»%1« был переименован в »%2«.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="488"/>
+        <location filename="../src/gui/folder.cpp" line="493"/>
         <source>»%1« has been moved to »%2« and %n other file(s) have been moved.</source>
         <translation><numerusform>»%1« был перемещен в »%2« и %n другой файл были перемещен.</numerusform><numerusform>»%1« был перемещен в »%2« и %n других файла были перемещены.</numerusform><numerusform>»%1« был перемещен в »%2« и %n других файлов были перемещены.</numerusform><numerusform>»%1« был перемещен в »%2« и %n других файлов были перемещены.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="490"/>
+        <location filename="../src/gui/folder.cpp" line="495"/>
         <source>»%1« has been moved to »%2«.</source>
         <translation>»%1« был перемещен в »%2«.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="495"/>
+        <location filename="../src/gui/folder.cpp" line="500"/>
         <source>»%1« and %n other file(s) have sync conflicts.</source>
         <translation><numerusform>»%1« и %n другой файл имеют конфликты при синхронизации.</numerusform><numerusform>»%1« и %n других файла имеют конфликты при синхронизации.</numerusform><numerusform>»%1« и %n других файлов имеют конфликты при синхронизации.</numerusform><numerusform>»%1« и %n других файлов имеют конфликты при синхронизации.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="497"/>
+        <location filename="../src/gui/folder.cpp" line="502"/>
         <source>»%1« has a sync conflict. Please check the conflict file!</source>
         <translation>При синхронизации »%1« произошел конфликт. Пожалуйста, проверьте файл конфликтов!</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="502"/>
+        <location filename="../src/gui/folder.cpp" line="507"/>
         <source>»%1« and %n other file(s) could not be synced due to errors. See the log for details.</source>
         <translation><numerusform>»%1« и %n другой файл не могут быть синхронизированы из-за ошибок. Подробнее в логах.</numerusform><numerusform>»%1« и %n других файла не могут быть синхронизированы из-за ошибок. Подробнее в логах.</numerusform><numerusform>»%1« и %n других файлов не могут быть синхронизированы из-за ошибок. Подробнее в логах.</numerusform><numerusform>»%1« и %n других файлов не могут быть синхронизированы из-за ошибок. Подробнее в логах.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="504"/>
+        <location filename="../src/gui/folder.cpp" line="509"/>
         <source>»%1« could not be synced due to an error. See the log for details.</source>
         <translation>»%1« не может быть синхронизирован из-за ошибок. Подробнее в логах.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="510"/>
+        <location filename="../src/gui/folder.cpp" line="515"/>
         <source>Sync Activity</source>
         <translation>Активность синхронизации</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="711"/>
+        <location filename="../src/gui/folder.cpp" line="716"/>
         <source>Switching VFS mode on folder »%1«</source>
         <translation>Переключение режима VFS для папки »%1«</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1054"/>
+        <location filename="../src/gui/folder.cpp" line="1059"/>
         <source>The folder »%1« was created but was excluded from synchronization previously. Data inside it will not be synchronized.</source>
         <translation>Папка »%1« была создана, но ранее была исключена из синхронизации. Данные в ней не будут синхронизированы.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1057"/>
+        <location filename="../src/gui/folder.cpp" line="1062"/>
         <source>The file »%1« was created but was excluded from synchronization previously. It will not be synchronized.</source>
         <translation>Файл »%1« был создан, но ранее был исключен из синхронизации. Он не будет синхронизирован.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1061"/>
+        <location filename="../src/gui/folder.cpp" line="1066"/>
         <source>»%1« is not synchronized</source>
         <translation>Объект не синхронизирован - »%1«</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="847"/>
+        <location filename="../src/gui/folder.cpp" line="852"/>
         <source>Could not read system exclude file</source>
         <translation>Не удалось прочесть список файлов-исключений</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1069"/>
+        <location filename="../src/gui/folder.cpp" line="1074"/>
         <source>Changes in synchronized folders could not be tracked reliably.
 
 This means that the synchronization client might not upload local changes immediately and will instead only scan for local changes and upload them occasionally (every two hours by default).

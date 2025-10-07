@@ -586,8 +586,7 @@ Hulpprogramma voor desktop bestandssynchronisatie.</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="202"/>
-        <location filename="../src/gui/accountsettings.cpp" line="241"/>
-        <location filename="../src/gui/accountsettings.cpp" line="541"/>
+        <location filename="../src/gui/accountsettings.cpp" line="498"/>
         <source>Cancel</source>
         <translation>Annuleren</translation>
     </message>
@@ -612,110 +611,87 @@ Hulpprogramma voor desktop bestandssynchronisatie.</translation>
         <translation>Ruimte verwijderen</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="232"/>
-        <source>Disable virtual file support?</source>
-        <translation>Ondersteuning voor virtuele bestanden uitschakelen?</translation>
-    </message>
-    <message>
-        <location filename="../src/gui/accountsettings.cpp" line="233"/>
-        <source>This action will disable virtual file support. As a consequence contents of folders that are currently marked as 'available online only' will be downloaded.
-
-The only advantage of disabling virtual file support is that the selective sync feature will become available again.
-
-This action will abort any currently running synchronization.</source>
-        <translation>Deze actie zal de ondersteuning voor virtuele bestanden uitschakelen. Als gevolg hiervan zullen de inhoud van mappen die momenteel zijn gemarkeerd als &apos;alleen online beschikbaar&apos; worden gedownload.
-
-Het enige voordeel van het uitschakelen van de ondersteuning voor virtuele bestanden is dat de functie voor selectieve synchronisatie weer beschikbaar zal komen.
-
-Deze actie zal elke momenteel lopende synchronisatie onderbreken.</translation>
-    </message>
-    <message>
-        <location filename="../src/gui/accountsettings.cpp" line="240"/>
-        <source>Disable support</source>
-        <translation>Ondersteuning uitschakelen</translation>
-    </message>
-    <message>
-        <location filename="../src/gui/accountsettings.cpp" line="281"/>
+        <location filename="../src/gui/accountsettings.cpp" line="238"/>
         <source>Sync Running</source>
         <translation>Synchronisatie actief</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="281"/>
+        <location filename="../src/gui/accountsettings.cpp" line="238"/>
         <source>The sync operation is running.&lt;br/&gt;Do you want to stop it?</source>
         <translation>De synchronisatietaak is actief.&lt;br/&gt;Wil je deze beëindigen?</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="298"/>
+        <location filename="../src/gui/accountsettings.cpp" line="255"/>
         <source>Sync paused by user</source>
         <translation>Synchronisatie gepauzeerd door gebruiker</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="309"/>
+        <location filename="../src/gui/accountsettings.cpp" line="266"/>
         <source>Internet connection is metered</source>
         <translation>Internetverbinding met datalimiet</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="310"/>
+        <location filename="../src/gui/accountsettings.cpp" line="267"/>
         <source>Synchronization is paused because the Internet connection is a metered connection&lt;p&gt;Do you really want to force a Synchronization now?</source>
         <translation>Synchronisatie is gepauzeerd vanwege de internetverbinding met een datalimiet.&lt;p&gt;Wil je nu echt een synchronisatie afdwingen?</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="333"/>
+        <location filename="../src/gui/accountsettings.cpp" line="290"/>
         <source>User triggered force sync</source>
         <translation>Gebruiker heeft geforceerde synchronisatie geïnitieerd</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="357"/>
+        <location filename="../src/gui/accountsettings.cpp" line="314"/>
         <source>Mark as read</source>
         <translation>Markeren als gelezen</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="392"/>
+        <location filename="../src/gui/accountsettings.cpp" line="349"/>
         <source>Connected</source>
         <translation>Verbonden</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="400"/>
+        <location filename="../src/gui/accountsettings.cpp" line="357"/>
         <source>Signed out</source>
         <translation>Uitgelogd</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="404"/>
+        <location filename="../src/gui/accountsettings.cpp" line="361"/>
         <source>Captive portal prevents connections to the server.</source>
         <translation>Het captive portal voorkomt verbindingen met de server.</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="406"/>
+        <location filename="../src/gui/accountsettings.cpp" line="363"/>
         <source>Sync is paused due to metered internet connection</source>
         <translation>De synchronisatie is gepauzeerd vanwege een internetverbinding met datalimiet.</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="408"/>
+        <location filename="../src/gui/accountsettings.cpp" line="365"/>
         <source>Connecting...</source>
         <translation>Verbinden…</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="412"/>
+        <location filename="../src/gui/accountsettings.cpp" line="369"/>
         <source>Disconnected</source>
         <translation>Niet verbonden</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="535"/>
+        <location filename="../src/gui/accountsettings.cpp" line="492"/>
         <source>Confirm Account Removal</source>
         <translation>Verwijdering van account bevestigen</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="536"/>
+        <location filename="../src/gui/accountsettings.cpp" line="493"/>
         <source>&lt;p&gt;Do you really want to remove the connection to the account %1«?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; This will &lt;b&gt;not&lt;/b&gt; delete any files.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Wil je echt de verbinding met het account »%1« verwijderen?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Opmerking:&lt;/b&gt; Er worden &lt;b&gt;geen&lt;/b&gt; bestanden verwijderd.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="540"/>
+        <location filename="../src/gui/accountsettings.cpp" line="497"/>
         <source>Remove connection</source>
         <translation>Verbinding verwijderen</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="389"/>
+        <location filename="../src/gui/accountsettings.cpp" line="346"/>
         <source>The server version %1 is unsupported! Proceed at your own risk.</source>
         <translation>Serverversie %1 is niet ondersteund! Doorgaan op eigen risico.</translation>
     </message>
@@ -902,111 +878,111 @@ De update wordt op de achtergrond uitgevoerd en overschrijft het huidige AppImag
         <translation>»%1« is niet schrijfbaar.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="460"/>
+        <location filename="../src/gui/folder.cpp" line="465"/>
         <source>»%1« and %n other file(s) have been removed.</source>
         <translation><numerusform>»%1« en %n ander bestand zin verwijderd.</numerusform><numerusform>»%1« en %n andere bestanden zijn verwijderd.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="462"/>
+        <location filename="../src/gui/folder.cpp" line="467"/>
         <source>»%1« has been removed.</source>
         <comment>%1 names a file.</comment>
         <translation>»%1« is verwijderd.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="467"/>
+        <location filename="../src/gui/folder.cpp" line="472"/>
         <source>»%1« and %n other file(s) have been added.</source>
         <translation><numerusform>»%1« en %n ander bestand zijn toegevoegd.</numerusform><numerusform>»%1« en %n andere bestanden zijn toegevoegd.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="469"/>
+        <location filename="../src/gui/folder.cpp" line="474"/>
         <source>»%1« has been added.</source>
         <comment>%1 names a file.</comment>
         <translation>»%1« is toegevoegd.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="474"/>
+        <location filename="../src/gui/folder.cpp" line="479"/>
         <source>»%1« and %n other file(s) have been updated.</source>
         <translation><numerusform>»%1« en %n ander bestand zijn bijgewerkt.</numerusform><numerusform>»%1« en %n andere bestanden zijn bijgewerkt.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="476"/>
+        <location filename="../src/gui/folder.cpp" line="481"/>
         <source>»%1« has been updated.</source>
         <comment>%1 names a file.</comment>
         <translation>»%1« is bijgewerkt.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="481"/>
+        <location filename="../src/gui/folder.cpp" line="486"/>
         <source>»%1« has been renamed to »%2« and %n other file(s) have been renamed.</source>
         <translation><numerusform>»%1« is hernoemd naar »%2« and %n ander bestand is hernoemd.</numerusform><numerusform>»%1« is hernoemd naar »%2« and %n andere bestanden zijn hernoemd.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="483"/>
+        <location filename="../src/gui/folder.cpp" line="488"/>
         <source>»%1« has been renamed to »%2«.</source>
         <comment>%1 and %2 name files.</comment>
         <translation>»%1« is hernoemd naar »%2«.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="488"/>
+        <location filename="../src/gui/folder.cpp" line="493"/>
         <source>»%1« has been moved to »%2« and %n other file(s) have been moved.</source>
         <translation><numerusform>»%1« is verplaatst naar »%2« en %n ander bestand is verplaatst.</numerusform><numerusform>»%1« is verplaatst naar »%2« en %n andere bestanden zijn verplaatst.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="490"/>
+        <location filename="../src/gui/folder.cpp" line="495"/>
         <source>»%1« has been moved to »%2«.</source>
         <translation>»%1« is verplaatst naar »%2«.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="495"/>
+        <location filename="../src/gui/folder.cpp" line="500"/>
         <source>»%1« and %n other file(s) have sync conflicts.</source>
         <translation><numerusform>»%1« en %n ander bestand hebben synchronisatieconflicten</numerusform><numerusform>»%1« en %n andere bestanden hebben synchronisatieconflicten.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="497"/>
+        <location filename="../src/gui/folder.cpp" line="502"/>
         <source>»%1« has a sync conflict. Please check the conflict file!</source>
         <translation>»%1« heeft een synchronisatieconflict. Controleer het conflictbestand!</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="502"/>
+        <location filename="../src/gui/folder.cpp" line="507"/>
         <source>»%1« and %n other file(s) could not be synced due to errors. See the log for details.</source>
         <translation><numerusform>»%1« en %n ander bestand zijn niet gesynchroniseerd t.g.v. fouten. Bekijk het logboek voor details.</numerusform><numerusform>»%1« en %n andere bestanden zijn niet gesynchroniseerd t.g.v. fouten. Bekijk het logboek voor meer details.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="504"/>
+        <location filename="../src/gui/folder.cpp" line="509"/>
         <source>»%1« could not be synced due to an error. See the log for details.</source>
         <translation>»%1« is niet gesynchroniseerd t.g.v. een fout. Bekijk het logboek voor meer details.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="510"/>
+        <location filename="../src/gui/folder.cpp" line="515"/>
         <source>Sync Activity</source>
         <translation>Synchronisatieactiviteit</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="711"/>
+        <location filename="../src/gui/folder.cpp" line="716"/>
         <source>Switching VFS mode on folder »%1«</source>
         <translation>Overschakelen naar VFS-modus voor map »%1«</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1054"/>
+        <location filename="../src/gui/folder.cpp" line="1059"/>
         <source>The folder »%1« was created but was excluded from synchronization previously. Data inside it will not be synchronized.</source>
         <translation>De map »%1« is gemaakt, maar was eerder uitgesloten van synchronisatie. De inhoud wordt niet gesynchroniseerd.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1057"/>
+        <location filename="../src/gui/folder.cpp" line="1062"/>
         <source>The file »%1« was created but was excluded from synchronization previously. It will not be synchronized.</source>
         <translation>Het bestand »%1« is gemaakt, maar was eerder uitgesloten van synchronisatie. Het wordt niet gesynchroniseerd.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1061"/>
+        <location filename="../src/gui/folder.cpp" line="1066"/>
         <source>»%1« is not synchronized</source>
         <translation>»%1« wordt niet gesynchroniseerd</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="847"/>
+        <location filename="../src/gui/folder.cpp" line="852"/>
         <source>Could not read system exclude file</source>
         <translation>Kan het systeem uitsluitbestand niet lezen</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1069"/>
+        <location filename="../src/gui/folder.cpp" line="1074"/>
         <source>Changes in synchronized folders could not be tracked reliably.
 
 This means that the synchronization client might not upload local changes immediately and will instead only scan for local changes and upload them occasionally (every two hours by default).
