@@ -51,8 +51,8 @@ class OPENCLOUD_GUI_EXPORT AccountSettings : public QWidget
     Q_OBJECT
     Q_PROPERTY(AccountState *accountState MEMBER _accountState CONSTANT)
     Q_PROPERTY(QSortFilterProxyModel *model MEMBER _sortModel CONSTANT)
-    Q_PROPERTY(uint unsyncedSpaces READ unsyncedSpaces NOTIFY unsyncedSpacesChanged)
-    Q_PROPERTY(uint syncedSpaces READ syncedSpaces NOTIFY syncedSpacesChanged)
+    Q_PROPERTY(uint64_t unsyncedSpaces READ unsyncedSpaces NOTIFY unsyncedSpacesChanged)
+    Q_PROPERTY(uint64_t syncedSpaces READ syncedSpaces NOTIFY syncedSpacesChanged)
     Q_PROPERTY(QString connectionLabel READ connectionLabel NOTIFY connectionLabelChanged)
     Q_PROPERTY(QChar accountStateIconGlype READ accountStateIconGlype NOTIFY connectionLabelChanged)
     Q_PROPERTY(QSet<Notification> notifications READ notifications NOTIFY notificationsChanged)
@@ -72,8 +72,8 @@ public:
     void addModalLegacyDialog(QWidget *widget, ModalWidgetSizePolicy sizePolicy);
     void addModalWidget(AccountModalWidget *widget);
 
-    uint unsyncedSpaces() const;
-    uint syncedSpaces() const;
+    uint64_t unsyncedSpaces() const;
+    uint64_t syncedSpaces() const;
 
     auto model() const;
 
@@ -118,8 +118,8 @@ private:
     AccountStatePtr _accountState;
     // are we already in the destructor
     bool _goingDown = false;
-    uint _syncedSpaces = 0;
-    uint _unsyncedSpaces = 0;
+    uint64_t _syncedSpaces = 0;
+    uint64_t _unsyncedSpaces = 0;
     QString _connectionLabel;
     QChar _accountStateIconGlype;
 

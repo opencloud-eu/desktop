@@ -373,17 +373,15 @@ void AccountSettings::slotAccountStateChanged()
 
 void AccountSettings::slotSpacesUpdated()
 {
-    auto spaces = accountsState()->account()->spacesManager()->spaces();
-    auto unsycnedSpaces = std::set<GraphApi::Space *>(spaces.cbegin(), spaces.cend());
-    for (const auto &f : std::as_const(FolderMan::instance()->folders())) {
-        unsycnedSpaces.erase(f->space());
-    }
+    const uint64_t enabledSpaces = std::ranges::count_if(accountsState()->account()->spacesManager()->spaces(), [](const auto *s) { return !s->disabled(); });
+    const uint64_t syncedSpaces = std::ranges::count_if(
+        FolderMan::instance()->folders(), [this](const auto *f) { return f->accountState() == accountsState() && f->space() && !f->space()->disabled(); });
+    const auto unsyncedSpaces = enabledSpaces - syncedSpaces;
 
-    if (_unsyncedSpaces != unsycnedSpaces.size()) {
-        _unsyncedSpaces = static_cast<uint>(unsycnedSpaces.size());
+    if (_unsyncedSpaces != unsyncedSpaces) {
+        _unsyncedSpaces = unsyncedSpaces;
         Q_EMIT unsyncedSpacesChanged();
     }
-    uint syncedSpaces = spaces.size() - _unsyncedSpaces;
     if (_syncedSpaces != syncedSpaces) {
         _syncedSpaces = syncedSpaces;
         Q_EMIT syncedSpacesChanged();
@@ -455,12 +453,12 @@ void AccountSettings::addModalWidget(AccountModalWidget *widget)
     ocApp()->settingsDialog()->requestModality(_accountState->account().get());
 }
 
-uint AccountSettings::unsyncedSpaces() const
+uint64_t AccountSettings::unsyncedSpaces() const
 {
     return _unsyncedSpaces;
 }
 
-uint AccountSettings::syncedSpaces() const
+uint64_t AccountSettings::syncedSpaces() const
 {
     return _syncedSpaces;
 }
