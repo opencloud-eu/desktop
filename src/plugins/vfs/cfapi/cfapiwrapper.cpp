@@ -385,7 +385,7 @@ void OCC::CfApiWrapper::registerSyncRoot(const VfsSetupParams &params, const std
                 info.HydrationPolicy(winrt::StorageProviderHydrationPolicy::Full);
                 info.HydrationPolicyModifier(winrt::StorageProviderHydrationPolicyModifier::AutoDehydrationAllowed);
                 info.PopulationPolicy(winrt::StorageProviderPopulationPolicy::AlwaysFull);
-                info.InSyncPolicy(winrt::StorageProviderInSyncPolicy::PreserveInsyncForSyncEngine);
+                info.InSyncPolicy(winrt::StorageProviderInSyncPolicy::Default);
                 info.HardlinkPolicy(winrt::StorageProviderHardlinkPolicy::None);
                 info.Version(reinterpret_cast<const wchar_t *>(version.utf16()));
                 info.AllowPinning(true);
