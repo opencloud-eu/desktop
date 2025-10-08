@@ -119,7 +119,7 @@ Folder::Folder(const FolderDefinition &definition, const AccountStatePtr &accoun
 
         connect(_accountState->account()->spacesManager(), &GraphApi::SpacesManager::spaceChanged, this, [this](GraphApi::Space *changedSpace) {
             if (_definition.spaceId() == changedSpace->id()) {
-                prepareFolder(path(), displayName(), changedSpace->drive().getDescription());
+                prepareFolder(path(), displayName(), changedSpace->drive().getDescription(), true);
                 Q_EMIT spaceChanged();
             }
         });
@@ -235,43 +235,39 @@ void Folder::setIsReady(bool b)
     Q_EMIT isReadyChanged();
 }
 
-void Folder::prepareFolder(const QString &path, const std::optional<QString> &displayName, const std::optional<QString> &description)
+void Folder::prepareFolder(const QString &path, const QString &displayName, const QString &description, bool override)
 {
 #ifdef Q_OS_WIN
     // First create a Desktop.ini so that the folder and favorite link show our application's icon.
     const QFileInfo desktopIniPath{u"%1/Desktop.ini"_s.arg(path)};
-    {
-        const QString updateIconKey = u"%1/UpdateIcon"_s.arg(Theme::instance()->appName());
-        const QString localizedNameKey = u".ShellClassInfo/LocalizedResourcename"_s;
-        QSettings desktopIni(desktopIniPath.absoluteFilePath(), QSettings::IniFormat);
-        if (desktopIni.value(updateIconKey, true).toBool()) {
-            qCInfo(lcFolder) << u"Creating" << desktopIni.fileName() << u"to set a folder icon in Explorer.";
-            desktopIni.setValue(u".ShellClassInfo/IconResource"_s, QDir::toNativeSeparators(qApp->applicationFilePath()));
-            desktopIni.setValue(u".ShellClassInfo/ConfirmFileOp"_s, 1);
-            if (description.has_value()) {
-                QString descriptionValue = description.value();
-                // the description can still be empty
-                if (descriptionValue.isEmpty()) {
-                    const auto displayNameVal = displayName.has_value() ? displayName.value() : desktopIni.value(localizedNameKey).toString();
-                    if (displayNameVal.isEmpty()) {
-                        descriptionValue = Theme::instance()->appNameGUI();
-                    } else {
-                        descriptionValue = u"%1 - %2"_s.arg(Theme::instance()->appNameGUI(), displayNameVal);
-                    }
+    if (!desktopIniPath.exists() || override) {
+        // we can't use QSettings as we require the file to be utf16 encoded
+        qCInfo(lcFolder) << u"Creating" << desktopIniPath.filePath() << u"to set a folder icon in Explorer.";
+        QFile file(desktopIniPath.filePath());
+        if (file.open(QIODevice::WriteOnly)) {
+            QTextStream out(&file);
+            out.setEncoding(QStringConverter::Utf16);
+            out.setGenerateByteOrderMark(true);
+            const QString eol = u"\r\n"_s;
+            out << u"[.ShellClassInfo]"_s << eol << //
+                u"IconResource="_s << QDir::toNativeSeparators(qApp->applicationFilePath()) << eol << //
+                u"ConfirmFileOp=1"_s << eol;
+            if (!displayName.isEmpty()) {
+                out << u"LocalizedResourcename="_s << displayName << eol;
+            }
+            out << u"InfoTip="_s;
+            if (description.isEmpty()) {
+                out << Theme::instance()->appNameGUI();
+                if (!displayName.isEmpty()) {
+                    out << u" - "_s << displayName;
                 }
-                desktopIni.setValue(u".ShellClassInfo/InfoTip"_s, descriptionValue);
+            } else {
+                out << description;
             }
-            // we got an actual displayName, update
-            if (displayName.has_value()) {
-                Q_ASSERT(!displayName->isEmpty());
-                desktopIni.setValue(u".ShellClassInfo/LocalizedResourcename"_s, displayName.value());
-            }
-            desktopIni.setValue(updateIconKey, true);
-        } else {
-            qCInfo(lcFolder) << u"Skip icon update for" << desktopIni.fileName() << u"," << updateIconKey << u"is disabled";
+            out << eol;
         }
-
-        desktopIni.sync();
+    } else {
+        qCWarning(lcFolder) << u"Failed to write Desktop.ini";
     }
 
     const QString longFolderPath = FileSystem::longWinPath(path);
@@ -291,6 +287,7 @@ void Folder::prepareFolder(const QString &path, const std::optional<QString> &di
     Q_UNUSED(path)
     Q_UNUSED(displayName)
     Q_UNUSED(description)
+    Q_UNUSED(override)
 #endif
 }
 
