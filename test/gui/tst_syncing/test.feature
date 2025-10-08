@@ -564,3 +564,18 @@ Feature: Syncing files
         And as "Brian" folder "Shares/simple-folder/sub-folder" should exist in the server
         And as "Brian" file "Shares/simple-folder/simple.pdf" should exist in the server
         And as "Brian" the file "Shares/simple-folder/uploaded-lorem.txt" should have the content "overwrite openCloud test text file" in the server
+
+    @issue-435
+    Scenario: Unselected subfolders are excluded from local sync
+        Given user "Alice" has created folder "test-folder" in the server
+        And user "Alice" has created folder "test-folder/sub-folder1" in the server
+        And user "Alice" has created folder "test-folder/sub-folder2" in the server
+        And user "Alice" has set up a client with default settings
+        When the user unselects the following folders to sync:
+            | folder                  |
+            | test-folder/sub-folder2 |
+        Then the folder "test-folder/sub-folder1" should exist on the file system
+        But the folder "test-folder/sub-folder2" should not exist on the file system
+        When user "Alice" uploads file with content "some content" to "test-folder/sub-folder2/lorem.txt" in the server
+        And the user waits for the files to sync
+        Then the file "test-folder/sub-folder2/lorem.txt" should not exist on the file system
