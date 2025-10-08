@@ -108,6 +108,9 @@ void Logger::doLog(QtMsgType type, const QMessageLogContext &ctx, const QString 
         _crashLog[_crashLogIndex] = msg;
         if (_logstream) {
             (*_logstream) << msg;
+            if (_doFileFlush) {
+                _logstream->flush();
+            }
         }
 #if defined(Q_OS_WIN)
         if (isDebuggerPresent()) {
@@ -141,6 +144,7 @@ void Logger::open(const QString &name)
     if (name == QLatin1Char('-')) {
         attacheToConsole();
         // always unbuffered
+        _doFileFlush = true;
         openSucceeded = _logFile.open(stdout, flags | QIODevice::Unbuffered);
         encoding = QStringConverter::Utf8;
     } else {
