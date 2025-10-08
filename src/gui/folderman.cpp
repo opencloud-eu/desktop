@@ -102,7 +102,7 @@ FolderMan::FolderMan()
                     AccountManager::instance()->accounts().size() == 1
                         ? Theme::instance()->appNameGUI()
                         : u"%1 - %2"_s.arg(Theme::instance()->appNameGUI(), accountStatePtr->account()->davDisplayName()),
-                    accountStatePtr->account()->davDisplayName());
+                    accountStatePtr->account()->davDisplayName(), true);
             }
         }
     };
@@ -868,7 +868,7 @@ bool FolderMan::prepareFolder(const QString &folder)
             return false;
         }
         FileSystem::setFolderMinimumPermissions(folder);
-        Folder::prepareFolder(folder);
+        Folder::prepareFolder(folder, {}, {}, false);
     }
     return true;
 }

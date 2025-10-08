@@ -70,7 +70,7 @@ public:
     };
     Q_ENUM(ChangeReason)
 
-    static void prepareFolder(const QString &path, const std::optional<QString> &displayName = {}, const std::optional<QString> &description = {});
+    static void prepareFolder(const QString &path, const QString &displayName, const QString &description, bool override);
 
     ~Folder() override;
     /**
