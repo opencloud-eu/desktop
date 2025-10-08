@@ -292,7 +292,7 @@ Dateisynchronisierung Desktop-Client .</translation>
         <translation>Space hinzufügen</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="394"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="392"/>
         <source>You are synchronizing %1 out of %2 Spaces</source>
         <translation>Du synchronisierst %1 von %2 Spaces</translation>
     </message>
@@ -586,7 +586,7 @@ Dateisynchronisierung Desktop-Client .</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="202"/>
-        <location filename="../src/gui/accountsettings.cpp" line="498"/>
+        <location filename="../src/gui/accountsettings.cpp" line="496"/>
         <source>Cancel</source>
         <translation>Abbrechen</translation>
     </message>
@@ -676,17 +676,17 @@ Dateisynchronisierung Desktop-Client .</translation>
         <translation>Getrennt</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="492"/>
+        <location filename="../src/gui/accountsettings.cpp" line="490"/>
         <source>Confirm Account Removal</source>
         <translation>Löschen des Benutzerkontos bestätigen</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="493"/>
+        <location filename="../src/gui/accountsettings.cpp" line="491"/>
         <source>&lt;p&gt;Do you really want to remove the connection to the account %1«?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; This will &lt;b&gt;not&lt;/b&gt; delete any files.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Möchtest du den Zugang zum Benutzerkonto %1 wirklich entfernen?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Hinweis:&lt;/b&gt; Bei diesem Vorgang werden &lt;b&gt;keine&lt;/b&gt; Dateien gelöscht.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="497"/>
+        <location filename="../src/gui/accountsettings.cpp" line="495"/>
         <source>Remove connection</source>
         <translation>Verbindung löschen</translation>
     </message>
@@ -2695,18 +2695,18 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
 <context>
     <name>OCC::UpdateNotifier</name>
     <message>
-        <location filename="../src/gui/updatenotifier.cpp" line="43"/>
+        <location filename="../src/gui/updatenotifier.cpp" line="47"/>
         <source>Update available</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/gui/updatenotifier.cpp" line="44"/>
+        <location filename="../src/gui/updatenotifier.cpp" line="48"/>
         <source>A new version %1 is available. You are using version %2.</source>
         <comment>The first placeholder is the new version, the second one the current version</comment>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/gui/updatenotifier.cpp" line="49"/>
+        <location filename="../src/gui/updatenotifier.cpp" line="53"/>
         <source>Open Download Page</source>
         <translation type="unfinished"/>
     </message>

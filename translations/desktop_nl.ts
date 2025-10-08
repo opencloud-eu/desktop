@@ -292,7 +292,7 @@ Hulpprogramma voor desktop bestandssynchronisatie.</translation>
         <translation>Ruimte toevoegen</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="394"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="392"/>
         <source>You are synchronizing %1 out of %2 Spaces</source>
         <translation>Je synchroniseert %1 van de %2 ruimtes</translation>
     </message>
@@ -586,7 +586,7 @@ Hulpprogramma voor desktop bestandssynchronisatie.</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="202"/>
-        <location filename="../src/gui/accountsettings.cpp" line="498"/>
+        <location filename="../src/gui/accountsettings.cpp" line="496"/>
         <source>Cancel</source>
         <translation>Annuleren</translation>
     </message>
@@ -676,17 +676,17 @@ Hulpprogramma voor desktop bestandssynchronisatie.</translation>
         <translation>Niet verbonden</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="492"/>
+        <location filename="../src/gui/accountsettings.cpp" line="490"/>
         <source>Confirm Account Removal</source>
         <translation>Verwijdering van account bevestigen</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="493"/>
+        <location filename="../src/gui/accountsettings.cpp" line="491"/>
         <source>&lt;p&gt;Do you really want to remove the connection to the account %1«?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; This will &lt;b&gt;not&lt;/b&gt; delete any files.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Wil je echt de verbinding met het account »%1« verwijderen?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Opmerking:&lt;/b&gt; Er worden &lt;b&gt;geen&lt;/b&gt; bestanden verwijderd.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="497"/>
+        <location filename="../src/gui/accountsettings.cpp" line="495"/>
         <source>Remove connection</source>
         <translation>Verbinding verwijderen</translation>
     </message>
@@ -2694,18 +2694,18 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::UpdateNotifier</name>
     <message>
-        <location filename="../src/gui/updatenotifier.cpp" line="43"/>
+        <location filename="../src/gui/updatenotifier.cpp" line="47"/>
         <source>Update available</source>
         <translation>Update beschikbaar</translation>
     </message>
     <message>
-        <location filename="../src/gui/updatenotifier.cpp" line="44"/>
+        <location filename="../src/gui/updatenotifier.cpp" line="48"/>
         <source>A new version %1 is available. You are using version %2.</source>
         <comment>The first placeholder is the new version, the second one the current version</comment>
         <translation>Er is een nieuwe versie %1 beschikbaar. Je gebruikt versie %2.</translation>
     </message>
     <message>
-        <location filename="../src/gui/updatenotifier.cpp" line="49"/>
+        <location filename="../src/gui/updatenotifier.cpp" line="53"/>
         <source>Open Download Page</source>
         <translation>Downloadpagina openen</translation>
     </message>
