@@ -30,12 +30,6 @@ OPENCLOUD_SYNC_EXPORT const QVersionNumber &versionWithBuildNumber();
 OPENCLOUD_SYNC_EXPORT int buildNumber();
 
 /**
- * git, rc1, rc2
- * Empty in releases
- */
-OPENCLOUD_SYNC_EXPORT QString suffix();
-
-/**
  * The commit id
  */
 OPENCLOUD_SYNC_EXPORT QString gitSha();
