@@ -12,15 +12,16 @@
  * for more details.
  */
 
-#ifndef SYNCRUNFILELOG_H
-#define SYNCRUNFILELOG_H
+#pragma once
+
+#include "libsync/common/chronoelapsedtimer.h"
+#include "libsync/syncfileitem.h"
+
 
 #include <QFile>
-#include <QTextStream>
 #include <QScopedPointer>
-#include <QElapsedTimer>
+#include <QTextStream>
 
-#include "syncfileitem.h"
 
 namespace OCC {
 class SyncFileItem;
@@ -41,10 +42,8 @@ public:
 protected:
 private:
     QScopedPointer<QFile> _file;
-    QElapsedTimer _totalDuration;
-    QElapsedTimer _lapDuration;
+    Utility::ChronoElapsedTimer _totalDuration;
+    Utility::ChronoElapsedTimer _lapDuration;
     QScopedPointer<QTextStream> _out;
 };
 }
-
-#endif // SYNCRUNFILELOG_H
