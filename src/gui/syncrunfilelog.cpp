@@ -61,8 +61,8 @@ void SyncRunFileLog::start(const QString &folderPath)
 
     if (!exists) {
         // We are creating a new file, add the note.
-        *_out << u"Log for:" << folderPath << Qt::endl
-              << u"# timestamp | duration | file | instruction | dir | modtime | etag | "
+        *_out << "Log for:" << folderPath << Qt::endl
+              << "# timestamp | duration | file | instruction | dir | modtime | etag | "
                  "size | fileId | status | errorString | http result code | "
                  "other size | other modtime | X-Request-ID"
               << Qt::endl;
@@ -73,7 +73,7 @@ void SyncRunFileLog::start(const QString &folderPath)
 
     _totalDuration.start();
     _lapDuration.start();
-    *_out << u"#=#=#=# Syncrun started " << dateTimeStr() << Qt::endl;
+    *_out << "#=#=#=# Syncrun started " << dateTimeStr() << Qt::endl;
 }
 
 void SyncRunFileLog::logItem(const SyncFileItem &item)
