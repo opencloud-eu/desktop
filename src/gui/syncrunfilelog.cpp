@@ -71,8 +71,8 @@ void SyncRunFileLog::start(const QString &folderPath)
     }
 
 
-    _totalDuration.start();
-    _lapDuration.start();
+    _totalDuration.reset();
+    _lapDuration.reset();
     *_out << "#=#=#=# Syncrun started " << dateTimeStr() << Qt::endl;
 }
 
@@ -99,9 +99,9 @@ void SyncRunFileLog::logLap(const QString &name)
 {
     QString tmp;
     {
-        QDebug(&tmp).noquote() << u"#=#=#=#=#" << name << dateTimeStr() << u"(last step:" << _lapDuration.restart() << u"msec" << u", total:"
-                               << _totalDuration.elapsed() << u"msec)" << Qt::endl;
+        QDebug(&tmp).noquote() << u"#=#=#=#=#" << name << dateTimeStr() << u"(last step:" << _lapDuration << u", total:" << _totalDuration << u")" << Qt::endl;
     }
+    _lapDuration.reset();
     *_out << tmp;
 }
 
@@ -109,8 +109,8 @@ void SyncRunFileLog::finish()
 {
     QString tmp;
     {
-        QDebug(&tmp).noquote() << u"#=#=#=# Syncrun finished" << dateTimeStr() << u"(last step:" << _lapDuration.elapsed() << u"msec" << u", total:"
-                               << _totalDuration.elapsed() << u"msec)" << Qt::endl;
+        QDebug(&tmp).noquote() << u"#=#=#=# Syncrun finished" << dateTimeStr() << u"(last step:" << _lapDuration << u", total:" << _totalDuration << u")"
+                               << Qt::endl;
     }
     *_out << tmp;
     _out->flush();
