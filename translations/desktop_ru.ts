@@ -758,7 +758,7 @@ The update will be performed in the background, and overwrite the current AppIma
     <message>
         <location filename="../src/gui/application.cpp" line="215"/>
         <source>Application is shutting down</source>
-        <translation type="unfinished"/>
+        <translation>Приложение выключается</translation>
     </message>
 </context>
 <context>
@@ -1315,17 +1315,17 @@ Please consider removing this folder from the account and adding it again.</sour
     <message>
         <location filename="../src/libsync/vfs/hydrationjob.cpp" line="27"/>
         <source>Failed to find fileId: %1 in db</source>
-        <translation type="unfinished"/>
+        <translation>Ошибка поиска в поле: %1 in db</translation>
     </message>
     <message>
         <location filename="../src/libsync/vfs/hydrationjob.cpp" line="49"/>
         <source>Unexpected file size transferred. Expected %1 received %2</source>
-        <translation type="unfinished"/>
+        <translation>Неожиданно размер файла был изменен. Ожидаемый размер: %1, полученный - %2</translation>
     </message>
     <message>
         <location filename="../src/libsync/vfs/hydrationjob.cpp" line="55"/>
         <source>Aborted.</source>
-        <translation type="unfinished"/>
+        <translation>Прервано</translation>
     </message>
 </context>
 <context>
@@ -2697,18 +2697,18 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/gui/updatenotifier.cpp" line="47"/>
         <source>Update available</source>
-        <translation type="unfinished"/>
+        <translation>Доступно обновление</translation>
     </message>
     <message>
         <location filename="../src/gui/updatenotifier.cpp" line="48"/>
         <source>A new version %1 is available. You are using version %2.</source>
         <comment>The first placeholder is the new version, the second one the current version</comment>
-        <translation type="unfinished"/>
+        <translation>Новая версия %1 доступна. Текущая версия - %2</translation>
     </message>
     <message>
         <location filename="../src/gui/updatenotifier.cpp" line="53"/>
         <source>Open Download Page</source>
-        <translation type="unfinished"/>
+        <translation>Открыть страницу загрузки</translation>
     </message>
 </context>
 <context>
