@@ -8,6 +8,16 @@ on:
       - 'stable-[0-9]+.[0-9]+.[0-9]+'
   pull_request:
   workflow_dispatch:
+    inputs:
+      releaseChannel:
+        description: 'The release channel'
+        required: true
+        default: 'stable'
+        type: choice
+        options:
+          - stable
+          - beta
+
 
 concurrency: 
   group: ${{ github.head_ref || github.run_id }}
@@ -104,7 +114,7 @@ jobs:
       run: |
         New-Item -ItemType Directory "${env:GITHUB_WORKSPACE}/binaries/"
         # settings
-        if ("${{ github.ref_type }}" -ne "tag"  ) {
+        if ("${{ github.ref_type }}" -ne "tag" -or "${{ inputs.releaseChannel }}" -eq "beta" ) {
           & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --set "forceAsserts=true" opencloud/opencloud-desktop
           & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --set "buildBeta=true" opencloud/opencloud-desktop
         }
