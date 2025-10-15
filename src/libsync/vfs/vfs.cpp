@@ -148,9 +148,8 @@ void Vfs::wipeDehydratedVirtualFiles()
     // But hydrated placeholders may still be around.
 }
 
-HydrationJob* Vfs::hydrateFile(const QByteArray &fileId)
+HydrationJob* Vfs::hydrateFile(const QByteArray&, const QString&)
 {
-    Q_UNUSED(fileId)
     // nothing to do
     return nullptr;
 }
