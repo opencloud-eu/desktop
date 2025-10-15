@@ -212,7 +212,7 @@ public:
      *
      * Returns a QFuture<Result> void if successful and QFuture<Result> QString if an error occurs.
      */
-    [[nodiscard]] virtual HydrationJob* hydrateFile(const QByteArray &fileId);
+    [[nodiscard]] virtual HydrationJob* hydrateFile(const QByteArray &fileId, const QString &targetPath);
 
 public Q_SLOTS:
     /** Update in-sync state based on SyncFileStatusTracker signal.

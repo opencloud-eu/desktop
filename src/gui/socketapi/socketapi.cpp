@@ -666,21 +666,36 @@ void SocketApi::command_V2_HYDRATE_FILE(const QSharedPointer<SocketApiJobV2> &jo
 {
     const auto &arguments = job->arguments();
 
-    const QString targetPath = arguments[QStringLiteral("file")].toString();
     const QByteArray fileId = arguments[QStringLiteral("fileId")].toString().toUtf8();
+
+    const QString targetPath = arguments[QStringLiteral("file")].toString();
+
+    std::filesystem::path fsysPath = FileSystem::toFilesystemPath(targetPath);
+    QFileInfo fi(targetPath);
+    const QString qfName{QStringLiteral(".")+fi.fileName()+QStringLiteral(".hyd")};
+    std::filesystem::path fName = FileSystem::toFilesystemPath(qfName);
+
+    fsysPath.replace_filename(fName);
+    const QString tempFileName = FileSystem::fromFilesystemPath(fsysPath);
 
     auto fileData = FileData::get(targetPath);
 
     if (fileData.folder) {
-        HydrationJob *hydJob = fileData.folder->vfs().hydrateFile(fileId);
-        connect(hydJob, &HydrationJob::finished, this, [job, hydJob] {
-            job->success({{QStringLiteral("status"), QStringLiteral("OK")}});
-            hydJob->deleteLater();
-        });
-        connect(hydJob, &HydrationJob::error, this, [job, hydJob](const QString& err) {
-            job->success({{QStringLiteral("status"), QStringLiteral("ERROR")}, {QStringLiteral("error"), err}});
-            hydJob->deleteLater();
-        });
+        HydrationJob *hydJob = fileData.folder->vfs().hydrateFile(fileId, tempFileName);
+
+        if (hydJob) {
+            connect(hydJob, &HydrationJob::finished, this, [job, hydJob, tempFileName] {
+                job->success({{QStringLiteral("status"), QStringLiteral("OK")}, {QStringLiteral("file"), tempFileName}});
+                hydJob->deleteLater();
+            });
+            connect(hydJob, &HydrationJob::error, this, [job, hydJob](const QString& err) {
+                job->success({{QStringLiteral("status"), QStringLiteral("ERROR")}, {QStringLiteral("error"), err}});
+                hydJob->deleteLater();
+            });
+            hydJob->start();
+        } else {
+            qCDebug(lcSocketApi) << "Hydration job for" << fileId << "already running";
+        }
     } else {
         job->failure(QStringLiteral("cannot hydrate unknown file"));
     }

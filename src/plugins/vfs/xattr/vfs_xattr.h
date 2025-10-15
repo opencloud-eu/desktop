@@ -19,13 +19,13 @@ namespace xattr {
 struct PlaceHolderAttribs {
 public:
     qint64 size() const { return _size; }
-    QByteArray fileId() const { return _fileId; }
+    QString fileId() const { return _fileId; }
     time_t modTime() const {return _modtime; }
     QString eTag() const { return _etag; }
-    QByteArray pinState() const { return _pinState; }
-    QByteArray action() const { return _action; }
-    QByteArray state() const { return _state; }
-    QByteArray owner() const { return _owner; }
+    QString pinState() const { return _pinState; }
+    QString action() const { return _action; }
+    QString state() const { return _state; }
+    QString owner() const { return _owner; }
 
     // the owner must not be empty but set to the ownerString, that consists
     // of the app name and an instance ID
@@ -36,13 +36,13 @@ public:
     bool validOwner() const { return !_owner.isEmpty(); }
 
     qint64 _size;
-    QByteArray _fileId;
+    QString _fileId;
     time_t _modtime;
     QString _etag;
-    QByteArray _owner;
-    QByteArray _pinState;
-    QByteArray _action;
-    QByteArray _state;
+    QString _owner;
+    QString _pinState;
+    QString _action;
+    QString _state;
 
 };
 }
@@ -71,8 +71,6 @@ public:
     // [[nodiscard]] bool isPlaceHolderInSync(const QString &filePath) const override { Q_UNUSED(filePath) return true; }
 
     Result<void, QString> createPlaceholder(const SyncFileItem &item) override;
-    OCC::Result<Vfs::ConvertToPlaceholderResult, QString> convertToPlaceholder(
-            const QString &path, time_t modtime, qint64 size, const QByteArray &fileId, const QString &replacesPath);
 
     bool needsMetadataUpdate(const SyncFileItem &item) override;
     bool isDehydratedPlaceholder(const QString &filePath) override;
@@ -82,7 +80,10 @@ public:
     Optional<PinState> pinState(const QString &folderPath) override;
     AvailabilityResult availability(const QString &folderPath) override;
 
-    HydrationJob* hydrateFile(const QByteArray &fileId) override;
+    HydrationJob* hydrateFile(const QByteArray &fileId, const QString& targetPath) override;
+
+    QString pinStateToString(PinState) const;
+    PinState stringToPinState(const QString&) const;
 
 Q_SIGNALS:
     void finished(Result<void, QString>);
@@ -90,13 +91,16 @@ Q_SIGNALS:
 public Q_SLOTS:
     void fileStatusChanged(const QString &systemFileName, OCC::SyncFileStatus fileStatus) override;
 
+    void slotHydrateJobFinished();
+
 protected:
     void startImpl(const VfsSetupParams &params) override;
 
 private:
-    QByteArray xattrOwnerString() const;
+    QString xattrOwnerString() const;
     PlaceHolderAttribs placeHolderAttributes(const QString& path);
-    OCC::Result<void, QString> addPlaceholderAttribute(const QString &path, const QByteArray &name = {}, const QByteArray &val = {});
+    OCC::Result<void, QString> addPlaceholderAttribute(const QString &path, const QString &name = {}, const QString &val = {});
+    OCC::Result<void, QString> removePlaceHolderAttributes(const QString& path);
 
     QMap<QByteArray, HydrationJob*> _hydrationJobs;
 };
