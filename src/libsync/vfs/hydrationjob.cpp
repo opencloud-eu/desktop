@@ -17,6 +17,16 @@ HydrationJob::HydrationJob(Vfs *vfs, const QByteArray &fileId, std::unique_ptr<Q
 {
 }
 
+void HydrationJob::setTargetFile(const QString& fileName)
+{
+    _fileName = fileName;
+}
+
+QString HydrationJob::targetFileName() const
+{
+    return _fileName;
+}
+
 void HydrationJob::start()
 {
     _vfs->params().journal->getFileRecordsByFileId(_fileId, [this](const SyncJournalFileRecord &record) {
