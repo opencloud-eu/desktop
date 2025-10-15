@@ -22,6 +22,10 @@ public:
     void start();
     void abort();
 
+    // In case the device to write to is a file, it can be passed here to the result slots
+    void setTargetFile(const QString& fileName);
+    QString targetFileName() const;
+
     Vfs *vfs() const;
 
     SyncJournalFileRecord record() const;
@@ -36,6 +40,7 @@ private:
     Vfs *_vfs;
     QByteArray _fileId;
     std::unique_ptr<QIODevice> _device;
+    QString _fileName;
     SyncJournalFileRecord _record;
     GETFileJob *_job = nullptr;
 };
