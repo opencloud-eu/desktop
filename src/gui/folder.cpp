@@ -654,6 +654,9 @@ void Folder::slotWatchedPathsChanged(const QSet<QString> &paths, ChangeReason re
     }
     if (needSync && canSync()) {
         FolderMan::instance()->scheduler()->enqueueFolder(this);
+    } else if (!needSync && _syncResult.status() == SyncResult::Queued && FolderMan::instance()->scheduler()->isFolderQueued(this)) {
+        // the folder entered queued when a file change was detected (not actually queued), it later turned out the change was irrelevant
+        setSyncState(SyncResult::Success);
     }
 }
 
@@ -1094,7 +1097,7 @@ void Folder::registerFolderWatcher()
         [this](const QSet<QString> &paths) { slotWatchedPathsChanged(paths, Folder::ChangeReason::Other); });
     connect(_folderWatcher.data(), &FolderWatcher::changesDetected, this, [this] {
         // don't set to not yet started if a sync is already running
-        if (!isSyncRunning()) {
+        if (canSync() && !isSyncRunning()) {
             setSyncState(SyncResult::Queued);
         }
     });
