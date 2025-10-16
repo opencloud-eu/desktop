@@ -25,6 +25,7 @@
 #include "libsync/creds/httpcredentials.h"
 
 #include "gui/folderman.h"
+#include "gui/messagebox.h"
 #include "gui/networkinformation.h"
 #include "gui/settingsdialog.h"
 #include "gui/tlserrordialog.h"
@@ -155,7 +156,7 @@ AccountState::AccountState(AccountPtr account)
     }
 
     connect(account.data(), &Account::appProviderErrorOccured, this, [](const QString &error) {
-        QMessageBox *msgBox = new QMessageBox(QMessageBox::Information, Theme::instance()->appNameGUI(), error, {}, ocApp()->settingsDialog());
+        QMessageBox *msgBox = new MessageBox({u''}, Theme::instance()->appNameGUI(), error, {}, ocApp()->settingsDialog());
         msgBox->setAttribute(Qt::WA_DeleteOnClose);
         ocApp()->showSettings();
         msgBox->open();
