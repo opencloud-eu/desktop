@@ -107,6 +107,8 @@ public:
         return _queue.top().folder;
     }
 
+    [[nodiscard]] bool contains(Folder *folder) const { return _scheduledFolders.contains(folder); }
+
 private:
     // the actual queue
     std::priority_queue<Element> _queue;
@@ -168,6 +170,11 @@ void SyncScheduler::enqueueFolder(Folder *folder, Priority priority)
         _currentSync.clear();
         startNext();
     }
+}
+
+bool SyncScheduler::isFolderQueued(Folder *folder) const
+{
+    return _queue->contains(folder);
 }
 
 void SyncScheduler::startNext()
