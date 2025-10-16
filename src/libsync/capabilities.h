@@ -187,6 +187,7 @@ public:
     int defaultPermissions() const;
 
     const Status &status() const;
+    bool checkForUpdates() const;
     const TusSupport &tusSupport() const;
     const SpaceSupport &spacesSupport() const;
 
@@ -283,6 +284,9 @@ public:
 
     QVariantMap raw() const;
 
+    bool operator==(const Capabilities &other) const;
+    bool operator!=(const Capabilities &other) const { return !(*this == other); }
+
 private:
     QVariantMap _capabilities;
     QVariantMap _fileSharingCapabilities;
@@ -290,6 +294,7 @@ private:
     TusSupport _tusSupport;
     SpaceSupport _spaces;
     Status _status;
+    bool _checkForUpdates;
     AppProviders _appProviders;
     FilesSharing _filesSharing;
     Migration _migration;

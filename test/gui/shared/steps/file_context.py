@@ -109,7 +109,7 @@ def copy_resource(resource_type, source, destination, from_files_for_upload=Fals
         source_dir = get_resource_path(source)
     destination_dir = get_resource_path(destination)
     if source_dir == destination_dir and destination_dir != '/':
-        destination = add_copy_suffix(source, resource_type)
+        destination_dir = add_copy_suffix(source, resource_type)
     if resource_type == 'folder':
         return shutil.copytree(source_dir, destination_dir)
     return shutil.copy2(source_dir, destination_dir)

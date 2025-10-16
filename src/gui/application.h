@@ -15,6 +15,7 @@
 #pragma once
 
 #include "gui/opencloudguilib.h"
+#include "gui/updatenotifier.h"
 
 #include "common/asserts.h"
 #include "libsync/accountfwd.h"
@@ -58,6 +59,8 @@ public:
 
     QSystemTrayIcon *systemTrayIcon() const;
 
+    UpdateNotifier *updateNotifier() const;
+
 protected Q_SLOTS:
     void slotCleanup();
     void slotAccountStateAdded(AccountStatePtr accountState) const;
@@ -71,6 +74,8 @@ private:
     QString _displayLanguage;
     Systray *_systray;
 
+    UpdateNotifier *_updateNotifier;
+
     SystemNotificationManager *_systemNotificationManager = nullptr;
 
     // keeping a pointer on those dialogs allows us to make sure they will be shown only once
@@ -78,11 +83,20 @@ private:
 
     static Application *_instance;
     friend Application *ocApp();
+    friend bool isOcApp();
 };
+/**
+ *
+ * @return whether the Application singleton is available, this must always be true unless we are a unit test...
+ */
+inline bool isOcApp()
+{
+    return Application::_instance;
+}
 
 inline Application *ocApp()
 {
-    OC_ENFORCE(Application::_instance);
+    Q_ASSERT(isOcApp());
     return Application::_instance;
 }
 

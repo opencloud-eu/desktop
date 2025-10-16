@@ -102,7 +102,7 @@ FolderMan::FolderMan()
                     AccountManager::instance()->accounts().size() == 1
                         ? Theme::instance()->appNameGUI()
                         : u"%1 - %2"_s.arg(Theme::instance()->appNameGUI(), accountStatePtr->account()->davDisplayName()),
-                    accountStatePtr->account()->davDisplayName());
+                    accountStatePtr->account()->davDisplayName(), true);
             }
         }
     };
@@ -314,7 +314,7 @@ void FolderMan::slotIsConnectedChanged()
                 scheduler()->enqueueFolder(f);
             }
         }
-    } else {
+    } else if (accountState->state() == AccountState::State::Disconnected || accountState->state() == AccountState::State::SignedOut) {
         qCInfo(lcFolderMan) << u"Account" << accountName
                             << u"disconnected or paused, "
                                "terminating or descheduling sync folders";
@@ -868,7 +868,7 @@ bool FolderMan::prepareFolder(const QString &folder)
             return false;
         }
         FileSystem::setFolderMinimumPermissions(folder);
-        Folder::prepareFolder(folder);
+        Folder::prepareFolder(folder, {}, {}, false);
     }
     return true;
 }

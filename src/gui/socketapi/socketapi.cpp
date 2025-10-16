@@ -362,8 +362,6 @@ void SocketApi::slotUpdateFolderView(Folder *f)
     if (f) {
         // do only send UPDATE_VIEW for a couple of status
         switch (f->syncResult().status()) {
-        case SyncResult::SyncPrepare:
-            Q_FALLTHROUGH();
         case SyncResult::Success:
             Q_FALLTHROUGH();
         case SyncResult::Paused:
@@ -381,7 +379,7 @@ void SocketApi::slotUpdateFolderView(Folder *f)
             [[fallthrough]];
         case OCC::SyncResult::Undefined:
             Q_FALLTHROUGH();
-        case OCC::SyncResult::NotYetStarted:
+        case OCC::SyncResult::Queued:
             Q_FALLTHROUGH();
         case OCC::SyncResult::SyncRunning:
             Q_FALLTHROUGH();
@@ -667,10 +665,10 @@ void SocketApi::command_V2_HYDRATE_FILE(const QSharedPointer<SocketApiJobV2> &jo
 {
     const auto &arguments = job->arguments();
 
-    const QString file = arguments[QStringLiteral("file")].toString();
+    const QString targetPath = arguments[QStringLiteral("file")].toString();
     const QByteArray fileId = arguments[QStringLiteral("fileId")].toString().toUtf8();
 
-    auto fileData = FileData::get(file);
+    auto fileData = FileData::get(targetPath);
 
     if (fileData.folder) {
         auto watcher = new QFutureWatcher<Result<void, QString>>();
@@ -683,7 +681,7 @@ void SocketApi::command_V2_HYDRATE_FILE(const QSharedPointer<SocketApiJobV2> &jo
                 job->success({{QStringLiteral("status"), QStringLiteral("OK")}});
             }
         });
-        watcher->setFuture(fileData.folder->vfs().hydrateFile(fileId));
+        watcher->setFuture(fileData.folder->vfs().hydrateFile(fileId, targetPath));
     } else {
         job->failure(QStringLiteral("cannot hydrate unknown file"));
     }

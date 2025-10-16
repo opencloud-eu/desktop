@@ -64,7 +64,6 @@ AccountState::AccountState(AccountPtr account)
     , _state(AccountState::Disconnected)
     , _connectionStatus(ConnectionValidator::Undefined)
     , _waitingForNewCredentials(false)
-    , _maintenanceToConnectedDelay(1min + minutes(QRandomGenerator::global()->generate() % 4)) // 1-5min delay
 {
     qRegisterMetaType<AccountState *>("AccountState*");
 
@@ -74,13 +73,11 @@ AccountState::AccountState(AccountPtr account)
         this, &AccountState::slotCredentialsFetched);
     connect(account.data(), &Account::credentialsAsked,
         this, &AccountState::slotCredentialsAsked);
-    connect(account.data(), &Account::unknownConnectionState,
-        this, [this] {
-            checkConnectivity(true);
-        });
-    connect(account.data(), &Account::serverVersionChanged, this, [this] {
-        if (_account->serverSupportLevel() == Account::ServerSupportLevel::Unsupported) {
-            setState(ConfigurationError);
+    connect(account.data(), &Account::unknownConnectionState, this, [this] { checkConnectivity(true); });
+
+    connect(account.data(), &Account::capabilitiesChanged, this, [this] {
+        if (_account->capabilities().checkForUpdates() && isOcApp()) {
+            ocApp()->updateNotifier()->checkForUpdates(_account);
         }
     });
 
@@ -198,7 +195,7 @@ AccountPtr AccountState::account() const
     return _account;
 }
 
-AccountState::ConnectionStatus AccountState::connectionStatus() const
+ConnectionValidator::Status AccountState::connectionStatus() const
 {
     return _connectionStatus;
 }
@@ -215,8 +212,9 @@ AccountState::State AccountState::state() const
 
 void AccountState::setState(State state)
 {
-    const State oldState = _state;
-    if (_state != state) {
+    const bool stateHasChanged = state != _state;
+    if (stateHasChanged) {
+        const State oldState = _state;
         qCInfo(lcAccountState) << u"AccountState state change: " << _state << u"->" << state;
         _state = state;
 
@@ -227,13 +225,6 @@ void AccountState::setState(State state)
             // If we stop being voluntarily signed-out, try to connect and
             // auth right now!
             checkConnectivity();
-        } else if (_state == ServiceUnavailable) {
-            // Check if we are actually down for maintenance.
-            // To do this we must clear the connection validator that just
-            // produced the 503. It's finished anyway and will delete itself.
-            _connectionValidator->deleteLater();
-            _connectionValidator.clear();
-            checkConnectivity();
         } else if (_state == Connected) {
             if ((NetworkInformation::instance()->isMetered() && ConfigFile().pauseSyncWhenMetered())
                 || NetworkInformation::instance()->isBehindCaptivePortal()) {
@@ -243,30 +234,33 @@ void AccountState::setState(State state)
     }
 
     // might not have changed but the underlying _connectionErrors might have
-    if (_state == Connected) {
-        QTimer::singleShot(0, this, [this, oldState] {
+    if (state == Connected) {
+        QTimer::singleShot(0, this, [stateHasChanged, this] {
             // ensure the connection validator is done
             _queueGuard.unblock();
 
             // update capabilites and fetch relevant settings
             if (!_fetchServerSettingsJob && _fetchCapabilitiesElapsedTimer.duration() > fetchSettingsTimeout) {
                 _fetchServerSettingsJob = new FetchServerSettingsJob(account(), this);
-                connect(_fetchServerSettingsJob, &FetchServerSettingsJob::finishedSignal, this, [oldState, this] {
+                connect(_fetchServerSettingsJob, &FetchServerSettingsJob::finishedSignal, this, [stateHasChanged, this] {
                     _fetchServerSettingsJob->deleteLater();
                     // clear the guard to make readyForSync return true
                     _fetchServerSettingsJob.clear();
                     _fetchCapabilitiesElapsedTimer.reset();
-                    if (oldState == Connected || _state == Connected) {
+                    if (stateHasChanged) {
                         Q_EMIT isConnectedChanged();
                     }
                 });
                 _fetchServerSettingsJob->start();
+            } else if (stateHasChanged) {
+                Q_EMIT isConnectedChanged();
             }
         });
+    } else if (stateHasChanged) {
+        Q_EMIT isConnectedChanged();
     }
-    // don't anounce a state change from connected to connected
-    // https://github.com/owncloud/client/commit/2c6c21d7532f0cbba4b768fde47810f6673ed931
-    if (oldState != state || state != Connected) {
+
+    if (stateHasChanged) {
         Q_EMIT stateChanged(_state);
     }
 }
@@ -283,13 +277,6 @@ void AccountState::signOutByUi()
     setState(SignedOut);
     // persist that we are signed out
     Q_EMIT account()->wantsAccountSaved(account().data());
-}
-
-void AccountState::freshConnectionAttempt()
-{
-    if (isConnected())
-        setState(Disconnected);
-    checkConnectivity();
 }
 
 void AccountState::signIn()
@@ -438,21 +425,6 @@ void AccountState::slotConnectionValidatorResult(ConnectionValidator::Status sta
         return;
     }
 
-    // Come online gradually from 503 or maintenance mode
-    if (status == ConnectionValidator::Connected
-        && (_connectionStatus == ConnectionValidator::ServiceUnavailable
-               || _connectionStatus == ConnectionValidator::MaintenanceMode)) {
-        if (!_timeSinceMaintenanceOver.isStarted()) {
-            qCInfo(lcAccountState) << u"AccountState reconnection: delaying for" << _maintenanceToConnectedDelay.count() << u"ms";
-            _timeSinceMaintenanceOver.reset();
-            QTimer::singleShot(_maintenanceToConnectedDelay + 100ms, this, [this] { AccountState::checkConnectivity(false); });
-            return;
-        } else if (_timeSinceMaintenanceOver.duration() < _maintenanceToConnectedDelay) {
-            qCInfo(lcAccountState) << u"AccountState reconnection: only" << _timeSinceMaintenanceOver;
-            return;
-        }
-    }
-
     if (_connectionStatus != status) {
         qCInfo(lcAccountState) << u"AccountState connection status change: " << _connectionStatus << u"->" << status;
         _connectionStatus = status;
@@ -464,14 +436,15 @@ void AccountState::slotConnectionValidatorResult(ConnectionValidator::Status sta
         break;
     case ConnectionValidator::Undefined:
         [[fallthrough]];
-    case ConnectionValidator::NotConfigured:
-        setState(Disconnected);
-        break;
+    case ConnectionValidator::ServiceUnavailable:
+        [[fallthrough]];
+    case ConnectionValidator::Timeout:
+        [[fallthrough]];
     case ConnectionValidator::StatusNotFound:
         // This can happen either because the server does not exist
         // or because we are having network issues. The latter one is
         // much more likely, so keep trying to connect.
-        setState(NetworkError);
+        setState(Disconnected);
         break;
     case ConnectionValidator::CredentialsWrong:
         [[fallthrough]];
@@ -480,17 +453,6 @@ void AccountState::slotConnectionValidatorResult(ConnectionValidator::Status sta
         break;
     case ConnectionValidator::SslError:
         // handled with the tlsDialog
-        break;
-    case ConnectionValidator::ServiceUnavailable:
-        _timeSinceMaintenanceOver.stop();
-        setState(ServiceUnavailable);
-        break;
-    case ConnectionValidator::MaintenanceMode:
-        _timeSinceMaintenanceOver.stop();
-        setState(MaintenanceMode);
-        break;
-    case ConnectionValidator::Timeout:
-        setState(NetworkError);
         break;
     case ConnectionValidator::CaptivePortal:
         setState(Connecting);
@@ -516,7 +478,7 @@ void AccountState::slotInvalidCredentials()
         }
         qCInfo(lcAccountState) << u"restart oauth";
         account()->credentials()->restartOauth();
-        setState(AskingCredentials);
+        setState(Connecting);
     }
 }
 

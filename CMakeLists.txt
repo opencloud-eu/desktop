@@ -90,6 +90,7 @@ endif()
 
 # build the auto updater component
 option(WITH_AUTO_UPDATER "WITH_AUTO_UPDATER" OFF)
+option(WITH_UPDATE_NOTIFICATION "Whether to check for new releases" ON)
 
 # create a co-installable client, that uses a separate profile
 option(BETA_CHANNEL_BUILD "Use a standalone profile for a beta release" OFF)

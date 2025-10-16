@@ -46,10 +46,6 @@ private Q_SLOTS:
         const auto defaultValue = TestUtils::Values{{QStringLiteral("maintenance"), QStringLiteral("false")},
             {QStringLiteral("version"), QStringLiteral("10.11.0.0")}, {QStringLiteral("productversion"), QStringLiteral("4.0.5")}};
 
-        QTest::newRow("status.php maintenance") << FailStage::StatusPhp << [value = defaultValue]() mutable {
-            value[QStringLiteral("maintenance")] = QStringLiteral("true");
-            return value;
-        }() << ConnectionValidator::MaintenanceMode;
         QTest::newRow("status.php ServiceUnavailable") << FailStage::StatusPhp << defaultValue << ConnectionValidator::StatusNotFound;
 
         QTest::newRow("user info timeout") << FailStage::UserInfo << defaultValue << ConnectionValidator::Timeout;

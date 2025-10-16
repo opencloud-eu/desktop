@@ -144,7 +144,7 @@ void Vfs::wipeDehydratedVirtualFiles()
     // But hydrated placeholders may still be around.
 }
 
-QFuture<Result<void, QString>> Vfs::hydrateFile(const QByteArray &fileId)
+QFuture<Result<void, QString>> Vfs::hydrateFile(const QByteArray &, const QString &)
 {
     // nothing to do
     return QtFuture::makeReadyValueFuture(Result<void, QString>{});

@@ -18,6 +18,7 @@
 #include <QVariantMap>
 
 using namespace std::chrono;
+using namespace Qt::Literals::StringLiterals;
 
 namespace OCC {
 
@@ -29,6 +30,7 @@ Capabilities::Capabilities(const QUrl &url, const QVariantMap &capabilities)
     , _tusSupport(_capabilities.value(QStringLiteral("files")).toMap().value(QStringLiteral("tus_support")).toMap())
     , _spaces(_capabilities.value(QStringLiteral("spaces")).toMap())
     , _status(_capabilities.value(QStringLiteral("core")).toMap().value(QStringLiteral("status")).toMap())
+    , _checkForUpdates(_capabilities.value("core"_L1).toMap().value("check_for_updates"_L1, true).toBool())
     , _appProviders(AppProviders::findVersion(
           url, _capabilities.value(QStringLiteral("files")).toMap().value(QStringLiteral("app_providers")).toList(), QVersionNumber({1, 1, 0})))
     , _filesSharing(_fileSharingCapabilities)
@@ -39,6 +41,11 @@ Capabilities::Capabilities(const QUrl &url, const QVariantMap &capabilities)
 QVariantMap Capabilities::raw() const
 {
     return _capabilities;
+}
+
+bool Capabilities::operator==(const Capabilities &other) const
+{
+    return raw() == other.raw();
 }
 
 bool Capabilities::shareAPI() const
@@ -163,6 +170,11 @@ CheckSums::Algorithm Capabilities::uploadChecksumType() const
 const Status &Capabilities::status() const
 {
     return _status;
+}
+
+bool Capabilities::checkForUpdates() const
+{
+    return _checkForUpdates;
 }
 
 const TusSupport &Capabilities::tusSupport() const

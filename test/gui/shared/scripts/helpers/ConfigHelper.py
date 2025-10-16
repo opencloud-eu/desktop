@@ -90,6 +90,7 @@ CONFIG = {
     'minSyncTimeout': 5,
     'lowestSyncTimeout': 1,
     'clientLogFile': '',
+    'clientLogDir': '',
     'clientRootSyncPath': get_client_root_path(),
     'tempFolderPath': os.path.join(get_client_root_path(), 'temp'),
     'clientConfigDir': get_config_home(),

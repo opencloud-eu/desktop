@@ -25,8 +25,9 @@
 #include "gui/navigationpanehelper.h"
 #endif
 
-#include <QDir>
 #include <QSettings>
+
+using namespace Qt::Literals::StringLiterals;
 
 namespace {
 auto urlC()
@@ -106,7 +107,11 @@ bool AccountManager::restore()
         acc->setUrl(urlConfig.toUrl());
 
         acc->_displayName = settings.value(davUserDisplyNameC()).toString();
-        acc->setCapabilities({acc->url(), settings.value(capabilitesC()).value<QVariantMap>()});
+
+        auto capabilities = settings.value(capabilitesC()).value<QVariantMap>();
+        capabilities.insert(u"cached"_s, true); // mark as cached capabilities, this will trigger a capabilitiesChanged signal once we got real capabilities
+
+        acc->setCapabilities({acc->url(), capabilities});
         acc->setDefaultSyncRoot(settings.value(defaultSyncRootC()).toString());
 
         acc->setCredentials(new HttpCredentialsGui);
