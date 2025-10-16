@@ -49,7 +49,7 @@ void OCC::QmlUtils::OCQuickWidget::setOCContext(const QUrl &src, QWidget *parent
 
     setSource(src);
     if (!errors().isEmpty()) {
-        auto box = new FontIconMessageBox({u''}, QStringLiteral("QML Error"), QDebug::toString(errors()));
+        auto box = new FontIconMessageBox({Resources::FontIcon::DefaultGlyphes::Warning}, QStringLiteral("QML Error"), QDebug::toString(errors()));
         box->setAttribute(Qt::WA_DeleteOnClose);
         box->exec();
         qFatal("A qml error occurred %s", qPrintable(QDebug::toString(errors())));

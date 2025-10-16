@@ -46,8 +46,8 @@ SetupWizardWidget::SetupWizardWidget(SettingsDialog *parent)
     slotHideErrorMessageWidget();
 
     connect(_ui->cancelButton, &QPushButton::clicked, this, [this] {
-        auto messageBox = new FontIconMessageBox(
-            {u''}, tr("Cancel Setup"), tr("Do you really want to cancel the account setup?"), QMessageBox::Yes | QMessageBox::No, ocApp()->settingsDialog());
+        auto messageBox = new FontIconMessageBox({Resources::FontIcon::DefaultGlyphes::Warning}, tr("Cancel Setup"),
+            tr("Do you really want to cancel the account setup?"), QMessageBox::Yes | QMessageBox::No, ocApp()->settingsDialog());
         messageBox->setAttribute(Qt::WA_DeleteOnClose);
         connect(messageBox, &QMessageBox::accepted, this, [this] {
             // call the base implementation
