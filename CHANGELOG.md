@@ -8,7 +8,7 @@
 
 ### 💥 Breaking changes
 
-- Implement a beta branch branding [[#489](https://github.com/opencloud-eu/desktop/pull/489)]
+- Implement a beta channel branding [[#489](https://github.com/opencloud-eu/desktop/pull/489)]
 - Remove unused fields in sqlite table [[#419](https://github.com/opencloud-eu/desktop/pull/419)]
 - Add Windows VFS [[#305](https://github.com/opencloud-eu/desktop/pull/305)]
 - Enable http2 support by default [[#333](https://github.com/opencloud-eu/desktop/pull/333)]
