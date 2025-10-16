@@ -1,6 +1,6 @@
 # Changelog
 
-## [3.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v3.0.0) - 2025-10-15
+## [3.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v3.0.0) - 2025-10-16
 
 ### ❤️ Thanks to all contributors! ❤️
 
@@ -8,12 +8,14 @@
 
 ### 💥 Breaking changes
 
+- Implement a beta branch branding [[#489](https://github.com/opencloud-eu/desktop/pull/489)]
 - Remove unused fields in sqlite table [[#419](https://github.com/opencloud-eu/desktop/pull/419)]
 - Add Windows VFS [[#305](https://github.com/opencloud-eu/desktop/pull/305)]
 - Enable http2 support by default [[#333](https://github.com/opencloud-eu/desktop/pull/333)]
 
 ### 🐛 Bug Fixes
 
+- Modify APPLICATION_REV_DOMAIN in beta builds to make coinstallable [[#587](https://github.com/opencloud-eu/desktop/pull/587)]
 - Only count enabled spaces when computing the number of spaces to sync [[#571](https://github.com/opencloud-eu/desktop/pull/571)]
 - Abort sync if connection is lost [[#562](https://github.com/opencloud-eu/desktop/pull/562)]
 - Fix: Attempted sync on non syncable Folder [[#533](https://github.com/opencloud-eu/desktop/pull/533)]
