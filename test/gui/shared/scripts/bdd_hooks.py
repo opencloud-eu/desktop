@@ -131,16 +131,6 @@ def scenario_title_to_filename(title):
 
 
 # runs after every scenario
-# Order: 1
-# server cleanup
-@OnScenarioEnd
-def hook(context):
-    delete_project_spaces()
-    delete_created_users()
-
-
-# runs after every scenario
-# Order: 2
 @OnScenarioEnd
 def hook(context):
     clear_waited_after_sync()
@@ -173,6 +163,8 @@ def hook(context):
     PREVIOUS_FAIL_RESULT_COUNT = test.resultCount("fails")
     PREVIOUS_ERROR_RESULT_COUNT = test.resultCount("errors")
 
+    delete_project_spaces()
+    delete_created_users()
 
 def get_active_widget():
     dialog_widgets = object.children(squish.waitForObject(AccountSetting.DIALOG_STACK, get_config('minSyncTimeout') * 100))
