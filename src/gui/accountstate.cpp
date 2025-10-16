@@ -156,7 +156,8 @@ AccountState::AccountState(AccountPtr account)
     }
 
     connect(account.data(), &Account::appProviderErrorOccured, this, [](const QString &error) {
-        QMessageBox *msgBox = new FontIconMessageBox({u''}, Theme::instance()->appNameGUI(), error, {}, ocApp()->settingsDialog());
+        QMessageBox *msgBox =
+            new FontIconMessageBox({Resources::FontIcon::DefaultGlyphes::Warning}, Theme::instance()->appNameGUI(), error, {}, ocApp()->settingsDialog());
         msgBox->setAttribute(Qt::WA_DeleteOnClose);
         ocApp()->showSettings();
         msgBox->open();

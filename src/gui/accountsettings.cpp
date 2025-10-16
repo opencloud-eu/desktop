@@ -193,7 +193,7 @@ void AccountSettings::slotRemoveCurrentFolder(Folder *folder)
 {
     // TODO: move to qml
     qCInfo(lcAccountSettings) << u"Remove Folder " << folder->path();
-    auto messageBox = new FontIconMessageBox({u''}, tr("Confirm removal of Space"),
+    auto messageBox = new FontIconMessageBox({Resources::FontIcon::DefaultGlyphes::Question}, tr("Confirm removal of Space"),
         tr("<p>Do you really want to stop syncing the Space »%1«?</p>"
            "<p><b>Note:</b> This will <b>not</b> delete any files.</p>")
             .arg(folder->displayName()),
@@ -264,7 +264,7 @@ void AccountSettings::slotEnableCurrentFolder(Folder *folder, bool terminate)
 void AccountSettings::slotForceSyncCurrentFolder(Folder *folder)
 {
     if (NetworkInformation::instance()->isMetered() && ConfigFile().pauseSyncWhenMetered()) {
-        auto messageBox = new FontIconMessageBox({u''}, tr("Internet connection is metered"),
+        auto messageBox = new FontIconMessageBox({Resources::FontIcon::DefaultGlyphes::Question}, tr("Internet connection is metered"),
             tr("Synchronization is paused because the Internet connection is a metered connection"
                "<p>Do you really want to force a Synchronization now?"),
             QMessageBox::Yes | QMessageBox::No, ocApp()->settingsDialog());
@@ -488,7 +488,7 @@ void AccountSettings::slotDeleteAccount()
 {
     // Deleting the account potentially deletes 'this', so
     // the QMessageBox should be destroyed before that happens.
-    auto messageBox = new FontIconMessageBox({u''}, tr("Confirm Account Removal"),
+    auto messageBox = new FontIconMessageBox({Resources::FontIcon::DefaultGlyphes::Question}, tr("Confirm Account Removal"),
         tr("<p>Do you really want to remove the connection to the account %1«?</p>"
            "<p><b>Note:</b> This will <b>not</b> delete any files.</p>")
             .arg(_accountState->account()->displayNameWithHost()),

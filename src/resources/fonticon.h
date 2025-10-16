@@ -14,13 +14,21 @@ class OPENCLOUD_RESOURCES_EXPORT FontIcon : public QIcon
     Q_GADGET
     QML_VALUE_TYPE(fontIcon)
 public:
-    enum class FontFamily {
+    enum class DefaultGlyphes : char16_t {
+        Question = u'',
+        Warning = u'',
+        Info = u''
+
+    };
+    Q_ENUM(DefaultGlyphes);
+
+    enum class FontFamily : uint8_t {
         FontAwesome,
         RemixIcon,
     };
     Q_ENUM(FontFamily);
 
-    enum class Size {
+    enum class Size : uint8_t {
         // fullsized icon
         Normal,
         // hafl sized, centered icon
@@ -30,6 +38,7 @@ public:
     FontIcon();
     // defaults to fontawesoem
     FontIcon(QChar glyphe, Size size = Size::Normal, const QColor &color = {});
+    FontIcon(DefaultGlyphes glyphe, Size size = Size::Normal, const QColor &color = {});
     FontIcon(FontFamily family, QChar glyphe, Size size = Size::Normal, const QColor &color = {});
 };
 

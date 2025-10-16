@@ -120,7 +120,7 @@ SettingsDialog::SettingsDialog(QWidget *parent)
     connect(
         _ui->quickWidget->engine(), &QQmlEngine::quit, QApplication::instance(),
         [this] {
-            auto box = new FontIconMessageBox(Resources::FontIcon(u''), tr("Quit %1").arg(Theme::instance()->appNameGUI()),
+            auto box = new FontIconMessageBox({Resources::FontIcon::DefaultGlyphes::Question}, tr("Quit %1").arg(Theme::instance()->appNameGUI()),
                 tr("Are you sure you want to quit %1?").arg(Theme::instance()->appNameGUI()), QMessageBox::Yes | QMessageBox::No, this);
             box->setAttribute(Qt::WA_DeleteOnClose);
             connect(box, &QMessageBox::accepted, this, [] {
