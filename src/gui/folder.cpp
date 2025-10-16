@@ -46,6 +46,7 @@
 #endif
 
 #include "fonticon.h"
+#include "gui/messagebox.h"
 #include "notifications/systemnotificationmanager.h"
 
 
@@ -1070,7 +1071,7 @@ void Folder::slotWatcherUnreliable(const QString &message)
 {
     qCWarning(lcFolder) << u"Folder watcher for" << path() << u"became unreliable:" << message;
 
-    QMessageBox *msgBox = new QMessageBox(QMessageBox::Information, Theme::instance()->appNameGUI(),
+    QMessageBox *msgBox = new MessageBox({u''}, Theme::instance()->appNameGUI(),
         tr("Changes in synchronized folders could not be tracked reliably.\n"
            "\n"
            "This means that the synchronization client might not upload local changes "
