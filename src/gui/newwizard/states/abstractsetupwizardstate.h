@@ -14,9 +14,9 @@
 
 #pragma once
 
-#include "enums.h"
-#include "pages/abstractsetupwizardpage.h"
-#include "setupwizardcontext.h"
+#include "gui/newwizard/enums.h"
+#include "gui/newwizard/pages/abstractsetupwizardpage.h"
+#include "gui/newwizard/setupwizardcontext.h"
 
 namespace OCC::Wizard {
 
