@@ -98,7 +98,6 @@ target_include_directories(OpenCloudGui PRIVATE models spaces creds)
 target_link_libraries(OpenCloudGui
     PUBLIC
         Qt::Widgets Qt::Network Qt::Xml Qt::Quick Qt::QuickWidgets Qt::QuickControls2
-        folderwizard
         libsync
         Qt6Keychain::Qt6Keychain
 )
