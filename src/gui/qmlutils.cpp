@@ -15,7 +15,7 @@
 #include "gui/qmlutils.h"
 
 #include "common/asserts.h"
-#include "gui/messagebox.h"
+#include "gui/fonticonmessagebox.h"
 #include "resources/resources.h"
 
 #include <QMessageBox>
@@ -49,7 +49,7 @@ void OCC::QmlUtils::OCQuickWidget::setOCContext(const QUrl &src, QWidget *parent
 
     setSource(src);
     if (!errors().isEmpty()) {
-        auto box = new MessageBox({u''}, QStringLiteral("QML Error"), QDebug::toString(errors()));
+        auto box = new FontIconMessageBox({u''}, QStringLiteral("QML Error"), QDebug::toString(errors()));
         box->setAttribute(Qt::WA_DeleteOnClose);
         box->exec();
         qFatal("A qml error occurred %s", qPrintable(QDebug::toString(errors())));
