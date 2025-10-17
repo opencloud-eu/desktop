@@ -39,7 +39,7 @@ public:
     GraphApi::Space *currentSpace() const;
 
 private:
-    Ui::SpacesPage *ui;
+    ::Ui::SpacesPage *ui;
 };
 
 }
