@@ -239,14 +239,18 @@ void ProcessDirectoryJob::processFile(const PathTuple &path,
     const SyncJournalFileRecord &dbEntry)
 {
     const char *hasServer = serverEntry.isValid() ? "true" : _queryServer == ParentNotChanged ? "db" : "false";
-    const char *hasLocal = localEntry.isValid() ? "true" : _queryLocal == ParentNotChanged ? "db" : "false";
-    qCInfo(lcDisco).nospace() << u"Processing (db|local|remote) " << path._original << u" | valid: " << dbEntry.isValid() << u"/" << hasLocal << u"/"
-                              << hasServer << u" | mtime: " << dbEntry.modtime() << u"/" << localEntry.modtime() << u"/" << serverEntry.modtime()
-                              << u" | size: " << dbEntry.size() << u"/" << localEntry.size() << u"/" << serverEntry.size() << u" | etag: " << dbEntry.etag()
-                              << u"//" << serverEntry.etag() << u" | checksum: " << dbEntry.checksumHeader() << u"//" << serverEntry.checksumHeader()
-                              << u" | perm: " << dbEntry.remotePerm() << u"//" << serverEntry.remotePerm() << u" | fileid: " << dbEntry.fileId() << u"//"
-                              << serverEntry.fileId() << u" | inode: " << dbEntry.inode() << u"/" << localEntry.inode() << u"/" << u" | type: "
-                              << dbEntry.type() << u"/" << localEntry.type() << u"/" << (serverEntry.isDirectory() ? ItemTypeDirectory : ItemTypeFile);
+    const auto *hasLocal = localEntry.isValid() ? "true" : _queryLocal == ParentNotChanged ? "db" : "false";
+    qCInfo(lcDisco).nospace() << u"Processing (db|local|remote) " << path._original //
+                              << u" | valid: " << dbEntry.isValid() << u"/" << hasLocal << u"/" << hasServer //
+                              << u" | mtime: " << dbEntry.modtime() << u"/" << localEntry.modtime() << u"/" << serverEntry.modtime() //
+                              << u" | size: " << dbEntry.size() << u"/" << localEntry.size() << u"/" << serverEntry.size() //
+                              << u" | etag: " << dbEntry.etag() << u"//" << serverEntry.etag() //
+                              << u" | checksum: " << dbEntry.checksumHeader() << u"//" << serverEntry.checksumHeader() //
+                              << u" | perm: " << dbEntry.remotePerm() << u"//" << serverEntry.remotePerm() //
+                              << u" | fileid: " << dbEntry.fileId() << u"//" << serverEntry.fileId() //
+                              << u" | inode: " << dbEntry.inode() << u"/" << localEntry.inode() << u"/" //
+                              << u" | type: " << dbEntry.type() << u"/" << localEntry.type() << u"/"
+                              << (serverEntry.isDirectory() ? ItemTypeDirectory : ItemTypeFile);
 
     if (_discoveryData->isRenamed(path._original)) {
         qCDebug(lcDisco) << u"Ignoring renamed";

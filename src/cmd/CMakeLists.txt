@@ -8,6 +8,7 @@ ecm_mark_nongui_executable(cmd)
 target_link_libraries(cmd libsync Qt::Core Qt::Network ZLIB::ZLIB)
 apply_common_target_settings(cmd)
 
+
 if(APPLE)
     set_target_properties(cmd PROPERTIES RUNTIME_OUTPUT_DIRECTORY "$<TARGET_FILE_DIR:opencloud>")
 else()

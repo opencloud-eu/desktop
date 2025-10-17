@@ -211,7 +211,7 @@ LocalInfo VfsCfApi::statTypeVirtualFile(const std::filesystem::directory_entry &
             FILE_ATTRIBUTE_TAG_INFO attributeInfo = {};
             if (!GetFileInformationByHandleEx(placeholderInfo.handle(), FileAttributeTagInfo, &attributeInfo, sizeof(attributeInfo))) {
                 const auto error = GetLastError();
-                qCCritical(lcFileSystem) << u"GetFileInformationByHandle failed on" << path.path() << OCC::Utility::formatWinError(error);
+                qCCritical(lcCfApi) << u"GetFileInformationByHandle failed on" << path.path() << OCC::Utility::formatWinError(error);
                 return {};
             }
             const CF_PLACEHOLDER_STATE placeholderState = CfGetPlaceholderStateFromAttributeTag(attributeInfo.FileAttributes, attributeInfo.ReparseTag);

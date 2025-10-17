@@ -11,6 +11,8 @@
 #include <sys/stat.h>
 #endif
 
+Q_LOGGING_CATEGORY(lcLocalInfo, "sync.discovery.localinfo", QtInfoMsg)
+
 using namespace OCC;
 
 class OCC::LocalInfoData : public QSharedData
@@ -27,14 +29,14 @@ public:
 #ifdef Q_OS_WIN
         auto h = Utility::Handle::createHandle(dirent.path(), {.followSymlinks = false});
         if (!h) {
-            qCWarning(lcFileSystem) << dirent.path().native() << h.errorMessage();
+            qCWarning(lcLocalInfo) << dirent.path().native() << h.errorMessage();
             _name.clear();
             return;
         }
         BY_HANDLE_FILE_INFORMATION fileInfo = {};
         if (!GetFileInformationByHandle(h, &fileInfo)) {
             const auto error = GetLastError();
-            qCCritical(lcFileSystem) << u"GetFileInformationByHandle failed on" << dirent.path().native() << OCC::Utility::formatWinError(error);
+            qCCritical(lcLocalInfo) << u"GetFileInformationByHandle failed on" << dirent.path().native() << OCC::Utility::formatWinError(error);
             _name.clear();
             return;
         }
@@ -47,7 +49,7 @@ public:
 #else
         struct stat sb;
         if (lstat(dirent.path().native().data(), &sb) < 0) {
-            qCCritical(lcFileSystem) << u"lstat failed on" << dirent.path().native();
+            qCCritical(lcLocalInfo) << u"lstat failed on" << dirent.path().native();
             _name.clear();
             return;
         }

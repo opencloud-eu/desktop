@@ -10,10 +10,10 @@
 #include <QMessageBox>
 
 namespace OCC {
-class OPENCLOUD_GUI_EXPORT MessageBox : public QMessageBox
+class OPENCLOUD_GUI_EXPORT FontIconMessageBox : public QMessageBox
 {
 public:
-    MessageBox(Resources::FontIcon icon, const QString &title, const QString &text, StandardButtons buttons = NoButton, QWidget *parent = nullptr,
+    FontIconMessageBox(Resources::FontIcon icon, const QString &title, const QString &text, StandardButtons buttons = NoButton, QWidget *parent = nullptr,
         Qt::WindowFlags flags = Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint);
 };
 }

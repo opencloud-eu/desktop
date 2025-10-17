@@ -46,6 +46,7 @@ public:
     ~SyncScheduler() override;
 
     void enqueueFolder(Folder *folder, Priority priority = Priority::Low);
+    [[nodiscard]] bool isFolderQueued(Folder *folder) const;
 
     void start();
 

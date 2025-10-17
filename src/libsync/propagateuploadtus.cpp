@@ -190,7 +190,7 @@ void PropagateUploadFileTUS::slotChunkFinished()
         // try to get the offset if possible, only try once
         if (err == QNetworkReply::TimeoutError && !_location.isEmpty() && HttpLogger::requestVerb(*job->reply())  != "HEAD")
         {
-            qCWarning(lcPropagateUploadTUS) << propagator()->fullRemotePath(_item->localName()) << u"Encountered a timeout -> get progrss for" << _location;
+            qCWarning(lcPropagateUploadTUS) << propagator()->fullRemotePath(_item->localName()) << u"Encountered a timeout -> get progress for" << _location;
             QNetworkRequest req;
             setTusVersionHeader(req);
             auto updateJob = new SimpleNetworkJob(propagator()->account(), propagator()->webDavUrl(), _location.path(), "HEAD", {}, req, this);
