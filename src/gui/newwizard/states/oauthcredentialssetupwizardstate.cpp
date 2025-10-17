@@ -12,9 +12,9 @@
  * for more details.
  */
 
-#include "oauthcredentialssetupwizardstate.h"
-
-#include "jobs/webfingeruserinfojobfactory.h"
+#include "gui/newwizard/states/oauthcredentialssetupwizardstate.h"
+#include "gui/newwizard/jobs/webfingeruserinfojobfactory.h"
+#include "gui/newwizard/pages/oauthcredentialssetupwizardpage.h"
 
 namespace OCC::Wizard {
 

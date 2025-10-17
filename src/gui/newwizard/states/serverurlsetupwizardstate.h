@@ -14,8 +14,7 @@
 
 #pragma once
 
-#include "abstractsetupwizardstate.h"
-#include "pages/serverurlsetupwizardpage.h"
+#include "gui/newwizard/states/abstractsetupwizardstate.h"
 
 namespace OCC::Wizard {
 

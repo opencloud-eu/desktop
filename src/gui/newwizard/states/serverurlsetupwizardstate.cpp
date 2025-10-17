@@ -16,6 +16,7 @@
 
 #include "gui/newwizard/jobs/discoverwebfingerservicejobfactory.h"
 #include "gui/newwizard/jobs/resolveurljobfactory.h"
+#include "gui/newwizard/pages/serverurlsetupwizardpage.h"
 #include "libsync/theme.h"
 
 namespace OCC::Wizard {

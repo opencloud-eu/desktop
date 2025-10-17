@@ -12,11 +12,10 @@
  * for more details.
  */
 
-#include "accountconfiguredsetupwizardstate.h"
+#include "gui/newwizard/states/accountconfiguredsetupwizardstate.h"
 #include "gui/folderman.h"
+#include "gui/newwizard/pages/accountconfiguredwizardpage.h"
 #include "libsync/filesystem.h"
-#include "pages/accountconfiguredwizardpage.h"
-#include "theme.h"
 
 namespace OCC::Wizard {
 
