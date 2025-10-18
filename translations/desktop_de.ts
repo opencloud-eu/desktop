@@ -28,6 +28,14 @@
     </message>
 </context>
 <context>
+    <name>AccountConfiguredSetupWizardState</name>
+    <message>
+        <location filename="../src/gui/newwizard/states/accountconfiguredsetupwizardstate.cpp" line="53"/>
+        <source>Invalid local download directory: %1</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
     <name>AccountConfiguredWizardPage</name>
     <message>
         <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.ui" line="33"/>
@@ -473,6 +481,19 @@ Dateisynchronisierung Desktop-Client .</translation>
         <location filename="../src/gui/qml/credentials/OAuthCredentials.qml" line="100"/>
         <source>Restart authentication</source>
         <translation>Authentifizierung neu starten</translation>
+    </message>
+</context>
+<context>
+    <name>OAuthCredentialsSetupWizardState</name>
+    <message>
+        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="52"/>
+        <source>Error while trying to log in to OAuth2-enabled server.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="56"/>
+        <source>Oauth2 authentication requires a secured connection.</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -2802,14 +2823,6 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
     </message>
 </context>
 <context>
-    <name>OCC::Wizard::AccountConfiguredSetupWizardState</name>
-    <message>
-        <location filename="../src/gui/newwizard/states/accountconfiguredsetupwizardstate.cpp" line="54"/>
-        <source>Invalid local download directory: %1</source>
-        <translation>Ungültiges lokales Download-Verzeichnis: %1</translation>
-    </message>
-</context>
-<context>
     <name>OCC::Wizard::AccountConfiguredWizardPage</name>
     <message>
         <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.cpp" line="33"/>
@@ -2817,31 +2830,9 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
         <translation>Wähle den lokalen Ordner</translation>
     </message>
     <message>
-        <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.cpp" line="42"/>
+        <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.cpp" line="43"/>
         <source>Sync location not supported</source>
         <translation>Synchronisation Pfad wird nicht unterstützt</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::Wizard::OAuthCredentialsSetupWizardState</name>
-    <message>
-        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="52"/>
-        <source>Error while trying to log in to OAuth2-enabled server.</source>
-        <translation>Fehler beim Anmelden an OAuth2-aktiviertem Server.</translation>
-    </message>
-    <message>
-        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="56"/>
-        <source>Oauth2 authentication requires a secured connection.</source>
-        <translation>Oauth2 Authentifizierung benötigt eine gesicherte Verbindung.</translation>
-    </message>
-</context>
-<context>
-    <name>OCC::Wizard::ServerUrlSetupWizardPage</name>
-    <message>
-        <location filename="../src/gui/newwizard/pages/serverurlsetupwizardpage.cpp" line="66"/>
-        <source>%1 logo</source>
-        <extracomment>This is the accessibility text for the logo in the setup wizard page. The parameter is the name for the (branded) application.</extracomment>
-        <translation>%1 Logo</translation>
     </message>
 </context>
 <context>
@@ -2871,7 +2862,7 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
         <translation>&lt; &amp;Zurück</translation>
     </message>
     <message>
-        <location filename="../src/gui/newwizard/setupwizardwidget.cpp" line="50"/>
+        <location filename="../src/gui/newwizard/setupwizardwidget.cpp" line="49"/>
         <source>Cancel Setup</source>
         <translation>Einrichtung abbrechen</translation>
     </message>
@@ -3029,11 +3020,17 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
         <source>What is your server&apos;s address?</source>
         <translation>Wie lautet die Serveradresse?</translation>
     </message>
+    <message>
+        <location filename="../src/gui/newwizard/pages/serverurlsetupwizardpage.cpp" line="66"/>
+        <source>%1 logo</source>
+        <extracomment>This is the accessibility text for the logo in the setup wizard page. The parameter is the name for the (branded) application.</extracomment>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>ServerUrlSetupWizardState</name>
     <message>
-        <location filename="../src/gui/newwizard/states/serverurlsetupwizardstate.cpp" line="52"/>
+        <location filename="../src/gui/newwizard/states/serverurlsetupwizardstate.cpp" line="53"/>
         <source>Invalid server URL</source>
         <translation>Ungültige Server-URL</translation>
     </message>
