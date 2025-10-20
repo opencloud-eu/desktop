@@ -71,9 +71,17 @@ bool FolderWatcher::pathIsIgnored(const QString &path) const
     Q_ASSERT(!path.isEmpty());
     Q_ASSERT(_folder);
     if (!QFileInfo::exists(path)) {
-        if (auto record = _folder->journalDb()->getFileRecord(path); record.isValid()) {
+        std::error_code ec;
+        const auto relPath =
+            FileSystem::fromFilesystemPath(std::filesystem::proximate(FileSystem::toFilesystemPath(path), FileSystem::toFilesystemPath(_folder->path()), ec));
+        Q_ASSERT(!ec);
+        if (ec) {
+            qCDebug(lcFolderWatcher) << u"* Failed to lookup record for path:" << path << u"error:" << ec.message();
+            return false;
+        }
+        if (auto record = _folder->journalDb()->getFileRecord(relPath); record.isValid()) {
             // we know about the file, it got removed, we should not ignore that
-            qCDebug(lcFolderWatcher) << u"* Not ignoring remvoed file" << path;
+            qCDebug(lcFolderWatcher) << u"* Not ignoring removed file" << path;
             return false;
         }
         // probably a temporary file that no longer exists

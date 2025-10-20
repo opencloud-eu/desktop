@@ -875,9 +875,9 @@ bool SyncJournalDb::deleteFileRecord(const QString &filename, bool recursively)
     }
 }
 
-
 SyncJournalFileRecord SyncJournalDb::getFileRecord(const QString &filename)
 {
+    Q_ASSERT(!QDir::isAbsolutePath(filename));
     QMutexLocker locker(&_mutex);
 
     if (_metadataTableIsEmpty)
