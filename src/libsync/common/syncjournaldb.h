@@ -51,6 +51,12 @@ public:
     static bool dbIsTooNewForClient(const QString &dbFilePath);
 
     // To verify that the record could be found check with SyncJournalFileRecord::isValid()
+
+    /**
+     * Returns the file record for the given filename.
+     * @param filename The filename, which must be a relative path (relative to the sync root).
+     *                 Passing an absolute path is not allowed and will not yield a result.
+     */
     SyncJournalFileRecord getFileRecord(const QString &filename);
     SyncJournalFileRecord getFileRecordByInode(quint64 inode);
     bool getFileRecordsByFileId(const QByteArray &fileId, const std::function<void(const SyncJournalFileRecord &)> &rowCallback);
