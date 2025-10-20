@@ -1159,7 +1159,7 @@ Overweeg om deze map uit het account te verwijderen en deze opnieuw toe te voege
 <context>
     <name>OCC::FolderWatcher</name>
     <message>
-        <location filename="../src/gui/folderwatcher.cpp" line="135"/>
+        <location filename="../src/gui/folderwatcher.cpp" line="143"/>
         <source>The watcher did not receive a test notification.</source>
         <translation>De toezichthouder heeft geen testmelding ontvangen.</translation>
     </message>
