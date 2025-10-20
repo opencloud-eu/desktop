@@ -43,7 +43,7 @@ WatcherThread::WatchChanges WatcherThread::watchChanges(size_t fileNotifyBufferS
         closeHandle();
     });
 
-    OVERLAPPED overlapped;
+    OVERLAPPED overlapped = {};
     overlapped.hEvent = _resultEvent;
 
     // QVarLengthArray ensures the stack-buffer is aligned like double and qint64.
