@@ -36,7 +36,7 @@ public:
 
     QString _path;
     quint64 _inode = 0;
-    qint64 _modtime = 0;
+    std::optional<qint64> _modtime;
     ItemType _type = ItemTypeUnsupported;
     QString _etag;
     QByteArray _fileId;
@@ -73,7 +73,7 @@ bool SyncJournalFileRecord::validateRecord()
     Q_ASSERT(d != SyncJournalFileRecord().d);
     Q_ASSERT(!remotePerm().isNull());
     Q_ASSERT(inode() != 0);
-    Q_ASSERT(modtime() != 0);
+    Q_ASSERT(d->_modtime.has_value());
     Q_ASSERT(!fileId().isEmpty());
     Q_ASSERT(type() != ItemTypeUnsupported);
     return true;
@@ -192,7 +192,7 @@ QByteArray SyncJournalFileRecord::checksumHeader() const
 
 time_t SyncJournalFileRecord::modtime() const
 {
-    return d->_modtime;
+    return d->_modtime.value_or(0);
 }
 
 int64_t SyncJournalFileRecord::size() const
