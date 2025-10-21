@@ -784,7 +784,7 @@ void SyncEngine::abort(const QString &reason)
     }
     if (aborting) {
         qCInfo(lcEngine) << u"Aborting sync";
-        Q_EMIT syncError(tr("Aborted due to %1").arg(reason));
+        Q_EMIT syncError(tr("Aborted due to: %1").arg(reason));
         finalize(false);
     }
 }
