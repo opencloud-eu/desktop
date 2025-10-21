@@ -412,10 +412,7 @@ void SyncEngine::startSync()
     _discoveryPhase->_ignoreHiddenFiles = ignoreHiddenFiles();
 
     connect(_discoveryPhase.get(), &DiscoveryPhase::itemDiscovered, this, &SyncEngine::slotItemDiscovered);
-    connect(_discoveryPhase.get(), &DiscoveryPhase::fatalError, this, [this](const QString &errorString) {
-        Q_EMIT syncError(errorString);
-        finalize(false);
-    });
+    connect(_discoveryPhase.get(), &DiscoveryPhase::fatalError, this, &SyncEngine::abort);
     connect(_discoveryPhase.get(), &DiscoveryPhase::finished, this, &SyncEngine::slotDiscoveryFinished);
     connect(_discoveryPhase.get(), &DiscoveryPhase::silentlyExcluded, _syncFileStatusTracker.data(), &SyncFileStatusTracker::slotAddSilentlyExcluded);
     connect(_discoveryPhase.get(), &DiscoveryPhase::excluded, _syncFileStatusTracker.data(), &SyncFileStatusTracker::slotAddSilentlyExcluded);
@@ -773,6 +770,7 @@ bool SyncEngine::shouldDiscoverLocally(const QString &path) const
 
 void SyncEngine::abort(const QString &reason)
 {
+    // abort might be called multiple times, ensure we call finalize only once
     bool aborting = false;
     if (_propagator) {
         aborting = true;
