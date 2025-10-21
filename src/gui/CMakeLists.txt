@@ -107,6 +107,7 @@ ecm_add_qml_module(OpenCloudGui
         URI eu.OpenCloud.gui
         VERSION 1.0
         NAMESPACE OCC
+        GENERATE_PLUGIN_SOURCE
         QML_FILES
             qml/OpenCloud.js
 
