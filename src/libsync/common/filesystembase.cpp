@@ -70,7 +70,7 @@ QString FileSystem::fromFilesystemPath(const std::filesystem::path &path)
     }
     return QString::fromStdWString(nativePath);
 #else
-    return QString::fromStdString(path.native());
+    return QFile::decodeName(path.native().c_str());
 #endif
 }
 
