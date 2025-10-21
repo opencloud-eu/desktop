@@ -15,6 +15,7 @@
 
 ### 🐛 Bug Fixes
 
+- Properly abort sync on error [[#611](https://github.com/opencloud-eu/desktop/pull/611)]
 - Fix plugin loading with ecm 6.19 [[#608](https://github.com/opencloud-eu/desktop/pull/608)]
 - Modify APPLICATION_REV_DOMAIN in beta builds to make coinstallable [[#587](https://github.com/opencloud-eu/desktop/pull/587)]
 - Only count enabled spaces when computing the number of spaces to sync [[#571](https://github.com/opencloud-eu/desktop/pull/571)]
