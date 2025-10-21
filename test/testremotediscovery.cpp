@@ -11,9 +11,20 @@
 #include <localdiscoverytracker.h>
 
 using namespace std::chrono_literals;
+using namespace Qt::Literals::StringLiterals;
 using namespace OCC;
 
-struct FakeBrokenXmlPropfindReply : FakePropfindReply {
+namespace {
+// keep in sync with SyncEngine::abort
+QString formatAbortError(const QString &error)
+{
+    return u"Aborted due to: %1"_s.arg(error);
+}
+
+class FakeBrokenXmlPropfindReply : public FakePropfindReply
+{
+    Q_OBJECT
+public:
     FakeBrokenXmlPropfindReply(FileInfo &remoteRootFileInfo, QNetworkAccessManager::Operation op,
                                const QNetworkRequest &request, QObject *parent)
         : FakePropfindReply(remoteRootFileInfo, op, request, parent) {
@@ -23,7 +34,10 @@ struct FakeBrokenXmlPropfindReply : FakePropfindReply {
     }
 };
 
-struct MissingPermissionsPropfindReply : FakePropfindReply {
+class MissingPermissionsPropfindReply : public FakePropfindReply
+{
+    Q_OBJECT
+public:
     MissingPermissionsPropfindReply(FileInfo &remoteRootFileInfo, QNetworkAccessManager::Operation op,
                                const QNetworkRequest &request, QObject *parent)
         : FakePropfindReply(remoteRootFileInfo, op, request, parent) {
@@ -40,6 +54,8 @@ enum ErrorKind : int {
     InvalidXML = 1000,
     Timeout,
 };
+
+}
 
 Q_DECLARE_METATYPE(ErrorCategory)
 
@@ -140,7 +156,7 @@ private Q_SLOTS:
         QCOMPARE(oldRemoteState.children[QStringLiteral("B")], fakeFolder.currentRemoteState().children[QStringLiteral("B")]);
         if (!syncSucceeds) {
             QCOMPARE(errorSpy.size(), 1);
-            QCOMPARE(errorSpy[0][0].toString(), QString(fatalErrorPrefix + expectedErrorString));
+            QCOMPARE(errorSpy[0][0].toString(), formatAbortError(fatalErrorPrefix + expectedErrorString));
         } else {
             QCOMPARE(completeSpy.findItem(QStringLiteral("B"))->instruction(), CSYNC_INSTRUCTION_IGNORE);
             QVERIFY(completeSpy.findItem(QStringLiteral("B"))->_errorString.contains(expectedErrorString));
@@ -159,7 +175,7 @@ private Q_SLOTS:
         errorSpy.clear();
         QVERIFY(!fakeFolder.applyLocalModificationsAndSync());
         QCOMPARE(errorSpy.size(), 1);
-        QCOMPARE(errorSpy[0][0].toString(), syncRootError.isEmpty() ? QString(fatalErrorPrefix + expectedErrorString) : syncRootError);
+        QCOMPARE(errorSpy[0][0].toString(), formatAbortError(syncRootError.isEmpty() ? QString(fatalErrorPrefix + expectedErrorString) : syncRootError));
     }
 
     void testMissingData()
