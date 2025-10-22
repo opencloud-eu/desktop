@@ -2543,17 +2543,12 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
         <translation>Die lokale Sync-Datenbank kann nicht geöffnet oder erstellt werden. Stell sicher, dass Schreibzugriff auf den Sync-Ordner vorliegt.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="789"/>
-        <source>Aborted due to %1</source>
-        <translation>Abgebrochen aufgrund von %1</translation>
-    </message>
-    <message>
-        <location filename="../src/libsync/syncengine.cpp" line="806"/>
+        <location filename="../src/libsync/syncengine.cpp" line="804"/>
         <source>Disk space is low: Downloads that would reduce free space below %1 were skipped.</source>
         <translation>Der Speicherplatz ist knapp: Downloads, die den freien Speicherplatz unter %1 reduzieren würden, wurden übersprungen.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="813"/>
+        <location filename="../src/libsync/syncengine.cpp" line="811"/>
         <source>Space quota exceeded. Please contact the Administrator of this space.</source>
         <translation>Space-Kontingent überschritten. Bitte wende dich an den Administrator dieses Space.</translation>
     </message>
@@ -2573,9 +2568,14 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
         <translation>Fehler beim Einlesen des Synchronisierungsprotokolls.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="476"/>
+        <location filename="../src/libsync/syncengine.cpp" line="473"/>
         <source>Cannot open the sync journal</source>
         <translation>Synchronisationsbericht kann nicht geöffnet werden</translation>
+    </message>
+    <message>
+        <location filename="../src/libsync/syncengine.cpp" line="787"/>
+        <source>Aborted due to: %1</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

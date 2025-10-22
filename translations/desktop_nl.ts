@@ -2542,17 +2542,12 @@ Note that using any logging command line options will override the settings.</so
         <translation>Kan de lokale synchronisatie-database niet openen of aanmaken. Zorg ervoor dat je schrijfrechten hebt in de synchronisatiemap.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="789"/>
-        <source>Aborted due to %1</source>
-        <translation>Afgebroken vanwege %1</translation>
-    </message>
-    <message>
-        <location filename="../src/libsync/syncengine.cpp" line="806"/>
+        <location filename="../src/libsync/syncengine.cpp" line="804"/>
         <source>Disk space is low: Downloads that would reduce free space below %1 were skipped.</source>
         <translation>Schijfruimte is beperkt: Downloads die de vrije ruimte onder %1 brengen, zijn overgeslagen.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="813"/>
+        <location filename="../src/libsync/syncengine.cpp" line="811"/>
         <source>Space quota exceeded. Please contact the Administrator of this space.</source>
         <translation>Quota van ruimte overschreden. Neem contact op met de beheerder van deze ruimte.</translation>
     </message>
@@ -2572,9 +2567,14 @@ Note that using any logging command line options will override the settings.</so
         <translation>Kan niet lezen uit het synchronisatielogboek.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="476"/>
+        <location filename="../src/libsync/syncengine.cpp" line="473"/>
         <source>Cannot open the sync journal</source>
         <translation>Kan het synchronisatielogboek niet openen</translation>
+    </message>
+    <message>
+        <location filename="../src/libsync/syncengine.cpp" line="787"/>
+        <source>Aborted due to: %1</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

@@ -2540,17 +2540,12 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
         <translation>Impossible d&apos;ouvrir ou de créer la base de données de synchronisation locale. Assurez-vous d&apos;avoir un accès en écriture dans le dossier sync.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="789"/>
-        <source>Aborted due to %1</source>
-        <translation>Annulé en raison de %1</translation>
-    </message>
-    <message>
-        <location filename="../src/libsync/syncengine.cpp" line="806"/>
+        <location filename="../src/libsync/syncengine.cpp" line="804"/>
         <source>Disk space is low: Downloads that would reduce free space below %1 were skipped.</source>
         <translation>L&apos;espace disque est faible : Les téléchargements susceptibles de réduire l&apos;espace libre en dessous de %1 ont été ignorés.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="813"/>
+        <location filename="../src/libsync/syncengine.cpp" line="811"/>
         <source>Space quota exceeded. Please contact the Administrator of this space.</source>
         <translation>Le quota d&apos;Espace est dépassé. Veuillez contacter l&apos;administrateur de cet Espace.</translation>
     </message>
@@ -2570,9 +2565,14 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
         <translation>Impossible de lire le journal de synchronisation</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="476"/>
+        <location filename="../src/libsync/syncengine.cpp" line="473"/>
         <source>Cannot open the sync journal</source>
         <translation>Impossible d’ouvrir le journal de synchronisation</translation>
+    </message>
+    <message>
+        <location filename="../src/libsync/syncengine.cpp" line="787"/>
+        <source>Aborted due to: %1</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

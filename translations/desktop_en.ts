@@ -2551,17 +2551,12 @@ Note that using any logging command line options will override the settings.</so
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="789"/>
-        <source>Aborted due to %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/libsync/syncengine.cpp" line="806"/>
+        <location filename="../src/libsync/syncengine.cpp" line="804"/>
         <source>Disk space is low: Downloads that would reduce free space below %1 were skipped.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="813"/>
+        <location filename="../src/libsync/syncengine.cpp" line="811"/>
         <source>Space quota exceeded. Please contact the Administrator of this space.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2581,8 +2576,13 @@ Note that using any logging command line options will override the settings.</so
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="476"/>
+        <location filename="../src/libsync/syncengine.cpp" line="473"/>
         <source>Cannot open the sync journal</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/libsync/syncengine.cpp" line="787"/>
+        <source>Aborted due to: %1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
