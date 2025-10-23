@@ -15,6 +15,7 @@
 
 ### 🐛 Bug Fixes
 
+- Don't use mtime -1  [[#616](https://github.com/opencloud-eu/desktop/pull/616)]
 - Properly abort sync on error [[#611](https://github.com/opencloud-eu/desktop/pull/611)]
 - Fix plugin loading with ecm 6.19 [[#608](https://github.com/opencloud-eu/desktop/pull/608)]
 - Modify APPLICATION_REV_DOMAIN in beta builds to make coinstallable [[#587](https://github.com/opencloud-eu/desktop/pull/587)]
