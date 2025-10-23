@@ -2574,7 +2574,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/syncengine.cpp" line="787"/>
         <source>Aborted due to: %1</source>
-        <translation type="unfinished"/>
+        <translation>Afgebroken vanwege: %1</translation>
     </message>
 </context>
 <context>
