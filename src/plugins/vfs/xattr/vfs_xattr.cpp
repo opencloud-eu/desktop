@@ -293,7 +293,7 @@ Result<void, QString> VfsXAttr::createPlaceholder(const SyncFileItem &item)
 
     QFile file(path);
     if (file.exists()
-        && FileSystem::fileChanged(path, FileSystem::FileChangedInfo::fromSyncFileItem(item))) {
+        && FileSystem::fileChanged(FileSystem::toFilesystemPath(path), FileSystem::FileChangedInfo::fromSyncFileItem(&item))) {
         return QStringLiteral("Cannot create a placeholder because a file with the placeholder name already exist");
     }
 
