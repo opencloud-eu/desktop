@@ -25,21 +25,11 @@ public:
     QString pinState() const { return _pinState; }
     QString action() const { return _action; }
     QString state() const { return _state; }
-    QString owner() const { return _owner; }
-
-    // the owner must not be empty but set to the ownerString, that consists
-    // of the app name and an instance ID
-    // If no xattrs are set at all, the method @placeHolderAttributes sets it
-    // to our name and claims the space
-
-    // Always check if we're the valid owner before accessing the xattrs.
-    bool validOwner() const { return !_owner.isEmpty(); }
 
     qint64 _size;
     QString _fileId;
     time_t _modtime;
     QString _etag;
-    QString _owner;
     QString _pinState;
     QString _action;
     QString _state;

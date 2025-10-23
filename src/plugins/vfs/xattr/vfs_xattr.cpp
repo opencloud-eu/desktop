@@ -43,10 +43,10 @@ const QString actionXAttrName = QStringLiteral("user.openvfs.action");
 const QString stateXAttrName = QStringLiteral("user.openvfs.state");
 const QString pinstateXAttrName = QStringLiteral("user.openvfs.pinstate");
 
-OCC::Optional<QByteArray> get(const QByteArray &path, const QByteArray &name)
+OCC::Optional<QByteArray> get(const QString &path, const QString& name)
 {
     QByteArray result(512, Qt::Initialization::Uninitialized);
-    auto count = getxattr(path.constData(), name.constData(), result.data(), result.size());
+    auto count = getxattr(path.toUtf8().constData(), name.toUtf8().constData(), result.data(), result.size());
     if (count > 0) {
         // xattr is special. It does not store C-Strings, but blobs.
         // So it needs to be checked, if a trailing \0 was added when writing
@@ -93,11 +93,45 @@ Vfs::Mode VfsXAttr::mode() const
     return XAttr;
 }
 
-void VfsXAttr::startImpl(const VfsSetupParams &)
+QString VfsXAttr::xattrOwnerString() const
+{
+    auto s = QByteArray(APPLICATION_EXECUTABLE);
+    s.append(":");
+    s.append(_setupParams->account->uuid().toByteArray(QUuid::WithoutBraces));
+    return QString::fromUtf8(s);
+}
+
+void VfsXAttr::startImpl(const VfsSetupParams &params)
 {
     qCDebug(lcVfsXAttr(), "Start XAttr VFS");
 
-    Q_EMIT started();
+    // Lets claim the sync root directory for us
+    const QString& path = params.filesystemPath;
+
+    auto owner = xattr::get(path, ownerXAttrName);
+    QString err;
+
+    if (!owner) {
+        // set the owner to opencloud to claim it
+        if (!xattr::set(path, ownerXAttrName, xattrOwnerString() )) {
+            err = QStringLiteral("Unable to claim sync root for vfs");
+            return;
+        }
+    } else {
+        // owner is set. See if it is us
+        const auto o = QString::fromUtf8(*owner);
+        if (o == xattrOwnerString()) {
+            // all good
+        } else {
+            qCDebug(lcVfsXAttr) << "Root-FS has a different owner" << o << "Not our vfs!";
+            err = QStringLiteral("VFS path claimed by other cloud, check your setup");
+            return;
+        }
+    }
+    if (err.isEmpty())
+        Q_EMIT started();
+    else
+        Q_EMIT error(err);
 }
 
 void VfsXAttr::stop()
@@ -113,39 +147,19 @@ bool VfsXAttr::socketApiPinStateActionsShown() const
     return true;
 }
 
-QString VfsXAttr::xattrOwnerString() const
-{
-    auto s = QByteArray(APPLICATION_EXECUTABLE);
-    s.append(":");
-    s.append(_setupParams->account->uuid().toByteArray(QUuid::WithoutBraces));
-    return QString::fromUtf8(s);
-}
-
 PlaceHolderAttribs VfsXAttr::placeHolderAttributes(const QString& path)
 {
     PlaceHolderAttribs attribs;
 
     // lambda to handle the Optional return val of xattrGet
     auto xattr = [](const QString& p, const QString& name) {
-        const auto value = xattr::get(p.toUtf8(), name.toUtf8());
+        const auto value = xattr::get(p, name);
         if (value) {
             return QString::fromUtf8(*value);
         } else {
             return QString();
         }
     };
-
-    attribs._owner = xattr(path, ownerXAttrName);
-    if (attribs._owner.isEmpty()) {
-        // lets claim it
-        attribs._owner = xattrOwnerString();
-    } else {
-        if (attribs._owner != xattrOwnerString()) {
-            qCDebug(lcVfsXAttr) << "XAttributes not from our instance";
-            attribs._owner.clear();
-            return attribs;
-        }
-    }
 
     attribs._etag = xattr(path, etagXAttrName);
     attribs._fileId = xattr(path, fileidXAttrName);
@@ -163,18 +177,6 @@ PlaceHolderAttribs VfsXAttr::placeHolderAttributes(const QString& path)
 
 OCC::Result<void, QString> VfsXAttr::addPlaceholderAttribute(const QString &path, const QString& name, const QString& value)
 {
-    const PlaceHolderAttribs attribs = placeHolderAttributes(path);
-
-    if (! attribs.validOwner()) {
-        return QStringLiteral("Can not overwrite attributes - not our placeholder");
-    }
-
-    // FIXME: this always sets the name, can be optimized
-    auto success = xattr::set(path, ownerXAttrName, xattrOwnerString());
-    if (!success) {
-        return QStringLiteral("Failed to set the extended attribute for owner");
-    }
-
     if (!name.isEmpty()) {
         auto success = xattr::set(path, name, value);
         if (!success) {
@@ -183,20 +185,6 @@ OCC::Result<void, QString> VfsXAttr::addPlaceholderAttribute(const QString &path
     }
 
     return {};
-}
-
-// removes the state and owner which makes the file a hydrated file
-OCC::Result<void, QString> VfsXAttr::removePlaceHolderAttributes(const QString& folderPath)
-{
-    bool ok{true};
-    ok = xattr::remove(folderPath, stateXAttrName);
-    ok = ok && xattr::remove(folderPath, ownerXAttrName);
-    // ok = ok && xattr::remove(folderPath, pinstateXAttrName);
-
-    if (ok)
-        return {};
-    else
-        return QStringLiteral("Failed to remove xattr");
 }
 
 OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> VfsXAttr::updateMetadata(const SyncFileItem &syncItem, const QString &filePath, const QString &replacesFile)
@@ -208,10 +196,6 @@ OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> VfsXAttr::updateMetad
 
     PlaceHolderAttribs attribs = placeHolderAttributes(localPath);
     OCC::Vfs::ConvertToPlaceholderResult res{OCC::Vfs::ConvertToPlaceholderResult::Ok};
-
-    if (attribs.validOwner() && attribs.state().isEmpty()) { // No status
-        // There is no state, so it is a normal, hydrated file
-    }
 
     if (syncItem._type == ItemTypeVirtualFileDehydration) { //
         addPlaceholderAttribute(localPath, actionXAttrName, QStringLiteral("dehydrate"));
@@ -257,22 +241,38 @@ void VfsXAttr::slotHydrateJobFinished()
         item->_type = ItemTypeFile;
         FileSystem::getInode(targetPath, &item->_inode);
 
-
-        // Update the client sync journal database
-        const auto result = this->params().journal->setFileRecord(SyncJournalFileRecord::fromSyncFileItem(*item));
-        if (!result) {
-            qCWarning(lcVfsXAttr) << u"Error when setting the file record to the database" << result.error();
-        } else {
-            qCInfo(lcVfsXAttr) << u"Hydration succeeded" << targetPath;
+        // set the xattrs
+        // the file is not virtual any more, remove the xattrs. No state xattr means local available data
+        bool ok{true};
+        ok = xattr::remove(targetPath, stateXAttrName);
+        if (!ok) {
+            qCInfo(lcVfsXAttr) << u"Removing extended file attribute state failed for" << targetPath;
+        }
+        ok = ok && xattr::remove(targetPath, actionXAttrName);
+        if (!ok) {
+            qCInfo(lcVfsXAttr) << u"Removing extended file attribute action failed for" << targetPath;
         }
 
-        // set the xattrs
-        // the file is not virtual any more, remove the xattrs.
-        removePlaceHolderAttributes(targetPath);
+        if (ok) {
+            time_t modtime = item->_modtime;
+            qCInfo(lcVfsXAttr) << u"Setting hydrated file's modtime to" << modtime;
 
-        time_t modtime = item->_modtime;
-        qCInfo(lcVfsXAttr) << u"Setting hydrated file's modtime to" << modtime;
-        FileSystem::setModTime(targetPath, modtime);
+            if (!FileSystem::setModTime(targetPath, modtime)) {
+                qCInfo(lcVfsXAttr) << u"Failed to set the mod time of the hydrated file" << targetPath;
+                // What can be done in this error condition
+                ok = false;
+            }
+        }
+
+        if (ok) {
+            // Update the client sync journal database if the file modifications have been successful
+            const auto result = this->params().journal->setFileRecord(SyncJournalFileRecord::fromSyncFileItem(*item));
+            if (!result) {
+                qCWarning(lcVfsXAttr) << u"Error when setting the file record to the database" << result.error();
+            } else {
+                qCInfo(lcVfsXAttr) << u"Hydration succeeded" << targetPath;
+            }
+        }
     } else {
         qCWarning(lcVfsXAttr) << u"Hydration succeeded but the file appears to be moved" << targetPath;
     }
@@ -292,11 +292,10 @@ Result<void, QString> VfsXAttr::createPlaceholder(const SyncFileItem &item)
     qCDebug(lcVfsXAttr()) << path;
 
     QFile file(path);
-    // FIXME: Check to not overwrite an existing file
-    // if (file.exists() && file.size() > 1
-    //    && !FileSystem::verifyFileUnchanged(path, item._size, item._modtime)) {
-    //    return QStringLiteral("Cannot create a placeholder because a file with the placeholder name already exist");
-    // }
+    if (file.exists()
+        && FileSystem::fileChanged(path, FileSystem::FileChangedInfo::fromSyncFileItem(item))) {
+        return QStringLiteral("Cannot create a placeholder because a file with the placeholder name already exist");
+    }
 
     if (!file.open(QFile::ReadWrite | QFile::Truncate)) {
         return file.errorString();
@@ -350,27 +349,28 @@ HydrationJob* VfsXAttr::hydrateFile(const QByteArray &fileId, const QString &tar
 
 bool VfsXAttr::needsMetadataUpdate(const SyncFileItem &item)
 {
-    qCDebug(lcVfsXAttr()) << "returns false by default DOUBLECHECK";
     // return true if file exists
     const auto path = item.localName();
     QFileInfo fi{path};
 
     // FIXME: Unsure about this implementation
+    bool re{false};
     if (fi.exists()) {
-        return true;
+        re = true;
     }
-    return false;
+    qCDebug(lcVfsXAttr()) << "returning" << re;
+    return re;
 }
 
 bool VfsXAttr::isDehydratedPlaceholder(const QString &filePath)
 {
     const auto fi = QFileInfo(filePath);
+    bool re{false};
     if (fi.exists()) {
         const auto attribs = placeHolderAttributes(filePath);
-        return (attribs.validOwner() &&
-                attribs.state() == QStringLiteral("virtual"));
+        re = (attribs.state() == QStringLiteral("virtual"));
     }
-    return false;
+    return re;
 }
 
 LocalInfo VfsXAttr::statTypeVirtualFile(const std::filesystem::directory_entry &path, ItemType type)
@@ -379,16 +379,14 @@ LocalInfo VfsXAttr::statTypeVirtualFile(const std::filesystem::directory_entry &
     if (type == ItemTypeFile) {
 
         auto attribs = placeHolderAttributes(p);
-        if (attribs.validOwner()) {
-            if (attribs.state() == QStringLiteral("virtual")) {
-                type = ItemTypeVirtualFile;
-                if (attribs.pinState() == pinStateToString(PinState::AlwaysLocal)) {
-                    type = ItemTypeVirtualFileDownload;
-                }
-            } else {
-                if (attribs.pinState() == pinStateToString(PinState::OnlineOnly)) {
-                    type = ItemTypeVirtualFileDehydration;
-                }
+        if (attribs.state() == QStringLiteral("virtual")) {
+            type = ItemTypeVirtualFile;
+            if (attribs.pinState() == pinStateToString(PinState::AlwaysLocal)) {
+                type = ItemTypeVirtualFileDownload;
+            }
+        } else {
+            if (attribs.pinState() == pinStateToString(PinState::OnlineOnly)) {
+                type = ItemTypeVirtualFileDehydration;
             }
         }
     }
@@ -418,18 +416,16 @@ Optional<PinState> VfsXAttr::pinState(const QString &folderPath)
     PlaceHolderAttribs attribs = placeHolderAttributes(folderPath);
 
     PinState pState{PinState::Unspecified}; // the default if no owner or state is set
-    if (attribs.validOwner()) {
-        const QString pin = attribs.pinState();
+    const QString pin = attribs.pinState();
 
-        if (pin == pinStateToString(PinState::AlwaysLocal)) {
-            pState = PinState::AlwaysLocal;
-        } else if (pin == pinStateToString(PinState::Excluded)) {
-            pState = PinState::Excluded;
-        } else if (pin.isEmpty() || pin == pinStateToString(PinState::Inherited)) {
-            pState = PinState::Inherited;
-        } else if (pin == pinStateToString(PinState::OnlineOnly)) {
-            pState = PinState::OnlineOnly;
-        }
+    if (pin == pinStateToString(PinState::AlwaysLocal)) {
+        pState = PinState::AlwaysLocal;
+    } else if (pin == pinStateToString(PinState::Excluded)) {
+        pState = PinState::Excluded;
+    } else if (pin.isEmpty() || pin == pinStateToString(PinState::Inherited)) {
+        pState = PinState::Inherited;
+    } else if (pin == pinStateToString(PinState::OnlineOnly)) {
+        pState = PinState::OnlineOnly;
     }
 
     return pState;
