@@ -148,11 +148,6 @@ void CALLBACK cfApiFetchDataCallback(const CF_CALLBACK_INFO *callbackInfo, const
 OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> updatePlaceholderState(
     const QString &path, time_t modtime, qint64 size, const QByteArray &fileId, const QString &replacesPath)
 {
-    if (modtime <= 0) {
-        Q_ASSERT(false);
-        return {u"Could not update metadata due to invalid modification time for %1: %2"_s.arg(path, modtime)};
-    }
-
     OCC::CfApiWrapper::PlaceHolderInfo<CF_PLACEHOLDER_BASIC_INFO> info;
     if (!replacesPath.isEmpty()) {
         info = OCC::CfApiWrapper::findPlaceholderInfo<CF_PLACEHOLDER_BASIC_INFO>(replacesPath);
@@ -534,10 +529,6 @@ OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> OCC::CfApiWrapper::se
 
 OCC::Result<void, QString> OCC::CfApiWrapper::createPlaceholderInfo(const QString &path, time_t modtime, qint64 size, const QByteArray &fileId)
 {
-    if (modtime <= 0) {
-        return {u"Could not update metadata due to invalid modification time for %1: %2"_s.arg(path, modtime)};
-    }
-
     const auto fileInfo = QFileInfo(path);
     const auto localBasePath = QDir::toNativeSeparators(fileInfo.path()).toStdWString();
     const auto relativePath = fileInfo.fileName().toStdWString();
@@ -584,13 +575,8 @@ OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> OCC::CfApiWrapper::up
     return updatePlaceholderState(path, modtime, size, fileId, replacesPath);
 }
 
-OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> OCC::CfApiWrapper::dehydratePlaceholder(
-    const QString &path, time_t modtime, qint64 size, const QByteArray &fileId)
+OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> OCC::CfApiWrapper::dehydratePlaceholder(const QString &path, qint64 size, const QByteArray &fileId)
 {
-    if (modtime <= 0) {
-        return {u"Could not update metadata due to invalid modification time for %1: %2"_s.arg(path, modtime)};
-    }
-
     const auto info = findPlaceholderInfo<CF_PLACEHOLDER_BASIC_INFO>(path);
     if (info) {
         setPinState(path, OCC::PinState::OnlineOnly, OCC::CfApiWrapper::NoRecurse);
