@@ -477,7 +477,9 @@ void SocketApi::command_SHARE(const QString &localFile, SocketListener *listener
 
 void SocketApi::command_VERSION(const QString &, SocketListener *listener)
 {
-    listener->sendMessage(QStringLiteral("VERSION:%1:%2").arg(OCC::Version::versionWithBuildNumber().toString(), QStringLiteral(MIRALL_SOCKET_API_VERSION)));
+    listener->sendMessage(QStringLiteral("VERSION:%1:%2:%3").arg(OCC::Version::versionWithBuildNumber().toString(),
+                                                                 QStringLiteral(MIRALL_SOCKET_API_VERSION),
+                                                                 QString::number(qApp->applicationPid())));
 }
 
 void SocketApi::command_SHARE_MENU_TITLE(const QString &, SocketListener *listener)
@@ -667,25 +669,16 @@ void SocketApi::command_V2_HYDRATE_FILE(const QSharedPointer<SocketApiJobV2> &jo
     const auto &arguments = job->arguments();
 
     const QByteArray fileId = arguments[QStringLiteral("fileId")].toString().toUtf8();
-
     const QString targetPath = arguments[QStringLiteral("file")].toString();
-
-    std::filesystem::path fsysPath = FileSystem::toFilesystemPath(targetPath);
-    QFileInfo fi(targetPath);
-    const QString qfName{QStringLiteral(".")+fi.fileName()+QStringLiteral(".hyd")};
-    std::filesystem::path fName = FileSystem::toFilesystemPath(qfName);
-
-    fsysPath.replace_filename(fName);
-    const QString tempFileName = FileSystem::fromFilesystemPath(fsysPath);
 
     auto fileData = FileData::get(targetPath);
 
     if (fileData.folder) {
-        HydrationJob *hydJob = fileData.folder->vfs().hydrateFile(fileId, tempFileName);
+        HydrationJob *hydJob = fileData.folder->vfs().hydrateFile(fileId, targetPath);
 
         if (hydJob) {
-            connect(hydJob, &HydrationJob::finished, this, [job, hydJob, tempFileName] {
-                job->success({{QStringLiteral("status"), QStringLiteral("OK")}, {QStringLiteral("file"), tempFileName}});
+            connect(hydJob, &HydrationJob::finished, this, [job, hydJob] {
+                job->success({{QStringLiteral("status"), QStringLiteral("OK")}});
                 hydJob->deleteLater();
             });
             connect(hydJob, &HydrationJob::error, this, [job, hydJob](const QString& err) {
