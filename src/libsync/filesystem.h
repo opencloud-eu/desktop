@@ -99,7 +99,7 @@ namespace FileSystem {
         static OPENCLOUD_SYNC_EXPORT FileChangedInfo fromSyncJournalFileRecord(const SyncJournalFileRecord &record);
 
         qint64 size = {};
-        time_t mtime = {};
+        std::optional<time_t> mtime = {};
         std::optional<quint64> inode = {};
         CSyncEnums::ItemType type = CSyncEnums::ItemTypeUnsupported;
     };
