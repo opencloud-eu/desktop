@@ -32,6 +32,7 @@
 #include "syncengine.h"
 #include "syncfileitem.h"
 #include "theme.h"
+#include "vfs/hydrationjob.h"
 
 #include <QApplication>
 #include <QDir>
@@ -476,7 +477,9 @@ void SocketApi::command_SHARE(const QString &localFile, SocketListener *listener
 
 void SocketApi::command_VERSION(const QString &, SocketListener *listener)
 {
-    listener->sendMessage(QStringLiteral("VERSION:%1:%2").arg(OCC::Version::versionWithBuildNumber().toString(), QStringLiteral(MIRALL_SOCKET_API_VERSION)));
+    listener->sendMessage(QStringLiteral("VERSION:%1:%2:%3").arg(OCC::Version::versionWithBuildNumber().toString(),
+                                                                 QStringLiteral(MIRALL_SOCKET_API_VERSION),
+                                                                 QString::number(qApp->applicationPid())));
 }
 
 void SocketApi::command_SHARE_MENU_TITLE(const QString &, SocketListener *listener)
@@ -665,23 +668,27 @@ void SocketApi::command_V2_HYDRATE_FILE(const QSharedPointer<SocketApiJobV2> &jo
 {
     const auto &arguments = job->arguments();
 
-    const QString targetPath = arguments[QStringLiteral("file")].toString();
     const QByteArray fileId = arguments[QStringLiteral("fileId")].toString().toUtf8();
+    const QString targetPath = arguments[QStringLiteral("file")].toString();
 
     auto fileData = FileData::get(targetPath);
 
     if (fileData.folder) {
-        auto watcher = new QFutureWatcher<Result<void, QString>>();
-        connect(watcher, &QFutureWatcher<Result<void, QString>>::finished, this, [job, watcher] {
-            const auto resut = watcher->result<Result<void, QString>>();
-            watcher->deleteLater();
-            if (!resut) {
-                job->success({{QStringLiteral("status"), QStringLiteral("ERROR")}, {QStringLiteral("error"), resut.error()}});
-            } else {
+        HydrationJob *hydJob = fileData.folder->vfs().hydrateFile(fileId, targetPath);
+
+        if (hydJob) {
+            connect(hydJob, &HydrationJob::finished, this, [job, hydJob] {
                 job->success({{QStringLiteral("status"), QStringLiteral("OK")}});
-            }
-        });
-        watcher->setFuture(fileData.folder->vfs().hydrateFile(fileId, targetPath));
+                hydJob->deleteLater();
+            });
+            connect(hydJob, &HydrationJob::error, this, [job, hydJob](const QString& err) {
+                job->success({{QStringLiteral("status"), QStringLiteral("ERROR")}, {QStringLiteral("error"), err}});
+                hydJob->deleteLater();
+            });
+            hydJob->start();
+        } else {
+            qCDebug(lcSocketApi) << "Hydration job for" << fileId << "already running";
+        }
     } else {
         job->failure(QStringLiteral("cannot hydrate unknown file"));
     }
