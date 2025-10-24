@@ -209,15 +209,15 @@ File synchronization desktop utility.</source>
 <context>
     <name>FileSystem</name>
     <message>
-        <location filename="../src/libsync/filesystem.cpp" line="234"/>
+        <location filename="../src/libsync/filesystem.cpp" line="236"/>
         <source>Could not remove folder</source>
         <translation>Не удалось удалить папку</translation>
     </message>
     <message>
-        <location filename="../src/libsync/common/filesystembase.cpp" line="188"/>
-        <location filename="../src/libsync/common/filesystembase.cpp" line="190"/>
-        <location filename="../src/libsync/common/filesystembase.cpp" line="249"/>
-        <location filename="../src/libsync/common/filesystembase.cpp" line="254"/>
+        <location filename="../src/libsync/common/filesystembase.cpp" line="191"/>
+        <location filename="../src/libsync/common/filesystembase.cpp" line="193"/>
+        <location filename="../src/libsync/common/filesystembase.cpp" line="252"/>
+        <location filename="../src/libsync/common/filesystembase.cpp" line="257"/>
         <source>Can&apos;t rename »%1«, the file is currently in use</source>
         <translation>Невозможно переименовать »%1«, файл сейчас используется</translation>
     </message>
