@@ -1,6 +1,6 @@
 # Changelog
 
-## [3.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v3.0.0) - 2025-10-24
+## [3.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v3.0.0) - 2025-10-27
 
 ### ❤️ Thanks to all contributors! ❤️
 
@@ -43,6 +43,7 @@
 
 ### 📦️ Dependencies
 
+- Bump actions/upload-artifact from 4 to 5 [[#620](https://github.com/opencloud-eu/desktop/pull/620)]
 - Bump actions/checkout from 4 to 5 [[#502](https://github.com/opencloud-eu/desktop/pull/502)]
 - Bump actions/stale from 9 to 10 [[#520](https://github.com/opencloud-eu/desktop/pull/520)]
 
