@@ -194,7 +194,7 @@ OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> VfsXAttr::updateMetad
 
     qCDebug(lcVfsXAttr) << localPath;
 
-    PlaceHolderAttribs attribs = placeHolderAttributes(localPath);
+    // PlaceHolderAttribs attribs = placeHolderAttributes(localPath);
     OCC::Vfs::ConvertToPlaceholderResult res{OCC::Vfs::ConvertToPlaceholderResult::Ok};
 
     if (syncItem._type == ItemTypeVirtualFileDehydration) { //
@@ -219,7 +219,7 @@ OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> VfsXAttr::updateMetad
             addPlaceholderAttribute(localPath, etagXAttrName, syncItem._etag);
     } else {
             // FIXME anything to check for other types?
-        qCDebug(lcVfsXAttr) << "Unexpected syncItem Type";
+        qCDebug(lcVfsXAttr) << "Unexpected syncItem Type" << syncItem._type;
     }
 
     // FIXME Errorhandling
@@ -293,7 +293,8 @@ Result<void, QString> VfsXAttr::createPlaceholder(const SyncFileItem &item)
 
     QFile file(path);
     if (file.exists()
-        && FileSystem::fileChanged(FileSystem::toFilesystemPath(path), FileSystem::FileChangedInfo::fromSyncFileItem(&item))) {
+        && FileSystem::fileChanged(FileSystem::toFilesystemPath(path),
+                                   FileSystem::FileChangedInfo::fromSyncFileItem(&item))) {
         return QStringLiteral("Cannot create a placeholder because a file with the placeholder name already exist");
     }
 
@@ -411,7 +412,6 @@ bool VfsXAttr::setPinState(const QString &folderPath, PinState state)
 
 Optional<PinState> VfsXAttr::pinState(const QString &folderPath)
 {
-    qCDebug(lcVfsXAttr()) << folderPath;
 
     PlaceHolderAttribs attribs = placeHolderAttributes(folderPath);
 
@@ -427,35 +427,39 @@ Optional<PinState> VfsXAttr::pinState(const QString &folderPath)
     } else if (pin == pinStateToString(PinState::OnlineOnly)) {
         pState = PinState::OnlineOnly;
     }
+    qCDebug(lcVfsXAttr()) << folderPath << Utility::enumToDisplayName(pState);
 
     return pState;
 }
 
 Vfs::AvailabilityResult VfsXAttr::availability(const QString &folderPath)
 {
-    qCDebug(lcVfsXAttr()) << folderPath;
 
     const auto basePinState = pinState(folderPath);
+    Vfs::AvailabilityResult res {VfsItemAvailability::Mixed};
 
     if (basePinState) {
         switch (*basePinState) {
         case OCC::PinState::AlwaysLocal:
-            return VfsItemAvailability::AlwaysLocal;
+            res = VfsItemAvailability::AlwaysLocal;
             break;
         case OCC::PinState::Inherited:
             break;
         case OCC::PinState::OnlineOnly:
-            return VfsItemAvailability::OnlineOnly;
+            res = VfsItemAvailability::OnlineOnly;
             break;
         case OCC::PinState::Unspecified:
             break;
         case OCC::PinState::Excluded:
             break;
         };
-        return VfsItemAvailability::Mixed;
+        res = VfsItemAvailability::Mixed;
     } else {
-        return AvailabilityError::NoSuchItem;
+        res = AvailabilityError::NoSuchItem;
     }
+    qCDebug(lcVfsXAttr()) << folderPath << res.get();
+
+    return res;
 }
 
 void VfsXAttr::fileStatusChanged(const QString& systemFileName, SyncFileStatus fileStatus)
