@@ -249,6 +249,8 @@ Pane {
 
                             Loader {
                                 id: progressLoader
+                                sourceComponent: quotaDisplay
+
                                 Accessible.ignored: true
                                 Layout.fillWidth: true
                                 Layout.minimumHeight: folderSyncPanel.spacing
