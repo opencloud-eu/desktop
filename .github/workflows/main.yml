@@ -204,14 +204,14 @@ jobs:
         }
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: ${{ matrix.target }}-${{ github.run_number }}
         path: ${{ github.workspace }}/binaries/*
 
     - name: Upload appx
       if: ${{ matrix.os  == 'windows-latest' && github.event_name != 'pull_request' }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: ${{ matrix.target }}-appx-${{ github.run_number }}
         path: ${{ github.workspace }}/appx/*
