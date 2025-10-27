@@ -65,7 +65,7 @@ OCC::Optional<QByteArray> get(const QString &path, const QString& name)
 bool set(const QString &path, const QString &name, const QString &value)
 {
     const auto returnCode = setxattr(path.toUtf8().constData(), name.toUtf8().constData(),
-                                     value.toUtf8().constData(), value.toUtf8().size()+1, 0);
+                                     value.toUtf8().constData(), value.toUtf8().size(), 0);
     return returnCode == 0;
 }
 
@@ -179,6 +179,7 @@ OCC::Result<void, QString> VfsXAttr::addPlaceholderAttribute(const QString &path
 {
     if (!name.isEmpty()) {
         auto success = xattr::set(path, name, value);
+        // Q_ASSERT(success);
         if (!success) {
             return QStringLiteral("Failed to set the extended attribute");
         }
@@ -192,37 +193,39 @@ OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> VfsXAttr::updateMetad
     const auto localPath = QDir::toNativeSeparators(filePath);
     const auto replacesPath = QDir::toNativeSeparators(replacesFile);
 
-    qCDebug(lcVfsXAttr) << localPath;
+    qCDebug(lcVfsXAttr) << localPath << syncItem._type;
 
-    PlaceHolderAttribs attribs = placeHolderAttributes(localPath);
+    // PlaceHolderAttribs attribs = placeHolderAttributes(localPath);
     OCC::Vfs::ConvertToPlaceholderResult res{OCC::Vfs::ConvertToPlaceholderResult::Ok};
 
     if (syncItem._type == ItemTypeVirtualFileDehydration) { //
-        addPlaceholderAttribute(localPath, actionXAttrName, QStringLiteral("dehydrate"));
         // FIXME: Error handling
         auto r = createPlaceholder(syncItem);
         if (!r) {
             res = OCC::Vfs::ConvertToPlaceholderResult::Locked;
         }
-
+        addPlaceholderAttribute(localPath, actionXAttrName, QStringLiteral("dehydrate"));
+        addPlaceholderAttribute(localPath, stateXAttrName, QStringLiteral("virtual"));
     } else if (syncItem._type == ItemTypeVirtualFileDownload) {
         addPlaceholderAttribute(localPath, actionXAttrName, QStringLiteral("hydrate"));
-        qCDebug(lcVfsXAttr) << "FIXME: Do we need to download here?";
-        // start to download? FIXME
+        // file gets downloaded and becomes a normal file, the xattr gets removed
+        xattr::remove(localPath, stateXAttrName);
     } else if (syncItem._type == ItemTypeVirtualFile) {
-            FileSystem::setModTime(localPath, syncItem._modtime);
-
-            // FIXME only write attribs if they're different, and/or all together
-            addPlaceholderAttribute(localPath, fileSizeXAttrName, QString::number(syncItem._size));
-            addPlaceholderAttribute(localPath, stateXAttrName, QStringLiteral("virtual"));
-            addPlaceholderAttribute(localPath, fileidXAttrName, QString::fromUtf8(syncItem._fileId));
-            addPlaceholderAttribute(localPath, etagXAttrName, syncItem._etag);
+        qCDebug(lcVfsXAttr) << "updateMetadata for virtual file " << syncItem._type;
+        addPlaceholderAttribute(localPath, stateXAttrName, QStringLiteral("virtual"));
     } else {
-            // FIXME anything to check for other types?
-        qCDebug(lcVfsXAttr) << "Unexpected syncItem Type";
+        qCDebug(lcVfsXAttr) << "Unexpected syncItem Type" << syncItem._type;
     }
 
-    // FIXME Errorhandling
+    FileSystem::setModTime(localPath, syncItem._modtime);
+
+    addPlaceholderAttribute(localPath, fileSizeXAttrName, QString::number(syncItem._size));
+    addPlaceholderAttribute(localPath, fileidXAttrName, QString::fromUtf8(syncItem._fileId));
+    addPlaceholderAttribute(localPath, etagXAttrName, syncItem._etag);
+
+    // remove the action marker again
+    xattr::remove(localPath, actionXAttrName);
+
     return res;
 }
 
@@ -293,7 +296,8 @@ Result<void, QString> VfsXAttr::createPlaceholder(const SyncFileItem &item)
 
     QFile file(path);
     if (file.exists()
-        && FileSystem::fileChanged(FileSystem::toFilesystemPath(path), FileSystem::FileChangedInfo::fromSyncFileItem(&item))) {
+        && FileSystem::fileChanged(FileSystem::toFilesystemPath(path),
+                                   FileSystem::FileChangedInfo::fromSyncFileItem(&item))) {
         return QStringLiteral("Cannot create a placeholder because a file with the placeholder name already exist");
     }
 
@@ -411,7 +415,6 @@ bool VfsXAttr::setPinState(const QString &folderPath, PinState state)
 
 Optional<PinState> VfsXAttr::pinState(const QString &folderPath)
 {
-    qCDebug(lcVfsXAttr()) << folderPath;
 
     PlaceHolderAttribs attribs = placeHolderAttributes(folderPath);
 
@@ -427,35 +430,39 @@ Optional<PinState> VfsXAttr::pinState(const QString &folderPath)
     } else if (pin == pinStateToString(PinState::OnlineOnly)) {
         pState = PinState::OnlineOnly;
     }
+    qCDebug(lcVfsXAttr()) << folderPath << pState;
 
     return pState;
 }
 
 Vfs::AvailabilityResult VfsXAttr::availability(const QString &folderPath)
 {
-    qCDebug(lcVfsXAttr()) << folderPath;
 
     const auto basePinState = pinState(folderPath);
+    Vfs::AvailabilityResult res {VfsItemAvailability::Mixed};
 
     if (basePinState) {
         switch (*basePinState) {
         case OCC::PinState::AlwaysLocal:
-            return VfsItemAvailability::AlwaysLocal;
+            res = VfsItemAvailability::AlwaysLocal;
             break;
         case OCC::PinState::Inherited:
             break;
         case OCC::PinState::OnlineOnly:
-            return VfsItemAvailability::OnlineOnly;
+            res = VfsItemAvailability::OnlineOnly;
             break;
         case OCC::PinState::Unspecified:
             break;
         case OCC::PinState::Excluded:
             break;
         };
-        return VfsItemAvailability::Mixed;
+        res = VfsItemAvailability::Mixed;
     } else {
-        return AvailabilityError::NoSuchItem;
+        res = AvailabilityError::NoSuchItem;
     }
+    qCDebug(lcVfsXAttr()) << folderPath << res.get();
+
+    return res;
 }
 
 void VfsXAttr::fileStatusChanged(const QString& systemFileName, SyncFileStatus fileStatus)
