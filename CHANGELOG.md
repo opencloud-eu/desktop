@@ -15,6 +15,7 @@
 
 ### 🐛 Bug Fixes
 
+- Fix quota not display until folder synced [[#622](https://github.com/opencloud-eu/desktop/pull/622)]
 - Don't use mtime -1  [[#616](https://github.com/opencloud-eu/desktop/pull/616)]
 - Properly abort sync on error [[#611](https://github.com/opencloud-eu/desktop/pull/611)]
 - Fix plugin loading with ecm 6.19 [[#608](https://github.com/opencloud-eu/desktop/pull/608)]
