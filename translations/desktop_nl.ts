@@ -260,47 +260,47 @@ Hulpprogramma voor desktop bestandssynchronisatie.</translation>
         <translation>Menu Accountopties</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="330"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="332"/>
         <source>Restart sync</source>
         <translation>Synchronisatie opnieuw starten</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="330"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="332"/>
         <source>Force sync now</source>
         <translation>Synchronisatie nu afdwingen</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="338"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="340"/>
         <source>Resume sync</source>
         <translation>Synchronisatie hervatten</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="338"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="340"/>
         <source>Pause sync</source>
         <translation>Synchronisatie pauzeren</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="346"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="348"/>
         <source>Choose what to sync</source>
         <translation>Kies wat te synchroniseren</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="353"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="355"/>
         <source>Remove Space</source>
         <translation>Ruimte verwijderen</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="360"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="362"/>
         <source>Sync options menu</source>
         <translation>Menu Synchronisatieopties</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="372"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="374"/>
         <source>Add Space</source>
         <translation>Ruimte toevoegen</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="392"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="394"/>
         <source>You are synchronizing %1 out of %2 Spaces</source>
         <translation>Je synchroniseert %1 van de %2 ruimtes</translation>
     </message>

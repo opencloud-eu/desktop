@@ -260,47 +260,47 @@ File synchronization desktop utility.</source>
         <translation>Меню настроек аккаунта</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="330"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="332"/>
         <source>Restart sync</source>
         <translation>Перезапустить синхронизацию</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="330"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="332"/>
         <source>Force sync now</source>
         <translation>Принудительная синхронизация прямо сейчас</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="338"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="340"/>
         <source>Resume sync</source>
         <translation>Возобновить синхронизацию</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="338"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="340"/>
         <source>Pause sync</source>
         <translation>Приостановить синхронизацию</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="346"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="348"/>
         <source>Choose what to sync</source>
         <translation>Выберите, что синхронизировать</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="353"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="355"/>
         <source>Remove Space</source>
         <translation>Удалить Пространство</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="360"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="362"/>
         <source>Sync options menu</source>
         <translation>Меню настроек синхронизации</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="372"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="374"/>
         <source>Add Space</source>
         <translation>Добавить Пространство</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="392"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="394"/>
         <source>You are synchronizing %1 out of %2 Spaces</source>
         <translation>Вы синхронизируете %1 из %2 Пространств</translation>
     </message>
