@@ -65,7 +65,7 @@ OCC::Optional<QByteArray> get(const QString &path, const QString& name)
 bool set(const QString &path, const QString &name, const QString &value)
 {
     const auto returnCode = setxattr(path.toUtf8().constData(), name.toUtf8().constData(),
-                                     value.toUtf8().constData(), value.toUtf8().size()+1, 0);
+                                     value.toUtf8().constData(), value.toUtf8().size(), 0);
     return returnCode == 0;
 }
 
