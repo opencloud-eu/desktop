@@ -268,7 +268,7 @@ Folder *SyncScheduler::currentSync()
 void SyncScheduler::terminateCurrentSync(const QString &reason)
 {
     if (_currentSync && _currentSync->isReady()) {
-        qCInfo(lcSyncScheduler) << u"folder " << _currentSync->path() << u" Terminating!";
+        qCInfo(lcSyncScheduler) << u"folder " << _currentSync->path() << _currentSync->syncState() << u" Terminating!";
         if (OC_ENSURE(_currentSync->syncEngine().isSyncRunning())) {
             _currentSync->syncEngine().abort(reason);
         }
