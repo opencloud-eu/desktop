@@ -157,7 +157,7 @@ void HttpLogger::logRequest(QNetworkReply *reply, QNetworkAccessManager::Operati
             } else if (ctx->receivedBeforeSent) {
                 qCWarning(lcNetworkHttp) << u"Request:" << ctx->id << u" was sent after we received a result";
             } else {
-                Q_UNREACHABLE();
+                qCWarning(lcNetworkHttp) << u"Request:" << ctx->id << u" resending";
             }
         }
 
