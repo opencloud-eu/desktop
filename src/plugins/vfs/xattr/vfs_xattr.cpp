@@ -208,10 +208,10 @@ OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> VfsXAttr::updateMetad
         addPlaceholderAttribute(localPath, stateXAttrName, QStringLiteral("virtual"));
     } else if (syncItem._type == ItemTypeVirtualFileDownload) {
         addPlaceholderAttribute(localPath, actionXAttrName, QStringLiteral("hydrate"));
-        // file gets downloaded and becomes a normal file
+        // file gets downloaded and becomes a normal file, the xattr gets removed
         xattr::remove(localPath, stateXAttrName);
     } else if (syncItem._type == ItemTypeVirtualFile) {
-        qCDebug(lcVfsXAttr) << "updateMetadata for " << syncItem._type;
+        qCDebug(lcVfsXAttr) << "updateMetadata for virtual file " << syncItem._type;
         addPlaceholderAttribute(localPath, stateXAttrName, QStringLiteral("virtual"));
     } else {
         qCDebug(lcVfsXAttr) << "Unexpected syncItem Type" << syncItem._type;
@@ -223,9 +223,9 @@ OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> VfsXAttr::updateMetad
     addPlaceholderAttribute(localPath, fileidXAttrName, QString::fromUtf8(syncItem._fileId));
     addPlaceholderAttribute(localPath, etagXAttrName, syncItem._etag);
 
+    // remove the action marker again
     xattr::remove(localPath, actionXAttrName);
 
-    // FIXME Errorhandling
     return res;
 }
 
