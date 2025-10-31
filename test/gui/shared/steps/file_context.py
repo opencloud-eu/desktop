@@ -174,40 +174,27 @@ def step(context, file_path):
     )
 
 
-@Then(r'^the (file|folder) "([^"]*)" should exist on the file system$', regexp=True)
-def step(context, resource_type, resource):
+@Then(r'^the (file|folder) "([^"]*)" (should|should not) exist on the file system$', regexp=True)
+def step(context, resource_type, resource, should_or_should_not):
     resource_path = get_resource_path(resource)
     resource_exists = False
     if resource_type == 'file':
-        resource_exists = file_exists(
-            resource_path, get_config('maxSyncTimeout') * 1000
-        )
+        if should_or_should_not == 'should':
+            resource_exists = file_exists(
+                resource_path, get_config('maxSyncTimeout') * 1000
+            )
     else:
-        resource_exists = folder_exists(
-            resource_path, get_config('maxSyncTimeout') * 1000
-        )
+        if should_or_should_not == 'should':
+            resource_exists = folder_exists(
+                resource_path, get_config('maxSyncTimeout') * 1000
+            )
 
+    expected = should_or_should_not == 'should'
     test.compare(
-        True,
+        expected,
         resource_exists,
-        f'Assert {resource_type} "{resource}" exists on the system',
-    )
-
-
-@Then(r'^the (file|folder) "([^"]*)" should not exist on the file system$', regexp=True)
-def step(context, resource_type, resource):
-    resource_path = get_resource_path(resource)
-    resource_exists = False
-    if resource_type == 'file':
-        resource_exists = file_exists(resource_path, 1000)
-    else:
-        resource_exists = folder_exists(resource_path, 1000)
-
-    test.compare(
-        False,
-        resource_exists,
-        f'Assert {resource_type} "{resource}" doesn\'t exist on the system',
-    )
+        f'{resource_type.capitalize()} "{resource}" {"exists" if resource_exists else "does not exist"} on the system',
+)
 
 
 @Given('the user has changed the content of local file "|any|" to:')
