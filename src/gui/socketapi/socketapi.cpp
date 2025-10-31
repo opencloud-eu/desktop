@@ -428,6 +428,24 @@ void SocketApi::command_RETRIEVE_FILE_STATUS(const QString &argument, SocketList
         listener->registerMonitoredDirectory(qHash(directory));
 
         statusString = fileData.syncFileStatus().toSocketAPIString();
+
+#ifdef Q_OS_LINUX
+        // append vfs status in case...
+        QString vfsStatus;
+        const auto fileType = fileData.journalRecord().type();
+        if (fileType == ItemTypeVirtualFileDownload || fileType == ItemTypeVirtualFile) {
+            vfsStatus = QStringLiteral("+VIRT");
+        }
+        const auto pState = fileData.folder->vfs().pinState(argument);
+        if (pState) {
+            if (*pState == PinState::AlwaysLocal) {
+                vfsStatus += QStringLiteral("+AL");
+            } else if (*pState == PinState::OnlineOnly) {
+                vfsStatus += QStringLiteral("+OO");
+            }
+        }
+        statusString.append(vfsStatus);
+#endif
     }
 
     const QString message = QStringLiteral("STATUS:") % statusString % QLatin1Char(':') % QDir::toNativeSeparators(argument);
