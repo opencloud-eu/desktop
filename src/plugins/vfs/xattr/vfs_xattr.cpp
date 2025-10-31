@@ -242,7 +242,12 @@ void VfsXAttr::slotHydrateJobFinished()
         auto item = OCC::SyncFileItem::fromSyncJournalFileRecord(hydration->record());
         // the file is now downloaded
         item->_type = ItemTypeFile;
-        FileSystem::getInode(targetPath, &item->_inode);
+
+        if (auto inode = FileSystem::getInode(FileSystem::toFilesystemPath(targetPath))) {
+            item->_inode = inode.value();
+        } else {
+            qCWarning(lcVfsXAttr) << u"Failed to get inode for" << targetPath;
+        }
 
         // set the xattrs
         // the file is not virtual any more, remove the xattrs. No state xattr means local available data
