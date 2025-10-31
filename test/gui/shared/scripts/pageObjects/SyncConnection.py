@@ -103,34 +103,6 @@ class SyncConnection:
         SyncConnection.open_menu()
         SyncConnection.perform_action("Choose what to sync")
 
-    @staticmethod
-    def unselect_folder_in_selective_sync(folder_name):
-        sync_folders = object.children(
-            squish.waitForObject(SyncConnection.FOLDER_SYNC_CONNECTION)
-        )
-        for sync_folder in sync_folders:
-            # TODO: allow selective sync in other sync folders as well
-            if hasattr(sync_folder, "text") and sync_folder.text == "Personal":
-                items = object.children(sync_folder)
-                for item in items:
-                    if hasattr(item, "text") and item.text:
-                        # remove item size suffix
-                        # example: folder1 (13 B) => folder1
-                        item_name = item.text.rsplit(" ", 1)
-                        if item_name[0] == folder_name:
-                            # NOTE: checkbox does not have separate object
-                            # click on (11,11) which is a checkbox to unselect the folder
-                            squish.mouseClick(
-                                item,
-                                11,
-                                11,
-                                squish.Qt.NoModifier,
-                                squish.Qt.LeftButton,
-                            )
-                            break
-        squish.clickButton(
-            squish.waitForObject(SyncConnection.SELECTIVE_SYNC_APPLY_BUTTON)
-        )
 
     @staticmethod
     def get_folder_connection_count():

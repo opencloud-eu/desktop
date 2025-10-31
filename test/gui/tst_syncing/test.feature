@@ -571,7 +571,7 @@ Feature: Syncing files
         And user "Alice" has created folder "test-folder/sub-folder1" in the server
         And user "Alice" has created folder "test-folder/sub-folder2" in the server
         And user "Alice" has set up a client with default settings
-        When the user unselects the following folders to sync:
+        When the user unselects the following folders to sync in "Choose what to sync" window:
             | folder                  |
             | test-folder/sub-folder2 |
         Then the folder "test-folder/sub-folder1" should exist on the file system

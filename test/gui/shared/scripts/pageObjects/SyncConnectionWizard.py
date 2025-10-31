@@ -166,9 +166,6 @@ class SyncConnectionWizard:
             squish.Qt.LeftButton,
         )
 
-    @staticmethod
-    def select_folders_to_sync(folders):
-        SyncConnectionWizard.select_or_unselect_folders_to_sync(folders, select=True)
 
     @staticmethod
     def sort_by(header_text):
@@ -274,13 +271,14 @@ class SyncConnectionWizard:
         ).enabled
 
     @staticmethod
-    def select_or_unselect_folders_to_sync(folders, select=True):
+    def select_or_unselect_folders_to_sync(folders, select=True, is_choose_what_to_sync_window=False):
         if select:
             # First deselect all
             SyncConnectionWizard.deselect_all_remote_folders()
-            folder_tree_locator = SyncConnectionWizard.SYNC_DIALOG_FOLDER_TREE.copy()
-        else:
+        if is_choose_what_to_sync_window:
             folder_tree_locator = SyncConnectionWizard.SYNC_DIALOG_PERSONAL_FOLDER_TREE.copy()
+        else:
+            folder_tree_locator = SyncConnectionWizard.SYNC_DIALOG_FOLDER_TREE.copy()
         for folder in folders:
             folder_levels = folder.strip("/").split("/")
             parent_selector = None
@@ -317,6 +315,6 @@ class SyncConnectionWizard:
         squish.clickButton(squish.waitForObject(names.stackedWidget_OK_QPushButton))
 
     @staticmethod
-    def unselect_folders_to_sync(folders):
-        SyncConnectionWizard.select_or_unselect_folders_to_sync(folders, select=False)
+    def unselect_folders_to_sync(folders, is_choose_what_to_sync_window=False):
+        SyncConnectionWizard.select_or_unselect_folders_to_sync(folders, select=False, is_choose_what_to_sync_window=is_choose_what_to_sync_window)
         SyncConnectionWizard.confirm_folder_selection()

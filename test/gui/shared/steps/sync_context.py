@@ -119,7 +119,7 @@ def step(context):
     folders = []
     for row in context.table[1:]:
         folders.append(row[0])
-    SyncConnectionWizard.select_folders_to_sync(folders)
+    SyncConnectionWizard.select_or_unselect_folders_to_sync(folders, select=True)
     SyncConnectionWizard.add_sync_connection()
 
 
@@ -215,12 +215,6 @@ def step(context):
     SyncConnectionWizard.deselect_all_remote_folders()
 
 
-@When('user unselects a folder "|any|" in selective sync')
-def step(context, folder_name):
-    SyncConnection.choose_what_to_sync()
-    SyncConnection.unselect_folder_in_selective_sync(folder_name)
-
-
 @Then('the sync folder list should be empty')
 def step(context):
     test.compare(
@@ -314,10 +308,10 @@ def step(context):
     )
 
 
-@When('the user unselects the following folders to sync:')
+@When('the user unselects the following folders to sync in "Choose what to sync" window:')
 def step(context):
     SyncConnection.choose_what_to_sync()
     folders = []
     for row in context.table[1:]:
         folders.append(row[0])
-    SyncConnectionWizard.unselect_folders_to_sync(folders)
+    SyncConnectionWizard.unselect_folders_to_sync(folders, is_choose_what_to_sync_window=True)
