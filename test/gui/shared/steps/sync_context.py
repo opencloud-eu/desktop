@@ -119,8 +119,7 @@ def step(context):
     folders = []
     for row in context.table[1:]:
         folders.append(row[0])
-    SyncConnectionWizard.select_folders_to_sync(folders)
-    SyncConnectionWizard.add_sync_connection()
+    SyncConnectionWizard.select_folders_to_sync(folders, in_choose_what_to_sync_dialog=False)
 
 
 @When('the user sorts the folder list by "|any|"')
@@ -213,12 +212,6 @@ def step(context):
 @When('user unselects all the remote folders')
 def step(context):
     SyncConnectionWizard.deselect_all_remote_folders()
-
-
-@When('user unselects a folder "|any|" in selective sync')
-def step(context, folder_name):
-    SyncConnection.choose_what_to_sync()
-    SyncConnection.unselect_folder_in_selective_sync(folder_name)
 
 
 @Then('the sync folder list should be empty')
@@ -319,10 +312,10 @@ def step(context, wait_for):
     squish.snooze(float(wait_for))
 
 
-@When('the user unselects the following folders to sync:')
+@When('the user unselects the following folders to sync in "Choose what to sync" window:')
 def step(context):
     SyncConnection.choose_what_to_sync()
     folders = []
     for row in context.table[1:]:
         folders.append(row[0])
-    SyncConnectionWizard.unselect_folders_to_sync(folders)
+    SyncConnectionWizard.unselect_folders_to_sync(folders, in_choose_what_to_sync_dialog=True)

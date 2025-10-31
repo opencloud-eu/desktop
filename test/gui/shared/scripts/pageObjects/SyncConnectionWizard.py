@@ -34,7 +34,7 @@ class SyncConnectionWizard:
         "text": "Personal",
         "type": "QModelIndex",
     }
-    SYNC_DIALOG_FOLDER_TREE = {
+    ADD_SPACE_FOLDER_TREE = {
         "column": 0,
         "container": names.deselect_remote_folders_you_do_not_wish_to_synchronize_OpenCloud_QModelIndex,
         "type": "QModelIndex",
@@ -115,7 +115,7 @@ class SyncConnectionWizard:
         "visible": 1,
     }
 
-    SYNC_DIALOG_PERSONAL_FOLDER_TREE = {
+    CHOOSE_WHAT_TO_SYNC_FOLDER_TREE = {
         "column": 0,
         "container": names.deselect_remote_folders_you_do_not_wish_to_synchronize_Personal_QModelIndex,
         "type": "QModelIndex",
@@ -166,9 +166,6 @@ class SyncConnectionWizard:
             squish.Qt.LeftButton,
         )
 
-    @staticmethod
-    def select_folders_to_sync(folders):
-        SyncConnectionWizard.select_or_unselect_folders_to_sync(folders, select=True)
 
     @staticmethod
     def sort_by(header_text):
@@ -274,13 +271,11 @@ class SyncConnectionWizard:
         ).enabled
 
     @staticmethod
-    def select_or_unselect_folders_to_sync(folders, select=True):
-        if select:
+    def select_or_unselect_folders_to_sync(folders, should_select=True, in_choose_what_to_sync_dialog=False):
+        if should_select:
             # First deselect all
             SyncConnectionWizard.deselect_all_remote_folders()
-            folder_tree_locator = SyncConnectionWizard.SYNC_DIALOG_FOLDER_TREE.copy()
-        else:
-            folder_tree_locator = SyncConnectionWizard.SYNC_DIALOG_PERSONAL_FOLDER_TREE.copy()
+        folder_tree_locator = SyncConnectionWizard.get_folder_tree_locator(in_choose_what_to_sync_dialog)
         for folder in folders:
             folder_levels = folder.strip("/").split("/")
             parent_selector = None
@@ -313,10 +308,38 @@ class SyncConnectionWizard:
                     squish.doubleClick(squish.waitForObject(selector))
 
     @staticmethod
-    def confirm_folder_selection():
+    def confirm_choose_what_to_sync_selection():
         squish.clickButton(squish.waitForObject(names.stackedWidget_OK_QPushButton))
 
     @staticmethod
-    def unselect_folders_to_sync(folders):
-        SyncConnectionWizard.select_or_unselect_folders_to_sync(folders, select=False)
-        SyncConnectionWizard.confirm_folder_selection()
+    def _handle_folder_selection(folders, should_select, in_choose_what_to_sync_dialog):
+        SyncConnectionWizard.select_or_unselect_folders_to_sync(
+            folders,
+            should_select=should_select,
+            in_choose_what_to_sync_dialog=in_choose_what_to_sync_dialog
+        )
+
+        if in_choose_what_to_sync_dialog:
+            SyncConnectionWizard.confirm_choose_what_to_sync_selection()
+        else:
+            SyncConnectionWizard.add_sync_connection()
+
+    @staticmethod
+    def unselect_folders_to_sync(folders, in_choose_what_to_sync_dialog=False):
+        SyncConnectionWizard._handle_folder_selection(
+            folders, should_select=False, in_choose_what_to_sync_dialog=in_choose_what_to_sync_dialog
+        )
+
+    @staticmethod
+    def select_folders_to_sync(folders, in_choose_what_to_sync_dialog=False):
+        SyncConnectionWizard._handle_folder_selection(
+            folders, should_select=True, in_choose_what_to_sync_dialog=in_choose_what_to_sync_dialog
+        )
+
+    @staticmethod
+    def get_folder_tree_locator(in_choose_what_to_sync_dialog=False):
+        return (
+            SyncConnectionWizard.CHOOSE_WHAT_TO_SYNC_FOLDER_TREE.copy()
+            if in_choose_what_to_sync_dialog
+            else SyncConnectionWizard.ADD_SPACE_FOLDER_TREE.copy()
+        )

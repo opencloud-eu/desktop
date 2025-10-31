@@ -37,17 +37,6 @@ def file_exists(file_path, timeout=1000):
         timeout,
     )
 
-def folder_not_exists(folder_path, timeout=1000):
-    return squish.waitFor(
-        lambda: not isdir(sanitize_path(folder_path)),
-        timeout,
-    )
-
-def file_not_exists(file_path, timeout=1000):
-    return squish.waitFor(
-        lambda: not isfile(sanitize_path(file_path)),
-        timeout,
-    )
 
 # To create folders in a temporary directory, we set is_temp_folder True
 # And if is_temp_folder is True, the create_folder function create folders in tempFolderPath
@@ -194,22 +183,15 @@ def step(context, resource_type, resource, should_or_should_not):
             resource_exists = file_exists(
                 resource_path, get_config('maxSyncTimeout') * 1000
             )
-        else:
-            resource_exists = file_not_exists(
-                resource_path, get_config('maxSyncTimeout') * 1000
-            )
     else:
         if should_or_should_not == 'should':
             resource_exists = folder_exists(
                 resource_path, get_config('maxSyncTimeout') * 1000
             )
-        else:
-            resource_exists = folder_not_exists(
-                resource_path, get_config('maxSyncTimeout') * 1000
-            )
 
+    expected = should_or_should_not == 'should'
     test.compare(
-        True,
+        expected,
         resource_exists,
         f'{resource_type.capitalize()} "{resource}" {"exists" if resource_exists else "does not exist"} on the system',
 )
