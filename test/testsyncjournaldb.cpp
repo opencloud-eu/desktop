@@ -157,9 +157,6 @@ private Q_SLOTS:
         Info record = _db.getUploadInfo(QStringLiteral("nonexistant"));
         QVERIFY(!record._valid);
 
-        record._errorCount = 5;
-        record._chunk = 12;
-        record._transferid = 812974891;
         record._size = 12894789147;
         record._modtime = dropMsecs(QDateTime::currentDateTime());
         record._valid = true;

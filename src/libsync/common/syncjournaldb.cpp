@@ -663,19 +663,6 @@ bool SyncJournalDb::updateMetadataTableStructure()
         commitInternal(QStringLiteral("update database structure: add hasDirtyPlaceholder col"));
     }
 
-    auto uploadInfoColumns = tableColumns("uploadinfo");
-    if (uploadInfoColumns.isEmpty())
-        return false;
-    if (!uploadInfoColumns.contains("contentChecksum")) {
-        SqlQuery query(_db);
-        query.prepare("ALTER TABLE uploadinfo ADD COLUMN contentChecksum TEXT;");
-        if (!query.exec()) {
-            sqlFail(QStringLiteral("updateMetadataTableStructure: add contentChecksum column"), query);
-            re = false;
-        }
-        commitInternal(QStringLiteral("update database structure: add contentChecksum col for uploadinfo"));
-    }
-
     auto conflictsColumns = tableColumns("conflicts");
     if (conflictsColumns.isEmpty())
         return false;
@@ -1306,8 +1293,8 @@ SyncJournalDb::UploadInfo SyncJournalDb::getUploadInfo(const QString &file)
         return {};
     }
 
-    const auto query = _queryManager.get(PreparedSqlQueryManager::GetUploadInfoQuery,
-        QByteArrayLiteral("SELECT chunk, transferid, errorcount, size, modtime, contentChecksum, url FROM uploadinfo WHERE path=?1"), _db);
+    const auto query = _queryManager.get(
+        PreparedSqlQueryManager::GetUploadInfoQuery, QByteArrayLiteral("SELECT size, modtime, contentChecksum, url FROM uploadinfo WHERE path=?1"), _db);
     if (!query) {
         return {};
     }
@@ -1319,14 +1306,12 @@ SyncJournalDb::UploadInfo SyncJournalDb::getUploadInfo(const QString &file)
 
     UploadInfo res;
     if (query->next().hasData) {
+        int index = 0;
         res._path = file;
-        res._chunk = query->intValue(0);
-        res._transferid = query->intValue(1);
-        res._errorCount = query->intValue(2);
-        res._size = query->int64Value(3);
-        res._modtime = query->int64Value(4);
-        res._contentChecksum = query->baValue(5);
-        res._url = QUrl::fromEncoded(query->baValue(6));
+        res._size = query->int64Value(index++);
+        res._modtime = query->int64Value(index++);
+        res._contentChecksum = query->baValue(index++);
+        res._url = QUrl::fromEncoded(query->baValue(index++));
         res._valid = true;
     }
     return res;
@@ -1336,8 +1321,8 @@ std::vector<SyncJournalDb::UploadInfo> SyncJournalDb::getUploadInfos()
 {
     QMutexLocker locker(&_mutex);
 
-    const auto query = _queryManager.get(PreparedSqlQueryManager::GetAllUploadInfoQuery,
-        QByteArrayLiteral("SELECT chunk, transferid, errorcount, size, modtime, contentChecksum, path, url FROM uploadinfo"), _db);
+    const auto query = _queryManager.get(
+        PreparedSqlQueryManager::GetAllUploadInfoQuery, QByteArrayLiteral("SELECT size, modtime, contentChecksum, path, url FROM uploadinfo"), _db);
     if (!query) {
         return {};
     }
@@ -1349,14 +1334,12 @@ std::vector<SyncJournalDb::UploadInfo> SyncJournalDb::getUploadInfos()
     std::vector<UploadInfo> res;
     while (query->next().hasData) {
         UploadInfo info;
-        info._chunk = query->intValue(0);
-        info._transferid = query->intValue(1);
-        info._errorCount = query->intValue(2);
-        info._size = query->int64Value(3);
-        info._modtime = query->int64Value(4);
-        info._contentChecksum = query->baValue(5);
-        info._path = query->stringValue(6);
-        info._url = QUrl::fromEncoded(query->baValue(7));
+        int index = 0;
+        info._size = query->int64Value(index++);
+        info._modtime = query->int64Value(index++);
+        info._contentChecksum = query->baValue(index++);
+        info._path = query->stringValue(index++);
+        info._url = QUrl::fromEncoded(query->baValue(index++));
         info._valid = true;
         res.push_back(std::move(info));
     }
@@ -1374,21 +1357,19 @@ void SyncJournalDb::setUploadInfo(const QString &file, const SyncJournalDb::Uplo
     if (i._valid) {
         const auto query = _queryManager.get(PreparedSqlQueryManager::SetUploadInfoQuery,
             QByteArrayLiteral("INSERT OR REPLACE INTO uploadinfo "
-                              "(path, chunk, transferid, errorcount, size, modtime, contentChecksum, url) "
-                              "VALUES ( ?1 , ?2, ?3 , ?4 ,  ?5, ?6 , ?7, ?8 )"),
+                              "(path, size, modtime, contentChecksum, url) "
+                              "VALUES ( ?1 , ?2, ?3 , ?4 , ?5 )"),
             _db);
         if (!query) {
             return;
         }
 
-        query->bindValue(1, file);
-        query->bindValue(2, i._chunk);
-        query->bindValue(3, i._transferid);
-        query->bindValue(4, i._errorCount);
-        query->bindValue(5, i._size);
-        query->bindValue(6, i._modtime);
-        query->bindValue(7, i._contentChecksum);
-        query->bindValue(8, i._url.toEncoded());
+        int index = 1;
+        query->bindValue(index++, file);
+        query->bindValue(index++, i._size);
+        query->bindValue(index++, i._modtime);
+        query->bindValue(index++, i._contentChecksum);
+        query->bindValue(index++, i._url.toEncoded());
 
         if (!query->exec()) {
             return;
@@ -1403,7 +1384,7 @@ void SyncJournalDb::setUploadInfo(const QString &file, const SyncJournalDb::Uplo
     }
 }
 
-QVector<uint> SyncJournalDb::deleteStaleUploadInfos(const QSet<QString> &keep)
+bool SyncJournalDb::deleteStaleUploadInfos(const QSet<QString> &keep)
 {
     QMutexLocker locker(&_mutex);
 
@@ -1412,26 +1393,24 @@ QVector<uint> SyncJournalDb::deleteStaleUploadInfos(const QSet<QString> &keep)
     }
 
     SqlQuery query(_db);
-    query.prepare("SELECT path,transferid FROM uploadinfo");
+    query.prepare("SELECT path FROM uploadinfo");
 
     if (!query.exec()) {
-        return {};
+        return false;
     }
 
     QStringList superfluousPaths;
-    QVector<uint> ids;
 
     while (query.next().hasData) {
         const QString file = query.stringValue(0);
         if (!keep.contains(file)) {
             superfluousPaths.append(file);
-            ids.append(query.intValue(1));
         }
     }
     qCDebug(lcDb) << Q_FUNC_INFO << u"Keep:" << keep << u"Removing Stale:" << superfluousPaths;
     const auto deleteUploadInfoQuery = _queryManager.get(PreparedSqlQueryManager::DeleteUploadInfoQuery);
     deleteBatch(*deleteUploadInfoQuery, superfluousPaths, QStringLiteral("uploadinfo"));
-    return ids;
+    return true;
 }
 
 SyncJournalErrorBlacklistRecord SyncJournalDb::errorBlacklistEntry(const QString &file)
@@ -1993,28 +1972,16 @@ bool SyncJournalDb::createUploadInfo()
 {
     SqlQuery createQuery(QByteArrayLiteral("CREATE TABLE IF NOT EXISTS uploadinfo("
                                            "path VARCHAR(4096),"
-                                           "chunk INTEGER,"
-                                           "transferid INTEGER,"
-                                           "errorcount INTEGER,"
                                            "size INTEGER(8),"
                                            "modtime INTEGER(8),"
                                            "contentChecksum TEXT,"
-                                           // uploadUrl TEXT
+                                           "url TEXT, "
                                            "PRIMARY KEY(path)"
                                            ");"),
         _db);
 
     if (!createQuery.exec()) {
         return sqlFail(QStringLiteral("Create table uploadinfo"), createQuery);
-    }
-
-    const auto columns = tableColumns("uploadinfo");
-
-    if (columns.indexOf(QByteArrayLiteral("url")) == -1) {
-        SqlQuery query(QByteArrayLiteral("ALTER TABLE uploadinfo ADD COLUMN url TEXT;"), _db);
-        if (!query.exec()) {
-            return sqlFail(QStringLiteral("Add column url"), query);
-        }
     }
     return true;
 }
@@ -2026,7 +1993,6 @@ bool operator==(const SyncJournalDb::DownloadInfo &lhs, const SyncJournalDb::Dow
 
 bool operator==(const SyncJournalDb::UploadInfo &lhs, const SyncJournalDb::UploadInfo &rhs)
 {
-    return lhs._errorCount == rhs._errorCount && lhs._chunk == rhs._chunk && lhs._modtime == rhs._modtime && lhs._valid == rhs._valid && lhs._size == rhs._size
-        && lhs._transferid == rhs._transferid && lhs._contentChecksum == rhs._contentChecksum;
+    return lhs._modtime == rhs._modtime && lhs._valid == rhs._valid && lhs._size == rhs._size && lhs._contentChecksum == rhs._contentChecksum;
 }
 } // namespace OCC
