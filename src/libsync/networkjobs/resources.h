@@ -1,7 +1,6 @@
 #pragma once
 
-#include "account.h"
-#include "networkjobs.h"
+#include "libsync/networkjobs/simplenetworkjob.h"
 
 #include <QIcon>
 #include <QLoggingCategory>
