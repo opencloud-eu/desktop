@@ -1355,6 +1355,7 @@ void SyncJournalDb::setUploadInfo(const QString &file, const SyncJournalDb::Uplo
     }
 
     if (i._valid) {
+        Q_ASSERT(i._url.isValid());
         const auto query = _queryManager.get(PreparedSqlQueryManager::SetUploadInfoQuery,
             QByteArrayLiteral("INSERT OR REPLACE INTO uploadinfo "
                               "(path, size, modtime, contentChecksum, url) "

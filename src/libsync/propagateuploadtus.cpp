@@ -238,7 +238,7 @@ void PropagateUploadFileTUS::slotChunkFinished()
     }
     if (!_finished) {
         // we just started the upload
-        if (HttpLogger::requestVerb(*job->reply()) == QByteArrayLiteral("POST")) {
+        if (HttpLogger::requestVerb(*job->reply()) == QByteArrayLiteral("POST") && !_location.isEmpty()) {
             // add the new location
             auto info = _item->toUploadInfo();
             info._url = _location;

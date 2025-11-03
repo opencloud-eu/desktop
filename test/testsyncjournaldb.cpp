@@ -160,6 +160,7 @@ private Q_SLOTS:
         record._size = 12894789147;
         record._modtime = dropMsecs(QDateTime::currentDateTime());
         record._valid = true;
+        record._url = QUrl(QStringLiteral("http://example.com/foo"));
         _db.setUploadInfo(QStringLiteral("foo"), record);
 
         Info storedRecord = _db.getUploadInfo(QStringLiteral("foo"));
