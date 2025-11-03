@@ -29,7 +29,7 @@ void UpdateNotifier::checkForUpdates(const AccountPtr &account)
     if (Version::withUpdateNotification()) {
         if (!_checkedForUpdate) {
             _checkedForUpdate = true;
-            auto *job = new JsonJob(account, account->url(), u"config.json"_s, "GET"_ba, {}, {}, this);
+            auto *job = new JsonJob(account, account->url(), u"config.json"_s, "GET"_ba, this);
             connect(job, &JsonJob::finishedSignal, this, [job, this] {
                 if (job->httpStatusCode() == 200) {
                     const auto server = job->data().value("server"_L1).toString().toUtf8();

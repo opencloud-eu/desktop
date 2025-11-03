@@ -16,6 +16,11 @@ SimpleNetworkJob::SimpleNetworkJob(
 {
 }
 
+SimpleNetworkJob::SimpleNetworkJob(AccountPtr account, const QUrl &rootUrl, const QString &path, const QByteArray &verb, QObject *parent)
+    : SimpleNetworkJob(account, rootUrl, path, verb, {}, parent)
+{
+}
+
 SimpleNetworkJob::SimpleNetworkJob(AccountPtr account, const QUrl &rootUrl, const QString &path, const QByteArray &verb, const UrlQuery &arguments,
     const QNetworkRequest &req, QObject *parent)
     : SimpleNetworkJob(account, rootUrl, path, verb, req, parent)
@@ -31,7 +36,7 @@ SimpleNetworkJob::SimpleNetworkJob(AccountPtr account, const QUrl &rootUrl, cons
         if (verb == QByteArrayLiteral("POST") || verb == QByteArrayLiteral("PUT") || verb == QByteArrayLiteral("PATCH")) {
             _request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded; charset=UTF-8"));
             _body = args.query(QUrl::FullyEncoded).toUtf8();
-            _device = new QBuffer(&_body);
+            _device = std::make_unique<QBuffer>(&_body);
         } else {
             setQuery(args);
         }
@@ -45,18 +50,20 @@ SimpleNetworkJob::SimpleNetworkJob(AccountPtr account, const QUrl &rootUrl, cons
     _request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/json"));
 }
 
-SimpleNetworkJob::SimpleNetworkJob(
-    AccountPtr account, const QUrl &rootUrl, const QString &path, const QByteArray &verb, QIODevice *requestBody, const QNetworkRequest &req, QObject *parent)
+SimpleNetworkJob::SimpleNetworkJob(AccountPtr account, const QUrl &rootUrl, const QString &path, const QByteArray &verb,
+    std::unique_ptr<QIODevice> &&requestBody, const QNetworkRequest &req, QObject *parent)
     : SimpleNetworkJob(account, rootUrl, path, verb, req, parent)
 {
-    _device = requestBody;
+    _device = std::move(requestBody);
 }
 
+// delay setting _device until we adopted the body
 SimpleNetworkJob::SimpleNetworkJob(
     AccountPtr account, const QUrl &rootUrl, const QString &path, const QByteArray &verb, QByteArray &&requestBody, const QNetworkRequest &req, QObject *parent)
-    : SimpleNetworkJob(account, rootUrl, path, verb, new QBuffer(&_body), req, parent)
+    : SimpleNetworkJob(account, rootUrl, path, verb, std::unique_ptr<QIODevice>{}, req, parent)
 {
     _body = std::move(requestBody);
+    _device = std::make_unique<QBuffer>(&_body);
 }
 
 SimpleNetworkJob::~SimpleNetworkJob() { }
@@ -64,7 +71,7 @@ void SimpleNetworkJob::start()
 {
     Q_ASSERT(!_verb.isEmpty());
     // AbstractNetworkJob will take ownership of the buffer
-    sendRequest(_verb, _request, _device);
+    sendRequest(_verb, _request, std::move(_device));
     AbstractNetworkJob::start();
 }
 
@@ -77,6 +84,9 @@ void SimpleNetworkJob::finished()
 {
     if (_device) {
         _device->close();
+    }
+    if (body()) {
+        body()->close();
     }
 }
 

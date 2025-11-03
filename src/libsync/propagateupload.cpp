@@ -66,7 +66,7 @@ static bool fileIsStillChanging(const SyncFileItem &item)
 PUTFileJob::PUTFileJob(
     AccountPtr account, const QUrl &url, const QString &path, std::unique_ptr<QIODevice> &&device, const QMap<QByteArray, QByteArray> &headers, QObject *parent)
     : AbstractNetworkJob(account, url, path, parent)
-    , _device(device.release())
+    , _device(std::move(device))
     , _headers(headers)
 {
     _device->setParent(this);
@@ -84,14 +84,19 @@ void PUTFileJob::start()
     for (auto it = _headers.cbegin(); it != _headers.cend(); ++it) {
         req.setRawHeader(it.key(), it.value());
     }
-    sendRequest("PUT", req, _device);
+    sendRequest("PUT", req, std::move(_device));
     _requestTimer.start();
     AbstractNetworkJob::start();
 }
 
 void PUTFileJob::finished()
 {
-    _device->close();
+    if (_device) {
+        _device->close();
+    }
+    if (body()) {
+        body()->close();
+    }
 
     qCInfo(lcPutJob) << u"PUT of" << reply()->request().url().toString() << u"FINISHED WITH STATUS" << replyStatusString()
                      << reply()->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt()

@@ -169,7 +169,7 @@ void PropagateUploadFileV1::abort(PropagatorJob::AbortType abortType)
 {
     abortNetworkJobs(abortType, [abortType](AbstractNetworkJob *job) {
         if (PUTFileJob *putJob = qobject_cast<PUTFileJob *>(job)) {
-            if (abortType == AbortType::Asynchronous && putJob->device()->atEnd()) {
+            if (abortType == AbortType::Asynchronous && putJob->body() && putJob->body()->atEnd()) {
                 return false;
             }
         }

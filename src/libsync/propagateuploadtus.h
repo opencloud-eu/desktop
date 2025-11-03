@@ -25,9 +25,9 @@ class PropagateUploadFileTUS : public PropagateUploadFileCommon
     Q_OBJECT
 
 private:
-    SimpleNetworkJob *makeCreationWithUploadJob(QNetworkRequest *request, UploadDevice *device);
+    SimpleNetworkJob *makeCreationWithUploadJob(QNetworkRequest *request, std::unique_ptr<UploadDevice> &&device);
     QNetworkRequest prepareRequest(const quint64 &chunkSize);
-    UploadDevice *prepareDevice(const quint64 &chunkSize);
+    std::unique_ptr<UploadDevice> prepareDevice(const quint64 &chunkSize);
 
     void startNextChunk();
     void slotChunkFinished();

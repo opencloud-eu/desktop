@@ -165,7 +165,7 @@ void ConnectionValidator::slotStatusFound(const QUrl &url, const QJsonObject &in
     // now check the authentication
     if (_mode != ConnectionValidator::ValidationMode::ValidateServer) {
         // the endpoint requires authentication
-        auto *userJob = new JsonJob(_account, _account->url(), u"graph/v1.0/me"_s, "GET");
+        auto *userJob = new JsonJob(_account, _account->url(), u"graph/v1.0/me"_s, "GET", nullptr);
         userJob->setAuthenticationJob(true);
         userJob->setTimeout(fetchSettingsTimeout());
         connect(userJob, &JsonApiJob::finishedSignal, this, [userJob, this] {
