@@ -32,7 +32,7 @@
     <message>
         <location filename="../src/gui/newwizard/states/accountconfiguredsetupwizardstate.cpp" line="53"/>
         <source>Invalid local download directory: %1</source>
-        <translation type="unfinished"/>
+        <translation>Directory di download locale non valida: %1</translation>
     </message>
 </context>
 <context>
@@ -91,7 +91,7 @@
     <message>
         <location filename="../src/libsync/appprovider.cpp" line="89"/>
         <source>Failed to open »%1« in web. Error: %2.</source>
-        <translation type="unfinished"/>
+        <translation>Impossibile aprire »%1« nel web. Errore: %2.</translation>
     </message>
 </context>
 <context>
@@ -218,7 +218,7 @@ Utilità desktop per la sincronizazione dei file.</translation>
         <location filename="../src/libsync/common/filesystembase.cpp" line="252"/>
         <location filename="../src/libsync/common/filesystembase.cpp" line="257"/>
         <source>Can&apos;t rename »%1«, the file is currently in use</source>
-        <translation type="unfinished"/>
+        <translation>Impossibile rinominare »%1«, il file è attualmente in uso</translation>
     </message>
 </context>
 <context>
@@ -413,7 +413,7 @@ Utilità desktop per la sincronizazione dei file.</translation>
     <message>
         <location filename="../src/gui/folderwizard/folderwizardsourcepage.ui" line="39"/>
         <source>Click to select the Spaces root folder.</source>
-        <translation type="unfinished"/>
+        <translation>Fai clic per selezionare la cartella radice di Spaces.</translation>
     </message>
     <message>
         <location filename="../src/gui/folderwizard/folderwizardsourcepage.ui" line="42"/>
@@ -487,12 +487,12 @@ Utilità desktop per la sincronizazione dei file.</translation>
     <message>
         <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="52"/>
         <source>Error while trying to log in to OAuth2-enabled server.</source>
-        <translation type="unfinished"/>
+        <translation>Errore durante il tentativo di accesso al server abilitato OAuth2.</translation>
     </message>
     <message>
         <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="56"/>
         <source>Oauth2 authentication requires a secured connection.</source>
-        <translation type="unfinished"/>
+        <translation>L&apos;autenticazione con Oauth2 richiede una connessione protetta.</translation>
     </message>
 </context>
 <context>
@@ -625,7 +625,7 @@ Utilità desktop per la sincronizazione dei file.</translation>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="197"/>
         <source>&lt;p&gt;Do you really want to stop syncing the Space »%1«?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; This will &lt;b&gt;not&lt;/b&gt; delete any files.&lt;/p&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;p&gt;Vuoi davvero interrompere la sincronizzazione dello Spazio  »%1«? &lt;/p&gt;&lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; Questo &lt;b&gt;non&lt;/b&gt; eliminerà alcun file.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="202"/>
@@ -776,12 +776,12 @@ L&apos;aggiornamento verrà eseguito in background e sovrascriverà il file AppI
     <message>
         <location filename="../src/gui/application.cpp" line="190"/>
         <source>The server on account »%1« runs an unsupported version %2. Using this client with unsupported server versions is untested and potentially dangerous. Proceed at your own risk.</source>
-        <translation type="unfinished"/>
+        <translation>Il server sull&apos;account »%1« esegue una versione non supportata %2. L&apos;utilizzo di questo client con versioni del server non supportate non è testato ed è potenzialmente pericoloso. Procedere a proprio rischio e pericolo.</translation>
     </message>
     <message>
         <location filename="../src/gui/application.cpp" line="215"/>
         <source>Application is shutting down</source>
-        <translation type="unfinished"/>
+        <translation>L&apos;applicazione si sta arrestando</translation>
     </message>
 </context>
 <context>
@@ -799,7 +799,7 @@ L&apos;aggiornamento verrà eseguito in background e sovrascriverà il file AppI
     <message>
         <location filename="../src/gui/commonstrings.cpp" line="36"/>
         <source>Show »%1« in %2</source>
-        <translation type="unfinished"/>
+        <translation>Mostra »%1« in %2</translation>
     </message>
     <message>
         <location filename="../src/gui/commonstrings.cpp" line="41"/>
