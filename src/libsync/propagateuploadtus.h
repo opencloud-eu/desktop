@@ -14,7 +14,8 @@
 
 #pragma once
 
-#include "propagateupload.h"
+#include "libsync/networkjobs/simplenetworkjob.h"
+#include "libsync/propagateupload.h"
 
 namespace OCC {
 Q_DECLARE_LOGGING_CATEGORY(lcPropagateUploadTUS)

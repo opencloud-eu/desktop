@@ -1,4 +1,6 @@
-#include "resources.h"
+#include "libsync/networkjobs/resources.h"
+
+#include "libsync/account.h"
 
 #include <QFile>
 #include <QIcon>
