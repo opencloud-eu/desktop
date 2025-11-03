@@ -135,14 +135,13 @@ bool AbstractNetworkJob::needsRetry() const
     return false;
 }
 
-void AbstractNetworkJob::sendRequest(const QByteArray &verb,
-    const QNetworkRequest &req, QIODevice *requestBody)
+void AbstractNetworkJob::sendRequest(const QByteArray &verb, const QNetworkRequest &req, std::unique_ptr<QIODevice> &&requestBody)
 {
     _verb = verb;
 
     _request = req;
 
-    // allow to transfer files with a big compression ratio
+    // allow transferring files with a big compression ratio
     _request.setDecompressedSafetyCheckThreshold(-1);
 
     _request.setAttribute(QNetworkRequest::CacheSaveControlAttribute, _storeInCache);
@@ -152,7 +151,7 @@ void AbstractNetworkJob::sendRequest(const QByteArray &verb,
     }
 
     if (requestBody) {
-        _requestBody = requestBody;
+        _requestBody = requestBody.release();
         _requestBody->setParent(this);
     }
 
@@ -167,7 +166,7 @@ void AbstractNetworkJob::sendRequest(const QByteArray &verb,
         return;
     }
 
-    auto reply = _account->sendRawRequest(verb, _request.url(), _request, requestBody);
+    auto reply = _account->sendRawRequest(verb, _request.url(), _request, _requestBody);
     adoptRequest(reply);
 }
 
@@ -371,7 +370,8 @@ void AbstractNetworkJob::retry()
             return;
         }
     }
-    sendRequest(_verb, _request, _requestBody);
+    // this will reuse _requestBody
+    sendRequest(_verb, _request);
 }
 
 void AbstractNetworkJob::abort()
@@ -411,6 +411,11 @@ void AbstractNetworkJob::setStoreInCache(bool storeInCache)
 void AbstractNetworkJob::setCacheLoadControl(QNetworkRequest::CacheLoadControl cacheLoadControl)
 {
     _cacheLoadControl = cacheLoadControl;
+}
+
+QPointer<QIODevice> AbstractNetworkJob::body() const
+{
+    return _requestBody;
 }
 
 } // namespace OCC

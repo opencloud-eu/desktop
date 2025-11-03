@@ -50,7 +50,7 @@ namespace OCC {
 Q_LOGGING_CATEGORY(lcPropagateUploadTUS, "sync.propagator.upload.tus", QtDebugMsg)
 
 
-UploadDevice *PropagateUploadFileTUS::prepareDevice(const quint64 &chunkSize)
+std::unique_ptr<UploadDevice> PropagateUploadFileTUS::prepareDevice(const quint64 &chunkSize)
 {
     const QString localFileName = propagator()->fullLocalPath(_item->localName());
     // If the file is currently locked, we want to retry the sync
@@ -68,11 +68,11 @@ UploadDevice *PropagateUploadFileTUS::prepareDevice(const quint64 &chunkSize)
         abortWithError(SyncFileItem::SoftError, device->errorString());
         return nullptr;
     }
-    return device.release();
+    return device;
 }
 
 
-SimpleNetworkJob *PropagateUploadFileTUS::makeCreationWithUploadJob(QNetworkRequest *request, UploadDevice *device)
+SimpleNetworkJob *PropagateUploadFileTUS::makeCreationWithUploadJob(QNetworkRequest *request, std::unique_ptr<UploadDevice> &&device)
 {
     Q_ASSERT(propagator()->account()->capabilities().tusSupport().extensions.contains(QStringLiteral("creation-with-upload")));
 
@@ -81,13 +81,13 @@ SimpleNetworkJob *PropagateUploadFileTUS::makeCreationWithUploadJob(QNetworkRequ
     QByteArrayList encodedMetaData;
     auto addMetaData = [&encodedMetaData](const QByteArray &key, const QByteArray &value) { encodedMetaData << key + ' ' + value.toBase64(); };
     addMetaData(QByteArrayLiteral("filename"), propagator()->fullRemotePath(_item->localName()).toUtf8());
-    // in difference to the old protocol the algrithm and the value are space seperated
+    // in difference to the old protocol, the algorithm and the value are space seperated
     addMetaData(QByteArrayLiteral("checksum"), Utility::enumToString(checksumHeader.type()).toUtf8() + ' ' + checksumHeader.checksum());
     addMetaData(QByteArrayLiteral("mtime"), QByteArray::number(static_cast<int64_t>(_item->_modtime)));
 
     request->setRawHeader(QByteArrayLiteral("Upload-Metadata"), encodedMetaData.join(','));
     request->setRawHeader(QByteArrayLiteral("Upload-Length"), QByteArray::number(_item->_size));
-    return new SimpleNetworkJob(propagator()->account(), propagator()->webDavUrl(), {}, "POST", device, *request, this);
+    return new SimpleNetworkJob(propagator()->account(), propagator()->webDavUrl(), {}, "POST", std::move(device), *request, this);
 }
 
 QNetworkRequest PropagateUploadFileTUS::prepareRequest(const quint64 &chunkSize)
@@ -123,7 +123,7 @@ void PropagateUploadFileTUS::doStartUpload()
     if (info.validate(_item->_size, _item->_modtime, _item->_checksumHeader)) {
         _location = info._url;
         Q_ASSERT(_location.isValid());
-        auto job = new SimpleNetworkJob(propagator()->account(), _location, {}, "HEAD", nullptr, {}, this);
+        auto job = new SimpleNetworkJob(propagator()->account(), _location, {}, "HEAD", {}, this);
         connect(job, &SimpleNetworkJob::finishedSignal, this, &PropagateUploadFileTUS::slotChunkFinished);
         job->start();
     } else {
@@ -153,11 +153,11 @@ void PropagateUploadFileTUS::startNextChunk()
     SimpleNetworkJob *job;
     if (_currentOffset != 0) {
         qCDebug(lcPropagateUploadTUS) << u"Starting to patch upload:" << propagator()->fullRemotePath(_item->localName());
-        job = new SimpleNetworkJob(propagator()->account(), _location, {}, "PATCH", device, req, this);
+        job = new SimpleNetworkJob(propagator()->account(), _location, {}, "PATCH", std::move(device), req, this);
     } else {
         Q_ASSERT(_location.isEmpty());
         qCDebug(lcPropagateUploadTUS) << u"Starting creation with upload:" << propagator()->fullRemotePath(_item->localName());
-        job = makeCreationWithUploadJob(&req, device);
+        job = makeCreationWithUploadJob(&req, std::move(device));
     }
 
     job->setPriority(QNetworkRequest::LowPriority);
@@ -166,8 +166,8 @@ void PropagateUploadFileTUS::startNextChunk()
 
     addChildJob(job);
     connect(job, &SimpleNetworkJob::finishedSignal, this, &PropagateUploadFileTUS::slotChunkFinished);
-    job->addNewReplyHook([device, this](QNetworkReply *reply) {
-        connect(reply, &QNetworkReply::uploadProgress, device, &UploadDevice::slotJobUploadProgress);
+    job->addNewReplyHook([job, this](QNetworkReply *reply) {
+        connect(reply, &QNetworkReply::uploadProgress, qobject_cast<UploadDevice *>(job->body().data()), &UploadDevice::slotJobUploadProgress);
         connect(reply, &QNetworkReply::uploadProgress, this, [this](qint64 bytesSent, qint64) {
             propagator()->reportProgress(*_item, _currentOffset + bytesSent);
         });
@@ -193,7 +193,7 @@ void PropagateUploadFileTUS::slotChunkFinished()
             qCWarning(lcPropagateUploadTUS) << propagator()->fullRemotePath(_item->localName()) << u"Encountered a timeout -> get progress for" << _location;
             QNetworkRequest req;
             setTusVersionHeader(req);
-            auto updateJob = new SimpleNetworkJob(propagator()->account(), propagator()->webDavUrl(), _location.path(), "HEAD", {}, req, this);
+            auto updateJob = new SimpleNetworkJob(propagator()->account(), propagator()->webDavUrl(), _location.path(), "HEAD", req, this);
             addChildJob(updateJob);
             connect(updateJob, &SimpleNetworkJob::finishedSignal, this, &PropagateUploadFileTUS::slotChunkFinished);
             updateJob->start();

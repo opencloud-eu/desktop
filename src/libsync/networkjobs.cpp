@@ -258,10 +258,10 @@ void PropfindJob::start()
                                     "</d:propfind>\n");
     }
 
-    QBuffer *buf = new QBuffer(this);
+    auto buf = std::make_unique<QBuffer>();
     buf->setData(data);
     buf->open(QIODevice::ReadOnly);
-    sendRequest(QByteArrayLiteral("PROPFIND"), req, buf);
+    sendRequest(QByteArrayLiteral("PROPFIND"), req, std::move(buf));
     AbstractNetworkJob::start();
 }
 

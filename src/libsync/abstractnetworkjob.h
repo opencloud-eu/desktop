@@ -149,6 +149,12 @@ public:
      */
     void setCacheLoadControl(QNetworkRequest::CacheLoadControl cacheLoadControl);
 
+    /**
+     *
+     * @return the body of the the request, if set
+     */
+    QPointer<QIODevice> body() const;
+
 Q_SIGNALS:
     /** Emitted on network error.
      *
@@ -169,9 +175,7 @@ protected:
      *
      * Takes ownership of the requestBody (to allow redirects).
      */
-    void sendRequest(const QByteArray &verb,
-        const QNetworkRequest &req = QNetworkRequest(),
-        QIODevice *requestBody = nullptr);
+    void sendRequest(const QByteArray &verb, const QNetworkRequest &req = QNetworkRequest(), std::unique_ptr<QIODevice> &&requestBody = {});
 
     /** Can be used by derived classes to set up the network reply.
      *

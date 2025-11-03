@@ -36,11 +36,11 @@ public:
                        "    <d:getetag/>\n"
                        "  </d:prop>\n"
                        "</d:propfind>\n");
-        QBuffer *buf = new QBuffer(this);
+        auto buf = std::make_unique<QBuffer>();
         buf->setData(xml);
         buf->open(QIODevice::ReadOnly);
         // assumes ownership
-        sendRequest("PROPFIND", req, buf);
+        sendRequest("PROPFIND", req, std::move(buf));
         AbstractNetworkJob::start();
     }
 

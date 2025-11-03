@@ -92,7 +92,7 @@ class PUTFileJob : public AbstractNetworkJob
     Q_OBJECT
 
 private:
-    QIODevice *_device;
+    std::unique_ptr<QIODevice> _device;
     QMap<QByteArray, QByteArray> _headers;
     QString _errorString;
     QElapsedTimer _requestTimer;
@@ -106,11 +106,6 @@ public:
     void start() override;
 
     void finished() override;
-
-    QIODevice *device()
-    {
-        return _device;
-    }
 
     QString errorString()
     {
