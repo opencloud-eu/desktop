@@ -151,7 +151,10 @@ void AbstractNetworkJob::sendRequest(const QByteArray &verb,
         _request.setAttribute(QNetworkRequest::CacheLoadControlAttribute, _cacheLoadControl.value());
     }
 
-    _requestBody = requestBody;
+    if (requestBody) {
+        _requestBody = requestBody;
+        _requestBody->setParent(this);
+    }
 
     Q_ASSERT(_request.url().isEmpty() || _request.url() == url());
     Q_ASSERT(_request.transferTimeout() == 0 || _request.transferTimeout() == duration_cast<milliseconds>(_timeout).count());
@@ -165,11 +168,6 @@ void AbstractNetworkJob::sendRequest(const QByteArray &verb,
     }
 
     auto reply = _account->sendRawRequest(verb, _request.url(), _request, requestBody);
-
-    if (_requestBody) {
-        _requestBody->setParent(this);
-    }
-
     adoptRequest(reply);
 }
 
