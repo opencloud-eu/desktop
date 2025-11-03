@@ -229,13 +229,6 @@ protected:
         const std::function<bool(AbstractNetworkJob *job)> &mayAbortJob);
 
     /**
-     * Checks whether the current error is one that should reset the whole
-     * transfer if it happens too often. If so: Bump UploadInfo::errorCount
-     * and maybe perform the reset.
-     */
-    void checkResettingErrors();
-
-    /**
      * Error handling functionality that is shared between jobs.
      */
     void commonErrorHandling(AbstractNetworkJob *job);

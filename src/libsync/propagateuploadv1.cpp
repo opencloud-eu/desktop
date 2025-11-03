@@ -48,9 +48,6 @@ void PropagateUploadFileV1::doStartUpload()
         // to the server, but the connection drops before we get the etag, we can check the checksum
         // in reconcile (issue #5106)
         auto pi = _item->toUploadInfo();
-        pi._chunk = 0;
-        pi._transferid = 0; // We set a null transfer id because it is not chunked.
-        pi._errorCount = 0;
         propagator()->_journal->setUploadInfo(_item->localName(), pi);
         propagator()->_journal->commit(QStringLiteral("Upload info"));
     }
