@@ -42,15 +42,6 @@ void PropagateUploadFileV1::doStartUpload()
         abortWithError(SyncFileItem::SoftError, tr("The file »%1« is currently in use").arg(QDir::toNativeSeparators(fileName)));
         return;
     }
-
-    if (!_item->_checksumHeader.isEmpty()) {
-        // Write the checksum in the database, so if the PUT is sent
-        // to the server, but the connection drops before we get the etag, we can check the checksum
-        // in reconcile (issue #5106)
-        auto pi = _item->toUploadInfo();
-        propagator()->_journal->setUploadInfo(_item->localName(), pi);
-        propagator()->_journal->commit(QStringLiteral("Upload info"));
-    }
     propagator()->reportProgress(*_item, 0);
 
     qint64 fileSize = _item->_size;
