@@ -8,6 +8,7 @@
 
 ### 💥 Breaking changes
 
+- Remove unused code from UploadInfo [[#637](https://github.com/opencloud-eu/desktop/pull/637)]
 - Implement a beta channel branding [[#489](https://github.com/opencloud-eu/desktop/pull/489)]
 - Remove unused fields in sqlite table [[#419](https://github.com/opencloud-eu/desktop/pull/419)]
 - Add Windows VFS [[#305](https://github.com/opencloud-eu/desktop/pull/305)]
@@ -15,6 +16,7 @@
 
 ### 🐛 Bug Fixes
 
+- Don't persist invalid upload info [[#638](https://github.com/opencloud-eu/desktop/pull/638)]
 - Fix quota not display until folder synced [[#622](https://github.com/opencloud-eu/desktop/pull/622)]
 - Don't use mtime -1  [[#616](https://github.com/opencloud-eu/desktop/pull/616)]
 - Properly abort sync on error [[#611](https://github.com/opencloud-eu/desktop/pull/611)]
