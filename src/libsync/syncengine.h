@@ -222,10 +222,6 @@ private:
     QScopedPointer<SyncFileStatusTracker> _syncFileStatusTracker;
     Utility::ChronoElapsedTimer _duration;
 
-    /**
-     * Instead of downloading files from the server, upload the files to the server
-     */
-    void restoreOldFiles(SyncFileItemSet &syncItems);
 
     // If ignored files should be ignored
     bool _ignore_hidden_files = false;
