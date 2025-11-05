@@ -663,38 +663,6 @@ void SyncEngine::updateFileTotal(const SyncFileItem &item, qint64 newSize)
     _progressInfo->updateTotalsForFile(item, newSize);
     Q_EMIT transmissionProgress(*_progressInfo);
 }
-void SyncEngine::restoreOldFiles(SyncFileItemSet &syncItems)
-{
-    /* When the server is trying to send us lots of file in the past, this means that a backup
-       was restored in the server.  In that case, we should not simply overwrite the newer file
-       on the file system with the older file from the backup on the server. Instead, we will
-       upload the client file. But we still downloaded the old file in a conflict file just in case
-    */
-
-    for (auto it = syncItems.begin(); it != syncItems.end(); ++it) {
-        if ((*it)->_direction != SyncFileItem::Down)
-            continue;
-
-        switch ((*it)->instruction()) {
-        case CSYNC_INSTRUCTION_SYNC:
-            qCWarning(lcEngine) << u"restoreOldFiles: RESTORING" << (*it)->localName();
-            (*it)->setInstruction(CSYNC_INSTRUCTION_CONFLICT);
-            break;
-        case CSYNC_INSTRUCTION_REMOVE:
-            qCWarning(lcEngine) << u"restoreOldFiles: RESTORING" << (*it)->localName();
-            (*it)->setInstruction(CSYNC_INSTRUCTION_NEW);
-            (*it)->_direction = SyncFileItem::Up;
-            break;
-        case CSYNC_INSTRUCTION_RENAME:
-        case CSYNC_INSTRUCTION_NEW:
-            // Ideally we should try to revert the rename or remove, but this would be dangerous
-            // without re-doing the reconcile phase.  So just let it happen.
-            break;
-        default:
-            break;
-        }
-    }
-}
 
 AccountPtr SyncEngine::account() const
 {
