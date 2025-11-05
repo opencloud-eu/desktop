@@ -634,6 +634,7 @@ void SyncEngine::slotPropagationFinished(bool success)
 
 void SyncEngine::finalize(bool success)
 {
+    Q_ASSERT(qApp->thread() == thread());
     qCInfo(lcEngine) << u"Sync run for" << _localPath << u"took" << _duration;
     _duration.stop();
 
