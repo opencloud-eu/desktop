@@ -381,34 +381,6 @@ bool FolderMan::isAnySyncRunning() const
     return false;
 }
 
-void FolderMan::slotFolderSyncStarted()
-{
-    auto f = qobject_cast<Folder *>(sender());
-    OC_ASSERT(f);
-    if (!f)
-        return;
-
-    qCInfo(lcFolderMan) << u">========== Sync started for folder [" << f->shortGuiLocalPath() << u"] of account ["
-                        << f->accountState()->account()->displayNameWithHost() << u"]";
-}
-
-/*
-  * a folder indicates that its syncing is finished.
-  * Start the next sync after the system had some milliseconds to breath.
-  * This delay is particularly useful to avoid late file change notifications
-  * (that we caused ourselves by syncing) from triggering another spurious sync.
-  */
-void FolderMan::slotFolderSyncFinished(const SyncResult &)
-{
-    auto f = qobject_cast<Folder *>(sender());
-    OC_ASSERT(f);
-    if (!f)
-        return;
-
-    qCInfo(lcFolderMan) << u"<========== Sync finished for folder [" << f->shortGuiLocalPath() << u"] of account ["
-                        << f->accountState()->account()->displayNameWithHost() << u"]";
-}
-
 Folder *FolderMan::addFolder(const AccountStatePtr &accountState, const FolderDefinition &folderDefinition)
 {
     // Choose a db filename
@@ -452,8 +424,6 @@ Folder *FolderMan::addFolderInternal(
     // See matching disconnects in unloadFolder().
     if (!folder->hasSetupError()) {
         connect(folder, &Folder::syncStateChange, _socketApi.get(), [folder, this] { _socketApi->slotUpdateFolderView(folder); });
-        connect(folder, &Folder::syncStarted, this, &FolderMan::slotFolderSyncStarted);
-        connect(folder, &Folder::syncFinished, this, &FolderMan::slotFolderSyncFinished);
         connect(folder, &Folder::syncStateChange, this, [folder, this] { Q_EMIT folderSyncStateChange(folder); });
         connect(folder, &Folder::syncPausedChanged, this, &FolderMan::slotFolderSyncPaused);
         connect(folder, &Folder::canSyncChanged, this, &FolderMan::slotFolderCanSyncChanged);

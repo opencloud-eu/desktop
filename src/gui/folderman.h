@@ -55,30 +55,6 @@ private:
     SyncResult _overallStatus;
 };
 
-/**
- * @brief The FolderMan class
- * @ingroup gui
- *
- * The FolderMan knows about all loaded folders and is responsible for
- * scheduling them when necessary.
- *
- * A folder is scheduled if:
- * - The configured force-sync-interval has expired
- *   (_timeScheduler and slotScheduleFolderByTime())
- *
- * - A folder watcher receives a notification about a file change
- *   (_folderWatchers and Folder::slotWatchedPathsChanged())
- *
- * - The folder etag on the server has changed
- *   (_etagPollTimer)
- *
- * - The locks of a monitored file are released
- *   (_lockWatcher and slotWatchedFileUnlocked())
- *
- * - There was a sync error or a follow-up sync is requested
- *   (_timeScheduler and slotScheduleFolderByTime()
- *    and Folder::slotSyncFinished())
- */
 class OPENCLOUD_GUI_EXPORT FolderMan : public QObject
 {
     Q_OBJECT
@@ -282,8 +258,6 @@ public Q_SLOTS:
 private Q_SLOTS:
     void slotFolderSyncPaused(Folder *, bool paused);
     void slotFolderCanSyncChanged();
-    void slotFolderSyncStarted();
-    void slotFolderSyncFinished(const SyncResult &);
 
     void slotRemoveFoldersForAccount(const AccountStatePtr &accountState);
 

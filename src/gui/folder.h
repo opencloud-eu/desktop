@@ -222,7 +222,6 @@ public:
 
 Q_SIGNALS:
     void syncStateChange();
-    void syncStarted();
     void syncFinished(const SyncResult &result);
     void syncPausedChanged(Folder *, bool paused);
     void canSyncChanged();
@@ -351,8 +350,6 @@ private:
     mutable SyncJournalDb _journal;
 
     QScopedPointer<SyncRunFileLog> _fileLog;
-
-    QTimer _scheduleSelfTimer;
 
     /**
      * Setting up vfs is a async operation

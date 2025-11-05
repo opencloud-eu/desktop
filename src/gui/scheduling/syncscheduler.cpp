@@ -235,7 +235,7 @@ void SyncScheduler::startNext()
             _currentSync.clear();
             startNext();
         },
-        Qt::SingleShotConnection);
+        static_cast<Qt::ConnectionType>(Qt::DirectConnection | Qt::SingleShotConnection));
     qCInfo(lcSyncScheduler) << u"Starting sync for" << _currentSync->path() << u"QueueSize:" << _queue->size();
     _currentSync->startSync();
     _syncTimer.reset();
@@ -268,7 +268,7 @@ Folder *SyncScheduler::currentSync()
 void SyncScheduler::terminateCurrentSync(const QString &reason)
 {
     if (_currentSync && _currentSync->isReady()) {
-        qCInfo(lcSyncScheduler) << u"folder " << _currentSync->path() << _currentSync->syncState() << u" Terminating!";
+        qCInfo(lcSyncScheduler) << u"folder" << _currentSync->path() << _currentSync->syncState() << u"Terminating!";
         if (OC_ENSURE(_currentSync->syncEngine().isSyncRunning())) {
             _currentSync->syncEngine().abort(reason);
         }
