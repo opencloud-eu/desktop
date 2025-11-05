@@ -229,13 +229,12 @@ void AccountSettings::slotEnableCurrentFolder(Folder *folder, bool terminate)
 {
     Q_ASSERT(folder);
     qCInfo(lcAccountSettings) << u"Application: enable folder with alias " << folder->path();
-    bool currentlyPaused = false;
 
     // this sets the folder status to disabled but does not interrupt it.
-    currentlyPaused = folder->isSyncPaused();
+    const bool currentlyPaused = folder->isSyncPaused();
     if (!currentlyPaused && !terminate) {
         // check if a sync is still running and if so, ask if we should terminate.
-        if (FolderMan::instance()->scheduler()->currentSync() == folder) { // its still running
+        if (FolderMan::instance()->scheduler()->currentSync() == folder) { // it's still running
             auto msgbox = new FontIconMessageBox(
                 {u''}, tr("Sync Running"), tr("The sync operation is running.<br/>Do you want to stop it?"), QMessageBox::Yes | QMessageBox::No, this);
             msgbox->setAttribute(Qt::WA_DeleteOnClose);
@@ -250,14 +249,18 @@ void AccountSettings::slotEnableCurrentFolder(Folder *folder, bool terminate)
         }
     }
 
-    // message box can return at any time while the thread keeps running,
-    // so better check again after the user has responded.
-    if (FolderMan::instance()->scheduler()->currentSync() == folder && terminate) {
-        FolderMan::instance()->scheduler()->terminateCurrentSync(tr("Sync paused by user"));
+    if (currentlyPaused) {
+        // ensure we don't forget about local errors
+        folder->slotNextSyncFullLocalDiscovery();
+        folder->setSyncPaused(false);
+    } else {
+        // set paused to prevent reschedule
+        folder->setSyncPaused(true);
+        // terminate the run if we previously where syncing
+        if (FolderMan::instance()->scheduler()->currentSync() == folder && terminate) {
+            FolderMan::instance()->scheduler()->terminateCurrentSync(tr("Sync paused by user"));
+        }
     }
-    folder->slotNextSyncFullLocalDiscovery(); // ensure we don't forget about local errors
-    folder->setSyncPaused(!currentlyPaused);
-
     _model->slotUpdateFolderState(folder);
 }
 
