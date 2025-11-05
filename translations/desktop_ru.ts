@@ -488,12 +488,12 @@ File synchronization desktop utility.</source>
     <message>
         <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="52"/>
         <source>Error while trying to log in to OAuth2-enabled server.</source>
-        <translation type="unfinished"/>
+        <translation>Ошибка при попытке входа в систему на сервере с включенной OAuth2-авторизацией.</translation>
     </message>
     <message>
         <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="56"/>
         <source>Oauth2 authentication requires a secured connection.</source>
-        <translation type="unfinished"/>
+        <translation>Oauth2 авторизация требует безопасного соединения.</translation>
     </message>
 </context>
 <context>
@@ -552,17 +552,17 @@ File synchronization desktop utility.</source>
 <context>
     <name>OCC::AbstractNetworkJob</name>
     <message>
-        <location filename="../src/libsync/abstractnetworkjob.cpp" line="248"/>
+        <location filename="../src/libsync/abstractnetworkjob.cpp" line="247"/>
         <source>Connection timed out</source>
         <translation>Время ожидания соединения истекло</translation>
     </message>
     <message>
-        <location filename="../src/libsync/abstractnetworkjob.cpp" line="250"/>
+        <location filename="../src/libsync/abstractnetworkjob.cpp" line="249"/>
         <source>Unknown error: network reply was deleted</source>
         <translation>Неизвестная ошибка: ответ сети был удален</translation>
     </message>
     <message>
-        <location filename="../src/libsync/abstractnetworkjob.cpp" line="356"/>
+        <location filename="../src/libsync/abstractnetworkjob.cpp" line="355"/>
         <source>Server replied &quot;%1 %2&quot; to &quot;%3 %4&quot;</source>
         <translation>Сервер ответил &quot;%1 %2&quot; на &quot;%3 %4&quot;</translation>
     </message>
@@ -2176,39 +2176,39 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::PropagateUploadFileCommon</name>
     <message>
-        <location filename="../src/libsync/propagateupload.cpp" line="239"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="244"/>
         <source>File Removed</source>
         <translation>Файл Удален</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateupload.cpp" line="108"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="113"/>
         <source>Local file changed during sync. It will be resumed.</source>
         <translation>Локальный файл был изменен в процессе синхронизации. </translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateupload.cpp" line="126"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="131"/>
         <source>The file »%1« cannot be uploaded because another file with the same name, differing only in case, exists</source>
         <translation>Невозможно обновить файл »%1«, потому что существует другой файл с таким же именем, отличающимся только регистром</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateupload.cpp" line="177"/>
-        <location filename="../src/libsync/propagateupload.cpp" line="208"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="182"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="213"/>
         <source>The file »%1« is currently in use</source>
         <translation>Файл »%1« сейчас используется</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateupload.cpp" line="579"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="563"/>
         <source>The server did not provide the file permissions</source>
         <translation>Сервер не предоставил разрешения для работы с файлами</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateupload.cpp" line="587"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="571"/>
         <source>Error updating metadata: %1</source>
         <translation>Ошибка при обновлении метаинформации: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateupload.cpp" line="137"/>
-        <location filename="../src/libsync/propagateupload.cpp" line="476"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="142"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="460"/>
         <source>Upload of %1 exceeds the quota for the folder</source>
         <translation>Загрузка %1 превышает квоту папки</translation>
     </message>
@@ -2239,17 +2239,17 @@ Note that using any logging command line options will override the settings.</so
         <translation>Файл »%1« сейчас используется</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateuploadv1.cpp" line="112"/>
+        <location filename="../src/libsync/propagateuploadv1.cpp" line="100"/>
         <source>The server did ask for a removed legacy feature (polling)</source>
         <translation>Сервер запросил использование устаревшей функциональности (поллинг)</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateuploadv1.cpp" line="132"/>
+        <location filename="../src/libsync/propagateuploadv1.cpp" line="120"/>
         <source>The local file was removed during sync.</source>
         <translation>Локальный файл был удален в процессе синхронизации.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateuploadv1.cpp" line="149"/>
+        <location filename="../src/libsync/propagateuploadv1.cpp" line="137"/>
         <source>The server did not acknowledge the last chunk. (No e-tag was present)</source>
         <translation>Сервер не подтвердил получение последнего фрагмента. (Отсутствовал e-tag)</translation>
     </message>
@@ -2575,13 +2575,13 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/syncengine.cpp" line="787"/>
         <source>Aborted due to: %1</source>
-        <translation type="unfinished"/>
+        <translation>Прервано из-за: %1</translation>
     </message>
 </context>
 <context>
     <name>OCC::SyncJournalDb</name>
     <message>
-        <location filename="../src/libsync/common/syncjournaldb.cpp" line="835"/>
+        <location filename="../src/libsync/common/syncjournaldb.cpp" line="822"/>
         <source>Failed to connect database.</source>
         <translation>Не удалось подключить базу данных.</translation>
     </message>
@@ -3024,7 +3024,7 @@ Note that using any logging command line options will override the settings.</so
         <location filename="../src/gui/newwizard/pages/serverurlsetupwizardpage.cpp" line="66"/>
         <source>%1 logo</source>
         <extracomment>This is the accessibility text for the logo in the setup wizard page. The parameter is the name for the (branded) application.</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 лого</translation>
     </message>
 </context>
 <context>

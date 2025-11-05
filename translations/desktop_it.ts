@@ -553,17 +553,17 @@ Utilità desktop per la sincronizazione dei file.</translation>
 <context>
     <name>OCC::AbstractNetworkJob</name>
     <message>
-        <location filename="../src/libsync/abstractnetworkjob.cpp" line="248"/>
+        <location filename="../src/libsync/abstractnetworkjob.cpp" line="247"/>
         <source>Connection timed out</source>
         <translation>Connessione sospesa</translation>
     </message>
     <message>
-        <location filename="../src/libsync/abstractnetworkjob.cpp" line="250"/>
+        <location filename="../src/libsync/abstractnetworkjob.cpp" line="249"/>
         <source>Unknown error: network reply was deleted</source>
         <translation>Errore sconosciuto: la risposta di rete è stata eliminata</translation>
     </message>
     <message>
-        <location filename="../src/libsync/abstractnetworkjob.cpp" line="356"/>
+        <location filename="../src/libsync/abstractnetworkjob.cpp" line="355"/>
         <source>Server replied &quot;%1 %2&quot; to &quot;%3 %4&quot;</source>
         <translation>Il server ha risposto &quot;%1 %2&quot; fino &quot;%3 %4&quot;</translation>
     </message>
@@ -2176,39 +2176,39 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::PropagateUploadFileCommon</name>
     <message>
-        <location filename="../src/libsync/propagateupload.cpp" line="239"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="244"/>
         <source>File Removed</source>
         <translation>File rimosso</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateupload.cpp" line="108"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="113"/>
         <source>Local file changed during sync. It will be resumed.</source>
         <translation>Il file locale è stato modificato durante la sincronizzazione. Verrà ripristinato.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateupload.cpp" line="126"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="131"/>
         <source>The file »%1« cannot be uploaded because another file with the same name, differing only in case, exists</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/libsync/propagateupload.cpp" line="177"/>
-        <location filename="../src/libsync/propagateupload.cpp" line="208"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="182"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="213"/>
         <source>The file »%1« is currently in use</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/libsync/propagateupload.cpp" line="579"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="563"/>
         <source>The server did not provide the file permissions</source>
         <translation>Il server non ha fornito i permessi del file</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateupload.cpp" line="587"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="571"/>
         <source>Error updating metadata: %1</source>
         <translation>Errore durante l&apos;aggiornamento dei metadati: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateupload.cpp" line="137"/>
-        <location filename="../src/libsync/propagateupload.cpp" line="476"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="142"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="460"/>
         <source>Upload of %1 exceeds the quota for the folder</source>
         <translation>Il caricamento di %1 supera la quota per la cartella</translation>
     </message>
@@ -2239,17 +2239,17 @@ Note that using any logging command line options will override the settings.</so
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/libsync/propagateuploadv1.cpp" line="112"/>
+        <location filename="../src/libsync/propagateuploadv1.cpp" line="100"/>
         <source>The server did ask for a removed legacy feature (polling)</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/libsync/propagateuploadv1.cpp" line="132"/>
+        <location filename="../src/libsync/propagateuploadv1.cpp" line="120"/>
         <source>The local file was removed during sync.</source>
         <translation>Il file locale è stato rimosso durante la sincronizzazione.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateuploadv1.cpp" line="149"/>
+        <location filename="../src/libsync/propagateuploadv1.cpp" line="137"/>
         <source>The server did not acknowledge the last chunk. (No e-tag was present)</source>
         <translation>Il server non ha riconosciuto l&apos;ultimo blocco. (Non era presente alcun e-tag)</translation>
     </message>
@@ -2581,7 +2581,7 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::SyncJournalDb</name>
     <message>
-        <location filename="../src/libsync/common/syncjournaldb.cpp" line="835"/>
+        <location filename="../src/libsync/common/syncjournaldb.cpp" line="822"/>
         <source>Failed to connect database.</source>
         <translation>Impossibile connettersi al database.</translation>
     </message>
