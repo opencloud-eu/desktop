@@ -19,7 +19,6 @@
 #include "account.h"
 #include "accountstate.h"
 #include "application.h"
-#include "common/checksums.h"
 #include "common/depreaction.h"
 #include "common/filesystembase.h"
 #include "common/syncjournalfilerecord.h"
@@ -55,9 +54,6 @@
 #include <QTimer>
 #include <QUrl>
 
-#include <QApplication>
-#include <QMessageBox>
-
 using namespace Qt::Literals::StringLiterals;
 using namespace std::chrono_literals;
 
@@ -85,7 +81,9 @@ Folder::Folder(const FolderDefinition &definition, const AccountStatePtr &accoun
     _timeSinceLastSyncStart.start();
     _timeSinceLastSyncDone.start();
 
-    setSyncState(definition.paused ? SyncResult::Paused : SyncResult::Queued);
+    // set the sync state without emiting a signal
+    _syncResult.setStatus(definition.paused ? SyncResult::Paused : SyncResult::Queued);
+
     // check if the local path exists
     if (checkLocalPath()) {
         // those errors should not persist over sessions
@@ -100,7 +98,8 @@ Folder::Folder(const FolderDefinition &definition, const AccountStatePtr &accoun
 
         connect(_accountState.data(), &AccountState::isConnectedChanged, this, &Folder::canSyncChanged);
 
-        connect(_engine.data(), &SyncEngine::finished, this, &Folder::slotSyncFinished);
+        // use a direct connection, the folder status has to be up to date
+        connect(_engine.data(), &SyncEngine::finished, this, &Folder::slotSyncFinished, Qt::DirectConnection);
 
         connect(_engine.data(), &SyncEngine::transmissionProgress, this,
             [this](const ProgressInfo &pi) { Q_EMIT ProgressDispatcher::instance()->progressInfo(this, pi); });
@@ -398,8 +397,8 @@ void Folder::setSyncState(SyncResult::Status state)
 {
     const auto oldIsRunning = isSyncRunning();
     if (state != _syncResult.status()) {
+        qCDebug(lcFolder) << u"State of" << path() << u"changed to" << state << u"old state" << _syncResult.status();
         _syncResult.setStatus(state);
-        qCDebug(lcFolder) << u"State of" << path() << u"changed to" << state;
         Q_EMIT syncStateChange();
         if (oldIsRunning != isSyncRunning()) {
             Q_EMIT isSyncRunningChanged();
@@ -882,9 +881,7 @@ void Folder::startSync()
     }
 
     _engine->setIgnoreHiddenFiles(_definition.ignoreHiddenFiles);
-    QMetaObject::invokeMethod(_engine.data(), &SyncEngine::startSync, Qt::QueuedConnection);
-
-    Q_EMIT syncStarted();
+    _engine->startSync();
 }
 
 void Folder::setDirtyNetworkLimits()
@@ -936,7 +933,6 @@ void Folder::slotSyncFinished(bool success)
         qCInfo(lcFolder) << u"SyncEngine finished without problem.";
     }
     _fileLog->finish();
-    showSyncResultPopup();
 
     auto anotherSyncNeeded = false;
 
@@ -975,10 +971,10 @@ void Folder::slotSyncFinished(bool success)
 
     if (syncStatus != SyncResult::Undefined) {
         setSyncState(syncStatus);
+        showSyncResultPopup();
     }
 
-    // syncStateChange from setSyncState needs to be emitted first
-    QTimer::singleShot(0, this, [this] { Q_EMIT syncFinished(_syncResult); });
+    Q_EMIT syncFinished(_syncResult);
 
     _lastSyncDuration = std::chrono::milliseconds(_timeSinceLastSyncStart.elapsed());
     _timeSinceLastSyncDone.start();
