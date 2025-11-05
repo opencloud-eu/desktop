@@ -16,6 +16,7 @@
 
 ### 🐛 Bug Fixes
 
+- Make sync scheduling more predictable [[#641](https://github.com/opencloud-eu/desktop/pull/641)]
 - Don't persist invalid upload info [[#638](https://github.com/opencloud-eu/desktop/pull/638)]
 - Fix quota not display until folder synced [[#622](https://github.com/opencloud-eu/desktop/pull/622)]
 - Don't use mtime -1  [[#616](https://github.com/opencloud-eu/desktop/pull/616)]
