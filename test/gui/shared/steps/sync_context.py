@@ -119,7 +119,7 @@ def step(context):
     folders = []
     for row in context.table[1:]:
         folders.append(row[0])
-    SyncConnectionWizard.select_folders_to_sync(folders, in_choose_what_to_sync_dialog=False)
+    SyncConnectionWizard.select_folders_to_sync(folders, new_sync_connection_wizard=True)
 
 
 @When('the user sorts the folder list by "|any|"')
@@ -318,4 +318,4 @@ def step(context):
     folders = []
     for row in context.table[1:]:
         folders.append(row[0])
-    SyncConnectionWizard.unselect_folders_to_sync(folders, in_choose_what_to_sync_dialog=True)
+    SyncConnectionWizard.unselect_folders_to_sync(folders, new_sync_connection_wizard=False)
