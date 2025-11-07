@@ -16,6 +16,7 @@
 
 ### 🐛 Bug Fixes
 
+- Ensure that a retry happens after the minimal ignorelist timeout [[#664](https://github.com/opencloud-eu/desktop/pull/664)]
 - Eit error if .well-known was not found [[#663](https://github.com/opencloud-eu/desktop/pull/663)]
 - Fix enqueing of paused folders [[#662](https://github.com/opencloud-eu/desktop/pull/662)]
 - Pause sync before we terminate [[#642](https://github.com/opencloud-eu/desktop/pull/642)]
