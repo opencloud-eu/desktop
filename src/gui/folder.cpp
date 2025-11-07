@@ -993,7 +993,7 @@ void Folder::slotSyncFinished(bool success)
         // Sometimes another sync is requested because a local file is still
         // changing, so wait at least a small amount of time before syncing
         // the folder again.
-        QTimer::singleShot(SyncEngine::minimumFileAgeForUpload, this, [this] { FolderMan::instance()->scheduler()->enqueueFolder(this); });
+        QTimer::singleShot(10s, this, [this] { FolderMan::instance()->scheduler()->enqueueFolder(this); });
     }
 }
 

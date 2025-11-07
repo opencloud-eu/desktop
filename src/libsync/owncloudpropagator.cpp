@@ -49,7 +49,7 @@ Q_LOGGING_CATEGORY(lcPropagator, "sync.propagator", QtInfoMsg)
 Q_LOGGING_CATEGORY(lcDirectory, "sync.propagator.directory", QtInfoMsg)
 
 namespace {
-    std::chrono::seconds getMinBlacklistTime = 25s;
+    std::chrono::seconds getMinBlacklistTime = 5s;
 
     std::chrono::seconds getMaxBlacklistTime = 24h;
 }
@@ -132,7 +132,8 @@ static SyncJournalErrorBlacklistRecord createBlacklistEntry(
     static qint64 minBlacklistTime(getMinBlacklistTime.count());
     static qint64 maxBlacklistTime(qMax(getMaxBlacklistTime.count(), minBlacklistTime));
 
-    // The factor of 5 feels natural: 25s, 2 min, 10 min, ~1h, ~5h, ~24h
+    // The factor of 5 feels natural: 5s, 25s, 2 min, 10 min, ~1h, ~5h, ~24h
+    // we start with 0 the actual value will be adjusted by qBound
     entry._ignoreDuration = old._ignoreDuration * 5;
 
     if (item._httpErrorCode == 403) {
