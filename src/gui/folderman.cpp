@@ -256,23 +256,6 @@ SocketApi *FolderMan::socketApi()
     return _socketApi.get();
 }
 
-void FolderMan::slotFolderSyncPaused(Folder *f, bool paused)
-{
-    if (!f) {
-        qCCritical(lcFolderMan) << u"slotFolderSyncPaused called with empty folder";
-        return;
-    }
-
-    if (!paused) {
-        _disabledFolders.remove(f);
-        if (f->canSync()) {
-            scheduler()->enqueueFolder(f);
-        }
-    } else {
-        _disabledFolders.insert(f);
-    }
-}
-
 void FolderMan::slotFolderCanSyncChanged()
 {
     Folder *f = qobject_cast<Folder *>(sender());
@@ -417,15 +400,11 @@ Folder *FolderMan::addFolderInternal(
 
     qCInfo(lcFolderMan) << u"Adding folder to Folder Map " << folder << folder->path();
     _folders.push_back(folder);
-    if (folder->isSyncPaused()) {
-        _disabledFolders.insert(folder);
-    }
 
     // See matching disconnects in unloadFolder().
     if (!folder->hasSetupError()) {
         connect(folder, &Folder::syncStateChange, _socketApi.get(), [folder, this] { _socketApi->slotUpdateFolderView(folder); });
         connect(folder, &Folder::syncStateChange, this, [folder, this] { Q_EMIT folderSyncStateChange(folder); });
-        connect(folder, &Folder::syncPausedChanged, this, &FolderMan::slotFolderSyncPaused);
         connect(folder, &Folder::canSyncChanged, this, &FolderMan::slotFolderCanSyncChanged);
         connect(
             &folder->syncEngine().syncFileStatusTracker(), &SyncFileStatusTracker::fileStatusChanged, _socketApi.get(), &SocketApi::broadcastStatusPushMessage);

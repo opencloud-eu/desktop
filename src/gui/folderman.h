@@ -256,7 +256,6 @@ public Q_SLOTS:
     void slotReloadSyncOptions();
 
 private Q_SLOTS:
-    void slotFolderSyncPaused(Folder *, bool paused);
     void slotFolderCanSyncChanged();
 
     void slotRemoveFoldersForAccount(const AccountStatePtr &accountState);
@@ -286,7 +285,6 @@ private:
     // makes the folder known to the socket api
     void registerFolderWithSocketApi(Folder *folder);
 
-    QSet<Folder *> _disabledFolders;
     QVector<Folder *> _folders;
     QString _folderConfigPath;
 
