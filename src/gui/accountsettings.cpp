@@ -228,7 +228,7 @@ void AccountSettings::showConnectionLabel(const QString &message, SyncResult::St
 void AccountSettings::slotEnableCurrentFolder(Folder *folder, bool terminate)
 {
     Q_ASSERT(folder);
-    qCInfo(lcAccountSettings) << u"Application: enable folder with alias " << folder->path();
+    qCInfo(lcAccountSettings) << u"Application: enable folder" << folder->path();
 
     // this sets the folder status to disabled but does not interrupt it.
     const bool currentlyPaused = folder->isSyncPaused();
@@ -253,6 +253,7 @@ void AccountSettings::slotEnableCurrentFolder(Folder *folder, bool terminate)
         // ensure we don't forget about local errors
         folder->slotNextSyncFullLocalDiscovery();
         folder->setSyncPaused(false);
+        FolderMan::instance()->scheduler()->enqueueFolder(folder);
     } else {
         // set paused to prevent reschedule
         folder->setSyncPaused(true);

@@ -159,6 +159,8 @@ void SyncScheduler::enqueueFolder(Folder *folder, Priority priority)
     // TODO: setSyncState should not be public...
     if (folder != _currentSync) {
         // don't override the state of the currently syncing folder
+        Q_ASSERT(folder->syncState() != SyncResult::SyncRunning);
+        Q_ASSERT(folder->syncState() != SyncResult::Paused);
         folder->setSyncState(SyncResult::Queued);
     }
     _queue->enqueueFolder(folder, priority);
