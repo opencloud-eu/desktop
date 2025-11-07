@@ -54,8 +54,8 @@
     </message>
     <message>
         <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.ui" line="147"/>
-        <source>Synchronize all exisitng spaces</source>
-        <translation>Alle vorhandenen Spaces synchronisieren</translation>
+        <source>Synchronize all existing spaces</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.ui" line="157"/>
@@ -2543,12 +2543,12 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
         <translation>Die lokale Sync-Datenbank kann nicht geöffnet oder erstellt werden. Stell sicher, dass Schreibzugriff auf den Sync-Ordner vorliegt.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="805"/>
+        <location filename="../src/libsync/syncengine.cpp" line="773"/>
         <source>Disk space is low: Downloads that would reduce free space below %1 were skipped.</source>
         <translation>Der Speicherplatz ist knapp: Downloads, die den freien Speicherplatz unter %1 reduzieren würden, wurden übersprungen.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="812"/>
+        <location filename="../src/libsync/syncengine.cpp" line="780"/>
         <source>Space quota exceeded. Please contact the Administrator of this space.</source>
         <translation>Space-Kontingent überschritten. Bitte wende dich an den Administrator dieses Space.</translation>
     </message>
@@ -2573,7 +2573,7 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
         <translation>Synchronisationsbericht kann nicht geöffnet werden</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="788"/>
+        <location filename="../src/libsync/syncengine.cpp" line="756"/>
         <source>Aborted due to: %1</source>
         <translation>Abgebrochen wegen: %1</translation>
     </message>

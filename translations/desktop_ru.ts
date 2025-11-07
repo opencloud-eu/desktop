@@ -54,8 +54,8 @@
     </message>
     <message>
         <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.ui" line="147"/>
-        <source>Synchronize all exisitng spaces</source>
-        <translation>Синхронизировать все существующие пространства</translation>
+        <source>Synchronize all existing spaces</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.ui" line="157"/>
@@ -2543,12 +2543,12 @@ Note that using any logging command line options will override the settings.</so
         <translation>Не удается открыть или создать локальную базу данных синхронизации. Убедитесь, что у вас есть доступ к папке синхронизации.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="805"/>
+        <location filename="../src/libsync/syncengine.cpp" line="773"/>
         <source>Disk space is low: Downloads that would reduce free space below %1 were skipped.</source>
         <translation>Недостаточно места на диске: были пропущены загрузки, которые привели бы к сокращению свободного места до значения ниже %1.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="812"/>
+        <location filename="../src/libsync/syncengine.cpp" line="780"/>
         <source>Space quota exceeded. Please contact the Administrator of this space.</source>
         <translation>Превышена квота для Пространства. Пожалуйста, обратитесь к Администратору этого пространства.</translation>
     </message>
@@ -2573,7 +2573,7 @@ Note that using any logging command line options will override the settings.</so
         <translation>Не удалось открыть журнал синхронизации</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="788"/>
+        <location filename="../src/libsync/syncengine.cpp" line="756"/>
         <source>Aborted due to: %1</source>
         <translation>Прервано из-за: %1</translation>
     </message>

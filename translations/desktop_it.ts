@@ -54,8 +54,8 @@
     </message>
     <message>
         <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.ui" line="147"/>
-        <source>Synchronize all exisitng spaces</source>
-        <translation>Sincronizza tutti gli spazi esistenti</translation>
+        <source>Synchronize all existing spaces</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.ui" line="157"/>
@@ -2543,12 +2543,12 @@ Note that using any logging command line options will override the settings.</so
         <translation>Impossibile aprire o creare il database di sincronizzazione locale. Assicurati di avere accesso in scrittura alla cartella di sincronizzazione.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="805"/>
+        <location filename="../src/libsync/syncengine.cpp" line="773"/>
         <source>Disk space is low: Downloads that would reduce free space below %1 were skipped.</source>
         <translation>Lo spazio su disco è insufficiente: i download che avrebbero ridotto lo spazio libero al di sotto di %1 sono stati saltati.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="812"/>
+        <location filename="../src/libsync/syncengine.cpp" line="780"/>
         <source>Space quota exceeded. Please contact the Administrator of this space.</source>
         <translation>Space quota exceeded. Please contact the Administrator of this space.</translation>
     </message>
@@ -2573,7 +2573,7 @@ Note that using any logging command line options will override the settings.</so
         <translation>Impossibile aprire il registro di sincronizzazione</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="788"/>
+        <location filename="../src/libsync/syncengine.cpp" line="756"/>
         <source>Aborted due to: %1</source>
         <translation type="unfinished"/>
     </message>

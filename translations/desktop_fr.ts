@@ -54,8 +54,8 @@
     </message>
     <message>
         <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.ui" line="147"/>
-        <source>Synchronize all exisitng spaces</source>
-        <translation>Synchroniser tous les espaces existants</translation>
+        <source>Synchronize all existing spaces</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.ui" line="157"/>
@@ -2540,12 +2540,12 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
         <translation>Impossible d&apos;ouvrir ou de créer la base de données de synchronisation locale. Assurez-vous d&apos;avoir un accès en écriture dans le dossier sync.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="805"/>
+        <location filename="../src/libsync/syncengine.cpp" line="773"/>
         <source>Disk space is low: Downloads that would reduce free space below %1 were skipped.</source>
         <translation>L&apos;espace disque est faible : Les téléchargements susceptibles de réduire l&apos;espace libre en dessous de %1 ont été ignorés.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="812"/>
+        <location filename="../src/libsync/syncengine.cpp" line="780"/>
         <source>Space quota exceeded. Please contact the Administrator of this space.</source>
         <translation>Le quota d&apos;Espace est dépassé. Veuillez contacter l&apos;administrateur de cet Espace.</translation>
     </message>
@@ -2570,7 +2570,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
         <translation>Impossible d’ouvrir le journal de synchronisation</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="788"/>
+        <location filename="../src/libsync/syncengine.cpp" line="756"/>
         <source>Aborted due to: %1</source>
         <translation type="unfinished"/>
     </message>
