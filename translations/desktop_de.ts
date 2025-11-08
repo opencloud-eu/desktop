@@ -37,7 +37,7 @@
     <message>
         <location filename="../src/gui/newwizard/states/accountconfiguredsetupwizardstate.cpp" line="57"/>
         <source>path must be absolute</source>
-        <translation type="unfinished"/>
+        <translation>Pfad muss absolut sein</translation>
     </message>
 </context>
 <context>
@@ -2626,7 +2626,7 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
     <message>
         <location filename="../src/gui/systray.cpp" line="134"/>
         <source>Space »%1«: %2</source>
-        <translation type="unfinished"/>
+        <translation>Space »%1«: %2</translation>
     </message>
     <message>
         <location filename="../src/gui/systray.cpp" line="146"/>

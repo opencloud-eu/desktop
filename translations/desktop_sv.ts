@@ -37,7 +37,7 @@
     <message>
         <location filename="../src/gui/newwizard/states/accountconfiguredsetupwizardstate.cpp" line="57"/>
         <source>path must be absolute</source>
-        <translation type="unfinished"/>
+        <translation>sökväg måste vara absolut</translation>
     </message>
 </context>
 <context>
@@ -2608,7 +2608,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/gui/systray.cpp" line="134"/>
         <source>Space »%1«: %2</source>
-        <translation type="unfinished"/>
+        <translation>Arbetsyta »%1«: %2</translation>
     </message>
     <message>
         <location filename="../src/gui/systray.cpp" line="146"/>
