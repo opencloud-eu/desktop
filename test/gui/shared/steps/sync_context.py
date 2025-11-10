@@ -312,3 +312,8 @@ def step(context):
         expected_error_message,
         f'Expected error message: "{expected_error_message}" but got: "{actual_error_message}"'
     )
+
+
+@Given('the user has waited for "|any|" seconds')
+def step(context, wait_for):
+    squish.snooze(float(wait_for))
