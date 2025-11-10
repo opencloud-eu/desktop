@@ -817,7 +817,7 @@ The update will be performed in the background, and overwrite the current AppIma
     <message numerus="yes">
         <location filename="../src/gui/commonstrings.cpp" line="51"/>
         <source>%n Filter(s)</source>
-        <translation><numerusform>%n مرشح</numerusform><numerusform>%n مرشح</numerusform><numerusform>%n مرشحات</numerusform><numerusform>%n مرشحات</numerusform><numerusform>%n مرشحات</numerusform><numerusform>%n مرشحات</numerusform></translation>
+        <translation><numerusform>لا توجد مرشحات</numerusform><numerusform>مرشح واحد</numerusform><numerusform>مرشحان اثنان</numerusform><numerusform>%n مرشحات</numerusform><numerusform>%n مرشحا</numerusform><numerusform>%n مرشح</numerusform></translation>
     </message>
 </context>
 <context>
@@ -850,17 +850,17 @@ The update will be performed in the background, and overwrite the current AppIma
     <message>
         <location filename="../src/libsync/discoveryphase.cpp" line="213"/>
         <source>Error while opening directory »%1«</source>
-        <translation>خطأ أثناء فتح المجلد »%1«</translation>
+        <translation>خطأ أثناء فتح الدليل »%1«</translation>
     </message>
     <message>
         <location filename="../src/libsync/discoveryphase.cpp" line="215"/>
         <source>Directory not accessible on client, permission denied</source>
-        <translation>المجلد غير متاح على العميل، تم رفض الإذن</translation>
+        <translation>الدليل غير متاح على العميل، تم رفض الإذن</translation>
     </message>
     <message>
         <location filename="../src/libsync/discoveryphase.cpp" line="219"/>
         <source>Directory not found: »%1«</source>
-        <translation>لم يتم العثور على المجلد: »%1«</translation>
+        <translation>لم يتم العثور على الدليل: »%1«</translation>
     </message>
 </context>
 <context>
@@ -876,7 +876,7 @@ The update will be performed in the background, and overwrite the current AppIma
     <message>
         <location filename="../src/gui/folder.cpp" line="150"/>
         <source>The path »%1« is too long. Please enable long paths in the Windows settings or choose a different folder.</source>
-        <translation>المسار »%1« طويل جدًا. يرجى تمكين المسارات الطويلة في إعدادات Windows أو اختيار مجلد مختلف.</translation>
+        <translation>المسار »%1« طويل جدًا. يرجى تمكين المسارات الطويلة في إعدادات ويندوز (Windows) أو اختيار مجلد مختلف.</translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="192"/>
