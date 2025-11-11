@@ -990,17 +990,17 @@ La mise à jour sera effectuée en arrière-plan et écrasera le fichier AppImag
     <message>
         <location filename="../src/gui/folder.cpp" line="1056"/>
         <source>The folder »%1« was created but was excluded from synchronization previously. Data inside it will not be synchronized.</source>
-        <translation type="unfinished"/>
+        <translation>Le dossier « %1 » a été créé mais a été exclu de la synchronisation précédemment. Les données qu&apos;il contient ne seront pas synchronisées.</translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="1059"/>
         <source>The file »%1« was created but was excluded from synchronization previously. It will not be synchronized.</source>
-        <translation type="unfinished"/>
+        <translation>Le fichier « %1 » a été créé mais a été exclu de la synchronisation précédemment. Il ne sera pas synchronisé.</translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="1063"/>
         <source>»%1« is not synchronized</source>
-        <translation type="unfinished"/>
+        <translation>« %1 » n&apos;est pas synchronisé</translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="852"/>
@@ -1031,7 +1031,7 @@ Cela signifie que le client de synchronisation peut ne pas télécharger immédi
     <message>
         <location filename="../src/gui/folderman.cpp" line="242"/>
         <source>An old sync journal %1 was found, but could not be removed. Please make sure that no application is currently using it.</source>
-        <translation type="unfinished"/>
+        <translation>Un ancien journal de synchronisation « %1 » a été trouvé, mais n&apos;a pas pu être supprimé. Veuillez vérifier qu&apos;aucune application ne l&apos;utilise actuellement.</translation>
     </message>
     <message>
         <location filename="../src/gui/folderman.cpp" line="304"/>
@@ -1066,22 +1066,22 @@ Cela signifie que le client de synchronisation peut ne pas télécharger immédi
     <message>
         <location filename="../src/gui/folderman.cpp" line="571"/>
         <source>The folder »%1« is already in use by application %2!</source>
-        <translation type="unfinished"/>
+        <translation>Le dossier « %1 » est déjà utilisé par l&apos;application %2 !</translation>
     </message>
     <message>
         <location filename="../src/gui/folderman.cpp" line="584"/>
         <source>The folder »%1« is already in use by another account.</source>
-        <translation type="unfinished"/>
+        <translation>Le dossier « %1 » est déjà utilisé par un autre compte.</translation>
     </message>
     <message>
         <location filename="../src/gui/folderman.cpp" line="659"/>
         <source>The local folder »%1« already contains a folder used in a folder sync connection. Please pick another local folder!</source>
-        <translation type="unfinished"/>
+        <translation>Le dossier local « %1 » contient déjà un dossier utilisé dans une connexion de synchronisation de dossiers. Veuillez choisir un autre dossier local !</translation>
     </message>
     <message>
         <location filename="../src/gui/folderman.cpp" line="665"/>
         <source>The local folder »%1« is already contained in a folder used in a folder sync connection. Please pick another local folder!</source>
-        <translation type="unfinished"/>
+        <translation>Le dossier local « %1 » est déjà contenu dans un dossier utilisé dans une connexion de synchronisation de dossiers. Veuillez choisir un autre dossier local !</translation>
     </message>
     <message>
         <location filename="../src/gui/folderman.cpp" line="673"/>
@@ -1093,7 +1093,9 @@ Cela signifie que le client de synchronisation peut ne pas télécharger immédi
         <source>Multiple accounts are sharing the folder »%1«.
 This configuration is know to lead to dataloss and is no longer supported.
 Please consider removing this folder from the account and adding it again.</source>
-        <translation type="unfinished"/>
+        <translation>Plusieurs comptes partagent le dossier « %1 ».
+Cette configuration est connue pour entraîner des pertes de données et n&apos;est plus supportée.
+Veuillez envisager de supprimer ce dossier du compte et de l&apos;ajouter à nouveau.</translation>
     </message>
     <message>
         <location filename="../src/gui/folderman.cpp" line="599"/>
@@ -1108,7 +1110,7 @@ Please consider removing this folder from the account and adding it again.</sour
     <message>
         <location filename="../src/gui/folderman.cpp" line="621"/>
         <source>The folder »%1« is used in a folder sync connection!</source>
-        <translation type="unfinished"/>
+        <translation>Le dossier « %1 » est utilisé dans une connexion de synchronisation de dossiers !</translation>
     </message>
     <message>
         <location filename="../src/gui/folderman.cpp" line="627"/>

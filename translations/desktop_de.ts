@@ -65,7 +65,7 @@
     <message>
         <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.ui" line="157"/>
         <source>After completing this wizard, you can set up folder synchronization manually.</source>
-        <translation>Nach der Fertigstellung dieses Assistenten können Sie die Ordnersynchronisierung manuell einrichten.</translation>
+        <translation>Nach der Fertigstellung dieses Assistenten kannst du die Ordnersynchronisierung manuell einrichten.</translation>
     </message>
     <message>
         <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.ui" line="160"/>
@@ -2687,7 +2687,7 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
     <message>
         <location filename="../src/gui/tlserrordialog.ui" line="42"/>
         <source>Do you want to trust this certificate anyway?</source>
-        <translation>Möchten Sie dem Zertifikat trotzdem vertrauen?</translation>
+        <translation>Möchtest du dem Zertifikat trotzdem vertrauen?</translation>
     </message>
     <message>
         <location filename="../src/gui/tlserrordialog.cpp" line="28"/>
@@ -2729,7 +2729,7 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
         <location filename="../src/gui/updatenotifier.cpp" line="48"/>
         <source>A new version %1 is available. You are using version %2.</source>
         <comment>The first placeholder is the new version, the second one the current version</comment>
-        <translation>Eine neue Version %1 ist verfügbar. Sie benutzen Version %2.</translation>
+        <translation>Eine neue Version %1 ist verfügbar. Du benutzt Version %2.</translation>
     </message>
     <message>
         <location filename="../src/gui/updatenotifier.cpp" line="53"/>
@@ -2747,7 +2747,7 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
     <message>
         <location filename="../src/gui/updateurldialog.cpp" line="33"/>
         <source>The URL for &lt;b&gt;%1&lt;/b&gt; changed from:&lt;br&gt;&lt;b&gt;%2&lt;/b&gt; to:&lt;br&gt; &lt;b&gt;%3&lt;/b&gt;.&lt;br&gt;&lt;br&gt;Do you want to accept the new URL permanently?&lt;br&gt;This will cause an application restart.</source>
-        <translation>Die URL für &lt;b&gt;%1&lt;/b&gt; hat sich geändert von:&lt;br&gt;&lt;b&gt;%2&lt;/b&gt; nach:&lt;br&gt;&lt;b&gt;%3&lt;/b&gt;.&lt;br&gt;&lt;br&gt; Möchtest Du die neue URL dauerhaft übernehmen?&lt;br&gt; Dies führt zu einem Neustart der Anwendung.</translation>
+        <translation>Die URL für &lt;b&gt;%1&lt;/b&gt; hat sich geändert von:&lt;br&gt;&lt;b&gt;%2&lt;/b&gt; nach:&lt;br&gt;&lt;b&gt;%3&lt;/b&gt;.&lt;br&gt;&lt;br&gt; Möchtest du die neue URL dauerhaft übernehmen?&lt;br&gt; Dies führt zu einem Neustart der Anwendung.</translation>
     </message>
 </context>
 <context>
