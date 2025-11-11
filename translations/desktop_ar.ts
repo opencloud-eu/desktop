@@ -906,7 +906,7 @@ The update will be performed in the background, and overwrite the current AppIma
     <message numerus="yes">
         <location filename="../src/gui/folder.cpp" line="462"/>
         <source>»%1« and %n other file(s) have been removed.</source>
-        <translation><numerusform>تمت إزالة »%1« وملف آخر %n.</numerusform><numerusform>تمت إزالة »%1« وملف آخر %n.</numerusform><numerusform>تمت إزالة »%1« وملفين آخرين %n.</numerusform><numerusform>تمت إزالة »%1« و%n ملفات أخرى.</numerusform><numerusform>تمت إزالة »%1« و%n ملفات أخرى.</numerusform><numerusform>تمت إزالة »%1« و%n ملفات أخرى.</numerusform></translation>
+        <translation><numerusform>تمت إزالة »%1« ولم تتم إزالة ملفات أخرى.</numerusform><numerusform>تمت إزالة »%1« وملف واحد آخر.</numerusform><numerusform>تمت إزالة »%1« وملفين اثنين آخرين.</numerusform><numerusform>تمت إزالة »%1« و%n ملفات أخرى.</numerusform><numerusform>تمت إزالة »%1« و%n ملفا آخر.</numerusform><numerusform>تمت إزالة »%1« و%n ملف آخر.</numerusform></translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="464"/>
@@ -917,7 +917,7 @@ The update will be performed in the background, and overwrite the current AppIma
     <message numerus="yes">
         <location filename="../src/gui/folder.cpp" line="469"/>
         <source>»%1« and %n other file(s) have been added.</source>
-        <translation><numerusform>تمت إضافة »%1« وملف آخر %n.</numerusform><numerusform>تمت إضافة »%1« وملف آخر %n.</numerusform><numerusform>تمت إضافة »%1« وملفين آخرين %n.</numerusform><numerusform>تمت إضافة »%1« و%n ملفات أخرى.</numerusform><numerusform>تمت إضافة »%1« و%n ملفات أخرى.</numerusform><numerusform>تمت إضافة »%1« و%n ملفات أخرى.</numerusform></translation>
+        <translation><numerusform>تمت إضافة »%1« ولم تتم إضافة ملف آخر.</numerusform><numerusform>تمت إضافة »%1« وملف واحد  آخر.</numerusform><numerusform>تمت إضافة »%1« وملفين اثنين آخرين.</numerusform><numerusform>تمت إضافة »%1« و%n ملفات أخرى.</numerusform><numerusform>تمت إضافة »%1« و%n ملفا آخر.</numerusform><numerusform>تمت إضافة »%1« و%n ملف آخر.</numerusform></translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="471"/>
@@ -928,7 +928,7 @@ The update will be performed in the background, and overwrite the current AppIma
     <message numerus="yes">
         <location filename="../src/gui/folder.cpp" line="476"/>
         <source>»%1« and %n other file(s) have been updated.</source>
-        <translation><numerusform>تم تحديث »%1« وملف آخر %n.</numerusform><numerusform>تم تحديث »%1« وملف آخر %n.</numerusform><numerusform>تم تحديث »%1« وملفين آخرين %n.</numerusform><numerusform>تم تحديث »%1« و%n ملفات أخرى.</numerusform><numerusform>تم تحديث »%1« و%n ملفات أخرى.</numerusform><numerusform>تم تحديث »%1« و%n ملفات أخرى.</numerusform></translation>
+        <translation><numerusform>تم تحديث »%1« ولم تتم تحديث ملف آخر.</numerusform><numerusform>تم تحديث »%1« وملف واحد آخر.</numerusform><numerusform>تم تحديث »%1« وملفين اثنين آخرين.</numerusform><numerusform>تم تحديث »%1« و%n ملفات أخرى.</numerusform><numerusform>تم تحديث »%1« و%n ملفا آخر.</numerusform><numerusform>تم تحديث »%1« و%n ملف آخر.</numerusform></translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="478"/>
@@ -939,7 +939,7 @@ The update will be performed in the background, and overwrite the current AppIma
     <message numerus="yes">
         <location filename="../src/gui/folder.cpp" line="483"/>
         <source>»%1« has been renamed to »%2« and %n other file(s) have been renamed.</source>
-        <translation><numerusform>تمت إعادة تسمية »%1« إلى »%2« وتمت إعادة تسمية ملف آخر %n.</numerusform><numerusform>تمت إعادة تسمية »%1« إلى »%2« وتمت إعادة تسمية ملف آخر %n.</numerusform><numerusform>تمت إعادة تسمية »%1« إلى »%2« وتمت إعادة تسمية ملفين آخرين %n.</numerusform><numerusform>تمت إعادة تسمية »%1« إلى »%2« وتمت إعادة تسمية %n ملفات أخرى.</numerusform><numerusform>تمت إعادة تسمية »%1« إلى »%2« وتمت إعادة تسمية %n ملفات أخرى.</numerusform><numerusform>تمت إعادة تسمية »%1« إلى »%2« وتمت إعادة تسمية %n ملفات أخرى.</numerusform></translation>
+        <translation><numerusform>تمت إعادة تسمية »%1« إلى »%2« ولم تتم إعادة تسمية ملف آخر.</numerusform><numerusform>تمت إعادة تسمية »%1« إلى »%2« وتمت إعادة تسمية ملف واحد آخر.</numerusform><numerusform>تمت إعادة تسمية »%1« إلى »%2« وتمت إعادة تسمية ملفين اثنين آخرين.</numerusform><numerusform>تمت إعادة تسمية »%1« إلى »%2« وتمت إعادة تسمية %n ملفات أخرى.</numerusform><numerusform>تمت إعادة تسمية »%1« إلى »%2« وتمت إعادة تسمية %n ملفا آخر.</numerusform><numerusform>تمت إعادة تسمية »%1« إلى »%2« وتمت إعادة تسمية %n ملف آخر.</numerusform></translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="485"/>
@@ -950,7 +950,7 @@ The update will be performed in the background, and overwrite the current AppIma
     <message numerus="yes">
         <location filename="../src/gui/folder.cpp" line="490"/>
         <source>»%1« has been moved to »%2« and %n other file(s) have been moved.</source>
-        <translation><numerusform>تم نقل »%1« إلى »%2« وتم نقل ملف آخر %n.</numerusform><numerusform>تم نقل »%1« إلى »%2« وتم نقل ملف آخر %n.</numerusform><numerusform>تم نقل »%1« إلى »%2« وتم نقل ملفين آخرين %n.</numerusform><numerusform>تم نقل »%1« إلى »%2« وتم نقل %n ملفات أخرى.</numerusform><numerusform>تم نقل »%1« إلى »%2« وتم نقل %n ملفات أخرى.</numerusform><numerusform>تم نقل »%1« إلى »%2« وتم نقل %n ملفات أخرى.</numerusform></translation>
+        <translation><numerusform>تم نقل »%1« إلى »%2« ولم يتم نقل ملف آخر.</numerusform><numerusform>تم نقل »%1« إلى »%2« وتم نقل ملف واحد آخر.</numerusform><numerusform>تم نقل »%1« إلى »%2« وتم نقل ملفين اثنين آخرين.</numerusform><numerusform>تم نقل »%1« إلى »%2« وتم نقل %n ملفات أخرى.</numerusform><numerusform>تم نقل »%1« إلى »%2« وتم نقل %n ملفا آخر.</numerusform><numerusform>تم نقل »%1« إلى »%2« وتم نقل %n ملف آخر.</numerusform></translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="492"/>
@@ -960,17 +960,17 @@ The update will be performed in the background, and overwrite the current AppIma
     <message numerus="yes">
         <location filename="../src/gui/folder.cpp" line="497"/>
         <source>»%1« and %n other file(s) have sync conflicts.</source>
-        <translation><numerusform>لدى »%1« وملف آخر %n تعارضات مزامنة.</numerusform><numerusform>لدى »%1« وملف آخر %n تعارضات مزامنة.</numerusform><numerusform>لدى »%1« وملفين آخرين %n تعارضات مزامنة.</numerusform><numerusform>لدى »%1« و%n ملفات أخرى تعارضات مزامنة.</numerusform><numerusform>لدى »%1« و%n ملفات أخرى تعارضات مزامنة.</numerusform><numerusform>لدى »%1« و%n ملفات أخرى تعارضات مزامنة.</numerusform></translation>
+        <translation><numerusform>لدى »%1« تعارضات في المزامنة ولا يوجد ملف آخر بتعارضات في المزامنة.</numerusform><numerusform>لدى »%1« وملف واحد آخر تعارضات في المزامنة.</numerusform><numerusform>لدى »%1« وملفين اثنين آخرين تعارضات في المزامنة.</numerusform><numerusform>لدى »%1« و%n ملفات أخرى تعارضات في المزامنة.</numerusform><numerusform>لدى »%1« و%n ملفا آخر تعارضات في المزامنة.</numerusform><numerusform>لدى »%1« و%n ملف آخر تعارضات في المزامنة.</numerusform></translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="499"/>
         <source>»%1« has a sync conflict. Please check the conflict file!</source>
-        <translation>لدى »%1« تعارض مزامنة. يرجى التحقق من ملف التعارض!</translation>
+        <translation>لدى »%1« تعارض في المزامنة. يرجى التحقق من ملف التعارض!</translation>
     </message>
     <message numerus="yes">
         <location filename="../src/gui/folder.cpp" line="504"/>
         <source>»%1« and %n other file(s) could not be synced due to errors. See the log for details.</source>
-        <translation><numerusform>تعذر مزامنة »%1« وملف آخر %n بسبب أخطاء. راجع السجل للتفاصيل.</numerusform><numerusform>تعذر مزامنة »%1« وملف آخر %n بسبب أخطاء. راجع السجل للتفاصيل.</numerusform><numerusform>تعذر مزامنة »%1« وملفين آخرين %n بسبب أخطاء. راجع السجل للتفاصيل.</numerusform><numerusform>تعذر مزامنة »%1« و%n ملفات أخرى بسبب أخطاء. راجع السجل للتفاصيل.</numerusform><numerusform>تعذر مزامنة »%1« و%n ملفات أخرى بسبب أخطاء. راجع السجل للتفاصيل.</numerusform><numerusform>تعذر مزامنة »%1« و%n ملفات أخرى بسبب أخطاء. راجع السجل للتفاصيل.</numerusform></translation>
+        <translation><numerusform>تعذر مزامنة »%1« بسبب أخطاء ولا يوجد ملف آخر لا يمكن مزامنته. راجع السجل للتفاصيل.</numerusform><numerusform>تعذر مزامنة »%1« وملف واحد آخر بسبب أخطاء. راجع السجل للتفاصيل.</numerusform><numerusform>تعذر مزامنة »%1« وملفين اثنين آخرين بسبب أخطاء. راجع السجل للتفاصيل.</numerusform><numerusform>تعذر مزامنة »%1« و%n ملفات أخرى بسبب أخطاء. راجع السجل للتفاصيل.</numerusform><numerusform>تعذر مزامنة »%1« و%n ملفا آخر بسبب أخطاء. راجع السجل للتفاصيل.</numerusform><numerusform>تعذر مزامنة »%1« و%n ملف آخر بسبب أخطاء. راجع السجل للتفاصيل.</numerusform></translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="506"/>
@@ -1174,7 +1174,7 @@ Please consider removing this folder from the account and adding it again.</sour
     <message>
         <location filename="../src/gui/folderwatcher_linux.cpp" line="81"/>
         <source>This problem usually happens when the inotify watches are exhausted. Check the FAQ for details.</source>
-        <translation>عادةً ما يحدث هذا المشكلة عندما تستنفد مراقبات inotify. تحقق من الأسئلة الشائعة للحصول على التفاصيل.</translation>
+        <translation>تحدث هذه المشكلة عادةً عندما تستنفد مراقبات inotify. راجع الأسئلة الشائعة للحصول على التفاصيل.</translation>
     </message>
 </context>
 <context>
@@ -1191,7 +1191,7 @@ Please consider removing this folder from the account and adding it again.</sour
     <message>
         <location filename="../src/gui/folderwizard/folderwizardlocalpath.cpp" line="103"/>
         <source>Select the Spaces root folder</source>
-        <translation>اختر مجلد جذر المساحات</translation>
+        <translation>اختر المجلد الجذر المساحات</translation>
     </message>
 </context>
 <context>
@@ -1199,17 +1199,17 @@ Please consider removing this folder from the account and adding it again.</sour
     <message>
         <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="27"/>
         <source>Connection Timeout</source>
-        <translation>انتهاء مدة الاتصال</translation>
+        <translation>انتهاء مهلة الاتصال</translation>
     </message>
     <message>
         <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="111"/>
         <source>No E-Tag received from server, check Proxy/Gateway</source>
-        <translation>لم يتم استلام علامة E-Tag من الخادم، تحقق من البروكسي/البوابة</translation>
+        <translation>لم يتم استلام علامة إلكترونية (E-Tag) من الخادم، تحقق من الوكيل/البوابة</translation>
     </message>
     <message>
         <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="117"/>
         <source>We received a different E-Tag for resuming. Retrying next time.</source>
-        <translation>لقد تلقينا علامة E-Tag مختلفة للاستئناف. سنحاول مرة أخرى في المرة القادمة.</translation>
+        <translation>تلقينا علامة إلكترونية &lt;(E-Tag) مختلفة لاستئناف العملية. سنحاول مرة أخرى في المرة القادمة.</translation>
     </message>
     <message>
         <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="127"/>
