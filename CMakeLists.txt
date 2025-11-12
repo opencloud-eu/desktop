@@ -36,8 +36,6 @@ include(ECMSetupVersion)
 include(KDECompilerSettings NO_POLICY_SCOPE)
 include(ECMEnableSanitizers)
 
-# while we use qt_add_qml_module instead of ecm_add_qml_module
-# include ECMQmlModule to set up the policies
 include(ECMQmlModule)
 
 if(UNIT_TESTING)
