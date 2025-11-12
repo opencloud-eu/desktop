@@ -1143,12 +1143,12 @@ Veuillez envisager de supprimer ce dossier du compte et de l&apos;ajouter à nou
     <message>
         <location filename="../src/gui/folderstatusmodel.cpp" line="386"/>
         <source>Checking for changes in remote »%1«</source>
-        <translation type="unfinished"/>
+        <translation>Vérification des modifications dans le dossier distant « %1 »</translation>
     </message>
     <message>
         <location filename="../src/gui/folderstatusmodel.cpp" line="388"/>
         <source>Checking for changes in local »%1«</source>
-        <translation type="unfinished"/>
+        <translation>Vérification des modifications dans le dossier local « %1 »</translation>
     </message>
     <message>
         <location filename="../src/gui/folderstatusmodel.cpp" line="392"/>
@@ -1403,12 +1403,12 @@ Les éléments dont la suppression est autorisée seront supprimés s&apos;ils e
     <message>
         <location filename="../src/gui/ignorelisteditor.cpp" line="41"/>
         <source>This entry is provided by the system at %1 and cannot be modified in this view.</source>
-        <translation type="unfinished"/>
+        <translation>Cette entrée est fournie par le système à « %1 » et ne peut pas être modifiée dans cette vue.</translation>
     </message>
     <message>
         <location filename="../src/gui/ignorelisteditor.cpp" line="111"/>
         <source>Cannot write changes to »%1«.</source>
-        <translation type="unfinished"/>
+        <translation>Impossible d&apos;écrire des modifications sur « %1 ».</translation>
     </message>
     <message>
         <location filename="../src/gui/ignorelisteditor.cpp" line="133"/>
@@ -1441,7 +1441,7 @@ Les éléments dont la suppression est autorisée seront supprimés s&apos;ils e
     <message>
         <location filename="../src/gui/issueswidget.cpp" line="208"/>
         <source>The file »%1« was ignored as its name is reserved by %2</source>
-        <translation type="unfinished"/>
+        <translation>Le fichier « %1 » a été ignoré, car son nom est réservé par %2</translation>
     </message>
     <message>
         <location filename="../src/gui/issueswidget.cpp" line="234"/>
@@ -1835,7 +1835,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
     <message>
         <location filename="../src/libsync/owncloudpropagator.cpp" line="733"/>
         <source>The file »%1« is currently in use</source>
-        <translation type="unfinished"/>
+        <translation>Le fichier « %1 » est actuellement utilisé</translation>
     </message>
 </context>
 <context>
@@ -1903,7 +1903,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
     <message>
         <location filename="../src/libsync/discovery.cpp" line="1262"/>
         <source>Server replied with an error while reading directory »%1«: %2</source>
-        <translation type="unfinished"/>
+        <translation>Le serveur a renvoyé une erreur lors de la lecture du répertoire « %1 » : %2</translation>
     </message>
     <message>
         <location filename="../src/libsync/discovery.cpp" line="1052"/>
