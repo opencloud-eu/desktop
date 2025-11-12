@@ -18,10 +18,9 @@ set(APPLE_SUPPRESS_X11_WARNING ON)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-find_package(QT 6.8 NAMES Qt6 COMPONENTS Core REQUIRED)
+find_package(Qt6 COMPONENTS Core Concurrent Network Widgets Xml Quick QuickWidgets QuickControls2 Linguist REQUIRED)
+qt_standard_project_setup(REQUIRES 6.8)
 
-find_package(Qt6 COMPONENTS Core Concurrent Network Widgets Xml Quick QuickWidgets QuickControls2 REQUIRED)
-find_package(Qt6LinguistTools REQUIRED)
 get_target_property (QT_QMAKE_EXECUTABLE Qt::qmake IMPORTED_LOCATION)
 message(STATUS "Using Qt ${QT_VERSION} (${QT_QMAKE_EXECUTABLE})")
 
