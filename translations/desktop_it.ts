@@ -37,7 +37,7 @@
     <message>
         <location filename="../src/gui/newwizard/states/accountconfiguredsetupwizardstate.cpp" line="57"/>
         <source>path must be absolute</source>
-        <translation type="unfinished"/>
+        <translation>il percorso dev&apos;essere assoluto</translation>
     </message>
 </context>
 <context>
@@ -60,7 +60,7 @@
     <message>
         <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.ui" line="147"/>
         <source>Synchronize all existing spaces</source>
-        <translation type="unfinished"/>
+        <translation>Sincronizza tutti gli spazi esistenti</translation>
     </message>
     <message>
         <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.ui" line="157"/>
@@ -96,7 +96,7 @@
     <message>
         <location filename="../src/libsync/appprovider.cpp" line="89"/>
         <source>Failed to open »%1« in web. Error: %2.</source>
-        <translation>Impossibile aprire »%1« nel web. Errore: %2.</translation>
+        <translation>Impossibile aprire »%1« via web. Errore: %2.</translation>
     </message>
 </context>
 <context>
@@ -104,7 +104,7 @@
     <message>
         <location filename="../src/libsync/common/checksums.cpp" line="124"/>
         <source>The checksum header is malformed: %1</source>
-        <translation>Il &apos;checksum header&apos; ha un errore nella sua formazione: %1</translation>
+        <translation>L&apos;header checksum è malformata: %1</translation>
     </message>
     <message>
         <location filename="../src/libsync/common/checksums.cpp" line="128"/>
@@ -231,7 +231,7 @@ Utilità desktop per la sincronizazione dei file.</translation>
     <message>
         <location filename="../src/gui/qml/FolderDelegate.qml" line="32"/>
         <source>Folder Sync</source>
-        <translation>Sincronizazione directory</translation>
+        <translation>Sincronizzazione directory</translation>
     </message>
     <message>
         <location filename="../src/gui/qml/FolderDelegate.qml" line="72"/>
@@ -349,7 +349,7 @@ Utilità desktop per la sincronizazione dei file.</translation>
         <location filename="../src/gui/folderstatusmodel.cpp" line="128"/>
         <source>%1 %2 (%3 of %4)</source>
         <extracomment>Example text: &quot;uploading foobar.png (2MB of 2MB)&quot;</extracomment>
-        <translation>%1 %2 (%3 of %4)</translation>
+        <translation>%1 %2 (%3 di %4)</translation>
     </message>
     <message>
         <location filename="../src/gui/folderstatusmodel.cpp" line="133"/>
@@ -560,7 +560,7 @@ Utilità desktop per la sincronizazione dei file.</translation>
     <message>
         <location filename="../src/libsync/abstractnetworkjob.cpp" line="247"/>
         <source>Connection timed out</source>
-        <translation>Connessione sospesa</translation>
+        <translation>Connessione scaduta</translation>
     </message>
     <message>
         <location filename="../src/libsync/abstractnetworkjob.cpp" line="249"/>
@@ -711,7 +711,7 @@ La sincronizzazione è in pausa perché la connessione Internet è a consumo. &l
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="496"/>
         <source>&lt;p&gt;Do you really want to remove the connection to the account %1«?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; This will &lt;b&gt;not&lt;/b&gt; delete any files.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Do you really want to remove the connection to the account %1«?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; This will &lt;b&gt;not&lt;/b&gt; delete any files.&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;Vuoi davvero rimuovere il collegamento all&apos;account %1«?Nota:&lt;/b&gt; Questo &lt;b&gt;non&lt;/b&gt; cancellerà alcun file.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="500"/>
@@ -852,7 +852,7 @@ L&apos;aggiornamento verrà eseguito in background e sovrascriverà il file AppI
     <message>
         <location filename="../src/libsync/discoveryphase.cpp" line="213"/>
         <source>Error while opening directory »%1«</source>
-        <translation type="unfinished"/>
+        <translation>Errore durante l&apos;apertura della directory »%1«</translation>
     </message>
     <message>
         <location filename="../src/libsync/discoveryphase.cpp" line="215"/>
@@ -862,7 +862,7 @@ L&apos;aggiornamento verrà eseguito in background e sovrascriverà il file AppI
     <message>
         <location filename="../src/libsync/discoveryphase.cpp" line="219"/>
         <source>Directory not found: »%1«</source>
-        <translation type="unfinished"/>
+        <translation>Directory non trovata: »%1«</translation>
     </message>
 </context>
 <context>
@@ -878,7 +878,7 @@ L&apos;aggiornamento verrà eseguito in background e sovrascriverà il file AppI
     <message>
         <location filename="../src/gui/folder.cpp" line="150"/>
         <source>The path »%1« is too long. Please enable long paths in the Windows settings or choose a different folder.</source>
-        <translation type="unfinished"/>
+        <translation>Il percorso »%1« è troppo lungo. Abilita i percorsi lunghi nelle impostazioni di Windows o scegli una cartella diversa.</translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="192"/>
