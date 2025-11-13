@@ -204,7 +204,7 @@ void PropagateUploadFileTUS::slotChunkFinished()
         return;
     }
 
-    const qint64 offset = job->reply()->rawHeader(uploadOffset()).toLongLong();
+    const uint64_t offset = job->reply()->rawHeader(uploadOffset()).toULongLong();
     propagator()->reportProgress(*_item, offset);
     _currentOffset = offset;
 

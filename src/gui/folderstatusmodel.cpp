@@ -80,7 +80,7 @@ namespace {
         // item if no items are in progress.
         SyncFileItem curItem = progress._lastCompletedItem;
         qint64 curItemProgress = -1; // -1 means finished
-        qint64 biggerItemSize = 0;
+        uint64_t biggerItemSize = 0;
         quint64 estimatedUpBw = 0;
         quint64 estimatedDownBw = 0;
         QStringList allFilenames;

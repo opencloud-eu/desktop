@@ -65,18 +65,16 @@ namespace OCC {
 
 Q_LOGGING_CATEGORY(lcUtility, "sync.utility", QtMsgType::QtInfoMsg)
 
-QString Utility::octetsToString(qint64 octets)
+QString Utility::octetsToString(uint64_t octets)
 {
-    OC_ASSERT(octets >= 0)
-
     using namespace FileSystem::SizeLiterals;
 
     // We do what macOS 10.8 and above do: 0 fraction digits for bytes and KB; 1 fraction digits for MB; 2 for GB and above.
     // See also https://developer.apple.com/documentation/foundation/nsbytecountformatter/1417887-adaptive
     int precision = 0;
-    if (quint64(octets) >= 1_GiB) {
+    if (octets >= 1_GiB) {
         precision = 2;
-    } else if (quint64(octets) >= 1_MiB) {
+    } else if (octets >= 1_MiB) {
         precision = 1;
     }
 
