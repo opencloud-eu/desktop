@@ -140,25 +140,7 @@ public:
     static SyncFileItemPtr fromSyncJournalFileRecord(const SyncJournalFileRecord &rec);
 
 
-    SyncFileItem(const QString &localName = {})
-        : _localName(localName)
-        , _type(ItemTypeUnsupported)
-        , _direction(None)
-        , _serverHasIgnoredFiles(false)
-        , _hasBlacklistEntry(false)
-        , _status(NoStatus)
-        , _isRestoration(false)
-        , _isSelectiveSync(false)
-        , _httpErrorCode(0)
-        , _affectedItems(1)
-        , _modtime(0)
-        , _size(0)
-        , _inode(0)
-        , _previousSize(0)
-        , _previousModtime(0)
-        , _relevantDirectoyInstruction(false)
-    {
-    }
+    SyncFileItem(const QString &localName = {});
 
     friend bool operator==(const SyncFileItem &item1, const SyncFileItem &item2)
     {
@@ -266,33 +248,33 @@ public:
      */
     QString _originalFile;
 
-    ItemType _type;
-    Direction _direction;
-    bool _serverHasIgnoredFiles;
+    ItemType _type = ItemTypeUnsupported;
+    Direction _direction = None;
+    bool _serverHasIgnoredFiles = false;
 
     /// Whether there's an entry in the blacklist table.
     /// Note: that entry may have retries left, so this can be true
     /// without the status being FileIgnored.
-    bool _hasBlacklistEntry;
+    bool _hasBlacklistEntry = false;
 
     // Variables useful to report to the user
-    Status _status;
-    bool _isRestoration; // The original operation was forbidden, and this is a restoration
-    bool _isSelectiveSync; // The file is removed or ignored because it is in the selective sync list
-    quint16 _httpErrorCode;
+    Status _status = NoStatus;
+    bool _isRestoration = false; // The original operation was forbidden, and this is a restoration
+    bool _isSelectiveSync = false; // The file is removed or ignored because it is in the selective sync list
+    quint16 _httpErrorCode = 0;
     RemotePermissions _remotePerm;
     QString _errorString; // Contains a string only in case of error
     QString _messageString; // Contains a string only in case of hand crafted events
     QByteArray _responseTimeStamp;
     QByteArray _requestId; // X-Request-Id of the failed request
-    quint32 _affectedItems; // the number of affected items by the operation on this item.
+    quint32 _affectedItems = 1; // the number of affected items by the operation on this item.
     // usually this value is 1, but for removes on dirs, it might be much higher.
 
     // Variables used by the propagator
-    time_t _modtime;
+    time_t _modtime = 0;
     QString _etag;
-    qint64 _size;
-    quint64 _inode;
+    uint64_t _size = 0;
+    quint64 _inode = 0;
     QByteArray _fileId;
 
     // This is the value for the 'new' side, matching with _size and _modtime.
@@ -304,8 +286,8 @@ public:
     QByteArray _checksumHeader;
 
     // The size and modtime of the file getting overwritten (on the disk for downloads, on the server for uploads).
-    qint64 _previousSize;
-    time_t _previousModtime;
+    uint64_t _previousSize = 0;
+    time_t _previousModtime = 0;
 
     bool _relevantDirectoyInstruction = false;
     bool _finished = false;

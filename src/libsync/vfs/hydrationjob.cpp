@@ -43,7 +43,7 @@ void HydrationJob::start()
             errorMsg = _job->reply()->errorString();
         }
 
-        if (_job->contentLength() != -1) {
+        if (_job->contentLength()) {
             const auto size = _job->resumeStart() + _job->contentLength();
             if (size != _record.size()) {
                 errorMsg = tr("Unexpected file size transferred. Expected %1 received %2").arg(QString::number(_record.size()), QString::number(size));

@@ -16,12 +16,6 @@
 
 #include <QHash>
 #include <QObject>
-#include <QMap>
-#include <QElapsedTimer>
-#include <QTimer>
-#include <QPointer>
-#include <QIODevice>
-#include <QMutex>
 
 #include "accountfwd.h"
 #include "bandwidthmanager.h"
@@ -431,7 +425,7 @@ public:
      *
      * This allows skipping of uploads that have a very high likelihood of failure.
      */
-    QHash<QString, qint64> _folderQuota;
+    QHash<QString, uint64_t> _folderQuota;
 
     /* the maximum number of jobs using bandwidth (uploads or downloads, in parallel) */
     int maximumActiveTransferJob();
@@ -443,7 +437,7 @@ public:
      * chunk-upload duration set.
      */
     qint64 _chunkSize;
-    qint64 smallFileSize();
+    uint64_t smallFileSize();
 
     /* The maximum number of active jobs in parallel  */
     int hardMaximumActiveJob();

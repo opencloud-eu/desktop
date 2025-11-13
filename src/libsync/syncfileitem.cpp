@@ -41,6 +41,11 @@ SyncFileItemPtr SyncFileItem::fromSyncJournalFileRecord(const SyncJournalFileRec
     return item;
 }
 
+SyncFileItem::SyncFileItem(const QString &localName)
+    : _localName(localName)
+{
+}
+
 SyncInstruction SyncFileItem::instruction() const
 {
     return _instruction;

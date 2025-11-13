@@ -387,7 +387,7 @@ void PropagateDownloadFile::startFullDownload()
 qint64 PropagateDownloadFile::committedDiskSpace() const
 {
     if (state() == Running) {
-        return qBound(0LL, _item->_size - _resumeStart - _downloadProgress, _item->_size);
+        return qBound<uint64_t>(0, _item->_size - _resumeStart - _downloadProgress, _item->_size);
     }
     return 0;
 }
@@ -481,7 +481,7 @@ void PropagateDownloadFile::slotGetFinished()
      */
     const QByteArray sizeHeader("Content-Length");
     bool hasSizeHeader = true;
-    qint64 bodySize = job->reply()->rawHeader(sizeHeader).toLongLong(&hasSizeHeader);
+    uint64_t bodySize = job->reply()->rawHeader(sizeHeader).toULongLong(&hasSizeHeader);
 
     // Qt removes the content-length header for transparently decompressed HTTP1 replies
     // but not for HTTP2 or SPDY replies. For these it remains and contains the size

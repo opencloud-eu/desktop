@@ -17,7 +17,6 @@
 #include "networkjobs.h"
 #include "owncloudpropagator.h"
 
-#include <QBuffer>
 #include <QFile>
 
 namespace OCC {
@@ -119,8 +118,8 @@ private Q_SLOTS:
 private:
     void deleteExistingFolder();
 
-    qint64 _resumeStart;
-    qint64 _downloadProgress;
+    uint64_t _resumeStart;
+    uint64_t _downloadProgress;
     QPointer<GETFileJob> _job;
     QFile _tmpFile;
     bool _deleteExisting;

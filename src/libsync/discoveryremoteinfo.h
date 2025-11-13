@@ -37,7 +37,7 @@ public:
     RemotePermissions remotePerm() const;
     time_t modtime() const;
 
-    int64_t size() const;
+    uint64_t size() const;
 
     QString error() const;
 
