@@ -21,6 +21,7 @@
 #include "common/utility.h"
 #include "discoveryphase.h"
 #include "filesystem.h"
+#include "libsync/common/filesystembase.h"
 #include "propagatedownload.h"
 #include "propagateremotedelete.h"
 #include "propagateremotemkdir.h"
@@ -42,6 +43,7 @@
 #include <qmath.h>
 
 using namespace std::chrono_literals;
+using namespace OCC::FileSystem::SizeLiterals;
 
 namespace OCC {
 
@@ -355,10 +357,9 @@ PropagateItemJob *OwncloudPropagator::createJob(const SyncFileItemPtr &item)
     Q_UNREACHABLE();
 }
 
-qint64 OwncloudPropagator::smallFileSize()
+uint64_t OwncloudPropagator::smallFileSize()
 {
-    const qint64 smallFileSize = 100 * 1024; //default to 1 MB. Not dynamic right now.
-    return smallFileSize;
+    return 1_MB; // default to 1 MB. Not dynamic right now.
 }
 
 /**

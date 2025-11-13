@@ -54,6 +54,7 @@ public:
             return;
         }
         _inode = sb.st_ino;
+        Q_ASSERT(sb.st_size >= 0);
         _size = sb.st_size;
         _modtime = sb.st_mtime;
 #ifdef Q_OS_MAC
@@ -65,7 +66,7 @@ public:
     QString _name;
     ItemType _type = ItemTypeUnsupported;
     time_t _modtime = 0;
-    int64_t _size = 0;
+    uint64_t _size = 0;
     uint64_t _inode = 0;
     bool _isHidden = false;
 };
@@ -129,7 +130,7 @@ time_t LocalInfo::modtime() const
     return d->_modtime;
 }
 
-int64_t LocalInfo::size() const
+uint64_t LocalInfo::size() const
 {
     return d->_size;
 }

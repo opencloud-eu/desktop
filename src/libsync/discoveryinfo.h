@@ -36,7 +36,7 @@ public:
     /** FileName of the entry (this does not contain any directory or path, just the plain name */
     QString name() const;
     time_t modtime() const;
-    int64_t size() const;
+    uint64_t size() const;
     uint64_t inode() const;
     ItemType type() const;
     bool isDirectory() const;

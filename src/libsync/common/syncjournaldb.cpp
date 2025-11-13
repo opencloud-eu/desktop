@@ -1170,6 +1170,13 @@ static bool deleteBatch(SqlQuery &query, const QStringList &entries, const QStri
     return true;
 }
 
+bool SyncJournalDb::UploadInfo::validate(uint64_t size, qint64 modtime, const QByteArray &checksum) const
+{
+    Q_ASSERT(!checksum.isEmpty());
+    Q_ASSERT(!_valid || !_contentChecksum.isEmpty());
+    return _valid && _size == size && _modtime == modtime && _contentChecksum == checksum;
+}
+
 SyncJournalDb::DownloadInfo SyncJournalDb::getDownloadInfo(const QString &file)
 {
     QMutexLocker locker(&_mutex);

@@ -17,8 +17,6 @@ GETFileJob::GETFileJob(AccountPtr account, const QUrl &url, const QString &path,
     , _device(device)
     , _headers(headers)
     , _expectedEtagForResume(expectedEtagForResume)
-    , _expectedContentLength(-1)
-    , _contentLength(-1)
     , _resumeStart(resumeStart)
 {
     connect(this, &GETFileJob::networkError, this, [this] {
@@ -83,6 +81,26 @@ void GETFileJob::newReplyHook(QNetworkReply *reply)
     connect(reply, &QNetworkReply::downloadProgress, this, &GETFileJob::downloadProgress);
 }
 
+uint64_t GETFileJob::resumeStart() const
+{
+    return _resumeStart;
+}
+
+std::optional<uint64_t> GETFileJob::contentLength() const
+{
+    return _contentLength;
+}
+
+std::optional<uint64_t> GETFileJob::expectedContentLength() const
+{
+    return _expectedContentLength;
+}
+
+void GETFileJob::setExpectedContentLength(uint64_t size)
+{
+    _expectedContentLength = size;
+}
+
 void GETFileJob::slotMetaDataChanged()
 {
     // For some reason setting the read buffer in GETFileJob::start doesn't seem to go
@@ -132,8 +150,10 @@ void GETFileJob::slotMetaDataChanged()
     }
 
     bool ok;
-    _contentLength = reply()->header(QNetworkRequest::ContentLengthHeader).toLongLong(&ok);
-    if (ok && _expectedContentLength != -1 && _contentLength != _expectedContentLength) {
+    _contentLength = reply()->header(QNetworkRequest::ContentLengthHeader).toULongLong(&ok);
+    if (!ok) {
+        _contentLength.reset();
+    } else if (_expectedContentLength.has_value() && _contentLength != _expectedContentLength) {
         qCWarning(lcGetJob) << u"We received a different content length than expected!" << _expectedContentLength << u"vs" << _contentLength;
         _errorString = tr("We received an unexpected download Content-Length.");
         _errorStatus = SyncFileItem::NormalError;
@@ -141,13 +161,13 @@ void GETFileJob::slotMetaDataChanged()
         return;
     }
 
-    qint64 start = 0;
+    uint64_t start = 0;
     const QString ranges = QString::fromUtf8(reply()->rawHeader("Content-Range"));
     if (!ranges.isEmpty()) {
         static QRegularExpression rx(QStringLiteral("bytes (\\d+)-"));
         const auto match = rx.match(ranges);
         if (match.hasMatch()) {
-            start = match.captured(1).toLongLong();
+            start = match.captured(1).toULongLong();
         }
     }
     if (start != _resumeStart) {
