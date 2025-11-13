@@ -103,33 +103,13 @@ target_link_libraries(OpenCloudGui
 )
 
 apply_common_target_settings(OpenCloudGui)
-ecm_add_qml_module(OpenCloudGui
-        URI eu.OpenCloud.gui
-        VERSION 1.0
-        NAMESPACE OCC
-        GENERATE_PLUGIN_SOURCE
-        QML_FILES
-            qml/OpenCloud.js
-
-            qml/AccountBar.qml
-            qml/AccountButton.qml
-            qml/FolderDelegate.qml
-            qml/FolderError.qml
-
-            qml/UpdateUrlDialog.qml
-
-            qml/credentials/Credentials.qml
-            qml/credentials/OAuthCredentials.qml
-
-            spaces/qml/SpaceDelegate.qml
-            spaces/qml/SpacesView.qml
-)
 
 generate_export_header(OpenCloudGui
         EXPORT_MACRO_NAME OPENCLOUD_GUI_EXPORT
         EXPORT_FILE_NAME opencloudguilib.h
         STATIC_DEFINE OPENCLOUD_BUILT_AS_STATIC
 )
+add_subdirectory(qml)
 add_subdirectory(spaces)
 
 
