@@ -43,6 +43,7 @@ Feature: Syncing files
             client content
             """
         And user "Alice" has uploaded file with content "changed server content" to "/conflict.txt" in the server
+        And the user has waited for "5" seconds
         When the user resumes the file sync on the client
         And the user clicks on the activity tab
         And the user selects "Not Synced" tab in the activity
