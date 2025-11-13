@@ -1913,7 +1913,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
     <message>
         <location filename="../src/libsync/discovery.cpp" line="181"/>
         <source>The file is listed on the ignore list.</source>
-        <translation type="unfinished"/>
+        <translation>Le fichier figure sur la liste des fichiers ignorés.</translation>
     </message>
     <message>
         <location filename="../src/libsync/discovery.cpp" line="530"/>
@@ -1956,7 +1956,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
     <message>
         <location filename="../src/libsync/owncloudpropagator.cpp" line="1103"/>
         <source>The folder »%1« is currently in use</source>
-        <translation type="unfinished"/>
+        <translation>Le dossier « %1 » est en cours d&apos;utilisation</translation>
     </message>
 </context>
 <context>
@@ -1975,18 +1975,18 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
         <location filename="../src/libsync/propagatedownload.cpp" line="170"/>
         <location filename="../src/libsync/propagatedownload.cpp" line="666"/>
         <source>The file has changed since discovery</source>
-        <translation type="unfinished"/>
+        <translation>Le fichier a été modifié depuis</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatedownload.cpp" line="175"/>
         <source>Failed to free up space, the file »%1« is currently in use</source>
-        <translation type="unfinished"/>
+        <translation>Échec de la libération de l&apos;espace, le fichier  « %1 » est en cours d&apos;utilisation</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatedownload.cpp" line="201"/>
         <location filename="../src/libsync/propagatedownload.cpp" line="284"/>
         <source>The file »%1« can not be downloaded because of a local file name clash with %2!</source>
-        <translation type="unfinished"/>
+        <translation>Le fichier « %1 » ne peut pas être téléchargé en raison d&apos;un conflit de nom de fichier local avec %2 !</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatedownload.cpp" line="293"/>
@@ -1994,12 +1994,12 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
         <location filename="../src/libsync/propagatedownload.cpp" line="674"/>
         <location filename="../src/libsync/propagatedownload.cpp" line="709"/>
         <source>The file »%1« is currently in use</source>
-        <translation type="unfinished"/>
+        <translation>Le fichier « %1 » est actuellement utilisé</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatedownload.cpp" line="441"/>
         <source>The file was deleted from server</source>
-        <translation type="unfinished"/>
+        <translation>Le fichier a été supprimé du serveur</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatedownload.cpp" line="500"/>
@@ -2019,7 +2019,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
     <message>
         <location filename="../src/libsync/propagatedownload.cpp" line="619"/>
         <source>The file »%1« cannot be saved because of a local file name clash with »%2«!</source>
-        <translation type="unfinished"/>
+        <translation>Le fichier « %1 » ne peut pas être enregistré en raison d’un conflit de nom avec le fichier local « %2 » !</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatedownload.cpp" line="706"/>
@@ -2040,17 +2040,17 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="163"/>
         <source>could not delete file »%1«, error: %2</source>
-        <translation type="unfinished"/>
+        <translation>impossible de supprimer le fichier « %1 », erreur : %2</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="178"/>
         <source>Cannot create local folder »%1« because of a local file name clash with »%2«</source>
-        <translation type="unfinished"/>
+        <translation>Impossible de créer le dossier local « %1 » en raison d&apos;un conflit de nom de fichier local avec « %2 »</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="183"/>
         <source>Could not create folder »%1«</source>
-        <translation type="unfinished"/>
+        <translation>Impossible de créer le dossier « %1 »</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="196"/>
@@ -2060,7 +2060,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="199"/>
         <source>The file »%1« is currently in use</source>
-        <translation type="unfinished"/>
+        <translation>Le fichier « %1 » est actuellement utilisé</translation>
     </message>
 </context>
 <context>
@@ -2074,17 +2074,17 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
         <location filename="../src/libsync/propagatorjobs.cpp" line="87"/>
         <location filename="../src/libsync/propagatorjobs.cpp" line="114"/>
         <source>The file »%1« is currently in use</source>
-        <translation type="unfinished"/>
+        <translation>Le fichier « %1 » est actuellement utilisé</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="107"/>
         <source>Could not remove »%1« because of a local file name clash with »%2«!</source>
-        <translation type="unfinished"/>
+        <translation>Impossible de supprimer « %1 » en raison d&apos;un conflit de nom de fichier local avec « %2 » !</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="123"/>
         <source>Could not move »%1« to the trash bin</source>
-        <translation type="unfinished"/>
+        <translation>Impossible de déplacer « %1 » vers la corbeille</translation>
     </message>
 </context>
 <context>
@@ -2092,12 +2092,12 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="234"/>
         <source>The file »%1« can not be renamed to »%2« because of a local file name clash</source>
-        <translation type="unfinished"/>
+        <translation>Le fichier  « %1 » ne peut pas être renommé en « %2 » en raison d&apos;un conflit de nom de fichier local.</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="240"/>
         <source>Could not rename »%1« to »%2«, the file is currently in use</source>
-        <translation type="unfinished"/>
+        <translation>Impossible de renommer « %1 » en « %2 », le fichier est en cours d&apos;utilisation</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="262"/>
@@ -2107,7 +2107,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="265"/>
         <source>The file »%1« is currently in use</source>
-        <translation type="unfinished"/>
+        <translation>Le fichier « %1 » est actuellement utilisé</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="271"/>
@@ -2156,7 +2156,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
     <message>
         <location filename="../src/libsync/propagateremotemove.cpp" line="150"/>
         <source>The file »%1« is currently in use</source>
-        <translation type="unfinished"/>
+        <translation>Le fichier « %1 » est actuellement utilisé</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagateremotemove.cpp" line="157"/>
@@ -2174,7 +2174,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
     <message>
         <location filename="../src/libsync/owncloudpropagator.cpp" line="1286"/>
         <source>The file »%1« is currently in use</source>
-        <translation type="unfinished"/>
+        <translation>Le fichier « %1 » est actuellement utilisé</translation>
     </message>
 </context>
 <context>
@@ -2192,13 +2192,13 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
     <message>
         <location filename="../src/libsync/propagateupload.cpp" line="131"/>
         <source>The file »%1« cannot be uploaded because another file with the same name, differing only in case, exists</source>
-        <translation type="unfinished"/>
+        <translation>Le fichier « %1 » ne peut pas être téléchargé car il existe un autre fichier portant le même nom et ne différant que par la casse</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagateupload.cpp" line="182"/>
         <location filename="../src/libsync/propagateupload.cpp" line="213"/>
         <source>The file »%1« is currently in use</source>
-        <translation type="unfinished"/>
+        <translation>Le fichier « %1 » est actuellement utilisé</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagateupload.cpp" line="563"/>
@@ -2222,7 +2222,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
     <message>
         <location filename="../src/libsync/propagateuploadtus.cpp" line="60"/>
         <source>The file »%1« is currently in use</source>
-        <translation type="unfinished"/>
+        <translation>Le fichier « %1 » est actuellement utilisé</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagateuploadtus.cpp" line="116"/>
@@ -2240,7 +2240,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
     <message>
         <location filename="../src/libsync/propagateuploadv1.cpp" line="42"/>
         <source>The file »%1« is currently in use</source>
-        <translation type="unfinished"/>
+        <translation>Le fichier « %1 » est actuellement utilisé</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagateuploadv1.cpp" line="100"/>
@@ -2423,12 +2423,12 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
     <message>
         <location filename="../src/gui/socketapi/socketapi.cpp" line="584"/>
         <source>Do you want to delete the directory »%1« and all its contents permanently?</source>
-        <translation type="unfinished"/>
+        <translation>Voulez-vous supprimer définitivement le répertoire « %1 » et tout son contenu ?</translation>
     </message>
     <message>
         <location filename="../src/gui/socketapi/socketapi.cpp" line="585"/>
         <source>Do you want to delete the file »%1« permanently?</source>
-        <translation type="unfinished"/>
+        <translation>Voulez-vous supprimer définitivement le fichier « %1 » ?</translation>
     </message>
     <message>
         <location filename="../src/gui/socketapi/socketapi.cpp" line="627"/>
@@ -2579,7 +2579,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
     <message>
         <location filename="../src/libsync/syncengine.cpp" line="756"/>
         <source>Aborted due to: %1</source>
-        <translation type="unfinished"/>
+        <translation>Annulé en raison de : %1</translation>
     </message>
 </context>
 <context>
@@ -2722,7 +2722,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
     <message>
         <location filename="../src/gui/updatenotifier.cpp" line="47"/>
         <source>Update available</source>
-        <translation type="unfinished"/>
+        <translation>Mise à jour disponible</translation>
     </message>
     <message>
         <location filename="../src/gui/updatenotifier.cpp" line="48"/>
@@ -3028,7 +3028,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
         <location filename="../src/gui/newwizard/pages/serverurlsetupwizardpage.cpp" line="66"/>
         <source>%1 logo</source>
         <extracomment>This is the accessibility text for the logo in the setup wizard page. The parameter is the name for the (branded) application.</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 logo</translation>
     </message>
 </context>
 <context>
@@ -3379,7 +3379,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="47"/>
         <source>»%1« moved to »%2«</source>
-        <translation type="unfinished"/>
+        <translation>« %1 » déplacé à « %2 »</translation>
     </message>
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="51"/>
