@@ -596,7 +596,7 @@ static QString checkPathForSyncRootMarkingRecursive(const QString &path, FolderM
 QString FolderMan::checkPathValidityRecursive(const QString &path, FolderMan::NewFolderType folderType, const QUuid &accountUuid)
 {
     if (path.isEmpty()) {
-        return FolderMan::tr("No valid folder selected!");
+        return tr("No valid folder selected!");
     }
 
 #ifdef Q_OS_WIN
@@ -614,21 +614,21 @@ QString FolderMan::checkPathValidityRecursive(const QString &path, FolderMan::Ne
         if (parentPath != path) {
             return checkPathValidityRecursive(parentPath, folderType, accountUuid);
         }
-        return FolderMan::tr("The selected path does not exist!");
+        return tr("The selected path does not exist!");
     }
 
     if (numberOfSyncJournals(selectedPathInfo.filePath()) != 0) {
-        return FolderMan::tr("The folder »%1« is used in a folder sync connection!").arg(QDir::toNativeSeparators(selectedPathInfo.filePath()));
+        return tr("The folder »%1« is used in a folder sync connection!").arg(QDir::toNativeSeparators(selectedPathInfo.filePath()));
     }
 
     // At this point we know there is no syncdb in the parent hyrarchy, check for spaces sync root.
 
     if (!selectedPathInfo.isDir()) {
-        return FolderMan::tr("The selected path is not a folder!");
+        return tr("The selected path is not a folder!");
     }
 
     if (!selectedPathInfo.isWritable()) {
-        return FolderMan::tr("You have no permission to write to the selected folder!");
+        return tr("You have no permission to write to the selected folder!");
     }
 
     return checkPathForSyncRootMarkingRecursive(path, folderType, accountUuid);
@@ -644,24 +644,26 @@ QString FolderMan::checkPathValidityRecursive(const QString &path, FolderMan::Ne
  */
 QString FolderMan::checkPathValidityForNewFolder(const QString &path, NewFolderType folderType, const QUuid &accountUuid) const
 {
+    if (FileSystem::isChildPathOf2(path, QDir::homePath()).testAnyFlag(FileSystem::ChildResult::IsEqual)) {
+        return tr("The home directory is not allowed to be used as a sync folder!");
+    }
+
     // check if the local directory isn't used yet in another sync
-    const auto cs = Utility::fsCaseSensitivity();
-
-    const QString userDir = QDir::cleanPath(canonicalPath(path)) + QLatin1Char('/');
+    const QString userDir = QDir::cleanPath(canonicalPath(path));
     for (auto f : _folders) {
-        const QString folderDir = QDir::cleanPath(canonicalPath(f->path())) + QLatin1Char('/');
+        const QString folderDir = QDir::cleanPath(canonicalPath(f->path()));
 
-        if (QString::compare(folderDir, userDir, cs) == 0) {
+        if (FileSystem::isChildPathOf2(folderDir, userDir).testAnyFlag(FileSystem::ChildResult::IsEqual)) {
             return tr("There is already a sync from the server to this local folder. "
                       "Please pick another local folder!");
         }
-        if (FileSystem::isChildPathOf(folderDir, userDir)) {
+        if (FileSystem::isChildPathOf2(folderDir, userDir).testAnyFlags(FileSystem::ChildResult::IsChild | FileSystem::ChildResult::IsEqual)) {
             return tr("The local folder »%1« already contains a folder used in a folder sync connection. "
                       "Please pick another local folder!")
                 .arg(QDir::toNativeSeparators(path));
         }
 
-        if (FileSystem::isChildPathOf(userDir, folderDir)) {
+        if (FileSystem::isChildPathOf2(userDir, folderDir).testAnyFlags(FileSystem::ChildResult::IsChild | FileSystem::ChildResult::IsEqual)) {
             return tr("The local folder »%1« is already contained in a folder used in a folder sync connection. "
                       "Please pick another local folder!")
                 .arg(QDir::toNativeSeparators(path));
