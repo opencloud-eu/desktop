@@ -531,34 +531,19 @@ FileSystem::ChildResults FileSystem::isChildPathOf2(QStringView child, QStringVi
             return ChildResult::IsChild;
         }
         // else: do the `cleanPath` version below
-    } else {
-        // Here we fast-path for the case the child is "Documents/a" and the parent is "Documents",
-        // and *not* the case where the child is "Documents/a" and the parent is "Document". In
-        // the latter case, the does start with the name of the parent, but there is an extra 's',
-        // and not a slash.
-
-        // Prevent a string concatenation like in `child.startsWith(parent + QLatin1Char('/'))`:
-        // first check if the child string starts with the parent string
-        if (child.startsWith(parent, sensitivity)) {
-            // ok, now check if the character after the parent is a '/'
-            if (child.length() >= parent.length() + 1 && isSeparator(child.at(parent.length()))) {
-                return ChildResult::IsChild;
-            }
-            // else: do the `cleanPath` version below
-        }
     }
 
     // Slow path (`QDir::cleanPath` does lots of string operations):
     const QString cleanParent = QDir::cleanPath(parent.toString());
     const QString cleanChild = QDir::cleanPath(child.toString());
-    // cleanPath removes trailing slashes, add one to parent to be sure we handle a child path
-    // /root/foo/bar is not  a child of /root/fo, therefor the trailing slash is important
-    if (cleanChild.startsWith(cleanParent + QLatin1Char('/'), sensitivity)) {
-        return ChildResult::IsChild;
-    }
     // both paths are the same /root/foo == /root/foo
     if (cleanChild.compare(cleanParent, sensitivity) == 0) {
         return ChildResult::IsChild | ChildResult::IsEqual;
+    }
+    // cleanPath removes trailing slashes, add one to parent to be sure we handle a child path
+    // /root/foo/bar is not a child of /root/fo, therefore, the trailing slash is important
+    if (cleanChild.startsWith(cleanParent + QLatin1Char('/'), sensitivity)) {
+        return ChildResult::IsChild;
     }
     return ChildResult::IsNoChild;
 }
