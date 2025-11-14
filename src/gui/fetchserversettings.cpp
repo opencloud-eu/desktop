@@ -87,7 +87,7 @@ void FetchServerSettingsJob::runAsyncUpdates()
 
     // this must not be passed to the lambda
     [account = _account] {
-        auto *userJob = new JsonJob(account, account->url(), u"graph/v1.0/me"_s, "GET");
+        auto *userJob = new JsonJob(account, account->url(), u"graph/v1.0/me"_s, "GET", nullptr);
         userJob->setTimeout(fetchSettingsTimeout());
         connect(userJob, &JsonApiJob::finishedSignal, account.data(), [userJob, account] {
             if (userJob->httpStatusCode() == 200) {
@@ -99,12 +99,12 @@ void FetchServerSettingsJob::runAsyncUpdates()
         userJob->start();
 
         if (account->capabilities().appProviders().enabled) {
-            auto *jsonJob = new JsonJob(account, account->capabilities().appProviders().appsUrl, {}, "GET");
+            auto *jsonJob = new JsonJob(account, account->capabilities().appProviders().appsUrl, {}, "GET", nullptr);
             connect(jsonJob, &JsonJob::finishedSignal, account.data(), [jsonJob, account] { account->setAppProvider(AppProvider{jsonJob->data()}); });
             jsonJob->start();
         }
 
-        auto *avatarJob = new SimpleNetworkJob(account, account->url(), u"graph/v1.0/me/photo/$value"_s, "GET");
+        auto *avatarJob = new SimpleNetworkJob(account, account->url(), u"graph/v1.0/me/photo/$value"_s, "GET", nullptr);
         connect(avatarJob, &SimpleNetworkJob::finishedSignal, account.data(), [avatarJob, account] {
             if (avatarJob->httpStatusCode() == 200) {
                 QImageReader reader(avatarJob->reply());

@@ -22,7 +22,7 @@
 #include "configfile.h"
 #include "generalsettings.h"
 #include "gui/folderman.h"
-#include "gui/messagebox.h"
+#include "gui/fonticonmessagebox.h"
 #include "gui/qmlutils.h"
 #include "resources/qmlresources.h"
 #include "resources/resources.h"
@@ -120,7 +120,7 @@ SettingsDialog::SettingsDialog(QWidget *parent)
     connect(
         _ui->quickWidget->engine(), &QQmlEngine::quit, QApplication::instance(),
         [this] {
-            auto box = new MessageBox(Resources::FontIcon(u''), tr("Quit %1").arg(Theme::instance()->appNameGUI()),
+            auto box = new FontIconMessageBox({Resources::FontIcon::DefaultGlyphes::Question}, tr("Quit %1").arg(Theme::instance()->appNameGUI()),
                 tr("Are you sure you want to quit %1?").arg(Theme::instance()->appNameGUI()), QMessageBox::Yes | QMessageBox::No, this);
             box->setAttribute(Qt::WA_DeleteOnClose);
             connect(box, &QMessageBox::accepted, this, [] {

@@ -47,7 +47,7 @@ class OPENCLOUD_GUI_EXPORT AccountState : public QObject
     QML_UNCREATABLE("Only created by AccountManager")
 
 public:
-    enum State {
+    enum State : uint8_t {
         /// Not even attempting to connect, most likely because the
         /// user explicitly signed out or cancelled a credential dialog.
         SignedOut,
@@ -58,31 +58,10 @@ public:
         /// The account is successfully talking to the server.
         Connected,
 
-        /// There's a temporary problem with talking to the server,
-        /// don't bother the user too much and try again.
-        ServiceUnavailable,
-
-        /// Similar to ServiceUnavailable, but we know the server is down
-        /// for maintenance
-        MaintenanceMode,
-
-        /// Could not communicate with the server for some reason.
-        /// We assume this may resolve itself over time and will try
-        /// again automatically.
-        NetworkError,
-
-        /// Server configuration error. (For example: unsupported version)
-        ConfigurationError,
-
-        /// We are currently asking the user for credentials
-        AskingCredentials,
-
         Connecting
     };
     Q_ENUM(State)
 
-    /// The actual current connectivity status.
-    typedef ConnectionValidator::Status ConnectionStatus;
 
     ~AccountState() override;
 
@@ -102,7 +81,7 @@ public:
 
     AccountPtr account() const;
 
-    ConnectionStatus connectionStatus() const;
+    ConnectionValidator::Status connectionStatus() const;
     QStringList connectionErrors() const;
 
     State state() const;
@@ -114,16 +93,6 @@ public:
     /** A user-triggered sign out which disconnects, stops syncs
      * for the account and forgets the password. */
     void signOutByUi();
-
-    /** Tries to connect from scratch.
-     *
-     * Does nothing for signed out accounts.
-     * Connected accounts will be disconnected and try anew.
-     * Disconnected accounts will go to checkConnectivity().
-     *
-     * Useful for when network settings (proxy) change.
-     */
-    void freshConnectionAttempt();
 
     /// Move from SignedOut state to Disconnected (attempting to connect)
     void signIn();
@@ -172,7 +141,7 @@ private:
     AccountPtr _account;
     JobQueueGuard _queueGuard;
     State _state;
-    ConnectionStatus _connectionStatus;
+    ConnectionValidator::Status _connectionStatus;
     QStringList _connectionErrors;
     bool _waitingForNewCredentials;
     QDateTime _timeOfLastETagCheck;
@@ -180,18 +149,6 @@ private:
     QPointer<TlsErrorDialog> _tlsDialog;
 
     bool _settingUp = false;
-
-    /**
-     * Starts counting when the server starts being back up after 503 or
-     * maintenance mode. The account will only become connected once this
-     * timer exceeds the _maintenanceToConnectedDelay value.
-     */
-    Utility::ChronoElapsedTimer _timeSinceMaintenanceOver = {false};
-
-    /**
-     * Milliseconds for which to delay reconnection after 503/maintenance.
-     */
-    std::chrono::milliseconds _maintenanceToConnectedDelay;
 
     Utility::ChronoElapsedTimer _fetchCapabilitiesElapsedTimer = {false};
     // guard against multiple fetches

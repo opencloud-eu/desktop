@@ -123,7 +123,7 @@ namespace CfApiWrapper {
         const QString &path, time_t modtime, qint64 size, const QByteArray &fileId, const QString &replacesPath = QString());
     Result<OCC::Vfs::ConvertToPlaceholderResult, QString> convertToPlaceholder(
         const QString &path, time_t modtime, qint64 size, const QByteArray &fileId, const QString &replacesPath);
-    Result<OCC::Vfs::ConvertToPlaceholderResult, QString> dehydratePlaceholder(const QString &path, time_t modtime, qint64 size, const QByteArray &fileId);
+    Result<OCC::Vfs::ConvertToPlaceholderResult, QString> dehydratePlaceholder(const QString &path, qint64 size, const QByteArray &fileId);
     Result<OCC::Vfs::ConvertToPlaceholderResult, QString> updatePlaceholderMarkInSync(const Utility::Handle &handle);
     bool isPlaceHolderInSync(const QString &filePath);
 }

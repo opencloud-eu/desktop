@@ -102,7 +102,7 @@ FolderMan::FolderMan()
                     AccountManager::instance()->accounts().size() == 1
                         ? Theme::instance()->appNameGUI()
                         : u"%1 - %2"_s.arg(Theme::instance()->appNameGUI(), accountStatePtr->account()->davDisplayName()),
-                    accountStatePtr->account()->davDisplayName());
+                    accountStatePtr->account()->davDisplayName(), true);
             }
         }
     };
@@ -256,23 +256,6 @@ SocketApi *FolderMan::socketApi()
     return _socketApi.get();
 }
 
-void FolderMan::slotFolderSyncPaused(Folder *f, bool paused)
-{
-    if (!f) {
-        qCCritical(lcFolderMan) << u"slotFolderSyncPaused called with empty folder";
-        return;
-    }
-
-    if (!paused) {
-        _disabledFolders.remove(f);
-        if (f->canSync()) {
-            scheduler()->enqueueFolder(f);
-        }
-    } else {
-        _disabledFolders.insert(f);
-    }
-}
-
 void FolderMan::slotFolderCanSyncChanged()
 {
     Folder *f = qobject_cast<Folder *>(sender());
@@ -314,10 +297,8 @@ void FolderMan::slotIsConnectedChanged()
                 scheduler()->enqueueFolder(f);
             }
         }
-    } else {
-        qCInfo(lcFolderMan) << u"Account" << accountName
-                            << u"disconnected or paused, "
-                               "terminating or descheduling sync folders";
+    } else if (accountState->state() == AccountState::State::Disconnected || accountState->state() == AccountState::State::SignedOut) {
+        qCInfo(lcFolderMan) << u"Account" << accountName << u"disconnected or paused, terminating or descheduling sync folders";
 
         if (scheduler()->currentSync() && scheduler()->currentSync()->accountState() == accountState) {
             scheduler()->terminateCurrentSync(tr("Account disconnected or paused"));
@@ -383,34 +364,6 @@ bool FolderMan::isAnySyncRunning() const
     return false;
 }
 
-void FolderMan::slotFolderSyncStarted()
-{
-    auto f = qobject_cast<Folder *>(sender());
-    OC_ASSERT(f);
-    if (!f)
-        return;
-
-    qCInfo(lcFolderMan) << u">========== Sync started for folder [" << f->shortGuiLocalPath() << u"] of account ["
-                        << f->accountState()->account()->displayNameWithHost() << u"]";
-}
-
-/*
-  * a folder indicates that its syncing is finished.
-  * Start the next sync after the system had some milliseconds to breath.
-  * This delay is particularly useful to avoid late file change notifications
-  * (that we caused ourselves by syncing) from triggering another spurious sync.
-  */
-void FolderMan::slotFolderSyncFinished(const SyncResult &)
-{
-    auto f = qobject_cast<Folder *>(sender());
-    OC_ASSERT(f);
-    if (!f)
-        return;
-
-    qCInfo(lcFolderMan) << u"<========== Sync finished for folder [" << f->shortGuiLocalPath() << u"] of account ["
-                        << f->accountState()->account()->displayNameWithHost() << u"]";
-}
-
 Folder *FolderMan::addFolder(const AccountStatePtr &accountState, const FolderDefinition &folderDefinition)
 {
     // Choose a db filename
@@ -447,17 +400,11 @@ Folder *FolderMan::addFolderInternal(
 
     qCInfo(lcFolderMan) << u"Adding folder to Folder Map " << folder << folder->path();
     _folders.push_back(folder);
-    if (folder->isSyncPaused()) {
-        _disabledFolders.insert(folder);
-    }
 
     // See matching disconnects in unloadFolder().
     if (!folder->hasSetupError()) {
         connect(folder, &Folder::syncStateChange, _socketApi.get(), [folder, this] { _socketApi->slotUpdateFolderView(folder); });
-        connect(folder, &Folder::syncStarted, this, &FolderMan::slotFolderSyncStarted);
-        connect(folder, &Folder::syncFinished, this, &FolderMan::slotFolderSyncFinished);
         connect(folder, &Folder::syncStateChange, this, [folder, this] { Q_EMIT folderSyncStateChange(folder); });
-        connect(folder, &Folder::syncPausedChanged, this, &FolderMan::slotFolderSyncPaused);
         connect(folder, &Folder::canSyncChanged, this, &FolderMan::slotFolderCanSyncChanged);
         connect(
             &folder->syncEngine().syncFileStatusTracker(), &SyncFileStatusTracker::fileStatusChanged, _socketApi.get(), &SocketApi::broadcastStatusPushMessage);
@@ -868,7 +815,7 @@ bool FolderMan::prepareFolder(const QString &folder)
             return false;
         }
         FileSystem::setFolderMinimumPermissions(folder);
-        Folder::prepareFolder(folder);
+        Folder::prepareFolder(folder, {}, {}, false);
     }
     return true;
 }

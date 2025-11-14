@@ -144,7 +144,7 @@
             <item>
              <widget class="QRadioButton" name="syncEverythingRadioButton">
               <property name="text">
-               <string>Synchronize all exisitng spaces</string>
+               <string>Synchronize all existing spaces</string>
               </property>
               <property name="checked">
                <bool>true</bool>

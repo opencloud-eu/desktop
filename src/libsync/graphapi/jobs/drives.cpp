@@ -29,7 +29,7 @@ const auto mountpointC = QLatin1String("mountpoint");
 }
 
 Drives::Drives(const AccountPtr &account, QObject *parent)
-    : JsonJob(account, account->url(), QStringLiteral("/graph/v1.0/me/drives"), "GET", {}, {}, parent)
+    : JsonJob(account, account->url(), QStringLiteral("/graph/v1.0/me/drives"), "GET", {}, parent)
 {
 }
 

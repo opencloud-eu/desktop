@@ -27,9 +27,9 @@ CfApiHydrationJob *CfApiWrapper::HydrationDevice::requestHydration(const CfApiWr
         return {};
     }
     // we assume that transferKey is unique and that we don't receive multiple requests for the same file with the same key
-    Q_ASSERT(std::find_if(context.vfs->_hydrationJobs.values().cbegin(), context.vfs->_hydrationJobs.values().cend(), [&context](const auto &it) {
+    Q_ASSERT(std::find_if(context.vfs->_hydrationJobs.cbegin(), context.vfs->_hydrationJobs.cend(), [&context](const auto &it) {
         return it->context().path == context.path;
-    }) == context.vfs->_hydrationJobs.values().cend());
+    }) == context.vfs->_hydrationJobs.cend());
 
     auto *hydration =
         new CfApiHydrationJob(context.vfs, context.fileId, std::make_unique<OCC::CfApiWrapper::HydrationDevice>(context, totalSize, parent), parent);

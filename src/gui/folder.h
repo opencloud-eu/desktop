@@ -70,7 +70,7 @@ public:
     };
     Q_ENUM(ChangeReason)
 
-    static void prepareFolder(const QString &path, const std::optional<QString> &displayName = {}, const std::optional<QString> &description = {});
+    static void prepareFolder(const QString &path, const QString &displayName, const QString &description, bool override);
 
     ~Folder() override;
     /**
@@ -143,6 +143,8 @@ public:
     virtual void wipeForRemoval();
 
     void setSyncState(SyncResult::Status state);
+
+    SyncResult::Status syncState() const;
 
     void setDirtyNetworkLimits();
 
@@ -220,7 +222,6 @@ public:
 
 Q_SIGNALS:
     void syncStateChange();
-    void syncStarted();
     void syncFinished(const SyncResult &result);
     void syncPausedChanged(Folder *, bool paused);
     void canSyncChanged();
@@ -270,7 +271,6 @@ public Q_SLOTS:
     bool reloadExcludes();
 
 private Q_SLOTS:
-    void slotSyncStarted();
     void slotSyncFinished(bool);
 
     /** Adds a error message that's not tied to a specific item.
@@ -278,8 +278,6 @@ private Q_SLOTS:
     void slotSyncError(const QString &message, ErrorCategory category = ErrorCategory::Normal);
 
     void slotItemCompleted(const SyncFileItemPtr &);
-
-    void slotLogPropagationStart();
 
     /** Adjust sync result based on conflict data from IssuesWidget.
      *
@@ -352,8 +350,6 @@ private:
     mutable SyncJournalDb _journal;
 
     QScopedPointer<SyncRunFileLog> _fileLog;
-
-    QTimer _scheduleSelfTimer;
 
     /**
      * Setting up vfs is a async operation

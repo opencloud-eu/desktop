@@ -105,6 +105,10 @@ FontIcon::FontIcon(QChar glyphe, Size size, const QColor &color)
     : QIcon(new FontIconEngine(FontFamily::FontAwesome, glyphe, size, color))
 {
 }
+FontIcon::FontIcon(DefaultGlyphes glyphe, Size size, const QColor &color)
+    : FontIcon(static_cast<std::underlying_type_t<DefaultGlyphes>>(glyphe), size, color)
+{
+}
 
 FontIcon::FontIcon(FontFamily family, QChar glyphe, Size size, const QColor &color)
     : QIcon(new FontIconEngine(family, glyphe, size, color))

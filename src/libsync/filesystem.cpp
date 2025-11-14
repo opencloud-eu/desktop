@@ -126,15 +126,17 @@ FileSystem::FileChangedInfo FileSystem::FileChangedInfo::fromSyncFileItemPreviou
 
 FileSystem::FileChangedInfo FileSystem::FileChangedInfo::fromSyncJournalFileRecord(const SyncJournalFileRecord &record)
 {
+    if (!record.isValid()) {
+        return {};
+    }
     return {.size = record.size(), .mtime = record.modtime(), .inode = record.inode(), .type = record.type()};
 }
 
 bool FileSystem::fileChanged(const std::filesystem::path &path, const FileChangedInfo &previousInfo)
 {
-    // previousMtime == -1 indicates the file does not exist
     const auto dirent = std::filesystem::directory_entry{path};
     if (!dirent.exists()) {
-        if (previousInfo.mtime != -1) {
+        if (previousInfo.mtime.has_value()) {
             qCDebug(lcFileSystem) << path.native() << u"was removed";
             return true;
         } else {

@@ -1,5 +1,5 @@
-#include "serverurlsetupwizardpage.h"
-#include "ui_serverurlsetupwizardpage.h"
+#include "gui/newwizard/pages/serverurlsetupwizardpage.h"
+#include "gui/newwizard/ui_serverurlsetupwizardpage.h"
 
 #include "libsync/globalconfig.h"
 #include "libsync/theme.h"

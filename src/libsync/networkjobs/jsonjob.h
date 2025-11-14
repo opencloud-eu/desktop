@@ -13,11 +13,10 @@
  */
 #pragma once
 
-#include "networkjobs.h"
+#include "libsync/networkjobs/simplenetworkjob.h"
 
 #include <QJsonObject>
 #include <QJsonParseError>
-#include <QUrlQuery>
 
 namespace OCC {
 

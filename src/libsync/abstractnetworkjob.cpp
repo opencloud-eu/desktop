@@ -135,14 +135,13 @@ bool AbstractNetworkJob::needsRetry() const
     return false;
 }
 
-void AbstractNetworkJob::sendRequest(const QByteArray &verb,
-    const QNetworkRequest &req, QIODevice *requestBody)
+void AbstractNetworkJob::sendRequest(const QByteArray &verb, const QNetworkRequest &req, std::unique_ptr<QIODevice> &&requestBody)
 {
     _verb = verb;
 
     _request = req;
 
-    // allow to transfer files with a big compression ratio
+    // allow transferring files with a big compression ratio
     _request.setDecompressedSafetyCheckThreshold(-1);
 
     _request.setAttribute(QNetworkRequest::CacheSaveControlAttribute, _storeInCache);
@@ -151,7 +150,10 @@ void AbstractNetworkJob::sendRequest(const QByteArray &verb,
         _request.setAttribute(QNetworkRequest::CacheLoadControlAttribute, _cacheLoadControl.value());
     }
 
-    _requestBody = requestBody;
+    if (requestBody) {
+        _requestBody = requestBody.release();
+        _requestBody->setParent(this);
+    }
 
     Q_ASSERT(_request.url().isEmpty() || _request.url() == url());
     Q_ASSERT(_request.transferTimeout() == 0 || _request.transferTimeout() == duration_cast<milliseconds>(_timeout).count());
@@ -164,12 +166,7 @@ void AbstractNetworkJob::sendRequest(const QByteArray &verb,
         return;
     }
 
-    auto reply = _account->sendRawRequest(verb, _request.url(), _request, requestBody);
-
-    if (_requestBody) {
-        _requestBody->setParent(this);
-    }
-
+    auto reply = _account->sendRawRequest(verb, _request.url(), _request, _requestBody);
     adoptRequest(reply);
 }
 
@@ -231,7 +228,6 @@ void AbstractNetworkJob::slotFinished()
 
 QByteArray AbstractNetworkJob::responseTimestamp() const
 {
-    OC_ASSERT(!_responseTimestamp.isEmpty() || _aborted || (reply() && reply()->error() == QNetworkReply::RemoteHostClosedError));
     return _responseTimestamp;
 }
 
@@ -285,7 +281,12 @@ AbstractNetworkJob::~AbstractNetworkJob()
         qCCritical(lcNetworkJob) << u"Deleting running job" << this;
     }
     if (_reply) {
-        _reply->disconnect();
+        // the body must live as long as the reply exists
+        // until now the body was parented by this network job
+        if (_requestBody) {
+            _requestBody->setParent(_reply);
+        }
+        _reply->disconnect(this);
         _reply->abort();
         _reply->deleteLater();
         _reply.clear();
@@ -369,7 +370,8 @@ void AbstractNetworkJob::retry()
             return;
         }
     }
-    sendRequest(_verb, _request, _requestBody);
+    // this will reuse _requestBody
+    sendRequest(_verb, _request);
 }
 
 void AbstractNetworkJob::abort()
@@ -409,6 +411,11 @@ void AbstractNetworkJob::setStoreInCache(bool storeInCache)
 void AbstractNetworkJob::setCacheLoadControl(QNetworkRequest::CacheLoadControl cacheLoadControl)
 {
     _cacheLoadControl = cacheLoadControl;
+}
+
+QPointer<QIODevice> AbstractNetworkJob::body() const
+{
+    return _requestBody;
 }
 
 } // namespace OCC

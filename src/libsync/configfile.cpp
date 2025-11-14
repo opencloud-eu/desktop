@@ -36,6 +36,7 @@
 
 #include <chrono>
 using namespace std::chrono_literals;
+using namespace Qt::Literals::StringLiterals;
 
 namespace OCC {
 
@@ -339,18 +340,8 @@ void ConfigFile::setSkipUpdateCheck(bool skip)
 
 QString ConfigFile::updateChannel() const
 {
-    QString defaultUpdateChannel = QStringLiteral("stable");
-    const QString suffix = OCC::Version::suffix();
-    if (suffix.startsWith(QLatin1String("daily"))
-        || suffix.startsWith(QLatin1String("nightly"))
-        || suffix.startsWith(QLatin1String("alpha"))
-        || suffix.startsWith(QLatin1String("rc"))
-        || suffix.startsWith(QLatin1String("beta"))) {
-        defaultUpdateChannel = QStringLiteral("beta");
-    }
-
     auto settings = makeQSettings();
-    return settings.value(updateChannelC(), defaultUpdateChannel).toString();
+    return settings.value(updateChannelC(), OCC::Version::isBeta() ? u"stable"_s : u"beta"_s).toString();
 }
 
 void ConfigFile::setUpdateChannel(const QString &channel)

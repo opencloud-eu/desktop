@@ -22,7 +22,6 @@ add_custom_target( mac_overlayplugin ALL
     VERBATIM)
 add_dependencies(mac_overlayplugin opencloud) # for the ${APPLICATION_ICON_NAME}.icns to be generated
 add_custom_command(TARGET mac_overlayplugin POST_BUILD COMMAND ${CMAKE_COMMAND}
-    ARGS -E copy_directory "${CMAKE_CURRENT_BINARY_DIR}/${XCODE_CONFIG}/FinderSyncExt.appex" "$<TARGET_FILE_DIR:opencloud>/../PlugIns/FinderSyncExt.appex" MAIN_DEPENDENCY "${mac_overlayplugin}")
+    ARGS -E copy_directory "${CMAKE_CURRENT_BINARY_DIR}/${XCODE_CONFIG}/FinderSyncExt.appex" "$<TARGET_FILE_DIR:opencloud>/../PlugIns/FinderSyncExt.appex")
 
 endif()
-

@@ -41,7 +41,7 @@ QString Utility::enumToDisplayName(SyncResult::Status status)
     switch (status) {
     case SyncResult::Status::Undefined:
         return QApplication::translate("SyncResult::Status", "Undefined");
-    case SyncResult::Status::NotYetStarted:
+    case SyncResult::Status::Queued:
         return QApplication::translate("SyncResult::Status", "Queued");
     case SyncResult::Status::SyncRunning:
         return QApplication::translate("SyncResult::Status", "Sync running");
@@ -51,8 +51,6 @@ QString Utility::enumToDisplayName(SyncResult::Status status)
         return QApplication::translate("SyncResult::Status", "Error");
     case SyncResult::Status::SetupError:
         return QApplication::translate("SyncResult::Status", "Setup error");
-    case SyncResult::Status::SyncPrepare:
-        return QApplication::translate("SyncResult::Status", "Preparing to sync");
     case SyncResult::Status::Problem:
         return QApplication::translate("SyncResult::Status", "Success, some files were ignored.");
     case SyncResult::Status::Paused:
@@ -171,14 +169,12 @@ int SyncResult::numBlacklistErrors() const
 QChar SyncResult::glype() const
 {
     switch (status()) {
-    case NotYetStarted:
+    case Queued:
         [[fallthrough]];
     case SyncRunning:
         return u'';
     case Paused:
         return u'';
-    case SyncPrepare:
-        [[fallthrough]];
     case Success:
         if (!hasUnresolvedConflicts()) {
             return u'';

@@ -1,6 +1,6 @@
 #include "accountconfiguredwizardpage.h"
 
-#include "gui/messagebox.h"
+#include "gui/fonticonmessagebox.h"
 #include "libsync/vfs/vfs.h"
 #include "ui_accountconfiguredwizardpage.h"
 
@@ -39,7 +39,8 @@ AccountConfiguredWizardPage::AccountConfiguredWizardPage(const QString &defaultS
             Q_ASSERT(QDir(directory).exists());
 
             if (auto result = Vfs::checkAvailability(directory, VfsPluginManager::instance().bestAvailableVfsMode()); !result) {
-                auto *box = new MessageBox({u''}, tr("Sync location not supported"), result.error(), QMessageBox::Ok, this);
+                auto *box =
+                    new FontIconMessageBox({Resources::FontIcon::DefaultGlyphes::Warning}, tr("Sync location not supported"), result.error(), QMessageBox::Ok, this);
                 box->setAttribute(Qt::WA_DeleteOnClose);
                 box->open();
                 return;

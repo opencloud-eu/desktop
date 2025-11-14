@@ -136,7 +136,7 @@ private:
     void saveFilter()
     {
         QStringList checked;
-        for (uint8_t s = SyncFileItem::NoStatus; s < SyncFileItem::StatusCount; ++s) {
+        for (std::underlying_type_t<SyncFileItem::Status> s = SyncFileItem::NoStatus; s < SyncFileItem::StatusCount; ++s) {
             if (_filter[s]) {
                 checked.append(Utility::enumToString(static_cast<SyncFileItem::Status>(s)));
             }
@@ -155,8 +155,8 @@ private:
             filterNeedsReset = false;
 
             for (const QString &s : checked.value()) {
-                auto status = Utility::stringToEnum<SyncFileItem::Status>(s);
-                if (static_cast<int8_t>(status) == -1) {
+                const auto status = Utility::stringToEnum<SyncFileItem::Status>(s);
+                if (status == static_cast<SyncFileItem::Status>(-1)) {
                     // The string value is not a valid enum value, so stop processing, and queue a reset.
                     filterNeedsReset = true;
                     break;

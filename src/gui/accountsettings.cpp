@@ -28,6 +28,7 @@
 #include "folderstatusmodel.h"
 #include "folderwizard/folderwizard.h"
 #include "gui/accountmodalwidget.h"
+#include "gui/fonticonmessagebox.h"
 #include "gui/models/models.h"
 #include "gui/networkinformation.h"
 #include "gui/notifications/systemnotificationmanager.h"
@@ -58,7 +59,6 @@ Q_LOGGING_CATEGORY(lcAccountSettings, "gui.account.settings", QtInfoMsg)
 AccountSettings::AccountSettings(const AccountStatePtr &accountState, QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::AccountSettings)
-    , _wasDisabledBefore(false)
     , _accountState(accountState)
 {
     ui->setupUi(this);
@@ -193,7 +193,7 @@ void AccountSettings::slotRemoveCurrentFolder(Folder *folder)
 {
     // TODO: move to qml
     qCInfo(lcAccountSettings) << u"Remove Folder " << folder->path();
-    auto messageBox = new QMessageBox(QMessageBox::Question, tr("Confirm removal of Space"),
+    auto messageBox = new FontIconMessageBox({Resources::FontIcon::DefaultGlyphes::Question}, tr("Confirm removal of Space"),
         tr("<p>Do you really want to stop syncing the Space »%1«?</p>"
            "<p><b>Note:</b> This will <b>not</b> delete any files.</p>")
             .arg(folder->displayName()),
@@ -210,49 +210,6 @@ void AccountSettings::slotRemoveCurrentFolder(Folder *folder)
     messageBox->open();
 }
 
-void AccountSettings::slotEnableVfsCurrentFolder(Folder *folder)
-{
-    if (OC_ENSURE(VfsPluginManager::instance().bestAvailableVfsMode() == Vfs::WindowsCfApi)) {
-        if (!folder) {
-            return;
-        }
-        qCInfo(lcAccountSettings) << u"Enabling vfs support for folder" << folder->path();
-
-        // Change the folder vfs mode and load the plugin
-        folder->setVirtualFilesEnabled(true);
-
-        // don't schedule the folder, it might not be ready yet.
-        // it will schedule its self once set up
-    }
-}
-
-void AccountSettings::slotDisableVfsCurrentFolder(Folder *folder)
-{
-    auto msgBox = new QMessageBox(
-        QMessageBox::Question,
-        tr("Disable virtual file support?"),
-        tr("This action will disable virtual file support. As a consequence contents of folders that "
-           "are currently marked as 'available online only' will be downloaded."
-           "\n\n"
-           "The only advantage of disabling virtual file support is that the selective sync feature "
-           "will become available again."
-           "\n\n"
-           "This action will abort any currently running synchronization."));
-    auto acceptButton = msgBox->addButton(tr("Disable support"), QMessageBox::AcceptRole);
-    msgBox->addButton(tr("Cancel"), QMessageBox::RejectRole);
-    connect(msgBox, &QMessageBox::finished, msgBox, [msgBox, folder, acceptButton] {
-        msgBox->deleteLater();
-        if (msgBox->clickedButton() != acceptButton || !folder) {
-            return;
-        }
-
-        qCInfo(lcAccountSettings) << u"Disabling vfs support for folder" << folder->path();
-
-        // Also wipes virtual files, schedules remote discovery
-        folder->setVirtualFilesEnabled(false);
-    });
-    msgBox->open();
-}
 
 void AccountSettings::showConnectionLabel(const QString &message, SyncResult::Status status, QStringList errors)
 {
@@ -271,16 +228,15 @@ void AccountSettings::showConnectionLabel(const QString &message, SyncResult::St
 void AccountSettings::slotEnableCurrentFolder(Folder *folder, bool terminate)
 {
     Q_ASSERT(folder);
-    qCInfo(lcAccountSettings) << u"Application: enable folder with alias " << folder->path();
-    bool currentlyPaused = false;
+    qCInfo(lcAccountSettings) << u"Application: enable folder" << folder->path();
 
     // this sets the folder status to disabled but does not interrupt it.
-    currentlyPaused = folder->isSyncPaused();
+    const bool currentlyPaused = folder->isSyncPaused();
     if (!currentlyPaused && !terminate) {
         // check if a sync is still running and if so, ask if we should terminate.
-        if (FolderMan::instance()->scheduler()->currentSync() == folder) { // its still running
-            auto msgbox = new QMessageBox(QMessageBox::Question, tr("Sync Running"), tr("The sync operation is running.<br/>Do you want to stop it?"),
-                QMessageBox::Yes | QMessageBox::No, this);
+        if (FolderMan::instance()->scheduler()->currentSync() == folder) { // it's still running
+            auto msgbox = new FontIconMessageBox(
+                {u''}, tr("Sync Running"), tr("The sync operation is running.<br/>Do you want to stop it?"), QMessageBox::Yes | QMessageBox::No, this);
             msgbox->setAttribute(Qt::WA_DeleteOnClose);
             msgbox->setDefaultButton(QMessageBox::Yes);
             connect(msgbox, &QMessageBox::accepted, this, [folder = QPointer<Folder>(folder), this] {
@@ -293,25 +249,26 @@ void AccountSettings::slotEnableCurrentFolder(Folder *folder, bool terminate)
         }
     }
 
-    // message box can return at any time while the thread keeps running,
-    // so better check again after the user has responded.
-    if (FolderMan::instance()->scheduler()->currentSync() == folder && terminate) {
-        FolderMan::instance()->scheduler()->terminateCurrentSync(tr("Sync paused by user"));
+    if (currentlyPaused) {
+        // ensure we don't forget about local errors
+        folder->slotNextSyncFullLocalDiscovery();
+        folder->setSyncPaused(false);
+        FolderMan::instance()->scheduler()->enqueueFolder(folder);
+    } else {
+        // set paused to prevent reschedule
+        folder->setSyncPaused(true);
+        // terminate the run if we previously where syncing
+        if (FolderMan::instance()->scheduler()->currentSync() == folder && terminate) {
+            FolderMan::instance()->scheduler()->terminateCurrentSync(tr("Sync paused by user"));
+        }
     }
-    folder->slotNextSyncFullLocalDiscovery(); // ensure we don't forget about local errors
-    folder->setSyncPaused(!currentlyPaused);
-
-    // keep state for the icon setting.
-    if (currentlyPaused)
-        _wasDisabledBefore = true;
-
     _model->slotUpdateFolderState(folder);
 }
 
 void AccountSettings::slotForceSyncCurrentFolder(Folder *folder)
 {
     if (NetworkInformation::instance()->isMetered() && ConfigFile().pauseSyncWhenMetered()) {
-        auto messageBox = new QMessageBox(QMessageBox::Question, tr("Internet connection is metered"),
+        auto messageBox = new FontIconMessageBox({Resources::FontIcon::DefaultGlyphes::Question}, tr("Internet connection is metered"),
             tr("Synchronization is paused because the Internet connection is a metered connection"
                "<p>Do you really want to force a Synchronization now?"),
             QMessageBox::Yes | QMessageBox::No, ocApp()->settingsDialog());
@@ -401,19 +358,9 @@ void AccountSettings::slotAccountStateChanged()
         updateNotifications();
         break;
     }
-    case AccountState::ServiceUnavailable:
-        showConnectionLabel(tr("Server is temporarily unavailable"), SyncResult::Offline);
-        break;
-    case AccountState::MaintenanceMode:
-        showConnectionLabel(tr("Server is currently in maintenance mode"), SyncResult::Offline);
-        break;
     case AccountState::SignedOut:
         showConnectionLabel(tr("Signed out"), SyncResult::Offline);
         break;
-    case AccountState::AskingCredentials: {
-        showConnectionLabel(tr("Updating credentials..."), SyncResult::Undefined);
-        break;
-    }
     case AccountState::Connecting:
         if (NetworkInformation::instance()->isBehindCaptivePortal()) {
             showConnectionLabel(tr("Captive portal prevents connections to the server."), SyncResult::Offline);
@@ -423,12 +370,6 @@ void AccountSettings::slotAccountStateChanged()
             showConnectionLabel(tr("Connecting..."), SyncResult::Undefined);
         }
         break;
-    case AccountState::ConfigurationError:
-        showConnectionLabel(tr("Server configuration error"), SyncResult::Problem, _accountState->connectionErrors());
-        break;
-    case AccountState::NetworkError:
-        // don't display the error to the user, https://github.com/owncloud/client/issues/9790
-        [[fallthrough]];
     case AccountState::Disconnected:
         showConnectionLabel(tr("Disconnected"), SyncResult::Offline);
         break;
@@ -437,17 +378,15 @@ void AccountSettings::slotAccountStateChanged()
 
 void AccountSettings::slotSpacesUpdated()
 {
-    auto spaces = accountsState()->account()->spacesManager()->spaces();
-    auto unsycnedSpaces = std::set<GraphApi::Space *>(spaces.cbegin(), spaces.cend());
-    for (const auto &f : std::as_const(FolderMan::instance()->folders())) {
-        unsycnedSpaces.erase(f->space());
-    }
+    const uint64_t enabledSpaces = std::ranges::count_if(accountsState()->account()->spacesManager()->spaces(), [](const auto *s) { return !s->disabled(); });
+    const uint64_t syncedSpaces = std::ranges::count_if(
+        FolderMan::instance()->folders(), [this](const auto *f) { return f->accountState() == accountsState() && f->space() && !f->space()->disabled(); });
+    const auto unsyncedSpaces = enabledSpaces - syncedSpaces;
 
-    if (_unsyncedSpaces != unsycnedSpaces.size()) {
-        _unsyncedSpaces = static_cast<uint>(unsycnedSpaces.size());
+    if (_unsyncedSpaces != unsyncedSpaces) {
+        _unsyncedSpaces = unsyncedSpaces;
         Q_EMIT unsyncedSpacesChanged();
     }
-    uint syncedSpaces = spaces.size() - _unsyncedSpaces;
     if (_syncedSpaces != syncedSpaces) {
         _syncedSpaces = syncedSpaces;
         Q_EMIT syncedSpacesChanged();
@@ -519,12 +458,12 @@ void AccountSettings::addModalWidget(AccountModalWidget *widget)
     ocApp()->settingsDialog()->requestModality(_accountState->account().get());
 }
 
-uint AccountSettings::unsyncedSpaces() const
+uint64_t AccountSettings::unsyncedSpaces() const
 {
     return _unsyncedSpaces;
 }
 
-uint AccountSettings::syncedSpaces() const
+uint64_t AccountSettings::syncedSpaces() const
 {
     return _syncedSpaces;
 }
@@ -553,7 +492,7 @@ void AccountSettings::slotDeleteAccount()
 {
     // Deleting the account potentially deletes 'this', so
     // the QMessageBox should be destroyed before that happens.
-    auto messageBox = new QMessageBox(QMessageBox::Question, tr("Confirm Account Removal"),
+    auto messageBox = new FontIconMessageBox({Resources::FontIcon::DefaultGlyphes::Question}, tr("Confirm Account Removal"),
         tr("<p>Do you really want to remove the connection to the account %1«?</p>"
            "<p><b>Note:</b> This will <b>not</b> delete any files.</p>")
             .arg(_accountState->account()->displayNameWithHost()),

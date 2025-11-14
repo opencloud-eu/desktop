@@ -81,7 +81,7 @@
            </size>
           </property>
           <property name="pixmap">
-           <pixmap resource="../../resources/client.qrc">:/client/resources/light/warning.svg</pixmap>
+           <pixmap>:/client/resources/light/warning.svg</pixmap>
           </property>
           <property name="scaledContents">
            <bool>true</bool>
@@ -91,7 +91,7 @@
         <item>
          <widget class="QLabel" name="errorMessageLabel">
           <property name="textFormat">
-           <enum>Qt::RichText</enum>
+           <enum>Qt::TextFormat::RichText</enum>
           </property>
          </widget>
         </item>
@@ -120,7 +120,7 @@
        <item>
         <spacer name="horizontalSpacer">
          <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+          <enum>Qt::Orientation::Horizontal</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
@@ -136,7 +136,7 @@
        <item>
         <spacer name="horizontalSpacer_2">
          <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+          <enum>Qt::Orientation::Horizontal</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
@@ -170,7 +170,7 @@
   <customwidget>
    <class>OCC::Wizard::Navigation</class>
    <extends>QWidget</extends>
-   <header>navigation.h</header>
+   <header>gui/newwizard/navigation.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
@@ -180,8 +180,6 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources>
-  <include location="../../resources/client.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

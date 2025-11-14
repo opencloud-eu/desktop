@@ -265,14 +265,12 @@ bool Theme::aboutShowCopyright() const
 QString Theme::syncStateIconName(const SyncResult &result) const
 {
     switch (result.status()) {
-    case SyncResult::NotYetStarted:
+    case SyncResult::Queued:
         [[fallthrough]];
     case SyncResult::SyncRunning:
         return QStringLiteral("sync");
     case SyncResult::Paused:
         return QStringLiteral("pause");
-    case SyncResult::SyncPrepare:
-        [[fallthrough]];
     case SyncResult::Success:
         if (!result.hasUnresolvedConflicts()) {
             return QStringLiteral("ok");

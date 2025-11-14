@@ -450,6 +450,7 @@ QUrl OAuth::authorisationLink() const
 {
     Q_ASSERT(_server.isListening());
     Q_ASSERT(_wellKnownFinished);
+    Q_ASSERT(_authEndpoint.isValid());
 
     const QByteArray code_challenge = QCryptographicHash::hash(_pkceCodeVerifier, QCryptographicHash::Sha256)
                                           .toBase64(QByteArray::Base64UrlEncoding | QByteArray::OmitTrailingEquals);
@@ -595,6 +596,7 @@ void OAuth::fetchWellKnown()
                 qCDebug(lcOauth) << u"failed to parse .well-known reply as JSON, server might not support OIDC";
             } else {
                 qCDebug(lcOauth) << u"failed to parse .well-known reply, error:" << err.error;
+                Q_EMIT result(Error);
             }
             Q_EMIT fetchWellKnownFinished();
         });

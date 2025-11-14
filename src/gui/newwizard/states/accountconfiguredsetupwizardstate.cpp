@@ -12,11 +12,10 @@
  * for more details.
  */
 
-#include "accountconfiguredsetupwizardstate.h"
+#include "gui/newwizard/states/accountconfiguredsetupwizardstate.h"
 #include "gui/folderman.h"
+#include "gui/newwizard/pages/accountconfiguredwizardpage.h"
 #include "libsync/filesystem.h"
-#include "pages/accountconfiguredwizardpage.h"
-#include "theme.h"
 
 namespace OCC::Wizard {
 
@@ -51,22 +50,23 @@ void AccountConfiguredSetupWizardState::evaluatePage()
         // make sure we remember it now so we can show it to the user again upon failures
         _context->accountBuilder().setSyncTargetDir(syncTargetDir);
 
-        const QString errorMessageTemplate = tr("Invalid local download directory: %1");
-
+        auto emitEvaluationFailedError = [this](const QString &errorMessage) {
+            Q_EMIT evaluationFailed(tr("Invalid local download directory: %1").arg(errorMessage));
+        };
         if (!QDir::isAbsolutePath(syncTargetDir)) {
-            Q_EMIT evaluationFailed(errorMessageTemplate.arg(QStringLiteral("path must be absolute")));
+            emitEvaluationFailedError(tr("path must be absolute"));
             return;
         }
 
         if (auto result = Vfs::checkAvailability(syncTargetDir, VfsPluginManager::instance().bestAvailableVfsMode()); !result) {
-            Q_EMIT evaluationFailed(errorMessageTemplate.arg(result.error()));
+            emitEvaluationFailedError(result.error());
             return;
         }
 
-        // Doesn't matter wether it's a spaces sync root
+        // Doesn't matter whether it's a space sync root
         QString invalidPathErrorMessage = FolderMan::checkPathValidityRecursive(syncTargetDir, FolderMan::NewFolderType::SpacesSyncRoot, {});
         if (!invalidPathErrorMessage.isEmpty()) {
-            Q_EMIT evaluationFailed(errorMessageTemplate.arg(invalidPathErrorMessage));
+            emitEvaluationFailedError(invalidPathErrorMessage);
             return;
         }
     }

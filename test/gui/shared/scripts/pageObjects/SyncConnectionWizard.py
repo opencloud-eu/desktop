@@ -34,7 +34,7 @@ class SyncConnectionWizard:
         "text": "Personal",
         "type": "QModelIndex",
     }
-    SYNC_DIALOG_FOLDER_TREE = {
+    ADD_SPACE_FOLDER_TREE = {
         "column": 0,
         "container": names.deselect_remote_folders_you_do_not_wish_to_synchronize_OpenCloud_QModelIndex,
         "type": "QModelIndex",
@@ -115,6 +115,12 @@ class SyncConnectionWizard:
         "visible": 1,
     }
 
+    CHOOSE_WHAT_TO_SYNC_FOLDER_TREE = {
+        "column": 0,
+        "container": names.deselect_remote_folders_you_do_not_wish_to_synchronize_Personal_QModelIndex,
+        "type": "QModelIndex",
+    }
+
     @staticmethod
     def set_sync_path_oc(sync_path):
         if not sync_path:
@@ -160,40 +166,6 @@ class SyncConnectionWizard:
             squish.Qt.LeftButton,
         )
 
-    @staticmethod
-    def select_folders_to_sync(folders):
-        # first deselect all
-        SyncConnectionWizard.deselect_all_remote_folders()
-        for folder in folders:
-            folder_levels = folder.strip("/").split("/")
-            parent_selector = None
-            for sub_folder in folder_levels:
-                if not parent_selector:
-                    SyncConnectionWizard.SYNC_DIALOG_FOLDER_TREE["text"] = sub_folder
-                    parent_selector = SyncConnectionWizard.SYNC_DIALOG_FOLDER_TREE
-                    selector = parent_selector
-                else:
-                    selector = {
-                        "column": "0",
-                        "container": parent_selector,
-                        "text": sub_folder,
-                        "type": "QModelIndex",
-                    }
-                if (
-                    len(folder_levels) == 1
-                    or folder_levels.index(sub_folder) == len(folder_levels) - 1
-                ):
-                    # NOTE: checkbox does not have separate object
-                    # click on (11,11) which is a checkbox to unselect the folder
-                    squish.mouseClick(
-                        squish.waitForObject(selector),
-                        11,
-                        11,
-                        squish.Qt.NoModifier,
-                        squish.Qt.LeftButton,
-                    )
-                else:
-                    squish.doubleClick(squish.waitForObject(selector))
 
     @staticmethod
     def sort_by(header_text):
@@ -297,3 +269,77 @@ class SyncConnectionWizard:
         return squish.waitForObjectExists(
             SyncConnectionWizard.ADD_FOLDER_SYNC_BUTTON
         ).enabled
+
+    @staticmethod
+    def select_or_unselect_folders_to_sync(folders, should_select=True, new_sync_connection_wizard=False):
+        if should_select:
+            # First deselect all
+            SyncConnectionWizard.deselect_all_remote_folders()
+        folder_tree_locator = SyncConnectionWizard.get_folder_tree_locator(new_sync_connection_wizard)
+        for folder in folders:
+            folder_levels = folder.strip("/").split("/")
+            parent_selector = None
+            for sub_folder in folder_levels:
+                if not parent_selector:
+                    folder_tree_locator["text"] = sub_folder
+                    parent_selector = folder_tree_locator
+                    selector = parent_selector
+                else:
+                    selector = {
+                        "column": "0",
+                        "container": parent_selector,
+                        "text": sub_folder,
+                        "type": "QModelIndex",
+                    }
+                if (
+                    len(folder_levels) == 1
+                    or folder_levels.index(sub_folder) == len(folder_levels) - 1
+                ):
+                    # NOTE: checkbox does not have separate object
+                    # click on (11,11) which is a checkbox
+                    squish.mouseClick(
+                        squish.waitForObject(selector),
+                        11,
+                        11,
+                        squish.Qt.NoModifier,
+                        squish.Qt.LeftButton,
+                    )
+                else:
+                    squish.doubleClick(squish.waitForObject(selector))
+
+    @staticmethod
+    def confirm_choose_what_to_sync_selection():
+        squish.clickButton(squish.waitForObject(names.stackedWidget_OK_QPushButton))
+
+    @staticmethod
+    def __handle_folder_selection(folders, should_select, new_sync_connection_wizard):
+        SyncConnectionWizard.select_or_unselect_folders_to_sync(
+            folders,
+            should_select=should_select,
+            new_sync_connection_wizard=new_sync_connection_wizard
+        )
+
+        if new_sync_connection_wizard:
+            SyncConnectionWizard.add_sync_connection()
+        else:
+            SyncConnectionWizard.confirm_choose_what_to_sync_selection()
+
+    @staticmethod
+    def unselect_folders_to_sync(folders, new_sync_connection_wizard=False):
+        SyncConnectionWizard.__handle_folder_selection(
+            folders, should_select=False, new_sync_connection_wizard=new_sync_connection_wizard
+        )
+
+    @staticmethod
+    def select_folders_to_sync(folders, new_sync_connection_wizard=False):
+        SyncConnectionWizard.__handle_folder_selection(
+            folders, should_select=True, new_sync_connection_wizard=new_sync_connection_wizard
+        )
+
+    @staticmethod
+    def get_folder_tree_locator(new_sync_connection_wizard=False):
+        return (
+            SyncConnectionWizard.ADD_SPACE_FOLDER_TREE.copy()
+            if new_sync_connection_wizard
+            else SyncConnectionWizard.CHOOSE_WHAT_TO_SYNC_FOLDER_TREE.copy()
+        )

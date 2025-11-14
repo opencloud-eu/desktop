@@ -431,9 +431,7 @@ void FolderStatusModel::slotFolderSyncStateChange(Folder *f)
         pi = {};
     } else {
         switch (state) {
-        case SyncResult::SyncPrepare:
-            [[fallthrough]];
-        case SyncResult::NotYetStarted:
+        case SyncResult::Queued:
             pi = {};
             pi._overallSyncString = Utility::enumToDisplayName(state);
             break;

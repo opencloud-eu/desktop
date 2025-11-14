@@ -1,4 +1,6 @@
-#include "resources.h"
+#include "libsync/networkjobs/resources.h"
+
+#include "libsync/account.h"
 
 #include <QFile>
 #include <QIcon>
@@ -78,7 +80,7 @@ QIcon ResourceJob::asIcon() const
 }
 
 ResourceJob::ResourceJob(const ResourcesCache *cache, const QUrl &rootUrl, const QString &path, QObject *parent)
-    : SimpleNetworkJob(cache->account()->sharedFromThis(), rootUrl, path, "GET", {}, {}, parent)
+    : SimpleNetworkJob(cache->account()->sharedFromThis(), rootUrl, path, "GET", {}, parent)
     , _cache(cache)
 {
     setStoreInCache(true);

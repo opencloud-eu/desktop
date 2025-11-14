@@ -224,7 +224,7 @@ void NetworkSettings::saveProxySettings()
     FolderMan::instance()->setDirtyProxy();
 
     for (auto account : AccountManager::instance()->accounts()) {
-        account->freshConnectionAttempt();
+        account->checkConnectivity(true);
     }
 }
 

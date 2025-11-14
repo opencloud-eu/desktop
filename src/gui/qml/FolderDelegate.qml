@@ -249,6 +249,8 @@ Pane {
 
                             Loader {
                                 id: progressLoader
+                                sourceComponent: quotaDisplay
+
                                 Accessible.ignored: true
                                 Layout.fillWidth: true
                                 Layout.minimumHeight: folderSyncPanel.spacing
@@ -370,8 +372,6 @@ Pane {
             Button {
                 id: addSyncButton
                 text: qsTr("Add Space")
-                // this should have no effect, but without it the highlight is not displayed in Qt 6.7 on Windows
-                palette.highlight: folderSyncPanel.palette.highlight
 
                 onClicked: {
                     accountSettings.slotAddFolder();

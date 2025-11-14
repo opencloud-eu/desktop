@@ -42,18 +42,6 @@ void PropagateUploadFileV1::doStartUpload()
         abortWithError(SyncFileItem::SoftError, tr("The file »%1« is currently in use").arg(QDir::toNativeSeparators(fileName)));
         return;
     }
-
-    if (!_item->_checksumHeader.isEmpty()) {
-        // Write the checksum in the database, so if the PUT is sent
-        // to the server, but the connection drops before we get the etag, we can check the checksum
-        // in reconcile (issue #5106)
-        auto pi = _item->toUploadInfo();
-        pi._chunk = 0;
-        pi._transferid = 0; // We set a null transfer id because it is not chunked.
-        pi._errorCount = 0;
-        propagator()->_journal->setUploadInfo(_item->localName(), pi);
-        propagator()->_journal->commit(QStringLiteral("Upload info"));
-    }
     propagator()->reportProgress(*_item, 0);
 
     qint64 fileSize = _item->_size;
@@ -181,7 +169,7 @@ void PropagateUploadFileV1::abort(PropagatorJob::AbortType abortType)
 {
     abortNetworkJobs(abortType, [abortType](AbstractNetworkJob *job) {
         if (PUTFileJob *putJob = qobject_cast<PUTFileJob *>(job)) {
-            if (abortType == AbortType::Asynchronous && putJob->device()->atEnd()) {
+            if (abortType == AbortType::Asynchronous && putJob->body() && putJob->body()->atEnd()) {
                 return false;
             }
         }

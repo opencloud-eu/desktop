@@ -117,7 +117,7 @@ void ProcessDirectoryJob::process()
         if (handleExcluded(path._target, e.localEntry.name(), e.localEntry.isDirectory() || e.serverEntry.isDirectory(), isHidden, e.localEntry.isSymLink())) {
             // the file only exists in the db
             if (!e.localEntry.isValid() && e.dbEntry.isValid()) {
-                qCWarning(lcDisco) << u"Removing db entry for non exisitng ignored file:" << path._original;
+                qCWarning(lcDisco) << u"Removing db entry for non existing ignored file:" << path._original;
                 _discoveryData->_statedb->deleteFileRecord(path._original, true);
             }
             continue;
@@ -239,14 +239,18 @@ void ProcessDirectoryJob::processFile(const PathTuple &path,
     const SyncJournalFileRecord &dbEntry)
 {
     const char *hasServer = serverEntry.isValid() ? "true" : _queryServer == ParentNotChanged ? "db" : "false";
-    const char *hasLocal = localEntry.isValid() ? "true" : _queryLocal == ParentNotChanged ? "db" : "false";
-    qCInfo(lcDisco).nospace() << u"Processing (db|local|remote) " << path._original << u" | valid: " << dbEntry.isValid() << u"/" << hasLocal << u"/"
-                              << hasServer << u" | mtime: " << dbEntry.modtime() << u"/" << localEntry.modtime() << u"/" << serverEntry.modtime()
-                              << u" | size: " << dbEntry.size() << u"/" << localEntry.size() << u"/" << serverEntry.size() << u" | etag: " << dbEntry.etag()
-                              << u"//" << serverEntry.etag() << u" | checksum: " << dbEntry.checksumHeader() << u"//" << serverEntry.checksumHeader()
-                              << u" | perm: " << dbEntry.remotePerm() << u"//" << serverEntry.remotePerm() << u" | fileid: " << dbEntry.fileId() << u"//"
-                              << serverEntry.fileId() << u" | inode: " << dbEntry.inode() << u"/" << localEntry.inode() << u"/" << u" | type: "
-                              << dbEntry.type() << u"/" << localEntry.type() << u"/" << (serverEntry.isDirectory() ? ItemTypeDirectory : ItemTypeFile);
+    const auto *hasLocal = localEntry.isValid() ? "true" : _queryLocal == ParentNotChanged ? "db" : "false";
+    qCInfo(lcDisco).nospace() << u"Processing (db|local|remote) " << path._original //
+                              << u" | valid: " << dbEntry.isValid() << u"/" << hasLocal << u"/" << hasServer //
+                              << u" | mtime: " << dbEntry.modtime() << u"/" << localEntry.modtime() << u"/" << serverEntry.modtime() //
+                              << u" | size: " << dbEntry.size() << u"/" << localEntry.size() << u"/" << serverEntry.size() //
+                              << u" | etag: " << dbEntry.etag() << u"//" << serverEntry.etag() //
+                              << u" | checksum: " << dbEntry.checksumHeader() << u"//" << serverEntry.checksumHeader() //
+                              << u" | perm: " << dbEntry.remotePerm() << u"//" << serverEntry.remotePerm() //
+                              << u" | fileid: " << dbEntry.fileId() << u"//" << serverEntry.fileId() //
+                              << u" | inode: " << dbEntry.inode() << u"/" << localEntry.inode() << u"/" //
+                              << u" | type: " << dbEntry.type() << u"/" << localEntry.type() << u"/"
+                              << (serverEntry.isDirectory() ? ItemTypeDirectory : ItemTypeFile);
 
     if (_discoveryData->isRenamed(path._original)) {
         qCDebug(lcDisco) << u"Ignoring renamed";
@@ -512,7 +516,7 @@ void ProcessDirectoryJob::processFileAnalyzeRemoteInfo(
                     // If the file exist or if there is another error, consider it is a new file.
                     postProcessServerNew();
                     return;
-                } else if (OC_ENSURE(job->httpStatusCode() == 404)) {
+                } else if (job->httpStatusCode() == 404) {
                     // The file do not exist, it is a rename
 
                     // In case the deleted item was discovered in parallel

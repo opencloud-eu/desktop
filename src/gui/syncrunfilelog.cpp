@@ -61,8 +61,8 @@ void SyncRunFileLog::start(const QString &folderPath)
 
     if (!exists) {
         // We are creating a new file, add the note.
-        *_out << u"Log for:" << folderPath << Qt::endl
-              << u"# timestamp | duration | file | instruction | dir | modtime | etag | "
+        *_out << "Log for:" << folderPath << Qt::endl
+              << "# timestamp | duration | file | instruction | dir | modtime | etag | "
                  "size | fileId | status | errorString | http result code | "
                  "other size | other modtime | X-Request-ID"
               << Qt::endl;
@@ -71,9 +71,9 @@ void SyncRunFileLog::start(const QString &folderPath)
     }
 
 
-    _totalDuration.start();
-    _lapDuration.start();
-    *_out << u"#=#=#=# Syncrun started " << dateTimeStr() << Qt::endl;
+    _totalDuration.reset();
+    _lapDuration.reset();
+    *_out << "#=#=#=# Syncrun started " << dateTimeStr() << Qt::endl;
 }
 
 void SyncRunFileLog::logItem(const SyncFileItem &item)
@@ -99,9 +99,9 @@ void SyncRunFileLog::logLap(const QString &name)
 {
     QString tmp;
     {
-        QDebug(&tmp).noquote() << u"#=#=#=#=#" << name << dateTimeStr() << u"(last step:" << _lapDuration.restart() << u"msec" << u", total:"
-                               << _totalDuration.elapsed() << u"msec)" << Qt::endl;
+        QDebug(&tmp).noquote() << u"#=#=#=#=#" << name << dateTimeStr() << u"(last step:" << _lapDuration << u", total:" << _totalDuration << u")" << Qt::endl;
     }
+    _lapDuration.reset();
     *_out << tmp;
 }
 
@@ -109,8 +109,8 @@ void SyncRunFileLog::finish()
 {
     QString tmp;
     {
-        QDebug(&tmp).noquote() << u"#=#=#=# Syncrun finished" << dateTimeStr() << u"(last step:" << _lapDuration.elapsed() << u"msec" << u", total:"
-                               << _totalDuration.elapsed() << u"msec)" << Qt::endl;
+        QDebug(&tmp).noquote() << u"#=#=#=# Syncrun finished" << dateTimeStr() << u"(last step:" << _lapDuration << u", total:" << _totalDuration << u")"
+                               << Qt::endl;
     }
     *_out << tmp;
     _out->flush();

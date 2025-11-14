@@ -51,6 +51,12 @@ public:
     static bool dbIsTooNewForClient(const QString &dbFilePath);
 
     // To verify that the record could be found check with SyncJournalFileRecord::isValid()
+
+    /**
+     * Returns the file record for the given filename.
+     * @param filename The filename, which must be a relative path (relative to the sync root).
+     *                 Passing an absolute path is not allowed and will not yield a result.
+     */
     SyncJournalFileRecord getFileRecord(const QString &filename);
     SyncJournalFileRecord getFileRecordByInode(quint64 inode);
     bool getFileRecordsByFileId(const QByteArray &fileId, const std::function<void(const SyncJournalFileRecord &)> &rowCallback);
@@ -98,21 +104,13 @@ public:
     };
     struct UploadInfo
     {
-        int _chunk = 0;
-        uint _transferid = 0;
+        bool _valid = false;
+
         qint64 _size = 0;
         qint64 _modtime = 0;
-        int _errorCount = 0;
-        bool _valid = false;
         QByteArray _contentChecksum;
-        QString _path; // stored as utf16
         QUrl _url; // upload url (tus)
-        /**
-         * Returns true if this entry refers to a chunked upload that can be continued.
-         * (As opposed to a small file transfer which is stored in the db so we can detect the case
-         * when the upload succeeded, but the connection was dropped before we got the answer)
-         */
-        bool isChunked() const { return _transferid != 0; }
+        QString _path; // stored as utf16, used in local discovery
 
         bool validate(qint64 size, qint64 modtime, const QByteArray &checksum) const
         {
@@ -131,8 +129,8 @@ public:
     std::vector<UploadInfo> getUploadInfos();
 
     void setUploadInfo(const QString &file, const UploadInfo &i);
-    // Return the list of transfer ids that were removed.
-    QVector<uint> deleteStaleUploadInfos(const QSet<QString> &keep);
+
+    bool deleteStaleUploadInfos(const QSet<QString> &keep);
 
     SyncJournalErrorBlacklistRecord errorBlacklistEntry(const QString &);
     bool deleteStaleErrorBlacklistEntries(const QSet<QString> &keep);

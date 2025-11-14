@@ -33,10 +33,6 @@ ToolButton {
     // we display both, with a custom content item, but qqc2-desktop-style would still render the text
     display: AbstractButton.IconOnly
 
-    // make the current button pop
-    // don't get highlight from our own palette else we create a binding loop
-    palette.button: parent.palette.highlight
-
     Component {
         id: imageComponent
 

@@ -92,7 +92,7 @@ class PUTFileJob : public AbstractNetworkJob
     Q_OBJECT
 
 private:
-    QIODevice *_device;
+    std::unique_ptr<QIODevice> _device;
     QMap<QByteArray, QByteArray> _headers;
     QString _errorString;
     QElapsedTimer _requestTimer;
@@ -106,11 +106,6 @@ public:
     void start() override;
 
     void finished() override;
-
-    QIODevice *device()
-    {
-        return _device;
-    }
 
     QString errorString()
     {
@@ -227,13 +222,6 @@ protected:
     void abortNetworkJobs(
         AbortType abortType,
         const std::function<bool(AbstractNetworkJob *job)> &mayAbortJob);
-
-    /**
-     * Checks whether the current error is one that should reset the whole
-     * transfer if it happens too often. If so: Bump UploadInfo::errorCount
-     * and maybe perform the reset.
-     */
-    void checkResettingErrors();
 
     /**
      * Error handling functionality that is shared between jobs.

@@ -38,16 +38,14 @@ public:
     enum class ValidationMode { ValidateServer, ValidateAuthAndUpdate };
     Q_ENUM(ValidationMode)
 
-    enum Status {
+    enum Status : uint8_t {
         Undefined,
         Connected,
-        NotConfigured,
         CredentialsNotReady, // Credentials aren't ready
         CredentialsWrong, // AuthenticationRequiredError
         SslError, // SSL handshake error, certificate rejected by user?
         StatusNotFound, // Error retrieving status.php
         ServiceUnavailable, // 503 on authed request
-        MaintenanceMode, // maintenance enabled in status.php
         Timeout, // actually also used for other errors on the authed request
         CaptivePortal, // We're stuck behind a captive portal and (will) get SSL certificate problems
     };

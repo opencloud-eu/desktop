@@ -99,7 +99,7 @@ private Q_SLOTS:
         QVERIFY(check_isExcluded(QStringLiteral("/a/foo (conflicted copy bar)"), keepHidden));
         QVERIFY(check_isExcluded(QStringLiteral("/a/.b"), excludeHidden));
 
-        // test non exisitng folder
+        // test non existing folder
         QVERIFY(check_isExcluded(QStringLiteral("/a/.b"), excludeHidden, false));
     }
 

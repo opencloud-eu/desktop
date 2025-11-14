@@ -126,7 +126,7 @@ void ConnectionValidator::slotCheckServerAndAuth()
                 reportResult(NetworkInformation::instance()->isBehindCaptivePortal() ? CaptivePortal : SslError);
                 return;
             case QNetworkReply::TooManyRedirectsError:
-                reportResult(MaintenanceMode);
+                reportResult(StatusNotFound);
                 return;
             default:
                 break;
@@ -157,13 +157,6 @@ void ConnectionValidator::slotStatusFound(const QUrl &url, const QJsonObject &in
         }
     }
 
-    // Check for maintenance mode: Servers send "true", so go through QVariant
-    // to parse it correctly.
-    if (info[QStringLiteral("maintenance")].toVariant().toBool()) {
-        reportResult(MaintenanceMode);
-        return;
-    }
-
     AbstractCredentials *creds = _account->credentials();
     if (!creds->ready()) {
         reportResult(CredentialsNotReady);
@@ -172,7 +165,7 @@ void ConnectionValidator::slotStatusFound(const QUrl &url, const QJsonObject &in
     // now check the authentication
     if (_mode != ConnectionValidator::ValidationMode::ValidateServer) {
         // the endpoint requires authentication
-        auto *userJob = new JsonJob(_account, _account->url(), u"graph/v1.0/me"_s, "GET");
+        auto *userJob = new JsonJob(_account, _account->url(), u"graph/v1.0/me"_s, "GET", nullptr);
         userJob->setAuthenticationJob(true);
         userJob->setTimeout(fetchSettingsTimeout());
         connect(userJob, &JsonApiJob::finishedSignal, this, [userJob, this] {

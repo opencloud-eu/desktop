@@ -49,7 +49,7 @@ target_sources(OpenCloudGui PRIVATE
     ignorelisteditor.cpp
     lockwatcher.cpp
     logbrowser.cpp
-    messagebox.cpp
+    fonticonmessagebox.cpp
     networkinformation.cpp
     networksettings.cpp
     notifications.cpp
@@ -98,7 +98,6 @@ target_include_directories(OpenCloudGui PRIVATE models spaces creds)
 target_link_libraries(OpenCloudGui
     PUBLIC
         Qt::Widgets Qt::Network Qt::Xml Qt::Quick Qt::QuickWidgets Qt::QuickControls2
-        newwizard folderwizard
         libsync
         Qt6Keychain::Qt6Keychain
 )
@@ -108,6 +107,7 @@ ecm_add_qml_module(OpenCloudGui
         URI eu.OpenCloud.gui
         VERSION 1.0
         NAMESPACE OCC
+        GENERATE_PLUGIN_SOURCE
         QML_FILES
             qml/OpenCloud.js
 

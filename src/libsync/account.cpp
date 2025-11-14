@@ -293,10 +293,10 @@ bool Account::hasCapabilities() const
 void Account::setCapabilities(const Capabilities &caps)
 {
     if (_capabilities != caps) {
-        Q_EMIT capabilitiesChanged();
         const bool versionChanged =
             caps.status().legacyVersion != _capabilities.status().legacyVersion || caps.status().productversion != _capabilities.status().productversion;
         _capabilities = caps;
+        Q_EMIT capabilitiesChanged();
         if (versionChanged) {
             Q_EMIT serverVersionChanged();
         }

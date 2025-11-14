@@ -14,8 +14,8 @@
 
 #pragma once
 
-#include "abstractsetupwizardpage.h"
-#include "setupwizardcontroller.h"
+#include "gui/newwizard/pages/abstractsetupwizardpage.h"
+#include "gui/newwizard/setupwizardcontroller.h"
 
 namespace Ui {
 class AccountConfiguredWizardPage;

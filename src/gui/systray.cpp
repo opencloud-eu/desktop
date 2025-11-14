@@ -25,6 +25,8 @@
 #include <QDesktopServices>
 #include <QMenu>
 
+using namespace Qt::Literals::StringLiterals;
+
 namespace OCC {
 
 
@@ -49,7 +51,11 @@ Systray::Systray(QObject *parent)
 
 void Systray::setToolTip(const QString &tip)
 {
+#ifdef Q_OS_WIN
     QSystemTrayIcon::setToolTip(tr("%1: %2").arg(Theme::instance()->appNameGUI(), tip));
+#else
+    QSystemTrayIcon::setToolTip(u"%1\n%2"_s.arg(Theme::instance()->appNameGUI(), tip));
+#endif
 }
 
 void Systray::slotComputeOverallSyncStatus()
@@ -125,7 +131,7 @@ void Systray::slotComputeOverallSyncStatus()
     QStringList allStatusStrings;
     for (auto *folder : map) {
         QString folderMessage = FolderMan::trayTooltipStatusString(folder->syncResult(), folder->isSyncPaused());
-        allStatusStrings += tr("Folder »%1«: %2").arg(folder->shortGuiLocalPath(), folderMessage);
+        allStatusStrings += tr("Space »%1«: %2").arg(folder->shortGuiLocalPath(), folderMessage);
     }
     trayMessage = allStatusStrings.join(QLatin1String("\n"));
 #endif

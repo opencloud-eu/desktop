@@ -23,6 +23,7 @@
 #include <queue>
 
 using namespace std::chrono_literals;
+using namespace Qt::Literals::StringLiterals;
 
 using namespace OCC;
 
@@ -106,6 +107,8 @@ public:
         return _queue.top().folder;
     }
 
+    [[nodiscard]] bool contains(Folder *folder) const { return _scheduledFolders.contains(folder); }
+
 private:
     // the actual queue
     std::priority_queue<Element> _queue;
@@ -148,18 +151,18 @@ void SyncScheduler::enqueueFolder(Folder *folder, Priority priority)
         return;
     }
 
-    if (lcSyncScheduler().isInfoEnabled()) {
-        QString message;
-        QDebug d(&message);
-        d << u"Enqueue" << folder->path() << priority << u"QueueSize:" << _queue->size() << u"scheduler is active:" << isRunning();
-        if (_currentSync) {
-            d << u"current sync" << _currentSync->path() << u"for" << _syncTimer;
-        } else {
-            d << u"no current sync running";
-        }
-        qCInfo(lcSyncScheduler).noquote() << message;
-    }
+    qCInfo(lcSyncScheduler) << u"Enqueue" << folder->path() << priority << u"QueueSize:" << _queue->size() << u"scheduler is active:" << isRunning()
+                            << (_currentSync ? u"current sync %1 %2 for %3"_s.arg(
+                                                   _currentSync->path(), QDebug::toString(_currentSync->syncState()), QDebug::toString(_syncTimer))
+                                             : u"no current sync running"_s);
 
+    // TODO: setSyncState should not be public...
+    if (folder != _currentSync) {
+        // don't override the state of the currently syncing folder
+        Q_ASSERT(folder->syncState() != SyncResult::SyncRunning);
+        Q_ASSERT(folder->syncState() != SyncResult::Paused);
+        folder->setSyncState(SyncResult::Queued);
+    }
     _queue->enqueueFolder(folder, priority);
 
     if (!_currentSync) {
@@ -169,6 +172,11 @@ void SyncScheduler::enqueueFolder(Folder *folder, Priority priority)
         _currentSync.clear();
         startNext();
     }
+}
+
+bool SyncScheduler::isFolderQueued(Folder *folder) const
+{
+    return _queue->contains(folder);
 }
 
 void SyncScheduler::startNext()
@@ -229,7 +237,7 @@ void SyncScheduler::startNext()
             _currentSync.clear();
             startNext();
         },
-        Qt::SingleShotConnection);
+        static_cast<Qt::ConnectionType>(Qt::DirectConnection | Qt::SingleShotConnection));
     qCInfo(lcSyncScheduler) << u"Starting sync for" << _currentSync->path() << u"QueueSize:" << _queue->size();
     _currentSync->startSync();
     _syncTimer.reset();
@@ -262,7 +270,7 @@ Folder *SyncScheduler::currentSync()
 void SyncScheduler::terminateCurrentSync(const QString &reason)
 {
     if (_currentSync && _currentSync->isReady()) {
-        qCInfo(lcSyncScheduler) << u"folder " << _currentSync->path() << u" Terminating!";
+        qCInfo(lcSyncScheduler) << u"folder" << _currentSync->path() << _currentSync->syncState() << u"Terminating!";
         if (OC_ENSURE(_currentSync->syncEngine().isSyncRunning())) {
             _currentSync->syncEngine().abort(reason);
         }

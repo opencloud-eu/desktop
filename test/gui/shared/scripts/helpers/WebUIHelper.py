@@ -1,7 +1,6 @@
 import os
 import subprocess
 import squish
-from helpers.ConfigHelper import is_windows
 
 
 def get_clipboard_text():
@@ -25,7 +24,7 @@ def authorize_via_webui(username, password, login_type='oidc'):
         'OC_AUTH_URL': get_clipboard_text(),
     }
     proc = subprocess.run(
-        f"{'pnpm.exe' if is_windows() else 'pnpm'} run {login_type}-login",
+        f"pnpm run {login_type}-login",
         capture_output=True,
         shell=True,
         env={**os.environ, **envs},

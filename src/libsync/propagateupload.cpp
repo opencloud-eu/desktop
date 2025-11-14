@@ -66,7 +66,7 @@ static bool fileIsStillChanging(const SyncFileItem &item)
 PUTFileJob::PUTFileJob(
     AccountPtr account, const QUrl &url, const QString &path, std::unique_ptr<QIODevice> &&device, const QMap<QByteArray, QByteArray> &headers, QObject *parent)
     : AbstractNetworkJob(account, url, path, parent)
-    , _device(device.release())
+    , _device(std::move(device))
     , _headers(headers)
 {
     _device->setParent(this);
@@ -84,14 +84,19 @@ void PUTFileJob::start()
     for (auto it = _headers.cbegin(); it != _headers.cend(); ++it) {
         req.setRawHeader(it.key(), it.value());
     }
-    sendRequest("PUT", req, _device);
+    sendRequest("PUT", req, std::move(_device));
     _requestTimer.start();
     AbstractNetworkJob::start();
 }
 
 void PUTFileJob::finished()
 {
-    _device->close();
+    if (_device) {
+        _device->close();
+    }
+    if (body()) {
+        body()->close();
+    }
 
     qCInfo(lcPutJob) << u"PUT of" << reply()->request().url().toString() << u"FINISHED WITH STATUS" << replyStatusString()
                      << reply()->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt()
@@ -421,24 +426,6 @@ void PropagateUploadFileCommon::done(SyncFileItem::Status status, const QString 
     PropagateItemJob::done(status, errorString);
 }
 
-void PropagateUploadFileCommon::checkResettingErrors()
-{
-    if (_item->_httpErrorCode == 412
-        || propagator()->account()->capabilities().httpErrorCodesThatResetFailingChunkedUploads().contains(_item->_httpErrorCode)) {
-        auto uploadInfo = propagator()->_journal->getUploadInfo(_item->localName());
-        uploadInfo._errorCount += 1;
-        if (uploadInfo._errorCount > 3) {
-            qCInfo(lcPropagateUpload) << u"Reset transfer of" << _item->localName() << u"due to repeated error" << _item->_httpErrorCode;
-            uploadInfo = SyncJournalDb::UploadInfo();
-        } else {
-            qCInfo(lcPropagateUpload) << u"Error count for maybe-reset error" << _item->_httpErrorCode << u"on file" << _item->localName() << u"is"
-                                      << uploadInfo._errorCount;
-        }
-        propagator()->_journal->setUploadInfo(_item->localName(), uploadInfo);
-        propagator()->_journal->commit(QStringLiteral("Upload info"));
-    }
-}
-
 void PropagateUploadFileCommon::commonErrorHandling(AbstractNetworkJob *job)
 {
     QByteArray replyContent;
@@ -453,9 +440,6 @@ void PropagateUploadFileCommon::commonErrorHandling(AbstractNetworkJob *job)
         propagator()->_journal->schedulePathForRemoteDiscovery(_item->localName());
         propagator()->_anotherSyncNeeded = true;
     }
-
-    // Ensure errors that should eventually reset the chunked upload are tracked.
-    checkResettingErrors();
 
     SyncFileItem::Status status = classifyError(job->reply()->error(), _item->_httpErrorCode,
         &propagator()->_anotherSyncNeeded, replyContent);

@@ -8,6 +8,16 @@ on:
       - 'stable-[0-9]+.[0-9]+.[0-9]+'
   pull_request:
   workflow_dispatch:
+    inputs:
+      releaseChannel:
+        description: 'The release channel'
+        required: true
+        default: 'stable'
+        type: choice
+        options:
+          - stable
+          - beta
+
 
 concurrency: 
   group: ${{ github.head_ref || github.run_id }}
@@ -104,7 +114,7 @@ jobs:
       run: |
         New-Item -ItemType Directory "${env:GITHUB_WORKSPACE}/binaries/"
         # settings
-        if ("${{ github.ref_type }}" -ne "tag"  ) {
+        if ("${{ github.ref_type }}" -ne "tag" -or "${{ inputs.releaseChannel }}" -eq "beta" ) {
           & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --set "forceAsserts=true" opencloud/opencloud-desktop
           & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --set "buildBeta=true" opencloud/opencloud-desktop
         }
@@ -163,10 +173,9 @@ jobs:
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --no-cache --test opencloud/opencloud-desktop
 
     - name: Clang tidy
-      # disable for now
-      if: ${{ false && github.event_name != 'pull_request' }}
+      if: ${{ github.event_name != 'pull_request' }}
       run: |
-        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c libs/llvm python-modules/pip
+        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c libs/llvm dev-utils/clazy python-modules/pip
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --run python3 -m pip install clang-html
         $env:BUILD_DIR = $(& "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --get buildDir -q opencloud/opencloud-desktop)
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --run pwsh "${env:GITHUB_WORKSPACE}/.github/workflows/.run-clang-tidy.ps1"
@@ -195,14 +204,14 @@ jobs:
         }
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: ${{ matrix.target }}-${{ github.run_number }}
         path: ${{ github.workspace }}/binaries/*
 
     - name: Upload appx
       if: ${{ matrix.os  == 'windows-latest' && github.event_name != 'pull_request' }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: ${{ matrix.target }}-appx-${{ github.run_number }}
         path: ${{ github.workspace }}/appx/*

@@ -23,6 +23,8 @@
 #include <QSettings>
 #include <QUrl>
 
+using namespace Qt::Literals::StringLiterals;
+
 namespace OCC {
 
 // according to the QStandardDir impl from Qt5
@@ -109,15 +111,7 @@ void showInFileManager(const QString &localPath)
             p.waitForFinished(5000);
         }
     } else if (Utility::isMac()) {
-        QStringList scriptArgs;
-        scriptArgs << QStringLiteral("-e")
-                   << QStringLiteral("tell application \"Finder\" to reveal POSIX file »%1«")
-                          .arg(localPath);
-        QProcess::execute(QStringLiteral("/usr/bin/osascript"), scriptArgs);
-        scriptArgs.clear();
-        scriptArgs << QStringLiteral("-e")
-                   << QStringLiteral("tell application \"Finder\" to activate");
-        QProcess::execute(QStringLiteral("/usr/bin/osascript"), scriptArgs);
+        QProcess::startDetached(u"/usr/bin/open"_s, {u"-R"_s, localPath});
     } else {
         QString app;
         QStringList args;

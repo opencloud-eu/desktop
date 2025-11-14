@@ -46,6 +46,7 @@ ecm_add_qml_module(OpenCloudResources
         URI eu.OpenCloud.resources
         VERSION 1.0
         NAMESPACE OCC
+        GENERATE_PLUGIN_SOURCE
 )
 
 ecm_finalize_qml_module(OpenCloudResources DESTINATION ${KDE_INSTALL_QMLDIR})

@@ -1,4 +1,4 @@
-#include "navigation.h"
+#include "gui/newwizard/navigation.h"
 
 #include <QHBoxLayout>
 #include <QRadioButton>

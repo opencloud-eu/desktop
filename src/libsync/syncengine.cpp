@@ -412,10 +412,7 @@ void SyncEngine::startSync()
     _discoveryPhase->_ignoreHiddenFiles = ignoreHiddenFiles();
 
     connect(_discoveryPhase.get(), &DiscoveryPhase::itemDiscovered, this, &SyncEngine::slotItemDiscovered);
-    connect(_discoveryPhase.get(), &DiscoveryPhase::fatalError, this, [this](const QString &errorString) {
-        Q_EMIT syncError(errorString);
-        finalize(false);
-    });
+    connect(_discoveryPhase.get(), &DiscoveryPhase::fatalError, this, &SyncEngine::abort);
     connect(_discoveryPhase.get(), &DiscoveryPhase::finished, this, &SyncEngine::slotDiscoveryFinished);
     connect(_discoveryPhase.get(), &DiscoveryPhase::silentlyExcluded, _syncFileStatusTracker.data(), &SyncFileStatusTracker::slotAddSilentlyExcluded);
     connect(_discoveryPhase.get(), &DiscoveryPhase::excluded, _syncFileStatusTracker.data(), &SyncFileStatusTracker::slotAddSilentlyExcluded);
@@ -637,6 +634,7 @@ void SyncEngine::slotPropagationFinished(bool success)
 
 void SyncEngine::finalize(bool success)
 {
+    Q_ASSERT(qApp->thread() == thread());
     qCInfo(lcEngine) << u"Sync run for" << _localPath << u"took" << _duration;
     _duration.stop();
 
@@ -664,38 +662,6 @@ void SyncEngine::updateFileTotal(const SyncFileItem &item, qint64 newSize)
 {
     _progressInfo->updateTotalsForFile(item, newSize);
     Q_EMIT transmissionProgress(*_progressInfo);
-}
-void SyncEngine::restoreOldFiles(SyncFileItemSet &syncItems)
-{
-    /* When the server is trying to send us lots of file in the past, this means that a backup
-       was restored in the server.  In that case, we should not simply overwrite the newer file
-       on the file system with the older file from the backup on the server. Instead, we will
-       upload the client file. But we still downloaded the old file in a conflict file just in case
-    */
-
-    for (auto it = syncItems.begin(); it != syncItems.end(); ++it) {
-        if ((*it)->_direction != SyncFileItem::Down)
-            continue;
-
-        switch ((*it)->instruction()) {
-        case CSYNC_INSTRUCTION_SYNC:
-            qCWarning(lcEngine) << u"restoreOldFiles: RESTORING" << (*it)->localName();
-            (*it)->setInstruction(CSYNC_INSTRUCTION_CONFLICT);
-            break;
-        case CSYNC_INSTRUCTION_REMOVE:
-            qCWarning(lcEngine) << u"restoreOldFiles: RESTORING" << (*it)->localName();
-            (*it)->setInstruction(CSYNC_INSTRUCTION_NEW);
-            (*it)->_direction = SyncFileItem::Up;
-            break;
-        case CSYNC_INSTRUCTION_RENAME:
-        case CSYNC_INSTRUCTION_NEW:
-            // Ideally we should try to revert the rename or remove, but this would be dangerous
-            // without re-doing the reconcile phase.  So just let it happen.
-            break;
-        default:
-            break;
-        }
-    }
 }
 
 AccountPtr SyncEngine::account() const
@@ -773,6 +739,7 @@ bool SyncEngine::shouldDiscoverLocally(const QString &path) const
 
 void SyncEngine::abort(const QString &reason)
 {
+    // abort might be called multiple times, ensure we call finalize only once
     bool aborting = false;
     if (_propagator) {
         aborting = true;
@@ -786,7 +753,7 @@ void SyncEngine::abort(const QString &reason)
     }
     if (aborting) {
         qCInfo(lcEngine) << u"Aborting sync";
-        Q_EMIT syncError(tr("Aborted due to %1").arg(reason));
+        Q_EMIT syncError(tr("Aborted due to: %1").arg(reason));
         finalize(false);
     }
 }

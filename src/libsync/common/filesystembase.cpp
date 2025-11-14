@@ -69,6 +69,9 @@ QString FileSystem::fromFilesystemPath(const std::filesystem::path &path)
         return QString::fromWCharArray(view.data(), view.length());
     }
     return QString::fromStdWString(nativePath);
+#elif defined(Q_OS_MACOS)
+    // based on QFile::decodeName
+    return QString::fromStdString(path.native()).normalized(QString::NormalizationForm_C);
 #else
     return QString::fromStdString(path.native());
 #endif
