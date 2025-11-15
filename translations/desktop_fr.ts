@@ -37,7 +37,7 @@
     <message>
         <location filename="../src/gui/newwizard/states/accountconfiguredsetupwizardstate.cpp" line="57"/>
         <source>path must be absolute</source>
-        <translation type="unfinished"/>
+        <translation>le chemin doit être absolu</translation>
     </message>
 </context>
 <context>
@@ -784,7 +784,7 @@ La mise à jour sera effectuée en arrière-plan et écrasera le fichier AppImag
     <message>
         <location filename="../src/gui/application.cpp" line="215"/>
         <source>Application is shutting down</source>
-        <translation type="unfinished"/>
+        <translation>L’application est en cours de fermeture</translation>
     </message>
 </context>
 <context>
@@ -881,7 +881,7 @@ La mise à jour sera effectuée en arrière-plan et écrasera le fichier AppImag
     <message>
         <location filename="../src/gui/folder.cpp" line="192"/>
         <source>Failed to open the database for »%1«.</source>
-        <translation type="unfinished"/>
+        <translation>Échec de l’ouverture de la base de données pour « %1 ».</translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="198"/>
@@ -1086,7 +1086,7 @@ Cela signifie que le client de synchronisation peut ne pas télécharger immédi
     <message>
         <location filename="../src/gui/folderman.cpp" line="673"/>
         <source>Please pick another local folder for »%1«.</source>
-        <translation type="unfinished"/>
+        <translation>Veuillez choisir un autre dossier local pour « %1 ».</translation>
     </message>
     <message>
         <location filename="../src/gui/folderman.cpp" line="734"/>
@@ -1341,17 +1341,17 @@ Veuillez envisager de supprimer ce dossier du compte et de l&apos;ajouter à nou
     <message>
         <location filename="../src/libsync/vfs/hydrationjob.cpp" line="27"/>
         <source>Failed to find fileId: %1 in db</source>
-        <translation type="unfinished"/>
+        <translation>Échec de la recherche de fileId : %1 dans la base de données</translation>
     </message>
     <message>
         <location filename="../src/libsync/vfs/hydrationjob.cpp" line="49"/>
         <source>Unexpected file size transferred. Expected %1 received %2</source>
-        <translation type="unfinished"/>
+        <translation>Taille de fichier transférée inattendue : %1 attendu, %2 reçu</translation>
     </message>
     <message>
         <location filename="../src/libsync/vfs/hydrationjob.cpp" line="55"/>
         <source>Aborted.</source>
-        <translation type="unfinished"/>
+        <translation>Avorté.</translation>
     </message>
 </context>
 <context>
@@ -2625,7 +2625,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
     <message>
         <location filename="../src/gui/systray.cpp" line="134"/>
         <source>Space »%1«: %2</source>
-        <translation type="unfinished"/>
+        <translation>Espace « %1 » : %2</translation>
     </message>
     <message>
         <location filename="../src/gui/systray.cpp" line="146"/>
@@ -2728,12 +2728,12 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
         <location filename="../src/gui/updatenotifier.cpp" line="48"/>
         <source>A new version %1 is available. You are using version %2.</source>
         <comment>The first placeholder is the new version, the second one the current version</comment>
-        <translation type="unfinished"/>
+        <translation>Une nouvelle version %1 est disponible. Vous utilisez la version %2.</translation>
     </message>
     <message>
         <location filename="../src/gui/updatenotifier.cpp" line="53"/>
         <source>Open Download Page</source>
-        <translation type="unfinished"/>
+        <translation>Ouvrir la page de téléchargement</translation>
     </message>
 </context>
 <context>
@@ -2803,12 +2803,12 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
     <message>
         <location filename="../src/gui/updater/ocupdater.cpp" line="376"/>
         <source>&lt;p&gt;A new version of the %1 Desktop App is available.&lt;/p&gt;&lt;p&gt;&lt;b&gt;%2&lt;/b&gt; is available for download. The installed version is %3.&lt;/p&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;p&gt;Une nouvelle version de l’application Desktop %1 est disponible.&lt;/p&gt;&lt;p&gt;&lt;b&gt;%2&lt;/b&gt; est disponible au téléchargement. La version installée est %3.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/gui/updater/ocupdater.cpp" line="409"/>
         <source>&lt;p&gt;A new version of the %1 Desktop App is available but the updating process failed.&lt;/p&gt;&lt;p&gt;&lt;b&gt;%2&lt;/b&gt; has been downloaded. The installed version is %3.&lt;/p&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;p&gt;Une nouvelle version de l’application Desktop %1 est disponible, mais le processus de mise à jour a échoué.&lt;/p&gt;&lt;p&gt;&lt;b&gt;%2&lt;/b&gt; a été téléchargé. La version installée est %3.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/gui/updater/ocupdater.cpp" line="423"/>
