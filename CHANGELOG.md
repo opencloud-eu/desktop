@@ -1,6 +1,6 @@
 # Changelog
 
-## [3.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v3.0.0) - 2025-11-15
+## [3.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v3.0.0) - 2025-11-17
 
 ### ❤️ Thanks to all contributors! ❤️
 
@@ -10,6 +10,7 @@
 
 - Remove unused code from UploadInfo [[#637](https://github.com/opencloud-eu/desktop/pull/637)]
 - Implement a beta channel branding [[#489](https://github.com/opencloud-eu/desktop/pull/489)]
+- Use utf16 for the rotating log, to reduce string conversions [[#467](https://github.com/opencloud-eu/desktop/pull/467)]
 - Remove unused fields in sqlite table [[#419](https://github.com/opencloud-eu/desktop/pull/419)]
 - Add Windows VFS [[#305](https://github.com/opencloud-eu/desktop/pull/305)]
 - Enable http2 support by default [[#333](https://github.com/opencloud-eu/desktop/pull/333)]
@@ -41,7 +42,6 @@
 
 ### 📈 Enhancement
 
-- Use utf16 for the rotating log, to reduce string conversions [[#467](https://github.com/opencloud-eu/desktop/pull/467)]
 - change help URL to the right docs URL [[#466](https://github.com/opencloud-eu/desktop/pull/466)]
 - Folder watcher: ignore changes in short lived files [[#455](https://github.com/opencloud-eu/desktop/pull/455)]
 - Fix assert in httplogger if a cached request is actuall send [[#456](https://github.com/opencloud-eu/desktop/pull/456)]
