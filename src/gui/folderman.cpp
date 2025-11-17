@@ -654,19 +654,16 @@ QString FolderMan::checkPathValidityForNewFolder(const QString &path, NewFolderT
         const QString folderDir = QDir::cleanPath(canonicalPath(f->path()));
 
         if (FileSystem::isChildPathOf2(folderDir, userDir).testAnyFlag(FileSystem::ChildResult::IsEqual)) {
-            return tr("There is already a sync from the server to this local folder. "
-                      "Please pick another local folder!");
+            return tr("There is already a sync from the server to this local folder. Please pick another local folder!");
         }
         if (FileSystem::isChildPathOf2(folderDir, userDir).testAnyFlags(FileSystem::ChildResult::IsChild | FileSystem::ChildResult::IsEqual)) {
-            return tr("The local folder »%1« already contains a folder used in a folder sync connection. "
-                      "Please pick another local folder!")
-                .arg(QDir::toNativeSeparators(path));
+            return tr("The local folder »%1« already contains a folder used in a folder sync connection »%2«. Please pick another local folder!")
+                .arg(QDir::toNativeSeparators(path), QDir::toNativeSeparators(folderDir));
         }
 
         if (FileSystem::isChildPathOf2(userDir, folderDir).testAnyFlags(FileSystem::ChildResult::IsChild | FileSystem::ChildResult::IsEqual)) {
-            return tr("The local folder »%1« is already contained in a folder used in a folder sync connection. "
-                      "Please pick another local folder!")
-                .arg(QDir::toNativeSeparators(path));
+            return tr("The local folder »%1« is already contained in a folder used in a folder sync connection »%2«. Please pick another local folder!")
+                .arg(QDir::toNativeSeparators(path), QDir::toNativeSeparators(folderDir));
         }
     }
 
