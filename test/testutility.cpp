@@ -208,40 +208,43 @@ private Q_SLOTS:
     {
         QTest::addColumn<QString>("child");
         QTest::addColumn<QString>("parent");
-        QTest::addColumn<bool>("output");
+        QTest::addColumn<OCC::FileSystem::ChildResults>("output");
         QTest::addColumn<bool>("casePreserving");
 
-        const auto add = [](const QString &child, const QString &parent, bool result, bool casePreserving = true) {
-            const auto title = QStringLiteral("CasePreserving %1: %2 is %3 child of %4").arg(casePreserving ? QStringLiteral("yes") : QStringLiteral("no"), child, result ? QString() : QStringLiteral("not"), parent);
+        int row = 0;
+        const auto add = [&row](const QString &child, const QString &parent, OCC::FileSystem::ChildResults result, bool casePreserving = true) {
+            const auto title =
+                QStringLiteral("Row: %1 CasePreserving %2: %3 is %4 child of %5")
+                    .arg(QString::number(++row), casePreserving ? QStringLiteral("yes") : QStringLiteral("no"), child, QDebug::toString(result), parent);
             QTest::addRow("%s", qUtf8Printable(title)) << child << parent << result << casePreserving;
         };
-        add(QStringLiteral("/A/a"), QStringLiteral("/A"), true);
-        add(QStringLiteral("/A/a"), QStringLiteral("/A/a"), true);
-        add(QStringLiteral("/A/a"), QStringLiteral("/A/a/"), true);
-        add(QStringLiteral("/A/a/"), QStringLiteral("/A/a/"), true);
-        add(QStringLiteral("/A/a/"), QStringLiteral("/A/a"), true);
-        add(QStringLiteral("C:/A/a"), QStringLiteral("C:/A"), true);
-        add(QStringLiteral("C:/Aa"), QStringLiteral("C:/A"), false);
-        add(QStringLiteral("C:/Aa"), QStringLiteral("C:/A"), false);
-        add(QStringLiteral("A/a"), QStringLiteral("A"), true);
-        add(QStringLiteral("a/a"), QStringLiteral("A"), true, true);
-        add(QStringLiteral("a/a"), QStringLiteral("A"), false, false);
-        add(QStringLiteral("Aa"), QStringLiteral("A"), false);
-        add(QStringLiteral("A/a"), QStringLiteral("A"), true);
-        add(QStringLiteral("A/a"), QStringLiteral("A/"), true);
-        add(QStringLiteral("ä/a"), QStringLiteral("ä/"), true);
-        add(QStringLiteral("Ä/è/a"), QStringLiteral("Ä/è/"), true);
-        add(QStringLiteral("Ä/a"), QStringLiteral("Ä/"), true);
-        add(QStringLiteral("Aa"), QStringLiteral("A"), false);
-        add(QStringLiteral("https://foo/bar"), QStringLiteral("https://foo"), true);
-        add(QStringLiteral("https://foo/bar"), QStringLiteral("http://foo"), false);
-        add(QStringLiteral("https://foo/bar"), QStringLiteral("http://foo/foo"), false);
+        add(QStringLiteral("/A/a"), QStringLiteral("/A"), OCC::FileSystem::ChildResult::IsChild);
+        add(QStringLiteral("/A/a"), QStringLiteral("/A/a"), OCC::FileSystem::ChildResult::IsChild | OCC::FileSystem::ChildResult::IsEqual);
+        add(QStringLiteral("/A/a"), QStringLiteral("/A/a/"), OCC::FileSystem::ChildResult::IsChild | OCC::FileSystem::ChildResult::IsEqual);
+        add(QStringLiteral("/A/a/"), QStringLiteral("/A/a/"), OCC::FileSystem::ChildResult::IsChild | OCC::FileSystem::ChildResult::IsEqual);
+        add(QStringLiteral("/A/a/"), QStringLiteral("/A/a"), OCC::FileSystem::ChildResult::IsChild | OCC::FileSystem::ChildResult::IsEqual);
+        add(QStringLiteral("C:/A/a"), QStringLiteral("C:/A"), OCC::FileSystem::ChildResult::IsChild);
+        add(QStringLiteral("C:/Aa"), QStringLiteral("C:/A"), OCC::FileSystem::ChildResult::IsNoChild);
+        add(QStringLiteral("A/a"), QStringLiteral("A"), OCC::FileSystem::ChildResult::IsChild);
+        add(QStringLiteral("a/a"), QStringLiteral("A"), OCC::FileSystem::ChildResult::IsChild, true);
+        add(QStringLiteral("a/a"), QStringLiteral("A"), OCC::FileSystem::ChildResult::IsNoChild, false);
+        add(QStringLiteral("Aa"), QStringLiteral("A"), OCC::FileSystem::ChildResult::IsNoChild);
+        add(QStringLiteral("A/a"), QStringLiteral("A"), OCC::FileSystem::ChildResult::IsChild);
+        add(QStringLiteral("A/a"), QStringLiteral("A/"), OCC::FileSystem::ChildResult::IsChild);
+        add(QStringLiteral("ä/a"), QStringLiteral("ä/"), OCC::FileSystem::ChildResult::IsChild);
+        add(QStringLiteral("Ä/è/a"), QStringLiteral("Ä/è/"), OCC::FileSystem::ChildResult::IsChild);
+        add(QStringLiteral("Ä/a"), QStringLiteral("Ä/"), OCC::FileSystem::ChildResult::IsChild);
+        add(QStringLiteral("https://foo/bar"), QStringLiteral("https://foo"), OCC::FileSystem::ChildResult::IsChild);
+        add(QStringLiteral("https://foo/bar"), QStringLiteral("http://foo"), OCC::FileSystem::ChildResult::IsNoChild);
+        add(QStringLiteral("https://foo/bar"), QStringLiteral("http://foo/foo"), OCC::FileSystem::ChildResult::IsNoChild);
+        add(QStringLiteral("https://foo/bar"), QString(), OCC::FileSystem::ChildResult::IsChild | OCC::FileSystem::ChildResult::IsParentEmpty);
 #ifdef Q_OS_WIN
         // QDir::cleanPath converts \\ only on Windows
-        add(QStringLiteral("C:/Program Files/test)"), QStringLiteral("C:/Program Files"), true);
-        add(QStringLiteral(R"(C:\Program Files\test)"), QStringLiteral("C:/Program Files"), true);
-        add(QStringLiteral(R"(C:\Program Files\test\)"), QStringLiteral("C:/Program Files\\"), true);
-        add(QStringLiteral(R"(C:\Program Files\test\\\)"), QStringLiteral("C:/Program Files/test"), true);
+        add(QStringLiteral("C:/Program Files/test)"), QStringLiteral("C:/Program Files"), OCC::FileSystem::ChildResult::IsChild);
+        add(QStringLiteral(R"(C:\Program Files\test)"), QStringLiteral("C:/Program Files"), OCC::FileSystem::ChildResult::IsChild);
+        add(QStringLiteral(R"(C:\Program Files\test\)"), QStringLiteral("C:/Program Files\\"), OCC::FileSystem::ChildResult::IsChild);
+        add(QStringLiteral(R"(C:\Program Files\test\\\)"), QStringLiteral("C:/Program Files/test"),
+            OCC::FileSystem::ChildResult::IsChild | OCC::FileSystem::ChildResult::IsEqual);
 #endif
     }
 
@@ -250,10 +253,10 @@ private Q_SLOTS:
         const QScopedValueRollback<bool> rollback(OCC::fsCasePreserving_override);
         QFETCH(QString, child);
         QFETCH(QString, parent);
-        QFETCH(bool, output);
+        QFETCH(OCC::FileSystem::ChildResults, output);
         QFETCH(bool, casePreserving);
         OCC::fsCasePreserving_override = casePreserving;
-        QCOMPARE(OCC::FileSystem::isChildPathOf(child, parent), output);
+        QCOMPARE(OCC::FileSystem::isChildPathOf2(child, parent), output);
     }
 
     void testSanitizeForFileName_data()
