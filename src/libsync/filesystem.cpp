@@ -338,14 +338,22 @@ bool FileSystem::Tags::remove(const QString &path, const QString &key)
     }
 
     auto result = removexattr(path.toUtf8().constData(), platformKey.toUtf8().constData(), 0);
-
-    return result == 0;
+    if (result == 0) {
+        return true;
+    }
+    qCWarning(lcFileSystem) << u"Failed to remove tag" << key << u"from" << path << u":" << strerror(errno);
+    return false;
 #elif defined(Q_OS_WIN)
-    return QFile::remove(QStringLiteral("%1:%2").arg(path, key));
+    const auto fsPath = toFilesystemPath(u"%1:%2"_s.arg(path, key));
+    std::error_code fileError;
+    std::filesystem::remove(fsPath, fileError);
+    if (fileError) {
+        qCWarning(lcFileSystem) << u"Failed to remove tag" << key << u"from" << path << u":" << fsPath << u"error:" << fileError.message();
+        return false;
+    }
+    return true;
 #else
     return false;
 #endif // Q_OS_MAC || Q_OS_LINUX
 }
-
-
 } // namespace OCC
