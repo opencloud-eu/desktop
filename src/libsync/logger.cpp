@@ -30,10 +30,17 @@
 #include <comdef.h>
 #endif
 
+using namespace Qt::Literals::StringLiterals;
+
 namespace {
 constexpr int crashLogSizeC = 20;
 constexpr int maxLogSizeC = 1024 * 1024 * 100; // 100 MiB
 constexpr int minLogsToKeepC = 5;
+
+QString logHeader()
+{
+    return u"%1 %2\n"_s.arg(OCC::Theme::instance()->aboutVersions(OCC::Theme::VersionFormat::OneLiner), qApp->applicationName());
+}
 
 #ifdef Q_OS_WIN
 bool isDebuggerPresent()
@@ -159,7 +166,7 @@ void Logger::open(const QString &name)
     _logstream.reset(new QTextStream(&_logFile));
     _logstream->setGenerateByteOrderMark(true);
     _logstream->setEncoding(encoding);
-    (*_logstream) << Theme::instance()->aboutVersions(Theme::VersionFormat::OneLiner) << u' ' << qApp->applicationName() << Qt::endl;
+    (*_logstream) << logHeader();
 }
 
 void Logger::close()
@@ -259,6 +266,7 @@ void Logger::dumpCrashLog()
     if (logFile.open(QFile::WriteOnly)) {
         QTextStream out(&logFile);
         out.setEncoding(QStringConverter::Utf8);
+        out << logHeader();
         for (int i = 1; i <= crashLogSizeC; ++i) {
             out << _crashLog[(_crashLogIndex + i) % crashLogSizeC];
         }
