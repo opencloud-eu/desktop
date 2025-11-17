@@ -23,6 +23,8 @@
 #include "common/utility_win.h"
 #endif
 
+
+using namespace Qt::Literals::StringLiterals;
 using namespace OCC;
 
 
@@ -52,13 +54,24 @@ private Q_SLOTS:
         auto newAccountState = TestUtils::createDummyAccount();
         FolderMan *folderman = TestUtils::folderMan();
         QCOMPARE(folderman, FolderMan::instance());
+
+        const auto type = FolderMan::NewFolderType::SpacesFolder;
+        const QUuid uuid = {};
+
+        if (Utility::isWindows()) { // drive-letter tests
+            if (QFileInfo(QStringLiteral("c:/")).isWritable()) {
+                // we expect success
+                QCOMPARE(folderman->checkPathValidityForNewFolder(QStringLiteral("c:"), type, uuid), QString());
+                QCOMPARE(folderman->checkPathValidityForNewFolder(QStringLiteral("c:/"), type, uuid), QString());
+                QCOMPARE(folderman->checkPathValidityForNewFolder(QStringLiteral("c:/foo"), type, uuid), QString());
+            }
+        }
+
         QVERIFY(folderman->addFolder(
             newAccountState.get(), TestUtils::createDummyFolderDefinition(newAccountState->account(), dirPath + QStringLiteral("/sub/OpenCloud1"))));
         QVERIFY(folderman->addFolder(
             newAccountState.get(), TestUtils::createDummyFolderDefinition(newAccountState->account(), dirPath + QStringLiteral("/OpenCloud2"))));
 
-        const auto type = FolderMan::NewFolderType::SpacesFolder;
-        const QUuid uuid = {};
 
         // those should be allowed
         // QString FolderMan::checkPathValidityForNewFolder(const QString& path, const QUrl &serverUrl, bool forNewDirectory)
@@ -118,19 +131,6 @@ private Q_SLOTS:
         }
 #endif
 
-        if (Utility::isWindows()) { // drive-letter tests
-            if (!QFileInfo(QStringLiteral("v:/")).exists()) {
-                QCOMPARE_NE(folderman->checkPathValidityForNewFolder(QStringLiteral("v:"), type, uuid), QString());
-                QCOMPARE_NE(folderman->checkPathValidityForNewFolder(QStringLiteral("v:/"), type, uuid), QString());
-                QCOMPARE_NE(folderman->checkPathValidityForNewFolder(QStringLiteral("v:/foo"), type, uuid), QString());
-            }
-            if (QFileInfo(QStringLiteral("c:/")).isWritable()) {
-                QCOMPARE(folderman->checkPathValidityForNewFolder(QStringLiteral("c:"), type, uuid), QString());
-                QCOMPARE(folderman->checkPathValidityForNewFolder(QStringLiteral("c:/"), type, uuid), QString());
-                QCOMPARE(folderman->checkPathValidityForNewFolder(QStringLiteral("c:/foo"), type, uuid), QString());
-            }
-        }
-
         // Invalid paths
         QCOMPARE_NE(folderman->checkPathValidityForNewFolder({}, type, uuid), QString());
 
@@ -158,6 +158,19 @@ private Q_SLOTS:
             f.close();
             QVERIFY(QFileInfo::exists(dirPath + QStringLiteral("/db-check2/._sync_something.db")));
             QCOMPARE_NE(folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/db-check2"), type, uuid), QString());
+        }
+
+
+        if (Utility::isWindows()) { // drive-letter tests
+            const auto driveLetter = QFileInfo(dirPath).absoluteDir().absolutePath().at(0);
+            const auto drive = u"%1:/"_s.arg(driveLetter);
+            if (QFileInfo(drive).isWritable()) {
+                // fails as we already sync dirPath + QStringLiteral("/sub/OpenCloud1")
+                QCOMPARE_NE(folderman->checkPathValidityForNewFolder(u"%1:"_s.arg(driveLetter), type, uuid), QString());
+                QCOMPARE_NE(folderman->checkPathValidityForNewFolder(u"%1:/"_s.arg(driveLetter), type, uuid), QString());
+                // succeeds as the sub dir foo does not contain OpenCloud1
+                QCOMPARE(folderman->checkPathValidityForNewFolder(u"%1:/foo"_s.arg(driveLetter), type, uuid), QString());
+            }
         }
     }
 
