@@ -15,6 +15,16 @@
 - Add Windows VFS [[#305](https://github.com/opencloud-eu/desktop/pull/305)]
 - Enable http2 support by default [[#333](https://github.com/opencloud-eu/desktop/pull/333)]
 
+### 📈 Enhancement
+
+- Ensure the version is included in the crash log [[#691](https://github.com/opencloud-eu/desktop/pull/691)]
+- change help URL to the right docs URL [[#466](https://github.com/opencloud-eu/desktop/pull/466)]
+- Folder watcher: ignore changes in short lived files [[#455](https://github.com/opencloud-eu/desktop/pull/455)]
+- Fix assert in httplogger if a cached request is actuall send [[#456](https://github.com/opencloud-eu/desktop/pull/456)]
+- Sync description and space name to Windows [[#443](https://github.com/opencloud-eu/desktop/pull/443)]
+- Replace csync C code with std::filesystem [[#393](https://github.com/opencloud-eu/desktop/pull/393)]
+- Remove margins around the content widgets [[#377](https://github.com/opencloud-eu/desktop/pull/377)]
+
 ### 🐛 Bug Fixes
 
 - Ensure that a retry happens after the minimal ignorelist timeout [[#664](https://github.com/opencloud-eu/desktop/pull/664)]
@@ -39,15 +49,6 @@
 - Fix printing of duration [[#400](https://github.com/opencloud-eu/desktop/pull/400)]
 - Don't try LockFile on directories [[#366](https://github.com/opencloud-eu/desktop/pull/366)]
 - OAuth: Only display user name in an error if we have one [[#355](https://github.com/opencloud-eu/desktop/pull/355)]
-
-### 📈 Enhancement
-
-- change help URL to the right docs URL [[#466](https://github.com/opencloud-eu/desktop/pull/466)]
-- Folder watcher: ignore changes in short lived files [[#455](https://github.com/opencloud-eu/desktop/pull/455)]
-- Fix assert in httplogger if a cached request is actuall send [[#456](https://github.com/opencloud-eu/desktop/pull/456)]
-- Sync description and space name to Windows [[#443](https://github.com/opencloud-eu/desktop/pull/443)]
-- Replace csync C code with std::filesystem [[#393](https://github.com/opencloud-eu/desktop/pull/393)]
-- Remove margins around the content widgets [[#377](https://github.com/opencloud-eu/desktop/pull/377)]
 
 ### 📦️ Dependencies
 
