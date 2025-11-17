@@ -207,13 +207,17 @@ void PropagateUploadFileTUS::slotChunkFinished()
     const qint64 offset = job->reply()->rawHeader(uploadOffset()).toLongLong();
     propagator()->reportProgress(*_item, offset);
     _currentOffset = offset;
+
+    _finished = offset == _item->_size;
     // first response after a POST request
     if (_location.isEmpty()) {
         _location = job->reply()->header(QNetworkRequest::LocationHeader).toUrl();
     }
-
-
-    _finished = offset == _item->_size;
+    if (!_finished && _location.isValid()) {
+        //: Content-Location is a technical term, don't translate.
+        abortWithError(SyncFileItem::SoftError, tr("Upload did not receive a Content-Location."));
+        return;
+    }
 
     // Check if the file still exists
     const QString fullFilePath(propagator()->fullLocalPath(_item->localName()));
@@ -238,7 +242,7 @@ void PropagateUploadFileTUS::slotChunkFinished()
     }
     if (!_finished) {
         // we just started the upload
-        if (HttpLogger::requestVerb(*job->reply()) == QByteArrayLiteral("POST") && !_location.isEmpty()) {
+        if (HttpLogger::requestVerb(*job->reply()) == QByteArrayLiteral("POST")) {
             // add the new location
             auto info = _item->toUploadInfo();
             info._url = _location;
