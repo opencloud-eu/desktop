@@ -135,10 +135,14 @@ std::pair<QString, QUuid> Utility::getDirectorySyncRootMarkings(const QString &p
 
 void Utility::unmarkDirectoryAsSyncRoot(const QString &path)
 {
-    if (!FileSystem::Tags::remove(path, dirTag())) {
-        qCWarning(lcGuiUtility) << u"Failed to remove tag on" << path;
-    }
-    if (!FileSystem::Tags::remove(path, uuidTag())) {
-        qCWarning(lcGuiUtility) << u"Failed to remove uuid tag on" << path;
+    if (QFileInfo::exists(path)) {
+        if (!FileSystem::Tags::remove(path, dirTag())) {
+            qCWarning(lcGuiUtility) << u"Failed to remove tag on" << path;
+            Q_ASSERT(false);
+        }
+        if (!FileSystem::Tags::remove(path, uuidTag())) {
+            qCWarning(lcGuiUtility) << u"Failed to remove uuid tag on" << path;
+            Q_ASSERT(false);
+        }
     }
 }

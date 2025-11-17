@@ -163,45 +163,44 @@ GraphApi::Space *Folder::space() const
 
 bool Folder::checkLocalPath()
 {
+    QString error;
 #ifdef Q_OS_WIN
     QNtfsPermissionCheckGuard ntfs_perm;
 #endif
+    _canonicalLocalPath = _definition.localPath();
     const QFileInfo fi(_definition.localPath());
-    _canonicalLocalPath = fi.canonicalFilePath();
-#ifdef Q_OS_MAC
-    // Workaround QTBUG-55896  (Should be fixed in Qt 5.8)
-    _canonicalLocalPath = _canonicalLocalPath.normalized(QString::NormalizationForm_C);
-#endif
-    if (_canonicalLocalPath.isEmpty()) {
-        qCWarning(lcFolder) << u"Broken symlink:" << _definition.localPath();
-        _canonicalLocalPath = _definition.localPath();
-    } else if (!_canonicalLocalPath.endsWith(QLatin1Char('/'))) {
-        _canonicalLocalPath.append(QLatin1Char('/'));
-    }
-
-    QString error;
-    if (fi.isDir() && fi.isReadable() && fi.isWritable()) {
-        auto pathLenghtCheck = checkPathLength(_canonicalLocalPath);
-        if (!pathLenghtCheck) {
-            error = pathLenghtCheck.error();
-        }
-
-        if (error.isEmpty()) {
-            qCDebug(lcFolder) << u"Checked local path ok";
-            if (!_journal.open()) {
-                error = tr("Failed to open the database for »%1«.").arg(_definition.localPath());
-            }
-        }
+    if (!FileSystem::fileExists(_definition.localPath(), fi)) {
+        error = tr("Local folder »%1« does not exist.").arg(_definition.localPath());
     } else {
-        // Check directory again
-        if (!FileSystem::fileExists(_definition.localPath(), fi)) {
-            error = tr("Local folder »%1« does not exist.").arg(_definition.localPath());
-        } else if (!fi.isDir()) {
-            error = tr("»%1« should be a folder but is not.").arg(_definition.localPath());
-        } else if (!fi.isReadable()) {
-            error = tr("»%1« is not readable.").arg(_definition.localPath());
-        } else if (!fi.isWritable()) {
-            error = tr("»%1« is not writable.").arg(_definition.localPath());
+        _canonicalLocalPath = fi.canonicalFilePath();
+        if (_canonicalLocalPath.isEmpty()) {
+            qCWarning(lcFolder) << u"Broken symlink:" << _definition.localPath();
+            _canonicalLocalPath = _definition.localPath();
+        } else if (!_canonicalLocalPath.endsWith(QLatin1Char('/'))) {
+            _canonicalLocalPath.append(QLatin1Char('/'));
+        }
+
+        if (fi.isDir() && fi.isReadable() && fi.isWritable()) {
+            auto pathLengthCheck = checkPathLength(_canonicalLocalPath);
+            if (!pathLengthCheck) {
+                error = pathLengthCheck.error();
+            }
+
+            if (error.isEmpty()) {
+                qCDebug(lcFolder) << u"Checked local path ok";
+                if (!_journal.open()) {
+                    error = tr("Failed to open the database for »%1«.").arg(_definition.localPath());
+                }
+            }
+        } else {
+            // Check directory again
+            if (!fi.isDir()) {
+                error = tr("»%1« should be a folder but is not.").arg(_definition.localPath());
+            } else if (!fi.isReadable()) {
+                error = tr("»%1« is not readable.").arg(_definition.localPath());
+            } else if (!fi.isWritable()) {
+                error = tr("»%1« is not writable.").arg(_definition.localPath());
+            }
         }
     }
     if (!error.isEmpty()) {
