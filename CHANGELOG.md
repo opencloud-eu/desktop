@@ -17,6 +17,7 @@
 
 ### 🐛 Bug Fixes
 
+- Terminate sync before an account is removed [[#699](https://github.com/opencloud-eu/desktop/pull/699)]
 - Abort if tus did not receive a location header and the upload is not … [[#693](https://github.com/opencloud-eu/desktop/pull/693)]
 - Ensure that a retry happens after the minimal ignorelist timeout [[#664](https://github.com/opencloud-eu/desktop/pull/664)]
 - Eit error if .well-known was not found [[#663](https://github.com/opencloud-eu/desktop/pull/663)]
