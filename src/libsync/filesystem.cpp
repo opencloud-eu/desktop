@@ -341,6 +341,14 @@ bool FileSystem::Tags::remove(const QString &path, const QString &key)
     if (result == 0) {
         return true;
     }
+#ifdef Q_OS_MAC
+    if (errno == ENOATTR) {
+#else
+    if (errno == ENODATA) {
+#endif
+        qCWarning(lcFileSystem) << u"Failed to remove tag" << key << u"from" << path << u"tag doesn't exist";
+        return true;
+    }
     qCWarning(lcFileSystem) << u"Failed to remove tag" << key << u"from" << path << u":" << strerror(errno);
     return false;
 #elif defined(Q_OS_WIN)
