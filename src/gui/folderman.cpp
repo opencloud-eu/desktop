@@ -546,7 +546,8 @@ QString FolderMan::trayTooltipStatusString(
 // parent directories.
 static QString canonicalPath(const QString &path)
 {
-    QFileInfo selFile(path);
+    // QFile::canonicalFilePath for C: returns the current working dir 🤷‍♀️
+    QFileInfo selFile(Utility::ensureTrailingSlash(path));
     if (!selFile.exists()) {
         const auto parentPath = selFile.dir().path();
 
@@ -557,7 +558,7 @@ static QString canonicalPath(const QString &path)
             return path;
         }
 
-        return canonicalPath(parentPath) + QLatin1Char('/') + selFile.fileName();
+        return canonicalPath(parentPath) + '/'_L1 + selFile.fileName();
     }
     return selFile.canonicalFilePath();
 }
