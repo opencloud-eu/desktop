@@ -213,7 +213,7 @@ void PropagateUploadFileTUS::slotChunkFinished()
     if (_location.isEmpty()) {
         _location = job->reply()->header(QNetworkRequest::LocationHeader).toUrl();
     }
-    if (!_finished && _location.isValid()) {
+    if (!_finished && !_location.isValid()) {
         //: Content-Location is a technical term, don't translate.
         abortWithError(SyncFileItem::SoftError, tr("Upload did not receive a Content-Location."));
         return;
