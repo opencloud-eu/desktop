@@ -47,6 +47,7 @@
 #include <QtQuickWidgets/QtQuickWidgets>
 
 using namespace std::chrono_literals;
+using namespace Qt::Literals::StringLiterals;
 
 namespace {
 constexpr auto modalWidgetStretchedMarginC = 50;
@@ -503,6 +504,12 @@ void AccountSettings::slotDeleteAccount()
     connect(messageBox, &QMessageBox::finished, this, [this, messageBox, yesButton]{
         if (messageBox->clickedButton() == yesButton) {
             auto manager = AccountManager::instance();
+            // sign out to stop new syncs from being scheduled
+            _accountState->signOutByUi();
+            if (FolderMan::instance()->scheduler()->currentSync() && FolderMan::instance()->scheduler()->currentSync()->accountState() == _accountState) {
+                // the message is usually not user visible
+                FolderMan::instance()->scheduler()->terminateCurrentSync(u"Account about to be removed"_s);
+            }
             manager->deleteAccount(_accountState);
         }
     });
