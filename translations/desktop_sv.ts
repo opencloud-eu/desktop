@@ -879,131 +879,131 @@ The update will be performed in the background, and overwrite the current AppIma
         <translation>Det gick inte att öppna databasen för »%1«.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="198"/>
+        <location filename="../src/gui/folder.cpp" line="173"/>
         <source>Local folder »%1« does not exist.</source>
         <translation>Den lokala mappen »%1« finns inte.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="200"/>
+        <location filename="../src/gui/folder.cpp" line="198"/>
         <source>»%1« should be a folder but is not.</source>
         <translation>»%1« borde vara en mapp, men är det inte.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="202"/>
+        <location filename="../src/gui/folder.cpp" line="200"/>
         <source>»%1« is not readable.</source>
         <translation>»%1« är inte läsbart.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="204"/>
+        <location filename="../src/gui/folder.cpp" line="202"/>
         <source>»%1« is not writable.</source>
         <translation>»%1« är inte skrivbar.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="462"/>
+        <location filename="../src/gui/folder.cpp" line="461"/>
         <source>»%1« and %n other file(s) have been removed.</source>
         <translation><numerusform>»%1« och %n andra filer har tagits bort.</numerusform><numerusform>»%1« och %n andra filer har tagits bort.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="464"/>
+        <location filename="../src/gui/folder.cpp" line="463"/>
         <source>»%1« has been removed.</source>
         <comment>%1 names a file.</comment>
         <translation>»%1« har tagits bort.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="469"/>
+        <location filename="../src/gui/folder.cpp" line="468"/>
         <source>»%1« and %n other file(s) have been added.</source>
         <translation><numerusform>»%1« och %n andra filer har lagts till.</numerusform><numerusform>»%1« och %n andra filer har lagts till.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="471"/>
+        <location filename="../src/gui/folder.cpp" line="470"/>
         <source>»%1« has been added.</source>
         <comment>%1 names a file.</comment>
         <translation>»%1« har lagts till.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="476"/>
+        <location filename="../src/gui/folder.cpp" line="475"/>
         <source>»%1« and %n other file(s) have been updated.</source>
         <translation><numerusform>»%1« och %n andra filer har uppdaterats.</numerusform><numerusform>»%1« och %n andra filer har uppdaterats.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="478"/>
+        <location filename="../src/gui/folder.cpp" line="477"/>
         <source>»%1« has been updated.</source>
         <comment>%1 names a file.</comment>
         <translation>»%1« har uppdaterats.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="483"/>
+        <location filename="../src/gui/folder.cpp" line="482"/>
         <source>»%1« has been renamed to »%2« and %n other file(s) have been renamed.</source>
         <translation><numerusform>»%1« har bytt namn till »%2« och %n andra filer har bytt namn.</numerusform><numerusform>»%1« har bytt namn till »%2« och %n andra filer har bytt namn.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="485"/>
+        <location filename="../src/gui/folder.cpp" line="484"/>
         <source>»%1« has been renamed to »%2«.</source>
         <comment>%1 and %2 name files.</comment>
         <translation>»%1« har bytt namn till »%2«.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="490"/>
+        <location filename="../src/gui/folder.cpp" line="489"/>
         <source>»%1« has been moved to »%2« and %n other file(s) have been moved.</source>
         <translation><numerusform>»%1« har flyttats till »%2« och %n andra filer har flyttats.</numerusform><numerusform>»%1« har flyttats till »%2« och %n andra filer har flyttats.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="492"/>
+        <location filename="../src/gui/folder.cpp" line="491"/>
         <source>»%1« has been moved to »%2«.</source>
         <translation>»%1« har flyttats till »%2«.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="497"/>
+        <location filename="../src/gui/folder.cpp" line="496"/>
         <source>»%1« and %n other file(s) have sync conflicts.</source>
         <translation><numerusform>»%1« och %n andra filer har synkroniseringskonflikter.</numerusform><numerusform>»%1« och %n andra filer har synkroniseringskonflikter.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="499"/>
+        <location filename="../src/gui/folder.cpp" line="498"/>
         <source>»%1« has a sync conflict. Please check the conflict file!</source>
         <translation>»%1« har en synkroniseringskonflikt. Kontrollera konfliktfilen!</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="504"/>
+        <location filename="../src/gui/folder.cpp" line="503"/>
         <source>»%1« and %n other file(s) could not be synced due to errors. See the log for details.</source>
         <translation><numerusform>»%1« och %n andra filer kunde inte synkroniseras på grund av fel. Se loggen för mer information.</numerusform><numerusform>»%1« och %n andra filer kunde inte synkroniseras på grund av fel. Se loggen för mer information.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="506"/>
+        <location filename="../src/gui/folder.cpp" line="505"/>
         <source>»%1« could not be synced due to an error. See the log for details.</source>
         <translation>»%1« kunde inte synkroniseras på grund av ett fel. Se loggen för mer information.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="512"/>
+        <location filename="../src/gui/folder.cpp" line="511"/>
         <source>Sync Activity</source>
         <translation>Synkronisera aktivitet</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="716"/>
+        <location filename="../src/gui/folder.cpp" line="715"/>
         <source>Switching VFS mode on folder »%1«</source>
         <translation>Aktivera VFS-läge för mappen »%1«</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1056"/>
+        <location filename="../src/gui/folder.cpp" line="1055"/>
         <source>The folder »%1« was created but was excluded from synchronization previously. Data inside it will not be synchronized.</source>
         <translation>Mappen »%1« skapades men exkluderades tidigare från synkroniseringen. Data i mappen kommer inte att synkroniseras.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1059"/>
+        <location filename="../src/gui/folder.cpp" line="1058"/>
         <source>The file »%1« was created but was excluded from synchronization previously. It will not be synchronized.</source>
         <translation>Filen »%1« skapades men exkluderades tidigare från synkroniseringen. Den kommer inte att synkroniseras.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1063"/>
+        <location filename="../src/gui/folder.cpp" line="1062"/>
         <source>»%1« is not synchronized</source>
         <translation>»%1« är inte synkroniserad</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="852"/>
+        <location filename="../src/gui/folder.cpp" line="851"/>
         <source>Could not read system exclude file</source>
         <translation>Kunde inte läsa systemets undantagsfil</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1071"/>
+        <location filename="../src/gui/folder.cpp" line="1070"/>
         <source>Changes in synchronized folders could not be tracked reliably.
 
 This means that the synchronization client might not upload local changes immediately and will instead only scan for local changes and upload them occasionally (every two hours by default).
@@ -2215,7 +2215,13 @@ Note that using any logging command line options will override the settings.</so
         <translation>Kontrollsumman kunde inte beräknas</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateuploadtus.cpp" line="222"/>
+        <location filename="../src/libsync/propagateuploadtus.cpp" line="218"/>
+        <source>Upload did not receive a Content-Location.</source>
+        <extracomment>Content-Location is a technical term, don't translate.</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/libsync/propagateuploadtus.cpp" line="226"/>
         <source>The local file was removed during sync.</source>
         <translation>Den lokala filen togs bort under synkroniseringen.</translation>
     </message>
