@@ -556,7 +556,6 @@ QString FileSystem::createPortableFileName(const QString &path, const QString &f
     tmp.resize(std::min<qsizetype>(tmp.size(), fileNameMaxC - reservedSize));
     // remove eventual trailing whitespace after the resize
     tmp = tmp.trimmed();
-
     return QDir::cleanPath(path + QLatin1Char('/') + tmp);
 }
 
