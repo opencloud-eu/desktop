@@ -118,7 +118,8 @@
         <location filename="../src/gui/main.cpp" line="98"/>
         <source>%1 version %2<byte value="xd"/>
 File synchronization desktop utility.</source>
-        <translation type="unfinished"/>
+        <translation>%1 versão %2
+Utilitário de sincronização de ficheiros para ambiente de trabalho.</translation>
     </message>
     <message>
         <location filename="../src/gui/main.cpp" line="106"/>
@@ -403,7 +404,7 @@ File synchronization desktop utility.</source>
     <message>
         <location filename="../src/gui/folderwizard/folderwizardsourcepage.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished"/>
+        <translation>Formulário</translation>
     </message>
     <message>
         <location filename="../src/gui/folderwizard/folderwizardsourcepage.ui" line="20"/>
@@ -431,7 +432,7 @@ File synchronization desktop utility.</source>
     <message>
         <location filename="../src/gui/folderwizard/folderwizardtargetpage.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished"/>
+        <translation>Formulário</translation>
     </message>
     <message>
         <location filename="../src/gui/folderwizard/folderwizardtargetpage.ui" line="20"/>
@@ -584,12 +585,12 @@ File synchronization desktop utility.</source>
     <message>
         <location filename="../src/gui/accountmodalwidget.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished"/>
+        <translation>Formulário</translation>
     </message>
     <message>
         <location filename="../src/gui/accountmodalwidget.ui" line="26"/>
         <source>GroupBox</source>
-        <translation type="unfinished"/>
+        <translation>Caixa de grupo</translation>
     </message>
 </context>
 <context>
@@ -597,7 +598,7 @@ File synchronization desktop utility.</source>
     <message>
         <location filename="../src/gui/accountsettings.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished"/>
+        <translation>Formulário</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.ui" line="58"/>
@@ -610,113 +611,113 @@ File synchronization desktop utility.</source>
         <translation>Ligações de sincronização</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="203"/>
-        <location filename="../src/gui/accountsettings.cpp" line="501"/>
+        <location filename="../src/gui/accountsettings.cpp" line="204"/>
+        <location filename="../src/gui/accountsettings.cpp" line="502"/>
         <source>Cancel</source>
         <translation>Cancelar</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="147"/>
+        <location filename="../src/gui/accountsettings.cpp" line="148"/>
         <source>Choose what to sync</source>
         <translation>Escolher o que sincronizar</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="196"/>
+        <location filename="../src/gui/accountsettings.cpp" line="197"/>
         <source>Confirm removal of Space</source>
         <translation>Confirmar remoção do Espaço</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="197"/>
+        <location filename="../src/gui/accountsettings.cpp" line="198"/>
         <source>&lt;p&gt;Do you really want to stop syncing the Space »%1«?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; This will &lt;b&gt;not&lt;/b&gt; delete any files.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Deseja realmente parar a sincronização do Espaço «%1»?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Nota:&lt;/b&gt; Isto &lt;b&gt;não&lt;/b&gt; eliminará quaisquer ficheiros.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="202"/>
+        <location filename="../src/gui/accountsettings.cpp" line="203"/>
         <source>Remove Space</source>
         <translation>Remover Espaço</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="239"/>
+        <location filename="../src/gui/accountsettings.cpp" line="240"/>
         <source>Sync Running</source>
         <translation>Sincronização em curso</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="239"/>
+        <location filename="../src/gui/accountsettings.cpp" line="240"/>
         <source>The sync operation is running.&lt;br/&gt;Do you want to stop it?</source>
         <translation>A sincronização está em curso.&lt;br/&gt;Deseja pará-la?</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="262"/>
+        <location filename="../src/gui/accountsettings.cpp" line="263"/>
         <source>Sync paused by user</source>
         <translation>Sincronização pausada pelo utilizador</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="271"/>
+        <location filename="../src/gui/accountsettings.cpp" line="272"/>
         <source>Internet connection is metered</source>
         <translation>Ligação à Internet é tarifada</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="272"/>
+        <location filename="../src/gui/accountsettings.cpp" line="273"/>
         <source>Synchronization is paused because the Internet connection is a metered connection&lt;p&gt;Do you really want to force a Synchronization now?</source>
         <translation>A sincronização está pausada porque a ligação à Internet é tarifada.&lt;p&gt;Deseja mesmo forçar a sincronização agora?</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="295"/>
+        <location filename="../src/gui/accountsettings.cpp" line="296"/>
         <source>User triggered force sync</source>
         <translation>Sincronização forçada pelo utilizador</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="319"/>
+        <location filename="../src/gui/accountsettings.cpp" line="320"/>
         <source>Mark as read</source>
         <translation>Marcar como lido</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="354"/>
+        <location filename="../src/gui/accountsettings.cpp" line="355"/>
         <source>Connected</source>
         <translation>Ligado</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="362"/>
+        <location filename="../src/gui/accountsettings.cpp" line="363"/>
         <source>Signed out</source>
         <translation>Sessão encerrada</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="366"/>
+        <location filename="../src/gui/accountsettings.cpp" line="367"/>
         <source>Captive portal prevents connections to the server.</source>
         <translation>Um portal cativo está a impedir ligações ao servidor.</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="368"/>
+        <location filename="../src/gui/accountsettings.cpp" line="369"/>
         <source>Sync is paused due to metered internet connection</source>
         <translation>A sincronização está pausada devido a ligação à Internet tarifada</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="370"/>
+        <location filename="../src/gui/accountsettings.cpp" line="371"/>
         <source>Connecting...</source>
         <translation>A ligar...</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="374"/>
+        <location filename="../src/gui/accountsettings.cpp" line="375"/>
         <source>Disconnected</source>
         <translation>Desligado</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="495"/>
+        <location filename="../src/gui/accountsettings.cpp" line="496"/>
         <source>Confirm Account Removal</source>
         <translation>Confirmar remoção da conta</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="496"/>
+        <location filename="../src/gui/accountsettings.cpp" line="497"/>
         <source>&lt;p&gt;Do you really want to remove the connection to the account %1«?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; This will &lt;b&gt;not&lt;/b&gt; delete any files.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Deseja realmente remover a ligação à conta %1?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Nota:&lt;/b&gt; Isto &lt;b&gt;não&lt;/b&gt; eliminará quaisquer ficheiros.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="500"/>
+        <location filename="../src/gui/accountsettings.cpp" line="501"/>
         <source>Remove connection</source>
         <translation>Remover ligação</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="351"/>
+        <location filename="../src/gui/accountsettings.cpp" line="352"/>
         <source>The server version %1 is unsupported! Proceed at your own risk.</source>
         <translation>A versão do servidor %1 não é suportada! Continue por sua conta e risco.</translation>
     </message>
@@ -768,7 +769,7 @@ A atualização será realizada em segundo plano e substituirá o ficheiro AppIm
     <message>
         <location filename="../src/gui/main.cpp" line="176"/>
         <source>Quit</source>
-        <translation type="unfinished"/>
+        <translation>Sair</translation>
     </message>
     <message>
         <location filename="../src/gui/application.cpp" line="189"/>
@@ -816,7 +817,7 @@ A atualização será realizada em segundo plano e substituirá o ficheiro AppIm
     <message numerus="yes">
         <location filename="../src/gui/commonstrings.cpp" line="51"/>
         <source>%n Filter(s)</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>%n filtro</numerusform><numerusform>%n filtros</numerusform><numerusform>%n filtro</numerusform></translation>
     </message>
 </context>
 <context>
@@ -905,7 +906,7 @@ A atualização será realizada em segundo plano e substituirá o ficheiro AppIm
     <message numerus="yes">
         <location filename="../src/gui/folder.cpp" line="461"/>
         <source>»%1« and %n other file(s) have been removed.</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>«%1» e mais %n ficheiro(s) foram removidos.</numerusform><numerusform>«%1» e mais %n ficheiros foram removidos.</numerusform><numerusform>«%1» e mais %n ficheiro(s) foram removidos.</numerusform></translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="463"/>
@@ -916,7 +917,7 @@ A atualização será realizada em segundo plano e substituirá o ficheiro AppIm
     <message numerus="yes">
         <location filename="../src/gui/folder.cpp" line="468"/>
         <source>»%1« and %n other file(s) have been added.</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>«%1» e mais %n ficheiro(s) foram adicionados.</numerusform><numerusform>«%1» e mais %n ficheiros foram adicionados.</numerusform><numerusform>«%1» e mais %n ficheiro(s) foram adicionados.</numerusform></translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="470"/>
@@ -927,7 +928,7 @@ A atualização será realizada em segundo plano e substituirá o ficheiro AppIm
     <message numerus="yes">
         <location filename="../src/gui/folder.cpp" line="475"/>
         <source>»%1« and %n other file(s) have been updated.</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>«%1» e mais %n ficheiro(s) foram carregados.</numerusform><numerusform>«%1» e mais %n ficheiros foram carregados.</numerusform><numerusform>«%1» e mais %n ficheiro(s) foram carregados.</numerusform></translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="477"/>
@@ -949,7 +950,7 @@ A atualização será realizada em segundo plano e substituirá o ficheiro AppIm
     <message numerus="yes">
         <location filename="../src/gui/folder.cpp" line="489"/>
         <source>»%1« has been moved to »%2« and %n other file(s) have been moved.</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>»%1« foi renomeado para »%2« e mais %n ficheiro(s) foram movidos.</numerusform><numerusform>»%1« foi renomeado para »%2« e mais %n ficheiros foram movidos.</numerusform><numerusform>»%1« foi renomeado para »%2« e mais %n ficheiro(s) foram movidos.</numerusform></translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="491"/>
@@ -959,7 +960,7 @@ A atualização será realizada em segundo plano e substituirá o ficheiro AppIm
     <message numerus="yes">
         <location filename="../src/gui/folder.cpp" line="496"/>
         <source>»%1« and %n other file(s) have sync conflicts.</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>«%1» e mais %n ficheiro têm conflitos de sincronização.</numerusform><numerusform>«%1» e mais %n ficheiros têm conflitos de sincronização.</numerusform><numerusform>«%1» e mais %n ficheiro têm conflitos de sincronização.</numerusform></translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="498"/>
@@ -969,7 +970,7 @@ A atualização será realizada em segundo plano e substituirá o ficheiro AppIm
     <message numerus="yes">
         <location filename="../src/gui/folder.cpp" line="503"/>
         <source>»%1« and %n other file(s) could not be synced due to errors. See the log for details.</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>«%1» e mais %n ficheiro não puderam ser sincronizados devido a erros. Consulte o registo para mais detalhes.</numerusform><numerusform>«%1» e mais %n ficheiros não puderam ser sincronizados devido a erros. Consulte o registo para mais detalhes.</numerusform><numerusform>«%1» e mais %n ficheiro não puderam ser sincronizados devido a erros. Consulte o registo para mais detalhes.</numerusform></translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="505"/>
@@ -1226,7 +1227,7 @@ Considere remover esta pasta da conta e adicioná-la novamente.</translation>
     <message>
         <location filename="../src/gui/generalsettings.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished"/>
+        <translation>Formulário</translation>
     </message>
     <message>
         <location filename="../src/gui/generalsettings.ui" line="35"/>
@@ -1490,7 +1491,7 @@ Como os ficheiros de registo podem crescer muito, o cliente inicia um novo para 
     <message>
         <location filename="../src/gui/logbrowser.ui" line="91"/>
         <source>C:/log</source>
-        <translation type="unfinished"/>
+        <translation>C:/log</translation>
     </message>
     <message>
         <location filename="../src/gui/logbrowser.ui" line="123"/>
@@ -1543,7 +1544,7 @@ Note que usar opções de registo na linha de comandos substituirá estas defini
     <message>
         <location filename="../src/gui/networksettings.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished"/>
+        <translation>Formulário</translation>
     </message>
     <message>
         <location filename="../src/gui/networksettings.ui" line="20"/>
@@ -1578,7 +1579,7 @@ Note que usar opções de registo na linha de comandos substituirá estas defini
     <message>
         <location filename="../src/gui/networksettings.ui" line="140"/>
         <source>:</source>
-        <translation type="unfinished"/>
+        <translation>:</translation>
     </message>
     <message>
         <location filename="../src/gui/networksettings.ui" line="153"/>
@@ -2233,7 +2234,7 @@ Note que usar opções de registo na linha de comandos substituirá estas defini
         <location filename="../src/libsync/propagateuploadtus.cpp" line="218"/>
         <source>Upload did not receive a Content-Location.</source>
         <extracomment>Content-Location is a technical term, don't translate.</extracomment>
-        <translation type="unfinished"/>
+        <translation>O upload não recebeu o cabeçalho Content-Location.</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagateuploadtus.cpp" line="226"/>
@@ -2410,7 +2411,7 @@ Note que usar opções de registo na linha de comandos substituirá estas defini
     <message>
         <location filename="../src/gui/settingsdialog.ui" line="14"/>
         <source>MainWindow</source>
-        <translation type="unfinished"/>
+        <translation>Janela principal</translation>
     </message>
 </context>
 <context>
@@ -2419,7 +2420,7 @@ Note que usar opções de registo na linha de comandos substituirá estas defini
         <location filename="../src/gui/socketapi/socketapi.cpp" line="484"/>
         <source>Share with %1</source>
         <comment>parameter is OpenCloud</comment>
-        <translation type="unfinished"/>
+        <translation>Partilhar com %1</translation>
     </message>
     <message>
         <location filename="../src/gui/socketapi/socketapi.cpp" line="582"/>
@@ -2545,7 +2546,7 @@ Note que usar opções de registo na linha de comandos substituirá estas defini
         <location filename="../src/libsync/syncengine.cpp" line="326"/>
         <source>Only %1 are available, need at least %2 to start</source>
         <comment>Placeholders are postfixed with file sizes using Utility::octetsToString()</comment>
-        <translation type="unfinished"/>
+        <translation>Apenas %1 estão disponíveis, são necessários pelo menos %2 para iniciar</translation>
     </message>
     <message>
         <location filename="../src/libsync/syncengine.cpp" line="354"/>
@@ -2948,12 +2949,12 @@ Note que usar opções de registo na linha de comandos substituirá estas defini
     <message numerus="yes">
         <location filename="../src/libsync/common/utility.cpp" line="297"/>
         <source>%n day(s) ago</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>há %n dia</numerusform><numerusform>há %n dias</numerusform><numerusform>há %n dia</numerusform></translation>
     </message>
     <message numerus="yes">
         <location filename="../src/libsync/common/utility.cpp" line="307"/>
         <source>%n hour(s) ago</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>há %n horas</numerusform><numerusform>há %n horas</numerusform><numerusform>há %n horas</numerusform></translation>
     </message>
     <message>
         <location filename="../src/libsync/common/utility.cpp" line="313"/>
@@ -2968,7 +2969,7 @@ Note que usar opções de registo na linha de comandos substituirá estas defini
     <message numerus="yes">
         <location filename="../src/libsync/common/utility.cpp" line="319"/>
         <source>%n minute(s) ago</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>há %n minuto</numerusform><numerusform>há %n minutos</numerusform><numerusform>há %n minutos</numerusform></translation>
     </message>
     <message>
         <location filename="../src/libsync/syncresult.cpp" line="112"/>
@@ -3263,32 +3264,32 @@ Note que usar opções de registo na linha de comandos substituirá estas defini
     <message numerus="yes">
         <location filename="../src/libsync/common/utility.cpp" line="201"/>
         <source>%n year(s)</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>há %n ano</numerusform><numerusform>há %n anos</numerusform><numerusform>há %n anos</numerusform></translation>
     </message>
     <message numerus="yes">
         <location filename="../src/libsync/common/utility.cpp" line="202"/>
         <source>%n month(s)</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>%n mês</numerusform><numerusform>%n meses</numerusform><numerusform>%n meses</numerusform></translation>
     </message>
     <message numerus="yes">
         <location filename="../src/libsync/common/utility.cpp" line="203"/>
         <source>%n day(s)</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>%n dia</numerusform><numerusform>%n dias</numerusform><numerusform>%n dias</numerusform></translation>
     </message>
     <message numerus="yes">
         <location filename="../src/libsync/common/utility.cpp" line="204"/>
         <source>%n hour(s)</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>%n hora</numerusform><numerusform>%n horas</numerusform><numerusform>%n hora</numerusform></translation>
     </message>
     <message numerus="yes">
         <location filename="../src/libsync/common/utility.cpp" line="205"/>
         <source>%n minute(s)</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>%n minuto</numerusform><numerusform>%n minutos</numerusform><numerusform>%n minuto</numerusform></translation>
     </message>
     <message numerus="yes">
         <location filename="../src/libsync/common/utility.cpp" line="206"/>
         <source>%n second(s)</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>%n segundo</numerusform><numerusform>%n segundos</numerusform><numerusform>%n segundos</numerusform></translation>
     </message>
     <message>
         <location filename="../src/libsync/common/utility.cpp" line="230"/>
