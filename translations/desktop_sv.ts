@@ -608,113 +608,113 @@ File synchronization desktop utility.</source>
         <translation>Synkronisera anslutningar</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="203"/>
-        <location filename="../src/gui/accountsettings.cpp" line="501"/>
+        <location filename="../src/gui/accountsettings.cpp" line="204"/>
+        <location filename="../src/gui/accountsettings.cpp" line="502"/>
         <source>Cancel</source>
         <translation>Avbryt</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="147"/>
+        <location filename="../src/gui/accountsettings.cpp" line="148"/>
         <source>Choose what to sync</source>
         <translation>Välj vad du vill synkronisera</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="196"/>
+        <location filename="../src/gui/accountsettings.cpp" line="197"/>
         <source>Confirm removal of Space</source>
         <translation>Bekräfta borttagning av Space</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="197"/>
+        <location filename="../src/gui/accountsettings.cpp" line="198"/>
         <source>&lt;p&gt;Do you really want to stop syncing the Space »%1«?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; This will &lt;b&gt;not&lt;/b&gt; delete any files.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Vill du verkligen sluta synkronisera arbetsytan »%1«?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Observera!&lt;/b&gt; Detta raderar &lt;b&gt;inga&lt;/b&gt; filer.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="202"/>
+        <location filename="../src/gui/accountsettings.cpp" line="203"/>
         <source>Remove Space</source>
         <translation>Ta bort arbetsyta</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="239"/>
+        <location filename="../src/gui/accountsettings.cpp" line="240"/>
         <source>Sync Running</source>
         <translation>Synkronisera körning</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="239"/>
+        <location filename="../src/gui/accountsettings.cpp" line="240"/>
         <source>The sync operation is running.&lt;br/&gt;Do you want to stop it?</source>
         <translation>Synkroniseringen pågår.&lt;br/&gt;Vill du avbryta den?</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="262"/>
+        <location filename="../src/gui/accountsettings.cpp" line="263"/>
         <source>Sync paused by user</source>
         <translation>Synkronisering pausad av användaren</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="271"/>
+        <location filename="../src/gui/accountsettings.cpp" line="272"/>
         <source>Internet connection is metered</source>
         <translation>Internetanslutningen är mätbar</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="272"/>
+        <location filename="../src/gui/accountsettings.cpp" line="273"/>
         <source>Synchronization is paused because the Internet connection is a metered connection&lt;p&gt;Do you really want to force a Synchronization now?</source>
         <translation>Synkroniseringen är pausad eftersom internetanslutningen är en mätbar anslutning&lt;p&gt;Vill du verkligen tvinga fram en synkronisering nu?</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="295"/>
+        <location filename="../src/gui/accountsettings.cpp" line="296"/>
         <source>User triggered force sync</source>
         <translation>Användaraktiverad tvångssynkronisering</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="319"/>
+        <location filename="../src/gui/accountsettings.cpp" line="320"/>
         <source>Mark as read</source>
         <translation>Markera alla som lästa</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="354"/>
+        <location filename="../src/gui/accountsettings.cpp" line="355"/>
         <source>Connected</source>
         <translation>Ansluten</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="362"/>
+        <location filename="../src/gui/accountsettings.cpp" line="363"/>
         <source>Signed out</source>
         <translation>Utloggad</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="366"/>
+        <location filename="../src/gui/accountsettings.cpp" line="367"/>
         <source>Captive portal prevents connections to the server.</source>
         <translation>Captive portal förhindrar anslutningar till servern.</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="368"/>
+        <location filename="../src/gui/accountsettings.cpp" line="369"/>
         <source>Sync is paused due to metered internet connection</source>
         <translation>Synkroniseringen är pausad på grund av begränsad internetanslutning</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="370"/>
+        <location filename="../src/gui/accountsettings.cpp" line="371"/>
         <source>Connecting...</source>
         <translation>Ansluter...</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="374"/>
+        <location filename="../src/gui/accountsettings.cpp" line="375"/>
         <source>Disconnected</source>
         <translation>Frånkopplad</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="495"/>
+        <location filename="../src/gui/accountsettings.cpp" line="496"/>
         <source>Confirm Account Removal</source>
         <translation>Bekräfta borttagning av konto</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="496"/>
+        <location filename="../src/gui/accountsettings.cpp" line="497"/>
         <source>&lt;p&gt;Do you really want to remove the connection to the account %1«?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; This will &lt;b&gt;not&lt;/b&gt; delete any files.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Vill du verkligen ta bort kopplingen till kontot %1«?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Obs!&lt;/b&gt; Detta raderar &lt;b&gt;inga&lt;/b&gt; filer.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="500"/>
+        <location filename="../src/gui/accountsettings.cpp" line="501"/>
         <source>Remove connection</source>
         <translation>Ta bort anslutning</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="351"/>
+        <location filename="../src/gui/accountsettings.cpp" line="352"/>
         <source>The server version %1 is unsupported! Proceed at your own risk.</source>
         <translation>Serverversionen %1 stöds inte! Fortsätt på egen risk.</translation>
     </message>
@@ -2218,7 +2218,7 @@ Note that using any logging command line options will override the settings.</so
         <location filename="../src/libsync/propagateuploadtus.cpp" line="218"/>
         <source>Upload did not receive a Content-Location.</source>
         <extracomment>Content-Location is a technical term, don't translate.</extracomment>
-        <translation type="unfinished"/>
+        <translation>Uppladdningen fick inte en Content-Location.</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagateuploadtus.cpp" line="226"/>

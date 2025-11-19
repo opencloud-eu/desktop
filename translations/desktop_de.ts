@@ -611,113 +611,113 @@ Dateisynchronisierung Desktop-Client.</translation>
         <translation>Synchronisiere Verbindungen</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="203"/>
-        <location filename="../src/gui/accountsettings.cpp" line="501"/>
+        <location filename="../src/gui/accountsettings.cpp" line="204"/>
+        <location filename="../src/gui/accountsettings.cpp" line="502"/>
         <source>Cancel</source>
         <translation>Abbrechen</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="147"/>
+        <location filename="../src/gui/accountsettings.cpp" line="148"/>
         <source>Choose what to sync</source>
         <translation>Wähle, was du synchronisieren möchtest</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="196"/>
+        <location filename="../src/gui/accountsettings.cpp" line="197"/>
         <source>Confirm removal of Space</source>
         <translation>Entfernen des Spaces bestätigen</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="197"/>
+        <location filename="../src/gui/accountsettings.cpp" line="198"/>
         <source>&lt;p&gt;Do you really want to stop syncing the Space »%1«?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; This will &lt;b&gt;not&lt;/b&gt; delete any files.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Möchtest du wirklich die Synchronisation des Spaces &lt;i&gt;&quot;%1&quot;&lt;/i&gt; abbrechen?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Hinweis:&lt;/b&gt; Dadurch werden &lt;b&gt;keine&lt;/b&gt; Dateien gelöscht.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="202"/>
+        <location filename="../src/gui/accountsettings.cpp" line="203"/>
         <source>Remove Space</source>
         <translation>Space entfernen</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="239"/>
+        <location filename="../src/gui/accountsettings.cpp" line="240"/>
         <source>Sync Running</source>
         <translation>Synchronisation läuft</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="239"/>
+        <location filename="../src/gui/accountsettings.cpp" line="240"/>
         <source>The sync operation is running.&lt;br/&gt;Do you want to stop it?</source>
         <translation>Die Synchronisation läuft gerade.&lt;br/&gt;Trotzdem beenden?</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="262"/>
+        <location filename="../src/gui/accountsettings.cpp" line="263"/>
         <source>Sync paused by user</source>
         <translation>Synchroniserung pausiert durch Benutzer</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="271"/>
+        <location filename="../src/gui/accountsettings.cpp" line="272"/>
         <source>Internet connection is metered</source>
         <translation>Internetverbindung ist getaktet</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="272"/>
+        <location filename="../src/gui/accountsettings.cpp" line="273"/>
         <source>Synchronization is paused because the Internet connection is a metered connection&lt;p&gt;Do you really want to force a Synchronization now?</source>
         <translation>Synchronisierung wird pausiert, weil die Internetverbindung getaktet ist&lt;p&gt;Soll die sofortige Fortsetzung der Synchronisierung wirklich erzwungen werden?</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="295"/>
+        <location filename="../src/gui/accountsettings.cpp" line="296"/>
         <source>User triggered force sync</source>
         <translation>Benutzer hat eine erzwungene Synchronisierung ausgelöst</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="319"/>
+        <location filename="../src/gui/accountsettings.cpp" line="320"/>
         <source>Mark as read</source>
         <translation>Als gelesen markieren</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="354"/>
+        <location filename="../src/gui/accountsettings.cpp" line="355"/>
         <source>Connected</source>
         <translation>Verbunden</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="362"/>
+        <location filename="../src/gui/accountsettings.cpp" line="363"/>
         <source>Signed out</source>
         <translation>Abgemeldet</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="366"/>
+        <location filename="../src/gui/accountsettings.cpp" line="367"/>
         <source>Captive portal prevents connections to the server.</source>
         <translation>Ein &quot;Captive Portal&quot; verhindert die Verbindung zum Server.</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="368"/>
+        <location filename="../src/gui/accountsettings.cpp" line="369"/>
         <source>Sync is paused due to metered internet connection</source>
         <translation>Die Synchronisierung ist aufgrund einer getakteten Internetverbindung pausiert</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="370"/>
+        <location filename="../src/gui/accountsettings.cpp" line="371"/>
         <source>Connecting...</source>
         <translation>Verbinden...</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="374"/>
+        <location filename="../src/gui/accountsettings.cpp" line="375"/>
         <source>Disconnected</source>
         <translation>Getrennt</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="495"/>
+        <location filename="../src/gui/accountsettings.cpp" line="496"/>
         <source>Confirm Account Removal</source>
         <translation>Löschen des Benutzerkontos bestätigen</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="496"/>
+        <location filename="../src/gui/accountsettings.cpp" line="497"/>
         <source>&lt;p&gt;Do you really want to remove the connection to the account %1«?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; This will &lt;b&gt;not&lt;/b&gt; delete any files.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Möchtest du den Zugang zum Benutzerkonto %1 wirklich entfernen?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Hinweis:&lt;/b&gt; Bei diesem Vorgang werden &lt;b&gt;keine&lt;/b&gt; Dateien gelöscht.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="500"/>
+        <location filename="../src/gui/accountsettings.cpp" line="501"/>
         <source>Remove connection</source>
         <translation>Verbindung löschen</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="351"/>
+        <location filename="../src/gui/accountsettings.cpp" line="352"/>
         <source>The server version %1 is unsupported! Proceed at your own risk.</source>
         <translation>Die Serverversion %1 ist nicht unterstützt! Fortfahren erfolgt auf eigene Gefahr.</translation>
     </message>
@@ -970,12 +970,12 @@ Das Update wird im Hintergrund ausgeführt und überschreibt die aktuelle AppIma
     <message numerus="yes">
         <location filename="../src/gui/folder.cpp" line="503"/>
         <source>»%1« and %n other file(s) could not be synced due to errors. See the log for details.</source>
-        <translation><numerusform>%1 und %n andere Datei konnten aufgrund von Fehlern nicht synchronisiert werden. Für Details sieh im Log nach.</numerusform><numerusform>%1 und %n andere Dateien konnten aufgrund von Fehlern nicht synchronisiert werden. Für Details sieh im Log nach.</numerusform></translation>
+        <translation><numerusform>%1 und %n andere Datei konnten aufgrund von Fehlern nicht synchronisiert werden. Für Details sieh im Log nach.</numerusform><numerusform>%1 und %n andere Dateien konnten aufgrund von Fehlern nicht synchronisiert werden. Details sind im Log verfügbar.</numerusform></translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="505"/>
         <source>»%1« could not be synced due to an error. See the log for details.</source>
-        <translation>%1 konnte wegen eines Fehlers nicht synchronisiert werden. Für Details sieh im Log nach.</translation>
+        <translation>%1 konnte aufgrund eines Fehlers nicht synchronisiert werden. Details sind im Log verfügbar.</translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="511"/>
@@ -2234,7 +2234,7 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
         <location filename="../src/libsync/propagateuploadtus.cpp" line="218"/>
         <source>Upload did not receive a Content-Location.</source>
         <extracomment>Content-Location is a technical term, don't translate.</extracomment>
-        <translation type="unfinished"/>
+        <translation>Der Upload ist aufgrund von fehlender Content-Location fehlgeschlagen.</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagateuploadtus.cpp" line="226"/>
@@ -2586,7 +2586,7 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
     <message>
         <location filename="../src/libsync/syncengine.cpp" line="756"/>
         <source>Aborted due to: %1</source>
-        <translation>Abgebrochen wegen: %1</translation>
+        <translation>Abgebrochen: %1</translation>
     </message>
 </context>
 <context>

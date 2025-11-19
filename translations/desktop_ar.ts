@@ -611,113 +611,113 @@ File synchronization desktop utility.</source>
         <translation>اتصالات المزامنة</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="203"/>
-        <location filename="../src/gui/accountsettings.cpp" line="501"/>
+        <location filename="../src/gui/accountsettings.cpp" line="204"/>
+        <location filename="../src/gui/accountsettings.cpp" line="502"/>
         <source>Cancel</source>
         <translation>إلغاء</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="147"/>
+        <location filename="../src/gui/accountsettings.cpp" line="148"/>
         <source>Choose what to sync</source>
         <translation>اختر ما تريد مزامنته</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="196"/>
+        <location filename="../src/gui/accountsettings.cpp" line="197"/>
         <source>Confirm removal of Space</source>
         <translation>تأكيد إزالة المساحة</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="197"/>
+        <location filename="../src/gui/accountsettings.cpp" line="198"/>
         <source>&lt;p&gt;Do you really want to stop syncing the Space »%1«?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; This will &lt;b&gt;not&lt;/b&gt; delete any files.&lt;/p&gt;</source>
         <translation>&lt;p&gt;هل تريد حقًا إيقاف مزامنة المساحة »%1«؟&lt;/p&gt;&lt;p&gt;&lt;b&gt;ملاحظة:&lt;/b&gt; لن يتم &lt;b&gt;حذف&lt;/b&gt; أي ملفات.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="202"/>
+        <location filename="../src/gui/accountsettings.cpp" line="203"/>
         <source>Remove Space</source>
         <translation>إزالة المساحة</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="239"/>
+        <location filename="../src/gui/accountsettings.cpp" line="240"/>
         <source>Sync Running</source>
         <translation>المزامنة قيد التشغيل</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="239"/>
+        <location filename="../src/gui/accountsettings.cpp" line="240"/>
         <source>The sync operation is running.&lt;br/&gt;Do you want to stop it?</source>
         <translation>عملية المزامنة قيد التشغيل.&lt;br/&gt;هل تريد إيقافها؟</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="262"/>
+        <location filename="../src/gui/accountsettings.cpp" line="263"/>
         <source>Sync paused by user</source>
         <translation>المزامنة متوقفة مؤقتًا من قبل المستخدم</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="271"/>
+        <location filename="../src/gui/accountsettings.cpp" line="272"/>
         <source>Internet connection is metered</source>
         <translation>اتصال الإنترنت مقيّد</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="272"/>
+        <location filename="../src/gui/accountsettings.cpp" line="273"/>
         <source>Synchronization is paused because the Internet connection is a metered connection&lt;p&gt;Do you really want to force a Synchronization now?</source>
         <translation>تم إيقاف المزامنة مؤقتًا لأن اتصال الإنترنت مقيّد&lt;p&gt;هل تريد حقًا إجبار المزامنة الآن؟</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="295"/>
+        <location filename="../src/gui/accountsettings.cpp" line="296"/>
         <source>User triggered force sync</source>
         <translation>المستخدم أطلق مزامنة إجبارية</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="319"/>
+        <location filename="../src/gui/accountsettings.cpp" line="320"/>
         <source>Mark as read</source>
         <translation>وضع علامة كمقروء</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="354"/>
+        <location filename="../src/gui/accountsettings.cpp" line="355"/>
         <source>Connected</source>
         <translation>متصل</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="362"/>
+        <location filename="../src/gui/accountsettings.cpp" line="363"/>
         <source>Signed out</source>
         <translation>تم تسجيل الخروج</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="366"/>
+        <location filename="../src/gui/accountsettings.cpp" line="367"/>
         <source>Captive portal prevents connections to the server.</source>
         <translation>البوابة المقيدة تمنع الاتصالات بالخادم.</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="368"/>
+        <location filename="../src/gui/accountsettings.cpp" line="369"/>
         <source>Sync is paused due to metered internet connection</source>
         <translation>تم إيقاف المزامنة مؤقتًا بسبب اتصال إنترنت مقيّد</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="370"/>
+        <location filename="../src/gui/accountsettings.cpp" line="371"/>
         <source>Connecting...</source>
         <translation>جارٍ الاتصال...</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="374"/>
+        <location filename="../src/gui/accountsettings.cpp" line="375"/>
         <source>Disconnected</source>
         <translation>منفصل</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="495"/>
+        <location filename="../src/gui/accountsettings.cpp" line="496"/>
         <source>Confirm Account Removal</source>
         <translation>تأكيد حذف الحساب</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="496"/>
+        <location filename="../src/gui/accountsettings.cpp" line="497"/>
         <source>&lt;p&gt;Do you really want to remove the connection to the account %1«?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; This will &lt;b&gt;not&lt;/b&gt; delete any files.&lt;/p&gt;</source>
         <translation>&lt;p&gt;هل تريد حقًا إزالة الاتصال بالحساب %1«؟&lt;/p&gt;&lt;p&gt;&lt;b&gt;ملاحظة:&lt;/b&gt; لن يتم &lt;b&gt;حذف&lt;/b&gt; أي ملفات.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="500"/>
+        <location filename="../src/gui/accountsettings.cpp" line="501"/>
         <source>Remove connection</source>
         <translation>إزالة الاتصال</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="351"/>
+        <location filename="../src/gui/accountsettings.cpp" line="352"/>
         <source>The server version %1 is unsupported! Proceed at your own risk.</source>
         <translation>إصدار الخادم %1 غير مدعوم! المتابعة على مسؤوليتك الخاصة.</translation>
     </message>
