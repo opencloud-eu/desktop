@@ -42,7 +42,11 @@ CfApiHydrationJob *CfApiWrapper::HydrationDevice::requestHydration(const CfApiWr
             auto item = OCC::SyncFileItem::fromSyncJournalFileRecord(hydration->record());
             // the file is now downloaded
             item->_type = ItemTypeFile;
-            FileSystem::getInode(FileSystem::toFilesystemPath(hydration->context().path), &item->_inode);
+            if (auto inode = FileSystem::getInode(FileSystem::toFilesystemPath(hydration->context().path))) {
+                item->_inode = inode.value();
+            } else {
+                qCWarning(lcCfApiHydrationDevice) << u"Failed to get inode for" << hydration->context().path;
+            }
             const auto result = hydration->context().vfs->params().journal->setFileRecord(SyncJournalFileRecord::fromSyncFileItem(*item));
             if (!result) {
                 qCWarning(lcCfApiHydrationDevice) << u"Error when setting the file record to the database" << hydration->context() << result.error();

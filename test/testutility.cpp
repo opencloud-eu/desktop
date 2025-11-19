@@ -466,9 +466,9 @@ private Q_SLOTS:
         QCOMPARE(OCC::FileSystem::fileTimeToTime_t(entry.last_write_time()), OCC::Utility::qDateTimeToTime_t(qFileInfo.metadataChangeTime()));
         QCOMPARE(OCC::FileSystem::fileTimeToTime_t(entry.last_write_time()), OCC::FileSystem::getModTime(entry.path()));
 
-        quint64 inode = 0;
-        QVERIFY(OCC::FileSystem::getInode(entry.path(), &inode));
-        QCOMPARE(fileInfo.inode(), inode);
+        auto inode = OCC::FileSystem::getInode(entry.path());
+        QVERIFY(inode.has_value());
+        QCOMPARE(fileInfo.inode(), inode.value());
     }
 };
 

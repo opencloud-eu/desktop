@@ -78,10 +78,10 @@ namespace FileSystem {
     /**
      * @brief Retrieve a file inode with csync
      */
-    bool OPENCLOUD_SYNC_EXPORT getInode(const std::filesystem::path &filename, quint64 *inode);
-    inline bool getInode(const QString &filename, quint64 *inode)
+    [[nodiscard]] std::optional<uint64_t> OPENCLOUD_SYNC_EXPORT getInode(const std::filesystem::path &filename);
+    [[nodiscard]] inline auto getInode(const QString &filename)
     {
-        return getInode(toFilesystemPath(filename), inode);
+        return getInode(toFilesystemPath(filename));
     }
 
 
