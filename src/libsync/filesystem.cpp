@@ -240,16 +240,14 @@ bool FileSystem::removeRecursively(const QString &path,
     return allRemoved;
 }
 
-bool FileSystem::getInode(const std::filesystem::path &filename, quint64 *inode)
+std::optional<uint64_t> FileSystem::getInode(const std::filesystem::path &filename)
 {
     const LocalInfo info(filename);
     Q_ASSERT(info.isValid());
     if (!info.isValid()) {
-        *inode = 0;
-        return false;
+        return {};
     }
-    *inode = info.inode();
-    return true;
+    return info.inode();
 }
 
 namespace {
