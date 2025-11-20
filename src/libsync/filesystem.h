@@ -128,9 +128,9 @@ namespace FileSystem {
     bool OPENCLOUD_SYNC_EXPORT removeRecursively(const QString &path, RemoveEntryList *success, RemoveEntryList *locked, RemoveErrorList *errors);
 
     namespace Tags {
-        std::optional<QByteArray> OPENCLOUD_SYNC_EXPORT get(const QString &path, const QString &key);
-        OCC::Result<void, QString> OPENCLOUD_SYNC_EXPORT set(const QString &path, const QString &key, const QByteArray &value);
-        bool OPENCLOUD_SYNC_EXPORT remove(const QString &path, const QString &key);
+        std::optional<QString> OPENCLOUD_SYNC_EXPORT get(const QString &path, const QString &key);
+        OCC::Result<void, QString> OPENCLOUD_SYNC_EXPORT set(const QString &path, const QString &key, const QString &value);
+        OCC::Result<void, QString> OPENCLOUD_SYNC_EXPORT remove(const QString &path, const QString &key);
     }
 }
 

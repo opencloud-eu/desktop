@@ -17,6 +17,7 @@
 #include "common/asserts.h"
 #include "common/utility.h"
 #include "libsync/discoveryinfo.h"
+#include "libsync/xattr.h"
 
 #include <QCoreApplication>
 #include <QDirIterator>
@@ -27,10 +28,6 @@
 #include "syncfileitem.h"
 
 #include <sys/stat.h>
-
-#if defined(Q_OS_MAC) || defined(Q_OS_LINUX)
-#include <sys/xattr.h>
-#endif
 
 #ifdef Q_OS_WIN32
 #include "common/utility_win.h"
@@ -250,52 +247,25 @@ std::optional<uint64_t> FileSystem::getInode(const std::filesystem::path &filena
     return info.inode();
 }
 
-namespace {
-
-#ifdef Q_OS_LINUX
-    Q_ALWAYS_INLINE ssize_t getxattr(const char *path, const char *name, void *value, size_t size, u_int32_t, int)
-    {
-        return ::getxattr(path, name, value, size);
-    }
-
-    Q_ALWAYS_INLINE int setxattr(const char *path, const char *name, const void *value, size_t size, u_int32_t, int)
-    {
-        return ::setxattr(path, name, value, size, 0);
-    }
-
-    Q_ALWAYS_INLINE int removexattr(const char *path, const char *name, int)
-    {
-        return ::removexattr(path, name);
-    }
-#endif // Q_OS_LINUX
-
-} // anonymous namespace
-
-std::optional<QByteArray> FileSystem::Tags::get(const QString &path, const QString &key)
+std::optional<QString> FileSystem::Tags::get(const QString &path, const QString &key)
 {
 #if defined(Q_OS_MAC) || defined(Q_OS_LINUX)
     QString platformKey = key;
     if (Utility::isLinux()) {
         platformKey = QStringLiteral("user.") + platformKey;
     }
-
-    QByteArray value(MaxValueSize + 1, '\0'); // Add a NUL character to terminate a string
-    auto size = getxattr(path.toUtf8().constData(), platformKey.toUtf8().constData(), value.data(), MaxValueSize, 0, 0);
-    if (size != -1) {
-        value.truncate(size);
-        return value;
-    }
+    return Xattr::getxattr(toFilesystemPath(path), platformKey);
 #elif defined(Q_OS_WIN)
     QFile file(QStringLiteral("%1:%2").arg(path, key));
     if (file.open(QIODevice::ReadOnly)) {
-        return file.readAll();
+        return QString::fromUtf8(file.readAll());
     }
 #endif // Q_OS_MAC || Q_OS_LINUX
 
     return {};
 }
 
-OCC::Result<void, QString> FileSystem::Tags::set(const QString &path, const QString &key, const QByteArray &value)
+OCC::Result<void, QString> FileSystem::Tags::set(const QString &path, const QString &key, const QString &value)
 {
     OC_ASSERT(value.size() < MaxValueSize)
 
@@ -304,30 +274,25 @@ OCC::Result<void, QString> FileSystem::Tags::set(const QString &path, const QStr
     if (Utility::isLinux()) {
         platformKey = QStringLiteral("user.") + platformKey;
     }
-
-    auto result = setxattr(path.toUtf8().constData(), platformKey.toUtf8().constData(), value.constData(), value.size(), 0, 0);
-    if (result != 0) {
-        return QString::fromUtf8(strerror(errno));
-    }
-
-    return {};
+    return Xattr::setxattr(toFilesystemPath(path), platformKey, value);
 #elif defined(Q_OS_WIN)
     QFile file(QStringLiteral("%1:%2").arg(path, key));
     if (!file.open(QIODevice::WriteOnly)) {
         return file.errorString();
     }
-    auto bytesWritten = file.write(value);
-    if (bytesWritten != value.size()) {
-        return QStringLiteral("wrote %1 out of %2 bytes").arg(QString::number(bytesWritten), QString::number(value.size()));
+    const auto data = value.toUtf8();
+    auto bytesWritten = file.write(data);
+    if (bytesWritten != data.size()) {
+        return QStringLiteral("wrote %1 out of %2 bytes").arg(QString::number(bytesWritten), QString::number(data.size()));
     }
 
     return {};
 #else
-    return QStringLiteral("function not implemented");
+    return u"Not implemented"_s;
 #endif // Q_OS_MAC || Q_OS_LINUX
 }
 
-bool FileSystem::Tags::remove(const QString &path, const QString &key)
+OCC::Result<void, QString> FileSystem::Tags::remove(const QString &path, const QString &key)
 {
 #if defined(Q_OS_MAC) || defined(Q_OS_LINUX)
     QString platformKey = key;
@@ -335,31 +300,18 @@ bool FileSystem::Tags::remove(const QString &path, const QString &key)
         platformKey = QStringLiteral("user.%1").arg(platformKey);
     }
 
-    auto result = removexattr(path.toUtf8().constData(), platformKey.toUtf8().constData(), 0);
-    if (result == 0) {
-        return true;
-    }
-#ifdef Q_OS_MAC
-    if (errno == ENOATTR) {
-#else
-    if (errno == ENODATA) {
-#endif
-        qCWarning(lcFileSystem) << u"Failed to remove tag" << key << u"from" << path << u"tag doesn't exist";
-        return true;
-    }
-    qCWarning(lcFileSystem) << u"Failed to remove tag" << key << u"from" << path << u":" << strerror(errno);
-    return false;
+    return Xattr::removexattr(toFilesystemPath(path), platformKey);
 #elif defined(Q_OS_WIN)
     const auto fsPath = toFilesystemPath(u"%1:%2"_s.arg(path, key));
     std::error_code fileError;
     std::filesystem::remove(fsPath, fileError);
     if (fileError) {
         qCWarning(lcFileSystem) << u"Failed to remove tag" << key << u"from" << path << u":" << fsPath << u"error:" << fileError.message();
-        return false;
+        return QString::fromStdString(fileError.message());
     }
-    return true;
+    return {};
 #else
-    return false;
+    return u"Not implemented"_s;
 #endif // Q_OS_MAC || Q_OS_LINUX
 }
 } // namespace OCC
