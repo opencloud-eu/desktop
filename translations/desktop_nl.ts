@@ -1949,12 +1949,12 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::PropagateDirectory</name>
     <message>
-        <location filename="../src/libsync/owncloudpropagator.cpp" line="1100"/>
+        <location filename="../src/libsync/owncloudpropagator.cpp" line="1108"/>
         <source>Error updating metadata: %1</source>
         <translation>Fout bij bijwerken metagegevens: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/owncloudpropagator.cpp" line="1103"/>
+        <location filename="../src/libsync/owncloudpropagator.cpp" line="1111"/>
         <source>The folder »%1« is currently in use</source>
         <translation>De map »%1« is momenteel in gebruik</translation>
     </message>
@@ -2167,12 +2167,12 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::PropagateUpdateMetaDataJob</name>
     <message>
-        <location filename="../src/libsync/owncloudpropagator.cpp" line="1283"/>
+        <location filename="../src/libsync/owncloudpropagator.cpp" line="1291"/>
         <source>Could not update file: %1</source>
         <translation>Kan bestand niet bijwerken: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/owncloudpropagator.cpp" line="1286"/>
+        <location filename="../src/libsync/owncloudpropagator.cpp" line="1294"/>
         <source>The file »%1« is currently in use</source>
         <translation>Het bestand »%1« is momenteel in gebruik</translation>
     </message>
@@ -2180,39 +2180,39 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::PropagateUploadFileCommon</name>
     <message>
-        <location filename="../src/libsync/propagateupload.cpp" line="244"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="243"/>
         <source>File Removed</source>
         <translation>Bestand verwijderd</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateupload.cpp" line="113"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="112"/>
         <source>Local file changed during sync. It will be resumed.</source>
         <translation>Lokale bestand is gewijzigd tijdens synchronisatie. Het zal worden hervat.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateupload.cpp" line="131"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="130"/>
         <source>The file »%1« cannot be uploaded because another file with the same name, differing only in case, exists</source>
         <translation>Het bestand »%1« kan niet worden geüpload omdat er een ander bestand met dezelfde naam en andere hoofdletters bestaat</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateupload.cpp" line="182"/>
-        <location filename="../src/libsync/propagateupload.cpp" line="213"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="181"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="212"/>
         <source>The file »%1« is currently in use</source>
         <translation>Het bestand »%1« is momenteel in gebruik</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateupload.cpp" line="563"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="562"/>
         <source>The server did not provide the file permissions</source>
         <translation>De server heeft de bestandsrechten niet verstrekt.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateupload.cpp" line="571"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="570"/>
         <source>Error updating metadata: %1</source>
         <translation>Fout bij bijwerken metagegevens: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateupload.cpp" line="142"/>
-        <location filename="../src/libsync/propagateupload.cpp" line="460"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="141"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="459"/>
         <source>Upload of %1 exceeds the quota for the folder</source>
         <translation>De upload van %1 overschrijdt de limiet voor de map</translation>
     </message>

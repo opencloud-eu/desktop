@@ -1209,7 +1209,7 @@ Please consider removing this folder from the account and adding it again.</sour
     <message>
         <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="117"/>
         <source>We received a different E-Tag for resuming. Retrying next time.</source>
-        <translation>تلقينا علامة إلكترونية &lt;(E-Tag) مختلفة لاستئناف العملية. سنحاول مرة أخرى في المرة القادمة.</translation>
+        <translation>تلقينا علامة إلكترونية (E-Tag) مختلفة لاستئناف العملية. سنحاول مرة أخرى في المرة القادمة.</translation>
     </message>
     <message>
         <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="127"/>
@@ -1262,7 +1262,7 @@ Please consider removing this folder from the account and adding it again.</sour
     <message>
         <location filename="../src/gui/generalsettings.ui" line="118"/>
         <source>Move remotely deleted files to the local trash bin instead of deleting them</source>
-        <translation>نقل الملفات المحذوفة عن بعد إلى سلة المهملات المحلية بدلاً من حذفها</translation>
+        <translation>نقل الملفات المحذوفة عن بُعد إلى سلة المهملات المحلية بدلاً من حذفها</translation>
     </message>
     <message>
         <location filename="../src/gui/generalsettings.ui" line="127"/>
@@ -1346,7 +1346,7 @@ Please consider removing this folder from the account and adding it again.</sour
     <message>
         <location filename="../src/libsync/vfs/hydrationjob.cpp" line="49"/>
         <source>Unexpected file size transferred. Expected %1 received %2</source>
-        <translation>تم نقل حجم ملف غير متوقع. المتوقع %1 المستلم %2</translation>
+        <translation>تم نقل حجم ملف غير متوقع. المتوقع %1 والمستلم %2</translation>
     </message>
     <message>
         <location filename="../src/libsync/vfs/hydrationjob.cpp" line="55"/>
@@ -1391,9 +1391,9 @@ Please consider removing this folder from the account and adding it again.</sour
         <source>Files or folders matching a pattern will not be synchronized. Changes take effect the next time folders are synchronized.
 
 Items where deletion is allowed will be deleted if they prevent a directory from being removed. This is useful for meta data.</source>
-        <translation>لن يتم مزامنة الملفات أو المجلدات التي تطابق النمط. تصبح التغييرات سارية في المرة التالية التي يتم فيها مزامنة المجلدات.
+        <translation>لن تتم مزامنة الملفات أو المجلدات التي تطابق النمط. تصبح التغييرات سارية في المرة التالية التي تتم فيها مزامنة المجلدات.
 
-سيتم حذف العناصر التي يسمح بالحذف فيها إذا كانت تمنع إزالة دليل. هذا مفيد للبيانات الوصفية.</translation>
+سيتم حذف العناصر التي يُسمح بحذفها إذا كانت تمنع إزالة دليل. هذا مفيد للبيانات الوصفية.</translation>
     </message>
     <message>
         <location filename="../src/gui/ignorelisteditor.cpp" line="110"/>
@@ -1431,12 +1431,12 @@ Items where deletion is allowed will be deleted if they prevent a directory from
     <message>
         <location filename="../src/gui/issueswidget.ui" line="40"/>
         <source>Issues table</source>
-        <translation>جدول القضايا</translation>
+        <translation>جدول المشاكل</translation>
     </message>
     <message>
         <location filename="../src/gui/issueswidget.ui" line="72"/>
         <source>There were too many issues. Not all will be visible here.</source>
-        <translation>كان هناك الكثير من القضايا. لن تكون جميعها مرئية هنا.</translation>
+        <translation>كان هناك الكثير من المشاكل. لن تكون جميعها مرئية هنا.</translation>
     </message>
     <message>
         <location filename="../src/gui/issueswidget.cpp" line="208"/>
@@ -1496,19 +1496,19 @@ Since log files can get large, the client will start a new one for each sync run
     <message>
         <location filename="../src/gui/logbrowser.ui" line="123"/>
         <source>Log Http traffic </source>
-        <translation>تسجيل حركة مرور Http </translation>
+        <translation>تسجيل حركة مرور HTTP </translation>
     </message>
     <message>
         <location filename="../src/gui/logbrowser.ui" line="132"/>
         <source>Log files to keep:</source>
-        <translation>ملفات السجل للإبقاء عليها:</translation>
+        <translation>ملفات السجل التي يجب الاحتفاظ بها:</translation>
     </message>
     <message>
         <location filename="../src/gui/logbrowser.ui" line="167"/>
         <source>These settings persist across client restarts.
 Note that using any logging command line options will override the settings.</source>
         <translation>تبقى هذه الإعدادات بعد إعادة تشغيل العميل.
-لاحظ أن استخدام أي خيارات سطر أوامر للتسجيل سيعيد تعيين الإعدادات.</translation>
+لاحظ أن استخدام أي خيارات سطر أوامر للتسجيل ستتجاوز الإعدادات.</translation>
     </message>
     <message>
         <location filename="../src/gui/logbrowser.ui" line="178"/>
@@ -1536,7 +1536,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/gui/issueswidget.cpp" line="373"/>
         <source>Status Filter:</source>
-        <translation>مرشح الحالة:</translation>
+        <translation>حالة المرشح:</translation>
     </message>
 </context>
 <context>
@@ -1554,17 +1554,17 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/gui/networksettings.ui" line="30"/>
         <source>Proxy Settings</source>
-        <translation>إعدادات البروكسي</translation>
+        <translation>إعدادات الوكيل</translation>
     </message>
     <message>
         <location filename="../src/gui/networksettings.ui" line="36"/>
         <source>No Proxy</source>
-        <translation>بدون بروكسي</translation>
+        <translation>دون وكيل</translation>
     </message>
     <message>
         <location filename="../src/gui/networksettings.ui" line="49"/>
         <source>Use system proxy</source>
-        <translation>استخدم بروكسي النظام</translation>
+        <translation>استخدم وكيل النظام</translation>
     </message>
     <message>
         <location filename="../src/gui/networksettings.ui" line="114"/>
@@ -1574,7 +1574,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/gui/networksettings.ui" line="130"/>
         <source>Proxy Hostname</source>
-        <translation>اسم مضيف البروكسي</translation>
+        <translation>اسم مضيف الوكيل</translation>
     </message>
     <message>
         <location filename="../src/gui/networksettings.ui" line="140"/>
@@ -1584,27 +1584,27 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/gui/networksettings.ui" line="153"/>
         <source>Proxy Port Number</source>
-        <translation>رقم منفذ البروكسي</translation>
+        <translation>رقم منفذ الوكيل</translation>
     </message>
     <message>
         <location filename="../src/gui/networksettings.ui" line="174"/>
         <source>Proxy server requires authentication</source>
-        <translation>خادم البروكسي يتطلب مصادقة</translation>
+        <translation>خادم الوكيل يتطلب مصادقة</translation>
     </message>
     <message>
         <location filename="../src/gui/networksettings.ui" line="219"/>
         <source>Note: proxy settings have no effects for accounts on localhost</source>
-        <translation>ملاحظة: إعدادات البروكسي ليس لها تأثير على الحسابات على localhost</translation>
+        <translation>ملاحظة: إعدادات الوكيل لا تؤثر على الحسابات الموجودة على المضيف المحلي.</translation>
     </message>
     <message>
         <location filename="../src/gui/networksettings.ui" line="240"/>
         <source>Download Bandwidth</source>
-        <translation>عرض النطاق التحميل</translation>
+        <translation>عرض النطاق الترددي للتنزيل</translation>
     </message>
     <message>
         <location filename="../src/gui/networksettings.ui" line="360"/>
         <source>Upload bandwidth in kilobytes per second</source>
-        <translation>عرض النطاق التحميل بالكيلوبايت في الثانية</translation>
+        <translation>عرض النطاق الترددي للتحميل بالكيلوبايت في الثانية</translation>
     </message>
     <message>
         <location filename="../src/gui/networksettings.ui" line="291"/>
@@ -1616,23 +1616,23 @@ Note that using any logging command line options will override the settings.</so
         <location filename="../src/gui/networksettings.ui" line="246"/>
         <location filename="../src/gui/networksettings.ui" line="328"/>
         <source>No limit</source>
-        <translation>بدون حد</translation>
+        <translation>دون حد</translation>
     </message>
     <message>
         <location filename="../src/gui/networksettings.ui" line="59"/>
         <source>Specify proxy manually</source>
-        <translation>حدد البروكسي يدويًا</translation>
+        <translation>تحديد الوكيل يدويًا</translation>
     </message>
     <message>
         <location filename="../src/gui/networksettings.ui" line="80"/>
         <source>Proxy type</source>
-        <translation>نوع البروكسي</translation>
+        <translation>نوع الوكيل</translation>
     </message>
     <message>
         <location filename="../src/gui/networksettings.ui" line="256"/>
         <location filename="../src/gui/networksettings.ui" line="338"/>
         <source>Limit to 3/4 of estimated bandwidth</source>
-        <translation>الحد إلى 3/4 من عرض النطاق المقدر</translation>
+        <translation>الحد إلى ٣/٤ من عرض النطاق الترددي المقدر</translation>
     </message>
     <message>
         <location filename="../src/gui/networksettings.ui" line="268"/>
@@ -1643,12 +1643,12 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/gui/networksettings.ui" line="278"/>
         <source>Download bandwidth in kilobytes per second</source>
-        <translation>عرض النطاق التحميل بالكيلوبايت في الثانية</translation>
+        <translation>عرض النطاق الترددي للتنزيل بالكيلوبايت في الثانية</translation>
     </message>
     <message>
         <location filename="../src/gui/networksettings.ui" line="322"/>
         <source>Upload Bandwidth</source>
-        <translation>عرض النطاق التحميل</translation>
+        <translation>عرض النطاق الترددي للتحميل</translation>
     </message>
     <message>
         <location filename="../src/gui/networksettings.ui" line="259"/>
@@ -1660,29 +1660,29 @@ Note that using any logging command line options will override the settings.</so
         <location filename="../src/gui/networksettings.cpp" line="49"/>
         <location filename="../src/gui/networksettings.cpp" line="50"/>
         <source>Hostname of proxy server</source>
-        <translation>اسم مضيف خادم البروكسي</translation>
+        <translation>اسم مضيف خادم الوكيل</translation>
     </message>
     <message>
         <location filename="../src/gui/networksettings.cpp" line="51"/>
         <location filename="../src/gui/networksettings.cpp" line="52"/>
         <source>Username for proxy server</source>
-        <translation>اسم المستخدم لخادم البروكسي</translation>
+        <translation>اسم المستخدم لخادم الوكيل</translation>
     </message>
     <message>
         <location filename="../src/gui/networksettings.cpp" line="53"/>
         <location filename="../src/gui/networksettings.cpp" line="54"/>
         <source>Password for proxy server</source>
-        <translation>كلمة المرور لخادم البروكسي</translation>
+        <translation>كلمة السر لخادم الوكيل</translation>
     </message>
     <message>
         <location filename="../src/gui/networksettings.cpp" line="56"/>
         <source>HTTP(S) proxy</source>
-        <translation>بروكسي HTTP(S)</translation>
+        <translation>وكيل HTTP(S)</translation>
     </message>
     <message>
         <location filename="../src/gui/networksettings.cpp" line="57"/>
         <source>SOCKS5 proxy</source>
-        <translation>بروكسي SOCKS5</translation>
+        <translation>وكيل SOCKS5</translation>
     </message>
 </context>
 <context>
@@ -1950,12 +1950,12 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::PropagateDirectory</name>
     <message>
-        <location filename="../src/libsync/owncloudpropagator.cpp" line="1100"/>
+        <location filename="../src/libsync/owncloudpropagator.cpp" line="1108"/>
         <source>Error updating metadata: %1</source>
         <translation>خطأ في تحديث البيانات الوصفية: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/owncloudpropagator.cpp" line="1103"/>
+        <location filename="../src/libsync/owncloudpropagator.cpp" line="1111"/>
         <source>The folder »%1« is currently in use</source>
         <translation>المجلد »%1« قيد الاستخدام حاليًا</translation>
     </message>
@@ -2168,12 +2168,12 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::PropagateUpdateMetaDataJob</name>
     <message>
-        <location filename="../src/libsync/owncloudpropagator.cpp" line="1283"/>
+        <location filename="../src/libsync/owncloudpropagator.cpp" line="1291"/>
         <source>Could not update file: %1</source>
         <translation>تعذر تحديث الملف: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/owncloudpropagator.cpp" line="1286"/>
+        <location filename="../src/libsync/owncloudpropagator.cpp" line="1294"/>
         <source>The file »%1« is currently in use</source>
         <translation>الملف »%1« قيد الاستخدام حاليًا</translation>
     </message>
@@ -2181,39 +2181,39 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::PropagateUploadFileCommon</name>
     <message>
-        <location filename="../src/libsync/propagateupload.cpp" line="244"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="243"/>
         <source>File Removed</source>
         <translation>تم حذف الملف</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateupload.cpp" line="113"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="112"/>
         <source>Local file changed during sync. It will be resumed.</source>
         <translation>تغير الملف المحلي أثناء المزامنة. سيتم استئنافه.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateupload.cpp" line="131"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="130"/>
         <source>The file »%1« cannot be uploaded because another file with the same name, differing only in case, exists</source>
         <translation>لا يمكن رفع الملف »%1« لأن ملفًا آخر بنفس الاسم، يختلف فقط في الحالة، موجود</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateupload.cpp" line="182"/>
-        <location filename="../src/libsync/propagateupload.cpp" line="213"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="181"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="212"/>
         <source>The file »%1« is currently in use</source>
         <translation>الملف »%1« قيد الاستخدام حاليًا</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateupload.cpp" line="563"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="562"/>
         <source>The server did not provide the file permissions</source>
         <translation>لم يوفر الخادم أذونات الملف</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateupload.cpp" line="571"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="570"/>
         <source>Error updating metadata: %1</source>
         <translation>خطأ في تحديث البيانات الوصفية: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateupload.cpp" line="142"/>
-        <location filename="../src/libsync/propagateupload.cpp" line="460"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="141"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="459"/>
         <source>Upload of %1 exceeds the quota for the folder</source>
         <translation>رفع %1 يتجاوز الحصة المسموحة للمجلد</translation>
     </message>

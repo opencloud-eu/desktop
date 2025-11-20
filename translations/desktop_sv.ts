@@ -1934,12 +1934,12 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::PropagateDirectory</name>
     <message>
-        <location filename="../src/libsync/owncloudpropagator.cpp" line="1100"/>
+        <location filename="../src/libsync/owncloudpropagator.cpp" line="1108"/>
         <source>Error updating metadata: %1</source>
         <translation>Fel vid uppdatering av metadata: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/owncloudpropagator.cpp" line="1103"/>
+        <location filename="../src/libsync/owncloudpropagator.cpp" line="1111"/>
         <source>The folder »%1« is currently in use</source>
         <translation>Mappen »%1« används för närvarande</translation>
     </message>
@@ -2152,12 +2152,12 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::PropagateUpdateMetaDataJob</name>
     <message>
-        <location filename="../src/libsync/owncloudpropagator.cpp" line="1283"/>
+        <location filename="../src/libsync/owncloudpropagator.cpp" line="1291"/>
         <source>Could not update file: %1</source>
         <translation>Kunde inte uppdatera filen: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/owncloudpropagator.cpp" line="1286"/>
+        <location filename="../src/libsync/owncloudpropagator.cpp" line="1294"/>
         <source>The file »%1« is currently in use</source>
         <translation>Filen »%1« används för närvarande</translation>
     </message>
@@ -2165,39 +2165,39 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::PropagateUploadFileCommon</name>
     <message>
-        <location filename="../src/libsync/propagateupload.cpp" line="244"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="243"/>
         <source>File Removed</source>
         <translation>Filen har tagits bort</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateupload.cpp" line="113"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="112"/>
         <source>Local file changed during sync. It will be resumed.</source>
         <translation>Lokal fil ändrad under synkronisering. Den kommer att återupptas.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateupload.cpp" line="131"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="130"/>
         <source>The file »%1« cannot be uploaded because another file with the same name, differing only in case, exists</source>
         <translation>Filen »%1« kan inte laddas upp eftersom det redan finns en fil med samma namn, med undantag för storleken på bokstäverna</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateupload.cpp" line="182"/>
-        <location filename="../src/libsync/propagateupload.cpp" line="213"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="181"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="212"/>
         <source>The file »%1« is currently in use</source>
         <translation>Filen »%1« används för närvarande</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateupload.cpp" line="563"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="562"/>
         <source>The server did not provide the file permissions</source>
         <translation>Servern tillhandahöll inte filbehörigheterna</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateupload.cpp" line="571"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="570"/>
         <source>Error updating metadata: %1</source>
         <translation>Fel vid uppdatering av metadata: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateupload.cpp" line="142"/>
-        <location filename="../src/libsync/propagateupload.cpp" line="460"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="141"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="459"/>
         <source>Upload of %1 exceeds the quota for the folder</source>
         <translation>Uppladdningen av %1 e överskrider kvoten för mappen</translation>
     </message>
