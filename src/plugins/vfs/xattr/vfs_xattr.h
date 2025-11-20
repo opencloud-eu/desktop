@@ -98,7 +98,7 @@ private:
 class XattrVfsPluginFactory : public QObject, public DefaultPluginFactory<VfsXAttr>
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID "eu.opencloud.PluginFactory" FILE "libsync/common/vfspluginmetadata.json")
+    Q_PLUGIN_METADATA(IID "eu.opencloud.PluginFactory" FILE "libsync/vfs/vfspluginmetadata.json")
     Q_INTERFACES(OCC::PluginFactory)
 };
 
