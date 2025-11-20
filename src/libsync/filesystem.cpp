@@ -240,16 +240,14 @@ bool FileSystem::removeRecursively(const QString &path,
     return allRemoved;
 }
 
-bool FileSystem::getInode(const std::filesystem::path &filename, quint64 *inode)
+std::optional<uint64_t> FileSystem::getInode(const std::filesystem::path &filename)
 {
     const LocalInfo info(filename);
     Q_ASSERT(info.isValid());
     if (!info.isValid()) {
-        *inode = 0;
-        return false;
+        return {};
     }
-    *inode = info.inode();
-    return true;
+    return info.inode();
 }
 
 namespace {
@@ -338,14 +336,30 @@ bool FileSystem::Tags::remove(const QString &path, const QString &key)
     }
 
     auto result = removexattr(path.toUtf8().constData(), platformKey.toUtf8().constData(), 0);
-
-    return result == 0;
+    if (result == 0) {
+        return true;
+    }
+#ifdef Q_OS_MAC
+    if (errno == ENOATTR) {
+#else
+    if (errno == ENODATA) {
+#endif
+        qCWarning(lcFileSystem) << u"Failed to remove tag" << key << u"from" << path << u"tag doesn't exist";
+        return true;
+    }
+    qCWarning(lcFileSystem) << u"Failed to remove tag" << key << u"from" << path << u":" << strerror(errno);
+    return false;
 #elif defined(Q_OS_WIN)
-    return QFile::remove(QStringLiteral("%1:%2").arg(path, key));
+    const auto fsPath = toFilesystemPath(u"%1:%2"_s.arg(path, key));
+    std::error_code fileError;
+    std::filesystem::remove(fsPath, fileError);
+    if (fileError) {
+        qCWarning(lcFileSystem) << u"Failed to remove tag" << key << u"from" << path << u":" << fsPath << u"error:" << fileError.message();
+        return false;
+    }
+    return true;
 #else
     return false;
 #endif // Q_OS_MAC || Q_OS_LINUX
 }
-
-
 } // namespace OCC

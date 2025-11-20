@@ -803,12 +803,20 @@ Result<Vfs::ConvertToPlaceholderResult, QString> OwncloudPropagator::updatePlace
 Result<Vfs::ConvertToPlaceholderResult, QString> OwncloudPropagator::updateMetadata(const SyncFileItem &item)
 {
     const QString fsPath = fullLocalPath(item.destination());
+    if (!QFileInfo::exists(fsPath)) {
+        qCWarning(lcPropagator) << u"Skipping updateMetadata on:" << fsPath << u"the file does no longer exist.";
+        return Vfs::ConvertToPlaceholderResult::Ok;
+    }
     const auto result = updatePlaceholder(item, fsPath, {});
     if (!result) {
         return result;
     }
     auto itemCopy = item;
-    FileSystem::getInode(FileSystem::toFilesystemPath(fsPath), &itemCopy._inode);
+    if (auto inode = FileSystem::getInode(FileSystem::toFilesystemPath(fsPath))) {
+        itemCopy._inode = inode.value();
+    } else {
+        qCWarning(lcPropagator) << u"Failed to get inode for" << fsPath;
+    }
     qCDebug(lcPropagator) << fsPath << u"Retrieved inode " << itemCopy._inode << u"(previous item inode: " << item._inode << u")";
     auto record = SyncJournalFileRecord::fromSyncFileItem(itemCopy);
     if (result.get() == Vfs::ConvertToPlaceholderResult::Locked) {

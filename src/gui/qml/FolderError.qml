@@ -84,12 +84,18 @@ ColumnLayout {
                 text: errorMessages[0]
                 maximumLineCount: errorMessages.length > 1 ? 1 : 2
             }
-            Button {
-                Layout.alignment: Qt.AlignHCenter
-                text: qsTr("Show more")
+            Item {
+                // this item is a workaround for a binding loop.
+                // caused by the size of the Button influencing the size of ErrorItem and thus `truncated` when changing from visible to invisible
                 visible: errorMessages.length > 1 || errorItem.truncated
-                onClicked: {
-                    collapsed = false;
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                Button {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text: qsTr("Show more")
+                    onClicked: {
+                        collapsed = false;
+                    }
                 }
             }
         }
