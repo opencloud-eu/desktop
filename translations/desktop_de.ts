@@ -318,7 +318,7 @@ Dateisynchronisierung Desktop-Client.</translation>
         <translation>Weniger anzeigen</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderError.qml" line="89"/>
+        <location filename="../src/gui/qml/FolderError.qml" line="95"/>
         <source>Show more</source>
         <translation>Mehr anzeigen</translation>
     </message>

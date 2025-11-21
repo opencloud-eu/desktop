@@ -317,7 +317,7 @@ Utilità desktop per la sincronizazione dei file.</translation>
         <translation>Mostra meno</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderError.qml" line="89"/>
+        <location filename="../src/gui/qml/FolderError.qml" line="95"/>
         <source>Show more</source>
         <translation>Mostra di più</translation>
     </message>

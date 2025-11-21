@@ -318,7 +318,7 @@ Utilitaire de bureau pour la synchronisation de fichiers.</translation>
         <translation>Afficher moins</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderError.qml" line="89"/>
+        <location filename="../src/gui/qml/FolderError.qml" line="95"/>
         <source>Show more</source>
         <translation>Afficher plus</translation>
     </message>
