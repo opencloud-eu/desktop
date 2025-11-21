@@ -131,16 +131,6 @@ def scenario_title_to_filename(title):
 
 
 # runs after every scenario
-# Order: 1
-# server cleanup
-@OnScenarioEnd
-def hook(context):
-    delete_project_spaces()
-    delete_created_users()
-
-
-# runs after every scenario
-# Order: 2
 @OnScenarioEnd
 def hook(context):
     clear_waited_after_sync()
@@ -173,11 +163,13 @@ def hook(context):
     PREVIOUS_FAIL_RESULT_COUNT = test.resultCount("fails")
     PREVIOUS_ERROR_RESULT_COUNT = test.resultCount("errors")
 
+    delete_project_spaces()
+    delete_created_users()
 
 def get_active_widget():
     dialog_widgets = object.children(squish.waitForObject(AccountSetting.DIALOG_STACK, get_config('minSyncTimeout') * 100))
     for child_widget in dialog_widgets:
-        if hasattr(child_widget, "objectName") and child_widget.objectName and child_widget.objectName != "page":
+        if hasattr(child_widget, "objectName") and child_widget.objectName != "" and child_widget.objectName != "page":
             return child_widget
 
     # return empty object if not found
@@ -194,7 +186,7 @@ def teardown_client():
         close_dialogs()
         close_widgets()
         active_widget = get_active_widget()
-        if active_widget.objectName and active_widget.objectName != names.setupWizardWindow_OCC_Wizard_SetupWizardWindow["name"]:
+        if active_widget.objectName != names.setupWizardWindow_OCC_Wizard_SetupWizardWindow["name"]:
             accounts, selectors = Toolbar.get_accounts()
             for display_name in selectors:
                 _, account_objects = Toolbar.get_accounts()
