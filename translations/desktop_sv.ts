@@ -315,7 +315,7 @@ File synchronization desktop utility.</source>
         <translation>Visa mindre</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderError.qml" line="89"/>
+        <location filename="../src/gui/qml/FolderError.qml" line="95"/>
         <source>Show more</source>
         <translation>Visa mer</translation>
     </message>

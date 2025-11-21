@@ -317,7 +317,7 @@ File synchronization desktop utility.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderError.qml" line="89"/>
+        <location filename="../src/gui/qml/FolderError.qml" line="95"/>
         <source>Show more</source>
         <translation type="unfinished"></translation>
     </message>

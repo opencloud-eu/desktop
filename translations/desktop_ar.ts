@@ -318,7 +318,7 @@ File synchronization desktop utility.</source>
         <translation>إظهار أقل</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderError.qml" line="89"/>
+        <location filename="../src/gui/qml/FolderError.qml" line="95"/>
         <source>Show more</source>
         <translation>إظهار المزيد</translation>
     </message>
