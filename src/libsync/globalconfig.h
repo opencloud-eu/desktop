@@ -6,7 +6,7 @@
 #include "libsync/opencloudsynclib.h"
 
 #include <QVariant>
-#include <QtQmlMeta>
+#include <QtQmlIntegration/QtQmlIntegration>
 
 namespace OCC {
 class OPENCLOUD_SYNC_EXPORT GlobalConfig : public QObject
