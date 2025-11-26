@@ -1,5 +1,15 @@
 # Changelog
 
+## [3.0.1](https://github.com/opencloud-eu/desktop/releases/tag/v3.0.1) - 2025-11-26
+
+### ❤️ Thanks to all contributors! ❤️
+
+@TheOneRing, @kulmann
+
+### 🐛 Bug Fixes
+
+- Opt out of liquid glass, its not supported by Qt 6.9.2 [[#718](https://github.com/opencloud-eu/desktop/pull/718)]
+
 ## [3.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v3.0.0) - 2025-11-25
 
 ### ❤️ Thanks to all contributors! ❤️
