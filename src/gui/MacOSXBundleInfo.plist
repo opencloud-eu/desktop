@@ -41,5 +41,7 @@
         <string>${CMAKE_OSX_DEPLOYMENT_TARGET}</string>
         <key>CFBundleAllowMixedLocalizations</key>
         <true/>
+        <key>UIDesignRequiresCompatibility</key>
+        <true/>
 </dict>
 </plist>
