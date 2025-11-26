@@ -166,3 +166,21 @@ class AccountSetting:
         displayname = substitute_inline_codes(displayname)
         Toolbar.open_account(displayname)
         AccountSetting.remove_account_connection()
+
+    @staticmethod
+    def wait_until_account_is_removed(username, timeout=10000):
+        displayname = get_displayname_for_user(username)
+        displayname = substitute_inline_codes(displayname)
+
+        def account_gone():
+            account, _ = Toolbar.get_account(displayname)
+            return account is None
+
+        result = squish.waitFor(account_gone, timeout)
+
+        if not result:
+            raise TimeoutError(
+                "Timeout waiting for account to be removed for "
+                + str(timeout)
+                + " milliseconds"
+            )
