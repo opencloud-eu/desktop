@@ -1,6 +1,6 @@
 when:
   event: push
-  branch: ${CI_REPO_DEFAULT_BRANCH}
+  branch: stable-3.0
 
 steps:
   release-helper:
@@ -8,5 +8,6 @@ steps:
     settings:
       git_email: devops@opencloud.eu
       forge_type: github
+      release_branch: stable-3.0,
       forge_token:
         from_secret: github_token
