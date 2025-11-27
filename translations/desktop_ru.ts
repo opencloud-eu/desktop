@@ -32,12 +32,12 @@
     <message>
         <location filename="../src/gui/newwizard/states/accountconfiguredsetupwizardstate.cpp" line="54"/>
         <source>Invalid local download directory: %1</source>
-        <translation type="unfinished"/>
+        <translation>Неверная локальная папка для скачивания: %1</translation>
     </message>
     <message>
         <location filename="../src/gui/newwizard/states/accountconfiguredsetupwizardstate.cpp" line="57"/>
         <source>path must be absolute</source>
-        <translation type="unfinished"/>
+        <translation>путь должен быть абсолютным</translation>
     </message>
 </context>
 <context>
@@ -60,7 +60,7 @@
     <message>
         <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.ui" line="147"/>
         <source>Synchronize all existing spaces</source>
-        <translation type="unfinished"/>
+        <translation>Синхронизировать все существующие пространства</translation>
     </message>
     <message>
         <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.ui" line="157"/>
@@ -75,7 +75,7 @@
     <message>
         <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.ui" line="200"/>
         <source>Choose local download directory:</source>
-        <translation>Выберите локальную директорию загрузки</translation>
+        <translation>Выберите локальную папку для скачивания:</translation>
     </message>
     <message>
         <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.ui" line="223"/>
@@ -850,17 +850,17 @@ The update will be performed in the background, and overwrite the current AppIma
     <message>
         <location filename="../src/libsync/discoveryphase.cpp" line="213"/>
         <source>Error while opening directory »%1«</source>
-        <translation>Ошибка при попытке открыть директорию »%1«</translation>
+        <translation>Ошибка при попытке открыть папку »%1«</translation>
     </message>
     <message>
         <location filename="../src/libsync/discoveryphase.cpp" line="215"/>
         <source>Directory not accessible on client, permission denied</source>
-        <translation>Директория не доступна на клиенте, доступ запрещен</translation>
+        <translation>Папка не доступна на клиенте, доступ запрещен</translation>
     </message>
     <message>
         <location filename="../src/libsync/discoveryphase.cpp" line="219"/>
         <source>Directory not found: »%1«</source>
-        <translation>Директория не найдена: »%1«</translation>
+        <translation>Папка не найдена: »%1«</translation>
     </message>
 </context>
 <context>
@@ -1191,7 +1191,7 @@ Please consider removing this folder from the account and adding it again.</sour
     <message>
         <location filename="../src/gui/folderwizard/folderwizardlocalpath.cpp" line="103"/>
         <source>Select the Spaces root folder</source>
-        <translation>Выберите корневую директорию для Пространств</translation>
+        <translation>Выберите корневую папку для Пространств</translation>
     </message>
 </context>
 <context>
@@ -1904,12 +1904,12 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/discovery.cpp" line="1262"/>
         <source>Server replied with an error while reading directory »%1«: %2</source>
-        <translation>Сервер ответил ошибкой при попытке прочесть директорию »%1«: %2</translation>
+        <translation>Сервер ответил ошибкой при попытке прочесть папку »%1«: %2</translation>
     </message>
     <message>
         <location filename="../src/libsync/discovery.cpp" line="1052"/>
         <source>Not allowed because you don&apos;t have permission to add subfolders to that folder</source>
-        <translation>Не разрешено, потому что у вас нет права добавлять подпапки в данную директорию</translation>
+        <translation>Не разрешено, потому что у вас нет права добавлять подпапки в данную папку</translation>
     </message>
     <message>
         <location filename="../src/libsync/discovery.cpp" line="181"/>
@@ -1929,7 +1929,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/discovery.cpp" line="1057"/>
         <source>Not allowed because you don&apos;t have permission to add files in that folder</source>
-        <translation>Не разрешено, потому что у вас нет права добавлять файлы в данную директорию</translation>
+        <translation>Не разрешено, потому что у вас нет права добавлять файлы в данную папку</translation>
     </message>
     <message>
         <location filename="../src/libsync/discovery.cpp" line="1070"/>
@@ -2234,7 +2234,7 @@ Note that using any logging command line options will override the settings.</so
         <location filename="../src/libsync/propagateuploadtus.cpp" line="218"/>
         <source>Upload did not receive a Content-Location.</source>
         <extracomment>Content-Location is a technical term, don't translate.</extracomment>
-        <translation type="unfinished"/>
+        <translation>Загрузка не получила локацию контента.</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagateuploadtus.cpp" line="226"/>
@@ -2430,7 +2430,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/gui/socketapi/socketapi.cpp" line="584"/>
         <source>Do you want to delete the directory »%1« and all its contents permanently?</source>
-        <translation>Вы хотите удалить директорию »%1« и все ее содержимое без возможности восстановления?</translation>
+        <translation>Вы хотите удалить папку »%1« и все её содержимое без возможности восстановления?</translation>
     </message>
     <message>
         <location filename="../src/gui/socketapi/socketapi.cpp" line="585"/>
@@ -2632,7 +2632,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/gui/systray.cpp" line="134"/>
         <source>Space »%1«: %2</source>
-        <translation type="unfinished"/>
+        <translation>Пространство »%1«: %2</translation>
     </message>
     <message>
         <location filename="../src/gui/systray.cpp" line="146"/>
