@@ -543,6 +543,12 @@ void Folder::startVfs()
         _vfs->fileStatusChanged(stateDbFile + QStringLiteral("-wal"), SyncFileStatus::StatusExcluded);
         _vfs->fileStatusChanged(stateDbFile + QStringLiteral("-shm"), SyncFileStatus::StatusExcluded);
         _engine->setSyncOptions(loadSyncOptions());
+
+        if (_vfs->mode() == Vfs::WindowsCfApi) {
+            // diable ignorelist with vfs
+            _engine->journal()->setSelectiveSyncList(SyncJournalDb::SelectiveSyncBlackList, {});
+        }
+
         registerFolderWatcher();
 
         connect(_vfs.get(), &Vfs::needSync, this, [this] {
