@@ -538,18 +538,15 @@ void SyncEngine::slotDiscoveryFinished()
         // do a database commit
         _journal->commit(QStringLiteral("post treewalk"));
 
-        _propagator = QSharedPointer<OwncloudPropagator>::create(_account, syncOptions(), _baseUrl, _localPath, _remotePath, _journal);
-        connect(_propagator.data(), &OwncloudPropagator::itemCompleted,
-            this, &SyncEngine::slotItemCompleted);
-        connect(_propagator.data(), &OwncloudPropagator::progress,
-            this, &SyncEngine::slotProgress);
-        connect(_propagator.data(), &OwncloudPropagator::updateFileTotal,
-            this, &SyncEngine::updateFileTotal);
-        connect(_propagator.data(), &OwncloudPropagator::finished, this, &SyncEngine::slotPropagationFinished, Qt::QueuedConnection);
-        connect(_propagator.data(), &OwncloudPropagator::seenLockedFile, this, &SyncEngine::seenLockedFile);
-        connect(_propagator.data(), &OwncloudPropagator::insufficientLocalStorage, this, &SyncEngine::slotInsufficientLocalStorage);
-        connect(_propagator.data(), &OwncloudPropagator::insufficientRemoteStorage, this, &SyncEngine::slotInsufficientRemoteStorage);
-        connect(_propagator.data(), &OwncloudPropagator::newItem, this, &SyncEngine::slotNewItem);
+        _propagator = std::make_unique<OwncloudPropagator>(_account, syncOptions(), _baseUrl, _localPath, _remotePath, _journal);
+        connect(_propagator.get(), &OwncloudPropagator::itemCompleted, this, &SyncEngine::slotItemCompleted);
+        connect(_propagator.get(), &OwncloudPropagator::progress, this, &SyncEngine::slotProgress);
+        connect(_propagator.get(), &OwncloudPropagator::updateFileTotal, this, &SyncEngine::updateFileTotal);
+        connect(_propagator.get(), &OwncloudPropagator::finished, this, &SyncEngine::slotPropagationFinished, Qt::QueuedConnection);
+        connect(_propagator.get(), &OwncloudPropagator::seenLockedFile, this, &SyncEngine::seenLockedFile);
+        connect(_propagator.get(), &OwncloudPropagator::insufficientLocalStorage, this, &SyncEngine::slotInsufficientLocalStorage);
+        connect(_propagator.get(), &OwncloudPropagator::insufficientRemoteStorage, this, &SyncEngine::slotInsufficientRemoteStorage);
+        connect(_propagator.get(), &OwncloudPropagator::newItem, this, &SyncEngine::slotNewItem);
 
         // apply the network limits to the propagator
         setNetworkLimits(_uploadLimit, _downloadLimit);
@@ -581,7 +578,7 @@ void SyncEngine::setNetworkLimits(int upload, int download)
         if (upload != 0 || download != 0) {
             qCInfo(lcEngine) << u"Network Limits (down/up) " << upload << download;
             if (!_propagator->_bandwidthManager) {
-                _propagator->_bandwidthManager = new BandwidthManager(_propagator.data());
+                _propagator->_bandwidthManager = new BandwidthManager(_propagator.get());
             }
         }
         // this might set the limit to 0 but only the next sync will have no bandwithd manager set
@@ -645,7 +642,7 @@ void SyncEngine::finalize(bool success)
     Q_EMIT finished(success);
 
     // Delete the propagator only after emitting the signal.
-    _propagator.clear();
+    _propagator.reset();
     _seenConflictFiles.clear();
     _uniqueErrors.clear();
     _localDiscoveryPaths.clear();
