@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.0.2](https://github.com/opencloud-eu/desktop/releases/tag/v3.0.2) - 2025-11-27
+
+### ❤️ Thanks to all contributors! ❤️
+
+@individual-it
+
+
+
 ## [3.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v3.0.0) - 2025-11-25
 
 ### ❤️ Thanks to all contributors! ❤️
