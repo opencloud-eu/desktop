@@ -1,5 +1,15 @@
 # Changelog
 
+## [3.0.2](https://github.com/opencloud-eu/desktop/releases/tag/v3.0.2) - 2025-11-27
+
+### ❤️ Thanks to all contributors! ❤️
+
+@TheOneRing
+
+### 🐛 Bug Fixes
+
+- Clear selective sync with windows vfs [[#726](https://github.com/opencloud-eu/desktop/pull/726)]
+
 ## [3.0.1](https://github.com/opencloud-eu/desktop/releases/tag/v3.0.1) - 2025-11-26
 
 ### ❤️ Thanks to all contributors! ❤️
