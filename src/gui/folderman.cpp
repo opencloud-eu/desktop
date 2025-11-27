@@ -421,7 +421,7 @@ Folder *FolderMan::folderForPath(const QString &path, QString *relativePath)
     for (auto *folder : std::as_const(_folders)) {
         const QString folderPath = folder->cleanPath() + QLatin1Char('/');
 
-        if (absolutePath.startsWith(folderPath, (Utility::isWindows() || Utility::isMac()) ? Qt::CaseInsensitive : Qt::CaseSensitive)) {
+        if (FileSystem::isChildPathOf2(absolutePath, folderPath).testAnyFlag(FileSystem::ChildResult::IsChild)) {
             if (relativePath) {
                 *relativePath = absolutePath.mid(folderPath.length());
                 relativePath->chop(1); // we added a '/' above
@@ -541,25 +541,35 @@ QString FolderMan::trayTooltipStatusString(
     return folderMessage;
 }
 
-// QFileInfo::canonicalPath returns an empty string if the file does not exist.
+// canonicalPath returns an empty string if the file does not exist.
 // This function also works with files that does not exist and resolve the symlinks in the
 // parent directories.
-static QString canonicalPath(const QString &path)
+static std::filesystem::path canonicalPath(const std::filesystem::path &p)
 {
-    QFileInfo selFile(path);
-    if (!selFile.exists()) {
-        const auto parentPath = selFile.dir().path();
-
-        // It's possible for the parentPath to match the path
-        // (possibly we've arrived at a non-existant drive root on Windows)
-        // and recursing would be fatal.
-        if (parentPath == path) {
-            return path;
+    std::error_code ec;
+    if (!std::filesystem::exists(p, ec) && !ec) {
+        const auto parentPath = p.lexically_normal().parent_path();
+        // last invocation will return /
+        if (parentPath == p) {
+            return p;
         }
 
-        return canonicalPath(parentPath) + QLatin1Char('/') + selFile.fileName();
+        return canonicalPath(parentPath) / p.filename();
     }
-    return selFile.canonicalFilePath();
+    if (ec) {
+        qCWarning(lcFolderMan) << "Failed to check existence of path:" << p << ec.message();
+    }
+    const auto out = std::filesystem::canonical(p, ec);
+    if (ec) {
+        qCWarning(lcFolderMan) << "Failed to canonicalize path:" << p << ec.message();
+        return p;
+    }
+    return out;
+}
+
+static QString canonicalPath(const QString &p)
+{
+    return FileSystem::fromFilesystemPath(canonicalPath(FileSystem::toFilesystemPath(p)));
 }
 
 static QString checkPathForSyncRootMarkingRecursive(const QString &path, FolderMan::NewFolderType folderType, const QUuid &accountUuid)
@@ -647,9 +657,9 @@ QString FolderMan::checkPathValidityForNewFolder(const QString &path, NewFolderT
     // check if the local directory isn't used yet in another sync
     const auto cs = Utility::fsCaseSensitivity();
 
-    const QString userDir = QDir::cleanPath(canonicalPath(path)) + QLatin1Char('/');
+    const QString userDir = canonicalPath(path) + QLatin1Char('/');
     for (auto f : _folders) {
-        const QString folderDir = QDir::cleanPath(canonicalPath(f->path())) + QLatin1Char('/');
+        const QString folderDir = canonicalPath(f->path()) + QLatin1Char('/');
 
         if (QString::compare(folderDir, userDir, cs) == 0) {
             return tr("There is already a sync from the server to this local folder. "
@@ -687,7 +697,7 @@ QString FolderMan::findGoodPathForNewSyncFolder(
     // possibly find a valid sync folder inside it.
     // Example: Someone syncs their home directory. Then ~/foobar is not
     // going to be an acceptable sync folder path for any value of foobar.
-    if (FolderMan::instance()->folderForPath(QFileInfo(normalisedPath).canonicalPath())) {
+    if (FolderMan::instance()->folderForPath(canonicalPath(normalisedPath))) {
         // Any path with that parent is going to be unacceptable,
         // so just keep it as-is.
         return canonicalPath(normalisedPath);
