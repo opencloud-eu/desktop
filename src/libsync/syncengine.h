@@ -125,9 +125,6 @@ public:
     /** Access the last sync run's local discovery style */
     LocalDiscoveryStyle lastLocalDiscoveryStyle() const { return _lastLocalDiscoveryStyle; }
 
-    auto getPropagator() { return _propagator; } // for the test
-
-
 Q_SIGNALS:
     // During update, before reconcile
     void rootEtag(const QString &, const QDateTime &);
@@ -211,7 +208,7 @@ private:
     QString _remoteRootEtag;
     SyncJournalDb *_journal;
     std::unique_ptr<DiscoveryPhase> _discoveryPhase;
-    QSharedPointer<OwncloudPropagator> _propagator;
+    std::unique_ptr<OwncloudPropagator> _propagator;
 
     // List of all files with conflicts
     QSet<QString> _seenConflictFiles;
