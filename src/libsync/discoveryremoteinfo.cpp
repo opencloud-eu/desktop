@@ -31,8 +31,7 @@ public:
             _size = 0;
         } else {
             if (auto it = Utility::optionalFind(map, "getcontentlength"_L1)) {
-                // See #4573, sometimes negative size values are returned
-                _size = std::max<int64_t>(0, it->value().toLongLong());
+                _size = it->value().toULongLong();
             } else {
                 errors.append(u"size"_s);
             }
@@ -74,7 +73,7 @@ public:
     QByteArray _checksumHeader;
     RemotePermissions _remotePerm;
     time_t _modtime = 0;
-    int64_t _size = 0;
+    uint64_t _size = 0;
     bool _isDirectory = false;
 
     QString _error;
@@ -134,7 +133,7 @@ time_t RemoteInfo::modtime() const
     return d->_modtime;
 }
 
-int64_t RemoteInfo::size() const
+uint64_t RemoteInfo::size() const
 {
     return d->_size;
 }
