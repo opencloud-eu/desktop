@@ -83,8 +83,8 @@ Feature: move file and folder
     @issue-435
 	Scenario: Syncing a 50MB file moved into the local sync folder
         Given user "Alice" has set up a client with default settings
-        And user "Alice" has created a folder "Folder1" inside the sync folder
+        And user "Alice" has created a folder "NewFolder" inside the sync folder
         And user "Alice" has created a file "newfile.txt" with size "50MB" in the sync folder
-        When user "Alice" moves file "newfile.txt" to "Folder1" in the sync folder
-        And the user waits for file "Folder1/newfile.txt" to be synced
-        Then as "Alice" file "Folder1/newfile.txt" should exist in the server
+        When user "Alice" moves file "newfile.txt" to "NewFolder" in the sync folder
+        And the user waits for file "NewFolder/newfile.txt" to be synced
+        Then as "Alice" file "NewFolder/newfile.txt" should exist in the server
