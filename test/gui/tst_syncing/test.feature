@@ -404,7 +404,7 @@ Feature: Syncing files
         And the user waits for file "file with space.txt" to be synced
         Then as "Alice" file "file with space.txt" should exist in the server
 
-    @issue-435
+
     Scenario: Syncing folders each having large number of files
         Given the user has created a folder "folder1" in temp folder
         And the user has created "500" files each of size "1048576" bytes inside folder "folder1" in temp folder
@@ -533,7 +533,7 @@ Feature: Syncing files
             | simple-folder/sub-folder | Blacklisted | Brian Murphy@%local_server_hostname% |
             | simple-folder/simple.pdf | Blacklisted | Brian Murphy@%local_server_hostname% |
 
-    @skipOnWindows @issue-435
+
     Scenario Outline: File with long multi-byte characters name can be synced (76 characters, 255 bytes including extension)
         Given user "Alice" has set up a client with default settings
         When user "Alice" creates a file "<filename>" with the following content inside the sync folder
@@ -546,7 +546,7 @@ Feature: Syncing files
             | filename                                                                    |
             | 𒁰𒁱𒁲𒁳𒁴𒁵𒁶𒁷𒁸𒁹𒁺𒁻𒁼𒁾𒁿𒁰𒁱𒁲𒁳𒁴𒁵𒁶𒁷𒁸𒁹𒁺𒁻𒁼𒁾𒁿𒁰𒁱𒁲𒁳𒁴𒁵𒁶𒁷𒁸𒁹𒁺abôǣฎพฒฆ๘ตกกผพฒณญไใๅำ๊๒๔๗๘รศฬอฮ.txt |
 
-    @issue-435
+
 	Scenario: Sync a received shared folder with Editor permission role
         Given user "Brian" has been created in the server with default attributes
         And user "Alice" has created folder "simple-folder" in the server
@@ -566,7 +566,7 @@ Feature: Syncing files
         And as "Brian" file "Shares/simple-folder/simple.pdf" should exist in the server
         And as "Brian" the file "Shares/simple-folder/uploaded-lorem.txt" should have the content "overwrite openCloud test text file" in the server
 
-    @issue-435
+
     Scenario: Unselected subfolders are excluded from local sync
         Given user "Alice" has created folder "test-folder" in the server
         And user "Alice" has created folder "test-folder/sub-folder1" in the server

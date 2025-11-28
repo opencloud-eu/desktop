@@ -67,7 +67,7 @@ Feature: Project spaces
         Then the sync folder list should be empty
         But the file "testfile.txt" should exist on the file system
 
-    @issue-435
+
     Scenario: User with Viewer role cannot create resource
         Given the administrator has added user "Alice" to space "Project101" with role "viewer"
         And user "Alice" has set up a client with space "Project101"
@@ -82,7 +82,7 @@ Feature: Project spaces
             | resource      | status      | account                              |
             | simple-folder | Blacklisted | Alice Hansen@%local_server_hostname% |
 
-    @issue-435
+
     Scenario: Sharee with Editor role deletes the shared resource
         Given user "Brian" has been created in the server with default attributes
         And user "Alice" has created folder "simple-folder" in the server
