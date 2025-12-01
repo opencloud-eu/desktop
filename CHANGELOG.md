@@ -4,7 +4,7 @@
 
 ### ❤️ Thanks to all contributors! ❤️
 
-@anon-pradip, @individual-it
+@TheOneRing, @anon-pradip, @individual-it
 
 
 
