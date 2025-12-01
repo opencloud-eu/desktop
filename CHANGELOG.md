@@ -1,5 +1,15 @@
 # Changelog
 
+## [3.0.3](https://github.com/opencloud-eu/desktop/releases/tag/v3.0.3) - 2025-12-01
+
+### ❤️ Thanks to all contributors! ❤️
+
+@TheOneRing
+
+### 🐛 Bug Fixes
+
+- Fix high cpu usage during cfapi hydration [[#735](https://github.com/opencloud-eu/desktop/pull/735)]
+
 ## [3.0.2](https://github.com/opencloud-eu/desktop/releases/tag/v3.0.2) - 2025-11-27
 
 ### ❤️ Thanks to all contributors! ❤️
