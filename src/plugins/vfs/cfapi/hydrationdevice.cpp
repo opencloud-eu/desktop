@@ -15,7 +15,7 @@ using namespace OCC::FileSystem::SizeLiterals;
 Q_LOGGING_CATEGORY(lcCfApiHydrationDevice, "sync.vfs.cfapi.hydrationdevice", QtDebugMsg)
 namespace {
 constexpr auto ChunkSize = 4_KiB;
-constexpr auto BufferSize = ChunkSize * 10;
+constexpr auto BufferSize = 4_MiB;
 }
 
 
@@ -70,6 +70,7 @@ CfApiWrapper::HydrationDevice::HydrationDevice(const CfApiWrapper::CallBackConte
     , _context(context)
     , _totalSize(totalSize)
 {
+    // we reserve a fixed size and don't expect to ever grow the array
     _buffer.reserve(BufferSize);
 }
 
@@ -81,14 +82,15 @@ qint64 CfApiWrapper::HydrationDevice::readData(char *, qint64)
 qint64 CfApiWrapper::HydrationDevice::writeData(const char *data, qint64 len)
 {
     _buffer.append(data, len);
-    // the buffer should not grow above BufferSize
-    Q_ASSERT(_buffer.size() <= BufferSize);
-    const bool isLastChunk = _offset + _buffer.size() == _totalSize;
-
-    if (_buffer.size() >= ChunkSize || isLastChunk) {
+    const bool isLastChunk = (_offset + _buffer.size()) >= _totalSize;
+    // only write if the buffer is decently filled, or we are in the last chunk
+    if (_buffer.size() >= BufferSize * 0.9 || isLastChunk) {
+        // the buffer should not grow above BufferSize
+        Q_ASSERT(_buffer.size() <= BufferSize);
         // ensure we chunk the writes to the block size, if we are at then end of the file take all the rest
         const auto currentBlockLength = isLastChunk ? _buffer.size() : // we are in the last chunk, use everything
             _buffer.size() - _buffer.size() % ChunkSize; // align the current block with ChunkSize
+
         CF_OPERATION_INFO opInfo = {};
         opInfo.StructSize = sizeof(opInfo);
         opInfo.Type = CF_OPERATION_TYPE_TRANSFER_DATA;
@@ -116,6 +118,7 @@ qint64 CfApiWrapper::HydrationDevice::writeData(const char *data, qint64 len)
             // move the memory to the front
             std::memcpy(_buffer.data(), _buffer.data() + currentBlockLength, trailing);
         }
+        // this won't reduce the allocated size
         _buffer.resize(trailing);
 
         _offset += currentBlockLength;
