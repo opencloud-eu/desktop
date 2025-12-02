@@ -1,6 +1,6 @@
 # Changelog
 
-## [3.0.3](https://github.com/opencloud-eu/desktop/releases/tag/v3.0.3) - 2025-12-01
+## [3.0.3](https://github.com/opencloud-eu/desktop/releases/tag/v3.0.3) - 2025-12-02
 
 ### ❤️ Thanks to all contributors! ❤️
 
@@ -8,6 +8,7 @@
 
 ### 🐛 Bug Fixes
 
+- Fix massive ram usage with http2 downloads [[#736](https://github.com/opencloud-eu/desktop/pull/736)]
 - Fix high cpu usage during cfapi hydration [[#735](https://github.com/opencloud-eu/desktop/pull/735)]
 
 ## [3.0.2](https://github.com/opencloud-eu/desktop/releases/tag/v3.0.2) - 2025-11-27
