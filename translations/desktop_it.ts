@@ -2556,12 +2556,12 @@ Note that using any logging command line options will override the settings.</so
         <translation>Impossibile aprire o creare il database di sincronizzazione locale. Assicurati di avere accesso in scrittura alla cartella di sincronizzazione.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="773"/>
+        <location filename="../src/libsync/syncengine.cpp" line="770"/>
         <source>Disk space is low: Downloads that would reduce free space below %1 were skipped.</source>
         <translation>Lo spazio su disco è insufficiente: i download che avrebbero ridotto lo spazio libero al di sotto di %1 sono stati saltati.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="780"/>
+        <location filename="../src/libsync/syncengine.cpp" line="777"/>
         <source>Space quota exceeded. Please contact the Administrator of this space.</source>
         <translation>Space quota exceeded. Please contact the Administrator of this space.</translation>
     </message>
@@ -2586,7 +2586,7 @@ Note that using any logging command line options will override the settings.</so
         <translation>Impossibile aprire il registro di sincronizzazione</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="756"/>
+        <location filename="../src/libsync/syncengine.cpp" line="753"/>
         <source>Aborted due to: %1</source>
         <translation>Interrotto a causa di: %1</translation>
     </message>

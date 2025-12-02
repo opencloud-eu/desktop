@@ -2558,12 +2558,12 @@ Note that using any logging command line options will override the settings.</so
         <translation>로컬 동기화 데이터베이스를 열거나 생성할 수 없습니다. 동기화 폴더에 쓰기 권한이 있는지 확인하십시오.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="773"/>
+        <location filename="../src/libsync/syncengine.cpp" line="770"/>
         <source>Disk space is low: Downloads that would reduce free space below %1 were skipped.</source>
         <translation>디스크 공간 부족: 여유 공간이 %1 미만으로 줄어드는 다운로드는 건너뛰었습니다.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="780"/>
+        <location filename="../src/libsync/syncengine.cpp" line="777"/>
         <source>Space quota exceeded. Please contact the Administrator of this space.</source>
         <translation>스페이스 할당량을 초과했습니다. 이 스페이스의 관리자에게 문의하십시오.</translation>
     </message>
@@ -2588,7 +2588,7 @@ Note that using any logging command line options will override the settings.</so
         <translation>동기화 저널을 열 수 없습니다</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="756"/>
+        <location filename="../src/libsync/syncengine.cpp" line="753"/>
         <source>Aborted due to: %1</source>
         <translation>다음 이유로 중단됨: %1</translation>
     </message>

@@ -2554,12 +2554,12 @@ Note that using any logging command line options will override the settings.</so
         <translation>Не удается открыть или создать локальную базу данных синхронизации. Убедитесь, что у вас есть доступ к папке синхронизации.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="773"/>
+        <location filename="../src/libsync/syncengine.cpp" line="770"/>
         <source>Disk space is low: Downloads that would reduce free space below %1 were skipped.</source>
         <translation>Недостаточно места на диске: были пропущены загрузки, которые привели бы к сокращению свободного места до значения ниже %1.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="780"/>
+        <location filename="../src/libsync/syncengine.cpp" line="777"/>
         <source>Space quota exceeded. Please contact the Administrator of this space.</source>
         <translation>Превышена квота для Пространства. Пожалуйста, обратитесь к Администратору этого пространства.</translation>
     </message>
@@ -2584,7 +2584,7 @@ Note that using any logging command line options will override the settings.</so
         <translation>Не удалось открыть журнал синхронизации</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="756"/>
+        <location filename="../src/libsync/syncengine.cpp" line="753"/>
         <source>Aborted due to: %1</source>
         <translation>Прервано из-за: %1</translation>
     </message>

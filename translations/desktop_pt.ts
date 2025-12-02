@@ -2554,12 +2554,12 @@ Note que usar opções de registo na linha de comandos substituirá estas defini
         <translation>Não foi possível abrir ou criar a base de dados local de sincronização. Certifique-se de que tem acesso de escrita na pasta de sincronização.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="773"/>
+        <location filename="../src/libsync/syncengine.cpp" line="770"/>
         <source>Disk space is low: Downloads that would reduce free space below %1 were skipped.</source>
         <translation>Espaço em disco reduzido: descarregamentos que reduziriam o espaço livre abaixo de %1 foram ignorados.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="780"/>
+        <location filename="../src/libsync/syncengine.cpp" line="777"/>
         <source>Space quota exceeded. Please contact the Administrator of this space.</source>
         <translation>Quota do Espaço excedida. Contacte o administrador deste Espaço.</translation>
     </message>
@@ -2584,7 +2584,7 @@ Note que usar opções de registo na linha de comandos substituirá estas defini
         <translation>Não é possível abrir o diário de sincronização</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="756"/>
+        <location filename="../src/libsync/syncengine.cpp" line="753"/>
         <source>Aborted due to: %1</source>
         <translation>Interrompido devido a: %1</translation>
     </message>

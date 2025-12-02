@@ -2554,12 +2554,12 @@ Note that using any logging command line options will override the settings.</so
         <translation>تعذر فتح أو إنشاء قاعدة بيانات المزامنة المحلية. تأكد من أن لديك حق الكتابة في مجلد المزامنة.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="773"/>
+        <location filename="../src/libsync/syncengine.cpp" line="770"/>
         <source>Disk space is low: Downloads that would reduce free space below %1 were skipped.</source>
         <translation>مساحة القرص منخفضة: تم تخطي التنزيلات التي من شأنها تقليل المساحة الحرة إلى أقل من %1.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="780"/>
+        <location filename="../src/libsync/syncengine.cpp" line="777"/>
         <source>Space quota exceeded. Please contact the Administrator of this space.</source>
         <translation>تم تجاوز حصة المساحة. يرجى الاتصال بمشرف هذه المساحة.</translation>
     </message>
@@ -2584,7 +2584,7 @@ Note that using any logging command line options will override the settings.</so
         <translation>لا يمكن فتح دفتر المزامنة</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="756"/>
+        <location filename="../src/libsync/syncengine.cpp" line="753"/>
         <source>Aborted due to: %1</source>
         <translation>تم الإلغاء بسبب: %1</translation>
     </message>
