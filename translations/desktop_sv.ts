@@ -1191,22 +1191,22 @@ Please consider removing this folder from the account and adding it again.</sour
         <translation>Timeout för anslutning</translation>
     </message>
     <message>
-        <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="111"/>
+        <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="120"/>
         <source>No E-Tag received from server, check Proxy/Gateway</source>
         <translation>Ingen E-Tag mottagen från servern, kontrollera proxy/gateway</translation>
     </message>
     <message>
-        <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="117"/>
+        <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="126"/>
         <source>We received a different E-Tag for resuming. Retrying next time.</source>
         <translation>Vi fick en annan E-Tag för att återuppta. Försöker igen nästa gång.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="127"/>
+        <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="136"/>
         <source>We received an unexpected download Content-Length.</source>
         <translation>Vi fick en oväntad nedladdning av Content-Length.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="155"/>
+        <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="164"/>
         <source>Server returned wrong content-range</source>
         <translation>Servern returnerade fel innehållsintervall</translation>
     </message>

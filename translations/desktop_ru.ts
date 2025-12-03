@@ -1202,22 +1202,22 @@ Please consider removing this folder from the account and adding it again.</sour
         <translation>Время ожидания соединения истекло</translation>
     </message>
     <message>
-        <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="111"/>
+        <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="120"/>
         <source>No E-Tag received from server, check Proxy/Gateway</source>
         <translation>От сервера не пришел E-Tag, проверьте Proxy/Gateway</translation>
     </message>
     <message>
-        <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="117"/>
+        <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="126"/>
         <source>We received a different E-Tag for resuming. Retrying next time.</source>
         <translation>Мы получили другой E-Tag для возобновления. Попробуем в следующий раз.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="127"/>
+        <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="136"/>
         <source>We received an unexpected download Content-Length.</source>
         <translation>Мы получили неожиданное значение Content-Length загрузки.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="155"/>
+        <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="164"/>
         <source>Server returned wrong content-range</source>
         <translation>Сервер вернул неправильный content-range</translation>
     </message>
