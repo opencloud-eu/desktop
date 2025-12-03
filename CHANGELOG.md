@@ -8,6 +8,8 @@
 
 ### 🐛 Bug Fixes
 
+- Ensure downloads are closed before finished is emitted [[#741](https://github.com/opencloud-eu/desktop/pull/741)]
+- Fix autostart on linux [[#740](https://github.com/opencloud-eu/desktop/pull/740)]
 - Fix massive ram usage with http2 downloads [[#736](https://github.com/opencloud-eu/desktop/pull/736)]
 - Fix high cpu usage during cfapi hydration [[#735](https://github.com/opencloud-eu/desktop/pull/735)]
 
