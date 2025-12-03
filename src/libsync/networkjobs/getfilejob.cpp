@@ -69,6 +69,8 @@ void GETFileJob::finished()
         slotReadyRead();
         Q_ASSERT(!reply()->bytesAvailable());
     }
+    // ensure the device is closed in case the underlying file is modified in a signal connected to finished()
+    _device->close();
 }
 
 void GETFileJob::newReplyHook(QNetworkReply *reply)
