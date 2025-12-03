@@ -1202,22 +1202,22 @@ Veuillez envisager de supprimer ce dossier du compte et de l&apos;ajouter à nou
         <translation>Délai de connexion dépassé</translation>
     </message>
     <message>
-        <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="111"/>
+        <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="120"/>
         <source>No E-Tag received from server, check Proxy/Gateway</source>
         <translation>Aucun E-Tag reçu du serveur, vérifiez le proxy/passerelle</translation>
     </message>
     <message>
-        <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="117"/>
+        <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="126"/>
         <source>We received a different E-Tag for resuming. Retrying next time.</source>
         <translation>Nous avons reçu un E-Tag différent lors de la reprise. Une nouvelle tentative sera effectuée lors du prochain essai.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="127"/>
+        <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="136"/>
         <source>We received an unexpected download Content-Length.</source>
         <translation>Nous avons reçu une longueur de contenu de téléchargement inattendue.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="155"/>
+        <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="164"/>
         <source>Server returned wrong content-range</source>
         <translation>Le serveur a renvoyé une plage de contenu incorrecte</translation>
     </message>

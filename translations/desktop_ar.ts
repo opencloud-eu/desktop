@@ -1202,22 +1202,22 @@ Please consider removing this folder from the account and adding it again.</sour
         <translation>انتهاء مهلة الاتصال</translation>
     </message>
     <message>
-        <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="111"/>
+        <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="120"/>
         <source>No E-Tag received from server, check Proxy/Gateway</source>
         <translation>لم يتم استلام علامة إلكترونية (E-Tag) من الخادم، تحقق من الوكيل/البوابة</translation>
     </message>
     <message>
-        <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="117"/>
+        <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="126"/>
         <source>We received a different E-Tag for resuming. Retrying next time.</source>
         <translation>تلقينا علامة إلكترونية (E-Tag) مختلفة لاستئناف العملية. سنحاول مرة أخرى في المرة القادمة.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="127"/>
+        <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="136"/>
         <source>We received an unexpected download Content-Length.</source>
         <translation>لقد تلقينا طول محتوى تنزيل غير متوقع.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="155"/>
+        <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="164"/>
         <source>Server returned wrong content-range</source>
         <translation>أعاد الخادم نطاق محتوى خاطئ</translation>
     </message>
