@@ -119,7 +119,7 @@ void VfsXAttr::startImpl(const VfsSetupParams &params)
         }
     } else {
         // owner is set. See if it is us
-        const auto o = QString::fromUtf8(*owner);
+        const auto o = QString::fromUtf8(owner.get());
         if (o == xattrOwnerString()) {
             // all good
         } else {
@@ -155,7 +155,7 @@ PlaceHolderAttribs VfsXAttr::placeHolderAttributes(const QString& path)
     auto xattr = [](const QString& p, const QString& name) {
         const auto value = xattr::get(p, name);
         if (value) {
-            return QString::fromUtf8(*value);
+            return QString::fromUtf8(value.get());
         } else {
             return QString();
         }
@@ -206,20 +206,28 @@ OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> VfsXAttr::updateMetad
         }
         addPlaceholderAttribute(localPath, actionXAttrName, QStringLiteral("dehydrate"));
         addPlaceholderAttribute(localPath, stateXAttrName, QStringLiteral("virtual"));
+        addPlaceholderAttribute(localPath, fileSizeXAttrName, QString::number(syncItem._size));
     } else if (syncItem._type == ItemTypeVirtualFileDownload) {
         addPlaceholderAttribute(localPath, actionXAttrName, QStringLiteral("hydrate"));
         // file gets downloaded and becomes a normal file, the xattr gets removed
         xattr::remove(localPath, stateXAttrName);
+        xattr::remove(localPath, fileSizeXAttrName);
     } else if (syncItem._type == ItemTypeVirtualFile) {
         qCDebug(lcVfsXAttr) << "updateMetadata for virtual file " << syncItem._type;
         addPlaceholderAttribute(localPath, stateXAttrName, QStringLiteral("virtual"));
+        addPlaceholderAttribute(localPath, fileSizeXAttrName, QString::number(syncItem._size));
+    } else if (syncItem._type == ItemTypeFile) {
+        qCDebug(lcVfsXAttr) << "updateMetadata for normal file " << syncItem._type;
+        xattr::remove(localPath, fileSizeXAttrName);
+    } else if (syncItem._type == ItemTypeDirectory) {
+        qCDebug(lcVfsXAttr) << "updateMetadata for directory" << syncItem._type;
     } else {
         qCDebug(lcVfsXAttr) << "Unexpected syncItem Type" << syncItem._type;
+        Q_UNREACHABLE();
     }
 
     FileSystem::setModTime(localPath, syncItem._modtime);
 
-    addPlaceholderAttribute(localPath, fileSizeXAttrName, QString::number(syncItem._size));
     addPlaceholderAttribute(localPath, fileidXAttrName, QString::fromUtf8(syncItem._fileId));
     addPlaceholderAttribute(localPath, etagXAttrName, syncItem._etag);
 
@@ -257,6 +265,7 @@ void VfsXAttr::slotHydrateJobFinished()
             qCInfo(lcVfsXAttr) << u"Removing extended file attribute state failed for" << targetPath;
         }
         ok = ok && xattr::remove(targetPath, actionXAttrName);
+        ok = ok && xattr::remove(targetPath, fileSizeXAttrName);
         if (!ok) {
             qCInfo(lcVfsXAttr) << u"Removing extended file attribute action failed for" << targetPath;
         }
