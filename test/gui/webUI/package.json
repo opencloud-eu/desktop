@@ -5,7 +5,7 @@
         "oidc-login": "playwright test --grep @oidc"
     },
     "devDependencies": {
-        "@playwright/test": "1.45.0"
+        "@playwright/test": "^1.57.0"
     },
     "packageManager": "pnpm@8.15.8"
 }
