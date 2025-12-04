@@ -109,17 +109,18 @@ void Utility::setLaunchOnStartup(const QString &appName, const QString &guiName,
 
         QTextStream ts(&iniFile);
         ts.setEncoding(QStringConverter::Utf8);
-        ts << QLatin1String("[Desktop Entry]") << Qt::endl
-           << QLatin1String("Name=") << guiName << Qt::endl
-           << QLatin1String("GenericName=") << QLatin1String("File Synchronizer") << Qt::endl
-           << QLatin1String("Exec=") << autostartApplicationPath << Qt::endl
-           << QLatin1String("Terminal=") << u"false" << Qt::endl
-           << QLatin1String("Icon=") << appName.toLower() << Qt::endl // always use lowercase for icons
-           << QLatin1String("Categories=") << QLatin1String("Network") << Qt::endl
-           << QLatin1String("Type=") << QLatin1String("Application") << Qt::endl
-           << QLatin1String("StartupNotify=") << u"false" << Qt::endl
-           << QLatin1String("X-GNOME-Autostart-enabled=") << u"true" << Qt::endl
-           << QLatin1String("X-GNOME-Autostart-Delay=10") << Qt::endl;
+        ts << QStringLiteral("[Desktop Entry]\n" //
+                             "Name=%1\n" //
+                             "GenericName=File Synchronizer\n" //
+                             "Exec=%2\n" //
+                             "Terminal=false\n" //
+                             "Icon=%3\n" //
+                             "Categories=Network\n" //
+                             "Type=Application\n" //
+                             "StartupNotify=false\n" //
+                             "X-GNOME-Autostart-enabled=true\n" //
+                             "X-GNOME-Autostart-Delay=10")
+                  .arg(guiName, autostartApplicationPath, appName.toLower());
     } else {
         if (!QFile::remove(desktopFileLocation)) {
             qCWarning(lcUtility) << u"Could not remove autostart desktop file";
