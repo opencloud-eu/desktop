@@ -17,6 +17,7 @@
 # manual for a complete reference of the available API.
 import shutil
 import os
+import squish
 from datetime import datetime
 from types import SimpleNamespace
 
@@ -180,23 +181,34 @@ def teardown_client():
     # Cleanup user accounts from UI for Windows platform
     # It is not needed for Linux so skipping it in order to save CI time
     if is_windows():
-        # remove account from UI
-        # In Windows, removing only config and sync folders won't help
-        # so to work around that, remove the account connection
-        close_dialogs()
-        close_widgets()
-        active_widget = get_active_widget()
-        if active_widget.objectName != names.setupWizardWindow_OCC_Wizard_SetupWizardWindow["name"]:
-            accounts, selectors = Toolbar.get_accounts()
-            for display_name in selectors:
-                _, account_objects = Toolbar.get_accounts()
-                squish.mouseClick(squish.waitForObject(account_objects[display_name]))
-                AccountSetting.remove_account_connection()
+        try:
+            close_dialogs()
+            close_widgets()
 
-            # re-fetch accounts after removing from UI
-            accounts, _ = Toolbar.get_accounts()
-            if accounts:
-                squish.waitForObject(AccountConnectionWizard.SERVER_ADDRESS_BOX)
+            # remove account from UI
+            # In Windows, removing only config and sync folders won't help
+            # so to work around that, remove the account connection
+            # Navigate to main page via stack widget to access toolbar
+            dialog_stack = squish.waitForObject(AccountSetting.DIALOG_STACK, get_config('minSyncTimeout') * 1000)
+            if hasattr(dialog_stack, 'setCurrentIndex'):
+                dialog_stack.setCurrentIndex(0)
+
+            squish.waitForObject(Toolbar.TOOLBAR_ROW, get_config('minSyncTimeout') * 1000)
+
+            # Remove all accounts
+            accounts, selectors = Toolbar.get_accounts()
+            for display_name in list(selectors.keys()):
+                try:
+                    _, account_objects = Toolbar.get_accounts()
+                    if display_name in account_objects:
+                        squish.mouseClick(squish.waitForObject(account_objects[display_name]))
+                        AccountSetting.remove_account_connection()
+                except Exception as e:
+                    test.log(f"Warning: Could not remove account {display_name}: {e}")
+                    continue
+
+        except Exception as e:
+            test.log(f"Error during Windows cleanup: {e}")
 
     # Detach (i.e. potentially terminate) all AUTs at the end of a scenario
     for ctx in squish.applicationContextList():
