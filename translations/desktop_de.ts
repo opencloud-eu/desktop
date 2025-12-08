@@ -3024,7 +3024,7 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
     <message>
         <location filename="../src/gui/newwizard/pages/serverurlsetupwizardpage.ui" line="59"/>
         <source>Welcome</source>
-        <translation>Wilkommen</translation>
+        <translation>Willkommen</translation>
     </message>
     <message>
         <location filename="../src/gui/newwizard/pages/serverurlsetupwizardpage.ui" line="85"/>
@@ -3056,7 +3056,7 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
     <message>
         <location filename="../src/gui/newwizard/enums.cpp" line="32"/>
         <source>Welcome</source>
-        <translation>Wilkommen</translation>
+        <translation>Willkommen</translation>
     </message>
     <message>
         <location filename="../src/gui/newwizard/enums.cpp" line="35"/>
