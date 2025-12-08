@@ -27,7 +27,6 @@ namespace OCC {
 Q_DECLARE_LOGGING_CATEGORY(lcPutJob)
 Q_DECLARE_LOGGING_CATEGORY(lcPropagateUpload)
 Q_DECLARE_LOGGING_CATEGORY(lcPropagateUploadV1)
-Q_DECLARE_LOGGING_CATEGORY(lcPropagateUploadNG)
 
 class BandwidthManager;
 
@@ -58,8 +57,6 @@ public:
     void setChoked(bool);
     bool isChoked() { return _choked; }
     void giveBandwidthQuota(qint64 bwq);
-
-Q_SIGNALS:
 
 private:
     /// The local file to read data from
