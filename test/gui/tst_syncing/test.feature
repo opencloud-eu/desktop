@@ -580,3 +580,27 @@ Feature: Syncing files
         When user "Alice" uploads file with content "some content" to "test-folder/sub-folder2/lorem.txt" in the server
         And the user waits for the files to sync
         Then the file "test-folder/sub-folder2/lorem.txt" should not exist on the file system
+
+    @skipOnWindows
+    Scenario: Only root level files sync when all folders are unselected
+        Given user "Alice" has created folder "test-folder" in the server
+        And user "Alice" has created folder "test-folder/sub-folder1" in the server
+        And user "Alice" has created folder "test-folder/sub-folder2" in the server
+        And user "Alice" has uploaded file with content "root file content" to "root-file.txt" in the server
+        And user "Alice" has uploaded file with content "some subfolder content" to "test-folder/sub-folder1/lorem.txt" in the server
+        And the user has started the client
+        And the user has entered the following account information:
+            | server   | %local_server% |
+            | user     | Alice          |
+            | password | 1234           |
+        When the user selects manual sync folder option in advanced section
+        And the user sets the sync path in sync connection wizard
+        And the user selects "Personal" space in sync connection wizard
+        And user unselects all the remote folders
+        And the user adds the folder sync connection
+        And the user waits for the files to sync
+        Then the folder "test-folder/sub-folder1" should not exist on the file system
+        And the folder "test-folder/sub-folder2" should not exist on the file system
+        And the file "test-folder/sub-folder1/lorem.txt" should not exist on the file system
+        But the file "root-file.txt" should exist on the file system
+
