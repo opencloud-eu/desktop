@@ -57,6 +57,7 @@ Feature: Syncing files
             client content
             """
 
+    @skipOnWindows
     Scenario: Sync all is selected by default
         Given user "Alice" has created folder "simple-folder" in the server
         And user "Alice" has created folder "large-folder" in the server
@@ -81,6 +82,7 @@ Feature: Syncing files
         But the folder "simple-folder" should not exist on the file system
         And the folder "large-folder" should not exist on the file system
 
+    @skipOnWindows
     Scenario: Sync only one folder from the server
         Given user "Alice" has created folder "simple-folder" in the server
         And user "Alice" has created folder "large-folder" in the server
@@ -111,7 +113,7 @@ Feature: Syncing files
         And the user waits for the files to sync
         Then as "Alice" folder "simple-folder" should not exist in the server
 
-    @issue-9733
+    @issue-9733 @skipOnWindows
     Scenario: sort folders list by name and size
         Given user "Alice" has created folder "123Folder" in the server
         And user "Alice" has uploaded file with content "small" to "123Folder/lorem.txt" in the server
@@ -456,6 +458,7 @@ Feature: Syncing files
         And as "Alice" the file "file2.txt" should have the content "Test file2" in the server
 
 
+    @skipOnWindows
     Scenario: sync remote folder to a local sync folder having special characters
         Given user "Alice" has created folder "~`!@#$^&()-_=+{[}];',)" in the server
         And user "Alice" has created folder "simple-folder" in the server
@@ -566,7 +569,7 @@ Feature: Syncing files
         And as "Brian" file "Shares/simple-folder/simple.pdf" should exist in the server
         And as "Brian" the file "Shares/simple-folder/uploaded-lorem.txt" should have the content "overwrite openCloud test text file" in the server
 
-
+    @skipOnWindows
     Scenario: Unselected subfolders are excluded from local sync
         Given user "Alice" has created folder "test-folder" in the server
         And user "Alice" has created folder "test-folder/sub-folder1" in the server
