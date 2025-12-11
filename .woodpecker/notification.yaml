@@ -9,9 +9,14 @@ variables:
 depends_on: [build, ui-tests]
 runs_on: [ success, failure ]
 when:
-  - event: [ push , manual ]
-    branch: ${CI_REPO_DEFAULT_BRANCH}
+  - branch:
+      - main
+      - stable-*
+    event:
+      - push
+      - manual
   - event: pull_request
+  - event: tag
   - event: cron
     cron: nightly*
 skip_clone: true
