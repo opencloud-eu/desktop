@@ -104,7 +104,7 @@ private Q_SLOTS:
         connect(&parser, &LsColXMLParser::directoryListingIterated, this, &TestXmlParse::slotDirectoryListingIterated);
         connect(&parser, &LsColXMLParser::finishedWithoutError, this, &TestXmlParse::slotFinishedSuccessfully);
 
-        QHash<QString, qint64> sizes;
+        QHash<QString, uint64_t> sizes;
         QVERIFY(parser.parse(testXml, &sizes, QStringLiteral("/oc/remote.php/webdav/sharefolder")));
 
         QVERIFY(_success);
@@ -176,7 +176,7 @@ private Q_SLOTS:
         connect(&parser, &LsColXMLParser::directoryListingIterated, this, &TestXmlParse::slotDirectoryListingIterated);
         connect(&parser, &LsColXMLParser::finishedWithoutError, this, &TestXmlParse::slotFinishedSuccessfully);
 
-        QHash<QString, qint64> sizes;
+        QHash<QString, uint64_t> sizes;
         QVERIFY(false == parser.parse(testXml, &sizes, QStringLiteral("/oc/remote.php/webdav/sharefolder"))); // verify false
 
         QVERIFY(!_success);
@@ -197,7 +197,7 @@ private Q_SLOTS:
         connect(&parser, &LsColXMLParser::directoryListingIterated, this, &TestXmlParse::slotDirectoryListingIterated);
         connect(&parser, &LsColXMLParser::finishedWithoutError, this, &TestXmlParse::slotFinishedSuccessfully);
 
-        QHash<QString, qint64> sizes;
+        QHash<QString, uint64_t> sizes;
         QVERIFY(false == parser.parse(testXml, &sizes, QStringLiteral("/oc/remote.php/webdav/sharefolder"))); // verify false
 
         QVERIFY(!_success);
@@ -217,7 +217,7 @@ private Q_SLOTS:
         connect(&parser, &LsColXMLParser::directoryListingIterated, this, &TestXmlParse::slotDirectoryListingIterated);
         connect(&parser, &LsColXMLParser::finishedWithoutError, this, &TestXmlParse::slotFinishedSuccessfully);
 
-        QHash<QString, qint64> sizes;
+        QHash<QString, uint64_t> sizes;
         QVERIFY(false == parser.parse(testXml, &sizes, QStringLiteral("/oc/remote.php/webdav/sharefolder"))); // verify false
 
         QVERIFY(!_success);
@@ -254,7 +254,7 @@ private Q_SLOTS:
         connect(&parser, &LsColXMLParser::directoryListingIterated, this, &TestXmlParse::slotDirectoryListingIterated);
         connect(&parser, &LsColXMLParser::finishedWithoutError, this, &TestXmlParse::slotFinishedSuccessfully);
 
-        QHash<QString, qint64> sizes;
+        QHash<QString, uint64_t> sizes;
         QVERIFY(!parser.parse(testXml, &sizes, QStringLiteral("/oc/remote.php/webdav/sharefolder")));
         QVERIFY(!_success);
     }
@@ -317,7 +317,7 @@ private Q_SLOTS:
         connect(&parser, &LsColXMLParser::directoryListingIterated, this, &TestXmlParse::slotDirectoryListingIterated);
         connect(&parser, &LsColXMLParser::finishedWithoutError, this, &TestXmlParse::slotFinishedSuccessfully);
 
-        QHash<QString, qint64> sizes;
+        QHash<QString, uint64_t> sizes;
         QVERIFY(false == parser.parse(testXml, &sizes, QStringLiteral("/oc/remote.php/webdav/sharefolder")));
         QVERIFY(!_success);
     }
@@ -380,7 +380,7 @@ private Q_SLOTS:
         connect(&parser, &LsColXMLParser::directoryListingIterated, this, &TestXmlParse::slotDirectoryListingIterated);
         connect(&parser, &LsColXMLParser::finishedWithoutError, this, &TestXmlParse::slotFinishedSuccessfully);
 
-        QHash<QString, qint64> sizes;
+        QHash<QString, uint64_t> sizes;
         QVERIFY(false == parser.parse(testXml, &sizes, QStringLiteral("/oc/remote.php/webdav/sharefolder")));
         QVERIFY(!_success);
     }
@@ -442,7 +442,7 @@ private Q_SLOTS:
         connect(&parser, &LsColXMLParser::directoryListingIterated, this, &TestXmlParse::slotDirectoryListingIterated);
         connect(&parser, &LsColXMLParser::finishedWithoutError, this, &TestXmlParse::slotFinishedSuccessfully);
 
-        QHash<QString, qint64> sizes;
+        QHash<QString, uint64_t> sizes;
         QVERIFY(parser.parse(testXml, &sizes, QString::fromUtf8("/ä")));
         QVERIFY(_success);
 

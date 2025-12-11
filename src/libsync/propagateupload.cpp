@@ -262,7 +262,7 @@ void PropagateUploadFileCommon::slotStartUpload(CheckSums::Algorithm transmissio
     doStartUpload();
 }
 
-UploadDevice::UploadDevice(const QString &fileName, qint64 start, qint64 size, BandwidthManager *bwm)
+UploadDevice::UploadDevice(const QString &fileName, uint64_t start, uint64_t size, BandwidthManager *bwm)
     : _file(fileName)
     , _start(start)
     , _size(size)
@@ -301,7 +301,7 @@ bool UploadDevice::open(QIODevice::OpenMode mode)
         return false;
     }
 
-    _size = qBound(0ll, _size, fileDiskSize - _start);
+    _size = std::min(_size, fileDiskSize - _start);
     _read = 0;
 
     return QIODevice::open(mode);
@@ -328,7 +328,7 @@ qint64 UploadDevice::readData(char *data, qint64 maxlen)
         }
         return -1;
     }
-    maxlen = qMin(maxlen, _size - _read);
+    maxlen = std::min<int64_t>(maxlen, _size - _read);
     if (maxlen <= 0) {
         return 0;
     }
@@ -352,7 +352,7 @@ qint64 UploadDevice::readData(char *data, qint64 maxlen)
     return c;
 }
 
-void UploadDevice::slotJobUploadProgress(qint64 sent, qint64 t)
+void UploadDevice::slotJobUploadProgress(int64_t sent, int64_t t)
 {
     if (sent == 0 || t == 0) {
         return;
@@ -387,7 +387,7 @@ bool UploadDevice::seek(qint64 pos)
     if (!QIODevice::seek(pos)) {
         return false;
     }
-    if (pos < 0 || pos > _size) {
+    if (pos < 0 || static_cast<uint64_t>(pos) > _size) {
         return false;
     }
     _read = pos;
@@ -463,7 +463,7 @@ void PropagateUploadFileCommon::commonErrorHandling(AbstractNetworkJob *job)
     abortWithError(status, errorString);
 }
 
-void PropagateUploadFileCommon::adjustLastJobTimeout(AbstractNetworkJob *job, qint64 fileSize)
+void PropagateUploadFileCommon::adjustLastJobTimeout(AbstractNetworkJob *job, uint64_t fileSize)
 {
     // Calculate 3 minutes for each gigabyte of data
     const auto timeout = std::chrono::minutes(static_cast<quint64>((3min).count() * fileSize / 1e9));

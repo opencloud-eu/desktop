@@ -12,7 +12,7 @@ Q_LOGGING_CATEGORY(lcGetJob, "sync.networkjob.get", QtInfoMsg)
 
 // DOES NOT take ownership of the device.
 GETFileJob::GETFileJob(AccountPtr account, const QUrl &url, const QString &path, QIODevice *device, const QMap<QByteArray, QByteArray> &headers,
-    const QString &expectedEtagForResume, qint64 resumeStart, QObject *parent)
+    const QString &expectedEtagForResume, uint64_t resumeStart, QObject *parent)
     : AbstractNetworkJob(account, url, path, parent)
     , _device(device)
     , _headers(headers)
@@ -226,9 +226,9 @@ void GETFileJob::giveBandwidthQuota(qint64 q)
     QMetaObject::invokeMethod(this, &GETFileJob::slotReadyRead, Qt::QueuedConnection);
 }
 
-qint64 GETFileJob::currentDownloadPosition()
+uint64_t GETFileJob::currentDownloadPosition()
 {
-    if (_device && _device->pos() > 0 && _device->pos() > qint64(_resumeStart)) {
+    if (_device && _device->pos() > 0 && static_cast<uint64_t>(_device->pos()) > _resumeStart) {
         return _device->pos();
     }
     return _resumeStart;
@@ -241,7 +241,7 @@ void GETFileJob::slotReadyRead()
         return;
     }
 
-    const qint64 bufferSize = std::min<qint64>(1024 * 8, reply()->bytesAvailable());
+    const uint64_t bufferSize = std::min<uint64_t>(1024 * 8, reply()->bytesAvailable());
     QByteArray buffer(bufferSize, Qt::Uninitialized);
 
     while (reply()->bytesAvailable() > 0) {
@@ -249,9 +249,9 @@ void GETFileJob::slotReadyRead()
             qCWarning(lcGetJob) << u"Download choked";
             break;
         }
-        qint64 toRead = bufferSize;
+        uint64_t toRead = bufferSize;
         if (_bandwidthLimited) {
-            toRead = std::min<qint64>(bufferSize, _bandwidthQuota);
+            toRead = std::min<uint64_t>(bufferSize, _bandwidthQuota);
             if (toRead == 0) {
                 qCWarning(lcGetJob) << u"Out of bandwidth quota";
                 break;

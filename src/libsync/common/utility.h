@@ -74,7 +74,7 @@ OPENCLOUD_SYNC_EXPORT Q_DECLARE_LOGGING_CATEGORY(lcUtility)
      *
      * \a path must point to a directory
      */
-    OPENCLOUD_SYNC_EXPORT qint64 freeDiskSpace(const QString &path);
+    OPENCLOUD_SYNC_EXPORT std::optional<uint64_t> freeDiskSpace(const QString &path);
 
     /**
      * @brief compactFormatDouble - formats a double value human readable.

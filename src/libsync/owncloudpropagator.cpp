@@ -56,12 +56,12 @@ namespace {
     std::chrono::seconds getMaxBlacklistTime = 24h;
 }
 
-qint64 criticalFreeSpaceLimit()
+uint64_t criticalFreeSpaceLimit()
 {
-    return qBound(0LL, 50 * 1000 * 1000LL, freeSpaceLimit());
+    return 50 * 1000 * 1000LL;
 }
 
-qint64 freeSpaceLimit()
+uint64_t freeSpaceLimit()
 {
     return 250 * 1000 * 1000LL;
 }
@@ -657,7 +657,7 @@ void OwncloudPropagator::scheduleNextJobImpl()
     }
 }
 
-void OwncloudPropagator::reportFileTotal(const SyncFileItem &item, qint64 newSize)
+void OwncloudPropagator::reportFileTotal(const SyncFileItem &item, uint64_t newSize)
 {
     Q_EMIT updateFileTotal(item, newSize);
 }
@@ -685,7 +685,7 @@ void OwncloudPropagator::abort()
     }
 }
 
-void OwncloudPropagator::reportProgress(const SyncFileItem &item, qint64 bytes)
+void OwncloudPropagator::reportProgress(const SyncFileItem &item, uint64_t bytes)
 {
     Q_EMIT progress(item, bytes);
 }
@@ -697,8 +697,9 @@ AccountPtr OwncloudPropagator::account() const
 
 OwncloudPropagator::DiskSpaceResult OwncloudPropagator::diskSpaceCheck() const
 {
-    const qint64 freeBytes = Utility::freeDiskSpace(_localDir);
-    if (freeBytes < 0) {
+    const auto freeBytes = Utility::freeDiskSpace(_localDir);
+    if (!freeBytes.has_value()) {
+        // assume we are still ok
         return DiskSpaceOk;
     }
 
@@ -706,7 +707,7 @@ OwncloudPropagator::DiskSpaceResult OwncloudPropagator::diskSpaceCheck() const
         return DiskSpaceCritical;
     }
 
-    if (freeBytes - _rootJob->committedDiskSpace() < freeSpaceLimit()) {
+    if (freeBytes.value() - _rootJob->committedDiskSpace() < freeSpaceLimit()) {
         return DiskSpaceFailure;
     }
 
@@ -983,9 +984,9 @@ void PropagatorCompositeJob::finalize()
     Q_EMIT finished(_errorPaths.empty() ? SyncFileItem::Success : _errorPaths.last());
 }
 
-qint64 PropagatorCompositeJob::committedDiskSpace() const
+uint64_t PropagatorCompositeJob::committedDiskSpace() const
 {
-    qint64 needed = 0;
+    uint64_t needed = 0;
     for (auto *job : _runningJobs) {
         needed += job->committedDiskSpace();
     }
@@ -1177,7 +1178,7 @@ void PropagateRootDirectory::abort(PropagatorJob::AbortType abortType)
     _dirDeletionJobs.abort(abortType);
 }
 
-qint64 PropagateRootDirectory::committedDiskSpace() const
+uint64_t PropagateRootDirectory::committedDiskSpace() const
 {
     return _subJobs.committedDiskSpace() + _dirDeletionJobs.committedDiskSpace();
 }

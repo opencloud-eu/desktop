@@ -99,16 +99,16 @@ public:
      * adjustTotalsForFile() while newSize is the newly determined actual
      * size.
      */
-    void updateTotalsForFile(const SyncFileItem &item, qint64 newSize);
+    void updateTotalsForFile(const SyncFileItem &item, uint64_t newSize);
 
-    qint64 totalFiles() const;
-    qint64 completedFiles() const;
+    uint64_t totalFiles() const;
+    uint64_t completedFiles() const;
 
-    qint64 totalSize() const;
-    qint64 completedSize() const;
+    uint64_t totalSize() const;
+    uint64_t completedSize() const;
 
     /** Number of a file that is currently in progress. */
-    qint64 currentFile() const;
+    uint64_t currentFile() const;
 
     /** Return true if the size needs to be taken in account in the total amount of time */
     static inline bool isSizeDependent(const SyncFileItem &item)
@@ -127,7 +127,7 @@ public:
         qint64 estimatedBandwidth;
 
         /// Estimated time remaining in milliseconds.
-        quint64 estimatedEta;
+        uint64_t estimatedEta;
     };
 
     /**
@@ -136,20 +136,13 @@ public:
      */
     struct OPENCLOUD_SYNC_EXPORT Progress
     {
-        Progress()
-            : _progressPerSec(0)
-            , _prevCompleted(0)
-            , _initialSmoothing(1.0)
-            , _completed(0)
-            , _total(0)
-        {
-        }
+        Progress() = default;
 
         /** Returns the estimates about progress per second and eta. */
         Estimates estimates() const;
 
-        qint64 completed() const;
-        qint64 remaining() const;
+        uint64_t completed() const;
+        uint64_t remaining() const;
 
     private:
         /**
@@ -161,19 +154,19 @@ public:
          * Changes the _completed value and does sanity checks on
          * _prevCompleted and _total.
          */
-        void setCompleted(qint64 completed);
+        void setCompleted(uint64_t completed);
 
         // Updated by update()
-        double _progressPerSec;
-        qint64 _prevCompleted;
+        double _progressPerSec = 0;
+        uint64_t _prevCompleted = 0;
 
         // Used to get to a good value faster when
         // progress measurement stats. See update().
-        double _initialSmoothing;
+        double _initialSmoothing = 1;
 
         // Set and updated by ProgressInfo
-        qint64 _completed;
-        qint64 _total;
+        uint64_t _completed = 0;
+        uint64_t _total = 0;
 
         friend class ProgressInfo;
     };
@@ -195,7 +188,7 @@ public:
 
     void setProgressComplete(const SyncFileItem &item);
 
-    void setProgressItem(const SyncFileItem &item, qint64 completed);
+    void setProgressItem(const SyncFileItem &item, uint64_t completed);
 
     /**
      * Get the total completion estimate
@@ -242,7 +235,7 @@ private:
     Progress _fileProgress;
 
     // All size from completed jobs only.
-    qint64 _totalSizeOfCompletedJobs;
+    uint64_t _totalSizeOfCompletedJobs;
 
     // The fastest observed rate of files per second in this sync.
     double _maxFilesPerSecond;

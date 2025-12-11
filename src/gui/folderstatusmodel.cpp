@@ -135,11 +135,11 @@ namespace {
         pi->_progressString = fileProgressString;
 
         // overall progress
-        qint64 completedSize = progress.completedSize();
-        qint64 completedFile = progress.completedFiles();
-        qint64 currentFile = progress.currentFile();
-        qint64 totalSize = qMax(completedSize, progress.totalSize());
-        qint64 totalFileCount = qMax(currentFile, progress.totalFiles());
+        const auto completedSize = progress.completedSize();
+        const auto completedFile = progress.completedFiles();
+        const auto currentFile = progress.currentFile();
+        const auto totalSize = qMax(completedSize, progress.totalSize());
+        const auto totalFileCount = qMax(currentFile, progress.totalFiles());
         QString overallSyncString;
         if (totalSize > 0) {
             const QString s1 = Utility::octetsToString(completedSize);

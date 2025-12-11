@@ -384,7 +384,7 @@ void PropagateDownloadFile::startFullDownload()
     _job->start();
 }
 
-qint64 PropagateDownloadFile::committedDiskSpace() const
+uint64_t PropagateDownloadFile::committedDiskSpace() const
 {
     if (state() == Running) {
         return qBound<uint64_t>(0, _item->_size - _resumeStart - _downloadProgress, _item->_size);
@@ -730,7 +730,7 @@ void PropagateDownloadFile::updateMetadata(bool isConflict)
     }
 }
 
-void PropagateDownloadFile::slotDownloadProgress(qint64 received, qint64)
+void PropagateDownloadFile::slotDownloadProgress(int64_t received, int64_t)
 {
     if (!_job)
         return;

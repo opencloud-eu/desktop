@@ -14,9 +14,6 @@
 
 #pragma once
 
-#include <QHash>
-#include <QObject>
-
 #include "accountfwd.h"
 #include "bandwidthmanager.h"
 #include "common/syncjournaldb.h"
@@ -30,14 +27,14 @@ Q_DECLARE_LOGGING_CATEGORY(lcPropagator)
 
 /** Free disk space threshold below which syncs will abort and not even start.
  */
-qint64 criticalFreeSpaceLimit();
+uint64_t criticalFreeSpaceLimit();
 
 /** The client will not intentionally reduce the available free disk space below
  *  this limit.
  *
  * Uploads will still run and downloads that are small enough will continue too.
  */
-qint64 freeSpaceLimit();
+uint64_t freeSpaceLimit();
 
 class SyncJournalDb;
 class OwncloudPropagator;
@@ -98,7 +95,7 @@ public:
      * Note that this does *not* include the disk space that's already
      * in use by running jobs for things like a download-in-progress.
      */
-    virtual qint64 committedDiskSpace() const { return 0; }
+    virtual uint64_t committedDiskSpace() const { return 0; }
 
     /** Set the associated composite job
      *
@@ -225,7 +222,7 @@ public:
         }
     }
 
-    qint64 committedDiskSpace() const override;
+    uint64_t committedDiskSpace() const override;
 
     QMap<QString, SyncFileItem::Status> errorPaths() const { return _errorPaths; }
 
@@ -298,10 +295,7 @@ public:
         _firstJob->_item->_affectedItems++;
     }
 
-    qint64 committedDiskSpace() const override
-    {
-        return _subJobs.committedDiskSpace();
-    }
+    uint64_t committedDiskSpace() const override { return _subJobs.committedDiskSpace(); }
 
     SyncFileItemPtr &item()
     {
@@ -331,7 +325,7 @@ public:
     JobParallelism parallelism() override;
     void abort(PropagatorJob::AbortType abortType) override;
 
-    qint64 committedDiskSpace() const override;
+    uint64_t committedDiskSpace() const override;
 
     void addDeleteJob(PropagatorJob *job);
 
@@ -436,7 +430,7 @@ public:
      * if Capabilities::desiredChunkUploadDuration has a target
      * chunk-upload duration set.
      */
-    qint64 _chunkSize;
+    uint64_t _chunkSize;
     uint64_t smallFileSize();
 
     /* The maximum number of active jobs in parallel  */
@@ -474,8 +468,8 @@ public:
     PropagateItemJob *createJob(const SyncFileItemPtr &item);
 
     void scheduleNextJob();
-    void reportProgress(const SyncFileItem &, qint64 bytes);
-    void reportFileTotal(const SyncFileItem &item, qint64 newSize);
+    void reportProgress(const SyncFileItem &, uint64_t bytes);
+    void reportFileTotal(const SyncFileItem &item, uint64_t newSize);
 
     void abort();
 
@@ -552,8 +546,8 @@ private Q_SLOTS:
 Q_SIGNALS:
     void newItem(const SyncFileItemPtr &);
     void itemCompleted(const SyncFileItemPtr &);
-    void progress(const SyncFileItem &, qint64 bytes);
-    void updateFileTotal(const SyncFileItem &, qint64 newSize);
+    void progress(const SyncFileItem &, uint64_t bytes);
+    void updateFileTotal(const SyncFileItem &, uint64_t newSize);
     void finished(bool success);
 
     /** Emitted when propagation has problems with a locked file. */

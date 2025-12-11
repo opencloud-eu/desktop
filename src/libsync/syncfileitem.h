@@ -15,11 +15,8 @@
 #ifndef SYNCFILEITEM_H
 #define SYNCFILEITEM_H
 
-#include <QVector>
 #include <QString>
-#include <QDateTime>
-#include <QMetaType>
-#include <QSharedPointer>
+#include <QVector>
 
 #include <set>
 

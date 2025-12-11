@@ -29,10 +29,10 @@ public:
     // DOES NOT take ownership of the device.
     // For directDownloadUrl:
     explicit GETFileJob(AccountPtr account, const QUrl &url, const QString &path, QIODevice *device, const QMap<QByteArray, QByteArray> &headers,
-        const QString &expectedEtagForResume, qint64 resumeStart, QObject *parent = nullptr);
+        const QString &expectedEtagForResume, uint64_t resumeStart, QObject *parent = nullptr);
     virtual ~GETFileJob();
 
-    qint64 currentDownloadPosition();
+    uint64_t currentDownloadPosition();
 
     void start() override;
     void finished() override;
@@ -63,7 +63,7 @@ private Q_SLOTS:
     void slotMetaDataChanged();
 
 Q_SIGNALS:
-    void downloadProgress(qint64, qint64);
+    void downloadProgress(int64_t, int64_t);
 
 protected:
     bool restartDevice();

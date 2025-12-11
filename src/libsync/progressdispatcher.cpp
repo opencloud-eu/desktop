@@ -179,7 +179,7 @@ void ProgressInfo::adjustTotalsForFile(const SyncFileItem &item)
     }
 }
 
-void ProgressInfo::updateTotalsForFile(const SyncFileItem &item, qint64 newSize)
+void ProgressInfo::updateTotalsForFile(const SyncFileItem &item, uint64_t newSize)
 {
     if (!shouldCountProgress(item)) {
         return;
@@ -195,27 +195,27 @@ void ProgressInfo::updateTotalsForFile(const SyncFileItem &item, qint64 newSize)
     _currentItems[item.localName()]._progress._total = newSize;
 }
 
-qint64 ProgressInfo::totalFiles() const
+uint64_t ProgressInfo::totalFiles() const
 {
     return _fileProgress._total;
 }
 
-qint64 ProgressInfo::completedFiles() const
+uint64_t ProgressInfo::completedFiles() const
 {
     return _fileProgress._completed;
 }
 
-qint64 ProgressInfo::currentFile() const
+uint64_t ProgressInfo::currentFile() const
 {
     return completedFiles() + _currentItems.size();
 }
 
-qint64 ProgressInfo::totalSize() const
+uint64_t ProgressInfo::totalSize() const
 {
     return _sizeProgress._total;
 }
 
-qint64 ProgressInfo::completedSize() const
+uint64_t ProgressInfo::completedSize() const
 {
     return _sizeProgress._completed;
 }
@@ -235,7 +235,7 @@ void ProgressInfo::setProgressComplete(const SyncFileItem &item)
     _lastCompletedItem = item;
 }
 
-void ProgressInfo::setProgressItem(const SyncFileItem &item, qint64 completed)
+void ProgressInfo::setProgressItem(const SyncFileItem &item, uint64_t completed)
 {
     if (!shouldCountProgress(item)) {
         return;
@@ -372,12 +372,12 @@ ProgressInfo::Estimates ProgressInfo::Progress::estimates() const
     return est;
 }
 
-qint64 ProgressInfo::Progress::completed() const
+uint64_t ProgressInfo::Progress::completed() const
 {
     return _completed;
 }
 
-qint64 ProgressInfo::Progress::remaining() const
+uint64_t ProgressInfo::Progress::remaining() const
 {
     return _total - _completed;
 }
@@ -398,7 +398,7 @@ void ProgressInfo::Progress::update()
     _prevCompleted = _completed;
 }
 
-void ProgressInfo::Progress::setCompleted(qint64 completed)
+void ProgressInfo::Progress::setCompleted(uint64_t completed)
 {
     _completed = qMin(completed, _total);
     _prevCompleted = qMin(_prevCompleted, _completed);

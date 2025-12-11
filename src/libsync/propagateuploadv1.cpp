@@ -44,7 +44,7 @@ void PropagateUploadFileV1::doStartUpload()
     }
     propagator()->reportProgress(*_item, 0);
 
-    qint64 fileSize = _item->_size;
+    auto fileSize = _item->_size;
     auto headers = PropagateUploadFileCommon::headers();
     headers[QByteArrayLiteral("OC-Total-Length")] = QByteArray::number(fileSize);
 
