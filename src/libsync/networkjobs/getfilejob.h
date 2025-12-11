@@ -21,29 +21,29 @@ class OPENCLOUD_SYNC_EXPORT GETFileJob : public AbstractNetworkJob
     QIODevice *_device;
     QMap<QByteArray, QByteArray> _headers;
     QString _expectedEtagForResume;
-    qint64 _expectedContentLength;
-    qint64 _contentLength;
-    qint64 _resumeStart;
+    std::optional<uint64_t> _expectedContentLength;
+    std::optional<uint64_t> _contentLength;
+    uint64_t _resumeStart;
 
 public:
     // DOES NOT take ownership of the device.
     // For directDownloadUrl:
     explicit GETFileJob(AccountPtr account, const QUrl &url, const QString &path, QIODevice *device, const QMap<QByteArray, QByteArray> &headers,
-        const QString &expectedEtagForResume, qint64 resumeStart, QObject *parent = nullptr);
+        const QString &expectedEtagForResume, uint64_t resumeStart, QObject *parent = nullptr);
     virtual ~GETFileJob();
 
-    qint64 currentDownloadPosition();
+    uint64_t currentDownloadPosition();
 
     void start() override;
     void finished() override;
 
     void newReplyHook(QNetworkReply *reply) override;
 
-    qint64 resumeStart() { return _resumeStart; }
+    uint64_t resumeStart() const;
 
-    qint64 contentLength() const { return _contentLength; }
-    qint64 expectedContentLength() const { return _expectedContentLength; }
-    void setExpectedContentLength(qint64 size) { _expectedContentLength = size; }
+    std::optional<uint64_t> contentLength() const;
+    std::optional<uint64_t> expectedContentLength() const;
+    void setExpectedContentLength(uint64_t size);
 
     void setChoked(bool c);
     void setBandwidthLimited(bool b);
@@ -63,7 +63,7 @@ private Q_SLOTS:
     void slotMetaDataChanged();
 
 Q_SIGNALS:
-    void downloadProgress(qint64, qint64);
+    void downloadProgress(int64_t, int64_t);
 
 protected:
     bool restartDevice();
