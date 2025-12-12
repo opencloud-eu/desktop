@@ -176,10 +176,12 @@ when:
     event:
       - push
       - manual
-  - event: pull_request
   - event: tag
   - event: cron
     cron: nightly*
+  - event: pull_request
+    evaluate: |
+      !(CI_COMMIT_SOURCE_BRANCH matches "next-release/(test-only|stable-*)" && CI_COMMIT_AUTHOR == "prashant-gurung899")
 workspace:
   base: /woodpecker
   path: desktop

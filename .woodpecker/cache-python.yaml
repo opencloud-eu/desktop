@@ -51,6 +51,8 @@ when:
       - manual
   - event: tag
   - event: pull_request
+    evaluate: |
+      !(CI_COMMIT_SOURCE_BRANCH matches "next-release/(test-only|stable-*)" && CI_COMMIT_AUTHOR == "prashant-gurung899")
   - event: cron
     cron: nightly*
 workspace:
