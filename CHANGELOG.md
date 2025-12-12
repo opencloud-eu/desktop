@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.0.4](https://github.com/opencloud-eu/desktop/releases/tag/v3.0.4) - 2025-12-12
+
+### ❤️ Thanks to all contributors! ❤️
+
+@anon-pradip
+
+
+
 ## [3.0.3](https://github.com/opencloud-eu/desktop/releases/tag/v3.0.3) - 2025-12-03
 
 ### ❤️ Thanks to all contributors! ❤️
