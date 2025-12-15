@@ -47,7 +47,7 @@ jobs:
               container:
             - target: linux-gcc-x86_64
               os: ubuntu-latest
-              container: ghcr.io/opencloud-eu/ci-docker-desktop/appimage:latest
+              container: invent-registry.kde.org/sysadmin/ci-images/craft-appimage:latest
 
     name: ${{ matrix.target }}
 
@@ -96,6 +96,8 @@ jobs:
     - name: Craft setup
       run: |
         New-Item -Path ~/cache -ItemType Directory -ErrorAction SilentlyContinue
+        # disable git's safe.directory
+        git config --global --add safe.directory '*'
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" --setup
 
     - name: Craft unshelve
