@@ -15,6 +15,8 @@ when:
   - event: [push, manual]
     branch: ${CI_REPO_DEFAULT_BRANCH}
   - event: pull_request
+    evaluate: |
+      !(CI_COMMIT_SOURCE_BRANCH matches "next-release/(main|stable-*)" && CI_COMMIT_AUTHOR == "openclouders")
   - event: cron
     cron: nightly*
 
