@@ -6,7 +6,10 @@
 
 @TheOneRing, @anon-pradip, @individual-it, @prashant-gurung899
 
+### 📦️ Dependencies
 
+- Bump actions/cache from 4 to 5 [[#758](https://github.com/opencloud-eu/desktop/pull/758)]
+- Bump actions/upload-artifact from 5 to 6 [[#757](https://github.com/opencloud-eu/desktop/pull/757)]
 
 ## [3.0.3](https://github.com/opencloud-eu/desktop/releases/tag/v3.0.3) - 2025-12-08
 
