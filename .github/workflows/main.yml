@@ -127,6 +127,8 @@ jobs:
             & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c dev-utils/nsis
         } elseif($IsLinux) {
             & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c dev-utils/linuxdeploy
+            # ensure we have fuse3-devel installed
+            dnf install -y fuse3-devel
         }
 
     - name: Install dependencies
