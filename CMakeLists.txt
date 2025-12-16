@@ -1,9 +1,11 @@
 cmake_minimum_required(VERSION 3.18)
+
+include(VERSION.cmake)
+project(OpenCloudDesktop LANGUAGES CXX VERSION ${MIRALL_VERSION_MAJOR}.${MIRALL_VERSION_MINOR}.${MIRALL_VERSION_PATCH})
+
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-include(VERSION.cmake)
-project(OpenCloudDesktop LANGUAGES CXX C VERSION ${MIRALL_VERSION_MAJOR}.${MIRALL_VERSION_MINOR}.${MIRALL_VERSION_PATCH})
 include(FeatureSummary)
 
 find_package(ECM 6.0.0 REQUIRED NO_MODULE)
@@ -17,16 +19,6 @@ set(APPLE_SUPPRESS_X11_WARNING ON)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-find_package(Qt6 COMPONENTS Core Concurrent Network Widgets Xml Quick QuickWidgets QuickControls2 Linguist REQUIRED)
-qt_standard_project_setup(REQUIRES 6.8)
-
-get_target_property (QT_QMAKE_EXECUTABLE Qt::qmake IMPORTED_LOCATION)
-message(STATUS "Using Qt ${QT_VERSION} (${QT_QMAKE_EXECUTABLE})")
-
-if (UNIX AND NOT APPLE)
-    find_package(Qt6 REQUIRED COMPONENTS DBus)
-endif()
-
 include(KDEInstallDirs)
 include(KDECMakeSettings)
 include(ECMMarkNonGuiExecutable)
@@ -34,8 +26,18 @@ include(ECMSetupVersion)
 
 include(KDECompilerSettings NO_POLICY_SCOPE)
 include(ECMEnableSanitizers)
-
 include(ECMQmlModule)
+
+find_package(Qt6 COMPONENTS Core Concurrent Network Widgets Xml Quick QuickWidgets QuickControls2 Linguist REQUIRED)
+qt6_standard_project_setup(REQUIRES 6.8)
+
+
+get_target_property (QT_QMAKE_EXECUTABLE Qt::qmake IMPORTED_LOCATION)
+message(STATUS "Using Qt ${Qt6_VERSION_MAJOR}.${Qt6_VERSION_MINOR}.${Qt6_VERSION_PATCH} (${QT_QMAKE_EXECUTABLE})")
+
+if (UNIX AND NOT APPLE)
+    find_package(Qt6 REQUIRED COMPONENTS DBus)
+endif()
 
 if(UNIT_TESTING)
     message(DEPRECATION "Setting UNIT_TESTING is deprecated please use BUILD_TESTING")
