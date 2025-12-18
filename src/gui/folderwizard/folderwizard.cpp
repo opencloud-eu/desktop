@@ -126,6 +126,7 @@ bool FolderWizardPrivate::useVirtualFiles() const
 #elif defined(Q_OS_UNIX) && !defined(Q_OS_MAC)
     return VfsPluginManager::instance().bestAvailableVfsMode() == Vfs::XAttr;
 #endif
+    return false;
 }
 
 FolderWizard::FolderWizard(const AccountStatePtr &account, QWidget *parent)
