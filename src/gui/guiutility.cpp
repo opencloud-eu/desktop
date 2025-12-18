@@ -100,7 +100,7 @@ void Utility::markDirectoryAsSyncRoot(const QString &path, const QUuid &accountU
     Q_ASSERT(getDirectorySyncRootMarkings(path).first.isEmpty());
     Q_ASSERT(getDirectorySyncRootMarkings(path).second.isNull());
 
-    auto result1 = FileSystem::Tags::set(path, dirTag(), Theme::instance()->orgDomainName().toUtf8());
+    auto result1 = FileSystem::Tags::set(path, dirTag(), Theme::instance()->orgDomainName());
     if (!result1) {
         qCWarning(lcGuiUtility) << QStringLiteral("Failed to set tag on »%1«: %2").arg(path, result1.error())
 #ifdef Q_OS_WIN
@@ -110,7 +110,7 @@ void Utility::markDirectoryAsSyncRoot(const QString &path, const QUuid &accountU
         return;
     }
 
-    auto result2 = FileSystem::Tags::set(path, uuidTag(), accountUuid.toString().toUtf8());
+    auto result2 = FileSystem::Tags::set(path, uuidTag(), accountUuid.toString());
     if (!result2) {
         qCWarning(lcGuiUtility) << QStringLiteral("Failed to set tag on »%1«: %2").arg(path, result2.error())
 #ifdef Q_OS_WIN
@@ -127,7 +127,7 @@ std::pair<QString, QUuid> Utility::getDirectorySyncRootMarkings(const QString &p
     auto existingUuidTag = FileSystem::Tags::get(path, uuidTag());
 
     if (existingDirTag.has_value() && existingUuidTag.has_value()) {
-        return {QString::fromUtf8(existingDirTag.value()), QUuid::fromString(QString::fromUtf8(existingUuidTag.value()))};
+        return {existingDirTag.value(), QUuid::fromString(existingUuidTag.value())};
     }
 
     return {};

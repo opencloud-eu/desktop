@@ -315,7 +315,7 @@ private Q_SLOTS:
 
         const auto fn = tempFile.fileName();
         const QString testKey = QStringLiteral("testKey");
-        const QByteArray testValue("testValue");
+        const auto testValue(u"testValue"_s);
 
         QVERIFY(!Tags::get(fn, testKey).has_value());
         QVERIFY(Tags::set(fn, testKey, testValue));
@@ -333,7 +333,7 @@ private Q_SLOTS:
 
         const auto fn = tempDir.path();
         const QString testKey = QStringLiteral("testKey");
-        const QByteArray testValue("testValue");
+        const QString testValue(u"testValue"_s);
 
         QVERIFY(!Tags::get(fn, testKey).has_value());
         QVERIFY(Tags::set(fn, testKey, testValue));
