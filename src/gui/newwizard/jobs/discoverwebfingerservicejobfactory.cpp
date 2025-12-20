@@ -80,12 +80,27 @@ CoreJob *DiscoverWebFingerServiceJobFactory::startJob(const QUrl &url, QObject *
         // See: https://github.com/opencloud-eu/desktop/issues/246
         const auto links = doc.object().value(QStringLiteral("links")).toArray();
 
+        // Helper struct to hold issuer info including optional client_id from properties
+        struct IssuerInfo {
+            QString href;
+            QString clientId;
+        };
+
         // Helper lambda to find an OIDC issuer with a specific relation type
-        auto findIssuerByRelation = [&links](const QString &relation) -> QString {
+        // Also extracts the client_id from properties if present
+        auto findIssuerByRelation = [&links](const QString &relation) -> IssuerInfo {
             for (const auto &link : links) {
                 const auto linkObject = link.toObject();
                 if (linkObject.value(QStringLiteral("rel")).toString() == relation) {
-                    return linkObject.value(QStringLiteral("href")).toString();
+                    IssuerInfo info;
+                    info.href = linkObject.value(QStringLiteral("href")).toString();
+                    // Check for client_id in properties
+                    const auto properties = linkObject.value(QStringLiteral("properties")).toObject();
+                    const QString clientIdProperty = QStringLiteral("http://openid.net/specs/connect/1.0/client_id");
+                    if (properties.contains(clientIdProperty)) {
+                        info.clientId = properties.value(clientIdProperty).toString();
+                    }
+                    return info;
                 }
             }
             return {};
@@ -93,19 +108,29 @@ CoreJob *DiscoverWebFingerServiceJobFactory::startJob(const QUrl &url, QObject *
 
         // First, try desktop-specific OIDC issuer
         const QString desktopIssuerRel = QStringLiteral("http://openid.net/specs/connect/1.0/issuer/desktop");
-        QString issuerHref = findIssuerByRelation(desktopIssuerRel);
-        if (!issuerHref.isEmpty()) {
-            qCInfo(lcDiscoverWebFingerService) << u"using desktop-specific OIDC issuer:" << issuerHref;
-            setJobResult(job, QUrl::fromUserInput(issuerHref));
+        IssuerInfo issuerInfo = findIssuerByRelation(desktopIssuerRel);
+        if (!issuerInfo.href.isEmpty()) {
+            qCInfo(lcDiscoverWebFingerService) << u"using desktop-specific OIDC issuer:" << issuerInfo.href;
+            if (!issuerInfo.clientId.isEmpty()) {
+                qCInfo(lcDiscoverWebFingerService) << u"using desktop-specific client_id:" << issuerInfo.clientId;
+            }
+            // Return both issuer URL and client_id as a map
+            QVariantMap result;
+            result[QStringLiteral("issuer")] = QUrl::fromUserInput(issuerInfo.href);
+            result[QStringLiteral("clientId")] = issuerInfo.clientId;
+            setJobResult(job, result);
             return;
         }
 
         // Fall back to generic OIDC issuer
         const QString genericIssuerRel = QStringLiteral("http://openid.net/specs/connect/1.0/issuer");
-        issuerHref = findIssuerByRelation(genericIssuerRel);
-        if (!issuerHref.isEmpty()) {
-            qCDebug(lcDiscoverWebFingerService) << u"using generic OIDC issuer:" << issuerHref;
-            setJobResult(job, QUrl::fromUserInput(issuerHref));
+        issuerInfo = findIssuerByRelation(genericIssuerRel);
+        if (!issuerInfo.href.isEmpty()) {
+            qCDebug(lcDiscoverWebFingerService) << u"using generic OIDC issuer:" << issuerInfo.href;
+            QVariantMap result;
+            result[QStringLiteral("issuer")] = QUrl::fromUserInput(issuerInfo.href);
+            result[QStringLiteral("clientId")] = QString(); // No client_id for generic issuer
+            setJobResult(job, result);
             return;
         }
 
