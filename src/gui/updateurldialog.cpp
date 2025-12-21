@@ -24,7 +24,7 @@ UpdateUrlDialog::UpdateUrlDialog(const QString &title, const QString &content, c
     , _content(content)
 {
     setWindowTitle(title);
-    setOCContext(QUrl(QStringLiteral("qrc:/qt/qml/eu/OpenCloud/gui/qml/UpdateUrlDialog.qml")), parent, this, QJSEngine::CppOwnership);
+    setOCContext(QUrl(QStringLiteral("qrc:/qt/qml/eu/OpenCloud/gui/UpdateUrlDialog.qml")), parent, this, QJSEngine::CppOwnership);
 }
 
 UpdateUrlDialog *UpdateUrlDialog::fromAccount(AccountPtr account, const QUrl &newUrl, QWidget *parent)
