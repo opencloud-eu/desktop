@@ -107,7 +107,7 @@ LsColXMLParser::LsColXMLParser()
 {
 }
 
-bool LsColXMLParser::parse(const QByteArray &xml, QHash<QString, qint64> *sizes, const QString &expectedPath)
+bool LsColXMLParser::parse(const QByteArray &xml, QHash<QString, uint64_t> *sizes, const QString &expectedPath)
 {
     // Parse DAV response
     QXmlStreamReader reader(xml);
@@ -162,7 +162,7 @@ bool LsColXMLParser::parse(const QByteArray &xml, QHash<QString, qint64> *sizes,
                 folders.append(currentHref);
             } else if (name == QLatin1String("size")) {
                 bool ok = false;
-                auto s = propertyContent.toLongLong(&ok);
+                auto s = propertyContent.toULongLong(&ok);
                 if (ok && sizes) {
                     sizes->insert(currentHref, s);
                 }
@@ -308,7 +308,7 @@ void PropfindJob::finished()
     }
 }
 
-const QHash<QString, qint64> &PropfindJob::sizes() const
+const QHash<QString, uint64_t> &PropfindJob::sizes() const
 {
     return _sizes;
 }

@@ -527,7 +527,7 @@ OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> OCC::CfApiWrapper::se
     }
 }
 
-OCC::Result<void, QString> OCC::CfApiWrapper::createPlaceholderInfo(const QString &path, time_t modtime, qint64 size, const QByteArray &fileId)
+OCC::Result<void, QString> OCC::CfApiWrapper::createPlaceholderInfo(const QString &path, time_t modtime, uint64_t size, const QByteArray &fileId)
 {
     const auto fileInfo = QFileInfo(path);
     const auto localBasePath = QDir::toNativeSeparators(fileInfo.path()).toStdWString();
@@ -570,12 +570,12 @@ OCC::Result<void, QString> OCC::CfApiWrapper::createPlaceholderInfo(const QStrin
 }
 
 OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> OCC::CfApiWrapper::updatePlaceholderInfo(
-    const QString &path, time_t modtime, qint64 size, const QByteArray &fileId, const QString &replacesPath)
+    const QString &path, time_t modtime, uint64_t size, const QByteArray &fileId, const QString &replacesPath)
 {
     return updatePlaceholderState(path, modtime, size, fileId, replacesPath);
 }
 
-OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> OCC::CfApiWrapper::dehydratePlaceholder(const QString &path, qint64 size, const QByteArray &fileId)
+OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> OCC::CfApiWrapper::dehydratePlaceholder(const QString &path, uint64_t size, const QByteArray &fileId)
 {
     const auto info = findPlaceholderInfo<CF_PLACEHOLDER_BASIC_INFO>(path);
     if (info) {
@@ -606,7 +606,7 @@ OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> OCC::CfApiWrapper::de
 }
 
 OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> OCC::CfApiWrapper::convertToPlaceholder(
-    const QString &path, time_t modtime, qint64 size, const QByteArray &fileId, const QString &replacesPath)
+    const QString &path, time_t modtime, uint64_t size, const QByteArray &fileId, const QString &replacesPath)
 {
     const qint64 result = CfConvertToPlaceholder(Utility::Handle::createHandle(OCC::FileSystem::toFilesystemPath(path)), fileId.data(),
         static_cast<DWORD>(fileId.size()), CF_CONVERT_FLAG_MARK_IN_SYNC, nullptr, nullptr);

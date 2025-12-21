@@ -106,18 +106,13 @@ public:
     {
         bool _valid = false;
 
-        qint64 _size = 0;
+        uint64_t _size = 0;
         qint64 _modtime = 0;
         QByteArray _contentChecksum;
         QUrl _url; // upload url (tus)
         QString _path; // stored as utf16, used in local discovery
 
-        bool validate(qint64 size, qint64 modtime, const QByteArray &checksum) const
-        {
-            Q_ASSERT(!checksum.isEmpty());
-            Q_ASSERT(!_valid || !_contentChecksum.isEmpty());
-            return _valid && _size == size && _modtime == modtime && _contentChecksum == checksum;
-        }
+        bool validate(uint64_t size, qint64 modtime, const QByteArray &checksum) const;
     };
 
     DownloadInfo getDownloadInfo(const QString &file);

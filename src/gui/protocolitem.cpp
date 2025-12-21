@@ -56,7 +56,7 @@ QDateTime ProtocolItem::timestamp() const
     return _timestamp;
 }
 
-qint64 ProtocolItem::size() const
+uint64_t ProtocolItem::size() const
 {
     return _size;
 }
