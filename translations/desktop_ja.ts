@@ -4,7 +4,7 @@
     <message>
         <location filename="../src/gui/qml/AccountBar.qml" line="27"/>
         <source>Navigation bar</source>
-        <translation> ナビゲーションバー</translation>
+        <translation>ナビゲーションバー</translation>
     </message>
     <message>
         <location filename="../src/gui/qml/AccountBar.qml" line="112"/>
@@ -674,7 +674,7 @@ File synchronization desktop utility.</source>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="355"/>
         <source>Connected</source>
-        <translation> 接続済み</translation>
+        <translation>接続済み</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="363"/>
@@ -868,7 +868,7 @@ The update will be performed in the background, and overwrite the current AppIma
     <message>
         <location filename="../src/gui/models/expandingheaderview.cpp" line="102"/>
         <source>Reset column sizes</source>
-        <translation> 列のサイズをリセット</translation>
+        <translation>列のサイズをリセット</translation>
     </message>
 </context>
 <context>
@@ -1257,7 +1257,7 @@ Please consider removing this folder from the account and adding it again.</sour
     <message>
         <location filename="../src/gui/generalsettings.ui" line="111"/>
         <source>Show crash reporter</source>
-        <translation> クラッシュレポーターを表示</translation>
+        <translation>クラッシュレポーターを表示</translation>
     </message>
     <message>
         <location filename="../src/gui/generalsettings.ui" line="118"/>
@@ -1312,7 +1312,7 @@ Please consider removing this folder from the account and adding it again.</sour
     <message>
         <location filename="../src/gui/generalsettings.cpp" line="162"/>
         <source>(use default)</source>
-        <translation> (デフォルトを使用)</translation>
+        <translation>(デフォルトを使用)</translation>
     </message>
 </context>
 <context>
@@ -1325,7 +1325,7 @@ Please consider removing this folder from the account and adding it again.</sour
     <message>
         <location filename="../src/libsync/graphapi/space.cpp" line="115"/>
         <source>Shares</source>
-        <translation> 共有</translation>
+        <translation>共有</translation>
     </message>
 </context>
 <context>
@@ -1333,7 +1333,7 @@ Please consider removing this folder from the account and adding it again.</sour
     <message>
         <location filename="../src/gui/creds/httpcredentialsgui.cpp" line="54"/>
         <source>Login required</source>
-        <translation> ログインが必要です</translation>
+        <translation>ログインが必要です</translation>
     </message>
 </context>
 <context>
@@ -1398,7 +1398,7 @@ Items where deletion is allowed will be deleted if they prevent a directory from
     <message>
         <location filename="../src/gui/ignorelisteditor.cpp" line="110"/>
         <source>Could not open file</source>
-        <translation> ファイルを開けませんでした</translation>
+        <translation>ファイルを開けませんでした</translation>
     </message>
     <message>
         <location filename="../src/gui/ignorelisteditor.cpp" line="41"/>
@@ -2051,7 +2051,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="183"/>
         <source>Could not create folder »%1«</source>
-        <translation> フォルダ「%1」を作成できませんでした</translation>
+        <translation>フォルダ「%1」を作成できませんでした</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="196"/>
@@ -2257,7 +2257,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/propagateuploadv1.cpp" line="120"/>
         <source>The local file was removed during sync.</source>
-        <translation> 同期中にローカルファイルが削除されました</translation>
+        <translation>同期中にローカルファイルが削除されました</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagateuploadv1.cpp" line="137"/>
@@ -2339,17 +2339,17 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/gui/protocolwidget.cpp" line="153"/>
         <source>Sort ascending by %1</source>
-        <translation> %1 で昇順に並べ替え</translation>
+        <translation>%1 で昇順に並べ替え</translation>
     </message>
     <message>
         <location filename="../src/gui/protocolwidget.cpp" line="157"/>
         <source>Sort descending by %1</source>
-        <translation> %1 で降順に並べ替え</translation>
+        <translation>%1 で降順に並べ替え</translation>
     </message>
     <message>
         <location filename="../src/gui/protocolwidget.cpp" line="179"/>
         <source>Retry sync</source>
-        <translation> 同期を再試行</translation>
+        <translation>同期を再試行</translation>
     </message>
 </context>
 <context>
@@ -2357,7 +2357,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/gui/selectivesyncwidget.cpp" line="69"/>
         <source>Loading...</source>
-        <translation> 読み込み中...</translation>
+        <translation>読み込み中...</translation>
     </message>
     <message>
         <location filename="../src/gui/selectivesyncwidget.cpp" line="75"/>
@@ -2420,7 +2420,7 @@ Note that using any logging command line options will override the settings.</so
         <location filename="../src/gui/socketapi/socketapi.cpp" line="484"/>
         <source>Share with %1</source>
         <comment>parameter is OpenCloud</comment>
-        <translation> %1 で共有</translation>
+        <translation>%1 で共有</translation>
     </message>
     <message>
         <location filename="../src/gui/socketapi/socketapi.cpp" line="582"/>
@@ -2800,7 +2800,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/gui/updater/ocupdater.cpp" line="422"/>
         <source>Skip this version</source>
-        <translation> このバージョンをスキップ</translation>
+        <translation>このバージョンをスキップ</translation>
     </message>
     <message>
         <location filename="../src/gui/updater/ocupdater.cpp" line="403"/>
@@ -2830,7 +2830,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/gui/updater/ocupdater.cpp" line="425"/>
         <source>Update manually</source>
-        <translation> 手動でアップデート</translation>
+        <translation>手動でアップデート</translation>
     </message>
 </context>
 <context>
@@ -2865,12 +2865,12 @@ Note that using any logging command line options will override the settings.</so
         <location filename="../src/gui/newwizard/setupwizardwidget.cpp" line="43"/>
         <location filename="../src/gui/newwizard/setupwizardwidget.cpp" line="44"/>
         <source>Back</source>
-        <translation> 戻る</translation>
+        <translation>戻る</translation>
     </message>
     <message>
         <location filename="../src/gui/newwizard/setupwizardwidget.cpp" line="43"/>
         <source>&lt; &amp;Back</source>
-        <translation> &lt; 戻る(&amp;B)</translation>
+        <translation>&lt; 戻る(&amp;B)</translation>
     </message>
     <message>
         <location filename="../src/gui/newwizard/setupwizardwidget.cpp" line="49"/>
@@ -2902,17 +2902,17 @@ Note that using any logging command line options will override the settings.</so
         <location filename="../src/gui/newwizard/setupwizardwidget.cpp" line="110"/>
         <location filename="../src/gui/newwizard/setupwizardwidget.cpp" line="111"/>
         <source>Continue</source>
-        <translation> 続行</translation>
+        <translation>続行</translation>
     </message>
     <message>
         <location filename="../src/gui/newwizard/setupwizardwidget.cpp" line="110"/>
         <source>&amp;Next &gt;</source>
-        <translation> 次へ(&amp;N) &gt;</translation>
+        <translation>次へ(&amp;N) &gt;</translation>
     </message>
     <message>
         <location filename="../src/gui/newwizard/setupwizardwidget.cpp" line="111"/>
         <source>Next</source>
-        <translation> 次へ</translation>
+        <translation>次へ</translation>
     </message>
 </context>
 <context>
@@ -2944,7 +2944,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/common/utility.cpp" line="302"/>
         <source>in the future</source>
-        <translation> 未来</translation>
+        <translation>未来</translation>
     </message>
     <message numerus="yes">
         <location filename="../src/libsync/common/utility.cpp" line="297"/>
@@ -2954,7 +2954,7 @@ Note that using any logging command line options will override the settings.</so
     <message numerus="yes">
         <location filename="../src/libsync/common/utility.cpp" line="307"/>
         <source>%n hour(s) ago</source>
-        <translation><numerusform> %n 時間前</numerusform></translation>
+        <translation><numerusform>%n 時間前</numerusform></translation>
     </message>
     <message>
         <location filename="../src/libsync/common/utility.cpp" line="313"/>
@@ -2969,7 +2969,7 @@ Note that using any logging command line options will override the settings.</so
     <message numerus="yes">
         <location filename="../src/libsync/common/utility.cpp" line="319"/>
         <source>%n minute(s) ago</source>
-        <translation><numerusform> %n 分前</numerusform></translation>
+        <translation><numerusform>%n 分前</numerusform></translation>
     </message>
     <message>
         <location filename="../src/libsync/syncresult.cpp" line="112"/>
@@ -3043,7 +3043,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/gui/newwizard/states/serverurlsetupwizardstate.cpp" line="53"/>
         <source>Invalid server URL</source>
-        <translation> サーバ URL が無効です</translation>
+        <translation>サーバ URL が無効です</translation>
     </message>
 </context>
 <context>
@@ -3200,7 +3200,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/syncresult.cpp" line="47"/>
         <source>Sync running</source>
-        <translation> 同期実行中</translation>
+        <translation>同期実行中</translation>
     </message>
     <message>
         <location filename="../src/libsync/syncresult.cpp" line="49"/>
@@ -3356,12 +3356,12 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="35"/>
         <source>Replaced by virtual file</source>
-        <translation> 仮想ファイルに置き換えられました</translation>
+        <translation>仮想ファイルに置き換えられました</translation>
     </message>
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="37"/>
         <source>Downloaded</source>
-        <translation> ダウンロード済み</translation>
+        <translation>ダウンロード済み</translation>
     </message>
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="40"/>
@@ -3386,23 +3386,23 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="47"/>
         <source>»%1« moved to »%2«</source>
-        <translation> 「%1」が「%2」へ移動されました</translation>
+        <translation>「%1」が「%2」へ移動されました</translation>
     </message>
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="51"/>
         <source>Error</source>
-        <translation> エラー</translation>
+        <translation>エラー</translation>
     </message>
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="53"/>
         <source>Updated local metadata</source>
-        <translation> ローカルメタデータを更新しました</translation>
+        <translation>ローカルメタデータを更新しました</translation>
     </message>
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="55"/>
         <location filename="../src/libsync/progressdispatcher.cpp" line="57"/>
         <source>Unknown</source>
-        <translation> 不明</translation>
+        <translation>不明</translation>
     </message>
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="68"/>
@@ -3432,12 +3432,12 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="78"/>
         <source>error</source>
-        <translation> エラー</translation>
+        <translation>エラー</translation>
     </message>
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="80"/>
         <source>updating local metadata</source>
-        <translation> ローカルメタデータを更新中</translation>
+        <translation>ローカルメタデータを更新中</translation>
     </message>
 </context>
 <context>
