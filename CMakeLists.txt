@@ -1,9 +1,11 @@
 cmake_minimum_required(VERSION 3.18)
+
+include(VERSION.cmake)
+project(OpenCloudDesktop LANGUAGES CXX VERSION ${MIRALL_VERSION_MAJOR}.${MIRALL_VERSION_MINOR}.${MIRALL_VERSION_PATCH})
+
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-include(VERSION.cmake)
-project(OpenCloudDesktop LANGUAGES CXX C VERSION ${MIRALL_VERSION_MAJOR}.${MIRALL_VERSION_MINOR}.${MIRALL_VERSION_PATCH})
 include(FeatureSummary)
 
 find_package(ECM 6.0.0 REQUIRED NO_MODULE)
@@ -18,6 +20,14 @@ set(APPLE_SUPPRESS_X11_WARNING ON)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
+include(KDEInstallDirs)
+include(KDECMakeSettings)
+include(ECMMarkNonGuiExecutable)
+include(ECMSetupVersion)
+
+include(KDECompilerSettings NO_POLICY_SCOPE)
+include(ECMEnableSanitizers)
+
 find_package(QT 6.8 NAMES Qt6 COMPONENTS Core REQUIRED)
 
 find_package(Qt6 COMPONENTS Core Concurrent Network Widgets Xml Quick QuickWidgets QuickControls2 REQUIRED)
@@ -28,14 +38,6 @@ message(STATUS "Using Qt ${QT_VERSION} (${QT_QMAKE_EXECUTABLE})")
 if (UNIX AND NOT APPLE)
     find_package(Qt6 REQUIRED COMPONENTS DBus)
 endif()
-
-include(KDEInstallDirs)
-include(KDECMakeSettings)
-include(ECMMarkNonGuiExecutable)
-include(ECMSetupVersion)
-
-include(KDECompilerSettings NO_POLICY_SCOPE)
-include(ECMEnableSanitizers)
 
 # while we use qt_add_qml_module instead of ecm_add_qml_module
 # include ECMQmlModule to set up the policies
