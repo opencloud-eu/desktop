@@ -1,4 +1,3 @@
----
 variables:
   - &minio_image 'minio/mc:RELEASE.2021-10-07T04-19-58Z'
   - &minio_environment
@@ -8,48 +7,8 @@ variables:
       from_secret: cache_s3_secret_key
     CACHE_BUCKET:
       from_secret: cache_s3_bucket
-    MC_HOST: "https://s3.ci.opencloud.eu"
+    MC_HOST: 'https://s3.ci.opencloud.eu'
 
-steps:
-  - commands:
-      - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-      - mc ls --recursive s3/$CACHE_BUCKET/web
-      - bash test/gui/woodpecker/script.sh check_browsers_cache
-    environment:
-      <<: *minio_environment
-    image: *minio_image
-    name: check-browsers-cache
-  - commands:
-      - . ./.woodpecker.env
-      - if $BROWSER_CACHE_FOUND; then exit 0; fi
-      - cd test/gui/
-      - npm i -s -g -f "$(jq -r ".packageManager" < webUI/package.json)"
-      - pnpm config set store-dir ./.pnpm-store
-      - make pnpm-install
-    image: owncloudci/nodejs:20
-    name: pnpm-install
-  - commands:
-      - . ./.woodpecker.env
-      - if $BROWSER_CACHE_FOUND; then exit 0; fi
-      - cd test/gui/
-      - make pnpm-install-chromium
-      - cd webUI
-      - tar -czvf /woodpecker/desktop/playwright-browsers.tar.gz .playwright
-    environment:
-      PLAYWRIGHT_BROWSERS_PATH: .playwright
-    image: owncloudci/nodejs:20
-    name: install-browsers
-  - commands:
-      - . ./.woodpecker.env
-      - if $BROWSER_CACHE_FOUND; then exit 0; fi
-      - playwright_version=$(bash test/gui/woodpecker/script.sh get_playwright_version)
-      - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-      - mc cp -r -a /woodpecker/desktop/playwright-browsers.tar.gz s3/$CACHE_BUCKET/web/browsers-cache/$playwright_version/
-      - mc ls --recursive s3/$CACHE_BUCKET/web
-    environment:
-      <<: *minio_environment
-    image: *minio_image
-    name: upload-browsers-cache
 when:
   - branch:
       - main
@@ -63,6 +22,48 @@ when:
       !(CI_COMMIT_SOURCE_BRANCH matches "next-release/(main|stable-*)" && CI_COMMIT_AUTHOR == "openclouders")
   - event: cron
     cron: nightly*
+
 workspace:
   base: /woodpecker/
   path: desktop
+
+steps:
+  - name: check-browsers-cache
+    image: *minio_image
+    environment:
+      <<: *minio_environment
+    commands:
+      - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
+      - mc ls --recursive s3/$CACHE_BUCKET/web
+      - bash test/gui/woodpecker/script.sh check_browsers_cache
+  - name: pnpm-install
+    image: owncloudci/nodejs:20
+    commands:
+      - . ./.woodpecker.env
+      - if $BROWSER_CACHE_FOUND; then exit 0; fi
+      - cd test/gui/
+      - npm i -s -g -f "$(jq -r ".packageManager" < webUI/package.json)"
+      - pnpm config set store-dir ./.pnpm-store
+      - make pnpm-install
+  - name: install-browsers
+    image: owncloudci/nodejs:20
+    environment:
+      PLAYWRIGHT_BROWSERS_PATH: .playwright
+    commands:
+      - . ./.woodpecker.env
+      - if $BROWSER_CACHE_FOUND; then exit 0; fi
+      - cd test/gui/
+      - make pnpm-install-chromium
+      - cd webUI
+      - tar -czvf /woodpecker/desktop/playwright-browsers.tar.gz .playwright
+  - name: upload-browsers-cache
+    image: *minio_image
+    environment:
+      <<: *minio_environment
+    commands:
+      - . ./.woodpecker.env
+      - if $BROWSER_CACHE_FOUND; then exit 0; fi
+      - playwright_version=$(bash test/gui/woodpecker/script.sh get_playwright_version)
+      - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
+      - mc cp -r -a /woodpecker/desktop/playwright-browsers.tar.gz s3/$CACHE_BUCKET/web/browsers-cache/$playwright_version/
+      - mc ls --recursive s3/$CACHE_BUCKET/web

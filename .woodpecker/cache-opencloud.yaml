@@ -1,4 +1,3 @@
----
 variables:
   - &minio_image 'minio/mc:RELEASE.2021-10-07T04-19-58Z'
   - &minio_environment
@@ -8,53 +7,8 @@ variables:
       from_secret: cache_s3_secret_key
     CACHE_BUCKET:
       from_secret: cache_s3_bucket
-    MC_HOST: "https://s3.ci.opencloud.eu"
+    MC_HOST: 'https://s3.ci.opencloud.eu'
 
-skip_clone: true
-steps:
-  - commands:
-      - curl -o .woodpecker.env https://raw.githubusercontent.com/opencloud-eu/desktop/$CI_COMMIT_SHA/.woodpecker.env
-      - curl -o script.sh https://raw.githubusercontent.com/opencloud-eu/desktop/$CI_COMMIT_SHA/test/gui/woodpecker/script.sh
-      - . ./.woodpecker.env
-      - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-      - mc ls --recursive s3/$CACHE_BUCKET/opencloud-build
-      - bash script.sh check_opencloud_cache
-    environment:
-      <<: *minio_environment
-    image: *minio_image
-    name: check-for-existing-cache
-  - commands:
-      - . ./.woodpecker.env
-      - if $OPENCLOUD_CACHE_FOUND; then exit 0; fi
-      - git clone -b $OPENCLOUD_BRANCH --single-branch https://github.com/opencloud-eu/opencloud.git repo_opencloud
-      - cd repo_opencloud
-      - git checkout $OPENCLOUD_COMMITID
-    image: docker.io/golang:1.24
-    name: clone-opencloud
-  - commands:
-      - . ./.woodpecker.env
-      - if $OPENCLOUD_CACHE_FOUND; then exit 0; fi
-      - cd repo_opencloud
-      - for i in $(seq 3); do make node-generate-prod && break || sleep 1; done
-    image: owncloudci/nodejs:20
-    name: generate-opencloud
-  - commands:
-      - . ./.woodpecker.env
-      - if $OPENCLOUD_CACHE_FOUND; then exit 0; fi
-      - cd repo_opencloud
-      - for i in $(seq 3); do make -C opencloud build && break || sleep 1; done
-    image: docker.io/golang:1.24
-    name: build-opencloud
-  - commands:
-      - . ./.woodpecker.env
-      - if $OPENCLOUD_CACHE_FOUND; then exit 0; fi
-      - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-      - mc cp -a repo_opencloud/opencloud/bin/opencloud s3/$CACHE_BUCKET/opencloud-build/$OPENCLOUD_COMMITID/
-      - mc ls --recursive s3/$CACHE_BUCKET/opencloud-build
-    environment:
-      <<: *minio_environment
-    image: *minio_image
-    name: upload-opencloud-cache
 when:
   - branch:
       - main
@@ -68,3 +22,50 @@ when:
   - event: tag
   - event: cron
     cron: nightly*
+
+skip_clone: true
+
+steps:
+  - name: check-for-existing-cache
+    image: *minio_image
+    environment:
+      <<: *minio_environment
+    commands:
+      - curl -o .woodpecker.env https://raw.githubusercontent.com/opencloud-eu/desktop/$CI_COMMIT_SHA/.woodpecker.env
+      - curl -o script.sh https://raw.githubusercontent.com/opencloud-eu/desktop/$CI_COMMIT_SHA/test/gui/woodpecker/script.sh
+      - . ./.woodpecker.env
+      - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
+      - mc ls --recursive s3/$CACHE_BUCKET/opencloud-build
+      - bash script.sh check_opencloud_cache
+  - name: clone-opencloud
+    image: docker.io/golang:1.24
+    commands:
+      - . ./.woodpecker.env
+      - if $OPENCLOUD_CACHE_FOUND; then exit 0; fi
+      - git clone -b $OPENCLOUD_BRANCH --single-branch https://github.com/opencloud-eu/opencloud.git repo_opencloud
+      - cd repo_opencloud
+      - git checkout $OPENCLOUD_COMMITID
+  - name: generate-opencloud
+    image: owncloudci/nodejs:20
+    commands:
+      - . ./.woodpecker.env
+      - if $OPENCLOUD_CACHE_FOUND; then exit 0; fi
+      - cd repo_opencloud
+      - for i in $(seq 3); do make node-generate-prod && break || sleep 1; done
+  - name: build-opencloud
+    image: docker.io/golang:1.24
+    commands:
+      - . ./.woodpecker.env
+      - if $OPENCLOUD_CACHE_FOUND; then exit 0; fi
+      - cd repo_opencloud
+      - for i in $(seq 3); do make -C opencloud build && break || sleep 1; done
+  - name: upload-opencloud-cache
+    image: *minio_image
+    environment:
+      <<: *minio_environment
+    commands:
+      - . ./.woodpecker.env
+      - if $OPENCLOUD_CACHE_FOUND; then exit 0; fi
+      - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
+      - mc cp -a repo_opencloud/opencloud/bin/opencloud s3/$CACHE_BUCKET/opencloud-build/$OPENCLOUD_COMMITID/
+      - mc ls --recursive s3/$CACHE_BUCKET/opencloud-build
