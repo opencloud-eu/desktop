@@ -31,9 +31,6 @@ target_sources(OpenCloudGui PRIVATE
     jobs/resolveurljobfactory.cpp
     jobs/resolveurljobfactory.h
 
-    jobs/discoverwebfingerservicejobfactory.cpp
-    jobs/discoverwebfingerservicejobfactory.h
-
     jobs/webfingeruserinfojobfactory.cpp
     jobs/webfingeruserinfojobfactory.h
 
