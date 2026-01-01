@@ -37,6 +37,7 @@ steps:
       - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
       - mc ls s3/$CACHE_BUCKET/desktop-build
       - bash test/gui/woodpecker/script.sh check_python_cache
+
   - name: install-python-modules
     image: *squish_image
     environment:
@@ -48,6 +49,7 @@ steps:
       - python3.10 -m pip list -v
       - requirements_sha=$(sha1sum test/gui/requirements.txt | cut -d" " -f1)
       - tar -czvf /woodpecker/desktop/python-cache-$requirements_sha.tar.gz lib/python3.10/site-packages
+
   - name: upload-python-cache
     image: *minio_image
     environment:
