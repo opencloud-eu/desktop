@@ -6,14 +6,21 @@ variables:
   - &ci_woodpecker_url
     from_secret: oc_ci_url
 
-depends_on: [build, ui-tests]
-runs_on: [ success, failure ]
 when:
-  - event: [ push , manual ]
+  - event: [push, manual]
     branch: ${CI_REPO_DEFAULT_BRANCH}
   - event: pull_request
   - event: cron
     cron: nightly*
+
+depends_on:
+  - build
+  - ui-tests
+
+runs_on:
+  - success
+  - failure
+
 skip_clone: true
 
 steps:
@@ -36,7 +43,6 @@ steps:
       CI_WOODPECKER_URL: *ci_woodpecker_url
       CI_REPO_ID: *current_repo_id
       CI_WOODPECKER_TOKEN: no-auth-needed-on-this-repo
-
     commands:
       - git clone --single-branch --branch $QA_REPO_BRANCH $QA_REPO /tmp/qa
       - cd /tmp/qa/scripts/matrix-notification/
