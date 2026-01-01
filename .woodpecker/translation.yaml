@@ -1,15 +1,17 @@
----
-when:
-  - event: cron
-    cron: translation-sync
-
 variables:
   - &ubuntu_image 'ubuntu'
   - &git_action_plugin 'quay.io/thegeeklab/wp-git-action:2'
 
+when:
+  - event: cron
+    cron: translation-sync
+
 steps:
   - name: translation-update
     image: *ubuntu_image
+    environment:
+      TX_TOKEN:
+        from_secret: tx_token
     commands:
       - apt update
       - ln -fs /usr/share/zoneinfo/Europe/Berlin /etc/localtime
@@ -23,9 +25,6 @@ steps:
       - rm -rf /tmp/tx
       - tx pull --force --all
       - rm tx LICENSE
-    environment:
-      TX_TOKEN:
-        from_secret: tx_token
 
   - name: translation-push
     image: *git_action_plugin

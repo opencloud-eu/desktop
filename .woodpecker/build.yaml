@@ -1,4 +1,3 @@
----
 variables:
   - &squish_image 'opencloudeu/squish@sha256:6eaecc218044020f49f24fd29b6bdc052e8170699a762687b10398b353e5fcda'
   - &minio_image 'minio/mc:RELEASE.2021-10-07T04-19-58Z'
@@ -9,28 +8,7 @@ variables:
       from_secret: cache_s3_secret_key
     CACHE_BUCKET:
       from_secret: cache_s3_bucket
-    MC_HOST: "https://s3.ci.opencloud.eu"
-
-steps:
-  - name: fix-permissions
-    image: owncloud/ubuntu:20.04
-    commands:
-      - chmod o+w /woodpecker/desktop/ -R
-  - name: build-client-for-ui-tests
-    image: *squish_image
-    commands:
-      - mkdir -p /woodpecker/desktop/build
-      - cd /woodpecker/desktop/build
-      - cmake %s -S .. -GNinja  -DCMAKE_BUILD_TYPE=Debug  -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
-      - ninja
-  - name: upload-desktop-client-cache
-    commands:
-      - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-      - mc cp -a -r /woodpecker/desktop/build/bin s3/$CACHE_BUCKET/desktop-build/${CI_COMMIT_SHA}/
-      - mc ls --recursive s3/$CACHE_BUCKET/desktop-build
-    environment:
-      <<: *minio_environment
-    image: *minio_image
+    MC_HOST: 'https://s3.ci.opencloud.eu'
 
 when:
   - branch:
@@ -45,6 +23,28 @@ when:
   - event: tag
   - event: cron
     cron: nightly*
+
 workspace:
   base: /woodpecker/
   path: desktop
+
+steps:
+  - name: fix-permissions
+    image: owncloud/ubuntu:20.04
+    commands:
+      - chmod o+w /woodpecker/desktop/ -R
+  - name: build-client-for-ui-tests
+    image: *squish_image
+    commands:
+      - mkdir -p /woodpecker/desktop/build
+      - cd /woodpecker/desktop/build
+      - cmake %s -S .. -GNinja  -DCMAKE_BUILD_TYPE=Debug  -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
+      - ninja
+  - name: upload-desktop-client-cache
+    image: *minio_image
+    environment:
+      <<: *minio_environment
+    commands:
+      - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
+      - mc cp -a -r /woodpecker/desktop/build/bin s3/$CACHE_BUCKET/desktop-build/${CI_COMMIT_SHA}/
+      - mc ls --recursive s3/$CACHE_BUCKET/desktop-build

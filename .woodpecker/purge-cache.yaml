@@ -1,12 +1,11 @@
----
 variables:
-  - &minio_image "minio/mc:RELEASE.2021-10-07T04-19-58Z"
+  - &minio_image 'minio/mc:RELEASE.2021-10-07T04-19-58Z'
   - &minio_environment
     AWS_ACCESS_KEY_ID:
       from_secret: cache_s3_access_key
     AWS_SECRET_ACCESS_KEY:
       from_secret: cache_s3_secret_key
-    MC_HOST: "https://s3.ci.opencloud.eu"
+    MC_HOST: 'https://s3.ci.opencloud.eu'
     CACHE_BUCKET:
       from_secret: cache_s3_bucket
     PUBLIC_BUCKET: public
@@ -41,11 +40,11 @@ matrix:
 steps:
   - name: ${JOB_NAME}
     image: *minio_image
+    environment:
+      <<: *minio_environment
     commands:
       - mc alias set s3 "$MC_HOST" "$AWS_ACCESS_KEY_ID" "$AWS_SECRET_ACCESS_KEY"
       - if [ "$USE_PUBLIC_BUCKET" = "true" ]; then CACHE_BUCKET=$PUBLIC_BUCKET; fi
       - to_delete=$(mc find "s3/$CACHE_BUCKET/${PURGE_PATH}" --older-than "${TTL}")
       - if [ "$to_delete" = "" ]; then exit 0; fi
       - mc rm $to_delete
-    environment:
-      <<: *minio_environment
