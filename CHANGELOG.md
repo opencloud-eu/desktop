@@ -1,10 +1,10 @@
 # Changelog
 
-## [3.0.4](https://github.com/opencloud-eu/desktop/releases/tag/v3.0.4) - 2025-12-25
+## [3.0.4](https://github.com/opencloud-eu/desktop/releases/tag/v3.0.4) - 2026-01-01
 
 ### ❤️ Thanks to all contributors! ❤️
 
-@TheOneRing, @anon-pradip, @individual-it, @prashant-gurung899
+@TheOneRing, @anon-pradip, @individual-it, @prashant-gurung899, @saw-jan
 
 ### 📦️ Dependencies
 
