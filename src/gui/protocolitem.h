@@ -38,7 +38,7 @@ public:
      */
     QDateTime timestamp() const;
 
-    qint64 size() const;
+    uint64_t size() const;
 
     SyncFileItem::Status status() const;
 
@@ -52,12 +52,12 @@ private:
     QString _path;
     Folder *_folder;
     QDateTime _timestamp;
-    qint64 _size;
-    SyncFileItem::Status _status;
-    SyncFileItem::Direction _direction;
+    uint64_t _size = 0;
+    SyncFileItem::Status _status = {};
+    SyncFileItem::Direction _direction = {};
 
     QString _message;
-    bool _sizeIsRelevant;
+    bool _sizeIsRelevant = false;
 
     friend class TestProtocolModel;
 };

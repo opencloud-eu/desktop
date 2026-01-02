@@ -179,10 +179,10 @@ bool FileSystem::fileChanged(const std::filesystem::path &path, const FileChange
     return false;
 }
 
-qint64 FileSystem::getSize(const std::filesystem::path &filename)
+uint64_t FileSystem::getSize(const std::filesystem::path &filename)
 {
     std::error_code ec;
-    const quint64 size = std::filesystem::file_size(filename, ec);
+    const auto size = std::filesystem::file_size(filename, ec);
     if (ec) {
         if (!std::filesystem::is_directory(filename)) {
             qCCritical(lcFileSystem) << u"Error getting size for" << filename << ec.value() << ec.message();

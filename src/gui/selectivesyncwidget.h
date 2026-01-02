@@ -14,7 +14,6 @@
 
 #pragma once
 #include "accountfwd.h"
-#include <QDialog>
 #include <QTreeWidget>
 #include <QUrl>
 
@@ -41,9 +40,6 @@ public:
     /// Returns a list of blacklisted paths, each including the trailing /
     QSet<QString> createBlackList(QTreeWidgetItem *root = nullptr) const;
 
-    // Estimates the total size of checked items (recursively)
-    qint64 estimatedSize(QTreeWidgetItem *root = nullptr);
-
     // oldBlackList is a list of excluded paths, each including a trailing /
     void setFolderInfo(const QString &rootName, const QSet<QString> &oldBlackList = {});
 
@@ -58,7 +54,7 @@ private Q_SLOTS:
 
 private:
     void refreshFolders();
-    void recursiveInsert(QTreeWidgetItem *parent, QStringList pathTrail, QString path, qint64 size, bool showChildIndicator);
+    void recursiveInsert(QTreeWidgetItem *parent, QStringList pathTrail, QString path, uint64_t size, bool showChildIndicator);
     QUrl davUrl() const;
 
 private:
