@@ -2234,7 +2234,7 @@ Note that using any logging command line options will override the settings.</so
         <location filename="../src/libsync/propagateuploadtus.cpp" line="218"/>
         <source>Upload did not receive a Content-Location.</source>
         <extracomment>Content-Location is a technical term, don't translate.</extracomment>
-        <translation type="unfinished"/>
+        <translation>لم يتلق التحميل Content-Location.</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagateuploadtus.cpp" line="226"/>
