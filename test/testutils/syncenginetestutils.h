@@ -390,9 +390,9 @@ public:
     };
     Q_ENUM(State);
 
-    const FileInfo *fileInfo;
-    char payload;
-    qint64 size;
+    const FileInfo *fileInfo = nullptr;
+    char payload = 0;
+    uint64_t size = 0;
     State state = State::Ok;
     const std::pair<qint64, qint64> _range;
 

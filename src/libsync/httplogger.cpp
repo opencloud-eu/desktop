@@ -32,7 +32,7 @@ using namespace Qt::Literals::StringLiterals;
 namespace {
 Q_LOGGING_CATEGORY(lcNetworkHttp, "sync.httplogger", QtWarningMsg)
 
-const qint64 PeekSize = 1024 * 1024;
+const uint64_t PeekSize = 1024 * 1024;
 
 bool isTextBody(const QString &s)
 {

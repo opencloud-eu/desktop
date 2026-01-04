@@ -453,7 +453,7 @@ qint64 FakePropfindReply::bytesAvailable() const
 
 qint64 FakePropfindReply::readData(char *data, qint64 maxlen)
 {
-    qint64 len = std::min(qint64 { payload.size() }, maxlen);
+    uint64_t len = std::min<uint64_t>(payload.size(), maxlen);
     std::copy(payload.cbegin(), payload.cbegin() + len, data);
     payload.remove(0, static_cast<int>(len));
     return len;
@@ -679,7 +679,7 @@ qint64 FakeGetReply::bytesAvailable() const
 
 qint64 FakeGetReply::readData(char *data, qint64 maxlen)
 {
-    qint64 len = std::min(qint64 { size }, maxlen);
+    auto len = std::min<uint64_t>(size, maxlen);
     std::fill_n(data, len, payload);
     size -= len;
     return len;
@@ -709,7 +709,7 @@ void FakePayloadReply::respond()
 
 qint64 FakePayloadReply::readData(char *buf, qint64 max)
 {
-    max = qMin<qint64>(max, _body.size());
+    max = qMin<uint64_t>(max, _body.size());
     memcpy(buf, _body.constData(), max);
     _body = _body.mid(max);
     return max;
@@ -757,7 +757,7 @@ void FakeErrorReply::slotSetFinished()
 
 qint64 FakeErrorReply::readData(char *buf, qint64 max)
 {
-    max = qMin<qint64>(max, _body.size());
+    max = qMin<uint64_t>(max, _body.size());
     memcpy(buf, _body.constData(), max);
     _body = _body.mid(max);
     return max;
