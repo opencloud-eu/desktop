@@ -8,7 +8,7 @@ from os.path import isfile, join, isdir
 import squish
 
 from helpers.SetupClientHelper import get_resource_path, get_temp_resource_path
-from helpers.SyncHelper import wait_for_client_to_be_ready
+from helpers.SyncHelper import wait_for_client_to_be_ready, listen_sync_status_for_item
 from helpers.ConfigHelper import get_config
 from helpers.FilesHelper import (
     build_conflicted_regex,
@@ -20,7 +20,7 @@ from helpers.FilesHelper import (
     prefix_path_namespace,
     remember_path,
     convert_path_separators_for_os,
-    get_file_for_upload
+    get_file_for_upload,
 )
 
 
@@ -70,11 +70,13 @@ def write_file(resource, content):
 
 
 def wait_and_write_file(path, content):
+    listen_sync_status_for_item(get_resource_path(path), 'FILE')
     wait_for_client_to_be_ready()
     write_file(path, content)
 
 
 def wait_and_try_to_write_file(resource, content):
+    listen_sync_status_for_item(get_resource_path(resource), 'FILE')
     wait_for_client_to_be_ready()
     try:
         write_file(resource, content)
@@ -102,7 +104,6 @@ def add_copy_suffix(resource_path, resource_type):
 
 
 def copy_resource(resource_type, source, destination, from_files_for_upload=False):
-    wait_for_client_to_be_ready()
     if from_files_for_upload:
         source_dir = get_file_for_upload(source)
     else:
@@ -110,9 +111,24 @@ def copy_resource(resource_type, source, destination, from_files_for_upload=Fals
     destination_dir = get_resource_path(destination)
     if source_dir == destination_dir and destination_dir != '/':
         destination_dir = add_copy_suffix(source, resource_type)
+
+    listen_sync_status_for_item(destination_dir, resource_type)
+    wait_for_client_to_be_ready()
     if resource_type == 'folder':
         return shutil.copytree(source_dir, destination_dir)
     return shutil.copy2(source_dir, destination_dir)
+
+
+def move_resource(username, resource_type, source, destination, is_temp_folder=False):
+    if not is_temp_folder:
+        source = get_resource_path(source, username)
+    if destination == '/':
+        destination = ''
+    destination = get_resource_path(destination, username)
+
+    listen_sync_status_for_item(destination, resource_type)
+    wait_for_client_to_be_ready()
+    shutil.move(source, destination)
 
 
 def deleteResource(resource, resource_type):
@@ -174,7 +190,10 @@ def step(context, file_path):
     )
 
 
-@Then(r'^the (file|folder) "([^"]*)" (should|should not) exist on the file system$', regexp=True)
+@Then(
+    r'^the (file|folder) "([^"]*)" (should|should not) exist on the file system$',
+    regexp=True,
+)
 def step(context, resource_type, resource, should_or_should_not):
     resource_path = get_resource_path(resource)
     resource_exists = False
@@ -194,7 +213,7 @@ def step(context, resource_type, resource, should_or_should_not):
         expected,
         resource_exists,
         f'{resource_type.capitalize()} "{resource}" {"exists" if resource_exists else "does not exist"} on the system',
-)
+    )
 
 
 @Given('the user has changed the content of local file "|any|" to:')
@@ -284,23 +303,17 @@ def step(context, file_number, file_size, folder_name):
     r'user "([^"]*)" moves (folder|file) "([^"]*)" from the temp folder into the sync folder',
     regexp=True,
 )
-def step(context, username, _, resource_name):
+def step(context, username, resource_type, resource_name):
     source_dir = join(get_config('tempFolderPath'), resource_name)
-    destination_dir = get_resource_path('/', username)
-    shutil.move(source_dir, destination_dir)
+    move_resource(username, resource_type, source_dir, '/', True)
 
 
 @When(
-    r'user "([^"]*)" moves (?:file|folder) "([^"]*)" to "([^"]*)" in the sync folder',
+    r'user "([^"]*)" moves (file|folder) "([^"]*)" to "([^"]*)" in the sync folder',
     regexp=True,
 )
-def step(context, username, source, destination):
-    wait_for_client_to_be_ready()
-    source_dir = get_resource_path(source, username)
-    if destination in (None, '/'):
-        destination = ''
-    destination_dir = get_resource_path(destination, username)
-    shutil.move(source_dir, destination_dir)
+def step(context, username, resource_type, source, destination):
+    move_resource(username, resource_type, source, destination)
 
 
 @Then('user "|any|" should be able to open the file "|any|" on the file system')

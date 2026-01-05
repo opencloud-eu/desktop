@@ -13,11 +13,9 @@ def get_core_dumps():
     # read coredump location
     with open('/proc/sys/kernel/core_pattern', 'r', encoding='utf-8') as f:
         coredump_path = f.read().strip('\n')
-        print(f'Content: {coredump_path}')
 
     # yields something like: /tmp/core-*-*-*-*
     coredump_file_pattern = re.sub(r'%[a-zA-Z]{1}', '*', coredump_path)
-    print(f'Pattern: {coredump_file_pattern}')
     return glob.glob(coredump_file_pattern)
 
 
@@ -42,14 +40,13 @@ def parse_stacktrace(coredump_file):
     message = []
     if coredump_file:
         coredump_filename = os.path.basename(coredump_file)
-        print(f'Found coredump file: {coredump_filename}')
         # example coredump file: core-1648445754-1001-11-!drone!src!build-GUI-tests!bin!opencloud
         patterns = coredump_filename.split('-')
         app_binary = 'opencloud'
         if len(patterns) == 1:
-            patterns[1] = 'N/A'
-            patterns[2] = 'N/A'
-            patterns[3] = 'N/A'
+            patterns.append('N/A')
+            patterns.append('N/A')
+            patterns.append('N/A')
         else:
             app_binary = '-'.join(patterns[4:]).replace('!', '/')
 
