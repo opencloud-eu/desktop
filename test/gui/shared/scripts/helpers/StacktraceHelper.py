@@ -45,7 +45,13 @@ def parse_stacktrace(coredump_file):
         print(f'Found coredump file: {coredump_filename}')
         # example coredump file: core-1648445754-1001-11-!drone!src!build-GUI-tests!bin!opencloud
         patterns = coredump_filename.split('-')
-        app_binary = '-'.join(patterns[4:]).replace('!', '/')
+        app_binary = 'opencloud'
+        if len(patterns) == 1:
+            patterns[1] = 'N/A'
+            patterns[2] = 'N/A'
+            patterns[3] = 'N/A'
+        else:
+            app_binary = '-'.join(patterns[4:]).replace('!', '/')
 
         message.append('-------------------------------------------')
         message.append(f'Executable: {app_binary}')
