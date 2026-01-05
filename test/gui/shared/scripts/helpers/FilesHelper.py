@@ -2,6 +2,12 @@ import os
 import re
 import ctypes
 import shutil
+from pathlib import Path
+
+from pypdf import PdfReader
+from docx import Document
+from pptx import Presentation
+from openpyxl import load_workbook
 
 import squish
 from helpers.ConfigHelper import is_windows, get_config
@@ -139,5 +145,58 @@ def convert_path_separators_for_os(path):
     On other systems, returns the path unchanged.
     """
     if is_windows():
-        return path.replace('/', '\\')
+        return path.replace("/", "\\")
     return path
+
+
+def get_pdf_content(pdf_file):
+    reader = PdfReader(pdf_file)
+    content = ""
+    for page in reader.pages:
+        if page_text := page.extract_text():
+            content += page_text
+    return content
+
+
+def get_docs_content(docs_file):
+    doc = Document(docs_file)
+    content = "\n".join(p.text for p in doc.paragraphs)
+    return content
+
+
+def get_presentation_content(ppt_file):
+    prs = Presentation(ppt_file)
+    text = []
+    for slide in prs.slides:
+        for shape in slide.shapes:
+            if hasattr(shape, "text"):
+                text.append(shape.text)
+    return "\n".join(text)
+
+
+def get_excel_content(excel_file):
+    # parse with read_only mode
+    wb = load_workbook(excel_file, read_only=True, data_only=True)
+    text = []
+    for sheet in wb.worksheets:
+        for row in sheet.iter_rows(values_only=True):
+            for cell in row:
+                if cell is not None:
+                    text.append(str(cell))
+    return "\n".join(text)
+
+
+def get_document_content(document):
+    content = ""
+    doc_ext = Path(document).suffix.lower().lstrip(".")
+    if doc_ext == "pdf":
+        content = get_pdf_content(document)
+    elif doc_ext == "docx":
+        content = get_docs_content(document)
+    elif doc_ext == "pptx":
+        content = get_presentation_content(document)
+    elif doc_ext == "xlsx":
+        content = get_excel_content(document)
+    else:
+        raise ValueError(f"Unsupported document format: {doc_ext}")
+    return content
