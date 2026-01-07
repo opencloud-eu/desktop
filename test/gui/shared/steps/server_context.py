@@ -1,4 +1,8 @@
+import tempfile
+from pathlib import Path
+
 from helpers.api import provisioning, webdav_helper as webdav
+from helpers.FilesHelper import get_document_content, get_file_for_upload
 
 from pageObjects.Toolbar import Toolbar
 
@@ -82,15 +86,23 @@ def step(context, user, file_name, destination):
     webdav.upload_file(user, file_name, destination)
 
 
-@Then('as "|any|" the content of file "|any|" in the server should match the content of local file "|any|"')
+@Then(
+    'as "|any|" the content of file "|any|" in the server should match the content of local file "|any|"'
+)
 def step(context, user_name, server_file_name, local_file_name):
-    server_content = webdav.get_file_content(user_name, server_file_name)
-    local_content  = open(get_file_for_upload(local_file_name), "rb").read()
+    raw_server_content = webdav.get_file_content(user_name, server_file_name)
+    with tempfile.NamedTemporaryFile(suffix=Path(server_file_name).suffix) as tmp_file:
+        if isinstance(raw_server_content, str):
+            tmp_file.write(raw_server_content.encode('utf-8'))
+        else:
+            tmp_file.write(raw_server_content)
+        server_content = get_document_content(tmp_file.name)
+    local_content = get_document_content(get_file_for_upload(local_file_name))
 
     test.compare(
         server_content,
         local_content,
-        f"Server file '{server_file_name}' differs from local file '{local_file_name}'"
+        f"Server file '{server_file_name}' differs from local file '{local_file_name}'",
     )
 
 
@@ -120,8 +132,8 @@ def step(context, user):
 def step(context, user):
     resource_details = {row[0]: row[1] for row in context.table}
     webdav.send_resource_share_invitation(
-        user, 
-        resource_details['resource'], 
-        resource_details['sharee'], 
-        resource_details['permissionsRole']
+        user,
+        resource_details['resource'],
+        resource_details['sharee'],
+        resource_details['permissionsRole'],
     )
