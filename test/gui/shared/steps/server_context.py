@@ -90,7 +90,6 @@ def step(context, user, file_name, destination):
     'as "|any|" the content of file "|any|" in the server should match the content of local file "|any|"'
 )
 def step(context, user_name, server_file_name, local_file_name):
-    server_content = ''
     raw_server_content = webdav.get_file_content(user_name, server_file_name)
     with tempfile.NamedTemporaryFile(suffix=Path(server_file_name).suffix) as tmp_file:
         if isinstance(raw_server_content, str):
