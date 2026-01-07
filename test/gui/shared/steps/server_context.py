@@ -91,12 +91,12 @@ def step(context, user, file_name, destination):
 )
 def step(context, user_name, server_file_name, local_file_name):
     server_content = ''
-    server_file = webdav.get_file_content(user_name, server_file_name)
+    raw_server_content = webdav.get_file_content(user_name, server_file_name)
     with tempfile.NamedTemporaryFile(suffix=Path(server_file_name).suffix) as tmp_file:
-        if isinstance(server_file, str):
-            tmp_file.write(server_file.encode('utf-8'))
+        if isinstance(raw_server_content, str):
+            tmp_file.write(raw_server_content.encode('utf-8'))
         else:
-            tmp_file.write(server_file)
+            tmp_file.write(raw_server_content)
         server_content = get_document_content(tmp_file.name)
     local_content = get_document_content(get_file_for_upload(local_file_name))
 
