@@ -165,9 +165,9 @@ def get_docs_content(docs_file):
 
 
 def get_presentation_content(ppt_file):
-    prs = Presentation(ppt_file)
+    presentation = Presentation(ppt_file)
     text = []
-    for slide in prs.slides:
+    for slide in presentation.slides:
         for shape in slide.shapes:
             if hasattr(shape, "text"):
                 text.append(shape.text)
@@ -176,9 +176,9 @@ def get_presentation_content(ppt_file):
 
 def get_excel_content(excel_file):
     # parse with read_only mode
-    wb = load_workbook(excel_file, read_only=True, data_only=True)
+    workbook = load_workbook(excel_file, read_only=True, data_only=True)
     text = []
-    for sheet in wb.worksheets:
+    for sheet in workbook.worksheets:
         for row in sheet.iter_rows(values_only=True):
             for cell in row:
                 if cell is not None:
@@ -197,6 +197,9 @@ def get_document_content(document):
         content = get_presentation_content(document)
     elif doc_ext == "xlsx":
         content = get_excel_content(document)
+    elif doc_ext in ["txt", "md"]:
+        with open(document, "r", encoding="utf-8") as f:
+            content = f.read()
     else:
         raise ValueError(f"Unsupported document format: {doc_ext}")
     return content
