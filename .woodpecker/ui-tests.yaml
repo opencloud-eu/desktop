@@ -1,5 +1,5 @@
 variables:
-  - &squish_image 'opencloudeu/squish@sha256:6eaecc218044020f49f24fd29b6bdc052e8170699a762687b10398b353e5fcda'
+  - &squish_image 'opencloudeu/squish@sha256:efaaa7749b9987dd3164288a55b2dc5514acd5eef01b0ec72f6b9b41d761378f'
   - &minio_image 'minio/mc:RELEASE.2021-10-07T04-19-58Z'
   - &ubuntu_image 'owncloud/ubuntu:20.04'
   - &minio_environment
@@ -151,6 +151,7 @@ steps:
       GUI_TEST_REPORT_DIR: /woodpecker/desktop/test/gui/guiReportUpload
       SERVER_INI: /woodpecker/desktop/test/gui/woodpecker/server.ini
       SQUISH_PARAMETERS: --testsuite /woodpecker/desktop/test/gui --reportgen html,/woodpecker/desktop/test/gui/guiReportUpload --envvar QT_LOGGING_RULES=sync.httplogger=true;gui.socketapi=false --tags ~@skip --tags ~@skipOnLinux
+      WAIT_FOR_SQUISH_LICENSE_MINUTES: 30
 
   - name: crash-log
     image: *ubuntu_image
