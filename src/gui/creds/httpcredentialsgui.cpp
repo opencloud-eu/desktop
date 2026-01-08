@@ -51,7 +51,7 @@ void HttpCredentialsGui::restartOauth()
     connect(_asyncAuth.data(), &OAuth::result, this, &HttpCredentialsGui::asyncAuthResult);
 
     auto *oauthCredentials = new QmlOAuthCredentials(_asyncAuth.data(), _account->url(), _account->davDisplayName());
-    _modalWidget = new AccountModalWidget(tr("Login required"), QUrl(QStringLiteral("qrc:/qt/qml/eu/OpenCloud/gui/qml/credentials/OAuthCredentials.qml")),
+    _modalWidget = new AccountModalWidget(tr("Login required"), QUrl(QStringLiteral("qrc:/qt/qml/eu/OpenCloud/gui/credentials/OAuthCredentials.qml")),
         oauthCredentials, ocApp()->settingsDialog());
 
     connect(oauthCredentials, &QmlOAuthCredentials::logOutRequested, _modalWidget, [this] {
