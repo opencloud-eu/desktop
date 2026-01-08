@@ -6,8 +6,6 @@ from helpers.ConfigHelper import get_config
 
 
 class SyncConnection:
-    WAIT_ERROR_LABEL_TIMEOUT = 10
-
     FOLDER_SYNC_CONNECTION_LIST = {
         "container": names.quickWidget_scrollView_ScrollView,
         "type": "ListView",
@@ -23,7 +21,7 @@ class SyncConnection:
         "container": names.quickWidget_scrollView_ScrollView,
         "id": "moreButton",
         "type": "Image",
-        "visible": True
+        "visible": True,
     }
     MENU = {
         "checkable": False,
@@ -32,7 +30,7 @@ class SyncConnection:
         "text": "",
         "type": "MenuItem",
         "unnamed": 1,
-        "visible": True
+        "visible": True,
     }
     SELECTIVE_SYNC_APPLY_BUTTON = {
         "container": names.settings_stack_QStackedWidget,
@@ -57,7 +55,7 @@ class SyncConnection:
     PERMISSION_ERROR_LABEL = {
         "container": names.folderError_Container,
         "type": "Label",
-        "visible": True
+        "visible": True,
     }
 
     @staticmethod
@@ -71,10 +69,8 @@ class SyncConnection:
     def perform_action(action):
         SyncConnection.open_menu()
         selector = SyncConnection.MENU.copy()
-        selector['text'] = action
-        squish.mouseClick(
-            squish.waitForObject(selector)
-        )
+        selector["text"] = action
+        squish.mouseClick(squish.waitForObject(selector))
 
     @staticmethod
     def force_sync():
@@ -103,7 +99,6 @@ class SyncConnection:
         SyncConnection.open_menu()
         SyncConnection.perform_action("Choose what to sync")
 
-
     @staticmethod
     def get_folder_connection_count():
         return squish.waitForObject(SyncConnection.FOLDER_SYNC_CONNECTION_LIST).count
@@ -129,7 +124,7 @@ class SyncConnection:
         """Wait for permission error label to appear or disappear"""
         status = squish.waitFor(
             lambda: object.exists(SyncConnection.PERMISSION_ERROR_LABEL) == to_exist,
-            SyncConnection.WAIT_ERROR_LABEL_TIMEOUT * 1000
+            get_config("maxSyncTimeout") * 1000,
         )
         if not status:
             action = "appear" if to_exist else "disappear"
