@@ -3100,7 +3100,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/gui/spaces/qml/SpacesView.qml" line="31"/>
         <source>Spaces</source>
-        <translation>Antal platser</translation>
+        <translation>Arbetsytor</translation>
     </message>
 </context>
 <context>
