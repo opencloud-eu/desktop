@@ -28,7 +28,7 @@ ColumnLayout {
         property alias truncated: label.truncated
         Image {
             Layout.alignment: Qt.AlignTop
-            source: OpenCloud.resourcePath("fontawesome", "", enabled)
+            source: OCUtils.resourcePath("fontawesome", "", enabled)
             Layout.maximumHeight: 16
             Layout.maximumWidth: 16
             sourceSize.width: width

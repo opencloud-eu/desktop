@@ -14,6 +14,8 @@
 
 #include "resources/qmlresources.h"
 
+using namespace Qt::Literals::StringLiterals;
+
 namespace {
 constexpr QSize minIconSize{16, 16};
 }
@@ -24,9 +26,9 @@ Resources::Icon Resources::parseIcon(const QString &id)
 {
     const auto data = QUrlQuery(id);
 
-    return {data.queryItemValue(QLatin1String("theme")), QUrl::fromPercentEncoding(data.queryItemValue(QLatin1String("icon")).toUtf8()),
-        QVariant(data.queryItemValue(QLatin1String("size"))).value<FontIcon::Size>(), QVariant(data.queryItemValue(QLatin1String("enabled"))).toBool(),
-        QVariant(data.queryItemValue(QLatin1String("color"))).value<QColor>()};
+    return {data.queryItemValue("theme"_L1), QUrl::fromPercentEncoding(data.queryItemValue("icon"_L1).toUtf8()),
+        static_cast<FontIcon::Size>(data.queryItemValue("size"_L1).toInt()), data.queryItemValue("enabled"_L1) == "true"_L1,
+        QColor(data.queryItemValue("color"_L1))};
 }
 
 QPixmap Resources::pixmap(const QSize &requestedSize, const QIcon &icon, QIcon::Mode mode, QSize *outSize)
