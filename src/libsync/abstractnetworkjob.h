@@ -112,13 +112,13 @@ public:
 
     /** static variable the HTTP timeout. If set to 0, the default will be used
      */
-    static std::chrono::seconds httpTimeout;
+    static std::chrono::milliseconds httpTimeout;
 
     /**
      * The default 5 minutes timeout if none is specified by the config.
      * Qt's default would be 30s.
      */
-    static constexpr std::chrono::seconds DefaultHttpTimeout { 5 * 60 };
+    static constexpr std::chrono::seconds DefaultHttpTimeout{std::chrono::minutes(5)};
 
     /** whether or noth this job should be restarted after authentication */
     bool  isAuthenticationJob() const;
@@ -130,7 +130,7 @@ public:
 
     virtual bool needsRetry() const;
 
-    void setTimeout(const std::chrono::seconds sec);
+    void setTimeout(const std::chrono::milliseconds sec);
 
     /**
      * Configure whether to store replies in a cache configured in the corresponding network access manager (if one is set there).
@@ -217,7 +217,7 @@ private:
 
     QUrlQuery _query;
 
-    std::chrono::seconds _timeout = httpTimeout;
+    std::chrono::milliseconds _timeout = httpTimeout;
     bool _timedout = false; // set to true when the timeout slot is received
     bool _aborted = false;
     bool _finished = false;

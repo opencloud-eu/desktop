@@ -34,7 +34,7 @@ namespace {
 
 auto fetchSettingsTimeout()
 {
-    return std::min(20s, OCC::AbstractNetworkJob::httpTimeout);
+    return std::min<std::chrono::milliseconds>(20s, OCC::AbstractNetworkJob::httpTimeout);
 }
 }
 namespace OCC {
