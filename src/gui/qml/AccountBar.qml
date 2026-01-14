@@ -67,7 +67,7 @@ Pane {
                 Layout.maximumWidth: widthHint
                 Accessible.role: Accessible.PageTab
                 checked: settingsDialog.currentAccount === accountState.account
-                icon.source: accountState.account.hasAvatar ? OpenCloud.avatarPath(accountState.account.uid, enabled) : undefined
+                icon.source: accountState.account.hasAvatar ? OCUtils.avatarPath(accountState.account.uid, enabled) : undefined
                 icon.cache: false
                 altText: accountState.account.initials
                 text: accountState.account.hostName
@@ -85,7 +85,7 @@ Pane {
                     function onAvatarChanged() {
                         icon.source = undefined;
                         if (accountState.account.hasAvatar) {
-                            icon.source = OpenCloud.avatarPath(accountState.account.uid, enabled);
+                            icon.source = OCUtils.avatarPath(accountState.account.uid, enabled);
                         }
                     }
                 }
@@ -108,7 +108,7 @@ Pane {
 
             Layout.fillHeight: true
             Layout.maximumWidth: widthHint
-            icon.source: OpenCloud.resourcePath("fontawesome", "+", enabled)
+            icon.source: OCUtils.resourcePath("fontawesome", "+", enabled)
             text: qsTr("Add Account")
             visible: Theme.multiAccount || AccountManager.accounts.length === 0
 
@@ -135,7 +135,7 @@ Pane {
             Layout.maximumWidth: widthHint
             Accessible.role: Accessible.PageTab
             checked: settingsDialog.currentPage === SettingsDialog.Activity
-            icon.source: OpenCloud.resourcePath("fontawesome", "", enabled)
+            icon.source: OCUtils.resourcePath("fontawesome", "", enabled)
             text: qsTr("Activity")
 
             onClicked: {
@@ -149,7 +149,7 @@ Pane {
             Layout.maximumWidth: widthHint
             Accessible.role: Accessible.PageTab
             checked: settingsDialog.currentPage === SettingsDialog.Settings
-            icon.source: OpenCloud.resourcePath("fontawesome", "", enabled)
+            icon.source: OCUtils.resourcePath("fontawesome", "", enabled)
             text: qsTr("Settings")
 
             onClicked: {
@@ -165,7 +165,7 @@ Pane {
 
                 Layout.fillHeight: true
                 Layout.maximumWidth: widthHint
-                icon.source: OpenCloud.resourcePath("universal", urlButton.icon, enabled)
+                icon.source: OCUtils.resourcePath("universal", urlButton.icon, enabled)
                 text: urlButton.name
 
                 onClicked: {
@@ -178,7 +178,7 @@ Pane {
 
             Layout.fillHeight: true
             Layout.maximumWidth: widthHint
-            icon.source: OpenCloud.resourcePath("fontawesome", "", enabled)
+            icon.source: OCUtils.resourcePath("fontawesome", "", enabled)
             text: qsTr("Quit")
 
             Keys.onTabPressed: {

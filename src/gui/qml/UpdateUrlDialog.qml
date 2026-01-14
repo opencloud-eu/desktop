@@ -26,7 +26,7 @@ Pane {
             spacing: 30
             Image {
                 Layout.alignment: Qt.AlignCenter
-                source: OpenCloud.resourcePath("fontawesome", "", enabled, FontIcon.Normal, Theme.primaryButtonColor.color)
+                source: OCUtils.resourcePath("fontawesome", "", enabled, FontIcon.Normal, Theme.primaryButtonColor.color)
                 fillMode: Image.PreserveAspectFit
                 sourceSize.width: 128
                 sourceSize.height: 128
