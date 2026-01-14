@@ -73,5 +73,13 @@ public:
     QString qVersion() const;
 
     Q_INVOKABLE int compareQVersion(int major, int minor, int patch) const;
+
+    // size is FontIcon::Size
+    Q_INVOKABLE QUrl resourcePath(const QString &theme, const QString &icon, bool enabled = true, int size = 0, const QColor &color = {});
+
+    Q_INVOKABLE QUrl resourcePath2(
+        const QString &provider, const QString &theme, const QString &icon, bool enabled = true, int size = 0, const QColor &color = {});
+
+    Q_INVOKABLE QUrl avatarPath(const QString &accountID, bool enabled = true, int size = 0);
 };
 }

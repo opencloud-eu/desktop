@@ -53,7 +53,7 @@ Pane {
         RowLayout {
             Layout.fillWidth: true
             Image {
-                source: OpenCloud.resourcePath("fontawesome", accountSettings.accountStateIconGlype, enabled)
+                source: OCUtils.resourcePath("fontawesome", accountSettings.accountStateIconGlype, enabled)
                 Layout.preferredHeight: 16
                 Layout.preferredWidth: 16
                 sourceSize.width: width
@@ -202,8 +202,8 @@ Pane {
                             spacing: folderSyncPanel.spacing
 
                             description: folderDelegate.subtitle
-                            imageSource: folderDelegate.folder.space ? folderDelegate.folder.space.image.qmlImageUrl : OpenCloud.resourcePath("remixicons", "", enabled, FontIcon.Half)
-                            statusSource: OpenCloud.resourcePath("fontawesome", statusIcon, enabled)
+                            imageSource: folderDelegate.folder.space ? folderDelegate.folder.space.image.qmlImageUrl : OCUtils.resourcePath("remixicons", "", enabled, FontIcon.Half)
+                            statusSource: OCUtils.resourcePath("fontawesome", statusIcon, enabled)
                             title: displayName
 
                             Component {
@@ -301,7 +301,7 @@ Pane {
 
                         // this is just a visual hint that we have a context menu
                         Accessible.ignored: true
-                        source: OpenCloud.resourcePath("fontawesome", "", enabled)
+                        source: OCUtils.resourcePath("fontawesome", "", enabled)
                         height: 24
                         width: 24
                         sourceSize: Qt.size(height, width)

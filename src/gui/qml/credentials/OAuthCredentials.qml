@@ -47,7 +47,7 @@ Credentials {
                 horizontalPadding: 64
                 enabled: credentials.ready
                 visible: credentials.isValid
-                icon.source: OpenCloud.resourcePath("fontawesome", "", true)
+                icon.source: OCUtils.resourcePath("fontawesome", "", true)
                 text: browserWasOpened ? qsTr("Reopen web browser") : qsTr("Open web browser")
                 onClicked: {
                     browserWasOpened = true;
@@ -65,7 +65,7 @@ Credentials {
                 visible: credentials.isValid
 
                 text: qsTr("Copy URL")
-                icon.source: OpenCloud.resourcePath("fontawesome", "", true)
+                icon.source: OCUtils.resourcePath("fontawesome", "", true)
                 onClicked: credentials.copyAuthenticationUrlToClipboard()
                 enabled: credentials.ready
 
@@ -96,7 +96,7 @@ Credentials {
             Layout.alignment: Qt.AlignHCenter
             Layout.preferredWidth: openBrowserButton.width
             visible: !credentials.isValid
-            icon.source: OpenCloud.resourcePath("fontawesome", "", true)
+            icon.source: OCUtils.resourcePath("fontawesome", "", true)
             text: qsTr("Restart authentication")
             onClicked: credentials.requestRestart()
 

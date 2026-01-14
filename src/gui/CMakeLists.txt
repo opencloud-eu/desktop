@@ -109,8 +109,6 @@ ecm_add_qml_module(OpenCloudGui
         NAMESPACE OCC
         GENERATE_PLUGIN_SOURCE
         QML_FILES
-            qml/OpenCloud.js
-
             qml/AccountBar.qml
             qml/AccountButton.qml
             qml/FolderDelegate.qml
