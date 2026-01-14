@@ -83,7 +83,7 @@ QString renderHttpTemplate(const QString &title, const QString &content)
 auto defaultTimeout()
 {
     // as the OAuth process can be interactive we don't want 5min of inactivity
-    return qMin(30s, OCC::AbstractNetworkJob::httpTimeout);
+    return qMin<milliseconds>(30s, OCC::AbstractNetworkJob::httpTimeout);
 }
 
 auto defaultTimeoutMs()

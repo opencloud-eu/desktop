@@ -39,7 +39,7 @@ namespace OCC {
 Q_LOGGING_CATEGORY(lcNetworkJob, "sync.networkjob", QtInfoMsg)
 
 // If not set, it is overwritten by the Application constructor with the value from the config
-seconds AbstractNetworkJob::httpTimeout = AbstractNetworkJob::DefaultHttpTimeout;
+milliseconds AbstractNetworkJob::httpTimeout = AbstractNetworkJob::DefaultHttpTimeout;
 
 AbstractNetworkJob::AbstractNetworkJob(AccountPtr account, const QUrl &baseUrl, const QString &path, QObject *parent)
     : QObject(parent)
@@ -73,7 +73,7 @@ QUrlQuery AbstractNetworkJob::query() const
     return _query;
 }
 
-void AbstractNetworkJob::setTimeout(const std::chrono::seconds sec)
+void AbstractNetworkJob::setTimeout(const std::chrono::milliseconds sec)
 {
     _timeout = sec;
 }
@@ -156,11 +156,11 @@ void AbstractNetworkJob::sendRequest(const QByteArray &verb, const QNetworkReque
     }
 
     Q_ASSERT(_request.url().isEmpty() || _request.url() == url());
-    Q_ASSERT(_request.transferTimeout() == 0 || _request.transferTimeout() == duration_cast<milliseconds>(_timeout).count());
+    Q_ASSERT(_request.transferTimeout() == 0 || _request.transferTimeout() == _timeout.count());
 
     _request.setUrl(url());
     _request.setPriority(_priority);
-    _request.setTransferTimeout(duration_cast<milliseconds>(_timeout).count());
+    _request.setTransferTimeout(_timeout);
 
     if (!isAuthenticationJob() && _account->jobQueue()->enqueue(this)) {
         return;
