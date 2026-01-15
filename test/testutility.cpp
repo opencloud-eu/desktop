@@ -470,6 +470,85 @@ private Q_SLOTS:
         QVERIFY(inode.has_value());
         QCOMPARE(fileInfo.inode(), inode.value());
     }
+
+    void testCanonicalPath()
+    {
+        // we compare .native() for std::fiileystem::path, else Qt does actual file comparison
+        std::error_code ec;
+        // our build dir might be symlinked, ensure the input path is already canonical
+        auto path = OCC::FileSystem::fromFilesystemPath(std::filesystem::canonical(qApp->applicationFilePath().toStdString(), ec));
+        QVERIFY(ec.value() == 0);
+        QCOMPARE(OCC::FileSystem::canonicalPath(OCC::FileSystem::toFilesystemPath(path)).native(), OCC::FileSystem::toFilesystemPath(path).native());
+        QCOMPARE(path, OCC::FileSystem::canonicalPath(path));
+
+#ifdef Q_OS_WIN
+        path = u"C:/"_s;
+        QCOMPARE(path, OCC::FileSystem::canonicalPath(path));
+        QCOMPARE(OCC::FileSystem::toFilesystemPath(path).native(), OCC::FileSystem::canonicalPath(OCC::FileSystem::toFilesystemPath(path)).native());
+
+        path = u"C:"_s;
+        QCOMPARE("C:/"_L1, OCC::FileSystem::canonicalPath(path));
+        QCOMPARE(OCC::FileSystem::toFilesystemPath(path).native(), OCC::FileSystem::canonicalPath(OCC::FileSystem::toFilesystemPath(path)).native());
+
+
+        // test non-existing file, which relies on lexical normalization rather than actual canonical path
+        path = u"C:/fooo_bar"_s;
+        QVERIFY(!QFileInfo::exists(path));
+        QCOMPARE(path, OCC::FileSystem::canonicalPath(path));
+        QCOMPARE(OCC::FileSystem::toFilesystemPath(path).native(), OCC::FileSystem::canonicalPath(OCC::FileSystem::toFilesystemPath(path)).native());
+
+        path = u"C:/fooo_bar/../foo/./../fooo_bar"_s;
+        QVERIFY(!QFileInfo::exists(path));
+        QCOMPARE(u"C:/fooo_bar"_s, OCC::FileSystem::canonicalPath(path));
+        QCOMPARE(
+            OCC::FileSystem::toFilesystemPath(u"C:/fooo_bar"_s).native(), OCC::FileSystem::canonicalPath(OCC::FileSystem::toFilesystemPath(path)).native());
+
+        // test multiple consecutive slashes
+        path = u"C:///fooo_bar//test///file"_s;
+        QVERIFY(!QFileInfo::exists(path));
+        QCOMPARE(u"C:/fooo_bar/test/file"_s, OCC::FileSystem::canonicalPath(path));
+        QCOMPARE(OCC::FileSystem::toFilesystemPath(u"C:/fooo_bar/test/file"_s).native(),
+            OCC::FileSystem::canonicalPath(OCC::FileSystem::toFilesystemPath(path)).native());
+
+        // test trailing slashes
+        path = u"C:/fooo_bar///"_s;
+        QVERIFY(!QFileInfo::exists(path));
+        QCOMPARE(u"C:/fooo_bar"_s, OCC::FileSystem::canonicalPath(path));
+        QCOMPARE(
+            OCC::FileSystem::toFilesystemPath(u"C:/fooo_bar"_s).native(), OCC::FileSystem::canonicalPath(OCC::FileSystem::toFilesystemPath(path)).native());
+
+        // test dot segments in middle of path
+        path = u"C:/fooo_bar/./test/./file"_s;
+        QVERIFY(!QFileInfo::exists(path));
+        QCOMPARE(u"C:/fooo_bar/test/file"_s, OCC::FileSystem::canonicalPath(path));
+        QCOMPARE(OCC::FileSystem::toFilesystemPath(u"C:/fooo_bar/test/file"_s).native(),
+            OCC::FileSystem::canonicalPath(OCC::FileSystem::toFilesystemPath(path)).native());
+
+        // test mixed slashes on Windows
+        path = u"C:\\fooo_bar/test\\file"_s;
+        QVERIFY(!QFileInfo::exists(path));
+        QCOMPARE(u"C:/fooo_bar/test/file"_s, OCC::FileSystem::canonicalPath(path));
+        QCOMPARE(OCC::FileSystem::toFilesystemPath(u"C:/fooo_bar/test/file"_s).native(),
+            OCC::FileSystem::canonicalPath(OCC::FileSystem::toFilesystemPath(path)).native());
+
+        // test UNC path
+        path = u"\\\\server\\share\\path"_s;
+        QCOMPARE(u"//server/share/path"_s, OCC::FileSystem::canonicalPath(path));
+        QCOMPARE(OCC::FileSystem::toFilesystemPath(u"//server/share/path"_s).native(),
+            OCC::FileSystem::canonicalPath(OCC::FileSystem::toFilesystemPath(path)).native());
+#else
+        // test non-existing file, which relies on lexical normalization rather than actual canonical path
+        path = u"/fooo_bar"_s;
+        QVERIFY(!QFileInfo::exists(path));
+        QCOMPARE(path, OCC::FileSystem::canonicalPath(path));
+        QCOMPARE(OCC::FileSystem::toFilesystemPath(path).native(), OCC::FileSystem::canonicalPath(OCC::FileSystem::toFilesystemPath(path)).native());
+
+        path = u"/fooo_bar/../foo/./../fooo_bar"_s;
+        QVERIFY(!QFileInfo::exists(path));
+        QCOMPARE(u"/fooo_bar"_s, OCC::FileSystem::canonicalPath(path));
+        QCOMPARE(OCC::FileSystem::toFilesystemPath(u"/fooo_bar"_s).native(), OCC::FileSystem::canonicalPath(OCC::FileSystem::toFilesystemPath(path)).native());
+#endif
+    }
 };
 
 QTEST_GUILESS_MAIN(TestUtility)

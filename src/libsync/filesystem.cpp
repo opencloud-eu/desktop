@@ -179,6 +179,46 @@ bool FileSystem::fileChanged(const std::filesystem::path &path, const FileChange
     return false;
 }
 
+std::filesystem::path FileSystem::canonicalPath(const std::filesystem::path &p)
+{
+    std::error_code ec;
+    if (!std::filesystem::exists(p, ec) && !ec) {
+        const auto normalized = p.lexically_normal();
+        const auto parentPath = normalized.parent_path();
+        // last invocation will return /
+        if (parentPath == p) {
+            return p;
+        }
+        if (normalized.filename().empty()) {
+            return canonicalPath(parentPath);
+        } else {
+            return canonicalPath(parentPath) / normalized.filename();
+        }
+    }
+    if (ec) {
+        qCWarning(lcFileSystem) << "Failed to check existence of path:" << p << ec.message();
+    }
+    const auto out = std::filesystem::canonical(p, ec);
+    if (ec) {
+        qCWarning(lcFileSystem) << "Failed to canonicalize path:" << p << ec.message();
+        return p;
+    }
+#ifdef Q_OS_WIN
+    // std::filesystem::canonical removes the ucn prefix
+    const auto ucn = std::wstring(LR"(\\?\)");
+    Q_ASSERT(!out.native().starts_with(ucn));
+    return std::filesystem::path(ucn + out.native());
+#else
+    return out;
+#endif
+}
+
+QString FileSystem::canonicalPath(const QString &p)
+{
+    // clean path to normalize path back to Qt form
+    return FileSystem::fromFilesystemPath(canonicalPath(FileSystem::toFilesystemPath(p)));
+}
+
 qint64 FileSystem::getSize(const std::filesystem::path &filename)
 {
     std::error_code ec;
