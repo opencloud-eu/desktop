@@ -541,38 +541,6 @@ QString FolderMan::trayTooltipStatusString(
     return folderMessage;
 }
 
-// canonicalPath returns an empty string if the file does not exist.
-// This function also works with files that does not exist and resolve the symlinks in the
-// parent directories.
-static std::filesystem::path canonicalPath(const std::filesystem::path &p)
-{
-    std::error_code ec;
-    if (!std::filesystem::exists(p, ec) && !ec) {
-        const auto parentPath = p.lexically_normal().parent_path();
-        // last invocation will return /
-        if (parentPath == p) {
-            return p;
-        }
-
-        return canonicalPath(parentPath) / p.filename();
-    }
-    if (ec) {
-        qCWarning(lcFolderMan) << "Failed to check existence of path:" << p << ec.message();
-    }
-    const auto out = std::filesystem::canonical(p, ec);
-    if (ec) {
-        qCWarning(lcFolderMan) << "Failed to canonicalize path:" << p << ec.message();
-        return p;
-    }
-    return out;
-}
-
-static QString canonicalPath(const QString &p)
-{
-    // clean path to normalize path back to Qt form
-    return QDir::cleanPath(FileSystem::fromFilesystemPath(canonicalPath(FileSystem::toFilesystemPath(p))));
-}
-
 static QString checkPathForSyncRootMarkingRecursive(const QString &path, FolderMan::NewFolderType folderType, const QUuid &accountUuid)
 {
     std::pair<QString, QUuid> existingTags = Utility::getDirectorySyncRootMarkings(path);
@@ -659,9 +627,9 @@ QString FolderMan::checkPathValidityForNewFolder(const QString &path, NewFolderT
     if (path.isEmpty()) {
         return u"Passingg an empty path is not supported"_s;
     }
-    const QString userDir = canonicalPath(path) + QLatin1Char('/');
+    const QString userDir = FileSystem::canonicalPath(path) + QLatin1Char('/');
     for (auto f : _folders) {
-        const QString folderDir = canonicalPath(f->path()) + QLatin1Char('/');
+        const QString folderDir = FileSystem::canonicalPath(f->path()) + QLatin1Char('/');
 
         const auto isChild = FileSystem::isChildPathOf2(folderDir, userDir);
         if (isChild.testFlag(FileSystem::ChildResult::IsEqual)) {
@@ -701,24 +669,24 @@ QString FolderMan::findGoodPathForNewSyncFolder(
     // going to be an acceptable sync folder path for any value of foobar.
     // If relativePath is empty, the path is equal to newFolder, and we will find a name in the following loop
     QString relativePath;
-    if (FolderMan::instance()->folderForPath(canonicalPath(normalisedPath), &relativePath) && !relativePath.isEmpty()) {
+    if (FolderMan::instance()->folderForPath(FileSystem::canonicalPath(normalisedPath), &relativePath) && !relativePath.isEmpty()) {
         // Any path with that parent is going to be unacceptable,
         // so just keep it as-is.
-        return canonicalPath(normalisedPath);
+        return FileSystem::canonicalPath(normalisedPath);
     }
     // Count attempts and give up eventually
     {
         QString folder = normalisedPath;
         for (int attempt = 2; attempt <= 100; ++attempt) {
             if (!QFileInfo::exists(folder) && FolderMan::instance()->checkPathValidityForNewFolder(folder, folderType, accountUuid).isEmpty()) {
-                return canonicalPath(folder);
+                return FileSystem::canonicalPath(folder);
             }
             folder = normalisedPath + QStringLiteral(" (%1)").arg(attempt);
         }
     }
     // we failed to find a non existing path
     Q_ASSERT(false);
-    return canonicalPath(normalisedPath);
+    return FileSystem::canonicalPath(normalisedPath);
 }
 
 bool FolderMan::ignoreHiddenFiles() const

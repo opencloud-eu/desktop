@@ -470,6 +470,13 @@ private Q_SLOTS:
         QVERIFY(inode.has_value());
         QCOMPARE(fileInfo.inode(), inode.value());
     }
+
+    void testCanonicalPath()
+    {
+        const auto path = OCC::FileSystem::toFilesystemPath(qApp->applicationFilePath());
+        const auto canonicalPath = OCC::FileSystem::fromFilesystemPath(OCC::FileSystem::canonicalPath(path));
+        QCOMPARE(canonicalPath.native(), path.native());
+    }
 };
 
 QTEST_GUILESS_MAIN(TestUtility)

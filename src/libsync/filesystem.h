@@ -106,6 +106,14 @@ namespace FileSystem {
     bool OPENCLOUD_SYNC_EXPORT fileChanged(const std::filesystem::path &path, const FileChangedInfo &previousInfo);
 
 
+    // canonicalPath returns an empty string if the file does not exist.
+    // This function also works with files that does not exist and resolve the symlinks in the
+    // parent directories.
+    std::filesystem::path OPENCLOUD_SYNC_EXPORT canonicalPath(const std::filesystem::path &p);
+
+    QString OPENCLOUD_SYNC_EXPORT canonicalPath(const QString &p);
+
+
     struct RemoveEntry
     {
         const QString path;
