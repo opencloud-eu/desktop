@@ -435,10 +435,10 @@ private Q_SLOTS:
     {
         struct Test : OAuthTestCase
         {
-            QScopedValueRollback<std::chrono::seconds> rollback;
+            QScopedValueRollback<decltype(AbstractNetworkJob::httpTimeout)> rollback;
 
             Test()
-                : rollback(AbstractNetworkJob::httpTimeout, 1s)
+                : rollback(AbstractNetworkJob::httpTimeout, 50ms)
             {
             }
 
