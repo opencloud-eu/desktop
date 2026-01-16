@@ -70,14 +70,14 @@ def write_file(resource, content):
 
 
 def wait_and_write_file(path, content):
-    listen_sync_status_for_item(get_resource_path(path), 'FILE')
     wait_for_client_to_be_ready()
+    listen_sync_status_for_item(get_resource_path(path), 'FILE')
     write_file(path, content)
 
 
 def wait_and_try_to_write_file(resource, content):
-    listen_sync_status_for_item(get_resource_path(resource), 'FILE')
     wait_for_client_to_be_ready()
+    listen_sync_status_for_item(get_resource_path(resource), 'FILE')
     try:
         write_file(resource, content)
     except:
@@ -112,8 +112,8 @@ def copy_resource(resource_type, source, destination, from_files_for_upload=Fals
     if source_dir == destination_dir and destination_dir != '/':
         destination_dir = add_copy_suffix(source, resource_type)
 
-    listen_sync_status_for_item(destination_dir, resource_type)
     wait_for_client_to_be_ready()
+    listen_sync_status_for_item(destination_dir, resource_type)
     if resource_type == 'folder':
         return shutil.copytree(source_dir, destination_dir)
     return shutil.copy2(source_dir, destination_dir)
@@ -126,8 +126,8 @@ def move_resource(username, resource_type, source, destination, is_temp_folder=F
         destination = ''
     destination = get_resource_path(destination, username)
 
-    listen_sync_status_for_item(destination, resource_type)
     wait_for_client_to_be_ready()
+    listen_sync_status_for_item(destination, resource_type)
     shutil.move(source, destination)
 
 
@@ -265,7 +265,6 @@ def step(context, user, resource, content):
 @When(r'the user deletes the (file|folder) "([^"]*)"', regexp=True)
 def step(context, item_type, resource):
     wait_for_client_to_be_ready()
-
     deleteResource(resource, item_type)
 
 

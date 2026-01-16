@@ -2,6 +2,7 @@ import os
 import subprocess
 import glob
 import re
+import time
 from datetime import datetime
 from helpers.ConfigHelper import is_windows
 
@@ -50,9 +51,12 @@ def parse_stacktrace(coredump_file):
         else:
             app_binary = '-'.join(patterns[4:]).replace('!', '/')
 
+        timestamp = datetime.fromtimestamp(
+            float(patterns[1] if patterns[1] != 'N/A' else time.time())
+        )
         message.append('-------------------------------------------')
         message.append(f'Executable: {app_binary}')
-        message.append(f'Timestamp: {str(datetime.fromtimestamp(float(patterns[1])))}')
+        message.append(f'Timestamp: {str(timestamp)}')
         message.append(f'Process ID: {patterns[2]}')
         message.append(f'Signal Number: {patterns[3]}')
         message.append('-------------------------------------------')
