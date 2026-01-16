@@ -4,7 +4,7 @@
 
 ### ❤️ Thanks to all contributors! ❤️
 
-@TheOneRing, @anon-pradip, @individual-it, @prashant-gurung899, @saw-jan
+@TheOneRing, @anon-pradip, @individual-it, @prashant-gurung899, @saw-jan, @tbsbdr
 
 ### 📦️ Dependencies
 
