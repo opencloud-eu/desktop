@@ -179,6 +179,35 @@ bool FileSystem::fileChanged(const std::filesystem::path &path, const FileChange
     return false;
 }
 
+std::filesystem::path FileSystem::canonicalPath(const std::filesystem::path &p)
+{
+    std::error_code ec;
+    if (!std::filesystem::exists(p, ec) && !ec) {
+        const auto parentPath = p.lexically_normal().parent_path();
+        // last invocation will return /
+        if (parentPath == p) {
+            return p;
+        }
+
+        return canonicalPath(parentPath) / p.filename();
+    }
+    if (ec) {
+        qCWarning(lcFileSystem) << "Failed to check existence of path:" << p << ec.message();
+    }
+    const auto out = std::filesystem::canonical(p, ec);
+    if (ec) {
+        qCWarning(lcFileSystem) << "Failed to canonicalize path:" << p << ec.message();
+        return p;
+    }
+    return out;
+}
+
+QString FileSystem::canonicalPath(const QString &p)
+{
+    // clean path to normalize path back to Qt form
+    return QDir::cleanPath(FileSystem::fromFilesystemPath(canonicalPath(FileSystem::toFilesystemPath(p))));
+}
+
 qint64 FileSystem::getSize(const std::filesystem::path &filename)
 {
     std::error_code ec;
