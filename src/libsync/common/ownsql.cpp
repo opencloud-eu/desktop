@@ -152,8 +152,8 @@ bool SqlDatabase::openOrCreateReadWrite(const QString &filename)
         if (checkResult == CheckDbResult::CantPrepare) {
             // When disk space is low, preparing may fail even though the db is fine.
             // Typically CANTOPEN or IOERR.
-            qint64 freeSpace = Utility::freeDiskSpace(QFileInfo(filename).dir().absolutePath());
-            if (freeSpace != -1 && freeSpace < 1000000) {
+            auto freeSpace = Utility::freeDiskSpace(QFileInfo(filename).dir().absolutePath());
+            if (freeSpace && freeSpace < 1000000) {
                 qCWarning(lcSql) << u"Can't prepare consistency check and disk space is low:" << freeSpace;
             } else if (_errId == SQLITE_CANTOPEN) {
                 // Even when there's enough disk space, it might very well be that the

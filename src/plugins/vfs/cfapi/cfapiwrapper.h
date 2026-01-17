@@ -118,12 +118,12 @@ namespace CfApiWrapper {
     enum SetPinRecurseMode { NoRecurse = 0, Recurse, ChildrenOnly };
 
     Result<OCC::Vfs::ConvertToPlaceholderResult, QString> setPinState(const QString &path, PinState state, SetPinRecurseMode mode);
-    Result<void, QString> createPlaceholderInfo(const QString &path, time_t modtime, qint64 size, const QByteArray &fileId);
+    Result<void, QString> createPlaceholderInfo(const QString &path, time_t modtime, uint64_t size, const QByteArray &fileId);
     Result<OCC::Vfs::ConvertToPlaceholderResult, QString> updatePlaceholderInfo(
-        const QString &path, time_t modtime, qint64 size, const QByteArray &fileId, const QString &replacesPath = QString());
+        const QString &path, time_t modtime, uint64_t size, const QByteArray &fileId, const QString &replacesPath = QString());
     Result<OCC::Vfs::ConvertToPlaceholderResult, QString> convertToPlaceholder(
-        const QString &path, time_t modtime, qint64 size, const QByteArray &fileId, const QString &replacesPath);
-    Result<OCC::Vfs::ConvertToPlaceholderResult, QString> dehydratePlaceholder(const QString &path, qint64 size, const QByteArray &fileId);
+        const QString &path, time_t modtime, uint64_t size, const QByteArray &fileId, const QString &replacesPath);
+    Result<OCC::Vfs::ConvertToPlaceholderResult, QString> dehydratePlaceholder(const QString &path, uint64_t size, const QByteArray &fileId);
     Result<OCC::Vfs::ConvertToPlaceholderResult, QString> updatePlaceholderMarkInSync(const Utility::Handle &handle);
     bool isPlaceHolderInSync(const QString &filePath);
 }

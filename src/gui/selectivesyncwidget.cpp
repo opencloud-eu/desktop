@@ -159,7 +159,7 @@ static QTreeWidgetItem *findFirstChild(QTreeWidgetItem *parent, const QString &t
  *       last item of the path/pathTrail: all parent items need to be expandable in order to reach
  *       that last folder. So all parents of that folder will have expansion triangles shown.
  */
-void SelectiveSyncWidget::recursiveInsert(QTreeWidgetItem *parent, QStringList pathTrail, QString path, qint64 size, bool showChildIndicator)
+void SelectiveSyncWidget::recursiveInsert(QTreeWidgetItem *parent, QStringList pathTrail, QString path, uint64_t size, bool showChildIndicator)
 {
     if (pathTrail.size() == 0) {
         if (path.endsWith(QLatin1Char('/'))) {
@@ -253,10 +253,9 @@ void SelectiveSyncWidget::slotUpdateDirectories(QStringList list)
         root->setIcon(0, Theme::instance()->applicationIcon());
         root->setData(0, Qt::UserRole, QString());
         root->setCheckState(0, Qt::Checked);
-        qint64 size = job ? job->sizes().value(rootPath, -1) : -1;
-        if (size >= 0) {
-            root->setText(1, Utility::octetsToString(size));
-            root->setData(1, Qt::UserRole, size);
+        if (const auto size = job ? Utility::optionalFind(job->sizes(), rootPath) : std::nullopt) {
+            root->setText(1, Utility::octetsToString(size->value()));
+            root->setData(1, Qt::UserRole, size->value());
         }
     }
 
@@ -387,39 +386,6 @@ QSet<QString> SelectiveSyncWidget::createBlackList(QTreeWidgetItem *root) const
             if (it.startsWith(path))
                 result += it;
         }
-    }
-    return result;
-}
-
-qint64 SelectiveSyncWidget::estimatedSize(QTreeWidgetItem *root)
-{
-    if (!root) {
-        root = _folderTree->topLevelItem(0);
-    }
-    if (!root)
-        return -1;
-
-
-    switch (root->checkState(0)) {
-    case Qt::Unchecked:
-        return 0;
-    case Qt::Checked:
-        return root->data(1, Qt::UserRole).toLongLong();
-    case Qt::PartiallyChecked:
-        break;
-    }
-
-    qint64 result = 0;
-    if (root->childCount()) {
-        for (int i = 0; i < root->childCount(); ++i) {
-            auto r = estimatedSize(root->child(i));
-            if (r < 0)
-                return r;
-            result += r;
-        }
-    } else {
-        // We did not load from the server so we have no idea how much we will sync from this branch
-        return -1;
     }
     return result;
 }

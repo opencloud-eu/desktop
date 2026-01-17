@@ -40,7 +40,7 @@ public:
     ItemType _type = ItemTypeUnsupported;
     QString _etag;
     QByteArray _fileId;
-    qint64 _fileSize = 0;
+    uint64_t _fileSize = 0;
     RemotePermissions _remotePerm;
     bool _serverHasIgnoredFiles = false;
     bool _hasDirtyPlaceholder = false;
@@ -195,7 +195,7 @@ time_t SyncJournalFileRecord::modtime() const
     return d->_modtime.value_or(0);
 }
 
-int64_t SyncJournalFileRecord::size() const
+uint64_t SyncJournalFileRecord::size() const
 {
     return d->_fileSize;
 }
