@@ -346,7 +346,7 @@ QVector<quint16> Theme::oauthPorts() const
 
 QString Theme::openIdConnectScopes() const
 {
-    return QStringLiteral("openid offline_access email profile");
+    return QStringLiteral("openid offline_access email profile groups");
 }
 
 QString Theme::openIdConnectPrompt() const
