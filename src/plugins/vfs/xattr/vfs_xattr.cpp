@@ -12,25 +12,38 @@
 #include "libsync/xattr.h"
 #include "syncfileitem.h"
 #include "vfs/hydrationjob.h"
+#include "theme.h"
+
+#include <string>
 
 #include <QDir>
 #include <QFile>
 #include <QLocalSocket>
 #include <QLoggingCategory>
 #include <QUuid>
+#include <QString>
+
+using namespace Qt::StringLiterals;
+using namespace xattr;
 
 Q_LOGGING_CATEGORY(lcVfsXAttr, "sync.vfs.xattr", QtInfoMsg)
 
 
 namespace {
-const QString ownerXAttrName = QStringLiteral("user.openvfs.owner");
-const QString etagXAttrName = QStringLiteral("user.openvfs.etag");
-const QString fileidXAttrName = QStringLiteral("user.openvfs.fileid");
-const QString modtimeXAttrName = QStringLiteral("user.openvfs.modtime");
-const QString fileSizeXAttrName = QStringLiteral("user.openvfs.fsize");
-const QString actionXAttrName = QStringLiteral("user.openvfs.action");
-const QString stateXAttrName = QStringLiteral("user.openvfs.state");
-const QString pinstateXAttrName = QStringLiteral("user.openvfs.pinstate");
+const QString ownerXAttrName = u"user.openvfs.owner"_s;
+const QString etagXAttrName = u"user.openvfs.etag"_s;
+const QString fileidXAttrName = u"user.openvfs.fileid"_s;
+const QString modtimeXAttrName = u"user.openvfs.modtime"_s;
+const QString fileSizeXAttrName = u"user.openvfs.fsize"_s;
+const QString actionXAttrName = u"user.openvfs.action"_s;
+const QString stateXAttrName = u"user.openvfs.state"_s;
+const QString pinstateXAttrName = u"user.openvfs.pinstate"_s;
+
+const QString fileStateVirtual = u"virtual"_s;
+const QString fileStateHydrate = u"hydrate"_s;
+const QString fileStateDehydrate = u"dehydrate"_s;
+const QString fileStateHydrated = u"hydrated"_s;
+
 }
 
 namespace OCC {
@@ -49,10 +62,7 @@ Vfs::Mode VfsXAttr::mode() const
 
 QString VfsXAttr::xattrOwnerString() const
 {
-    auto s = QByteArray(APPLICATION_EXECUTABLE);
-    s.append(":");
-    s.append(_setupParams->account->uuid().toByteArray(QUuid::WithoutBraces));
-    return QString::fromUtf8(s);
+    return u"%1:%2"_s.arg(Theme::instance()->appName(), params().account->uuid().toString(QUuid::WithoutBraces));
 }
 
 void VfsXAttr::startImpl(const VfsSetupParams &params)
@@ -68,23 +78,18 @@ void VfsXAttr::startImpl(const VfsSetupParams &params)
     if (!owner) {
         // set the owner to opencloud to claim it
         if (!FileSystem::Xattr::setxattr(path, ownerXAttrName, xattrOwnerString() )) {
-            err = Vfs::tr("Unable to claim the sync root for files on demand");
-            return;
+            err = tr("Unable to claim the sync root for files on demand");
         }
-    } else {
+    } else if (owner.value() != xattrOwnerString()) {
         // owner is set. See if it is us
-        if (owner.value() == xattrOwnerString()) {
-            // all good
-        } else {
-            qCDebug(lcVfsXAttr) << "Root-FS has a different owner" << owner.value() << "Not our vfs!";
-            err = Vfs::tr("The sync path is claimed by a different cloud, please check your setup");
-            return;
-        }
+        qCDebug(lcVfsXAttr) << "Root-FS has a different owner" << owner.value() << "Not our vfs!";
+        err = tr("The sync path is claimed by a different cloud, please check your setup");
     }
-    if (err.isEmpty())
+    if (err.isEmpty()) {
         Q_EMIT started();
-    else
+    } else {
         Q_EMIT error(err);
+    }
 }
 
 void VfsXAttr::stop()
@@ -100,12 +105,10 @@ bool VfsXAttr::socketApiPinStateActionsShown() const
     return true;
 }
 
-PlaceHolderAttribs VfsXAttr::placeHolderAttributes(const QString& path)
+xattr::PlaceHolderAttribs VfsXAttr::placeHolderAttributes(const QString& path)
 {
     PlaceHolderAttribs attribs;
     const auto fPath = FileSystem::toFilesystemPath(path);
-
-    // lambda to handle the Optional return val of xattrGet
 
     attribs._etag = FileSystem::Xattr::getxattr(fPath, etagXAttrName).value_or(QString());
     attribs._fileId = FileSystem::Xattr::getxattr(fPath, fileidXAttrName).value_or(QString());
@@ -127,7 +130,7 @@ OCC::Result<void, QString> VfsXAttr::addPlaceholderAttribute(const QString &path
         auto success = FileSystem::Xattr::setxattr(FileSystem::toFilesystemPath(path), name, value);
         // Q_ASSERT(success);
         if (!success) {
-            return Vfs::tr("Failed to set the extended file attribute");
+            return tr("Failed to set the extended file attribute");
         }
     }
 
@@ -150,17 +153,17 @@ OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> VfsXAttr::updateMetad
         if (!r) {
             res = OCC::Vfs::ConvertToPlaceholderResult::Locked;
         }
-        addPlaceholderAttribute(filePath, actionXAttrName, QStringLiteral("dehydrate"));
-        addPlaceholderAttribute(filePath, stateXAttrName, QStringLiteral("virtual"));
+        addPlaceholderAttribute(filePath, actionXAttrName, fileStateDehydrate);
+        addPlaceholderAttribute(filePath, stateXAttrName, fileStateVirtual);
         addPlaceholderAttribute(filePath, fileSizeXAttrName, QString::number(syncItem._size));
     } else if (syncItem._type == ItemTypeVirtualFileDownload) {
-        addPlaceholderAttribute(filePath, actionXAttrName, QStringLiteral("hydrate"));
+        addPlaceholderAttribute(filePath, actionXAttrName, fileStateHydrate);
         // file gets downloaded and becomes a normal file, the xattr gets removed
         FileSystem::Xattr::removexattr(localPath, stateXAttrName);
         FileSystem::Xattr::removexattr(localPath, fileSizeXAttrName);
     } else if (syncItem._type == ItemTypeVirtualFile) {
         qCDebug(lcVfsXAttr) << "updateMetadata for virtual file " << syncItem._type;
-        addPlaceholderAttribute(filePath, stateXAttrName, QStringLiteral("virtual"));
+        addPlaceholderAttribute(filePath, stateXAttrName, fileStateVirtual);
         addPlaceholderAttribute(filePath, fileSizeXAttrName, QString::number(syncItem._size));
     } else if (syncItem._type == ItemTypeFile) {
         qCDebug(lcVfsXAttr) << "updateMetadata for normal file " << syncItem._type;
@@ -205,36 +208,26 @@ void VfsXAttr::slotHydrateJobFinished()
 
         // set the xattrs
         // the file is not virtual any more, remove the xattrs. No state xattr means local available data
-        bool ok{true};
-        ok = ok && FileSystem::Xattr::removexattr(targetPath, stateXAttrName);
-        if (!ok) {
-            qCInfo(lcVfsXAttr) << u"Removing extended file attribute state failed for" << targetPath;
-        }
-        ok = ok && FileSystem::Xattr::removexattr(targetPath, actionXAttrName);
-        ok = ok && FileSystem::Xattr::removexattr(targetPath, fileSizeXAttrName);
-        if (!ok) {
+        if (!(FileSystem::Xattr::removexattr(targetPath, stateXAttrName) &&
+              FileSystem::Xattr::removexattr(targetPath, actionXAttrName) &&
+              FileSystem::Xattr::removexattr(targetPath, fileSizeXAttrName) )) {
             qCInfo(lcVfsXAttr) << u"Removing extended file attribute action failed for" << targetPath;
         }
 
-        if (ok) {
-            time_t modtime = item->_modtime;
-            qCInfo(lcVfsXAttr) << u"Setting hydrated file's modtime to" << modtime;
+        time_t modtime = item->_modtime;
+        qCInfo(lcVfsXAttr) << u"Setting hydrated file's modtime to" << modtime;
 
-            if (!FileSystem::setModTime(targetPath, modtime)) {
-                qCInfo(lcVfsXAttr) << u"Failed to set the mod time of the hydrated file" << targetPath;
-                // What can be done in this error condition
-                ok = false;
-            }
+        if (!FileSystem::setModTime(targetPath, modtime)) {
+            qCInfo(lcVfsXAttr) << u"Failed to set the mod time of the hydrated file" << targetPath;
+            // What can be done in this error condition
         }
 
-        if (ok) {
-            // Update the client sync journal database if the file modifications have been successful
-            const auto result = this->params().journal->setFileRecord(SyncJournalFileRecord::fromSyncFileItem(*item));
-            if (!result) {
-                qCWarning(lcVfsXAttr) << u"Error when setting the file record to the database" << result.error();
-            } else {
-                qCInfo(lcVfsXAttr) << u"Hydration succeeded" << targetPath;
-            }
+        // Update the client sync journal database if the file modifications have been successful
+        const auto result = this->params().journal->setFileRecord(SyncJournalFileRecord::fromSyncFileItem(*item));
+        if (!result) {
+            qCWarning(lcVfsXAttr) << u"Error when setting the file record to the database" << result.error();
+        } else {
+            qCInfo(lcVfsXAttr) << u"Hydration succeeded" << targetPath;
         }
     } else {
         qCWarning(lcVfsXAttr) << u"Hydration succeeded but the file appears to be moved" << targetPath;
@@ -254,7 +247,7 @@ Result<void, QString> VfsXAttr::createPlaceholder(const SyncFileItem &item)
     if (file.exists()
         && FileSystem::fileChanged(FileSystem::toFilesystemPath(path),
                                    FileSystem::FileChangedInfo::fromSyncFileItem(&item))) {
-        return Vfs::tr("Cannot create a placeholder because a file with the placeholder name already exist");
+        return tr("Cannot create a placeholder because a file with the placeholder name already exist");
     }
 
     if (!file.open(QFile::ReadWrite | QFile::Truncate)) {
@@ -267,7 +260,7 @@ Result<void, QString> VfsXAttr::createPlaceholder(const SyncFileItem &item)
 
     // FIXME only write attribs if they're different, and/or all together
     addPlaceholderAttribute(path, fileSizeXAttrName, QString::number(item._size));
-    addPlaceholderAttribute(path, stateXAttrName, QStringLiteral("virtual"));
+    addPlaceholderAttribute(path, stateXAttrName, fileStateVirtual);
     addPlaceholderAttribute(path, fileidXAttrName, QString::fromUtf8(item._fileId));
     addPlaceholderAttribute(path, etagXAttrName, item._etag);
     FileSystem::setModTime(path, item._modtime);
@@ -294,7 +287,7 @@ HydrationJob* VfsXAttr::hydrateFile(const QByteArray &fileId, const QString &tar
     _hydrationJobs.insert(fileId, hydration);
 
     // set an action attrib
-    addPlaceholderAttribute(targetPath, actionXAttrName, QStringLiteral("hydrate"));
+    addPlaceholderAttribute(targetPath, actionXAttrName, fileStateHydrate);
 
     connect(hydration, &HydrationJob::finished, this, &VfsXAttr::slotHydrateJobFinished);
 
@@ -309,28 +302,19 @@ HydrationJob* VfsXAttr::hydrateFile(const QByteArray &fileId, const QString &tar
 
 bool VfsXAttr::needsMetadataUpdate(const SyncFileItem &item)
 {
-    // return true if file exists
-    const auto path = item.localName();
-    QFileInfo fi{path};
+    const QString path = params().filesystemPath + item.localName();
 
-    // FIXME: Unsure about this implementation
-    bool re{false};
-    if (fi.exists()) {
-        re = true;
-    }
-    qCDebug(lcVfsXAttr) << "returning" << re;
-    return re;
+    return QFileInfo::exists(path);
 }
 
 bool VfsXAttr::isDehydratedPlaceholder(const QString &filePath)
 {
-    const auto fi = QFileInfo(filePath);
-    bool re{false};
-    if (fi.exists()) {
+
+    if (QFileInfo::exists(filePath)) {
         const auto attribs = placeHolderAttributes(filePath);
-        re = (attribs.state() == QStringLiteral("virtual"));
+        return (attribs.state() == fileStateVirtual);
     }
-    return re;
+    return false;
 }
 
 LocalInfo VfsXAttr::statTypeVirtualFile(const std::filesystem::directory_entry &path, ItemType type)
@@ -339,7 +323,7 @@ LocalInfo VfsXAttr::statTypeVirtualFile(const std::filesystem::directory_entry &
     if (type == ItemTypeFile) {
 
         auto attribs = placeHolderAttributes(p);
-        if (attribs.state() == QStringLiteral("virtual")) {
+        if (attribs.state() == fileStateVirtual) {
             type = ItemTypeVirtualFile;
             if (attribs.pinState() == pinStateToString(PinState::AlwaysLocal)) {
                 type = ItemTypeVirtualFileDownload;
@@ -435,42 +419,35 @@ void VfsXAttr::fileStatusChanged(const QString& systemFileName, SyncFileStatus f
 
 QString VfsXAttr::pinStateToString(PinState pState) const
 {
-    QString re;
     switch (pState) {
     case OCC::PinState::AlwaysLocal:
-        re = QStringLiteral("alwayslocal");
-        break;
+        return u"alwayslocal"_s;
     case OCC::PinState::Inherited:
-        re = QStringLiteral("interited");
-        break;
+        return u"interited"_s;
     case OCC::PinState::OnlineOnly:
-        re = QStringLiteral("onlineonly");
-        break;
+        return u"onlineonly"_s;
     case OCC::PinState::Unspecified:
-        re = QStringLiteral("unspecified");
-        break;
+        return u"unspecified"_s;
     case OCC::PinState::Excluded:
-        re = QStringLiteral("excluded");
-        break;
+        return u"excluded"_s;
     };
-    return re;
+    return u"unspecified"_s;
 }
 
 PinState VfsXAttr::stringToPinState(const QString& str) const
 {
-    PinState p{PinState::Unspecified};
-    if (str.isEmpty() || str == QStringLiteral("unspecified")) {
-        p = PinState::Unspecified;
-    } else if( str == QStringLiteral("alwayslocal")) {
-        p = PinState::AlwaysLocal;
-    } else if( str == QStringLiteral("inherited")) {
-        p = PinState::Inherited;
-    } else if( str == QStringLiteral("unspecified")) {
-        p = PinState::Unspecified;
-    } else if( str == QStringLiteral("excluded")) {
-        p = PinState::Excluded;
+    if (str.isEmpty() || str == u"unspecified"_s) {
+        return PinState::Unspecified;
+    } else if( str == u"alwayslocal"_s) {
+        return PinState::AlwaysLocal;
+    } else if( str == u"inherited"_s) {
+        return PinState::Inherited;
+    } else if( str == u"unspecified"_s) {
+        return PinState::Unspecified;
+    } else if( str == u"excluded"_s) {
+        return PinState::Excluded;
     }
-    return p;
+    return PinState::Unspecified;
 }
 
 } // namespace OCC

@@ -12,8 +12,6 @@
 #include "common/plugin.h"
 #include "common/result.h"
 
-#include "config.h"
-
 namespace xattr {
 
 struct PlaceHolderAttribs {
@@ -39,8 +37,6 @@ public:
 
 namespace OCC {
 class HydrationJob;
-
-using namespace xattr;
 
 class VfsXAttr : public Vfs
 {
@@ -88,7 +84,7 @@ protected:
 
 private:
     QString xattrOwnerString() const;
-    PlaceHolderAttribs placeHolderAttributes(const QString& path);
+    xattr::PlaceHolderAttribs placeHolderAttributes(const QString& path);
     OCC::Result<void, QString> addPlaceholderAttribute(const QString &path, const QString &name = {}, const QString &val = {});
     OCC::Result<void, QString> removePlaceHolderAttributes(const QString& path);
 
