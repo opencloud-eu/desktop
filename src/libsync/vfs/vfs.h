@@ -253,9 +253,9 @@ protected:
      */
     virtual void startImpl(const VfsSetupParams &params) = 0;
 
+private:
     // the parameters passed to start()
     std::unique_ptr<VfsSetupParams> _setupParams;
-private:
 
     friend class OwncloudPropagator;
 };
