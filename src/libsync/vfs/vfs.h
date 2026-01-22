@@ -37,6 +37,7 @@ class Account;
 class SyncJournalDb;
 class SyncFileItem;
 class SyncEngine;
+class HydrationJob;
 
 /** Collection of parameters for initializing a Vfs instance. */
 struct OPENCLOUD_SYNC_EXPORT VfsSetupParams
@@ -97,7 +98,7 @@ public:
      * Currently plugins and modes are one-to-one but that's not required.
      * The raw integer values are used in Qml
      */
-    enum Mode : uint8_t { Off = 0, WindowsCfApi = 1 };
+    enum Mode : uint8_t { Off = 0, WindowsCfApi = 1, XAttr = 2 };
     Q_ENUM(Mode)
     enum class ConvertToPlaceholderResult : uint8_t { Ok, Locked };
     Q_ENUM(ConvertToPlaceholderResult)
@@ -211,7 +212,7 @@ public:
      *
      * Returns a QFuture<Result> void if successful and QFuture<Result> QString if an error occurs.
      */
-    [[nodiscard]] virtual QFuture<Result<void, QString>> hydrateFile(const QByteArray &fileId, const QString &targetPath);
+    [[nodiscard]] virtual HydrationJob* hydrateFile(const QByteArray &fileId, const QString &targetPath);
 
 public Q_SLOTS:
     /** Update in-sync state based on SyncFileStatusTracker signal.
