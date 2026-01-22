@@ -1,10 +1,14 @@
 # Changelog
 
-## [3.0.4](https://github.com/opencloud-eu/desktop/releases/tag/v3.0.4) - 2026-01-19
+## [3.1.0](https://github.com/opencloud-eu/desktop/releases/tag/v3.1.0) - 2026-01-22
 
 ### ❤️ Thanks to all contributors! ❤️
 
-@TheOneRing, @anon-pradip, @db-ot, @individual-it, @prashant-gurung899, @saw-jan, @tbsbdr
+@TheOneRing, @anon-pradip, @db-ot, @dragotin, @individual-it, @prashant-gurung899, @saw-jan, @tbsbdr
+
+### 📈 Enhancement
+
+- Update SVG logo with new design [[#711](https://github.com/opencloud-eu/desktop/pull/711)]
 
 ### 📦️ Dependencies
 
