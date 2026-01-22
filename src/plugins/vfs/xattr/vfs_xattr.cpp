@@ -355,16 +355,18 @@ LocalInfo VfsXAttr::statTypeVirtualFile(const std::filesystem::directory_entry &
     return LocalInfo(path, type);
 }
 
+// expects a relative path
 bool VfsXAttr::setPinState(const QString &folderPath, PinState state)
 {
-    qCDebug(lcVfsXAttr) << folderPath << state;
+    const auto localPath = QDir::toNativeSeparators(params().filesystemPath + folderPath);
+    qCDebug(lcVfsXAttr) << localPath << state;
 
     if (state == PinState::AlwaysLocal || state == PinState::OnlineOnly || state == PinState::Excluded) {
         auto stateStr = pinStateToString(state);
-        addPlaceholderAttribute(folderPath, pinstateXAttrName, stateStr);
+        addPlaceholderAttribute(localPath, pinstateXAttrName, stateStr);
     } else {
         qCDebug(lcVfsXAttr) << "Do not set Pinstate" << pinStateToString(state) << ", remove pinstate xattr";
-        FileSystem::Xattr::removexattr(FileSystem::toFilesystemPath(folderPath), pinstateXAttrName);
+        FileSystem::Xattr::removexattr(FileSystem::toFilesystemPath(localPath), pinstateXAttrName);
     }
     return true;
 }
