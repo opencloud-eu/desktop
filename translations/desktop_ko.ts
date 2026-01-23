@@ -214,7 +214,7 @@ File synchronization desktop utility.</source>
 <context>
     <name>FileSystem</name>
     <message>
-        <location filename="../src/libsync/filesystem.cpp" line="236"/>
+        <location filename="../src/libsync/filesystem.cpp" line="233"/>
         <source>Could not remove folder</source>
         <translation>폴더를 삭제하지 못했습니다</translation>
     </message>
@@ -1181,8 +1181,8 @@ Please consider removing this folder from the account and adding it again.</sour
 <context>
     <name>OCC::FolderWizard</name>
     <message>
-        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="131"/>
-        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="133"/>
+        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="136"/>
+        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="138"/>
         <source>Add Space</source>
         <translation>스페이스 추가</translation>
     </message>
@@ -1340,17 +1340,17 @@ Please consider removing this folder from the account and adding it again.</sour
 <context>
     <name>OCC::HydrationJob</name>
     <message>
-        <location filename="../src/libsync/vfs/hydrationjob.cpp" line="27"/>
+        <location filename="../src/libsync/vfs/hydrationjob.cpp" line="37"/>
         <source>Failed to find fileId: %1 in db</source>
         <translation>db에서 fileId: %1을 찾을 수 없습니다.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/vfs/hydrationjob.cpp" line="49"/>
+        <location filename="../src/libsync/vfs/hydrationjob.cpp" line="59"/>
         <source>Unexpected file size transferred. Expected %1 received %2</source>
         <translation>예상치 못한 파일 크기가 전송되었습니다. 예상값 %1 수신값 %2</translation>
     </message>
     <message>
-        <location filename="../src/libsync/vfs/hydrationjob.cpp" line="55"/>
+        <location filename="../src/libsync/vfs/hydrationjob.cpp" line="65"/>
         <source>Aborted.</source>
         <translation>중단됨.</translation>
     </message>
@@ -2421,38 +2421,38 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::SocketApi</name>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="484"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="505"/>
         <source>Share with %1</source>
         <comment>parameter is OpenCloud</comment>
         <translation>%1와(과) 공유</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="582"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="603"/>
         <source>Confirm deletion</source>
         <translation>삭제 확인</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="584"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="605"/>
         <source>Do you want to delete the directory »%1« and all its contents permanently?</source>
         <translation>디렉터리 »%1«과(와) 그 모든 내용을 영구적으로 삭제하시겠습니까?</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="585"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="606"/>
         <source>Do you want to delete the file »%1« permanently?</source>
         <translation>파일 »%1«을(를) 영구적으로 삭제하시겠습니까?</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="627"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="648"/>
         <source>Select new location...</source>
         <translation>새 위치 선택...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="637"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="658"/>
         <source>Error</source>
         <translation>오류</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="638"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="659"/>
         <source>Moving file failed:
 
 %1</source>
@@ -2461,80 +2461,80 @@ Note that using any logging command line options will override the settings.</so
 %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="737"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="762"/>
         <source>I shared something with you</source>
         <translation>무언가를 공유했습니다</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="750"/>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="780"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="775"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="805"/>
         <source>Share...</source>
         <translation>공유...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="752"/>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="784"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="777"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="809"/>
         <source>Copy private link to clipboard</source>
         <translation>비공개 링크를 클립보드에 복사</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="753"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="778"/>
         <source>Send private link by email...</source>
         <translation>이메일로 비공개 링크 보내기...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="778"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="803"/>
         <source>Resharing this file is not allowed</source>
         <translation>이 파일의 재공유는 허용되지 않습니다</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="778"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="803"/>
         <source>Resharing this folder is not allowed</source>
         <translation>이 폴더의 재공유는 허용되지 않습니다</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="849"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="874"/>
         <source>Open in %1</source>
         <translation>%1에서 열기</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="860"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="885"/>
         <source>Show file versions in web browser</source>
         <translation>웹 브라우저에서 파일 버전 보기</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="882"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="907"/>
         <source>Rename...</source>
         <translation>이름 바꾸기...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="885"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="910"/>
         <source>Rename and upload...</source>
         <translation>이름 바꾸기 및 업로드...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="890"/>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="894"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="915"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="919"/>
         <source>Move and rename...</source>
         <translation>이동 및 이름 바꾸기...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="897"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="922"/>
         <source>Move, rename and upload...</source>
         <translation>이동, 이름 바꾸기 및 업로드...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="900"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="925"/>
         <source>Delete local changes</source>
         <translation>로컬 변경 사항 삭제</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="905"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="930"/>
         <source>Move and upload...</source>
         <translation>이동 및 업로드...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="906"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="931"/>
         <source>Delete</source>
         <translation>삭제</translation>
     </message>
@@ -2779,24 +2779,47 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::Vfs</name>
     <message>
-        <location filename="../src/libsync/vfs/vfs.cpp" line="85"/>
+        <location filename="../src/libsync/vfs/vfs.cpp" line="89"/>
         <source>ReFS is currently not supported.</source>
         <translation>ReFS는 현재 지원되지 않습니다.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/vfs/vfs.cpp" line="89"/>
+        <location filename="../src/libsync/vfs/vfs.cpp" line="93"/>
         <source>The Virtual filesystem feature does not support a drive as sync root</source>
         <translation>가상 파일 시스템 기능은 드라이브를 동기화 루트로 지원하지 않습니다</translation>
     </message>
     <message>
-        <location filename="../src/libsync/vfs/vfs.cpp" line="93"/>
+        <location filename="../src/libsync/vfs/vfs.cpp" line="97"/>
         <source>The Virtual filesystem feature requires a NTFS file system, %1 is using %2</source>
         <translation>가상 파일 시스템 기능은 NTFS 파일 시스템이 필요합니다. %1은(는) %2을(를) 사용 중입니다</translation>
     </message>
     <message>
-        <location filename="../src/libsync/vfs/vfs.cpp" line="97"/>
+        <location filename="../src/libsync/vfs/vfs.cpp" line="101"/>
         <source>The Virtual filesystem feature is not supported on network drives</source>
         <translation>가상 파일 시스템 기능은 네트워크 드라이브에서 지원되지 않습니다</translation>
+    </message>
+</context>
+<context>
+    <name>OCC::VfsXAttr</name>
+    <message>
+        <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="81"/>
+        <source>Unable to claim the sync root for files on demand</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="86"/>
+        <source>The sync path is claimed by a different cloud, please check your setup</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="133"/>
+        <source>Failed to set the extended file attribute</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="250"/>
+        <source>Cannot create a placeholder because a file with the placeholder name already exist</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

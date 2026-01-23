@@ -211,7 +211,7 @@ File synchronization desktop utility.</source>
 <context>
     <name>FileSystem</name>
     <message>
-        <location filename="../src/libsync/filesystem.cpp" line="236"/>
+        <location filename="../src/libsync/filesystem.cpp" line="233"/>
         <source>Could not remove folder</source>
         <translation>Kunde inte ta bort mappen</translation>
     </message>
@@ -1169,8 +1169,8 @@ Please consider removing this folder from the account and adding it again.</sour
 <context>
     <name>OCC::FolderWizard</name>
     <message>
-        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="131"/>
-        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="133"/>
+        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="136"/>
+        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="138"/>
         <source>Add Space</source>
         <translation>Lägg till arbetsyta</translation>
     </message>
@@ -1328,17 +1328,17 @@ Please consider removing this folder from the account and adding it again.</sour
 <context>
     <name>OCC::HydrationJob</name>
     <message>
-        <location filename="../src/libsync/vfs/hydrationjob.cpp" line="27"/>
+        <location filename="../src/libsync/vfs/hydrationjob.cpp" line="37"/>
         <source>Failed to find fileId: %1 in db</source>
         <translation>Det gick inte att hitta fil-ID: %1 i databasen</translation>
     </message>
     <message>
-        <location filename="../src/libsync/vfs/hydrationjob.cpp" line="49"/>
+        <location filename="../src/libsync/vfs/hydrationjob.cpp" line="59"/>
         <source>Unexpected file size transferred. Expected %1 received %2</source>
         <translation>Oväntad filstorlek överförd. Förväntad %1 mottagen %2</translation>
     </message>
     <message>
-        <location filename="../src/libsync/vfs/hydrationjob.cpp" line="55"/>
+        <location filename="../src/libsync/vfs/hydrationjob.cpp" line="65"/>
         <source>Aborted.</source>
         <translation>Avbruten.</translation>
     </message>
@@ -2401,118 +2401,118 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::SocketApi</name>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="484"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="505"/>
         <source>Share with %1</source>
         <comment>parameter is OpenCloud</comment>
         <translation>Dela med %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="582"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="603"/>
         <source>Confirm deletion</source>
         <translation>Bekräfta radering</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="584"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="605"/>
         <source>Do you want to delete the directory »%1« and all its contents permanently?</source>
         <translation>Vill du radera katalogen »%1« och allt dess innehåll permanent?</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="585"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="606"/>
         <source>Do you want to delete the file »%1« permanently?</source>
         <translation>Vill du ta bort filen »%1« permanent?</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="627"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="648"/>
         <source>Select new location...</source>
         <translation>Välj ny plats...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="637"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="658"/>
         <source>Error</source>
         <translation>Fel</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="638"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="659"/>
         <source>Moving file failed:
 
 %1</source>
         <translation>Flyttning av fil misslyckades: %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="737"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="762"/>
         <source>I shared something with you</source>
         <translation>Jag delade något med dig</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="750"/>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="780"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="775"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="805"/>
         <source>Share...</source>
         <translation>Dela...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="752"/>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="784"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="777"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="809"/>
         <source>Copy private link to clipboard</source>
         <translation>Kopiera privat länk till urklipp</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="753"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="778"/>
         <source>Send private link by email...</source>
         <translation>Skicka privat länk via e-post...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="778"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="803"/>
         <source>Resharing this file is not allowed</source>
         <translation>Det är inte tillåtet att dela denna fil vidare</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="778"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="803"/>
         <source>Resharing this folder is not allowed</source>
         <translation>Det är inte tillåtet att dela denna mapp igen</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="849"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="874"/>
         <source>Open in %1</source>
         <translation>Öppna i %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="860"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="885"/>
         <source>Show file versions in web browser</source>
         <translation>Visa filversioner i webbläsaren</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="882"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="907"/>
         <source>Rename...</source>
         <translation>Byt namn...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="885"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="910"/>
         <source>Rename and upload...</source>
         <translation>Byt namn och ladda upp...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="890"/>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="894"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="915"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="919"/>
         <source>Move and rename...</source>
         <translation>Flytta och byt namn...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="897"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="922"/>
         <source>Move, rename and upload...</source>
         <translation>Flytta, byt namn och ladda upp...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="900"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="925"/>
         <source>Delete local changes</source>
         <translation>Ta bort lokala ändringar</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="905"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="930"/>
         <source>Move and upload...</source>
         <translation>Flytta och ladda upp...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="906"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="931"/>
         <source>Delete</source>
         <translation>Ta bort</translation>
     </message>
@@ -2757,24 +2757,47 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::Vfs</name>
     <message>
-        <location filename="../src/libsync/vfs/vfs.cpp" line="85"/>
+        <location filename="../src/libsync/vfs/vfs.cpp" line="89"/>
         <source>ReFS is currently not supported.</source>
         <translation>ReFS stöds för närvarande inte.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/vfs/vfs.cpp" line="89"/>
+        <location filename="../src/libsync/vfs/vfs.cpp" line="93"/>
         <source>The Virtual filesystem feature does not support a drive as sync root</source>
         <translation>Funktionen Virtuellt filsystem stöder inte en enhet som synkroniseringsrot</translation>
     </message>
     <message>
-        <location filename="../src/libsync/vfs/vfs.cpp" line="93"/>
+        <location filename="../src/libsync/vfs/vfs.cpp" line="97"/>
         <source>The Virtual filesystem feature requires a NTFS file system, %1 is using %2</source>
         <translation>Funktionen Virtuellt filsystem kräver ett NTFS-filsystem. %1 använder %2</translation>
     </message>
     <message>
-        <location filename="../src/libsync/vfs/vfs.cpp" line="97"/>
+        <location filename="../src/libsync/vfs/vfs.cpp" line="101"/>
         <source>The Virtual filesystem feature is not supported on network drives</source>
         <translation>Funktionen Virtuellt filsystem stöds inte på nätverksenheter</translation>
+    </message>
+</context>
+<context>
+    <name>OCC::VfsXAttr</name>
+    <message>
+        <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="81"/>
+        <source>Unable to claim the sync root for files on demand</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="86"/>
+        <source>The sync path is claimed by a different cloud, please check your setup</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="133"/>
+        <source>Failed to set the extended file attribute</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="250"/>
+        <source>Cannot create a placeholder because a file with the placeholder name already exist</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

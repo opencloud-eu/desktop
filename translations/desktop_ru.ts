@@ -214,7 +214,7 @@ File synchronization desktop utility.</source>
 <context>
     <name>FileSystem</name>
     <message>
-        <location filename="../src/libsync/filesystem.cpp" line="236"/>
+        <location filename="../src/libsync/filesystem.cpp" line="233"/>
         <source>Could not remove folder</source>
         <translation>Не удалось удалить папку</translation>
     </message>
@@ -1180,8 +1180,8 @@ Please consider removing this folder from the account and adding it again.</sour
 <context>
     <name>OCC::FolderWizard</name>
     <message>
-        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="131"/>
-        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="133"/>
+        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="136"/>
+        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="138"/>
         <source>Add Space</source>
         <translation>Добавить Пространство</translation>
     </message>
@@ -1339,17 +1339,17 @@ Please consider removing this folder from the account and adding it again.</sour
 <context>
     <name>OCC::HydrationJob</name>
     <message>
-        <location filename="../src/libsync/vfs/hydrationjob.cpp" line="27"/>
+        <location filename="../src/libsync/vfs/hydrationjob.cpp" line="37"/>
         <source>Failed to find fileId: %1 in db</source>
         <translation>Ошибка поиска в поле: %1 in db</translation>
     </message>
     <message>
-        <location filename="../src/libsync/vfs/hydrationjob.cpp" line="49"/>
+        <location filename="../src/libsync/vfs/hydrationjob.cpp" line="59"/>
         <source>Unexpected file size transferred. Expected %1 received %2</source>
         <translation>Неожиданно размер файла был изменен. Ожидаемый размер: %1, полученный - %2</translation>
     </message>
     <message>
-        <location filename="../src/libsync/vfs/hydrationjob.cpp" line="55"/>
+        <location filename="../src/libsync/vfs/hydrationjob.cpp" line="65"/>
         <source>Aborted.</source>
         <translation>Прервано</translation>
     </message>
@@ -2417,38 +2417,38 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::SocketApi</name>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="484"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="505"/>
         <source>Share with %1</source>
         <comment>parameter is OpenCloud</comment>
         <translation>Предоставить совместный доступ для %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="582"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="603"/>
         <source>Confirm deletion</source>
         <translation>Подтвердить удаление</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="584"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="605"/>
         <source>Do you want to delete the directory »%1« and all its contents permanently?</source>
         <translation>Вы хотите удалить папку »%1« и все её содержимое без возможности восстановления?</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="585"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="606"/>
         <source>Do you want to delete the file »%1« permanently?</source>
         <translation>Вы хотите удалить файл »%1« без возможности восстановления?</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="627"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="648"/>
         <source>Select new location...</source>
         <translation>Выберите новое расположение...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="637"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="658"/>
         <source>Error</source>
         <translation>Ошибка</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="638"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="659"/>
         <source>Moving file failed:
 
 %1</source>
@@ -2457,80 +2457,80 @@ Note that using any logging command line options will override the settings.</so
 %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="737"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="762"/>
         <source>I shared something with you</source>
         <translation>Я предоставил(-а) вам совместный доступ к ресурсу</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="750"/>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="780"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="775"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="805"/>
         <source>Share...</source>
         <translation>Предоставить совместный доступ...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="752"/>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="784"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="777"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="809"/>
         <source>Copy private link to clipboard</source>
         <translation>Скопировать приватную ссылку в буфер обмена</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="753"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="778"/>
         <source>Send private link by email...</source>
         <translation>Отправить приватную ссылку по email...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="778"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="803"/>
         <source>Resharing this file is not allowed</source>
         <translation>Повторный перевод данного файла в совместный доступ не разрешен</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="778"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="803"/>
         <source>Resharing this folder is not allowed</source>
         <translation>Повторный перевод данной папки в совместный доступ не разрешен</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="849"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="874"/>
         <source>Open in %1</source>
         <translation>Открыть в %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="860"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="885"/>
         <source>Show file versions in web browser</source>
         <translation>Показать версии файла в веб браузере</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="882"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="907"/>
         <source>Rename...</source>
         <translation>Переименовать...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="885"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="910"/>
         <source>Rename and upload...</source>
         <translation>Переименовать и загрузить...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="890"/>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="894"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="915"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="919"/>
         <source>Move and rename...</source>
         <translation>Переместить и переименовать...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="897"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="922"/>
         <source>Move, rename and upload...</source>
         <translation>Переместить, переименовать и загрузить...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="900"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="925"/>
         <source>Delete local changes</source>
         <translation>Удалить локальные изменения</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="905"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="930"/>
         <source>Move and upload...</source>
         <translation>Переместить и загрузить...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="906"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="931"/>
         <source>Delete</source>
         <translation>Удалить</translation>
     </message>
@@ -2775,24 +2775,47 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::Vfs</name>
     <message>
-        <location filename="../src/libsync/vfs/vfs.cpp" line="85"/>
+        <location filename="../src/libsync/vfs/vfs.cpp" line="89"/>
         <source>ReFS is currently not supported.</source>
         <translation>ReFS сейчас не поддерживается.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/vfs/vfs.cpp" line="89"/>
+        <location filename="../src/libsync/vfs/vfs.cpp" line="93"/>
         <source>The Virtual filesystem feature does not support a drive as sync root</source>
         <translation>Функциональной Виртуальной файловой системы не поддерживает диск в качестве корня для синхронизации</translation>
     </message>
     <message>
-        <location filename="../src/libsync/vfs/vfs.cpp" line="93"/>
+        <location filename="../src/libsync/vfs/vfs.cpp" line="97"/>
         <source>The Virtual filesystem feature requires a NTFS file system, %1 is using %2</source>
         <translation>Функциональность Виртуальной файловой системы требует файловой системы NTFS, %1 использует %2</translation>
     </message>
     <message>
-        <location filename="../src/libsync/vfs/vfs.cpp" line="97"/>
+        <location filename="../src/libsync/vfs/vfs.cpp" line="101"/>
         <source>The Virtual filesystem feature is not supported on network drives</source>
         <translation>Функциональность Виртуальной файловой системы не поддерживается на сетевых дисках</translation>
+    </message>
+</context>
+<context>
+    <name>OCC::VfsXAttr</name>
+    <message>
+        <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="81"/>
+        <source>Unable to claim the sync root for files on demand</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="86"/>
+        <source>The sync path is claimed by a different cloud, please check your setup</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="133"/>
+        <source>Failed to set the extended file attribute</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="250"/>
+        <source>Cannot create a placeholder because a file with the placeholder name already exist</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
