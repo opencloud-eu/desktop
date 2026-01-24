@@ -2799,22 +2799,22 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="81"/>
         <source>Unable to claim the sync root for files on demand</source>
-        <translation type="unfinished"/>
+        <translation>Geen synchronisatierechten voor bestanden op aanvraag</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="86"/>
         <source>The sync path is claimed by a different cloud, please check your setup</source>
-        <translation type="unfinished"/>
+        <translation>Het synchronisatiepad wordt geclaimd door een andere cloud. Controleer uw installatie</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="133"/>
         <source>Failed to set the extended file attribute</source>
-        <translation type="unfinished"/>
+        <translation>Het instellen van het uitgebreide bestandsattribuut is mislukt</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="250"/>
         <source>Cannot create a placeholder because a file with the placeholder name already exist</source>
-        <translation type="unfinished"/>
+        <translation>Kan geen tijdelijke aanduiding aanmaken omdat er al een bestand met de tijdelijke aanduiding bestaat</translation>
     </message>
 </context>
 <context>
