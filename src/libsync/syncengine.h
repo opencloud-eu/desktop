@@ -168,8 +168,8 @@ private Q_SLOTS:
     void slotItemCompleted(const SyncFileItemPtr &item);
     void slotDiscoveryFinished();
     void slotPropagationFinished(bool success);
-    void slotProgress(const SyncFileItem &item, qint64 curent);
-    void updateFileTotal(const SyncFileItem &item, qint64 newSize);
+    void slotProgress(const SyncFileItem &item, uint64_t curent);
+    void updateFileTotal(const SyncFileItem &item, uint64_t newSize);
 
     /** Emit a summary error, unless it was seen before */
     void slotSummaryError(const QString &message);

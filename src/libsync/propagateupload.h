@@ -16,6 +16,8 @@
 #include "owncloudpropagator.h"
 #include "networkjobs.h"
 
+#include "libsync/bandwidthmanager.h"
+
 #include <QBuffer>
 #include <QFile>
 #include <QElapsedTimer>
@@ -38,7 +40,7 @@ class UploadDevice : public QIODevice
 {
     Q_OBJECT
 public:
-    UploadDevice(const QString &fileName, qint64 start, qint64 size, BandwidthManager *bwm);
+    UploadDevice(const QString &fileName, uint64_t start, uint64_t size, BandwidthManager *bwm);
     ~UploadDevice() override;
 
     bool open(QIODevice::OpenMode mode) override;
@@ -63,11 +65,11 @@ private:
     QFile _file;
 
     /// Start of the file data to use
-    qint64 _start = 0;
+    uint64_t _start = 0;
     /// Amount of file data after _start to use
-    qint64 _size = 0;
+    uint64_t _size = 0;
     /// Position between _start and _start+_size
-    qint64 _read = 0;
+    uint64_t _read = 0;
 
     // Bandwidth manager related
     QPointer<BandwidthManager> _bandwidthManager;
@@ -118,8 +120,7 @@ protected:
     void newReplyHook(QNetworkReply *reply) override;
 
 Q_SIGNALS:
-    void uploadProgress(qint64, qint64);
-
+    void uploadProgress(int64_t, int64_t);
 };
 
 /**
@@ -234,7 +235,7 @@ protected:
      *
      * See #6527, enterprise#2480
      */
-    static void adjustLastJobTimeout(AbstractNetworkJob *job, qint64 fileSize);
+    static void adjustLastJobTimeout(AbstractNetworkJob *job, uint64_t fileSize);
 
     /** Bases headers that need to be sent on the PUT, or in the MOVE for chunking-ng */
     QMap<QByteArray, QByteArray> headers();
@@ -265,6 +266,6 @@ public Q_SLOTS:
     void abort(PropagatorJob::AbortType abortType) override;
 private Q_SLOTS:
     void slotPutFinished();
-    void slotUploadProgress(qint64, qint64);
+    void slotUploadProgress(int64_t, int64_t);
 };
 }

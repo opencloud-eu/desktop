@@ -17,7 +17,6 @@
 #include "networkjobs.h"
 #include "owncloudpropagator.h"
 
-#include <QBuffer>
 #include <QFile>
 
 namespace OCC {
@@ -79,7 +78,7 @@ public:
     {
     }
     void start() override;
-    qint64 committedDiskSpace() const override;
+    uint64_t committedDiskSpace() const override;
 
     // We think it might finish quickly because it is a small file.
     bool isLikelyFinishedQuickly() override { return _item->_size < propagator()->smallFileSize(); }
@@ -113,14 +112,14 @@ private Q_SLOTS:
     void updateMetadata(bool isConflict);
 
     void abort(PropagatorJob::AbortType abortType) override;
-    void slotDownloadProgress(qint64, qint64);
+    void slotDownloadProgress(int64_t, int64_t);
     void slotChecksumFail(const QString &errMsg);
 
 private:
     void deleteExistingFolder();
 
-    qint64 _resumeStart;
-    qint64 _downloadProgress;
+    uint64_t _resumeStart;
+    uint64_t _downloadProgress;
     QPointer<GETFileJob> _job;
     QFile _tmpFile;
     bool _deleteExisting;

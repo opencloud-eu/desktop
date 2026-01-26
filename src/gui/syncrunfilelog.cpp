@@ -19,6 +19,8 @@
 #include "filesystem.h"
 #include <qfileinfo.h>
 
+using namespace OCC::FileSystem::SizeLiterals;
+
 namespace {
 auto dateTimeStr(const QDateTime &dt = QDateTime::currentDateTimeUtc())
 {
@@ -35,7 +37,7 @@ SyncRunFileLog::SyncRunFileLog()
 
 void SyncRunFileLog::start(const QString &folderPath)
 {
-    const qint64 logfileMaxSize = 10 * 1024 * 1024; // 10MiB
+    const auto logfileMaxSize = 10_MiB; // 10MiB
 
     // Note; this name is ignored in csync_exclude.c
     const QString filename = folderPath + QStringLiteral(".OpenCloudSync.log");

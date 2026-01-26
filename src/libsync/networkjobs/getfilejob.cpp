@@ -12,13 +12,11 @@ Q_LOGGING_CATEGORY(lcGetJob, "sync.networkjob.get", QtInfoMsg)
 
 // DOES NOT take ownership of the device.
 GETFileJob::GETFileJob(AccountPtr account, const QUrl &url, const QString &path, QIODevice *device, const QMap<QByteArray, QByteArray> &headers,
-    const QString &expectedEtagForResume, qint64 resumeStart, QObject *parent)
+    const QString &expectedEtagForResume, uint64_t resumeStart, QObject *parent)
     : AbstractNetworkJob(account, url, path, parent)
     , _device(device)
     , _headers(headers)
     , _expectedEtagForResume(expectedEtagForResume)
-    , _expectedContentLength(-1)
-    , _contentLength(-1)
     , _resumeStart(resumeStart)
 {
     connect(this, &GETFileJob::networkError, this, [this] {
@@ -83,6 +81,26 @@ void GETFileJob::newReplyHook(QNetworkReply *reply)
     connect(reply, &QNetworkReply::downloadProgress, this, &GETFileJob::downloadProgress);
 }
 
+uint64_t GETFileJob::resumeStart() const
+{
+    return _resumeStart;
+}
+
+std::optional<uint64_t> GETFileJob::contentLength() const
+{
+    return _contentLength;
+}
+
+std::optional<uint64_t> GETFileJob::expectedContentLength() const
+{
+    return _expectedContentLength;
+}
+
+void GETFileJob::setExpectedContentLength(uint64_t size)
+{
+    _expectedContentLength = size;
+}
+
 void GETFileJob::slotMetaDataChanged()
 {
     // For some reason setting the read buffer in GETFileJob::start doesn't seem to go
@@ -132,8 +150,10 @@ void GETFileJob::slotMetaDataChanged()
     }
 
     bool ok;
-    _contentLength = reply()->header(QNetworkRequest::ContentLengthHeader).toLongLong(&ok);
-    if (ok && _expectedContentLength != -1 && _contentLength != _expectedContentLength) {
+    _contentLength = reply()->header(QNetworkRequest::ContentLengthHeader).toULongLong(&ok);
+    if (!ok) {
+        _contentLength.reset();
+    } else if (_expectedContentLength.has_value() && _contentLength != _expectedContentLength) {
         qCWarning(lcGetJob) << u"We received a different content length than expected!" << _expectedContentLength << u"vs" << _contentLength;
         _errorString = tr("We received an unexpected download Content-Length.");
         _errorStatus = SyncFileItem::NormalError;
@@ -141,13 +161,13 @@ void GETFileJob::slotMetaDataChanged()
         return;
     }
 
-    qint64 start = 0;
+    uint64_t start = 0;
     const QString ranges = QString::fromUtf8(reply()->rawHeader("Content-Range"));
     if (!ranges.isEmpty()) {
         static QRegularExpression rx(QStringLiteral("bytes (\\d+)-"));
         const auto match = rx.match(ranges);
         if (match.hasMatch()) {
-            start = match.captured(1).toLongLong();
+            start = match.captured(1).toULongLong();
         }
     }
     if (start != _resumeStart) {
@@ -206,9 +226,9 @@ void GETFileJob::giveBandwidthQuota(qint64 q)
     QMetaObject::invokeMethod(this, &GETFileJob::slotReadyRead, Qt::QueuedConnection);
 }
 
-qint64 GETFileJob::currentDownloadPosition()
+uint64_t GETFileJob::currentDownloadPosition()
 {
-    if (_device && _device->pos() > 0 && _device->pos() > qint64(_resumeStart)) {
+    if (_device && _device->pos() > 0 && static_cast<uint64_t>(_device->pos()) > _resumeStart) {
         return _device->pos();
     }
     return _resumeStart;
@@ -221,7 +241,7 @@ void GETFileJob::slotReadyRead()
         return;
     }
 
-    const qint64 bufferSize = std::min<qint64>(1024 * 8, reply()->bytesAvailable());
+    const uint64_t bufferSize = std::min<uint64_t>(1024 * 8, reply()->bytesAvailable());
     QByteArray buffer(bufferSize, Qt::Uninitialized);
 
     while (reply()->bytesAvailable() > 0) {
@@ -229,9 +249,9 @@ void GETFileJob::slotReadyRead()
             qCWarning(lcGetJob) << u"Download choked";
             break;
         }
-        qint64 toRead = bufferSize;
+        uint64_t toRead = bufferSize;
         if (_bandwidthLimited) {
-            toRead = std::min<qint64>(bufferSize, _bandwidthQuota);
+            toRead = std::min<uint64_t>(bufferSize, _bandwidthQuota);
             if (toRead == 0) {
                 qCWarning(lcGetJob) << u"Out of bandwidth quota";
                 break;

@@ -136,7 +136,7 @@ OPENCLOUD_SYNC_EXPORT Q_DECLARE_LOGGING_CATEGORY(lcFileSystem)
      * Warning: The resulting file may have an empty fileName and be unsuitable for use
      * with QFileInfo! Calling seek() on the QFile with >32bit signed values will fail!
      */
-    bool OPENCLOUD_SYNC_EXPORT openAndSeekFileSharedRead(QFile * file, QString * error, qint64 seek);
+    bool OPENCLOUD_SYNC_EXPORT openAndSeekFileSharedRead(QFile * file, QString * error, uint64_t seek);
 
     enum class LockMode { Shared, Exclusive, SharedRead };
     Q_ENUM_NS(LockMode);

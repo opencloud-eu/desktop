@@ -53,8 +53,8 @@ void HydrationJob::start()
             errorMsg = _job->reply()->errorString();
         }
 
-        if (_job->contentLength() != -1) {
-            const auto size = _job->resumeStart() + _job->contentLength();
+        if (_job->contentLength()) {
+            const auto size = _job->resumeStart() + _job->contentLength().value();
             if (size != _record.size()) {
                 errorMsg = tr("Unexpected file size transferred. Expected %1 received %2").arg(QString::number(_record.size()), QString::number(size));
                 // assume that the local and the remote metadata are out of sync

@@ -139,7 +139,7 @@ void PropagateUploadFileTUS::startNextChunk()
     const quint64 chunkSize = [&] {
         auto chunkSize = _item->_size - _currentOffset;
         if (propagator()->account()->capabilities().tusSupport().max_chunk_size) {
-            chunkSize = std::min<qint64>(chunkSize, propagator()->account()->capabilities().tusSupport().max_chunk_size);
+            chunkSize = std::min<uint64_t>(chunkSize, propagator()->account()->capabilities().tusSupport().max_chunk_size);
         }
         return chunkSize;
     }();
@@ -168,9 +168,8 @@ void PropagateUploadFileTUS::startNextChunk()
     connect(job, &SimpleNetworkJob::finishedSignal, this, &PropagateUploadFileTUS::slotChunkFinished);
     job->addNewReplyHook([job, this](QNetworkReply *reply) {
         connect(reply, &QNetworkReply::uploadProgress, qobject_cast<UploadDevice *>(job->body().data()), &UploadDevice::slotJobUploadProgress);
-        connect(reply, &QNetworkReply::uploadProgress, this, [this](qint64 bytesSent, qint64) {
-            propagator()->reportProgress(*_item, _currentOffset + bytesSent);
-        });
+        connect(reply, &QNetworkReply::uploadProgress, this,
+            [this](uint64_t bytesSent, uint64_t) { propagator()->reportProgress(*_item, _currentOffset + bytesSent); });
     });
     job->start();
 }
@@ -204,7 +203,7 @@ void PropagateUploadFileTUS::slotChunkFinished()
         return;
     }
 
-    const qint64 offset = job->reply()->rawHeader(uploadOffset()).toLongLong();
+    const uint64_t offset = job->reply()->rawHeader(uploadOffset()).toULongLong();
     propagator()->reportProgress(*_item, offset);
     _currentOffset = offset;
 

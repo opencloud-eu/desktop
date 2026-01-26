@@ -16,9 +16,9 @@ namespace CfApiWrapper {
     {
         Q_OBJECT
     public:
-        static CfApiHydrationJob *requestHydration(const CfApiWrapper::CallBackContext &context, qint64 totalSize, QObject *parent = nullptr);
+        static CfApiHydrationJob *requestHydration(const CfApiWrapper::CallBackContext &context, uint64_t totalSize, QObject *parent = nullptr);
 
-        HydrationDevice(const CfApiWrapper::CallBackContext &context, qint64 totalSize, QObject *parent = nullptr);
+        HydrationDevice(const CfApiWrapper::CallBackContext &context, uint64_t totalSize, QObject *parent = nullptr);
 
         qint64 readData(char *data, qint64 maxlen) override;
         qint64 writeData(const char *data, qint64 len) override;
@@ -26,9 +26,9 @@ namespace CfApiWrapper {
     private:
         CfApiWrapper::CallBackContext _context;
         // expected total size
-        qint64 _totalSize;
+        uint64_t _totalSize = 0;
         // current offset
-        qint64 _offset = 0;
+        uint64_t _offset = 0;
 
         QByteArray _buffer;
     };

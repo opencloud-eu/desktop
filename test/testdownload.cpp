@@ -27,13 +27,13 @@ class BrokenFakeGetReply : public FakeGetReply
     Q_OBJECT
 public:
     using FakeGetReply::FakeGetReply;
-    qint64 fakeSize = stopAfter;
+    uint64_t fakeSize = stopAfter;
 
     qint64 bytesAvailable() const override
     {
         switch (state) {
         case State::Ok:
-            return std::min(size, fakeSize) + QIODevice::bytesAvailable();
+            return std::min<uint64_t>(size, fakeSize) + QIODevice::bytesAvailable();
         default:
             return FakeGetReply::bytesAvailable();
         }
@@ -41,7 +41,7 @@ public:
 
     qint64 readData(char *data, qint64 maxlen) override
     {
-        qint64 len = std::min(qint64{ fakeSize }, maxlen);
+        qint64 len = std::min<uint64_t>(fakeSize, maxlen);
         std::fill_n(data, len, payload);
         size -= len;
         fakeSize -= len;

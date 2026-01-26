@@ -317,21 +317,19 @@ void SyncEngine::startSync()
     }
 
     // Check free size on disk first.
-    const qint64 minFree = criticalFreeSpaceLimit();
-    const qint64 freeBytes = Utility::freeDiskSpace(_localPath);
-    if (freeBytes >= 0) {
+    const auto minFree = criticalFreeSpaceLimit();
+    const auto freeBytes = Utility::freeDiskSpace(_localPath);
+    if (freeBytes.has_value()) {
         if (freeBytes < minFree) {
             qCWarning(lcEngine()) << u"Too little space available at" << _localPath << u". Have" << freeBytes << u"bytes and require at least" << minFree
                                   << u"bytes";
-            Q_EMIT syncError(tr("Only %1 are available, need at least %2 to start",
-                "Placeholders are postfixed with file sizes using Utility::octetsToString()")
-                                 .arg(
-                                     Utility::octetsToString(freeBytes),
-                                     Utility::octetsToString(minFree)));
+            Q_EMIT syncError(
+                tr("Only %1 are available, need at least %2 to start", "Placeholders are postfixed with file sizes using Utility::octetsToString()")
+                    .arg(Utility::octetsToString(freeBytes.value()), Utility::octetsToString(minFree)));
             finalize(false);
             return;
         } else {
-            qCInfo(lcEngine) << u"There are" << Utility::octetsToString(freeBytes) << u"available at" << _localPath;
+            qCInfo(lcEngine) << u"There are" << Utility::octetsToString(freeBytes.value()) << u"available at" << _localPath;
         }
     } else {
         qCWarning(lcEngine) << u"Could not determine free space available at" << _localPath;
@@ -649,13 +647,13 @@ void SyncEngine::finalize(bool success)
     _localDiscoveryStyle = LocalDiscoveryStyle::FilesystemOnly;
 }
 
-void SyncEngine::slotProgress(const SyncFileItem &item, qint64 current)
+void SyncEngine::slotProgress(const SyncFileItem &item, uint64_t current)
 {
     _progressInfo->setProgressItem(item, current);
     Q_EMIT transmissionProgress(*_progressInfo);
 }
 
-void SyncEngine::updateFileTotal(const SyncFileItem &item, qint64 newSize)
+void SyncEngine::updateFileTotal(const SyncFileItem &item, uint64_t newSize)
 {
     _progressInfo->updateTotalsForFile(item, newSize);
     Q_EMIT transmissionProgress(*_progressInfo);

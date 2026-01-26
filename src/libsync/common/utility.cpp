@@ -65,18 +65,16 @@ namespace OCC {
 
 Q_LOGGING_CATEGORY(lcUtility, "sync.utility", QtMsgType::QtInfoMsg)
 
-QString Utility::octetsToString(qint64 octets)
+QString Utility::octetsToString(uint64_t octets)
 {
-    OC_ASSERT(octets >= 0)
-
     using namespace FileSystem::SizeLiterals;
 
     // We do what macOS 10.8 and above do: 0 fraction digits for bytes and KB; 1 fraction digits for MB; 2 for GB and above.
     // See also https://developer.apple.com/documentation/foundation/nsbytecountformatter/1417887-adaptive
     int precision = 0;
-    if (quint64(octets) >= 1_GiB) {
+    if (octets >= 1_GiB) {
         precision = 2;
-    } else if (quint64(octets) >= 1_MiB) {
+    } else if (octets >= 1_MiB) {
         precision = 1;
     }
 
@@ -116,26 +114,25 @@ QByteArray Utility::userAgentString()
         .toLatin1();
 }
 
-qint64 Utility::freeDiskSpace(const QString &path)
+std::optional<uint64_t> Utility::freeDiskSpace(const QString &path)
 {
 #if defined(Q_OS_MAC) || defined(Q_OS_FREEBSD) || defined(Q_OS_FREEBSD_KERNEL) || defined(Q_OS_NETBSD) || defined(Q_OS_OPENBSD)
     struct statvfs stat;
     if (statvfs(path.toLocal8Bit().data(), &stat) == 0) {
-        return (qint64)stat.f_bavail * stat.f_frsize;
+        return stat.f_bavail * stat.f_frsize;
     }
 #elif defined(Q_OS_UNIX)
     struct statvfs64 stat;
     if (statvfs64(path.toLocal8Bit().data(), &stat) == 0) {
-        return (qint64)stat.f_bavail * stat.f_frsize;
+        return stat.f_bavail * stat.f_frsize;
     }
 #elif defined(Q_OS_WIN)
-    ULARGE_INTEGER freeBytes;
-    freeBytes.QuadPart = 0L;
+    ULARGE_INTEGER freeBytes = {};
     if (GetDiskFreeSpaceEx(reinterpret_cast<const wchar_t *>(FileSystem::longWinPath(path).utf16()), &freeBytes, nullptr, nullptr)) {
         return freeBytes.QuadPart;
     }
 #endif
-    return -1;
+    return {};
 }
 
 QString Utility::compactFormatDouble(double value, int prec, const QString &unit)

@@ -19,7 +19,7 @@ constexpr auto BufferSize = 4_MiB;
 }
 
 
-CfApiHydrationJob *CfApiWrapper::HydrationDevice::requestHydration(const CfApiWrapper::CallBackContext &context, qint64 totalSize, QObject *parent)
+CfApiHydrationJob *CfApiWrapper::HydrationDevice::requestHydration(const CfApiWrapper::CallBackContext &context, uint64_t totalSize, QObject *parent)
 {
     qCInfo(lcCfApiHydrationDevice) << u"Requesting hydration" << context;
     if (context.vfs->_hydrationJobs.contains(context.transferKey)) {
@@ -65,7 +65,7 @@ CfApiHydrationJob *CfApiWrapper::HydrationDevice::requestHydration(const CfApiWr
     return hydration;
 }
 
-CfApiWrapper::HydrationDevice::HydrationDevice(const CfApiWrapper::CallBackContext &context, qint64 totalSize, QObject *parent)
+CfApiWrapper::HydrationDevice::HydrationDevice(const CfApiWrapper::CallBackContext &context, uint64_t totalSize, QObject *parent)
     : QIODevice(parent)
     , _context(context)
     , _totalSize(totalSize)
@@ -123,9 +123,9 @@ qint64 CfApiWrapper::HydrationDevice::writeData(const char *data, qint64 len)
 
         _offset += currentBlockLength;
         // refresh Windows Copy Dialog progress
-        const LARGE_INTEGER progressTotal = {.QuadPart = _totalSize};
+        const LARGE_INTEGER progressTotal = {.QuadPart = static_cast<int64_t>(_totalSize)};
 
-        const LARGE_INTEGER progressCompleted = {.QuadPart = _offset};
+        const LARGE_INTEGER progressCompleted = {.QuadPart = static_cast<int64_t>(_offset)};
 
         const qint64 cfReportProgressResult =
             CfReportProviderProgress(_context.connectionKey, {.QuadPart = _context.transferKey}, progressTotal, progressCompleted);
