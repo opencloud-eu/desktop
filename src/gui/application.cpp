@@ -124,8 +124,7 @@ Application::Application(const QString &displayLanguage, bool debugMode)
     if (VfsPluginManager::instance().bestAvailableVfsMode() == Vfs::Off) {
         qCWarning(lcApplication) << u"Theme wants to show vfs mode, but no vfs plugins are available";
     }
-    if (VfsPluginManager::instance().isVfsPluginAvailable(Vfs::WindowsCfApi))
-        qCInfo(lcApplication) << u"VFS windows plugin is available";
+    qCInfo(lcApplication) << VfsPluginManager::instance().bestAvailableVfsMode() << u"plugin is available";
 
     ConfigFile cfg;
 
