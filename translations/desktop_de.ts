@@ -2805,17 +2805,17 @@ Beachten Sie, dass Kommandozeilenoptionen zum Logging diese Einstellungen übers
     <message>
         <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="86"/>
         <source>The sync path is claimed by a different cloud, please check your setup</source>
-        <translation type="unfinished"/>
+        <translation>Der Synchronisierungspfad wird von einer anderen Cloud beansprucht. Bitte überprüfen Sie Ihre Einstellungen.</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="133"/>
         <source>Failed to set the extended file attribute</source>
-        <translation type="unfinished"/>
+        <translation>Fehler beim Setzen der erweiterten Dateiattribute</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="250"/>
         <source>Cannot create a placeholder because a file with the placeholder name already exist</source>
-        <translation type="unfinished"/>
+        <translation>Es konnte kein Platzhalter erstellt werden, da bereits eine Datei mit dem Namen des Platzhalters existiert</translation>
     </message>
 </context>
 <context>
