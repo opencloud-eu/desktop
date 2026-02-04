@@ -91,11 +91,9 @@ QString AccountConfiguredWizardPage::syncTargetDir() const
 SyncMode AccountConfiguredWizardPage::syncMode() const
 {
     if (_ui->syncEverythingRadioButton->isChecked()) {
-#ifdef Q_OS_WIN
-        if (Vfs::checkAvailability(syncTargetDir(), Vfs::WindowsCfApi)) {
+        if (VfsPluginManager::instance().bestAvailableVfsMode() != Vfs::Off) {
             return SyncMode::UseVfs;
         }
-#endif
         return SyncMode::SyncEverything;
     }
     if (_ui->configureSyncManuallyRadioButton->isChecked()) {

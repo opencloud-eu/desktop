@@ -78,7 +78,7 @@ FolderWizardPrivate::FolderWizardPrivate(FolderWizard *q, const AccountStatePtr 
 
     q->setPage(FolderWizard::Page_Space, _spacesPage);
 
-    if (VfsPluginManager::instance().bestAvailableVfsMode() != Vfs::WindowsCfApi) {
+    if (VfsPluginManager::instance().bestAvailableVfsMode() == Vfs::Off) {
         _folderWizardSelectiveSyncPage = new FolderWizardSelectiveSync(this);
         q->setPage(FolderWizard::Page_SelectiveSync, _folderWizardSelectiveSyncPage);
     }
@@ -121,12 +121,7 @@ const AccountStatePtr &FolderWizardPrivate::accountState()
 
 bool FolderWizardPrivate::useVirtualFiles() const
 {
-#ifdef Q_OS_WIN
-    return VfsPluginManager::instance().bestAvailableVfsMode() == Vfs::WindowsCfApi;
-#elif defined(Q_OS_UNIX) && !defined(Q_OS_MAC)
-    return VfsPluginManager::instance().bestAvailableVfsMode() == Vfs::XAttr;
-#endif
-    return false;
+    return VfsPluginManager::instance().bestAvailableVfsMode() != Vfs::Off;
 }
 
 FolderWizard::FolderWizard(const AccountStatePtr &account, QWidget *parent)

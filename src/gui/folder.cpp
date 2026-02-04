@@ -544,7 +544,7 @@ void Folder::startVfs()
         _vfs->fileStatusChanged(stateDbFile + QStringLiteral("-shm"), SyncFileStatus::StatusExcluded);
         _engine->setSyncOptions(loadSyncOptions());
 
-        if (_vfs->mode() == Vfs::WindowsCfApi) {
+        if (_vfs->mode() != Vfs::Off) {
             // diable ignorelist with vfs
             _engine->journal()->setSelectiveSyncList(SyncJournalDb::SelectiveSyncBlackList, {});
         }
