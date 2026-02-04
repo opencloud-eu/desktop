@@ -67,15 +67,15 @@ private Q_SLOTS:
         QTest::addColumn<Vfs::Mode>("vfsMode");
         QTest::addColumn<bool>("filesAreDehydrated");
 
-        QTest::newRow("Vfs::Off") << Vfs::Off << false;
+        QTest::newRow("Vfs::Mode::Off") << Vfs::Mode::Off << false;
 
-        if (VfsPluginManager::instance().isVfsPluginAvailable(Vfs::WindowsCfApi)) {
-            QTest::newRow("Vfs::WindowsCfApi dehydrated") << Vfs::WindowsCfApi << true;
+        if (VfsPluginManager::instance().isVfsPluginAvailable(Vfs::Mode::WindowsCfApi)) {
+            QTest::newRow("Vfs::Mode::WindowsCfApi dehydrated") << Vfs::Mode::WindowsCfApi << true;
 
             // TODO: the hydrated version will fail due to an issue in the winvfs plugin, so leave it disabled for now.
-            // QTest::newRow("Vfs::WindowsCfApi hydrated") << Vfs::WindowsCfApi << false;
+            // QTest::newRow("Vfs::Mode::WindowsCfApi hydrated") << Vfs::Mode::WindowsCfApi << false;
         } else if (Utility::isWindows()) {
-            qWarning("Skipping Vfs::WindowsCfApi");
+            qWarning("Skipping Vfs::Mode::WindowsCfApi");
         }
     }
 
@@ -227,7 +227,7 @@ private Q_SLOTS:
         QVERIFY(fakeFolder.applyLocalModificationsAndSync());
         QCOMPARE(fakeFolder.currentLocalState(), remoteInfo);
         QCOMPARE(printDbData(fakeFolder.dbState()), printDbData(remoteInfo));
-        if (vfsMode == Vfs::Off) {
+        if (vfsMode == Vfs::Mode::Off) {
             QCOMPARE(counter.nGET, 0); // b2m is detected as a *new* file, so we don't need to fetch the contents
         } else {
             QCOMPARE(counter.nGET, 1); // b2 is accessed, so we get a callback to download the file
@@ -238,7 +238,7 @@ private Q_SLOTS:
         counter.reset();
 
         // WinVFS handles this just fine.
-        if (vfsMode == Vfs::Off) {
+        if (vfsMode == Vfs::Mode::Off) {
             // Move-and-change, content only -- c1 has no checksum, so we fail to detect this!
             // NOTE: This is an expected failure.
             mtime = fakeFolder.remoteModifier().find(QStringLiteral("C/c1"))->lastModified();
@@ -952,7 +952,7 @@ private Q_SLOTS:
             auto localState = fakeFolder.currentLocalState();
             FileInfo *localFile = localState.find(QStringLiteral("A/file"));
             QVERIFY(localFile != nullptr); // check if the file exists
-            QCOMPARE(vfsMode == Vfs::Off || localFile->isDehydratedPlaceholder, vfsMode == Vfs::Off || filesAreDehydrated);
+            QCOMPARE(vfsMode == Vfs::Mode::Off || localFile->isDehydratedPlaceholder, vfsMode == Vfs::Mode::Off || filesAreDehydrated);
 
             auto remoteState = fakeFolder.currentRemoteState();
             FileInfo *remoteFile = remoteState.find(QStringLiteral("A/file"));
@@ -973,7 +973,7 @@ private Q_SLOTS:
             QVERIFY(localState.find(QStringLiteral("A")) == nullptr); // check if the directory is gone
             FileInfo *localFile = localState.find(QStringLiteral("B/file"));
             QVERIFY(localFile != nullptr); // check if the file exists
-            QCOMPARE(vfsMode == Vfs::Off || localFile->isDehydratedPlaceholder, vfsMode == Vfs::Off || filesAreDehydrated);
+            QCOMPARE(vfsMode == Vfs::Mode::Off || localFile->isDehydratedPlaceholder, vfsMode == Vfs::Mode::Off || filesAreDehydrated);
 
             auto remoteState = fakeFolder.currentRemoteState();
             FileInfo *remoteFile = remoteState.find(QStringLiteral("B/file"));
@@ -988,12 +988,12 @@ private Q_SLOTS:
     {
         QTest::addColumn<Vfs::Mode>("vfsMode");
 
-        QTest::newRow("Vfs::Off") << Vfs::Off;
+        QTest::newRow("Vfs::Mode::Off") << Vfs::Mode::Off;
 #ifdef Q_OS_WIN32
-        if (VfsPluginManager::instance().isVfsPluginAvailable(Vfs::WindowsCfApi)) {
-            QTest::newRow("Vfs::WindowsCfApi") << Vfs::WindowsCfApi;
+        if (VfsPluginManager::instance().isVfsPluginAvailable(Vfs::Mode::WindowsCfApi)) {
+            QTest::newRow("Vfs::Mode::WindowsCfApi") << Vfs::Mode::WindowsCfApi;
         } else {
-            qWarning("Skipping Vfs::WindowsCfApi");
+            qWarning("Skipping Vfs::Mode::WindowsCfApi");
         }
 #endif
     }
@@ -1010,8 +1010,7 @@ private Q_SLOTS:
 
         QCOMPARE(fakeFolder.currentLocalState(), fakeFolder.currentRemoteState());
 
-        if (vfsMode != Vfs::Off)
-        {
+        if (vfsMode != Vfs::Mode::Off) {
             auto vfs = QSharedPointer<Vfs>(VfsPluginManager::instance().createVfsFromPlugin(vfsMode).release());
             QVERIFY(vfs);
             fakeFolder.switchToVfs(vfs);
@@ -1031,7 +1030,7 @@ private Q_SLOTS:
         // sync2 file is in error state, checkErrorBlacklisting sets instruction to IGNORED
         QVERIFY(!fakeFolder.applyLocalModificationsAndSync());
 
-        if (vfsMode != Vfs::Off) {
+        if (vfsMode != Vfs::Mode::Off) {
             QVERIFY(!fakeFolder.applyLocalModificationsAndSync());
         }
 

@@ -109,7 +109,7 @@ VfsCfApi::~VfsCfApi() = default;
 
 Vfs::Mode VfsCfApi::mode() const
 {
-    return WindowsCfApi;
+    return Vfs::Mode::WindowsCfApi;
 }
 
 void VfsCfApi::startImpl(const VfsSetupParams &params)

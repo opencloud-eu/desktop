@@ -179,7 +179,7 @@ void PropagateDownloadFile::start()
         updateMetadata(false);
         return;
     }
-    if (vfs->mode() == Vfs::Off && _item->_type == ItemTypeVirtualFile) {
+    if (vfs->mode() == Vfs::Mode::Off && _item->_type == ItemTypeVirtualFile) {
         qCWarning(lcPropagateDownload) << u"ignored virtual file type of" << _item->localName();
         _item->_type = ItemTypeFile;
     }

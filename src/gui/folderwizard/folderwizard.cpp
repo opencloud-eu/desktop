@@ -78,7 +78,7 @@ FolderWizardPrivate::FolderWizardPrivate(FolderWizard *q, const AccountStatePtr 
 
     q->setPage(FolderWizard::Page_Space, _spacesPage);
 
-    if (VfsPluginManager::instance().bestAvailableVfsMode() == Vfs::Off) {
+    if (VfsPluginManager::instance().bestAvailableVfsMode() == Vfs::Mode::Off) {
         _folderWizardSelectiveSyncPage = new FolderWizardSelectiveSync(this);
         q->setPage(FolderWizard::Page_SelectiveSync, _folderWizardSelectiveSyncPage);
     }
@@ -121,7 +121,7 @@ const AccountStatePtr &FolderWizardPrivate::accountState()
 
 bool FolderWizardPrivate::useVirtualFiles() const
 {
-    return VfsPluginManager::instance().bestAvailableVfsMode() != Vfs::Off;
+    return VfsPluginManager::instance().bestAvailableVfsMode() != Vfs::Mode::Off;
 }
 
 FolderWizard::FolderWizard(const AccountStatePtr &account, QWidget *parent)

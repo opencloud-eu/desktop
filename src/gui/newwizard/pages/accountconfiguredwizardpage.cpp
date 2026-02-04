@@ -91,7 +91,7 @@ QString AccountConfiguredWizardPage::syncTargetDir() const
 SyncMode AccountConfiguredWizardPage::syncMode() const
 {
     if (_ui->syncEverythingRadioButton->isChecked()) {
-        if (VfsPluginManager::instance().bestAvailableVfsMode() != Vfs::Off) {
+        if (VfsPluginManager::instance().bestAvailableVfsMode() != Vfs::Mode::Off) {
             return SyncMode::UseVfs;
         }
         return SyncMode::SyncEverything;
