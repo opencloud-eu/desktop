@@ -23,6 +23,8 @@
 #include "common/utility_win.h"
 #endif
 
+
+using namespace Qt::Literals::StringLiterals;
 using namespace OCC;
 
 
@@ -52,13 +54,24 @@ private Q_SLOTS:
         auto newAccountState = TestUtils::createDummyAccount();
         FolderMan *folderman = TestUtils::folderMan();
         QCOMPARE(folderman, FolderMan::instance());
+
+        const auto type = FolderMan::NewFolderType::SpacesFolder;
+        const QUuid uuid = {};
+
+        if (Utility::isWindows()) { // drive-letter tests
+            if (QFileInfo(QStringLiteral("c:/")).isWritable()) {
+                // we expect success
+                QCOMPARE(folderman->checkPathValidityForNewFolder(QStringLiteral("c:"), type, uuid), QString());
+                QCOMPARE(folderman->checkPathValidityForNewFolder(QStringLiteral("c:/"), type, uuid), QString());
+                QCOMPARE(folderman->checkPathValidityForNewFolder(QStringLiteral("c:/foo"), type, uuid), QString());
+            }
+        }
+
         QVERIFY(folderman->addFolder(
             newAccountState.get(), TestUtils::createDummyFolderDefinition(newAccountState->account(), dirPath + QStringLiteral("/sub/OpenCloud1"))));
         QVERIFY(folderman->addFolder(
             newAccountState.get(), TestUtils::createDummyFolderDefinition(newAccountState->account(), dirPath + QStringLiteral("/OpenCloud2"))));
 
-        const auto type = FolderMan::NewFolderType::SpacesFolder;
-        const QUuid uuid = {};
 
         // those should be allowed
         // QString FolderMan::checkPathValidityForNewFolder(const QString& path, const QUrl &serverUrl, bool forNewDirectory)
@@ -71,15 +84,15 @@ private Q_SLOTS:
         // QCOMPARE(folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/sub/bliblablu/some/more")), QString());
 
         // A file -> Error
-        QVERIFY(!folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/sub/file.txt"), type, uuid).isNull());
+        QCOMPARE_NE(folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/sub/file.txt"), type, uuid), QString());
 
         // The following both fail because they refer to the same account
-        QVERIFY(!folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/sub/OpenCloud1"), type, uuid).isNull());
-        QVERIFY(!folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/OpenCloud2/"), type, uuid).isNull());
+        QCOMPARE_NE(folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/sub/OpenCloud1"), type, uuid), QString());
+        QCOMPARE_NE(folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/OpenCloud2/"), type, uuid), QString());
 
-        QVERIFY(!folderman->checkPathValidityForNewFolder(dirPath, type, uuid).isNull());
-        QVERIFY(!folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/sub/OpenCloud1/folder"), type, uuid).isNull());
-        QVERIFY(!folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/sub/OpenCloud1/folder/f"), type, uuid).isNull());
+        QCOMPARE_NE(folderman->checkPathValidityForNewFolder(dirPath, type, uuid), QString());
+        QCOMPARE_NE(folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/sub/OpenCloud1/folder"), type, uuid), QString());
+        QCOMPARE_NE(folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/sub/OpenCloud1/folder/f"), type, uuid), QString());
 
 #ifndef Q_OS_WIN // no links on windows, no permissions
         // make a bunch of links
@@ -89,75 +102,75 @@ private Q_SLOTS:
         QVERIFY(QFile::link(dirPath + QStringLiteral("/sub/OpenCloud1/folder"), dirPath + QStringLiteral("/link4")));
 
         // Ok
-        QVERIFY(folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/link1"), type, uuid).isNull());
-        QVERIFY(folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/link2/free"), type, uuid).isNull());
+        QCOMPARE(folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/link1"), type, uuid), QString());
+        QCOMPARE(folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/link2/free"), type, uuid), QString());
 
         // Not Ok
-        QVERIFY(!folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/link2"), type, uuid).isNull());
+        QCOMPARE_NE(folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/link2"), type, uuid), QString());
 
         // link 3 points to an existing sync folder. To make it fail, the account must be the same
-        QVERIFY(!folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/link3"), type, uuid).isNull());
+        QCOMPARE_NE(folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/link3"), type, uuid), QString());
 
-        QVERIFY(!folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/link4"), type, uuid).isNull());
-        QVERIFY(!folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/link3/folder"), type, uuid).isNull());
+        QCOMPARE_NE(folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/link4"), type, uuid), QString());
+        QCOMPARE_NE(folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/link3/folder"), type, uuid), QString());
 
         // test some non existing sub path (error)
-        QVERIFY(!folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/sub/OpenCloud1/some/sub/path"), type, uuid).isNull());
-        QVERIFY(!folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/OpenCloud2/blublu"), type, uuid).isNull());
-        QVERIFY(!folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/sub/OpenCloud1/folder/g/h"), type, uuid).isNull());
-        QVERIFY(!folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/link3/folder/neu_folder"), type, uuid).isNull());
+        QCOMPARE_NE(folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/sub/OpenCloud1/some/sub/path"), type, uuid), QString());
+        QCOMPARE_NE(folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/OpenCloud2/blublu"), type, uuid), QString());
+        QCOMPARE_NE(folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/sub/OpenCloud1/folder/g/h"), type, uuid), QString());
+        QCOMPARE_NE(folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/link3/folder/neu_folder"), type, uuid), QString());
 
         // Subfolder of links
-        QVERIFY(folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/link1/subfolder"), type, uuid).isNull());
-        QVERIFY(folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/link2/free/subfolder"), type, uuid).isNull());
+        QCOMPARE(folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/link1/subfolder"), type, uuid), QString());
+        QCOMPARE(folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/link2/free/subfolder"), type, uuid), QString());
 
         if (getuid() != 0) {
             // Should not have the rights
-            QVERIFY(!folderman->checkPathValidityForNewFolder(QStringLiteral("/"), type, uuid).isNull());
-            QVERIFY(!folderman->checkPathValidityForNewFolder(QStringLiteral("/usr/bin/somefolder"), type, uuid).isNull());
+            QCOMPARE_NE(folderman->checkPathValidityForNewFolder(QStringLiteral("/"), type, uuid), QString());
+            QCOMPARE_NE(folderman->checkPathValidityForNewFolder(QStringLiteral("/usr/bin/somefolder"), type, uuid), QString());
         }
 #endif
 
-        if (Utility::isWindows()) { // drive-letter tests
-            if (!QFileInfo(QStringLiteral("v:/")).exists()) {
-                QVERIFY(!folderman->checkPathValidityForNewFolder(QStringLiteral("v:"), type, uuid).isNull());
-                QVERIFY(!folderman->checkPathValidityForNewFolder(QStringLiteral("v:/"), type, uuid).isNull());
-                QVERIFY(!folderman->checkPathValidityForNewFolder(QStringLiteral("v:/foo"), type, uuid).isNull());
-            }
-            if (QFileInfo(QStringLiteral("c:/")).isWritable()) {
-                QVERIFY(folderman->checkPathValidityForNewFolder(QStringLiteral("c:"), type, uuid).isNull());
-                QVERIFY(folderman->checkPathValidityForNewFolder(QStringLiteral("c:/"), type, uuid).isNull());
-                QVERIFY(folderman->checkPathValidityForNewFolder(QStringLiteral("c:/foo"), type, uuid).isNull());
-            }
-        }
-
         // Invalid paths
-        QVERIFY(!folderman->checkPathValidityForNewFolder({}, type, uuid).isNull());
+        QCOMPARE_NE(folderman->checkPathValidityForNewFolder({}, type, uuid), QString());
 
 
         // REMOVE OpenCloud2 from the filesystem, but keep a folder sync'ed to it.
         QDir(dirPath + QStringLiteral("/OpenCloud2/")).removeRecursively();
-        QVERIFY(!folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/OpenCloud2/blublu"), type, uuid).isNull());
-        QVERIFY(!folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/OpenCloud2/sub/subsub/sub"), type, uuid).isNull());
+        QCOMPARE_NE(folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/OpenCloud2/blublu"), type, uuid), QString());
+        QCOMPARE_NE(folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/OpenCloud2/sub/subsub/sub"), type, uuid), QString());
 
         { // check for rejection of a directory with `.sync_*.db`
             QVERIFY(dir2.mkpath(QStringLiteral("db-check1")));
-            QVERIFY(folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/db-check1"), type, uuid).isNull());
+            QCOMPARE(folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/db-check1"), type, uuid), QString());
             QFile f(dirPath + QStringLiteral("/db-check1/.sync_something.db"));
             QVERIFY(f.open(QFile::Truncate | QFile::WriteOnly));
             f.close();
             QVERIFY(QFileInfo::exists(dirPath + QStringLiteral("/db-check1/.sync_something.db")));
-            QVERIFY(!folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/db-check1"), type, uuid).isNull());
+            QCOMPARE_NE(folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/db-check1"), type, uuid), QString());
         }
 
         { // check for rejection of a directory with `._sync_*.db`
             QVERIFY(dir2.mkpath(QStringLiteral("db-check2")));
-            QVERIFY(folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/db-check2"), type, uuid).isNull());
+            QCOMPARE(folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/db-check2"), type, uuid), QString());
             QFile f(dirPath + QStringLiteral("/db-check2/._sync_something.db"));
             QVERIFY(f.open(QFile::Truncate | QFile::WriteOnly));
             f.close();
             QVERIFY(QFileInfo::exists(dirPath + QStringLiteral("/db-check2/._sync_something.db")));
-            QVERIFY(!folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/db-check2"), type, uuid).isNull());
+            QCOMPARE_NE(folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/db-check2"), type, uuid), QString());
+        }
+
+
+        if (Utility::isWindows()) { // drive-letter tests
+            const auto driveLetter = QFileInfo(dirPath).absoluteDir().absolutePath().at(0);
+            const auto drive = u"%1:/"_s.arg(driveLetter);
+            if (QFileInfo(drive).isWritable()) {
+                // fails as we already sync dirPath + QStringLiteral("/sub/OpenCloud1")
+                QCOMPARE_NE(folderman->checkPathValidityForNewFolder(u"%1:"_s.arg(driveLetter), type, uuid), QString());
+                QCOMPARE_NE(folderman->checkPathValidityForNewFolder(u"%1:/"_s.arg(driveLetter), type, uuid), QString());
+                // succeeds as the sub dir foo does not contain OpenCloud1
+                QCOMPARE(folderman->checkPathValidityForNewFolder(u"%1:/foo"_s.arg(driveLetter), type, uuid), QString());
+            }
         }
     }
 
@@ -235,28 +248,25 @@ private Q_SLOTS:
         const auto ourUuid = QUuid::createUuid();
 
         // Spaces Sync Root in another Spaces Sync Root should fail
-        QVERIFY(!folderman
-                     ->checkPathValidityForNewFolder(
-                         dirPath + QStringLiteral("/AnotherSpacesSyncRoot/OurSpacesSyncRoot"), FolderMan::NewFolderType::SpacesSyncRoot, ourUuid)
-                     .isNull());
+        QCOMPARE_NE(folderman->checkPathValidityForNewFolder(
+                        dirPath + QStringLiteral("/AnotherSpacesSyncRoot/OurSpacesSyncRoot"), FolderMan::NewFolderType::SpacesSyncRoot, ourUuid),
+            QString());
         // Spaces Sync Root one level up should be fine
-        QVERIFY(folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/OurSpacesSyncRoot"), FolderMan::NewFolderType::SpacesSyncRoot, ourUuid)
-                    .isNull());
+        QCOMPARE(folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/OurSpacesSyncRoot"), FolderMan::NewFolderType::SpacesSyncRoot, ourUuid),
+            QString());
 
         // Create the sync root so we can test Spaces Folder creation below
         QVERIFY(dir2.mkpath(QStringLiteral("OurSpacesSyncRoot")));
         Utility::markDirectoryAsSyncRoot(dir2.filePath(QStringLiteral("OurSpacesSyncRoot")), ourUuid);
 
         // A folder for a Space in a sync root for another account should fail
-        QVERIFY(!folderman
-                     ->checkPathValidityForNewFolder(
-                         dirPath + QStringLiteral("/AnotherSpacesSyncRoot/OurSpacesFolder"), FolderMan::NewFolderType::SpacesFolder, ourUuid)
-                     .isNull());
+        QCOMPARE_NE(folderman->checkPathValidityForNewFolder(
+                        dirPath + QStringLiteral("/AnotherSpacesSyncRoot/OurSpacesFolder"), FolderMan::NewFolderType::SpacesFolder, ourUuid),
+            QString());
         // But in our sync root that should just be fine
-        QVERIFY(
-            folderman
-                ->checkPathValidityForNewFolder(dirPath + QStringLiteral("/OurSpacesSyncRoot/OurSpacesFolder"), FolderMan::NewFolderType::SpacesFolder, ourUuid)
-                .isNull());
+        QCOMPARE(folderman->checkPathValidityForNewFolder(
+                     dirPath + QStringLiteral("/OurSpacesSyncRoot/OurSpacesFolder"), FolderMan::NewFolderType::SpacesFolder, ourUuid),
+            QString());
     }
 };
 
