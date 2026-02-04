@@ -58,7 +58,7 @@ void AccountConfiguredSetupWizardState::evaluatePage()
             return;
         }
 
-        if (auto result = Vfs::checkAvailability(syncTargetDir, VfsPluginManager::instance().bestAvailableVfsMode()); !result) {
+        if (auto result = VfsPluginManager::instance().prepare(syncTargetDir, {}, VfsPluginManager::instance().bestAvailableVfsMode()); !result) {
             emitEvaluationFailedError(result.error());
             return;
         }

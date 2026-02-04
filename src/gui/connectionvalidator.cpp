@@ -71,8 +71,8 @@ void ConnectionValidator::checkServer(ConnectionValidator::ValidationMode mode)
         qCDebug(lcConnectionValidator) << u"Trying to look up system proxy";
         auto watcher = std::make_unique<QFutureWatcher<QList<QNetworkProxy>>>();
         auto *watcherPtr = watcher.get();
-        // the watchers live time is managed by the conncect
-        watcherPtr->connect(
+        // the watchers live time is managed by the connect
+        connect(
             watcherPtr, &QFutureWatcher<QList<QNetworkProxy>>::finished, this, [watcher = std::move(watcher), elaped = Utility::ChronoElapsedTimer(), this] {
                 const auto proxies = watcher->result();
                 if (proxies.isEmpty()) {

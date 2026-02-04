@@ -160,7 +160,8 @@ void Logger::open(const QString &name)
     }
 
     if (!openSucceeded) {
-        std::cerr << "Failed to open the log file" << std::endl;
+        std::cerr << "Failed to open the log file: '" << qPrintable(_logFile.fileName()) << "' Error: '" << qPrintable(_logFile.errorString()) << "'"
+                  << std::endl;
         return;
     }
     _logstream.reset(new QTextStream(&_logFile));
