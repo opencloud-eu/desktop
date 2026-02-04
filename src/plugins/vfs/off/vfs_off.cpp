@@ -80,6 +80,11 @@ void VfsOff::startImpl(const VfsSetupParams &)
     Q_EMIT started();
 }
 
+Result<void, QString> OffVfsPluginFactory::checkAvailability(const QString &) const
+{
+    return {};
+}
+
 Result<Vfs::ConvertToPlaceholderResult, QString> VfsOff::updateMetadata(const SyncFileItem &item, const QString &filePath, const QString &replacesFile)
 {
     Q_UNUSED(replacesFile)
