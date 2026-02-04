@@ -121,7 +121,7 @@ Application::Application(const QString &displayLanguage, bool debugMode)
     qCInfo(lcApplication) << u"Plugin search paths:" << qApp->libraryPaths();
 
     // Check vfs plugins
-    if (VfsPluginManager::instance().bestAvailableVfsMode() == Vfs::Off) {
+    if (VfsPluginManager::instance().bestAvailableVfsMode() == Vfs::Mode::Off) {
         qCWarning(lcApplication) << u"Theme wants to show vfs mode, but no vfs plugins are available";
     }
     qCInfo(lcApplication) << VfsPluginManager::instance().bestAvailableVfsMode() << u"plugin is available";

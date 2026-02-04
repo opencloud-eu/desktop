@@ -57,7 +57,7 @@ VfsXAttr::~VfsXAttr() = default;
 
 Vfs::Mode VfsXAttr::mode() const
 {
-    return XAttr;
+    return Mode::XAttr;
 }
 
 QString VfsXAttr::xattrOwnerString() const

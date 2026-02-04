@@ -40,7 +40,7 @@ public:
     /// whether the folder syncs hidden files
     bool ignoreHiddenFiles = true;
     /// Which virtual files setting the folder uses
-    Vfs::Mode virtualFilesMode = Vfs::Off;
+    Vfs::Mode virtualFilesMode = Vfs::Mode::Off;
 
     /// Saves the folder definition into the current settings.
     static void save(QSettings &settings, const FolderDefinition &folder);

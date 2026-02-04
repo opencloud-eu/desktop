@@ -171,7 +171,7 @@ void sync(const SyncCTX &ctx, const QUrl &spaceUrl)
         selectiveSyncFixup(db, selectiveSyncList);
     }
 
-    SyncOptions opt{QSharedPointer<Vfs>(VfsPluginManager::instance().createVfsFromPlugin(Vfs::Off).release())};
+    SyncOptions opt{QSharedPointer<Vfs>(VfsPluginManager::instance().createVfsFromPlugin(Vfs::Mode::Off).release())};
     auto engine = new SyncEngine(ctx.account, spaceUrl, ctx.options.source_dir, ctx.options.remoteFolder, db);
     engine->setSyncOptions(opt);
     engine->setParent(db);
