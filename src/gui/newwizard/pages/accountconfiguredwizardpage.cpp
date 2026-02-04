@@ -38,7 +38,7 @@ AccountConfiguredWizardPage::AccountConfiguredWizardPage(const QString &defaultS
             // the directory chooser should guarantee that the directory exists
             Q_ASSERT(QDir(directory).exists());
 
-            if (auto result = Vfs::checkAvailability(directory, VfsPluginManager::instance().bestAvailableVfsMode()); !result) {
+            if (auto result = VfsPluginManager::instance().prepare(directory, {}, VfsPluginManager::instance().bestAvailableVfsMode()); !result) {
                 auto *box =
                     new FontIconMessageBox({Resources::FontIcon::DefaultGlyphes::Warning}, tr("Sync location not supported"), result.error(), QMessageBox::Ok, this);
                 box->setAttribute(Qt::WA_DeleteOnClose);

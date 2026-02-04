@@ -106,7 +106,7 @@ FolderDefinition FolderDefinition::load(QSettings &settings)
     QString vfsModeString = settings.value("virtualFilesMode").toString();
 
     const auto vfs = Utility::isWindows() ? Vfs::Mode::WindowsCfApi : Vfs::Mode::XAttr;
-    if (auto result = Vfs::checkAvailability(folder.localPath(), vfs); result) {
+    if (auto result = VfsPluginManager::instance().prepare(folder.localPath(), folder.accountUUID(), vfs); result) {
         vfsModeString = Utility::enumToString(vfs);
     } else {
         qCWarning(lcFolder) << u"Failed to upgrade" << folder.localPath() << u"to" << vfs << result.error();

@@ -7,22 +7,22 @@
 #include "vfs_xattr.h"
 
 #include "account.h"
+#include "common/chronoelapsedtimer.h"
 #include "common/syncjournaldb.h"
 #include "filesystem.h"
+#include "libsync/theme.h"
 #include "libsync/xattr.h"
 #include "syncfileitem.h"
 #include "vfs/hydrationjob.h"
-#include "theme.h"
-
-#include <string>
 
 #include <QDir>
 #include <QFile>
-#include <QLocalSocket>
 #include <QLoggingCategory>
-#include <QUuid>
 #include <QString>
+#include <QUuid>
 
+
+using namespace std::chrono_literals;
 using namespace Qt::StringLiterals;
 using namespace xattr;
 
@@ -30,6 +30,24 @@ Q_LOGGING_CATEGORY(lcVfsXAttr, "sync.vfs.xattr", QtInfoMsg)
 
 
 namespace {
+
+QString openVFSExePath()
+{
+    return QStringLiteral(OPENVFS_EXE);
+}
+
+
+QString xattrOwnerString(const QUuid &accountUuid)
+{
+    return u"%1:%2"_s.arg(OCC::Theme::instance()->appName(), accountUuid.toString(QUuid::WithoutBraces));
+}
+
+QString openVFSConfigFilePath()
+{
+    return QStandardPaths::locate(QStandardPaths::ConfigLocation, u"openvfs/config.json"_s);
+}
+
+
 const QString ownerXAttrName = u"user.openvfs.owner"_s;
 const QString etagXAttrName = u"user.openvfs.etag"_s;
 const QString fileidXAttrName = u"user.openvfs.fileid"_s;
@@ -44,6 +62,50 @@ const QString fileStateHydrate = u"hydrate"_s;
 const QString fileStateDehydrate = u"dehydrate"_s;
 const QString fileStateHydrated = u"hydrated"_s;
 
+
+#ifdef Q_OS_LINUX
+
+// Helper function to parse paths that the kernel inserts escape sequences
+// for.
+// https://github.com/qt/qtbase/blob/f47d9bcb45c77183c23e406df415ec2d9f4acbc4/src/corelib/io/qstorageinfo_linux.cpp#L72
+QByteArray parseMangledPath(QByteArrayView path)
+{
+    // The kernel escapes with octal the following characters:
+    //  space ' ', tab '\t', backslash '\\', and newline '\n'
+    // See:
+    // https://codebrowser.dev/linux/linux/fs/proc_namespace.c.html#show_mountinfo
+    // https://codebrowser.dev/linux/linux/fs/seq_file.c.html#mangle_path
+
+    QByteArray ret(path.size(), '\0');
+    char *dst = ret.data();
+    const char *src = path.data();
+    const char *srcEnd = path.data() + path.size();
+    while (src != srcEnd) {
+        switch (*src) {
+        case ' ': // Shouldn't happen
+            return {};
+
+        case '\\': {
+            // It always uses exactly three octal characters.
+            ++src;
+            char c = (*src++ - '0') << 6;
+            c |= (*src++ - '0') << 3;
+            c |= (*src++ - '0');
+            *dst++ = c;
+            break;
+        }
+
+        default:
+            *dst++ = *src++;
+            break;
+        }
+    }
+    // If "path" contains any of the characters this method is demangling,
+    // "ret" would be oversized with extra '\0' characters at the end.
+    ret.resize(dst - ret.data());
+    return ret;
+}
+#endif
 }
 
 namespace OCC {
@@ -60,36 +122,33 @@ Vfs::Mode VfsXAttr::mode() const
     return Mode::XAttr;
 }
 
-QString VfsXAttr::xattrOwnerString() const
-{
-    return u"%1:%2"_s.arg(Theme::instance()->appName(), params().account->uuid().toString(QUuid::WithoutBraces));
-}
-
 void VfsXAttr::startImpl(const VfsSetupParams &params)
 {
     qCDebug(lcVfsXAttr, "Start XAttr VFS");
 
     // Lets claim the sync root directory for us
     const auto path = FileSystem::toFilesystemPath(params.filesystemPath);
-
-    auto owner = FileSystem::Xattr::getxattr(path, ownerXAttrName);
-    QString err;
-
-    if (!owner) {
-        // set the owner to opencloud to claim it
-        if (!FileSystem::Xattr::setxattr(path, ownerXAttrName, xattrOwnerString() )) {
-            err = tr("Unable to claim the sync root for files on demand");
-        }
-    } else if (owner.value() != xattrOwnerString()) {
-        // owner is set. See if it is us
-        qCDebug(lcVfsXAttr) << "Root-FS has a different owner" << owner.value() << "Not our vfs!";
-        err = tr("The sync path is claimed by a different cloud, please check your setup");
+    // set the owner to opencloud to claim it
+    if (!FileSystem::Xattr::setxattr(path, ownerXAttrName, xattrOwnerString(params.account->uuid()))) {
+        Q_EMIT error(tr("Unable to claim the sync root for files on demand"));
+        return;
     }
-    if (err.isEmpty()) {
+
+    auto vfsProcess = new QProcess(this);
+    // merging the channels and piping the output to our log lead to deadlocks
+    vfsProcess->setProcessChannelMode(QProcess::ForwardedChannels);
+    const auto logPrefix = [vfsProcess, path = params.filesystemPath] { return u"[%1 %2] "_s.arg(QString::number(vfsProcess->processId()), path); };
+    connect(vfsProcess, &QProcess::finished, vfsProcess, [logPrefix, vfsProcess] {
+        qCInfo(lcVfsXAttr) << logPrefix() << "finished" << vfsProcess->exitCode();
+        vfsProcess->deleteLater();
+    });
+    connect(vfsProcess, &QProcess::started, this, [logPrefix, this] {
+        qCInfo(lcVfsXAttr) << logPrefix() << u"started";
         Q_EMIT started();
-    } else {
-        Q_EMIT error(err);
-    }
+    });
+    connect(vfsProcess, &QProcess::errorOccurred, this, [logPrefix, vfsProcess, this] { qCWarning(lcVfsXAttr) << logPrefix() << vfsProcess->errorString(); });
+
+    vfsProcess->start(openVFSExePath(), {u"-d"_s, u"-i"_s, openVFSConfigFilePath(), params.filesystemPath}, QIODevice::ReadOnly);
 }
 
 void VfsXAttr::stop()
@@ -134,6 +193,65 @@ OCC::Result<void, QString> VfsXAttr::addPlaceholderAttribute(const QString &path
         }
     }
 
+    return {};
+}
+
+Result<void, QString> XattrVfsPluginFactory::prepare(const QString &path, const QUuid &accountUuid) const
+{
+#ifdef Q_OS_LINUX
+    // we can't use QStorageInfo as it does not list fuse mounts
+    if (!_cacheTimer.isStarted() || _cacheTimer.duration() > 30s) {
+        _fuseMountCache.clear();
+        QFile file(u"/proc/self/mountinfo"_s);
+        if (file.open(QIODevice::ReadOnly)) {
+            const auto lines = file.readAll().split('\n');
+            file.close();
+            for (auto &line : lines) {
+                auto fields = line.split(' ');
+                if (fields.size() >= 9 && fields[8] == "fuse.openvfsfuse") {
+                    _fuseMountCache << QString::fromUtf8(parseMangledPath(fields[4]));
+                }
+            }
+        } else {
+            qCWarning(lcVfsXAttr) << "Failed to read /proc/self/mountinfo" << file.errorString();
+            return tr("Failed to read /proc/self/mountinfo");
+        }
+    }
+    if (std::ranges::find_if(_fuseMountCache, [&](const QString &p) { return FileSystem::isChildPathOf2(path, p).testFlag(FileSystem::ChildResult::IsEqual); })
+        != _fuseMountCache.cend()) {
+        QProcess process;
+        process.setProcessChannelMode(QProcess::MergedChannels);
+        process.start(u"fusermount"_s, {u"-zu"_s, path});
+        // TODO: don't block?
+        process.waitForFinished();
+        if (process.exitCode() != 0) {
+            const auto output = process.readAll();
+            qCWarning(lcVfsXAttr) << "Failed to unmount the OpenVFS mount" << path << output;
+            return tr("Failed to unmount the OpenVFS mount %1 Error:%2").arg(path, output);
+        } else {
+            qCDebug(lcVfsXAttr) << "Unmounted OpenVFS mount" << path;
+        }
+    }
+#endif
+    const auto owner = FileSystem::Xattr::getxattr(FileSystem::toFilesystemPath(path), ownerXAttrName);
+    if (accountUuid.isNull() && owner.has_value()) {
+        qCDebug(lcVfsXAttr) << path << "has an owner set" << owner.value() << "Not our vfs!";
+        return tr("The sync path is already claimed by a different account, please check your setup");
+    } else if (owner.value_or(QString()) != xattrOwnerString(accountUuid)) {
+        // owner is set. See if it is us
+        qCDebug(lcVfsXAttr) << path << "is claimed by a different account" << owner.value() << "Not our vfs!";
+        return tr("The sync path is claimed by a different cloud, please check your setup");
+    }
+    if (!QFileInfo::exists(openVFSExePath())) {
+        qCDebug(lcVfsXAttr) << "OpenVFS executable not found at" << openVFSExePath();
+        return tr("OpenVFS executable not found, please install it");
+    }
+    const auto vfsConfig = openVFSConfigFilePath();
+    if (!vfsConfig.isEmpty()) {
+        qCDebug(lcVfsXAttr) << "Using config file" << vfsConfig;
+    } else {
+        return tr("Failed to find the OpenVFS config file, please check your installation.");
+    }
     return {};
 }
 
