@@ -28,7 +28,7 @@ VfsOff::~VfsOff() = default;
 
 Vfs::Mode VfsOff::mode() const
 {
-    return Vfs::Off;
+    return Vfs::Mode::Off;
 }
 
 void VfsOff::stop() { }

@@ -772,17 +772,17 @@ De update wordt op de achtergrond uitgevoerd en overschrijft het huidige AppImag
         <translation>Sluiten</translation>
     </message>
     <message>
-        <location filename="../src/gui/application.cpp" line="189"/>
+        <location filename="../src/gui/application.cpp" line="188"/>
         <source>Unsupported Server Version</source>
         <translation>Serverversie niet ondersteund</translation>
     </message>
     <message>
-        <location filename="../src/gui/application.cpp" line="190"/>
+        <location filename="../src/gui/application.cpp" line="189"/>
         <source>The server on account »%1« runs an unsupported version %2. Using this client with unsupported server versions is untested and potentially dangerous. Proceed at your own risk.</source>
         <translation>De server op account »%1« voert een niet-ondersteunde versie %2 uit. Het gebruik van deze client met niet-ondersteunde serverversies is niet getest en potentieel gevaarlijk. Doorgaan op eigen risico.</translation>
     </message>
     <message>
-        <location filename="../src/gui/application.cpp" line="215"/>
+        <location filename="../src/gui/application.cpp" line="214"/>
         <source>Application is shutting down</source>
         <translation>Applicatie wordt afgesloten</translation>
     </message>
@@ -1180,8 +1180,8 @@ Overweeg om deze map uit het account te verwijderen en deze opnieuw toe te voege
 <context>
     <name>OCC::FolderWizard</name>
     <message>
-        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="136"/>
-        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="138"/>
+        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="131"/>
+        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="133"/>
         <source>Add Space</source>
         <translation>Ruimte toevoegen</translation>
     </message>
@@ -1891,22 +1891,22 @@ Note that using any logging command line options will override the settings.</so
         <translation>De bestandsnaam staat bij de server op de zwarte lijst.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1093"/>
+        <location filename="../src/libsync/discovery.cpp" line="1090"/>
         <source>Moved to invalid target, restoring</source>
         <translation>Verplaatst naar ongeldige bestemming, herstellen</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1106"/>
+        <location filename="../src/libsync/discovery.cpp" line="1103"/>
         <source>Not allowed to remove, restoring</source>
         <translation>Verwijderen niet toegestaan, herstellen</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1262"/>
+        <location filename="../src/libsync/discovery.cpp" line="1259"/>
         <source>Server replied with an error while reading directory »%1«: %2</source>
         <translation>Server reageerde met een fout bij het lezen van de map »%1«: %2</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1052"/>
+        <location filename="../src/libsync/discovery.cpp" line="1049"/>
         <source>Not allowed because you don&apos;t have permission to add subfolders to that folder</source>
         <translation>Niet toegestaan omdat je niet gemachtigd bent om submappen aan die map toe te voegen.</translation>
     </message>
@@ -1916,32 +1916,32 @@ Note that using any logging command line options will override the settings.</so
         <translation>Het bestand staat vermeld op de negeerlijst.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="530"/>
+        <location filename="../src/libsync/discovery.cpp" line="527"/>
         <source>Error while doing a rename, unhandled status code: %1</source>
         <translation>Fout bij het hernoemen, niet-afhandelende statuscode: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1020"/>
+        <location filename="../src/libsync/discovery.cpp" line="1017"/>
         <source>Selective sync: Ignored because its path is deselected</source>
         <translation>Selectieve synchronisatie: Genegeerd omdat het pad niet is geselecteerd</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1057"/>
+        <location filename="../src/libsync/discovery.cpp" line="1054"/>
         <source>Not allowed because you don&apos;t have permission to add files in that folder</source>
         <translation>Niet toegestaan omdat je niet gemachtigd bent om bestanden in die map toe te voegen.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1070"/>
+        <location filename="../src/libsync/discovery.cpp" line="1067"/>
         <source>Not allowed to upload this file because it is read-only on the server, restoring</source>
         <translation>Niet toegestaan om dit bestand te uploaden omdat het alleen-lezen is op de server, herstellen</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1216"/>
+        <location filename="../src/libsync/discovery.cpp" line="1213"/>
         <source>Error while reading the database</source>
         <translation>Fout bij het lezen van de database</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1241"/>
+        <location filename="../src/libsync/discovery.cpp" line="1238"/>
         <source>This Space is currently unavailable</source>
         <translation>Deze ruimte is momenteel niet beschikbaar</translation>
     </message>

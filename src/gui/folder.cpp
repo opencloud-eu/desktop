@@ -544,7 +544,7 @@ void Folder::startVfs()
         _vfs->fileStatusChanged(stateDbFile + QStringLiteral("-shm"), SyncFileStatus::StatusExcluded);
         _engine->setSyncOptions(loadSyncOptions());
 
-        if (_vfs->mode() != Vfs::Off) {
+        if (_vfs->mode() != Vfs::Mode::Off) {
             // diable ignorelist with vfs
             _engine->journal()->setSelectiveSyncList(SyncJournalDb::SelectiveSyncBlackList, {});
         }
@@ -668,10 +668,10 @@ void Folder::slotWatchedPathsChanged(const QSet<QString> &paths, ChangeReason re
 void Folder::setVirtualFilesEnabled(bool enabled)
 {
     Vfs::Mode newMode = _definition.virtualFilesMode;
-    if (enabled && _definition.virtualFilesMode == Vfs::Off) {
+    if (enabled && _definition.virtualFilesMode == Vfs::Mode::Off) {
         newMode = VfsPluginManager::instance().bestAvailableVfsMode();
-    } else if (!enabled && _definition.virtualFilesMode != Vfs::Off) {
-        newMode = Vfs::Off;
+    } else if (!enabled && _definition.virtualFilesMode != Vfs::Mode::Off) {
+        newMode = Vfs::Mode::Off;
     }
 
     if (newMode != _definition.virtualFilesMode) {
@@ -1113,7 +1113,7 @@ void Folder::registerFolderWatcher()
 
 bool Folder::virtualFilesEnabled() const
 {
-    return _definition.virtualFilesMode != Vfs::Off;
+    return _definition.virtualFilesMode != Vfs::Mode::Off;
 }
 
 } // namespace OCC

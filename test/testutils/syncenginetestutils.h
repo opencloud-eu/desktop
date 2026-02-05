@@ -535,7 +535,7 @@ class FakeFolder : public QObject
     std::unique_ptr<OCC::SyncEngine> _syncEngine;
 
 public:
-    FakeFolder(const FileInfo &fileTemplate, OCC::Vfs::Mode vfsMode = OCC::Vfs::Off, bool filesAreDehydrated = false);
+    FakeFolder(const FileInfo &fileTemplate, OCC::Vfs::Mode vfsMode = OCC::Vfs::Mode::Off, bool filesAreDehydrated = false);
     ~FakeFolder();
 
     void switchToVfs(QSharedPointer<OCC::Vfs> vfs);

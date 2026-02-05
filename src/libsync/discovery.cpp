@@ -342,7 +342,7 @@ void ProcessDirectoryJob::processFileAnalyzeRemoteInfo(
             item->_size = serverEntry.size();
             if (dbEntry.isDirectory()) {
                 // TODO: move the decision to the backend
-                if (_discoveryData->_syncOptions._vfs->mode() != Vfs::Off && _pinState != PinState::AlwaysLocal) {
+                if (_discoveryData->_syncOptions._vfs->mode() != Vfs::Mode::Off && _pinState != PinState::AlwaysLocal) {
                     item->_type = ItemTypeVirtualFile;
                 }
             }
@@ -391,10 +391,7 @@ void ProcessDirectoryJob::processFileAnalyzeRemoteInfo(
         // Turn new remote files into virtual files if the option is enabled.
         // TODO: move the decision to the backend
         const auto &opts = _discoveryData->_syncOptions;
-        if (!localEntry.isValid()
-            && item->_type == ItemTypeFile
-            && opts._vfs->mode() != Vfs::Off
-            && _pinState != PinState::AlwaysLocal) {
+        if (!localEntry.isValid() && item->_type == ItemTypeFile && opts._vfs->mode() != Vfs::Mode::Off && _pinState != PinState::AlwaysLocal) {
             item->_type = ItemTypeVirtualFile;
         }
         processFileAnalyzeLocalInfo(item, path, localEntry, serverEntry, dbEntry, _queryServer);

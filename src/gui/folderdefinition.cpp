@@ -101,11 +101,11 @@ FolderDefinition FolderDefinition::load(QSettings &settings)
     folder._deployed = settings.value(deployedC(), false).toBool();
     folder._priority = settings.value(priorityC(), 0).toUInt();
 
-    folder.virtualFilesMode = Vfs::Off;
+    folder.virtualFilesMode = Vfs::Mode::Off;
 
     QString vfsModeString = settings.value("virtualFilesMode").toString();
 
-    const auto vfs = Utility::isWindows() ? Vfs::WindowsCfApi : Vfs::XAttr;
+    const auto vfs = Utility::isWindows() ? Vfs::Mode::WindowsCfApi : Vfs::Mode::XAttr;
     if (auto result = Vfs::checkAvailability(folder.localPath(), vfs); result) {
         vfsModeString = Utility::enumToString(vfs);
     } else {

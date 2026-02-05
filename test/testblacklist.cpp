@@ -26,15 +26,15 @@ private Q_SLOTS:
         QTest::addColumn<Vfs::Mode>("vfsMode");
         QTest::addColumn<bool>("filesAreDehydrated");
 
-        QTest::newRow("Vfs::Off") << Vfs::Off << false;
+        QTest::newRow("Vfs::Mode::Off") << Vfs::Mode::Off << false;
 
-        if (VfsPluginManager::instance().isVfsPluginAvailable(Vfs::WindowsCfApi)) {
-            QTest::newRow("Vfs::WindowsCfApi dehydrated") << Vfs::WindowsCfApi << true;
+        if (VfsPluginManager::instance().isVfsPluginAvailable(Vfs::Mode::WindowsCfApi)) {
+            QTest::newRow("Vfs::Mode::WindowsCfApi dehydrated") << Vfs::Mode::WindowsCfApi << true;
 
             // TODO: the hydrated version will fail due to an issue in the winvfs plugin, so leave it disabled for now.
-            // QTest::newRow("Vfs::WindowsCfApi hydrated") << Vfs::WindowsCfApi << false;
+            // QTest::newRow("Vfs::Mode::WindowsCfApi hydrated") << Vfs::Mode::WindowsCfApi << false;
         } else if (Utility::isWindows()) {
-            qWarning("Skipping Vfs::WindowsCfApi");
+            qWarning("Skipping Vfs::Mode::WindowsCfApi");
         }
     }
 
@@ -82,7 +82,7 @@ private Q_SLOTS:
         modifier.insert(testFileName);
         fakeFolder.serverErrorPaths().append(testFileName, 500); // will be blacklisted
         const bool syncResult = fakeFolder.applyLocalModificationsAndSync();
-        if (vfsMode == Vfs::WindowsCfApi && filesAreDehydrated && remote) {
+        if (vfsMode == Vfs::Mode::WindowsCfApi && filesAreDehydrated && remote) {
             // With dehydrated files, only a PROPFIND is done, but not a GET request.
             // And it is the GET request that fails, and causes a blacklist entry, all "syncs" will succeed.
             QVERIFY(syncResult);

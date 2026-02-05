@@ -85,13 +85,13 @@ private Q_SLOTS:
         QTest::addColumn<Vfs::Mode>("vfsMode");
         QTest::addColumn<bool>("filesAreDehydrated");
 
-        QTest::newRow("Vfs::Off") << Vfs::Off << false;
+        QTest::newRow("Vfs::Mode::Off") << Vfs::Mode::Off << false;
 
-        if (VfsPluginManager::instance().isVfsPluginAvailable(Vfs::WindowsCfApi)) {
-            QTest::newRow("Vfs::WindowsCfApi dehydrated") << Vfs::WindowsCfApi << true;
-            QTest::newRow("Vfs::WindowsCfApi hydrated") << Vfs::WindowsCfApi << false;
+        if (VfsPluginManager::instance().isVfsPluginAvailable(Vfs::Mode::WindowsCfApi)) {
+            QTest::newRow("Vfs::Mode::WindowsCfApi dehydrated") << Vfs::Mode::WindowsCfApi << true;
+            QTest::newRow("Vfs::Mode::WindowsCfApi hydrated") << Vfs::Mode::WindowsCfApi << false;
         } else if (Utility::isWindows()) {
-            qWarning("Skipping Vfs::WindowsCfApi");
+            qWarning("Skipping Vfs::Mode::WindowsCfApi");
         }
     }
 

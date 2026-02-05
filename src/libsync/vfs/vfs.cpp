@@ -48,11 +48,11 @@ Optional<Vfs::Mode> Vfs::modeFromString(const QString &str)
     // Note: Strings are used for config and must be stable
     // keep in sync with: QString Utility::enumToString(Vfs::Mode mode)
     if (str == QLatin1String("off")) {
-        return Off;
+        return Mode::Off;
     } else if (str == QLatin1String("cfapi")) {
-        return WindowsCfApi;
+        return Mode::WindowsCfApi;
     } else if (str == QLatin1String("xattr")) {
-        return XAttr;
+        return Mode::XAttr;
     }
     return {};
 }
@@ -209,12 +209,12 @@ bool OCC::VfsPluginManager::isVfsPluginAvailable(Vfs::Mode mode) const
 
 Vfs::Mode OCC::VfsPluginManager::bestAvailableVfsMode() const
 {
-    if (isVfsPluginAvailable(Vfs::WindowsCfApi)) {
-        return Vfs::WindowsCfApi;
-    } else if (isVfsPluginAvailable(Vfs::XAttr)) {
-        return Vfs::XAttr;
-    } else if (isVfsPluginAvailable(Vfs::Off)) {
-        return Vfs::Off;
+    if (isVfsPluginAvailable(Vfs::Mode::WindowsCfApi)) {
+        return Vfs::Mode::WindowsCfApi;
+    } else if (isVfsPluginAvailable(Vfs::Mode::XAttr)) {
+        return Vfs::Mode::XAttr;
+    } else if (isVfsPluginAvailable(Vfs::Mode::Off)) {
+        return Vfs::Mode::Off;
     }
     Q_UNREACHABLE();
 }
