@@ -105,7 +105,7 @@ private Q_SLOTS:
         QVERIFY(!folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/sub/OpenCloud1/some/sub/path"), type, uuid).isNull());
         QVERIFY(!folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/OpenCloud2/blublu"), type, uuid).isNull());
         QVERIFY(!folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/sub/OpenCloud1/folder/g/h"), type, uuid).isNull());
-        QVERIFY(!folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/link3/folder/neu_folder"), type, uuid).isNull());
+        QCOMPARE_NE(folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/link3/folder/neu_folder"), type, uuid), QString());
 
         // Subfolder of links
         QVERIFY(folderman->checkPathValidityForNewFolder(dirPath + QStringLiteral("/link1/subfolder"), type, uuid).isNull());

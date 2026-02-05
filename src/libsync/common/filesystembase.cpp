@@ -64,11 +64,11 @@ QString FileSystem::fromFilesystemPath(const std::filesystem::path &path)
 #ifdef Q_OS_WIN
     constexpr std::wstring_view prefix = LR"(\\?\)";
     std::wstring nativePath = path.native();
+    auto view = std::wstring_view(nativePath);
     if (nativePath.starts_with(prefix)) {
-        const auto view = std::wstring_view(nativePath).substr(prefix.size());
-        return QString::fromWCharArray(view.data(), view.length());
+        view = view.substr(prefix.size());
     }
-    return QString::fromStdWString(nativePath);
+    return QDir::fromNativeSeparators(QString::fromWCharArray(view.data(), view.length()));
 #elif defined(Q_OS_MACOS)
     // based on QFile::decodeName
     return QString::fromStdString(path.native()).normalized(QString::NormalizationForm_C);
@@ -86,20 +86,24 @@ QString FileSystem::longWinPath(const QString &inpath)
     if (inpath.isEmpty()) {
         return inpath;
     }
-    const QString str = QDir::toNativeSeparators(inpath);
+    QString out = QDir::toNativeSeparators(inpath);
     const QLatin1Char sep('\\');
+    if (out.size() == 2 && out.at(1) == ':'_L1) {
+        // std::path handles C: incorrectly
+        out += sep;
+    }
 
     // we already have a unc path
-    if (str.startsWith(sep + sep)) {
-        return str;
+    if (out.startsWith(sep + sep)) {
+        return out;
     }
     // prepend \\?\ and to support long names
 
-    if (str.at(0) == sep) {
+    if (out.at(0) == sep) {
         // should not happen as we require the path to be absolute
-        return QStringLiteral("\\\\?") + str;
+        return QStringLiteral("\\\\?") + out;
     }
-    return QStringLiteral("\\\\?\\") + str;
+    return QStringLiteral("\\\\?\\") + out;
 #endif
 }
 
@@ -556,7 +560,6 @@ QString FileSystem::createPortableFileName(const QString &path, const QString &f
     tmp.resize(std::min<qsizetype>(tmp.size(), fileNameMaxC - reservedSize));
     // remove eventual trailing whitespace after the resize
     tmp = tmp.trimmed();
-
     return QDir::cleanPath(path + QLatin1Char('/') + tmp);
 }
 
