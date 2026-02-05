@@ -772,17 +772,17 @@ La mise à jour sera effectuée en arrière-plan et écrasera le fichier AppImag
         <translation>Quitter</translation>
     </message>
     <message>
-        <location filename="../src/gui/application.cpp" line="189"/>
+        <location filename="../src/gui/application.cpp" line="188"/>
         <source>Unsupported Server Version</source>
         <translation>Version du serveur non prise en charge</translation>
     </message>
     <message>
-        <location filename="../src/gui/application.cpp" line="190"/>
+        <location filename="../src/gui/application.cpp" line="189"/>
         <source>The server on account »%1« runs an unsupported version %2. Using this client with unsupported server versions is untested and potentially dangerous. Proceed at your own risk.</source>
         <translation>Le serveur du compte « %1 » utilise une version non prise en charge %2. L&apos;utilisation de ce client avec des versions de serveur non supportées n&apos;a pas été testée et est potentiellement dangereuse. Procédez à vos propres risques.</translation>
     </message>
     <message>
-        <location filename="../src/gui/application.cpp" line="215"/>
+        <location filename="../src/gui/application.cpp" line="214"/>
         <source>Application is shutting down</source>
         <translation>L’application est en cours de fermeture</translation>
     </message>
@@ -1180,8 +1180,8 @@ Veuillez envisager de supprimer ce dossier du compte et de l&apos;ajouter à nou
 <context>
     <name>OCC::FolderWizard</name>
     <message>
-        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="136"/>
-        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="138"/>
+        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="131"/>
+        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="133"/>
         <source>Add Space</source>
         <translation>Ajouter un Espace</translation>
     </message>
@@ -1891,22 +1891,22 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
         <translation>Le nom de fichier est sur la liste noire du serveur.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1093"/>
+        <location filename="../src/libsync/discovery.cpp" line="1090"/>
         <source>Moved to invalid target, restoring</source>
         <translation>Déplacement vers une cible invalide, restauration en cours</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1106"/>
+        <location filename="../src/libsync/discovery.cpp" line="1103"/>
         <source>Not allowed to remove, restoring</source>
         <translation>Suppression non autorisée, restauration en cours</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1262"/>
+        <location filename="../src/libsync/discovery.cpp" line="1259"/>
         <source>Server replied with an error while reading directory »%1«: %2</source>
         <translation>Le serveur a renvoyé une erreur lors de la lecture du répertoire « %1 » : %2</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1052"/>
+        <location filename="../src/libsync/discovery.cpp" line="1049"/>
         <source>Not allowed because you don&apos;t have permission to add subfolders to that folder</source>
         <translation>Non autorisé car vous n&apos;avez pas le droit d&apos;ajouter des sous-dossiers à ce dossier.</translation>
     </message>
@@ -1916,32 +1916,32 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
         <translation>Le fichier figure sur la liste des fichiers ignorés.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="530"/>
+        <location filename="../src/libsync/discovery.cpp" line="527"/>
         <source>Error while doing a rename, unhandled status code: %1</source>
         <translation>Erreur lors du renommage, code non géré : %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1020"/>
+        <location filename="../src/libsync/discovery.cpp" line="1017"/>
         <source>Selective sync: Ignored because its path is deselected</source>
         <translation>Synchronisation sélective : ignoré car son chemin est désélectionné</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1057"/>
+        <location filename="../src/libsync/discovery.cpp" line="1054"/>
         <source>Not allowed because you don&apos;t have permission to add files in that folder</source>
         <translation>Non autorisé car vous n&apos;avez pas la permission d&apos;ajouter des fichiers dans ce dossier</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1070"/>
+        <location filename="../src/libsync/discovery.cpp" line="1067"/>
         <source>Not allowed to upload this file because it is read-only on the server, restoring</source>
         <translation>Impossible de télécharger ce fichier parce qu&apos;il est en lecture seule sur le serveur.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1216"/>
+        <location filename="../src/libsync/discovery.cpp" line="1213"/>
         <source>Error while reading the database</source>
         <translation>Erreur lors de la lecture de la base de données</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1241"/>
+        <location filename="../src/libsync/discovery.cpp" line="1238"/>
         <source>This Space is currently unavailable</source>
         <translation>Cet espace est actuellement indisponible</translation>
     </message>

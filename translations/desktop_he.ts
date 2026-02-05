@@ -772,17 +772,17 @@ The update will be performed in the background, and overwrite the current AppIma
         <translation>יציאה</translation>
     </message>
     <message>
-        <location filename="../src/gui/application.cpp" line="189"/>
+        <location filename="../src/gui/application.cpp" line="188"/>
         <source>Unsupported Server Version</source>
         <translation>גרסת שרת לא נתמכת</translation>
     </message>
     <message>
-        <location filename="../src/gui/application.cpp" line="190"/>
+        <location filename="../src/gui/application.cpp" line="189"/>
         <source>The server on account »%1« runs an unsupported version %2. Using this client with unsupported server versions is untested and potentially dangerous. Proceed at your own risk.</source>
         <translation>השרת בחשבון »%1« מריץ גרסה לא נתמכת %2. שימוש בלקוח זה עם גרסאות שרת לא נתמכות לא נבדק ועלול להיות מסוכן. המשך על אחריותך בלבד.</translation>
     </message>
     <message>
-        <location filename="../src/gui/application.cpp" line="215"/>
+        <location filename="../src/gui/application.cpp" line="214"/>
         <source>Application is shutting down</source>
         <translation>האפליקציה נסגרת</translation>
     </message>
@@ -1180,8 +1180,8 @@ Please consider removing this folder from the account and adding it again.</sour
 <context>
     <name>OCC::FolderWizard</name>
     <message>
-        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="136"/>
-        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="138"/>
+        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="131"/>
+        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="133"/>
         <source>Add Space</source>
         <translation>הוספת מרחב</translation>
     </message>
@@ -1892,22 +1892,22 @@ Note that using any logging command line options will override the settings.</so
         <translation>שם הקובץ נמצא ברשימה השחורה בשרת.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1093"/>
+        <location filename="../src/libsync/discovery.cpp" line="1090"/>
         <source>Moved to invalid target, restoring</source>
         <translation>הועבר ליעד לא חוקי, משחזר</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1106"/>
+        <location filename="../src/libsync/discovery.cpp" line="1103"/>
         <source>Not allowed to remove, restoring</source>
         <translation>אין הרשאה להסרה, משחזר</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1262"/>
+        <location filename="../src/libsync/discovery.cpp" line="1259"/>
         <source>Server replied with an error while reading directory »%1«: %2</source>
         <translation>השרת החזיר שגיאה בעת קריאת התיקייה »%1«: %2</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1052"/>
+        <location filename="../src/libsync/discovery.cpp" line="1049"/>
         <source>Not allowed because you don&apos;t have permission to add subfolders to that folder</source>
         <translation>לא מורשה מכיוון שאין לך הרשאה להוסיף תת-תיקיות לתיקייה זו</translation>
     </message>
@@ -1917,32 +1917,32 @@ Note that using any logging command line options will override the settings.</so
         <translation>הקובץ כלול ברשימת ההתעלמות.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="530"/>
+        <location filename="../src/libsync/discovery.cpp" line="527"/>
         <source>Error while doing a rename, unhandled status code: %1</source>
         <translation>שגיאה בעת שינוי שם, קוד סטטוס לא מטופל: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1020"/>
+        <location filename="../src/libsync/discovery.cpp" line="1017"/>
         <source>Selective sync: Ignored because its path is deselected</source>
         <translation>סנכרון סלקטיבי: קיבל התעלמות מכיוון שהנתיב שלו לא נבחר</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1057"/>
+        <location filename="../src/libsync/discovery.cpp" line="1054"/>
         <source>Not allowed because you don&apos;t have permission to add files in that folder</source>
         <translation>לא מורשה מכיוון שאין לך הרשאה להוסיף קבצים לתיקייה זו</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1070"/>
+        <location filename="../src/libsync/discovery.cpp" line="1067"/>
         <source>Not allowed to upload this file because it is read-only on the server, restoring</source>
         <translation>אין הרשאה להעלות קובץ זה מכיוון שהוא לקריאה בלבד בשרת, משחזר</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1216"/>
+        <location filename="../src/libsync/discovery.cpp" line="1213"/>
         <source>Error while reading the database</source>
         <translation>שגיאה בעת קריאת מסד הנתונים</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1241"/>
+        <location filename="../src/libsync/discovery.cpp" line="1238"/>
         <source>This Space is currently unavailable</source>
         <translation>מרחב זה אינו זמין כרגע</translation>
     </message>

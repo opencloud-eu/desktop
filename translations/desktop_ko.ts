@@ -773,17 +773,17 @@ The update will be performed in the background, and overwrite the current AppIma
         <translation>종료</translation>
     </message>
     <message>
-        <location filename="../src/gui/application.cpp" line="189"/>
+        <location filename="../src/gui/application.cpp" line="188"/>
         <source>Unsupported Server Version</source>
         <translation>미지원 서버 버전</translation>
     </message>
     <message>
-        <location filename="../src/gui/application.cpp" line="190"/>
+        <location filename="../src/gui/application.cpp" line="189"/>
         <source>The server on account »%1« runs an unsupported version %2. Using this client with unsupported server versions is untested and potentially dangerous. Proceed at your own risk.</source>
         <translation>계정 »%1«의 서버가 지원되지 않는 버전 %2을(를) 실행 중입니다. 지원되지 않는 서버 버전에서 이 클라이언트를 사용하는 것은 테스트되지 않았으며 잠재적으로 위험합니다. 본인 책임하에 진행하십시오.</translation>
     </message>
     <message>
-        <location filename="../src/gui/application.cpp" line="215"/>
+        <location filename="../src/gui/application.cpp" line="214"/>
         <source>Application is shutting down</source>
         <translation>애플리케이션이 종료 중입니다</translation>
     </message>
@@ -1181,8 +1181,8 @@ Please consider removing this folder from the account and adding it again.</sour
 <context>
     <name>OCC::FolderWizard</name>
     <message>
-        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="136"/>
-        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="138"/>
+        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="131"/>
+        <location filename="../src/gui/folderwizard/folderwizard.cpp" line="133"/>
         <source>Add Space</source>
         <translation>스페이스 추가</translation>
     </message>
@@ -1896,22 +1896,22 @@ Note that using any logging command line options will override the settings.</so
         <translation>파일 이름이 서버의 블랙리스트에 등록되었습니다.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1093"/>
+        <location filename="../src/libsync/discovery.cpp" line="1090"/>
         <source>Moved to invalid target, restoring</source>
         <translation>잘못된 대상으로 이동, 복원 중</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1106"/>
+        <location filename="../src/libsync/discovery.cpp" line="1103"/>
         <source>Not allowed to remove, restoring</source>
         <translation>제거가 허용되지 않음, 복원 중</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1262"/>
+        <location filename="../src/libsync/discovery.cpp" line="1259"/>
         <source>Server replied with an error while reading directory »%1«: %2</source>
         <translation>디렉터리 »%1«을(를) 읽는 중 서버에서 오류 응답: %2</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1052"/>
+        <location filename="../src/libsync/discovery.cpp" line="1049"/>
         <source>Not allowed because you don&apos;t have permission to add subfolders to that folder</source>
         <translation>해당 폴더에 하위 폴더를 추가할 권한이 없으므로 허용되지 않습니다</translation>
     </message>
@@ -1921,32 +1921,32 @@ Note that using any logging command line options will override the settings.</so
         <translation>이 파일은 무시 목록에 있습니다.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="530"/>
+        <location filename="../src/libsync/discovery.cpp" line="527"/>
         <source>Error while doing a rename, unhandled status code: %1</source>
         <translation>이름 변경 중 오류 발생, 처리되지 않은 상태 코드: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1020"/>
+        <location filename="../src/libsync/discovery.cpp" line="1017"/>
         <source>Selective sync: Ignored because its path is deselected</source>
         <translation>선택적 동기화: 경로가 선택 해제되어 무시됨</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1057"/>
+        <location filename="../src/libsync/discovery.cpp" line="1054"/>
         <source>Not allowed because you don&apos;t have permission to add files in that folder</source>
         <translation>해당 폴더에 파일을 추가할 권한이 없으므로 허용되지 않습니다</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1070"/>
+        <location filename="../src/libsync/discovery.cpp" line="1067"/>
         <source>Not allowed to upload this file because it is read-only on the server, restoring</source>
         <translation>서버에서 읽기 전용이므로 이 파일을 업로드할 수 없음, 복원 중</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1216"/>
+        <location filename="../src/libsync/discovery.cpp" line="1213"/>
         <source>Error while reading the database</source>
         <translation>데이터베이스를 읽는 중 오류 발생</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1241"/>
+        <location filename="../src/libsync/discovery.cpp" line="1238"/>
         <source>This Space is currently unavailable</source>
         <translation>이 스페이스는 현재 사용할 수 없습니다</translation>
     </message>
