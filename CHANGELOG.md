@@ -6,6 +6,10 @@
 
 @TheOneRing, @anon-pradip, @db-ot, @dragotin, @individual-it, @prashant-gurung899, @saw-jan, @tbsbdr
 
+### 🐛 Bug Fixes
+
+- Fix canonicalPath for drives (c:) [[#701](https://github.com/opencloud-eu/desktop/pull/701)]
+
 ### 📈 Enhancement
 
 - Update SVG logo with new design [[#711](https://github.com/opencloud-eu/desktop/pull/711)]
