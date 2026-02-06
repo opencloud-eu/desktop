@@ -214,15 +214,15 @@ Utilitário de sincronização de ficheiros para ambiente de trabalho.</translat
 <context>
     <name>FileSystem</name>
     <message>
-        <location filename="../src/libsync/filesystem.cpp" line="233"/>
+        <location filename="../src/libsync/filesystem.cpp" line="273"/>
         <source>Could not remove folder</source>
         <translation>Não foi possível remover a pasta</translation>
     </message>
     <message>
-        <location filename="../src/libsync/common/filesystembase.cpp" line="191"/>
-        <location filename="../src/libsync/common/filesystembase.cpp" line="193"/>
-        <location filename="../src/libsync/common/filesystembase.cpp" line="252"/>
-        <location filename="../src/libsync/common/filesystembase.cpp" line="257"/>
+        <location filename="../src/libsync/common/filesystembase.cpp" line="195"/>
+        <location filename="../src/libsync/common/filesystembase.cpp" line="197"/>
+        <location filename="../src/libsync/common/filesystembase.cpp" line="256"/>
+        <location filename="../src/libsync/common/filesystembase.cpp" line="261"/>
         <source>Can&apos;t rename »%1«, the file is currently in use</source>
         <translation>Não é possível renomear «%1», o ficheiro está em utilização</translation>
     </message>
@@ -1064,32 +1064,32 @@ Isto significa que o cliente de sincronização pode não enviar imediatamente a
         <translation>%1 (Sincronização pausada)</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="571"/>
+        <location filename="../src/gui/folderman.cpp" line="550"/>
         <source>The folder »%1« is already in use by application %2!</source>
         <translation>A pasta «%1» já está a ser utilizada pela aplicação %2!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="584"/>
+        <location filename="../src/gui/folderman.cpp" line="563"/>
         <source>The folder »%1« is already in use by another account.</source>
         <translation>A pasta «%1» já está a ser utilizada por outra conta.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="659"/>
+        <location filename="../src/gui/folderman.cpp" line="639"/>
         <source>The local folder »%1« already contains a folder used in a folder sync connection. Please pick another local folder!</source>
         <translation>A pasta local «%1» já contém uma pasta utilizada numa ligação de sincronização. Escolha outra pasta local!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="665"/>
+        <location filename="../src/gui/folderman.cpp" line="645"/>
         <source>The local folder »%1« is already contained in a folder used in a folder sync connection. Please pick another local folder!</source>
         <translation>A pasta local «%1» já está dentro de uma pasta utilizada numa ligação de sincronização. Escolha outra pasta local!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="673"/>
+        <location filename="../src/gui/folderman.cpp" line="653"/>
         <source>Please pick another local folder for »%1«.</source>
         <translation>Escolha outra pasta local para «%1».</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="734"/>
+        <location filename="../src/gui/folderman.cpp" line="716"/>
         <source>Multiple accounts are sharing the folder »%1«.
 This configuration is know to lead to dataloss and is no longer supported.
 Please consider removing this folder from the account and adding it again.</source>
@@ -1098,32 +1098,32 @@ Esta configuração é conhecida por causar perda de dados e já não é suporta
 Considere remover esta pasta da conta e adicioná-la novamente.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="599"/>
+        <location filename="../src/gui/folderman.cpp" line="578"/>
         <source>No valid folder selected!</source>
         <translation>Nenhuma pasta válida selecionada!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="617"/>
+        <location filename="../src/gui/folderman.cpp" line="596"/>
         <source>The selected path does not exist!</source>
         <translation>O caminho selecionado não existe!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="621"/>
+        <location filename="../src/gui/folderman.cpp" line="600"/>
         <source>The folder »%1« is used in a folder sync connection!</source>
         <translation>A pasta «%1» está a ser utilizada numa ligação de sincronização!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="627"/>
+        <location filename="../src/gui/folderman.cpp" line="606"/>
         <source>The selected path is not a folder!</source>
         <translation>O caminho selecionado não é uma pasta!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="631"/>
+        <location filename="../src/gui/folderman.cpp" line="610"/>
         <source>You have no permission to write to the selected folder!</source>
         <translation>Não tem permissão para escrever na pasta selecionada!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="655"/>
+        <location filename="../src/gui/folderman.cpp" line="636"/>
         <source>There is already a sync from the server to this local folder. Please pick another local folder!</source>
         <translation>Já existe uma sincronização do servidor para esta pasta local. Escolha outra pasta local!</translation>
     </message>

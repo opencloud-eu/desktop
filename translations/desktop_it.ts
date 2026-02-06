@@ -213,15 +213,15 @@ Utilità desktop per la sincronizazione dei file.</translation>
 <context>
     <name>FileSystem</name>
     <message>
-        <location filename="../src/libsync/filesystem.cpp" line="233"/>
+        <location filename="../src/libsync/filesystem.cpp" line="273"/>
         <source>Could not remove folder</source>
         <translation>Impossibile rimuovere la cartella</translation>
     </message>
     <message>
-        <location filename="../src/libsync/common/filesystembase.cpp" line="191"/>
-        <location filename="../src/libsync/common/filesystembase.cpp" line="193"/>
-        <location filename="../src/libsync/common/filesystembase.cpp" line="252"/>
-        <location filename="../src/libsync/common/filesystembase.cpp" line="257"/>
+        <location filename="../src/libsync/common/filesystembase.cpp" line="195"/>
+        <location filename="../src/libsync/common/filesystembase.cpp" line="197"/>
+        <location filename="../src/libsync/common/filesystembase.cpp" line="256"/>
+        <location filename="../src/libsync/common/filesystembase.cpp" line="261"/>
         <source>Can&apos;t rename »%1«, the file is currently in use</source>
         <translation>Impossibile rinominare »%1«, il file è attualmente in uso</translation>
     </message>
@@ -1066,32 +1066,32 @@ Ciò significa che il client di sincronizzazione potrebbe non caricare immediata
         <translation>%1 (sincronizzazione in pausa)</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="571"/>
+        <location filename="../src/gui/folderman.cpp" line="550"/>
         <source>The folder »%1« is already in use by application %2!</source>
         <translation>La cartella »%1« è già utilizzata dall&apos;applicazione %2!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="584"/>
+        <location filename="../src/gui/folderman.cpp" line="563"/>
         <source>The folder »%1« is already in use by another account.</source>
         <translation>La cartella »%1« è già utilizzata da un altro account.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="659"/>
+        <location filename="../src/gui/folderman.cpp" line="639"/>
         <source>The local folder »%1« already contains a folder used in a folder sync connection. Please pick another local folder!</source>
         <translation>La cartella locale »%1« contiene già una cartella utilizzata in una connessione di sincronizzazione cartelle. Seleziona un&apos;altra cartella locale!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="665"/>
+        <location filename="../src/gui/folderman.cpp" line="645"/>
         <source>The local folder »%1« is already contained in a folder used in a folder sync connection. Please pick another local folder!</source>
         <translation>La cartella locale »%1« è già contenuta in una cartella utilizzata in una connessione di sincronizzazione cartelle. Seleziona un&apos;altra cartella locale!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="673"/>
+        <location filename="../src/gui/folderman.cpp" line="653"/>
         <source>Please pick another local folder for »%1«.</source>
         <translation>Seleziona un&apos;altra cartella locale per »%1«.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="734"/>
+        <location filename="../src/gui/folderman.cpp" line="716"/>
         <source>Multiple accounts are sharing the folder »%1«.
 This configuration is know to lead to dataloss and is no longer supported.
 Please consider removing this folder from the account and adding it again.</source>
@@ -1100,32 +1100,32 @@ Questa configurazione può causare la perdita di dati e non è più supportata.
 Si consiglia di rimuovere questa cartella dall&apos;account e di aggiungerla nuovamente.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="599"/>
+        <location filename="../src/gui/folderman.cpp" line="578"/>
         <source>No valid folder selected!</source>
         <translation>Nessuna cartella valida selezionata!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="617"/>
+        <location filename="../src/gui/folderman.cpp" line="596"/>
         <source>The selected path does not exist!</source>
         <translation>Il percorso selezionato non esiste!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="621"/>
+        <location filename="../src/gui/folderman.cpp" line="600"/>
         <source>The folder »%1« is used in a folder sync connection!</source>
         <translation>La cartella »%1« è utilizzata in una connessione di sincronizzazione delle cartelle!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="627"/>
+        <location filename="../src/gui/folderman.cpp" line="606"/>
         <source>The selected path is not a folder!</source>
         <translation>Il percorso selezionato non è una cartella!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="631"/>
+        <location filename="../src/gui/folderman.cpp" line="610"/>
         <source>You have no permission to write to the selected folder!</source>
         <translation>Non hai il permesso di scrivere nella cartella selezionata!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="655"/>
+        <location filename="../src/gui/folderman.cpp" line="636"/>
         <source>There is already a sync from the server to this local folder. Please pick another local folder!</source>
         <translation>C&apos;è già una sincronizzazione dal server a questa cartella locale. Si prega di scegliere un&apos;altra cartella locale!</translation>
     </message>

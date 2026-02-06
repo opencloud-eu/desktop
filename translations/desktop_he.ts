@@ -214,15 +214,15 @@ File synchronization desktop utility.</source>
 <context>
     <name>FileSystem</name>
     <message>
-        <location filename="../src/libsync/filesystem.cpp" line="233"/>
+        <location filename="../src/libsync/filesystem.cpp" line="273"/>
         <source>Could not remove folder</source>
         <translation>לא ניתן להסיר תיקייה</translation>
     </message>
     <message>
-        <location filename="../src/libsync/common/filesystembase.cpp" line="191"/>
-        <location filename="../src/libsync/common/filesystembase.cpp" line="193"/>
-        <location filename="../src/libsync/common/filesystembase.cpp" line="252"/>
-        <location filename="../src/libsync/common/filesystembase.cpp" line="257"/>
+        <location filename="../src/libsync/common/filesystembase.cpp" line="195"/>
+        <location filename="../src/libsync/common/filesystembase.cpp" line="197"/>
+        <location filename="../src/libsync/common/filesystembase.cpp" line="256"/>
+        <location filename="../src/libsync/common/filesystembase.cpp" line="261"/>
         <source>Can&apos;t rename »%1«, the file is currently in use</source>
         <translation>לא ניתן לשנות שם ל-»%1«, הקובץ בשימוש כרגע</translation>
     </message>
@@ -1064,32 +1064,32 @@ This means that the synchronization client might not upload local changes immedi
         <translation>%1 (הסנכרון מושהה)</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="571"/>
+        <location filename="../src/gui/folderman.cpp" line="550"/>
         <source>The folder »%1« is already in use by application %2!</source>
         <translation>התיקייה »%1« כבר בשימוש על ידי האפליקציה %2!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="584"/>
+        <location filename="../src/gui/folderman.cpp" line="563"/>
         <source>The folder »%1« is already in use by another account.</source>
         <translation>התיקייה »%1« כבר בשימוש על ידי חשבון אחר.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="659"/>
+        <location filename="../src/gui/folderman.cpp" line="639"/>
         <source>The local folder »%1« already contains a folder used in a folder sync connection. Please pick another local folder!</source>
         <translation>התיקייה המקומית »%1« כבר מכילה תיקייה המשמשת לחיבור סנכרון. נא לבחור תיקייה מקומית אחרת!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="665"/>
+        <location filename="../src/gui/folderman.cpp" line="645"/>
         <source>The local folder »%1« is already contained in a folder used in a folder sync connection. Please pick another local folder!</source>
         <translation>התיקייה המקומית »%1« כבר כלולה בתוך תיקייה המשמשת לחיבור סנכרון. נא לבחור תיקייה מקומית אחרת!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="673"/>
+        <location filename="../src/gui/folderman.cpp" line="653"/>
         <source>Please pick another local folder for »%1«.</source>
         <translation>נא לבחור תיקייה מקומית אחרת עבור »%1«.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="734"/>
+        <location filename="../src/gui/folderman.cpp" line="716"/>
         <source>Multiple accounts are sharing the folder »%1«.
 This configuration is know to lead to dataloss and is no longer supported.
 Please consider removing this folder from the account and adding it again.</source>
@@ -1098,32 +1098,32 @@ Please consider removing this folder from the account and adding it again.</sour
 נא לשקול להסיר תיקייה זו מהחשבון ולהוסיפה מחדש.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="599"/>
+        <location filename="../src/gui/folderman.cpp" line="578"/>
         <source>No valid folder selected!</source>
         <translation>לא נבחרה תיקייה חוקית!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="617"/>
+        <location filename="../src/gui/folderman.cpp" line="596"/>
         <source>The selected path does not exist!</source>
         <translation>הנתיב שנבחר אינו קיים!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="621"/>
+        <location filename="../src/gui/folderman.cpp" line="600"/>
         <source>The folder »%1« is used in a folder sync connection!</source>
         <translation>התיקייה »%1« משמשת לחיבור סנכרון!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="627"/>
+        <location filename="../src/gui/folderman.cpp" line="606"/>
         <source>The selected path is not a folder!</source>
         <translation>הנתיב שנבחר אינו תיקייה!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="631"/>
+        <location filename="../src/gui/folderman.cpp" line="610"/>
         <source>You have no permission to write to the selected folder!</source>
         <translation>אין לך הרשאת כתיבה לתיקייה שנבחרה!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="655"/>
+        <location filename="../src/gui/folderman.cpp" line="636"/>
         <source>There is already a sync from the server to this local folder. Please pick another local folder!</source>
         <translation>כבר קיים סנכרון מהשרת לתיקייה מקומית זו. נא לבחור תיקייה מקומית אחרת!</translation>
     </message>
