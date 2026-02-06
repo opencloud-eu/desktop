@@ -101,6 +101,11 @@ QString idTokenC()
     return QStringLiteral("oauth/id_token");
 }
 
+QString desktopClientIdC()
+{
+    return QStringLiteral("oauth/desktopClientId");
+}
+
 QVariant getRequiredField(const QVariantMap &json, const QString &s, QString *error)
 {
     const auto out = json.constFind(s);
@@ -481,7 +486,12 @@ QString OAuth::clientSecret() const
     return _clientSecret;
 }
 
-void OAuth::persist(const OCC::AccountPtr &accountPtr, const QVariantMap &dynamicRegistrationData, const IdToken &idToken)
+void OAuth::setClientId(const QString &clientId)
+{
+    _clientId = clientId;
+}
+
+void OAuth::persist(const OCC::AccountPtr &accountPtr, const QVariantMap &dynamicRegistrationData, const IdToken &idToken, const QString &desktopClientId)
 {
     if (!dynamicRegistrationData.isEmpty()) {
         accountPtr->credentialManager()->set(dynamicRegistrationDataC(), dynamicRegistrationData);
@@ -492,6 +502,13 @@ void OAuth::persist(const OCC::AccountPtr &accountPtr, const QVariantMap &dynami
         accountPtr->credentialManager()->set(idTokenC(), idToken.toJson());
     } else {
         accountPtr->credentialManager()->clear(idTokenC());
+    }
+    // Store desktop-specific client_id from webfinger if provided
+    // See: https://github.com/opencloud-eu/desktop/issues/246
+    if (!desktopClientId.isEmpty()) {
+        accountPtr->credentialManager()->set(desktopClientIdC(), desktopClientId);
+    } else {
+        accountPtr->credentialManager()->clear(desktopClientIdC());
     }
 }
 
@@ -708,7 +725,20 @@ void AccountBasedOAuth::restore()
             logCredentialsJobResult(credentialsJob);
 
             _dynamicRegistrationData = credentialsJob->data().value<QVariantMap>();
-            Q_EMIT restored(QPrivateSignal());
+
+            // Also restore the desktop-specific client_id if stored
+            // See: https://github.com/opencloud-eu/desktop/issues/246
+            auto clientIdJob = _account->credentialManager()->get(desktopClientIdC());
+            connect(clientIdJob, &CredentialJob::finished, this, [this, clientIdJob] {
+                if (clientIdJob->error() == QKeychain::NoError) {
+                    const QString storedClientId = clientIdJob->data().toString();
+                    if (!storedClientId.isEmpty()) {
+                        qCInfo(lcOauth) << u"restored desktop-specific client_id";
+                        setClientId(storedClientId);
+                    }
+                }
+                Q_EMIT restored(QPrivateSignal());
+            });
         });
     });
 }

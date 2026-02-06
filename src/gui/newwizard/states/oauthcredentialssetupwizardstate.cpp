@@ -30,6 +30,14 @@ OAuthCredentialsSetupWizardState::OAuthCredentialsSetupWizardState(SetupWizardCo
     }();
 
     auto oAuth = new OAuth(authServerUrl, _context->accessManager(), {}, this);
+
+    // Use the desktop-specific client_id if provided by webfinger
+    // See: https://github.com/opencloud-eu/desktop/issues/246
+    const QString desktopClientId = _context->accountBuilder().webFingerDesktopClientId();
+    if (!desktopClientId.isEmpty()) {
+        oAuth->setClientId(desktopClientId);
+    }
+
     _page = new OAuthCredentialsSetupWizardPage(oAuth, authServerUrl);
 
 
