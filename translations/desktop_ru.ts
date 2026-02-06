@@ -214,15 +214,15 @@ File synchronization desktop utility.</source>
 <context>
     <name>FileSystem</name>
     <message>
-        <location filename="../src/libsync/filesystem.cpp" line="233"/>
+        <location filename="../src/libsync/filesystem.cpp" line="273"/>
         <source>Could not remove folder</source>
         <translation>Не удалось удалить папку</translation>
     </message>
     <message>
-        <location filename="../src/libsync/common/filesystembase.cpp" line="191"/>
-        <location filename="../src/libsync/common/filesystembase.cpp" line="193"/>
-        <location filename="../src/libsync/common/filesystembase.cpp" line="252"/>
-        <location filename="../src/libsync/common/filesystembase.cpp" line="257"/>
+        <location filename="../src/libsync/common/filesystembase.cpp" line="195"/>
+        <location filename="../src/libsync/common/filesystembase.cpp" line="197"/>
+        <location filename="../src/libsync/common/filesystembase.cpp" line="256"/>
+        <location filename="../src/libsync/common/filesystembase.cpp" line="261"/>
         <source>Can&apos;t rename »%1«, the file is currently in use</source>
         <translation>Невозможно переименовать »%1«, файл сейчас используется</translation>
     </message>
@@ -1064,32 +1064,32 @@ This means that the synchronization client might not upload local changes immedi
         <translation>%1 (Синхронизация приостановлена)</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="571"/>
+        <location filename="../src/gui/folderman.cpp" line="550"/>
         <source>The folder »%1« is already in use by application %2!</source>
         <translation>Папка »%1« уже используется приложением %2!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="584"/>
+        <location filename="../src/gui/folderman.cpp" line="563"/>
         <source>The folder »%1« is already in use by another account.</source>
         <translation>Папка »%1« уже используется другим аккаунтом.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="659"/>
+        <location filename="../src/gui/folderman.cpp" line="639"/>
         <source>The local folder »%1« already contains a folder used in a folder sync connection. Please pick another local folder!</source>
         <translation>Локальная папка »%1« уже содержит папку, которая участвует в синхронизации. Пожалуйста, выберите другую локальную папку!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="665"/>
+        <location filename="../src/gui/folderman.cpp" line="645"/>
         <source>The local folder »%1« is already contained in a folder used in a folder sync connection. Please pick another local folder!</source>
         <translation>Локальная папка »%1« уже является дочерней для папки, которая участвует в синхронизации. Пожалуйста, выберите другую локальную папку!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="673"/>
+        <location filename="../src/gui/folderman.cpp" line="653"/>
         <source>Please pick another local folder for »%1«.</source>
         <translation>Пожалуйста, выберите другую локальную папку для »%1«.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="734"/>
+        <location filename="../src/gui/folderman.cpp" line="716"/>
         <source>Multiple accounts are sharing the folder »%1«.
 This configuration is know to lead to dataloss and is no longer supported.
 Please consider removing this folder from the account and adding it again.</source>
@@ -1098,32 +1098,32 @@ Please consider removing this folder from the account and adding it again.</sour
 Пожалуйста, уберите данную папку из профиля и добавьте ее повторно.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="599"/>
+        <location filename="../src/gui/folderman.cpp" line="578"/>
         <source>No valid folder selected!</source>
         <translation>Не выбрано ни одной валидной папки!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="617"/>
+        <location filename="../src/gui/folderman.cpp" line="596"/>
         <source>The selected path does not exist!</source>
         <translation>Выбранный путь не существует!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="621"/>
+        <location filename="../src/gui/folderman.cpp" line="600"/>
         <source>The folder »%1« is used in a folder sync connection!</source>
         <translation>Папка »%1« используется в синхронизации!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="627"/>
+        <location filename="../src/gui/folderman.cpp" line="606"/>
         <source>The selected path is not a folder!</source>
         <translation>Выбранный путь не является папкой!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="631"/>
+        <location filename="../src/gui/folderman.cpp" line="610"/>
         <source>You have no permission to write to the selected folder!</source>
         <translation>У вас нет прав для записи в выбранную папку!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="655"/>
+        <location filename="../src/gui/folderman.cpp" line="636"/>
         <source>There is already a sync from the server to this local folder. Please pick another local folder!</source>
         <translation>Сервер уже синхронизируется с этой локальной папкой. Пожалуйста, выберите другую локальную папку!</translation>
     </message>
