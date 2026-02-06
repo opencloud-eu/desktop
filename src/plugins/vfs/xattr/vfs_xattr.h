@@ -5,6 +5,9 @@
  */
 #pragma once
 
+#include "common/chronoelapsedtimer.h"
+
+
 #include <QObject>
 #include <QScopedPointer>
 
@@ -96,6 +99,13 @@ class XattrVfsPluginFactory : public QObject, public DefaultPluginFactory<VfsXAt
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "eu.opencloud.PluginFactory" FILE "libsync/vfs/vfspluginmetadata.json")
     Q_INTERFACES(OCC::PluginFactory)
+
+public:
+    Result<void, QString> checkAvailability(const QString &path) const override;
+
+private:
+    mutable Utility::ChronoElapsedTimer _cacheTimer = false;
+    mutable QStringList _fuseMountCache;
 };
 
 } // namespace OCC

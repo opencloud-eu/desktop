@@ -748,7 +748,7 @@ void FolderMan::slotReloadSyncOptions()
 
 bool FolderMan::checkVfsAvailability(const QString &path, Vfs::Mode mode) const
 {
-    return unsupportedConfiguration(path) && Vfs::checkAvailability(path, mode);
+    return unsupportedConfiguration(path) && VfsPluginManager::instance().checkAvailability(path, mode);
 }
 
 Folder *FolderMan::addFolderFromWizard(const AccountStatePtr &accountStatePtr, FolderDefinition &&folderDefinition, bool useVfs)

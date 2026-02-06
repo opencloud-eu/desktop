@@ -78,6 +78,8 @@ class CfApiVfsPluginFactory : public QObject, public DefaultPluginFactory<VfsCfA
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "eu.opencloud.PluginFactory" FILE "libsync/vfs/vfspluginmetadata.json")
     Q_INTERFACES(OCC::PluginFactory)
+public:
+    Result<void, QString> checkAvailability(const QString &path) const override;
 };
 
 } // namespace OCC

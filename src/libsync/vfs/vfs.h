@@ -105,8 +105,6 @@ public:
 
     static Optional<Mode> modeFromString(const QString &str);
 
-    static Result<void, QString> checkAvailability(const QString &path, OCC::Vfs::Mode mode);
-
     enum class AvailabilityError : uint8_t {
         // Availability can't be retrieved due to db error
         DbError,
@@ -182,7 +180,7 @@ public:
      * Usually backed by the db's effectivePinState() function but some vfs
      * plugins will override it to retrieve the state from elsewhere.
      *
-     * relFilePath is relative to the sync folder. Can be "" for root folder.
+     * relFilePath is relative to the sync folder. Can be "" for root folder.<
      *
      * Returns none on retrieval error.
      */
@@ -268,14 +266,17 @@ public:
 
     /// Return the best available VFS mode.
     Vfs::Mode bestAvailableVfsMode() const;
-
     /// Create a VFS instance for the mode, returns nullptr on failure.
     std::unique_ptr<Vfs> createVfsFromPlugin(Vfs::Mode mode) const;
+
+    Result<void, QString> checkAvailability(const QString &path, Vfs::Mode mode) const;
 
     static const VfsPluginManager &instance();
 
 protected:
     VfsPluginManager() = default;
+    std::pair<QString, class PluginFactory *> createVfsPluginFactory(Vfs::Mode mode) const;
+
 
 private:
     static VfsPluginManager *_instance;

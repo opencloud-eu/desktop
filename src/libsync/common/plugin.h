@@ -18,7 +18,9 @@
 
 #pragma once
 
+#include "libsync/common/result.h"
 #include "libsync/opencloudsynclib.h"
+
 #include <QObject>
 
 namespace OCC {
@@ -28,6 +30,7 @@ class OPENCLOUD_SYNC_EXPORT PluginFactory
 public:
     virtual ~PluginFactory();
     virtual QObject *create(QObject *parent) = 0;
+    virtual Result<void, QString> checkAvailability(const QString &path) const = 0;
 };
 
 template <class PluginClass>
