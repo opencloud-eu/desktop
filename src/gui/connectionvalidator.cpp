@@ -12,6 +12,7 @@
  * for more details.
  */
 #include "gui/connectionvalidator.h"
+
 #include "gui/clientproxy.h"
 #include "gui/fetchserversettings.h"
 #include "gui/networkinformation.h"
@@ -26,6 +27,7 @@
 #include <QLoggingCategory>
 #include <QNetworkProxyFactory>
 #include <QNetworkReply>
+#include <QtConcurrent/QtConcurrentRun>
 
 using namespace std::chrono_literals;
 using namespace Qt::Literals::StringLiterals;
@@ -67,31 +69,30 @@ void ConnectionValidator::checkServer(ConnectionValidator::ValidationMode mode)
     // Lookup system proxy in a thread https://github.com/owncloud/client/issues/2993
     if (ClientProxy::isUsingSystemDefault()) {
         qCDebug(lcConnectionValidator) << u"Trying to look up system proxy";
-        ClientProxy::lookupSystemProxyAsync(_account->url(),
-            this, SLOT(systemProxyLookupDone(QNetworkProxy)));
+        auto watcher = std::make_unique<QFutureWatcher<QList<QNetworkProxy>>>();
+        auto *watcherPtr = watcher.get();
+        // the watchers live time is managed by the conncect
+        watcherPtr->connect(
+            watcherPtr, &QFutureWatcher<QList<QNetworkProxy>>::finished, this, [watcher = std::move(watcher), elaped = Utility::ChronoElapsedTimer(), this] {
+                const auto proxies = watcher->result();
+                if (proxies.isEmpty()) {
+                    _account->accessManager()->setProxy(QNetworkProxy::NoProxy);
+                } else {
+                    _account->accessManager()->setProxy(proxies.first());
+                }
+                qCInfo(lcConnectionValidator) << u"System proxy lookup done" << _account->accessManager()->proxy() << u"for" << _account->displayNameWithHost()
+                                              << elaped;
+
+                slotCheckServerAndAuth();
+            });
+        watcherPtr->setFuture(QtConcurrent::run([url = _account->url()] { return QNetworkProxyFactory::systemProxyForQuery(QNetworkProxyQuery(url)); }));
+
     } else {
         // We want to reset the QNAM proxy so that the global proxy settings are used (via ClientProxy settings)
         _account->accessManager()->setProxy(QNetworkProxy(QNetworkProxy::DefaultProxy));
         // use a queued invocation so we're as asynchronous as with the other code path
         QMetaObject::invokeMethod(this, &ConnectionValidator::slotCheckServerAndAuth, Qt::QueuedConnection);
     }
-}
-
-void ConnectionValidator::systemProxyLookupDone(const QNetworkProxy &proxy)
-{
-    if (!_account) {
-        qCWarning(lcConnectionValidator) << u"Bailing out, Account had been deleted";
-        return;
-    }
-
-    if (proxy.type() != QNetworkProxy::NoProxy) {
-        qCInfo(lcConnectionValidator) << u"Setting QNAM proxy to be system proxy" << ClientProxy::printQNetworkProxy(proxy);
-    } else {
-        qCInfo(lcConnectionValidator) << u"No system proxy set by OS";
-    }
-    _account->accessManager()->setProxy(proxy);
-
-    slotCheckServerAndAuth();
 }
 
 // The actual check

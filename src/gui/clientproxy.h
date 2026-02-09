@@ -33,23 +33,7 @@ class ConfigFile;
  */
 namespace ClientProxy {
     bool isUsingSystemDefault();
-    void lookupSystemProxyAsync(const QUrl &url, QObject *dst, const char *slot);
     void setupQtProxyFromConfig(const QString &password);
-
-    QString printQNetworkProxy(const QNetworkProxy &proxy);
-};
-
-class SystemProxyRunnable : public QObject, public QRunnable
-{
-    Q_OBJECT
-public:
-    SystemProxyRunnable(const QUrl &url);
-    void run() override;
-Q_SIGNALS:
-    void systemProxyLookedUp(const QNetworkProxy &url);
-
-private:
-    QUrl _url;
 };
 }
 
