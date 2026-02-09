@@ -43,11 +43,6 @@ namespace {
 
 }
 
-QString ClientProxy::printQNetworkProxy(const QNetworkProxy &proxy)
-{
-    return QStringLiteral("%1://%2:%3").arg(proxy.type()).arg(proxy.hostName()).arg(proxy.port());
-}
-
 bool ClientProxy::isUsingSystemDefault()
 {
     OCC::ConfigFile cfg;
@@ -84,45 +79,18 @@ void ClientProxy::setupQtProxyFromConfig(const QString &password)
         break;
     case QNetworkProxy::Socks5Proxy:
         proxy.setType(QNetworkProxy::Socks5Proxy);
-        qCInfo(lcClientProxy) << u"Set proxy configuration to SOCKS5" << printQNetworkProxy(proxy);
+        qCInfo(lcClientProxy) << u"Set proxy configuration to SOCKS5" << proxy;
         QNetworkProxyFactory::setUseSystemConfiguration(false);
         QNetworkProxy::setApplicationProxy(proxy);
         break;
     case QNetworkProxy::HttpProxy:
         proxy.setType(QNetworkProxy::HttpProxy);
-        qCInfo(lcClientProxy) << u"Set proxy configuration to HTTP" << printQNetworkProxy(proxy);
+        qCInfo(lcClientProxy) << u"Set proxy configuration to HTTP" << proxy;
         QNetworkProxyFactory::setUseSystemConfiguration(false);
         QNetworkProxy::setApplicationProxy(proxy);
         break;
     default:
         break;
-    }
-}
-
-void ClientProxy::lookupSystemProxyAsync(const QUrl &url, QObject *dst, const char *slot)
-{
-    SystemProxyRunnable *runnable = new SystemProxyRunnable(url);
-    QObject::connect(runnable, SIGNAL(systemProxyLookedUp(QNetworkProxy)), dst, slot);
-    QThreadPool::globalInstance()->start(runnable); // takes ownership and deletes
-}
-
-SystemProxyRunnable::SystemProxyRunnable(const QUrl &url)
-    : QObject()
-    , QRunnable()
-    , _url(url)
-{
-}
-
-void SystemProxyRunnable::run()
-{
-    qRegisterMetaType<QNetworkProxy>("QNetworkProxy");
-    QList<QNetworkProxy> proxies = QNetworkProxyFactory::systemProxyForQuery(QNetworkProxyQuery(_url));
-
-    if (proxies.isEmpty()) {
-        Q_EMIT systemProxyLookedUp(QNetworkProxy(QNetworkProxy::NoProxy));
-    } else {
-        Q_EMIT systemProxyLookedUp(proxies.first());
-        // FIXME Would we really ever return more?
     }
 }
 }
