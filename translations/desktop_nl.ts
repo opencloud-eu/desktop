@@ -823,7 +823,7 @@ De update wordt op de achtergrond uitgevoerd en overschrijft het huidige AppImag
 <context>
     <name>OCC::ConnectionValidator</name>
     <message>
-        <location filename="../src/gui/connectionvalidator.cpp" line="122"/>
+        <location filename="../src/gui/connectionvalidator.cpp" line="123"/>
         <source>timeout</source>
         <translation>timeout</translation>
     </message>
