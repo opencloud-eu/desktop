@@ -9,6 +9,15 @@
 
 namespace OCC {
 namespace FileSystem {
+    bool Xattr::supportsxattr(const std::filesystem::path &path)
+    {
+#ifdef Q_OS_MAC
+        return !(::listxattr(path.c_str(), nullptr, 0, XATTR_NOFOLLOW) == -1 && errno == ENOTSUP);
+#else
+        return !(::listxattr(path.c_str(), nullptr, 0) == -1 && errno == ENOTSUP);
+#endif
+    }
+
     std::optional<QString> Xattr::getxattr(const std::filesystem::path &path, const QString &name)
     {
         QByteArray value;
