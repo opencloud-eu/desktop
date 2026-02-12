@@ -233,7 +233,12 @@ Result<void, QString> XattrVfsPluginFactory::prepare(const QString &path, const 
         }
     }
 #endif
-    const auto owner = FileSystem::Xattr::getxattr(FileSystem::toFilesystemPath(path), ownerXAttrName);
+    const auto fsPath = FileSystem::toFilesystemPath(path);
+    if (!FileSystem::Xattr::supportsxattr(fsPath)) {
+        qCDebug(lcVfsXAttr) << path << "does not support xattributes";
+        return tr("The filesystem for %1 does not support xattributes.").arg(path);
+    }
+    const auto owner = FileSystem::Xattr::getxattr(fsPath, ownerXAttrName);
     if (accountUuid.isNull() && owner.has_value()) {
         qCDebug(lcVfsXAttr) << path << "has an owner set" << owner.value() << "Not our vfs!";
         return tr("The sync path is already claimed by a different account, please check your setup");
