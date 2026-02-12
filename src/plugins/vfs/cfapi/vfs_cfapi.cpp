@@ -134,6 +134,22 @@ void VfsCfApi::startImpl(const VfsSetupParams &params)
     });
 }
 
+Result<void, QString> CfApiVfsPluginFactory::prepare(const QString &path, const QUuid &accountUuid) const
+{
+    if (QDir(path).isRoot()) {
+        return tr("The Virtual filesystem feature does not support a drive as sync root");
+    }
+    const auto fileSystem = FileSystem::fileSystemForPath(path);
+    if (!fileSystem.startsWith("NTFS"_L1, Qt::CaseInsensitive)) {
+        return tr("The Virtual filesystem feature requires a NTFS file system, %1 is using %2").arg(path, fileSystem);
+    }
+    const auto type = GetDriveTypeW(reinterpret_cast<const wchar_t *>(path.mid(0, 3).utf16()));
+    if (type == DRIVE_REMOTE) {
+        return tr("The Virtual filesystem feature is not supported on network drives");
+    }
+    return {};
+}
+
 void VfsCfApi::stop()
 {
     if (_connectionKey.Internal != 0) {

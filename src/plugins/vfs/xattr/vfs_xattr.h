@@ -5,6 +5,9 @@
  */
 #pragma once
 
+#include "common/chronoelapsedtimer.h"
+
+
 #include <QObject>
 #include <QScopedPointer>
 
@@ -83,7 +86,6 @@ protected:
     void startImpl(const VfsSetupParams &params) override;
 
 private:
-    QString xattrOwnerString() const;
     xattr::PlaceHolderAttribs placeHolderAttributes(const QString& path);
     OCC::Result<void, QString> addPlaceholderAttribute(const QString &path, const QString &name = {}, const QString &val = {});
     OCC::Result<void, QString> removePlaceHolderAttributes(const QString& path);
@@ -96,6 +98,13 @@ class XattrVfsPluginFactory : public QObject, public DefaultPluginFactory<VfsXAt
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "eu.opencloud.PluginFactory" FILE "libsync/vfs/vfspluginmetadata.json")
     Q_INTERFACES(OCC::PluginFactory)
+
+public:
+    Result<void, QString> prepare(const QString &path, const QUuid &accountUuid) const override;
+
+private:
+    mutable Utility::ChronoElapsedTimer _cacheTimer = false;
+    mutable QStringList _fuseMountCache;
 };
 
 } // namespace OCC

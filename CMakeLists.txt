@@ -9,7 +9,6 @@ include(FeatureSummary)
 find_package(ECM 6.0.0 REQUIRED NO_MODULE)
 
 set_package_properties(ECM PROPERTIES TYPE REQUIRED DESCRIPTION "Extra CMake Modules." URL "https://projects.kde.org/projects/kdesupport/extra-cmake-modules")
-feature_summary(WHAT REQUIRED_PACKAGES_NOT_FOUND FATAL_ON_MISSING_REQUIRED_PACKAGES)
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules ${ECM_MODULE_PATH} ${CMAKE_MODULE_PATH})
 
@@ -148,8 +147,6 @@ if(BUILD_TESTING)
     add_subdirectory(test)
 endif()
 
-feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
-
 if(ECM_VERSION VERSION_GREATER_EQUAL 5.79)
     message(STATUS "Suitable ECM ${ECM_VERSION} found, installing clang-format git hook")
     include(KDEGitCommitHooks)
@@ -157,3 +154,5 @@ if(ECM_VERSION VERSION_GREATER_EQUAL 5.79)
 else()
     message(WARNING "ECM ${ECM_VERSION} too old, cannot install clang-format git hook")
 endif()
+
+feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES INCLUDE_QUIET_PACKAGES)

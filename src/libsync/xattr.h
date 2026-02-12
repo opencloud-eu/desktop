@@ -14,6 +14,7 @@
 namespace OCC {
 namespace FileSystem {
     namespace Xattr {
+        OPENCLOUD_SYNC_EXPORT bool supportsxattr(const std::filesystem::path &path);
         OPENCLOUD_SYNC_EXPORT std::optional<QString> getxattr(const std::filesystem::path &path, const QString &name);
         OPENCLOUD_SYNC_EXPORT Result<void, QString> setxattr(const std::filesystem::path &path, const QString &name, const QString &value);
 

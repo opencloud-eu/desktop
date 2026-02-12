@@ -124,8 +124,6 @@ Folder::Folder(const FolderDefinition &definition, const AccountStatePtr &accoun
             }
         });
 
-        // Potentially upgrade suffix vfs to windows vfs
-        OC_ENFORCE(_vfs);
         // Initialize the vfs plugin. Do this after the UI is running, so we can show a dialog when something goes wrong.
         QTimer::singleShot(0, this, &Folder::startVfs);
     }
@@ -186,7 +184,10 @@ bool Folder::checkLocalPath()
                 error = pathLengthCheck.error();
             }
 
-            if (error.isEmpty()) {
+            const auto result = VfsPluginManager::instance().prepare(path(), _accountState->account()->uuid(), _vfs->mode());
+            if (!result) {
+                error = result.error();
+            } else if (error.isEmpty()) {
                 qCDebug(lcFolder) << u"Checked local path ok";
                 if (!_journal.open()) {
                     error = tr("Failed to open the database for »%1«.").arg(_definition.localPath());
@@ -517,13 +518,6 @@ void Folder::startVfs()
 {
     OC_ENFORCE(_vfs);
     OC_ENFORCE(_vfs->mode() == _definition.virtualFilesMode);
-
-    const auto result = Vfs::checkAvailability(path(), _vfs->mode());
-    if (!result) {
-        _syncResult.appendErrorString(result.error());
-        setSyncState(SyncResult::SetupError);
-        return;
-    }
 
     VfsSetupParams vfsParams(_accountState->account(), webDavUrl(), _definition.spaceId(), displayName(), _engine.get());
     vfsParams.filesystemPath = path();

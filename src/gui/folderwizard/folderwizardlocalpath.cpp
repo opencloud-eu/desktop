@@ -64,7 +64,7 @@ bool FolderWizardLocalPath::isComplete() const
     auto accountUuid = folderWizardPrivate()->accountState()->account()->uuid();
     QString errorStr = FolderMan::instance()->checkPathValidityForNewFolder(localPath(), FolderMan::NewFolderType::SpacesSyncRoot, accountUuid);
     if (errorStr.isEmpty()) {
-        if (auto result = Vfs::checkAvailability(localPath(), VfsPluginManager::instance().bestAvailableVfsMode()); !result) {
+        if (auto result = VfsPluginManager::instance().prepare(localPath(), accountUuid, VfsPluginManager::instance().bestAvailableVfsMode()); !result) {
             errorStr = result.error();
         }
     }

@@ -105,8 +105,6 @@ public:
 
     static Optional<Mode> modeFromString(const QString &str);
 
-    static Result<void, QString> checkAvailability(const QString &path, OCC::Vfs::Mode mode);
-
     enum class AvailabilityError : uint8_t {
         // Availability can't be retrieved due to db error
         DbError,
@@ -268,14 +266,17 @@ public:
 
     /// Return the best available VFS mode.
     Vfs::Mode bestAvailableVfsMode() const;
-
     /// Create a VFS instance for the mode, returns nullptr on failure.
     std::unique_ptr<Vfs> createVfsFromPlugin(Vfs::Mode mode) const;
+
+    Result<void, QString> prepare(const QString &path, const QUuid &accountUuid, Vfs::Mode mode) const;
 
     static const VfsPluginManager &instance();
 
 protected:
     VfsPluginManager() = default;
+    std::pair<QString, class PluginFactory *> createVfsPluginFactory(Vfs::Mode mode) const;
+
 
 private:
     static VfsPluginManager *_instance;
