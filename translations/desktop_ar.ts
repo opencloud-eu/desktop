@@ -788,6 +788,24 @@ The update will be performed in the background, and overwrite the current AppIma
     </message>
 </context>
 <context>
+    <name>OCC::CfApiVfsPluginFactory</name>
+    <message>
+        <location filename="../src/plugins/vfs/cfapi/vfs_cfapi.cpp" line="140"/>
+        <source>The Virtual filesystem feature does not support a drive as sync root</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/plugins/vfs/cfapi/vfs_cfapi.cpp" line="144"/>
+        <source>The Virtual filesystem feature requires a NTFS file system, %1 is using %2</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/plugins/vfs/cfapi/vfs_cfapi.cpp" line="148"/>
+        <source>The Virtual filesystem feature is not supported on network drives</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
     <name>OCC::CommonStrings</name>
     <message>
         <location filename="../src/gui/commonstrings.cpp" line="27"/>
@@ -874,141 +892,141 @@ The update will be performed in the background, and overwrite the current AppIma
 <context>
     <name>OCC::Folder</name>
     <message>
-        <location filename="../src/gui/folder.cpp" line="150"/>
+        <location filename="../src/gui/folder.cpp" line="148"/>
         <source>The path »%1« is too long. Please enable long paths in the Windows settings or choose a different folder.</source>
         <translation>المسار »%1« طويل جدًا. يرجى تمكين المسارات الطويلة في إعدادات ويندوز (Windows) أو اختيار مجلد مختلف.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="192"/>
+        <location filename="../src/gui/folder.cpp" line="193"/>
         <source>Failed to open the database for »%1«.</source>
         <translation>فشل فتح قاعدة البيانات لـ »%1«.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="173"/>
+        <location filename="../src/gui/folder.cpp" line="171"/>
         <source>Local folder »%1« does not exist.</source>
         <translation>المجلد المحلي »%1« غير موجود.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="198"/>
+        <location filename="../src/gui/folder.cpp" line="199"/>
         <source>»%1« should be a folder but is not.</source>
         <translation>»%1« يجب أن يكون مجلدًا لكنه ليس كذلك.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="200"/>
+        <location filename="../src/gui/folder.cpp" line="201"/>
         <source>»%1« is not readable.</source>
         <translation>»%1« غير قابل للقراءة.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="202"/>
+        <location filename="../src/gui/folder.cpp" line="203"/>
         <source>»%1« is not writable.</source>
         <translation>»%1« غير قابل للكتابة.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="461"/>
+        <location filename="../src/gui/folder.cpp" line="462"/>
         <source>»%1« and %n other file(s) have been removed.</source>
         <translation><numerusform>تمت إزالة »%1« ولم تتم إزالة ملفات أخرى.</numerusform><numerusform>تمت إزالة »%1« وملف واحد آخر.</numerusform><numerusform>تمت إزالة »%1« وملفين اثنين آخرين.</numerusform><numerusform>تمت إزالة »%1« و%n ملفات أخرى.</numerusform><numerusform>تمت إزالة »%1« و%n ملفا آخر.</numerusform><numerusform>تمت إزالة »%1« و%n ملف آخر.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="463"/>
+        <location filename="../src/gui/folder.cpp" line="464"/>
         <source>»%1« has been removed.</source>
         <comment>%1 names a file.</comment>
         <translation>تمت إزالة »%1«.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="468"/>
+        <location filename="../src/gui/folder.cpp" line="469"/>
         <source>»%1« and %n other file(s) have been added.</source>
         <translation><numerusform>تمت إضافة »%1« ولم تتم إضافة ملف آخر.</numerusform><numerusform>تمت إضافة »%1« وملف واحد  آخر.</numerusform><numerusform>تمت إضافة »%1« وملفين اثنين آخرين.</numerusform><numerusform>تمت إضافة »%1« و%n ملفات أخرى.</numerusform><numerusform>تمت إضافة »%1« و%n ملفا آخر.</numerusform><numerusform>تمت إضافة »%1« و%n ملف آخر.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="470"/>
+        <location filename="../src/gui/folder.cpp" line="471"/>
         <source>»%1« has been added.</source>
         <comment>%1 names a file.</comment>
         <translation>تمت إضافة »%1«.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="475"/>
+        <location filename="../src/gui/folder.cpp" line="476"/>
         <source>»%1« and %n other file(s) have been updated.</source>
         <translation><numerusform>تم تحديث »%1« ولم تتم تحديث ملف آخر.</numerusform><numerusform>تم تحديث »%1« وملف واحد آخر.</numerusform><numerusform>تم تحديث »%1« وملفين اثنين آخرين.</numerusform><numerusform>تم تحديث »%1« و%n ملفات أخرى.</numerusform><numerusform>تم تحديث »%1« و%n ملفا آخر.</numerusform><numerusform>تم تحديث »%1« و%n ملف آخر.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="477"/>
+        <location filename="../src/gui/folder.cpp" line="478"/>
         <source>»%1« has been updated.</source>
         <comment>%1 names a file.</comment>
         <translation>تم تحديث »%1«.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="482"/>
+        <location filename="../src/gui/folder.cpp" line="483"/>
         <source>»%1« has been renamed to »%2« and %n other file(s) have been renamed.</source>
         <translation><numerusform>تمت إعادة تسمية »%1« إلى »%2« ولم تتم إعادة تسمية ملف آخر.</numerusform><numerusform>تمت إعادة تسمية »%1« إلى »%2« وتمت إعادة تسمية ملف واحد آخر.</numerusform><numerusform>تمت إعادة تسمية »%1« إلى »%2« وتمت إعادة تسمية ملفين اثنين آخرين.</numerusform><numerusform>تمت إعادة تسمية »%1« إلى »%2« وتمت إعادة تسمية %n ملفات أخرى.</numerusform><numerusform>تمت إعادة تسمية »%1« إلى »%2« وتمت إعادة تسمية %n ملفا آخر.</numerusform><numerusform>تمت إعادة تسمية »%1« إلى »%2« وتمت إعادة تسمية %n ملف آخر.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="484"/>
+        <location filename="../src/gui/folder.cpp" line="485"/>
         <source>»%1« has been renamed to »%2«.</source>
         <comment>%1 and %2 name files.</comment>
         <translation>تمت إعادة تسمية »%1« إلى »%2«.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="489"/>
+        <location filename="../src/gui/folder.cpp" line="490"/>
         <source>»%1« has been moved to »%2« and %n other file(s) have been moved.</source>
         <translation><numerusform>تم نقل »%1« إلى »%2« ولم يتم نقل ملف آخر.</numerusform><numerusform>تم نقل »%1« إلى »%2« وتم نقل ملف واحد آخر.</numerusform><numerusform>تم نقل »%1« إلى »%2« وتم نقل ملفين اثنين آخرين.</numerusform><numerusform>تم نقل »%1« إلى »%2« وتم نقل %n ملفات أخرى.</numerusform><numerusform>تم نقل »%1« إلى »%2« وتم نقل %n ملفا آخر.</numerusform><numerusform>تم نقل »%1« إلى »%2« وتم نقل %n ملف آخر.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="491"/>
+        <location filename="../src/gui/folder.cpp" line="492"/>
         <source>»%1« has been moved to »%2«.</source>
         <translation>تم نقل »%1« إلى »%2«.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="496"/>
+        <location filename="../src/gui/folder.cpp" line="497"/>
         <source>»%1« and %n other file(s) have sync conflicts.</source>
         <translation><numerusform>لدى »%1« تعارضات في المزامنة ولا يوجد ملف آخر بتعارضات في المزامنة.</numerusform><numerusform>لدى »%1« وملف واحد آخر تعارضات في المزامنة.</numerusform><numerusform>لدى »%1« وملفين اثنين آخرين تعارضات في المزامنة.</numerusform><numerusform>لدى »%1« و%n ملفات أخرى تعارضات في المزامنة.</numerusform><numerusform>لدى »%1« و%n ملفا آخر تعارضات في المزامنة.</numerusform><numerusform>لدى »%1« و%n ملف آخر تعارضات في المزامنة.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="498"/>
+        <location filename="../src/gui/folder.cpp" line="499"/>
         <source>»%1« has a sync conflict. Please check the conflict file!</source>
         <translation>لدى »%1« تعارض في المزامنة. يرجى التحقق من ملف التعارض!</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="503"/>
+        <location filename="../src/gui/folder.cpp" line="504"/>
         <source>»%1« and %n other file(s) could not be synced due to errors. See the log for details.</source>
         <translation><numerusform>تعذر مزامنة »%1« بسبب أخطاء ولا يوجد ملف آخر لا يمكن مزامنته. راجع السجل للتفاصيل.</numerusform><numerusform>تعذر مزامنة »%1« وملف واحد آخر بسبب أخطاء. راجع السجل للتفاصيل.</numerusform><numerusform>تعذر مزامنة »%1« وملفين اثنين آخرين بسبب أخطاء. راجع السجل للتفاصيل.</numerusform><numerusform>تعذر مزامنة »%1« و%n ملفات أخرى بسبب أخطاء. راجع السجل للتفاصيل.</numerusform><numerusform>تعذر مزامنة »%1« و%n ملفا آخر بسبب أخطاء. راجع السجل للتفاصيل.</numerusform><numerusform>تعذر مزامنة »%1« و%n ملف آخر بسبب أخطاء. راجع السجل للتفاصيل.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="505"/>
+        <location filename="../src/gui/folder.cpp" line="506"/>
         <source>»%1« could not be synced due to an error. See the log for details.</source>
         <translation>تعذر مزامنة »%1« بسبب خطأ. راجع السجل للتفاصيل.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="511"/>
+        <location filename="../src/gui/folder.cpp" line="512"/>
         <source>Sync Activity</source>
         <translation>نشاط المزامنة</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="721"/>
+        <location filename="../src/gui/folder.cpp" line="715"/>
         <source>Switching VFS mode on folder »%1«</source>
         <translation>جارٍ تبديل وضع VFS على المجلد »%1«</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1061"/>
+        <location filename="../src/gui/folder.cpp" line="1055"/>
         <source>The folder »%1« was created but was excluded from synchronization previously. Data inside it will not be synchronized.</source>
         <translation>تم إنشاء المجلد »%1« لكنه تم استبعاده من المزامنة مسبقًا. لن يتم مزامنة البيانات الموجودة بداخله.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1064"/>
+        <location filename="../src/gui/folder.cpp" line="1058"/>
         <source>The file »%1« was created but was excluded from synchronization previously. It will not be synchronized.</source>
         <translation>تم إنشاء الملف »%1« لكنه تم استبعاده من المزامنة مسبقًا. لن يتم مزامنته.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1068"/>
+        <location filename="../src/gui/folder.cpp" line="1062"/>
         <source>»%1« is not synchronized</source>
         <translation>»%1« غير مزامن</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="857"/>
+        <location filename="../src/gui/folder.cpp" line="851"/>
         <source>Could not read system exclude file</source>
         <translation>تعذر قراءة ملف الاستبعاد النظامي</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1076"/>
+        <location filename="../src/gui/folder.cpp" line="1070"/>
         <source>Changes in synchronized folders could not be tracked reliably.
 
 This means that the synchronization client might not upload local changes immediately and will instead only scan for local changes and upload them occasionally (every two hours by default).
@@ -2773,47 +2791,19 @@ Note that using any logging command line options will override the settings.</so
     </message>
 </context>
 <context>
-    <name>OCC::Vfs</name>
-    <message>
-        <location filename="../src/libsync/vfs/vfs.cpp" line="89"/>
-        <source>ReFS is currently not supported.</source>
-        <translation>ReFS غير مدعوم حاليًا.</translation>
-    </message>
-    <message>
-        <location filename="../src/libsync/vfs/vfs.cpp" line="93"/>
-        <source>The Virtual filesystem feature does not support a drive as sync root</source>
-        <translation>ميزة نظام الملفات الافتراضي لا تدعم محرك أقراص كجذر مزامنة</translation>
-    </message>
-    <message>
-        <location filename="../src/libsync/vfs/vfs.cpp" line="97"/>
-        <source>The Virtual filesystem feature requires a NTFS file system, %1 is using %2</source>
-        <translation>ميزة نظام الملفات الافتراضي تتطلب نظام ملفات NTFS، %1 يستخدم %2</translation>
-    </message>
-    <message>
-        <location filename="../src/libsync/vfs/vfs.cpp" line="101"/>
-        <source>The Virtual filesystem feature is not supported on network drives</source>
-        <translation>ميزة نظام الملفات الافتراضي غير مدعومة على محركات الأقراص الشبكية</translation>
-    </message>
-</context>
-<context>
     <name>OCC::VfsXAttr</name>
     <message>
-        <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="81"/>
+        <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="133"/>
         <source>Unable to claim the sync root for files on demand</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="86"/>
-        <source>The sync path is claimed by a different cloud, please check your setup</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="133"/>
+        <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="192"/>
         <source>Failed to set the extended file attribute</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="250"/>
+        <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="373"/>
         <source>Cannot create a placeholder because a file with the placeholder name already exist</source>
         <translation type="unfinished"/>
     </message>
@@ -2936,6 +2926,44 @@ Note that using any logging command line options will override the settings.</so
         <location filename="../src/gui/newwizard/setupwizardwidget.cpp" line="111"/>
         <source>Next</source>
         <translation>التالي</translation>
+    </message>
+</context>
+<context>
+    <name>OCC::XattrVfsPluginFactory</name>
+    <message>
+        <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="217"/>
+        <source>Failed to read /proc/self/mountinfo</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="230"/>
+        <source>Failed to unmount the OpenVFS mount %1 Error:%2</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="239"/>
+        <source>The filesystem for %1 does not support xattributes.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="244"/>
+        <source>The sync path is already claimed by a different account, please check your setup</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="248"/>
+        <source>The sync path is claimed by a different cloud, please check your setup</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="252"/>
+        <source>OpenVFS executable not found, please install it</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="258"/>
+        <source>Failed to find the OpenVFS config file, please check your installation.</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -3323,6 +3351,19 @@ Note that using any logging command line options will override the settings.</so
         <location filename="../src/libsync/platform_win.cpp" line="112"/>
         <source>Shutting down %1</source>
         <translation>جارٍ إيقاف %1</translation>
+    </message>
+</context>
+<context>
+    <name>VfsPluginManager</name>
+    <message>
+        <location filename="../src/libsync/vfs/vfs.cpp" line="239"/>
+        <source>ReFS is currently not supported.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/libsync/vfs/vfs.cpp" line="247"/>
+        <source>The Virtual filesystem %1 is not supported on this platform</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

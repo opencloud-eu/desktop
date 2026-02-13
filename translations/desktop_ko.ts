@@ -789,6 +789,24 @@ The update will be performed in the background, and overwrite the current AppIma
     </message>
 </context>
 <context>
+    <name>OCC::CfApiVfsPluginFactory</name>
+    <message>
+        <location filename="../src/plugins/vfs/cfapi/vfs_cfapi.cpp" line="140"/>
+        <source>The Virtual filesystem feature does not support a drive as sync root</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/plugins/vfs/cfapi/vfs_cfapi.cpp" line="144"/>
+        <source>The Virtual filesystem feature requires a NTFS file system, %1 is using %2</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/plugins/vfs/cfapi/vfs_cfapi.cpp" line="148"/>
+        <source>The Virtual filesystem feature is not supported on network drives</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
     <name>OCC::CommonStrings</name>
     <message>
         <location filename="../src/gui/commonstrings.cpp" line="27"/>
@@ -875,141 +893,141 @@ The update will be performed in the background, and overwrite the current AppIma
 <context>
     <name>OCC::Folder</name>
     <message>
-        <location filename="../src/gui/folder.cpp" line="150"/>
+        <location filename="../src/gui/folder.cpp" line="148"/>
         <source>The path »%1« is too long. Please enable long paths in the Windows settings or choose a different folder.</source>
         <translation>경로 »%1«이(가) 너무 깁니다. Windows 설정에서 긴 경로를 활성화하거나 다른 폴더를 선택하십시오.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="192"/>
+        <location filename="../src/gui/folder.cpp" line="193"/>
         <source>Failed to open the database for »%1«.</source>
         <translation>»%1«에 대한 데이터베이스를 열지 못했습니다.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="173"/>
+        <location filename="../src/gui/folder.cpp" line="171"/>
         <source>Local folder »%1« does not exist.</source>
         <translation>»%1« 로컬 폴더가 존재하지 않습니다.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="198"/>
+        <location filename="../src/gui/folder.cpp" line="199"/>
         <source>»%1« should be a folder but is not.</source>
         <translation>»%1«은 폴더여야 하지만 폴더가 아닙니다.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="200"/>
+        <location filename="../src/gui/folder.cpp" line="201"/>
         <source>»%1« is not readable.</source>
         <translation>»%1«을 읽을 수 없습니다.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="202"/>
+        <location filename="../src/gui/folder.cpp" line="203"/>
         <source>»%1« is not writable.</source>
         <translation>»%1«은 쓸 수 없습니다.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="461"/>
+        <location filename="../src/gui/folder.cpp" line="462"/>
         <source>»%1« and %n other file(s) have been removed.</source>
         <translation><numerusform>»%1« 및 %n개의 다른 파일(들)이 제거되었습니다.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="463"/>
+        <location filename="../src/gui/folder.cpp" line="464"/>
         <source>»%1« has been removed.</source>
         <comment>%1 names a file.</comment>
         <translation>»%1«이 제거되었습니다.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="468"/>
+        <location filename="../src/gui/folder.cpp" line="469"/>
         <source>»%1« and %n other file(s) have been added.</source>
         <translation><numerusform>»%1« 및 %n개의 다른 파일(들)이 추가되었습니다.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="470"/>
+        <location filename="../src/gui/folder.cpp" line="471"/>
         <source>»%1« has been added.</source>
         <comment>%1 names a file.</comment>
         <translation>»%1«이 추가되었습니다.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="475"/>
+        <location filename="../src/gui/folder.cpp" line="476"/>
         <source>»%1« and %n other file(s) have been updated.</source>
         <translation><numerusform>»%1« 및 %n개의 다른 파일(들)이 업데이트되었습니다.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="477"/>
+        <location filename="../src/gui/folder.cpp" line="478"/>
         <source>»%1« has been updated.</source>
         <comment>%1 names a file.</comment>
         <translation>»%1«이 업데이트되었습니다.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="482"/>
+        <location filename="../src/gui/folder.cpp" line="483"/>
         <source>»%1« has been renamed to »%2« and %n other file(s) have been renamed.</source>
         <translation><numerusform>»%1«의 이름이 »%2«로 변경되었고, 다른 %n개의 파일(들)의 이름이 변경되었습니다.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="484"/>
+        <location filename="../src/gui/folder.cpp" line="485"/>
         <source>»%1« has been renamed to »%2«.</source>
         <comment>%1 and %2 name files.</comment>
         <translation>»%1«의 이름이 »%2«로 변경되었습니다.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="489"/>
+        <location filename="../src/gui/folder.cpp" line="490"/>
         <source>»%1« has been moved to »%2« and %n other file(s) have been moved.</source>
         <translation><numerusform>»%1«이 »%2«로 이동되었고, 다른 %n개의 파일(들)이 이동되었습니다.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="491"/>
+        <location filename="../src/gui/folder.cpp" line="492"/>
         <source>»%1« has been moved to »%2«.</source>
         <translation>»%1«이 »%2«로 이동되었습니다.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="496"/>
+        <location filename="../src/gui/folder.cpp" line="497"/>
         <source>»%1« and %n other file(s) have sync conflicts.</source>
         <translation><numerusform>»%1« 및 %n개의 다른 파일(들)에 동기화 충돌이 있습니다.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="498"/>
+        <location filename="../src/gui/folder.cpp" line="499"/>
         <source>»%1« has a sync conflict. Please check the conflict file!</source>
         <translation>»%1«에 동기화 충돌이 있습니다. 충돌 파일을 확인하세요!</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="503"/>
+        <location filename="../src/gui/folder.cpp" line="504"/>
         <source>»%1« and %n other file(s) could not be synced due to errors. See the log for details.</source>
         <translation><numerusform>»%1« 및 다른 %n개의 파일(들)을 오류로 인해 동기화할 수 없습니다. 자세한 내용은 로그를 참조하세요.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="505"/>
+        <location filename="../src/gui/folder.cpp" line="506"/>
         <source>»%1« could not be synced due to an error. See the log for details.</source>
         <translation>오류로 인해 »%1«을 동기화할 수 없습니다. 자세한 내용은 로그를 참조하세요.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="511"/>
+        <location filename="../src/gui/folder.cpp" line="512"/>
         <source>Sync Activity</source>
         <translation>동기화 활성화</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="721"/>
+        <location filename="../src/gui/folder.cpp" line="715"/>
         <source>Switching VFS mode on folder »%1«</source>
         <translation>폴더 »%1«을 VFS 모드를 전환합니다.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1061"/>
+        <location filename="../src/gui/folder.cpp" line="1055"/>
         <source>The folder »%1« was created but was excluded from synchronization previously. Data inside it will not be synchronized.</source>
         <translation>폴더 »%1«이 생성되었지만 이전에 동기화에서 제외되었습니다. 폴더 안의 데이터는 동기화되지 않습니다.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1064"/>
+        <location filename="../src/gui/folder.cpp" line="1058"/>
         <source>The file »%1« was created but was excluded from synchronization previously. It will not be synchronized.</source>
         <translation>파일 »%1«이(가) 생성되었지만 이전에 동기화에서 제외되었습니다. 동기화되지 않습니다.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1068"/>
+        <location filename="../src/gui/folder.cpp" line="1062"/>
         <source>»%1« is not synchronized</source>
         <translation>»%1«이 동기화되지 않았습니다</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="857"/>
+        <location filename="../src/gui/folder.cpp" line="851"/>
         <source>Could not read system exclude file</source>
         <translation>시스템 제외 파일을 읽을 수 없습니다.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1076"/>
+        <location filename="../src/gui/folder.cpp" line="1070"/>
         <source>Changes in synchronized folders could not be tracked reliably.
 
 This means that the synchronization client might not upload local changes immediately and will instead only scan for local changes and upload them occasionally (every two hours by default).
@@ -2777,47 +2795,19 @@ Note that using any logging command line options will override the settings.</so
     </message>
 </context>
 <context>
-    <name>OCC::Vfs</name>
-    <message>
-        <location filename="../src/libsync/vfs/vfs.cpp" line="89"/>
-        <source>ReFS is currently not supported.</source>
-        <translation>ReFS는 현재 지원되지 않습니다.</translation>
-    </message>
-    <message>
-        <location filename="../src/libsync/vfs/vfs.cpp" line="93"/>
-        <source>The Virtual filesystem feature does not support a drive as sync root</source>
-        <translation>가상 파일 시스템 기능은 드라이브를 동기화 루트로 지원하지 않습니다</translation>
-    </message>
-    <message>
-        <location filename="../src/libsync/vfs/vfs.cpp" line="97"/>
-        <source>The Virtual filesystem feature requires a NTFS file system, %1 is using %2</source>
-        <translation>가상 파일 시스템 기능은 NTFS 파일 시스템이 필요합니다. %1은(는) %2을(를) 사용 중입니다</translation>
-    </message>
-    <message>
-        <location filename="../src/libsync/vfs/vfs.cpp" line="101"/>
-        <source>The Virtual filesystem feature is not supported on network drives</source>
-        <translation>가상 파일 시스템 기능은 네트워크 드라이브에서 지원되지 않습니다</translation>
-    </message>
-</context>
-<context>
     <name>OCC::VfsXAttr</name>
     <message>
-        <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="81"/>
+        <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="133"/>
         <source>Unable to claim the sync root for files on demand</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="86"/>
-        <source>The sync path is claimed by a different cloud, please check your setup</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="133"/>
+        <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="192"/>
         <source>Failed to set the extended file attribute</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="250"/>
+        <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="373"/>
         <source>Cannot create a placeholder because a file with the placeholder name already exist</source>
         <translation type="unfinished"/>
     </message>
@@ -2940,6 +2930,44 @@ Note that using any logging command line options will override the settings.</so
         <location filename="../src/gui/newwizard/setupwizardwidget.cpp" line="111"/>
         <source>Next</source>
         <translation>다음</translation>
+    </message>
+</context>
+<context>
+    <name>OCC::XattrVfsPluginFactory</name>
+    <message>
+        <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="217"/>
+        <source>Failed to read /proc/self/mountinfo</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="230"/>
+        <source>Failed to unmount the OpenVFS mount %1 Error:%2</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="239"/>
+        <source>The filesystem for %1 does not support xattributes.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="244"/>
+        <source>The sync path is already claimed by a different account, please check your setup</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="248"/>
+        <source>The sync path is claimed by a different cloud, please check your setup</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="252"/>
+        <source>OpenVFS executable not found, please install it</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="258"/>
+        <source>Failed to find the OpenVFS config file, please check your installation.</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -3327,6 +3355,19 @@ Note that using any logging command line options will override the settings.</so
         <location filename="../src/libsync/platform_win.cpp" line="112"/>
         <source>Shutting down %1</source>
         <translation>%1 종료 중</translation>
+    </message>
+</context>
+<context>
+    <name>VfsPluginManager</name>
+    <message>
+        <location filename="../src/libsync/vfs/vfs.cpp" line="239"/>
+        <source>ReFS is currently not supported.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/libsync/vfs/vfs.cpp" line="247"/>
+        <source>The Virtual filesystem %1 is not supported on this platform</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
