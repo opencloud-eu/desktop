@@ -792,17 +792,17 @@ De update wordt op de achtergrond uitgevoerd en overschrijft het huidige AppImag
     <message>
         <location filename="../src/plugins/vfs/cfapi/vfs_cfapi.cpp" line="140"/>
         <source>The Virtual filesystem feature does not support a drive as sync root</source>
-        <translation type="unfinished"/>
+        <translation>De virtuele bestandsysteemfunctie ondersteunt geen station als synchronisatiemap</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/cfapi/vfs_cfapi.cpp" line="144"/>
         <source>The Virtual filesystem feature requires a NTFS file system, %1 is using %2</source>
-        <translation type="unfinished"/>
+        <translation>De virtuele bestandsfunctie vereist een NTFS-bestandssysteem, %1 gebruikt %2</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/cfapi/vfs_cfapi.cpp" line="148"/>
         <source>The Virtual filesystem feature is not supported on network drives</source>
-        <translation type="unfinished"/>
+        <translation>De virtuele bestandsfunctie wordt niet ondersteund op netwerkstations</translation>
     </message>
 </context>
 <context>
@@ -2932,37 +2932,37 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="217"/>
         <source>Failed to read /proc/self/mountinfo</source>
-        <translation type="unfinished"/>
+        <translation>Lezen /proc/self/mountinfo is mislukt</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="230"/>
         <source>Failed to unmount the OpenVFS mount %1 Error:%2</source>
-        <translation type="unfinished"/>
+        <translation>Het verwijderen van de OpenVFS-aankoppeling %1 is mislukt. Fout: %2</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="239"/>
         <source>The filesystem for %1 does not support xattributes.</source>
-        <translation type="unfinished"/>
+        <translation>Het bestandssysteem voor %1 ondersteunt geen xattributen.</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="244"/>
         <source>The sync path is already claimed by a different account, please check your setup</source>
-        <translation type="unfinished"/>
+        <translation>Het synchronisatiepad is al in gebruik door een ander account, controleer uw instellingen</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="248"/>
         <source>The sync path is claimed by a different cloud, please check your setup</source>
-        <translation type="unfinished"/>
+        <translation>Het synchronisatiepad wordt geclaimd door een andere cloud, controleer uw instellingen</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="252"/>
         <source>OpenVFS executable not found, please install it</source>
-        <translation type="unfinished"/>
+        <translation>OpenVFS-uitvoerbaar bestand niet gevonden, installeer het</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/xattr/vfs_xattr.cpp" line="258"/>
         <source>Failed to find the OpenVFS config file, please check your installation.</source>
-        <translation type="unfinished"/>
+        <translation>Kon het OpenVFS-configuratiebestand niet vinden, controleer uw installatie.</translation>
     </message>
 </context>
 <context>
@@ -3357,12 +3357,12 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/vfs/vfs.cpp" line="239"/>
         <source>ReFS is currently not supported.</source>
-        <translation type="unfinished"/>
+        <translation>ReFS wordt momenteel niet ondersteund.</translation>
     </message>
     <message>
         <location filename="../src/libsync/vfs/vfs.cpp" line="247"/>
         <source>The Virtual filesystem %1 is not supported on this platform</source>
-        <translation type="unfinished"/>
+        <translation>Het virtuele bestandssysteem %1 wordt niet ondersteund op dit platform</translation>
     </message>
 </context>
 <context>
