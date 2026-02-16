@@ -85,6 +85,13 @@ SYNC_PATTERNS = {
             SYNC_STATUS['OK'],
             SYNC_STATUS['UPDATE'],
         ],
+        # used for local resource creation and deletion
+        [
+            SYNC_STATUS['OKAL'],
+            SYNC_STATUS['OK'],
+            SYNC_STATUS['OK'],
+            SYNC_STATUS['UPDATE'],
+        ],
     ],
     'single_synced': [SYNC_STATUS['SYNC'], SYNC_STATUS['OK']],
     'error': [SYNC_STATUS['ERROR']],
