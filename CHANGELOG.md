@@ -12,6 +12,7 @@
 
 ### 🐛 Bug Fixes
 
+- Fix path passed to pinstate [[#810](https://github.com/opencloud-eu/desktop/pull/810)]
 - Fix canonicalPath for drives (c:) [[#701](https://github.com/opencloud-eu/desktop/pull/701)]
 
 ### 📈 Enhancement
