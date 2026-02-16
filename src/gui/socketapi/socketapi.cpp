@@ -436,7 +436,7 @@ void SocketApi::command_RETRIEVE_FILE_STATUS(const QString &argument, SocketList
         if (fileType == ItemTypeVirtualFileDownload || fileType == ItemTypeVirtualFile) {
             vfsStatus = QStringLiteral("+VIRT");
         }
-        const auto pState = fileData.folder->vfs().pinState(argument);
+        const auto pState = fileData.folder->vfs().pinState(fileData.folderRelativePath);
         if (pState) {
             if (*pState == PinState::AlwaysLocal) {
                 vfsStatus += QStringLiteral("+AL");
@@ -978,7 +978,7 @@ void SocketApi::command_GET_MENU_ITEMS(const QString &argument, OCC::SocketListe
             if (!folder->isReady()) {
                 continue;
             }
-            auto fileData = FileData::get(file);
+            const auto fileData = FileData::get(file);
             auto availability = folder->vfs().availability(fileData.folderRelativePath);
             if (!availability) {
                 if (availability.error() == Vfs::AvailabilityError::DbError)
