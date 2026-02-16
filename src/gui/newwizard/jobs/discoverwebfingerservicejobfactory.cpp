@@ -21,6 +21,7 @@
 #include <QJsonObject>
 #include <QJsonParseError>
 #include <QNetworkReply>
+#include <QUrl>
 
 namespace OCC::Wizard::Jobs {
 
@@ -73,20 +74,67 @@ CoreJob *DiscoverWebFingerServiceJobFactory::startJob(const QUrl &url, QObject *
             return;
         }
 
-        // check for an OIDC issuer in the list of links provided (we use the first that matches our conditions)
+        // Check for an OIDC issuer in the list of links provided.
+        // We prioritize a desktop-specific issuer over the generic one to support
+        // identity providers that require separate OIDC client configurations per application type.
+        // See: https://github.com/opencloud-eu/desktop/issues/246
         const auto links = doc.object().value(QStringLiteral("links")).toArray();
-        for (const auto &link : links) {
-            const auto linkObject = link.toObject();
 
-            if (linkObject.value(QStringLiteral("rel")).toString() == QStringLiteral("http://openid.net/specs/connect/1.0/issuer")) {
-                // we have good faith in the server to provide a meaningful value and do not have to validate this any further
-                const auto href = linkObject.value(QStringLiteral("href")).toString();
-                setJobResult(job, href);
-                return;
+        // Helper struct to hold issuer info including optional client_id from properties
+        struct IssuerInfo {
+            QString href;
+            QString clientId;
+        };
+
+        // Helper lambda to find an OIDC issuer with a specific relation type
+        // Also extracts the client_id from properties if present
+        auto findIssuerByRelation = [&links](const QString &relation) -> IssuerInfo {
+            for (const auto &link : links) {
+                const auto linkObject = link.toObject();
+                if (linkObject.value(QStringLiteral("rel")).toString() == relation) {
+                    IssuerInfo info;
+                    info.href = linkObject.value(QStringLiteral("href")).toString();
+                    // Check for client_id in properties
+                    const auto properties = linkObject.value(QStringLiteral("properties")).toObject();
+                    const QString clientIdProperty = QStringLiteral("http://openid.net/specs/connect/1.0/client_id");
+                    if (properties.contains(clientIdProperty)) {
+                        info.clientId = properties.value(clientIdProperty).toString();
+                    }
+                    return info;
+                }
             }
+            return {};
+        };
+
+        // First, try desktop-specific OIDC issuer
+        const QString desktopIssuerRel = QStringLiteral("http://openid.net/specs/connect/1.0/issuer/desktop");
+        IssuerInfo issuerInfo = findIssuerByRelation(desktopIssuerRel);
+        if (!issuerInfo.href.isEmpty()) {
+            qCInfo(lcDiscoverWebFingerService) << u"using desktop-specific OIDC issuer:" << issuerInfo.href;
+            if (!issuerInfo.clientId.isEmpty()) {
+                qCInfo(lcDiscoverWebFingerService) << u"using desktop-specific client_id:" << issuerInfo.clientId;
+            }
+            // Return both issuer URL and client_id as a map
+            QVariantMap result;
+            result[QStringLiteral("issuer")] = QUrl::fromUserInput(issuerInfo.href);
+            result[QStringLiteral("clientId")] = issuerInfo.clientId;
+            setJobResult(job, result);
+            return;
         }
 
-        qCWarning(lcDiscoverWebFingerService) << u"could not find suitable relation in WebFinger response";
+        // Fall back to generic OIDC issuer
+        const QString genericIssuerRel = QStringLiteral("http://openid.net/specs/connect/1.0/issuer");
+        issuerInfo = findIssuerByRelation(genericIssuerRel);
+        if (!issuerInfo.href.isEmpty()) {
+            qCDebug(lcDiscoverWebFingerService) << u"using generic OIDC issuer:" << issuerInfo.href;
+            QVariantMap result;
+            result[QStringLiteral("issuer")] = QUrl::fromUserInput(issuerInfo.href);
+            result[QStringLiteral("clientId")] = QString(); // No client_id for generic issuer
+            setJobResult(job, result);
+            return;
+        }
+
+        qCWarning(lcDiscoverWebFingerService) << u"could not find OIDC issuer relation in WebFinger response";
         setInvalidReplyError();
     });
 

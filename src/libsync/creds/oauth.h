@@ -79,7 +79,14 @@ public:
     QString clientId() const;
     QString clientSecret() const;
 
-    static void persist(const AccountPtr &accountPtr, const QVariantMap &dynamicRegistrationData, const IdToken &idToken);
+    /**
+     * Set a custom client_id to use instead of the theme default.
+     * This is used when the server provides a desktop-specific client_id via webfinger.
+     * Must be called before startAuthentication().
+     */
+    void setClientId(const QString &clientId);
+
+    static void persist(const AccountPtr &accountPtr, const QVariantMap &dynamicRegistrationData, const IdToken &idToken, const QString &desktopClientId = {});
 
 Q_SIGNALS:
     /**

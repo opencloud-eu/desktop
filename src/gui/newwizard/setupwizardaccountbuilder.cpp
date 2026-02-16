@@ -90,7 +90,7 @@ AccountPtr SetupWizardAccountBuilder::build() const
     // TODO: perhaps _authenticationStrategy->setUpAccountPtr(...) would be more elegant? no need for getters then
     newAccountPtr->setCredentials(_authenticationStrategy->makeCreds());
     newAccountPtr->credentials()->persist();
-    OAuth::persist(newAccountPtr, _authenticationStrategy->dynamicRegistrationData(), _authenticationStrategy->idToken());
+    OAuth::persist(newAccountPtr, _authenticationStrategy->dynamicRegistrationData(), _authenticationStrategy->idToken(), _webFingerDesktopClientId);
 
     newAccountPtr->setDavDisplayName(_displayName);
 
@@ -164,6 +164,16 @@ void SetupWizardAccountBuilder::setWebFingerAuthenticationServerUrl(const QUrl &
 QUrl SetupWizardAccountBuilder::webFingerAuthenticationServerUrl() const
 {
     return _webFingerAuthenticationServerUrl;
+}
+
+void SetupWizardAccountBuilder::setWebFingerDesktopClientId(const QString &clientId)
+{
+    _webFingerDesktopClientId = clientId;
+}
+
+QString SetupWizardAccountBuilder::webFingerDesktopClientId() const
+{
+    return _webFingerDesktopClientId;
 }
 
 void SetupWizardAccountBuilder::setWebFingerInstances(const QVector<QUrl> &instancesList)

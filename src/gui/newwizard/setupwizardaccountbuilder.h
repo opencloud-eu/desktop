@@ -98,6 +98,9 @@ public:
     void setWebFingerAuthenticationServerUrl(const QUrl &url);
     QUrl webFingerAuthenticationServerUrl() const;
 
+    void setWebFingerDesktopClientId(const QString &clientId);
+    QString webFingerDesktopClientId() const;
+
     void setWebFingerInstances(const QVector<QUrl> &instancesList);
     QVector<QUrl> webFingerInstances() const;
 
@@ -108,6 +111,7 @@ private:
     QUrl _serverUrl;
 
     QUrl _webFingerAuthenticationServerUrl;
+    QString _webFingerDesktopClientId;
     QVector<QUrl> _webFingerInstances;
     QUrl _webFingerSelectedInstance;
 
