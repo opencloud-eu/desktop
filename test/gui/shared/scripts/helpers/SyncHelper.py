@@ -43,6 +43,8 @@ WAITED_AFTER_SYNC = False
 SYNC_STATUS = {
     'SYNC': 'STATUS:SYNC',  # sync in progress
     'OK': 'STATUS:OK',  # sync completed
+    'OKAL': 'STATUS:OK+AL',  # sync completed (Always Local)
+    'OKOO': 'STATUS:OK+OO',  # sync completed (Online Only)
     'ERROR': 'STATUS:ERROR',  # sync error
     'IGNORE': 'STATUS:IGNORE',  # sync ignored
     'NOP': 'STATUS:NOP',  # not in sync yet
@@ -57,13 +59,13 @@ SYNC_PATTERNS = {
     'initial': [
         # when adding account via New Account wizard
         [
+            SYNC_STATUS['NOP'],
             SYNC_STATUS['REGISTER'],
-            SYNC_STATUS['UPDATE'],
-            SYNC_STATUS['UPDATE'],
             SYNC_STATUS['UPDATE'],
         ],
         # when syncing empty account (hidden files are ignored)
         [SYNC_STATUS['UPDATE'], SYNC_STATUS['OK']],
+        [SYNC_STATUS['UPDATE'], SYNC_STATUS['OKAL']],
         # when syncing an account that has some files/folders
         [SYNC_STATUS['SYNC'], SYNC_STATUS['OK']],
     ],
@@ -79,6 +81,13 @@ SYNC_PATTERNS = {
             SYNC_STATUS['SYNC'],
             SYNC_STATUS['UPDATE'],
             SYNC_STATUS['OK'],
+            SYNC_STATUS['OK'],
+            SYNC_STATUS['OK'],
+            SYNC_STATUS['UPDATE'],
+        ],
+        # used for local resource creation and deletion
+        [
+            SYNC_STATUS['OKAL'],
             SYNC_STATUS['OK'],
             SYNC_STATUS['OK'],
             SYNC_STATUS['UPDATE'],
@@ -194,7 +203,7 @@ def listen_sync_status_for_item(item, resource_type='FOLDER'):
     if (resource_type := resource_type.upper()) not in ('FILE', 'FOLDER'):
         raise ValueError('resource_type must be "FILE" or "FOLDER"')
     socket_connect = get_socket_connection()
-    item = item.rstrip('\\')
+    item = item.rstrip('\\').rstrip('/')
     socket_connect.sendCommand(f'RETRIEVE_{resource_type}_STATUS:{item}\n')
 
 

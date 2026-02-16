@@ -170,8 +170,8 @@ steps:
       <<: *minio_environment
     commands:
       - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-      - mc cp -a -r /woodpecker/desktop/test/gui/clientLog/* s3/$PUBLIC_BUCKET/desktop/$CI_PIPELINE_NUMBER/logs/
       - mc cp -a -r /woodpecker/desktop/test/gui/guiReportUpload s3/$PUBLIC_BUCKET/desktop/$CI_PIPELINE_NUMBER
+      - mc cp -a -r /woodpecker/desktop/test/gui/clientLog/* s3/$PUBLIC_BUCKET/desktop/$CI_PIPELINE_NUMBER/logs/
 
   - name: gui-test-reports
     image: *minio_image
