@@ -1,10 +1,14 @@
 # Changelog
 
-## [3.1.0](https://github.com/opencloud-eu/desktop/releases/tag/v3.1.0) - 2026-02-15
+## [4.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v4.0.0) - 2026-02-16
 
 ### ❤️ Thanks to all contributors! ❤️
 
 @TheOneRing, @anon-pradip, @db-ot, @dragotin, @individual-it, @prashant-gurung899, @saw-jan, @tbsbdr
+
+### 💥 Breaking changes
+
+- Update Qt to 6.10.2, this removes support for MacOS 12 [[#762](https://github.com/opencloud-eu/desktop/pull/762)]
 
 ### 🐛 Bug Fixes
 
