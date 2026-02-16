@@ -66,12 +66,15 @@ Feature: deleting files and folders
         And as "Alice" file "textfile2.txt" should exist in the server
 
 
-    Scenario: Create and delete a file with special characters in the filename
+    Scenario Outline: Create and delete a file with special characters
         Given user "Alice" has set up a client with default settings
-        When user "Alice" creates a file "~`!@#$^&()-_=+{[}];',$%ñ&💥🫨❤️‍🔥.txt" with the following content inside the sync folder
+        When user "Alice" creates a file "<fileName>" with the following content inside the sync folder
             """
             special characters
             """
-        And the user deletes the file "~`!@#$^&()-_=+{[}];',$%ñ&💥🫨❤️‍🔥.txt"
+        And the user deletes the file "<fileName>"
         And the user waits for the files to sync
-        Then as "Alice" file "~`!@#$^&()-_=+{[}];',$%ñ&💥🫨❤️‍🔥.txt" should not exist in the server
+        Then as "Alice" file "<fileName>" should not exist in the server
+        Examples:
+            | fileName                            |
+            | ~`!@#$^&()-_=+{[}];',$%ñ&💥🫨❤️‍🔥.txt |

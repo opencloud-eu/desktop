@@ -31,11 +31,11 @@ Feature: edit files
     Given user "Alice" has set up a client with default settings
     And the user has copied file "<initialFile>" from outside the sync folder to "/" in the sync folder
     When the user copies file "<updateFile1>" from outside the sync folder to "/<initialFile>" in the sync folder
-    And the user waits for file "<initialFile>" to be synced
+    And the user waits for the files to sync
     And the user copies file "<updateFile2>" from outside the sync folder to "/<initialFile>" in the sync folder
-    And the user waits for file "<initialFile>" to be synced
+    And the user waits for the files to sync
     And the user copies file "<updateFile3>" from outside the sync folder to "/<initialFile>" in the sync folder
-    And the user waits for file "<initialFile>" to be synced
+    And the user waits for the files to sync
     Then as "Alice" the content of file "<initialFile>" in the server should match the content of local file "<updateFile3>"
     Examples:
       | initialFile | updateFile1  | updateFile2  | updateFile3  |
