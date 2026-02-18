@@ -8,7 +8,7 @@ from os.path import isfile, join, isdir
 import squish
 
 from helpers.SetupClientHelper import get_resource_path, get_temp_resource_path
-from helpers.SyncHelper import wait_for_client_to_be_ready, listen_sync_status_for_item
+from helpers.SyncHelper import wait_for_client_to_be_ready, listen_sync_status_for_item, perform_file_explorer_action
 from helpers.ConfigHelper import get_config, is_windows
 from helpers.FilesHelper import (
     build_conflicted_regex,
@@ -430,3 +430,9 @@ def step(context):
 @Given('user "|any|" has created a file "|any|" with size "|any|" in the sync folder')
 def step(context, _, filename, filesize):
     create_file_with_size(filename, filesize)
+
+
+@When(r'user "([^"]*)" marks file "([^"]*)" as (online-only|available-locally) from the file explorer', regexp=True)
+def step(context, user, resource, action):
+    resource_path = get_resource_path(resource, user)
+    perform_file_explorer_action(resource_path, action)

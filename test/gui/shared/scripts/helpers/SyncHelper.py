@@ -333,3 +333,26 @@ def wait_for_client_to_be_ready():
 def clear_waited_after_sync():
     global WAITED_AFTER_SYNC
     WAITED_AFTER_SYNC = False
+
+
+def perform_file_explorer_action(resource_path, action):
+    if action == 'online-only':
+        make_online_only(resource_path)
+    elif action == 'available-locally':
+        make_available_locally(resource_path)
+    else:
+        raise ValueError(
+            f'Invalid file explorer action: {action}'
+        )
+
+
+def make_online_only(resource_path):
+    socket_connect = get_socket_connection()
+    resource_path = resource_path.rstrip('\\').rstrip('/')
+    socket_connect.sendCommand(f'MAKE_ONLINE_ONLY:{resource_path}\n')
+
+
+def make_available_locally(resource_path):
+    socket_connect = get_socket_connection()
+    resource_path = resource_path.rstrip('\\').rstrip('/')
+    socket_connect.sendCommand(f'MAKE_AVAILABLE_LOCALLY:{resource_path}\n')

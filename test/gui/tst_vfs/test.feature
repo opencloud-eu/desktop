@@ -57,3 +57,18 @@ Feature: VFS support
         And as "Alice" file "Folder/lorem.txt" should exist in the server
         And as "Alice" file "lorem.txt" should not exist in the server
         And as "Alice" file "sampleFile.txt" should not exist in the server
+
+
+    Scenario: File explorer actions
+        Given user "Alice" has been created in the server with default attributes
+        And user "Alice" has uploaded file with content "openCloud" to "testFile.txt" in the server
+        And user "Alice" has created folder "parent" in the server
+        And user "Alice" has uploaded file with content "some contents" to "parent/lorem.txt" in the server
+        And user "Alice" has set up a client with default settings
+        Then the placeholder of file "testFile.txt" should exist on the file system
+        When user "Alice" marks file "testFile.txt" as available-locally from the file explorer
+        And the user waits for file "testFile.txt" to be synced
+        Then the file "testFile.txt" should be downloaded
+        When user "Alice" marks file "testFile.txt" as online-only from the file explorer
+        And the user waits for file "testFile.txt" to be synced
+        Then the placeholder of file "testFile.txt" should exist on the file system
