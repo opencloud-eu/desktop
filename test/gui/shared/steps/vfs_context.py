@@ -1,5 +1,6 @@
 from helpers.FilesHelper import get_file_size_on_disk, get_file_size
 from helpers.SetupClientHelper import get_resource_path
+from helpers.SyncHelper import perform_file_explorer_vfs_action
 
 
 @Then('the placeholder file "|any|" should exist on the file system')
@@ -19,5 +20,11 @@ def step(context, file_name):
     test.compare(
         size_on_disk,
         file_size,
-        f"Original file size '{file_size}' is not equal to its size on disk '{size_on_disk}'",
+        f"File size is equal to its size on disk",
     )
+
+
+@When(r'user "([^"]*)" marks file "([^"]*)" as (online-only|available-locally) from the file explorer', regexp=True)
+def step(context, user, resource, action):
+    resource_path = get_resource_path(resource, user)
+    perform_file_explorer_vfs_action(resource_path, action)

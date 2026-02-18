@@ -57,3 +57,34 @@ Feature: VFS support
         And as "Alice" file "Folder/lorem.txt" should exist in the server
         And as "Alice" file "lorem.txt" should not exist in the server
         And as "Alice" file "sampleFile.txt" should not exist in the server
+
+
+    Scenario: File explorer VFS actions
+        Given user "Alice" has been created in the server with default attributes
+        And user "Alice" has uploaded file with content "openCloud" to "testFile.txt" in the server
+        And user "Alice" has uploaded file with content "test content" to "simple.txt" in the server
+        And user "Alice" has created folder "parent" in the server
+        And user "Alice" has uploaded file with content "some contents" to "parent/lorem.txt" in the server
+        And user "Alice" has set up a client with default settings
+        Then the placeholder file "testFile.txt" should exist on the file system
+        Then the placeholder file "simple.txt" should exist on the file system
+        And the placeholder file "parent/lorem.txt" should exist on the file system
+        When user "Alice" reads the content of file "parent/lorem.txt"
+        And user "Alice" reads the content of file "testFile.txt"
+        Then the file "parent/lorem.txt" should be downloaded
+        And the file "testFile.txt" should be downloaded
+        When user "Alice" marks file "testFile.txt" as available-locally from the file explorer
+        And the user waits for file "testFile.txt" to be synced
+        Then the file "testFile.txt" should be downloaded
+        When user "Alice" marks file "simple.txt" as available-locally from the file explorer
+        And the user waits for file "simple.txt" to be synced
+        Then the file "simple.txt" should be downloaded
+        When user "Alice" marks file "testFile.txt" as online-only from the file explorer
+        And the user waits for file "testFile.txt" to be synced
+        Then the placeholder file "testFile.txt" should exist on the file system
+        When user "Alice" marks file "parent/lorem.txt" as online-only from the file explorer
+        And the user waits for file "parent/lorem.txt" to be synced
+        Then the placeholder file "parent/lorem.txt" should exist on the file system
+        When user "Alice" marks file "simple.txt" as online-only from the file explorer
+        And the user waits for file "simple.txt" to be synced
+        Then the file "simple.txt" should be downloaded
