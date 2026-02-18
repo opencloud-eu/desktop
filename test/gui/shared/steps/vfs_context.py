@@ -2,7 +2,7 @@ from helpers.FilesHelper import get_file_size_on_disk, get_file_size
 from helpers.SetupClientHelper import get_resource_path
 
 
-@Then('the placeholder of file "|any|" should exist on the file system')
+@Then('the placeholder file "|any|" should exist on the file system')
 def step(context, file_name):
     resource_path = get_resource_path(file_name)
     size_on_disk = get_file_size_on_disk(resource_path)
