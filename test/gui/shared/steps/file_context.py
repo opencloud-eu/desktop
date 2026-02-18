@@ -8,8 +8,8 @@ from os.path import isfile, join, isdir
 import squish
 
 from helpers.SetupClientHelper import get_resource_path, get_temp_resource_path
-from helpers.SyncHelper import wait_for_client_to_be_ready, listen_sync_status_for_item
-from helpers.ConfigHelper import get_config
+from helpers.SyncHelper import wait_for_client_to_be_ready, listen_sync_status_for_item, perform_file_explorer_action
+from helpers.ConfigHelper import get_config, is_windows
 from helpers.FilesHelper import (
     build_conflicted_regex,
     sanitize_path,
@@ -97,26 +97,27 @@ def extract_zip(zip_file_path, destination_dir):
 
 
 def add_copy_suffix(resource_path, resource_type):
+    suffix = ' (Copy)'
     if resource_type == 'file':
         source_dir = resource_path.rsplit('.', 1)
-        return source_dir[0] + ' - Copy.' + source_dir[-1]
-    return resource_path + ' - Copy'
+        return source_dir[0] + suffix + '.' + source_dir[-1]
+    return resource_path + suffix
 
 
 def copy_resource(resource_type, source, destination, from_files_for_upload=False):
     if from_files_for_upload:
-        source_dir = get_file_for_upload(source)
+        source = get_file_for_upload(source)
     else:
-        source_dir = get_resource_path(source)
-    destination_dir = get_resource_path(destination)
-    if source_dir == destination_dir and destination_dir != '/':
-        destination_dir = add_copy_suffix(source, resource_type)
+        source = get_resource_path(source)
+    destination = get_resource_path(destination)
+    if source == destination and destination != '/':
+        destination = add_copy_suffix(source, resource_type)
 
     wait_for_client_to_be_ready()
-    listen_sync_status_for_item(destination_dir, resource_type)
+    listen_sync_status_for_item(destination, resource_type)
     if resource_type == 'folder':
-        return shutil.copytree(source_dir, destination_dir)
-    return shutil.copy2(source_dir, destination_dir)
+        return shutil.copytree(source, destination)
+    return shutil.copy2(source, destination)
 
 
 def move_resource(username, resource_type, source, destination, is_temp_folder=False):
@@ -164,9 +165,14 @@ def step(context, _, filename, filesize):
     create_file_with_size(filename, filesize)
 
 
-@When(r'the user copies the (file|folder) "([^"]*)" to "([^"]*)"', regexp=True)
-def step(context, resource_type, file_name, destination):
-    copy_resource(resource_type, file_name, destination, False)
+@When(r'the user copies (file|folder) "([^"]*)" into folder "([^"]*)"', regexp=True)
+def step(context, resource_type, resource_name, destination_dir):
+    copy_resource(resource_type, resource_name, destination_dir, False)
+
+
+@When(r'the user copies (file|folder) "([^"]*)" into the same folder', regexp=True)
+def step(context, resource_type, resource_name):
+    copy_resource(resource_type, resource_name, resource_name, False)
 
 
 @When(r'the user renames a (?:file|folder) "([^"]*)" to "([^"]*)"', regexp=True)
@@ -299,12 +305,31 @@ def step(context, file_number, file_size, folder_name):
 
 
 @When(
+    r'user "([^"]*)" reads the content of file "([^"]*)"',
+    regexp=True,
+)
+def step(context, username, file):
+    file_path = get_resource_path(file, username)
+    with open(file_path, 'r') as f:
+        f.read()
+
+
+@When(
     r'user "([^"]*)" moves (folder|file) "([^"]*)" from the temp folder into the sync folder',
     regexp=True,
 )
 def step(context, username, resource_type, resource_name):
     source_dir = join(get_config('tempFolderPath'), resource_name)
     move_resource(username, resource_type, source_dir, '/', True)
+
+
+@When(
+    r'user "([^"]*)" moves (folder|file) "([^"]*)" to the temp folder',
+    regexp=True,
+)
+def step(context, username, resource_type, resource_name):
+    destination= join(get_config('tempFolderPath'), resource_name)
+    move_resource(username, resource_type, resource_name, destination)
 
 
 @When(
@@ -405,3 +430,9 @@ def step(context):
 @Given('user "|any|" has created a file "|any|" with size "|any|" in the sync folder')
 def step(context, _, filename, filesize):
     create_file_with_size(filename, filesize)
+
+
+@When(r'user "([^"]*)" marks file "([^"]*)" as (online-only|available-locally) from the file explorer', regexp=True)
+def step(context, user, resource, action):
+    resource_path = get_resource_path(resource, user)
+    perform_file_explorer_action(resource_path, action)
