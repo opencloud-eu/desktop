@@ -191,31 +191,38 @@ void VfsXAttr::startImpl(const VfsSetupParams &params)
     qCDebug(lcVfsXAttr, "Start XAttr VFS");
 
     // Lets claim the sync root directory for us
-    const auto path = params.root();
     // set the owner to opencloud to claim it
-    if (!FileSystem::Xattr::setxattr(path, QString::fromUtf8(OpenVfsConstants::XAttributeNames::Owner), xattrOwnerString(params.account->uuid()))) {
+    if (!FileSystem::Xattr::setxattr(params.root(), QString::fromUtf8(OpenVfsConstants::XAttributeNames::Owner), xattrOwnerString(params.account->uuid()))) {
         Q_EMIT error(tr("Unable to claim the sync root for files on demand"));
         return;
     }
 
-    auto vfsProcess = new QProcess(this);
+    qCDebug(lcVfsXAttr) << "Mounting" << openVFSExePath().toString() << params.root().toString();
+    _openVfsProcess = new QProcess(this);
     // merging the channels and piping the output to our log lead to deadlocks
-    vfsProcess->setProcessChannelMode(QProcess::ForwardedChannels);
-    const auto logPrefix = [vfsProcess, path = params.root().toString()] { return u"[%1 %2] "_s.arg(QString::number(vfsProcess->processId()), path); };
-    connect(vfsProcess, &QProcess::finished, vfsProcess, [logPrefix, vfsProcess] {
-        qCFatal(lcVfsXAttr) << logPrefix() << "finished" << vfsProcess->exitCode();
-        vfsProcess->deleteLater();
+    _openVfsProcess->setProcessChannelMode(QProcess::ForwardedChannels);
+    const auto logPrefix = [path = params.root().toString(), this] { return u"[%1 %2] "_s.arg(QString::number(_openVfsProcess->processId()), path); };
+    connect(_openVfsProcess, &QProcess::finished, this, [logPrefix, this] {
+        qCFatal(lcVfsXAttr) << logPrefix() << "finished" << _openVfsProcess->exitCode();
+        _openVfsProcess->deleteLater();
     });
-    connect(vfsProcess, &QProcess::started, this, [logPrefix, this] {
+    connect(_openVfsProcess, &QProcess::started, this, [logPrefix, this] {
         qCInfo(lcVfsXAttr) << logPrefix() << u"started";
-        Q_EMIT started();
+        // TODO:
+        // give it time to mount
+        QTimer::singleShot(1s, this, &Vfs::started);
     });
-    connect(vfsProcess, &QProcess::errorOccurred, this, [logPrefix, vfsProcess] { qCWarning(lcVfsXAttr) << logPrefix() << vfsProcess->errorString(); });
-    vfsProcess->start(openVFSExePath().toString(), {u"-d"_s, u"-i"_s, openVFSConfigFilePath().toString(), params.root().toString()}, QIODevice::ReadOnly);
+    connect(_openVfsProcess, &QProcess::errorOccurred, this, [logPrefix, this] { qCWarning(lcVfsXAttr) << logPrefix() << _openVfsProcess->errorString(); });
+    _openVfsProcess->start(openVFSExePath().toString(), {u"-d"_s, u"-i"_s, openVFSConfigFilePath().toString(), params.root().toString()}, QIODevice::ReadOnly);
 }
 
 void VfsXAttr::stop()
 {
+    if (_openVfsProcess) {
+        _openVfsProcess->terminate();
+        _openVfsProcess->waitForFinished();
+        _openVfsProcess->deleteLater();
+    }
 }
 
 void VfsXAttr::unregisterFolder()
@@ -498,12 +505,17 @@ bool VfsXAttr::setPinState(const QString &folderPath, PinState state)
 
 Optional<PinState> VfsXAttr::pinState(const QString &folderPath)
 {
-    const auto attribs = placeHolderAttributes(params().root() / folderPath);
-    if (!attribs) {
-        qCDebug(lcVfsXAttr) << u"Couldn't find pin state for regular non-placeholder file" << folderPath;
-        return {};
+    for (auto relativePath = FileSystem::Path::relative(folderPath).get();; relativePath = relativePath.parent_path()) {
+        const auto attributes = placeHolderAttributes(params().root() / relativePath);
+        if (!attributes) {
+            qCDebug(lcVfsXAttr) << "Couldn't find pin state for placeholder file" << folderPath;
+            return {};
+        }
+        // if the state is inherited and we still have a parent path, retreive that instead.
+        if (attributes.pinState != OpenVfsConstants::PinStates::Inherited || !relativePath.has_relative_path()) {
+            return convertPinState(attributes.pinState);
+        }
     }
-    return convertPinState(attribs.pinState);
 }
 
 Vfs::AvailabilityResult VfsXAttr::availability(const QString &folderPath)

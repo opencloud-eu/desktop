@@ -865,8 +865,14 @@ FakeFolder::FakeFolder(const FileInfo &fileTemplate, OCC::Vfs::Mode vfsMode, boo
         Q_ASSERT(vfs);
     }
 
+    QSignalSpy vfsStartedSpy(vfs.data(), &OCC::Vfs::started);
     // Ensure we have a valid Vfs instance "running"
     switchToVfs(vfs);
+    // delay setting of the root pin state until the vfs is ready
+    OC_ENFORCE(vfsStartedSpy.wait(5s));
+    const auto pinState = filesAreDehydrated ? OCC::PinState::OnlineOnly : OCC::PinState::AlwaysLocal;
+    OC_ENFORCE(vfs->setPinState(QString(), pinState));
+
 
     if (vfsMode != OCC::Vfs::Mode::Off) {
         const auto pinState = filesAreDehydrated ? OCC::PinState::OnlineOnly : OCC::PinState::AlwaysLocal;
