@@ -24,8 +24,11 @@ skip_clone: true
 matrix:
   include:
     - JOB_NAME: purge-desktop-build
-      PURGE_PATH: desktop-build/
+      PURGE_PATH: desktop/bin-build/
       TTL: 1d
+    - JOB_NAME: purge-python-cache
+      PURGE_PATH: desktop/python-cache/
+      TTL: 14d
     - JOB_NAME: purge-browsers-cache
       PURGE_PATH: web/browsers-cache/
       TTL: 14d
@@ -33,7 +36,7 @@ matrix:
       PURGE_PATH: opencloud-build/
       TTL: 1d
     - JOB_NAME: purge-logs
-      PURGE_PATH: desktop
+      PURGE_PATH: desktop/testlogs/
       USE_PUBLIC_BUCKET: true
       TTL: 7d
 
