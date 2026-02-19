@@ -18,7 +18,7 @@ namespace FileSystem {
 #endif
     }
 
-    std::optional<QString> Xattr::getxattr(const std::filesystem::path &path, const QString &name)
+    std::optional<QByteArray> Xattr::getxattr(const std::filesystem::path &path, const QString &name)
     {
         QByteArray value;
         ssize_t res = 0;
@@ -32,15 +32,14 @@ namespace FileSystem {
         } while (res == -1 && errno == ERANGE);
         if (res > 0) {
             value.resize(res);
-            return QString::fromUtf8(value);
+            return value;
         } else {
             return {};
         }
     }
 
-    Result<void, QString> Xattr::setxattr(const std::filesystem::path &path, const QString &name, const QString &value)
+    Result<void, QString> Xattr::setxattr(const std::filesystem::path &path, const QString &name, const QByteArray &data)
     {
-        const auto data = value.toUtf8();
 #ifdef Q_OS_MAC
         const auto result = ::setxattr(path.c_str(), name.toUtf8().constData(), data.constData(), data.size(), 0, XATTR_NOFOLLOW);
 #else
