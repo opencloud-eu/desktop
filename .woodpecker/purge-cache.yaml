@@ -19,6 +19,13 @@ when:
   - event: cron
     cron: nightly*
 
+depends_on:
+  - ui-tests
+
+runs_on:
+  - success
+  - failure
+
 skip_clone: true
 
 matrix:
