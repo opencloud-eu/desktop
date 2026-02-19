@@ -520,7 +520,6 @@ void Folder::startVfs()
     OC_ENFORCE(_vfs->mode() == _definition.virtualFilesMode);
 
     VfsSetupParams vfsParams(_accountState->account(), webDavUrl(), _definition.spaceId(), displayName(), _engine.get());
-    vfsParams.filesystemPath = path();
     vfsParams.journal = &_journal;
     vfsParams.providerDisplayName = Theme::instance()->appNameGUI();
     vfsParams.providerName = Theme::instance()->appName();

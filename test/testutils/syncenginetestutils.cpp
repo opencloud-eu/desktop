@@ -865,13 +865,14 @@ FakeFolder::FakeFolder(const FileInfo &fileTemplate, OCC::Vfs::Mode vfsMode, boo
         Q_ASSERT(vfs);
     }
 
+    if (vfsMode != OCC::Vfs::Mode::Off) {
+        connect(vfs.data(), &OCC::Vfs::started, this, [vfs, filesAreDehydrated] {
+            const auto pinState = filesAreDehydrated ? OCC::PinState::OnlineOnly : OCC::PinState::AlwaysLocal;
+            OC_ENFORCE(vfs->setPinState(QString(), pinState));
+        });
+    }
     // Ensure we have a valid Vfs instance "running"
     switchToVfs(vfs);
-
-    if (vfsMode != OCC::Vfs::Mode::Off) {
-        const auto pinState = filesAreDehydrated ? OCC::PinState::OnlineOnly : OCC::PinState::AlwaysLocal;
-        OC_ENFORCE(vfs->setPinState(QString(), pinState));
-    }
 
     // A new folder will update the local file state database on first sync.
     // To have a state matching what users will encounter, we have to a sync
@@ -892,7 +893,6 @@ void FakeFolder::switchToVfs(QSharedPointer<OCC::Vfs> vfs)
     _syncEngine->setSyncOptions(opts);
 
     OCC::VfsSetupParams vfsParams(account(), OCC::TestUtils::dummyDavUrl(), QString(), u"DisplayName"_s, &syncEngine());
-    vfsParams.filesystemPath = localPath();
     vfsParams.journal = _journalDb.get();
     vfsParams.providerName = QStringLiteral("OC-TEST");
     vfsParams.providerDisplayName = QStringLiteral("OC-TEST");

@@ -51,12 +51,13 @@ namespace OCC {
 
 Q_LOGGING_CATEGORY(lcFileSystem, "sync.filesystem", QtInfoMsg)
 
-std::filesystem::path FileSystem::toFilesystemPath(QString path)
+std::filesystem::path FileSystem::toFilesystemPath(const QString &path)
 {
 #ifdef Q_OS_WIN
-    path = FileSystem::longWinPath(path);
+    return QtPrivate::toFilesystemPath(FileSystem::longWinPath(path));
+#else
+    return QtPrivate::toFilesystemPath(path);
 #endif
-    return std::filesystem::path(reinterpret_cast<const char16_t *>(path.cbegin()), reinterpret_cast<const char16_t *>(path.cend()));
 }
 
 QString FileSystem::fromFilesystemPath(const std::filesystem::path &path)
@@ -71,9 +72,9 @@ QString FileSystem::fromFilesystemPath(const std::filesystem::path &path)
     return QDir::fromNativeSeparators(QString::fromWCharArray(view.data(), view.length()));
 #elif defined(Q_OS_MACOS)
     // based on QFile::decodeName
-    return QString::fromStdString(path.native()).normalized(QString::NormalizationForm_C);
+    return QtPrivate::fromFilesystemPath(path).normalized(QString::NormalizationForm_C);
 #else
-    return QString::fromStdString(path.native());
+    return QtPrivate::fromFilesystemPath(path);
 #endif
 }
 

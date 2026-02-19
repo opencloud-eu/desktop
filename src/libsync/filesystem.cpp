@@ -294,7 +294,9 @@ std::optional<QString> FileSystem::Tags::get(const QString &path, const QString 
     if (Utility::isLinux()) {
         platformKey = QStringLiteral("user.") + platformKey;
     }
-    return Xattr::getxattr(toFilesystemPath(path), platformKey);
+    if (const auto d = Xattr::getxattr(toFilesystemPath(path), platformKey)) {
+        return QString::fromUtf8(*d);
+    }
 #elif defined(Q_OS_WIN)
     QFile file(QStringLiteral("%1:%2").arg(path, key));
     if (file.open(QIODevice::ReadOnly)) {
@@ -314,7 +316,7 @@ OCC::Result<void, QString> FileSystem::Tags::set(const QString &path, const QStr
     if (Utility::isLinux()) {
         platformKey = QStringLiteral("user.") + platformKey;
     }
-    return Xattr::setxattr(toFilesystemPath(path), platformKey, value);
+    return Xattr::setxattr(toFilesystemPath(path), platformKey, value.toUtf8());
 #elif defined(Q_OS_WIN)
     QFile file(QStringLiteral("%1:%2").arg(path, key));
     if (!file.open(QIODevice::WriteOnly)) {

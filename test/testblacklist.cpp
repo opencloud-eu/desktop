@@ -28,6 +28,11 @@ private Q_SLOTS:
 
         QTest::newRow("Vfs::Mode::Off") << Vfs::Mode::Off << false;
 
+        if (VfsPluginManager::instance().isVfsPluginAvailable(Vfs::Mode::XAttr)) {
+            QTest::newRow("Vfs::Mode::Xattr dehydrdeated") << Vfs::Mode::XAttr << false;
+            QTest::newRow("Vfs::Mode::Xattr hydrated") << Vfs::Mode::XAttr << true;
+        }
+
         if (VfsPluginManager::instance().isVfsPluginAvailable(Vfs::Mode::WindowsCfApi)) {
             QTest::newRow("Vfs::Mode::WindowsCfApi dehydrated") << Vfs::Mode::WindowsCfApi << true;
 
@@ -82,7 +87,7 @@ private Q_SLOTS:
         modifier.insert(testFileName);
         fakeFolder.serverErrorPaths().append(testFileName, 500); // will be blacklisted
         const bool syncResult = fakeFolder.applyLocalModificationsAndSync();
-        if (vfsMode == Vfs::Mode::WindowsCfApi && filesAreDehydrated && remote) {
+        if (filesAreDehydrated && remote) {
             // With dehydrated files, only a PROPFIND is done, but not a GET request.
             // And it is the GET request that fails, and causes a blacklist entry, all "syncs" will succeed.
             QVERIFY(syncResult);

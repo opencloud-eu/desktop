@@ -64,6 +64,8 @@ add_library(libsync SHARED
     abstractcorejob.cpp
 
     appprovider.cpp
+
+    path.cpp
 )
 
 if(WIN32)

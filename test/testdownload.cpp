@@ -73,6 +73,11 @@ private Q_SLOTS:
 
         QTest::newRow("Vfs::Mode::Off") << Vfs::Mode::Off << false;
 
+        if (VfsPluginManager::instance().isVfsPluginAvailable(Vfs::Mode::XAttr)) {
+            QTest::newRow("Vfs::Mode::Xattr dehydrdeated") << Vfs::Mode::XAttr << false;
+            QTest::newRow("Vfs::Mode::Xattr hydrated") << Vfs::Mode::XAttr << true;
+        }
+
         if (VfsPluginManager::instance().isVfsPluginAvailable(Vfs::Mode::WindowsCfApi)) {
             QTest::newRow("Vfs::Mode::WindowsCfApi dehydrated") << Vfs::Mode::WindowsCfApi << true;
 

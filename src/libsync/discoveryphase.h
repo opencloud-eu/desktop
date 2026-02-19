@@ -63,8 +63,7 @@ Q_SIGNALS:
 private:
     QString _localPath;
     AccountPtr _account;
-    OCC::Vfs* _vfs;
-public:
+    OCC::Vfs *_vfs;
 };
 
 
