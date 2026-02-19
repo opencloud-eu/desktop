@@ -13,21 +13,21 @@
  */
 #pragma once
 
-#include "../common/pinstate.h"
-#include "../common/result.h"
-#include "../common/syncfilestatus.h"
-#include "../common/utility.h"
-#include "assert.h"
+#include "filesystem.h"
 #include "libsync/accountfwd.h"
+#include "libsync/common/pinstate.h"
+#include "libsync/common/result.h"
+#include "libsync/common/syncfilestatus.h"
+#include "libsync/common/utility.h"
 #include "libsync/discoveryinfo.h"
 #include "libsync/opencloudsynclib.h"
+#include "libsync/path.h"
 
 #include <QObject>
 #include <QSharedPointer>
 #include <QUrl>
 #include <QVersionNumber>
 
-#include <QFuture>
 #include <filesystem>
 #include <memory>
 
@@ -43,11 +43,7 @@ class HydrationJob;
 struct OPENCLOUD_SYNC_EXPORT VfsSetupParams
 {
     explicit VfsSetupParams(const AccountPtr &account, const QUrl &baseUrl, const QString &spaceId, const QString &folderDisplayName, SyncEngine *syncEngine);
-    /** The full path to the folder on the local filesystem
-     *
-     * Always ends with /.
-     */
-    QString filesystemPath;
+
     QString folderDisplayName() const;
 
     /// Account url, credentials etc for network calls
@@ -69,11 +65,15 @@ struct OPENCLOUD_SYNC_EXPORT VfsSetupParams
 
     SyncEngine *syncEngine() const;
 
+    QString filesystemPath() const;
+    const FileSystem::Path &root() const;
+
 private:
     QUrl _baseUrl;
     SyncEngine *_syncEngine;
     QString _spaceId;
     QString _folderDisplayName;
+    FileSystem::Path _root;
 };
 
 /** Interface describing how to deal with virtual/placeholder files.

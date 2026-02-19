@@ -118,7 +118,7 @@ void VfsCfApi::startImpl(const VfsSetupParams &params)
 
     cfapi::registerSyncRoot(params, [this](const QString &errorMessage) {
         if (errorMessage.isEmpty()) {
-            auto connectResult = cfapi::connectSyncRoot(this->params().filesystemPath, this);
+            auto connectResult = cfapi::connectSyncRoot(this->params().filesystemPath(), this);
             if (!connectResult) {
                 qCCritical(lcCfApi) << u"Initialization failed, couldn't connect sync root:" << connectResult.error();
                 return;
@@ -155,7 +155,7 @@ void VfsCfApi::stop()
     if (_connectionKey.Internal != 0) {
         const auto result = cfapi::disconnectSyncRoot(std::move(_connectionKey));
         if (!result) {
-            qCCritical(lcCfApi) << u"Disconnect failed for" << params().filesystemPath << u":" << result.error();
+            qCCritical(lcCfApi) << u"Disconnect failed for" << params().filesystemPath() << u":" << result.error();
         }
     }
 }
@@ -164,7 +164,7 @@ void VfsCfApi::unregisterFolder()
 {
     const auto result = cfapi::unregisterSyncRoot(params());
     if (!result) {
-        qCCritical(lcCfApi) << u"Unregistration failed for" << params().filesystemPath << u":" << result.error();
+        qCCritical(lcCfApi) << u"Unregistration failed for" << params().filesystemPath() << u":" << result.error();
     }
 
 #if 0
@@ -197,15 +197,14 @@ Result<Vfs::ConvertToPlaceholderResult, QString> VfsCfApi::updateMetadata(const 
 
 Result<void, QString> VfsCfApi::createPlaceholder(const SyncFileItem &item)
 {
-    Q_ASSERT(params().filesystemPath.endsWith('/'_L1));
-    const auto localPath = QDir::toNativeSeparators(params().filesystemPath + item.localName());
+    const auto localPath = QDir::toNativeSeparators(params().filesystemPath() + item.localName());
     const auto result = cfapi::createPlaceholderInfo(localPath, item._modtime, item._size, item._fileId);
     return result;
 }
 
 bool VfsCfApi::needsMetadataUpdate(const SyncFileItem &item)
 {
-    const QString path = params().filesystemPath + item.localName();
+    const QString path = params().filesystemPath() + item.localName();
     if (!QFileInfo::exists(path)) {
         return false;
     }
@@ -258,13 +257,13 @@ bool VfsCfApi::setPinState(const QString &folderPath, PinState state)
 {
     qCDebug(lcCfApi) << u"setPinState" << folderPath << state;
 
-    const auto localPath = QDir::toNativeSeparators(params().filesystemPath + folderPath);
+    const auto localPath = QDir::toNativeSeparators(params().filesystemPath() + folderPath);
     return static_cast<bool>(cfapi::setPinState(localPath, state, cfapi::Recurse));
 }
 
 Optional<PinState> VfsCfApi::pinState(const QString &folderPath)
 {
-    const auto localPath = QDir::toNativeSeparators(params().filesystemPath + folderPath);
+    const auto localPath = QDir::toNativeSeparators(params().filesystemPath() + folderPath);
     const auto info = cfapi::findPlaceholderInfo<CF_PLACEHOLDER_BASIC_INFO>(localPath);
     if (!info) {
         qCDebug(lcCfApi) << u"Couldn't find pin state for regular non-placeholder file" << localPath;
