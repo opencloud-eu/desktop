@@ -223,7 +223,7 @@ void CALLBACK cfApiRename(const CF_CALLBACK_INFO *callbackInfo, const CF_CALLBAC
     if (callbackParameters->Rename.Flags & (CF_CALLBACK_RENAME_FLAG_TARGET_IN_SCOPE | CF_CALLBACK_RENAME_FLAG_SOURCE_IN_SCOPE) &&
         // CF_CALLBACK_RENAME_FLAG_TARGET_IN_SCOPE is also set for any other sync root we manage
         // but in that case windows will hydrate the file before its moved
-        OCC::FileSystem::isChildPathOf(target, context.vfs->params().filesystemPath) && context.vfs->isDehydratedPlaceholder(context.path)
+        OCC::FileSystem::isChildPathOf(target, context.vfs->params().filesystemPath()) && context.vfs->isDehydratedPlaceholder(context.path)
         && context.vfs->params().syncEngine()->isExcluded(qtPath)) {
         reject = true;
     }
@@ -356,7 +356,7 @@ QString createSyncRootID(const QString &providerName, const QUuid &accountUUID, 
 
 void OCC::CfApiWrapper::registerSyncRoot(const VfsSetupParams &params, const std::function<void(QString)> &callback)
 {
-    const auto nativePath = QDir::toNativeSeparators(params.filesystemPath);
+    const auto nativePath = QDir::toNativeSeparators(params.filesystemPath());
     winrt::StorageFolder::GetFolderFromPathAsync(reinterpret_cast<const wchar_t *>(nativePath.utf16()))
         .Completed([params, callback](const winrt::IAsyncOperation<winrt::StorageFolder> &result, winrt::AsyncStatus status) {
             if (status != winrt::AsyncStatus::Completed) {
@@ -365,7 +365,7 @@ void OCC::CfApiWrapper::registerSyncRoot(const VfsSetupParams &params, const std
             }
             try {
                 const auto iconPath = QCoreApplication::applicationFilePath();
-                const auto id = createSyncRootID(params.providerName, params.account->uuid(), params.filesystemPath);
+                const auto id = createSyncRootID(params.providerName, params.account->uuid(), params.filesystemPath());
                 const auto version = params.providerVersion.toString();
 
                 winrt::StorageProviderSyncRootInfo info;
@@ -400,7 +400,7 @@ void OCC::CfApiWrapper::registerSyncRoot(const VfsSetupParams &params, const std
                 }
                 callback({});
             } catch (const winrt::hresult_error &ex) {
-                callback(u"Failed to register sync root %1: %2"_s.arg(params.filesystemPath, Utility::formatWinError(ex.code())));
+                callback(u"Failed to register sync root %1: %2"_s.arg(params.filesystemPath(), Utility::formatWinError(ex.code())));
             }
         });
 }
@@ -431,7 +431,7 @@ OCC::Result<void, QString> OCC::CfApiWrapper::unregisterSyncRoot(const VfsSetupP
     try {
         std::lock_guard lock(sRegister_mutex);
         winrt::StorageProviderSyncRootManager::Unregister(
-            reinterpret_cast<const wchar_t *>(createSyncRootID(params.providerName, params.account->uuid(), params.filesystemPath).utf16()));
+            reinterpret_cast<const wchar_t *>(createSyncRootID(params.providerName, params.account->uuid(), params.filesystemPath()).utf16()));
     } catch (winrt::hresult_error const &ex) {
         return u"unregisterSyncRoot failed: %1"_s.arg(Utility::formatWinError(ex.code()));
     }
