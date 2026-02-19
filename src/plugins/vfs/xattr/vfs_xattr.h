@@ -15,28 +15,6 @@
 #include "common/plugin.h"
 #include "common/result.h"
 
-namespace xattr {
-
-struct PlaceHolderAttribs {
-public:
-    qint64 size() const { return _size; }
-    QString fileId() const { return _fileId; }
-    time_t modTime() const {return _modtime; }
-    QString eTag() const { return _etag; }
-    QString pinState() const { return _pinState; }
-    QString action() const { return _action; }
-    QString state() const { return _state; }
-
-    qint64 _size;
-    QString _fileId;
-    time_t _modtime;
-    QString _etag;
-    QString _pinState;
-    QString _action;
-    QString _state;
-
-};
-}
 
 namespace OCC {
 class HydrationJob;
@@ -71,9 +49,6 @@ public:
 
     HydrationJob* hydrateFile(const QByteArray &fileId, const QString& targetPath) override;
 
-    QString pinStateToString(PinState) const;
-    PinState stringToPinState(const QString&) const;
-
 Q_SIGNALS:
     void finished(Result<void, QString>);
 
@@ -86,10 +61,6 @@ protected:
     void startImpl(const VfsSetupParams &params) override;
 
 private:
-    xattr::PlaceHolderAttribs placeHolderAttributes(const QString& path);
-    OCC::Result<void, QString> addPlaceholderAttribute(const QString &path, const QString &name = {}, const QString &val = {});
-    OCC::Result<void, QString> removePlaceHolderAttributes(const QString& path);
-
     QMap<QByteArray, HydrationJob*> _hydrationJobs;
 };
 
