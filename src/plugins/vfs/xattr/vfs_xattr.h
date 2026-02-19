@@ -15,6 +15,8 @@
 #include "common/plugin.h"
 #include "common/result.h"
 
+#include <QProcess>
+
 
 namespace OCC {
 class HydrationJob;
@@ -62,6 +64,7 @@ protected:
 
 private:
     QMap<QByteArray, HydrationJob*> _hydrationJobs;
+    QPointer<QProcess> _openVfsProcess;
 };
 
 class XattrVfsPluginFactory : public QObject, public DefaultPluginFactory<VfsXAttr>
