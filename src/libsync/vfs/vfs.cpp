@@ -23,6 +23,7 @@
 #include "libsync/common/syncjournaldb.h"
 #include "libsync/common/version.h"
 #include "libsync/filesystem.h"
+#include "libsync/syncengine.h"
 
 #include <QApplication>
 #include <QCoreApplication>
@@ -100,7 +101,7 @@ void Vfs::wipeDehydratedVirtualFiles()
 
         // If the local file is a dehydrated placeholder, wipe it too.
         // Otherwise leave it to allow the next sync to have a new-new conflict.
-        const QString absolutePath = _setupParams->filesystemPath + relativePath;
+        const auto absolutePath = QString(_setupParams->root() / relativePath);
         if (QFile::exists(absolutePath)) {
             // according to our db this is a dehydrated file, check it  to be sure
             if (isDehydratedPlaceholder(absolutePath)) {
@@ -261,7 +262,9 @@ VfsSetupParams::VfsSetupParams(const AccountPtr &account, const QUrl &baseUrl, c
     , _syncEngine(syncEngine)
     , _spaceId(spaceId)
     , _folderDisplayName(folderDisplayName)
+    , _root(syncEngine->localPath())
 {
+    Q_ASSERT(filesystemPath().endsWith('/'_L1));
 }
 
 QString VfsSetupParams::folderDisplayName() const
@@ -272,4 +275,14 @@ QString VfsSetupParams::folderDisplayName() const
 SyncEngine *VfsSetupParams::syncEngine() const
 {
     return _syncEngine;
+}
+
+QString VfsSetupParams::filesystemPath() const
+{
+    return _root.toString();
+}
+
+const FileSystem::Path &VfsSetupParams::root() const
+{
+    return _root;
 }
