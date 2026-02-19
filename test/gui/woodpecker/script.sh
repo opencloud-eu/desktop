@@ -65,7 +65,7 @@ check_browsers_cache() {
 
 check_python_cache() {
     requirements_sha=$(sha1sum test/gui/requirements.txt | cut -d" " -f1)
-    python_cache=$(mc find s3/$CACHE_BUCKET/desktop-build/python-cache-$requirements_sha.tar.gz 2>&1 | grep 'Object does not exist')
+    python_cache=$(mc find s3/$CACHE_BUCKET/desktop/python-cache/python-cache-$requirements_sha.tar.gz 2>&1 | grep 'Object does not exist')
 
     if [[ "$python_cache" != "" ]]
     then

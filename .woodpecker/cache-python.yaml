@@ -35,7 +35,7 @@ steps:
       <<: *minio_environment
     commands:
       - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-      - mc ls s3/$CACHE_BUCKET/desktop-build
+      - mc ls s3/$CACHE_BUCKET/desktop/python-cache/
       - bash test/gui/woodpecker/script.sh check_python_cache
 
   - name: install-python-modules
@@ -58,5 +58,5 @@ steps:
       - . ./.woodpecker.env
       - if $PYTHON_CACHE_FOUND; then exit 0; fi
       - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-      - mc cp -r -a /woodpecker/desktop/python-cache*.tar.gz s3/$CACHE_BUCKET/desktop-build/
-      - mc ls s3/$CACHE_BUCKET/desktop-build
+      - mc cp -r -a /woodpecker/desktop/python-cache*.tar.gz s3/$CACHE_BUCKET/desktop/python-cache/
+      - mc ls s3/$CACHE_BUCKET/desktop/python-cache/
