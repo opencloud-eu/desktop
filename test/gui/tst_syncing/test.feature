@@ -243,12 +243,12 @@ Feature: Syncing files
             """
             test content
             """
-        And the user copies the folder "original" to "copied"
-        And the user waits for folder "copied" to be synced
+        And the user copies folder "original" into the same folder
+        And the user waits for folder "original (Copy)" to be synced
         Then as "Alice" folder "original" should exist in the server
         And as "Alice" the file "original/localFile.txt" should have the content "test content" in the server
-        And as "Alice" folder "copied" should exist in the server
-        And as "Alice" the file "copied/localFile.txt" should have the content "test content" in the server
+        And as "Alice" folder "original (Copy)" should exist in the server
+        And as "Alice" the file "original (Copy)/localFile.txt" should have the content "test content" in the server
 
     @issue-9281
     Scenario: Verify that you can create a subfolder with long name(~220 characters)
