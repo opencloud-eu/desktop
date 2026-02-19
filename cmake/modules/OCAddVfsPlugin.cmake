@@ -14,7 +14,7 @@ function(add_vfs_plugin)
 
     set_target_properties(vfs_${__PLUGIN_NAME} PROPERTIES OUTPUT_NAME "OpenCloud_vfs_${__PLUGIN_NAME}")
 
-    target_link_libraries(vfs_${__PLUGIN_NAME}
+    target_link_libraries(vfs_${__PLUGIN_NAME} PRIVATE
         libsync
         ${__PLUGIN_LIBS}
     )
