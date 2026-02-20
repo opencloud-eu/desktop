@@ -49,7 +49,7 @@ steps:
     commands:
       - requirements_sha=$(sha1sum test/gui/requirements.txt | cut -d" " -f1)
       - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-      - mc cp -a s3/$CACHE_BUCKET/desktop-build/python-cache-$requirements_sha.tar.gz /woodpecker/desktop
+      - mc cp -a s3/$CACHE_BUCKET/desktop/python-cache/python-cache-$requirements_sha.tar.gz /woodpecker/desktop
 
   - name: install-python-modules
     image: *squish_image
@@ -116,7 +116,7 @@ steps:
       <<: *minio_environment
     commands:
       - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-      - mc cp -a -r s3/$CACHE_BUCKET/desktop-build/${CI_COMMIT_SHA}/ /woodpecker/desktop/build
+      - mc cp -a -r s3/$CACHE_BUCKET/desktop/client-build/${CI_COMMIT_SHA}/ /woodpecker/desktop/build
       - ls -lh /woodpecker/desktop/build/bin
 
   - name: create-extra-directories
@@ -170,8 +170,8 @@ steps:
       <<: *minio_environment
     commands:
       - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-      - mc cp -a -r /woodpecker/desktop/test/gui/guiReportUpload s3/$PUBLIC_BUCKET/desktop/$CI_PIPELINE_NUMBER
-      - mc cp -a -r /woodpecker/desktop/test/gui/clientLog/* s3/$PUBLIC_BUCKET/desktop/$CI_PIPELINE_NUMBER/logs/
+      - mc cp -a -r /woodpecker/desktop/test/gui/guiReportUpload s3/$PUBLIC_BUCKET/desktop/testlogs/$CI_PIPELINE_NUMBER
+      - mc cp -a -r /woodpecker/desktop/test/gui/clientLog/* s3/$PUBLIC_BUCKET/desktop/testlogs/$CI_PIPELINE_NUMBER/logs/
 
   - name: gui-test-reports
     image: *minio_image
@@ -193,5 +193,5 @@ steps:
       - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
       - cd /woodpecker/desktop/test/gui/clientLog/
       - echo "To download the logs, access the following links:"
-      - logs=$(mc find s3/$PUBLIC_BUCKET/desktop/$CI_PIPELINE_NUMBER/logs/)
+      - logs=$(mc find s3/$PUBLIC_BUCKET/desktop/testlogs/$CI_PIPELINE_NUMBER/logs/)
       - "for f in $logs; do echo \"$MC_HOST/$f \n \" | cut -d '/' -f1-3,5-99; done"

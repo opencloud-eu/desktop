@@ -1,6 +1,6 @@
 #!/bin/bash
 
-REPORT_PATH="$PUBLIC_BUCKET/desktop/$CI_PIPELINE_NUMBER/guiReportUpload"
+REPORT_PATH="$PUBLIC_BUCKET/desktop/testlogs/$CI_PIPELINE_NUMBER/guiReportUpload"
 REPORT_URL="$MC_HOST/$REPORT_PATH"
 
 echo ""
