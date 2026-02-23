@@ -31,7 +31,7 @@ skip_clone: true
 matrix:
   include:
     - JOB_NAME: purge-desktop-build
-      PURGE_PATH: desktop/bin-build/
+      PURGE_PATH: desktop/client-build/
       TTL: 1d
     - JOB_NAME: purge-python-cache
       PURGE_PATH: desktop/python-cache/
