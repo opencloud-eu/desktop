@@ -14,6 +14,7 @@ namespace FileSystem {
     class OPENCLOUD_SYNC_EXPORT Path
     {
     public:
+        Path() = default;
         /**
          * Will create an absolute path from the given QString.
          * On Windows it will create a UNC path starting with "\\?\".

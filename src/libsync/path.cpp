@@ -27,11 +27,17 @@ OCC::FileSystem::Path OCC::FileSystem::Path::relative(QAnyStringView path)
 
 QString OCC::FileSystem::Path::toString() const
 {
+    if (_path.empty()) {
+        return {};
+    }
     return fromFilesystemPath(_path);
 }
 
 bool OCC::FileSystem::Path::exists() const
 {
+    if (_path.empty()) {
+        return false;
+    }
     std::error_code ec;
     const bool exists = std::filesystem::exists(_path, ec);
     if (ec) {
