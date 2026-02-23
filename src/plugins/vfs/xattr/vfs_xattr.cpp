@@ -31,9 +31,14 @@ Q_LOGGING_CATEGORY(lcVfsXAttr, "sync.vfs.xattr", QtInfoMsg)
 
 
 namespace {
-QString openVFSExePath()
+OCC::FileSystem::Path openVFSExePath()
 {
-    return QStringLiteral(OPENVFS_EXE);
+    const auto openVFS = OCC::FileSystem::Path(std::filesystem::path(OPENVFS_EXE));
+    const auto binary = OCC::FileSystem::Path(qApp->applicationDirPath()) / openVFS.get().filename();
+    if (binary.exists()) {
+        return binary;
+    }
+    return openVFS;
 }
 
 
@@ -195,7 +200,7 @@ void VfsXAttr::startImpl(const VfsSetupParams &params)
         Q_EMIT started();
     });
     connect(vfsProcess, &QProcess::errorOccurred, this, [logPrefix, vfsProcess] { qCWarning(lcVfsXAttr) << logPrefix() << vfsProcess->errorString(); });
-    vfsProcess->start(openVFSExePath(), {u"-d"_s, u"-i"_s, openVFSConfigFilePath(), params.root().toString()}, QIODevice::ReadOnly);
+    vfsProcess->start(openVFSExePath().toString(), {u"-d"_s, u"-i"_s, openVFSConfigFilePath(), params.root().toString()}, QIODevice::ReadOnly);
 }
 
 void VfsXAttr::stop()
@@ -264,8 +269,8 @@ Result<void, QString> XattrVfsPluginFactory::prepare(const QString &path, const 
             return tr("The sync path is claimed by a different cloud, please check your setup");
         }
     }
-    if (!QFileInfo::exists(openVFSExePath())) {
-        qCDebug(lcVfsXAttr) << "OpenVFS executable not found at" << openVFSExePath();
+    if (!openVFSExePath().exists()) {
+        qCDebug(lcVfsXAttr) << "OpenVFS executable not found at" << openVFSExePath().toString();
         return tr("OpenVFS executable not found, please install it");
     }
     const auto vfsConfig = openVFSConfigFilePath();
