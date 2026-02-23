@@ -61,6 +61,8 @@ namespace FileSystem {
 
         QString toString() const;
 
+        bool exists() const;
+
     private:
         std::filesystem::path _path;
     };

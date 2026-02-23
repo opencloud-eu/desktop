@@ -29,3 +29,14 @@ QString OCC::FileSystem::Path::toString() const
 {
     return fromFilesystemPath(_path);
 }
+
+bool OCC::FileSystem::Path::exists() const
+{
+    std::error_code ec;
+    const bool exists = std::filesystem::exists(_path, ec);
+    if (ec) {
+        qCCritical(lcFileSystem) << u"Error checking existence of" << _path.native() << ec.value() << ec.message();
+        return false;
+    }
+    return exists;
+}
