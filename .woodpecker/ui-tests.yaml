@@ -25,7 +25,6 @@ when:
     cron: nightly*
 
 depends_on:
-  - cache-opencloud
   - cache-pnpm
   - build
 
@@ -74,17 +73,8 @@ steps:
     commands:
       - tar -xvf /woodpecker/desktop/playwright-browsers.tar.gz -C .
 
-  - name: restore-opencloud-cache
-    image: *minio_image
-    environment:
-      <<: *minio_environment
-    commands:
-      - . ./.woodpecker.env
-      - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-      - mc cp -r -a s3/$CACHE_BUCKET/opencloud-build/$OPENCLOUD_COMMITID/opencloud /woodpecker/desktop
-
   - name: opencloud
-    image: docker.io/golang:1.24
+    image: quay.io/opencloudeu/opencloud-rolling:latest
     detach: true
     environment:
       FRONTEND_SEARCH_MIN_LENGTH: '2'
@@ -100,10 +90,8 @@ steps:
       PROXY_ENABLE_BASIC_AUTH: true
       WEB_UI_CONFIG_FILE: /woodpecker/desktop/test/gui/woodpecker/config-opencloud.json
     commands:
-      - mkdir -p /srv/app/tmp/opencloud/opencloud/data/
-      - mkdir -p /srv/app/tmp/opencloud/storage/users/
-      - ./opencloud init
-      - ./opencloud server
+      - opencloud init
+      - opencloud server
 
   - name: wait-for-opencloud
     image: owncloudci/alpine:latest
