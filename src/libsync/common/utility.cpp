@@ -452,25 +452,20 @@ QString Utility::sanitizeForFileName(const QString &name)
     return result;
 }
 
+
+#ifdef Q_OS_LINUX
 QString Utility::appImageLocation()
 {
-#ifdef Q_OS_LINUX
     Q_ASSERT(Utility::runningInAppImage());
     static const auto value = qEnvironmentVariable("APPIMAGE");
     return value;
-#else
-    Q_UNREACHABLE();
-#endif
 }
 
 bool Utility::runningInAppImage()
 {
-#ifdef Q_OS_LINUX
     return qEnvironmentVariableIsSet("APPIMAGE");
-#else
-    return false;
-#endif
 }
+#endif
 
 QDateTime Utility::parseRFC1123Date(const QString &date)
 {
