@@ -67,9 +67,8 @@ void FetchServerSettingsJob::start()
             }
             _account->setCapabilities({_account->url(), caps.toVariantMap()});
             runAsyncUpdates();
-
-            Q_EMIT finishedSignal();
         }
+        Q_EMIT finishedSignal();
     });
     job->start();
 }
