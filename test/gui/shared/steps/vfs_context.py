@@ -24,7 +24,7 @@ def step(context, file_name):
     )
 
 
-@When(r'user "([^"]*)" marks file "([^"]*)" as (online-only|available-locally) from the file explorer', regexp=True)
+@When(r'user "([^"]*)" marks (?:file|folder) "([^"]*)" as (online-only|available-locally) from the file explorer', regexp=True)
 def step(context, user, resource, action):
     resource_path = get_resource_path(resource, user)
     perform_file_explorer_vfs_action(resource_path, action)
