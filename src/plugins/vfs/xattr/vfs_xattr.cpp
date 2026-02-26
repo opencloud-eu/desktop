@@ -325,7 +325,7 @@ OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> VfsXAttr::updateMetad
         attributes.fileId = syncItem._fileId.toStdString();
         attributes.etag = syncItem._etag.toStdString();
 
-        qCDebug(lcVfsXAttr) << attributes.absolutePath << syncItem._type;
+        qCDebug(lcVfsXAttr) << attributes.absolutePath.native() << syncItem._type;
 
         switch (syncItem._type) {
         case ItemTypeVirtualFileDownload:
@@ -338,6 +338,8 @@ OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> VfsXAttr::updateMetad
             attributes.state = OpenVfsConstants::States::DeHydrated;
             break;
         case ItemTypeFile:
+            // hydrated files must not have a size attribute != 0
+            attributes.size = 0;
             [[fallthrough]];
         case ItemTypeDirectory:
             qCDebug(lcVfsXAttr) << "updateMetadata for" << syncItem._type;
@@ -353,7 +355,6 @@ OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> VfsXAttr::updateMetad
             qCCritical(lcVfsXAttr) << "Failed to update placeholder for" << filePath << result.error();
             return result.error();
         }
-
         return ConvertToPlaceholderResult::Ok;
     }
 }
