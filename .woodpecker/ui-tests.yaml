@@ -25,8 +25,9 @@ when:
     cron: nightly*
 
 depends_on:
-  - cache-pnpm
   - build
+  - cache-pnpm
+  - cache-python
 
 workspace:
   base: /woodpecker
