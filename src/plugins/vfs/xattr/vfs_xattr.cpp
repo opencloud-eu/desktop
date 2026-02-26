@@ -396,11 +396,11 @@ void VfsXAttr::slotHydrateJobFinished()
 Result<void, QString> VfsXAttr::createPlaceholder(const SyncFileItem &item)
 {
     const auto path = params().root() / item.localName();
-    if (std::filesystem::exists(path)) {
+    if (path.exists()) {
+        Q_ASSERT(item._type == ItemTypeVirtualFileDehydration);
         if (item._type == ItemTypeVirtualFileDehydration && FileSystem::fileChanged(path, FileSystem::FileChangedInfo::fromSyncFileItem(&item))) {
             return tr("Cannot dehydrate a placeholder because the file changed");
         }
-        Q_ASSERT(item._type == ItemTypeVirtualFile);
     }
     QFile file(path.get());
     if (!file.open(QFile::ReadWrite | QFile::Truncate)) {
