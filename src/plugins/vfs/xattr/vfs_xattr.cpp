@@ -78,6 +78,7 @@ OpenVfsAttributes::PlaceHolderAttributes placeHolderAttributes(const QString &pa
 
 OCC::Result<void, QString> setPlaceholderAttributes(const OpenVfsAttributes::PlaceHolderAttributes &attributes)
 {
+    Q_ASSERT(attributes.validate());
     const auto data = attributes.toData();
     return OCC::FileSystem::Xattr::setxattr(attributes.absolutePath, QString::fromUtf8(OpenVfsConstants::XAttributeNames::Data),
         {reinterpret_cast<const char *>(data.data()), static_cast<qsizetype>(data.size())});

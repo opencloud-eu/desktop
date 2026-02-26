@@ -11,6 +11,8 @@ if (NOT WIN32)
         add_vfs_plugin(NAME xattr
                 SRC
                 vfs_xattr.cpp
+                LIBS
+                OpenVFS::LibOpenVFS
         )
         target_compile_definitions(vfs_xattr PRIVATE OPENVFS_EXE=\"${OPEN_VFS_PATH}\")
     endif()
