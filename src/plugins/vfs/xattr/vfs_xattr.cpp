@@ -202,7 +202,7 @@ void VfsXAttr::startImpl(const VfsSetupParams &params)
     vfsProcess->setProcessChannelMode(QProcess::ForwardedChannels);
     const auto logPrefix = [vfsProcess, path = params.root().toString()] { return u"[%1 %2] "_s.arg(QString::number(vfsProcess->processId()), path); };
     connect(vfsProcess, &QProcess::finished, vfsProcess, [logPrefix, vfsProcess] {
-        qCInfo(lcVfsXAttr) << logPrefix() << "finished" << vfsProcess->exitCode();
+        qCFatal(lcVfsXAttr) << logPrefix() << "finished" << vfsProcess->exitCode();
         vfsProcess->deleteLater();
     });
     connect(vfsProcess, &QProcess::started, this, [logPrefix, this] {
