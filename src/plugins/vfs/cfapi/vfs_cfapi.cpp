@@ -185,7 +185,10 @@ Result<Vfs::ConvertToPlaceholderResult, QString> VfsCfApi::updateMetadata(const 
     const auto replacesPath = QDir::toNativeSeparators(replacesFile);
 
     if (syncItem._type == ItemTypeVirtualFileDehydration) {
-        return cfapi::dehydratePlaceholder(localPath, syncItem._size, syncItem._fileId);
+        auto result = cfapi::dehydratePlaceholder(localPath, syncItem._fileId);
+        // if the dehydration call succeeded, check whether the placeholder is dehydrated
+        Q_ASSERT(!result || isDehydratedPlaceholder(filePath));
+        return result;
     } else {
         if (cfapi::findPlaceholderInfo<CF_PLACEHOLDER_BASIC_INFO>(localPath)) {
             return cfapi::updatePlaceholderInfo(localPath, syncItem._modtime, syncItem._size, syncItem._fileId, replacesPath);
