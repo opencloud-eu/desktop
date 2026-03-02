@@ -383,7 +383,7 @@ private Q_SLOTS:
                 if (SUCCEEDED(hres)) {
                     hres = ppf->Save(target.native().data(), true);
                     if (SUCCEEDED(hres)) {
-                        qDebug() << u"Created lnk" << target << u"->" << path;
+                        qDebug() << u"Created lnk" << target.native() << u"->" << path;
                     } else {
                         qCritical() << u"Failed to create lnk: Save" << OCC::Utility::formatWinError(hres);
                     }

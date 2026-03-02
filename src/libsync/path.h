@@ -74,3 +74,6 @@ namespace FileSystem {
     };
 }
 }
+
+
+OPENCLOUD_SYNC_EXPORT QDebug operator<<(QDebug debug, const OCC::FileSystem::Path &path);

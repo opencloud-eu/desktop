@@ -46,3 +46,8 @@ bool OCC::FileSystem::Path::exists() const
     }
     return exists;
 }
+
+QDebug operator<<(QDebug debug, const OCC::FileSystem::Path &path)
+{
+    return debug << u"Path(" << path.toString() << u")";
+}

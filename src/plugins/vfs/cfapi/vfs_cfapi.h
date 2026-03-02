@@ -58,7 +58,7 @@ public:
 
     void cancelHydration(const OCC::CfApiWrapper::CallBackContext &context);
 
-    LocalInfo statTypeVirtualFile(const std::filesystem::directory_entry &path, ItemType type) override;
+    LocalInfo statTypeVirtualFile(const std::filesystem::directory_entry &entry, ItemType type) override;
 
 public Q_SLOTS:
     void fileStatusChanged(const QString &systemFileName, OCC::SyncFileStatus fileStatus) override;
