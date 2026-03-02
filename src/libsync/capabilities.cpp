@@ -222,12 +222,6 @@ bool Capabilities::versioningEnabled() const
     return _capabilities.value(QStringLiteral("files")).toMap().value(QStringLiteral("versioning")).toBool();
 }
 
-bool Capabilities::avatarsAvailable() const
-{
-    auto userCaps = _fileSharingCapabilities.value(QStringLiteral("user")).toMap();
-    return userCaps.value(QStringLiteral("profile_picture"), false).toBool();
-}
-
 QStringList Capabilities::blacklistedFiles() const
 {
     return _capabilities.value(QStringLiteral("files")).toMap().value(QStringLiteral("blacklisted_files")).toStringList();

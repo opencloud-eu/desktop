@@ -273,9 +273,6 @@ public:
     /** Is versioning available? */
     bool versioningEnabled() const;
 
-    /** Are avatars (profile pictures) available? */
-    bool avatarsAvailable() const;
-
     const AppProviders &appProviders() const;
 
     const FilesSharing &filesSharing() const;
