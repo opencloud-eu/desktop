@@ -606,8 +606,8 @@ OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> OCC::CfApiWrapper::de
             qCWarning(lcCfApiWrapper) << errorMessage << path << u":" << OCC::Utility::formatWinError(result);
             return errorMessage;
         }
+        setPinState(path, OCC::PinState::OnlineOnly, OCC::CfApiWrapper::NoRecurse);
     }
-
     return OCC::Vfs::ConvertToPlaceholderResult::Ok;
 }
 
