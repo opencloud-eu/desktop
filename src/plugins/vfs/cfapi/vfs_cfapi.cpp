@@ -134,7 +134,7 @@ void VfsCfApi::startImpl(const VfsSetupParams &params)
     });
 }
 
-Result<void, QString> CfApiVfsPluginFactory::prepare(const QString &path, const QUuid &accountUuid) const
+Result<void, QString> CfApiVfsPluginFactory::prepare(const QString &path, const QUuid &) const
 {
     if (QDir(path).isRoot()) {
         return tr("The Virtual filesystem feature does not support a drive as sync root");
