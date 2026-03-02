@@ -98,7 +98,7 @@ namespace CfApiWrapper {
     Result<CF_CONNECTION_KEY, QString> connectSyncRoot(const QString &path, VfsCfApi *context);
     Result<void, QString> disconnectSyncRoot(CF_CONNECTION_KEY &&key);
 
-    bool isSparseFile(const QString &path);
+    bool isDehydratedPlaceholder(const FileSystem::Path &path);
 
     /**
      * The placeholder info can have a dynamic size, by default we don't query FileIdentity
