@@ -202,10 +202,7 @@ void VfsXAttr::startImpl(const VfsSetupParams &params)
     // merging the channels and piping the output to our log lead to deadlocks
     _openVfsProcess->setProcessChannelMode(QProcess::ForwardedChannels);
     const auto logPrefix = [path = params.root().toString(), this] { return u"[%1 %2] "_s.arg(QString::number(_openVfsProcess->processId()), path); };
-    connect(_openVfsProcess, &QProcess::finished, this, [logPrefix, this] {
-        qCFatal(lcVfsXAttr) << logPrefix() << "finished" << _openVfsProcess->exitCode();
-        _openVfsProcess->deleteLater();
-    });
+    connect(_openVfsProcess, &QProcess::finished, this, [logPrefix, this] { qCFatal(lcVfsXAttr) << logPrefix() << "finished" << _openVfsProcess->exitCode(); });
     connect(_openVfsProcess, &QProcess::started, this, [logPrefix, this] {
         qCInfo(lcVfsXAttr) << logPrefix() << u"started";
         // TODO:
@@ -219,6 +216,8 @@ void VfsXAttr::startImpl(const VfsSetupParams &params)
 void VfsXAttr::stop()
 {
     if (_openVfsProcess) {
+        // disconnect qFatal on subprocess exit
+        disconnect(_openVfsProcess, &QProcess::finished, nullptr, nullptr);
         _openVfsProcess->terminate();
         _openVfsProcess->waitForFinished();
         _openVfsProcess->deleteLater();
