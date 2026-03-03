@@ -318,11 +318,6 @@ QIcon Theme::wizardHeaderLogo() const
     return applicationIcon();
 }
 
-bool Theme::forceSystemNetworkProxy() const
-{
-    return false;
-}
-
 QString Theme::oauthClientId() const
 {
     return QStringLiteral("OpenCloudDesktop");

@@ -29,7 +29,6 @@
 #include <QFileInfo>
 #include <QHeaderView>
 #include <QLoggingCategory>
-#include <QNetworkProxy>
 #include <QOperatingSystemVersion>
 #include <QSettings>
 #include <QStandardPaths>
@@ -77,15 +76,6 @@ const QString numberOfLogsToKeepC()
 // The key `clientVersion` stores the version *with* build number of the config file. It is named
 // this way, because before 5.0, only the version *without* build number was stored.
 const QString clientVersionC() { return QStringLiteral("clientVersion"); }
-
-const QString proxyHostC() { return QStringLiteral("Proxy/host"); }
-const QString proxyTypeC() { return QStringLiteral("Proxy/type"); }
-const QString proxyPortC() { return QStringLiteral("Proxy/port"); }
-const QString proxyUserC()
-{
-    return QStringLiteral("Proxy/user");
-}
-const QString proxyNeedsAuthC() { return QStringLiteral("Proxy/needsAuth"); }
 
 const QString useUploadLimitC() { return QStringLiteral("BWLimit/useUploadLimit"); }
 const QString useDownloadLimitC() { return QStringLiteral("BWLimit/useDownloadLimit"); }
@@ -362,21 +352,6 @@ void ConfigFile::setUiLanguage(const QString &uiLanguage)
     settings.setValue(uiLanguageC(), uiLanguage);
 }
 
-void ConfigFile::setProxyType(QNetworkProxy::ProxyType proxyType, const QString &host, int port, bool needsAuth, const QString &user)
-{
-    auto settings = makeQSettings();
-
-    settings.setValue(proxyTypeC(), proxyType);
-
-    if (proxyType == QNetworkProxy::HttpProxy || proxyType == QNetworkProxy::Socks5Proxy) {
-        settings.setValue(proxyHostC(), host);
-        settings.setValue(proxyPortC(), port);
-        settings.setValue(proxyNeedsAuthC(), needsAuth);
-        settings.setValue(proxyUserC(), user);
-    }
-    settings.sync();
-}
-
 QVariant ConfigFile::getValue(const QString &param, const QVariant &defaultValue) const
 {
     auto setting = makeQSettings().value(param);
@@ -391,34 +366,6 @@ void ConfigFile::setValue(const QString &key, const QVariant &value)
     auto settings = makeQSettings();
 
     settings.setValue(key, value);
-}
-
-int ConfigFile::proxyType() const
-{
-    if (Theme::instance()->forceSystemNetworkProxy()) {
-        return QNetworkProxy::DefaultProxy;
-    }
-    return getValue(proxyTypeC()).toInt();
-}
-
-QString ConfigFile::proxyHostName() const
-{
-    return getValue(proxyHostC()).toString();
-}
-
-int ConfigFile::proxyPort() const
-{
-    return getValue(proxyPortC()).toInt();
-}
-
-bool ConfigFile::proxyNeedsAuth() const
-{
-    return getValue(proxyNeedsAuthC()).toBool();
-}
-
-QString ConfigFile::proxyUser() const
-{
-    return getValue(proxyUserC()).toString();
 }
 
 int ConfigFile::useUploadLimit() const

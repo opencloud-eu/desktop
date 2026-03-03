@@ -39,24 +39,12 @@ public:
     ~NetworkSettings() override;
 
 private Q_SLOTS:
-    void saveProxySettings();
     void saveBWLimitSettings();
     void saveMeteredSettings();
 
-    /// Red marking of host field if empty and enabled
-    void checkEmptyProxyHost();
-
-    void checkAccountLocalhost();
-
-protected:
-    void showEvent(QShowEvent *event) override;
-
 private:
-    void loadProxySettings();
     void loadBWLimitSettings();
     void loadMeteredSettings();
-    CredentialManager *_credentialManager;
-
 
     Ui::NetworkSettings *_ui;
 };

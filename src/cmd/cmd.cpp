@@ -27,13 +27,7 @@
 #include "platform.h"
 #include "syncengine.h"
 
-#include <QCommandLineParser>
-#include <QCoreApplication>
-#include <QDebug>
-#include <QFile>
-#include <QFileInfo>
 #include <QJsonObject>
-#include <QNetworkProxy>
 #include <QUrl>
 
 #include <iostream>
@@ -92,7 +86,6 @@ struct CmdOptions
     QByteArray username;
     QByteArray token = qgetenv("OPENCLOUD_TOKEN");
 
-    QString proxy;
     bool query = false;
     bool trustSSL = false;
     bool interactive = true;
@@ -232,33 +225,6 @@ void setupCredentials(SyncCTX &ctx)
     // 2. From options
     // 3. From prompt (if interactive)
 
-    if (!ctx.options.proxy.isNull()) {
-        QString host;
-        uint32_t port = 0;
-        bool ok;
-
-        QStringList pList = ctx.options.proxy.split(QLatin1Char(':'));
-        if (pList.count() == 3) {
-            // http: //192.168.178.23 : 8080
-            //  0            1            2
-            host = pList.at(1);
-            if (host.startsWith(QLatin1String("//")))
-                host.remove(0, 2);
-
-            port = pList.at(2).toUInt(&ok);
-            if (!ok || port > std::numeric_limits<uint16_t>::max()) {
-                qCritical() << u"Invalid port number";
-                exit(EXIT_FAILURE);
-            }
-
-            QNetworkProxyFactory::setUseSystemConfiguration(false);
-            QNetworkProxy::setApplicationProxy(QNetworkProxy(QNetworkProxy::HttpProxy, host, static_cast<uint16_t>(port)));
-        } else {
-            qCritical() << u"Could not read httpproxy. The proxy should have the format \"http://hostname:port\".";
-            exit(EXIT_FAILURE);
-        }
-    }
-
     // Pre-flight check: verify that the file specified by --unsyncedfolders can be read by us:
     if (!ctx.options.unsyncedfolders.isNull()) { // yes, isNull and not isEmpty because...:
         // ... if the user entered "--unsyncedfolders ''" on the command-line, opening that will
@@ -330,7 +296,6 @@ CmdOptions parseOptions(const QStringList &app_args)
 
     auto remoteFolder =
         addOption({{QStringLiteral("remote-folder")}, QStringLiteral("The subdirectory of the space that is synchronized"), QStringLiteral("remote-folder")});
-    auto httpproxyOption = addOption({{QStringLiteral("http-proxy")}, QStringLiteral("Specify a http proxy to use"), QStringLiteral("http://server:port")});
     auto trustOption = addOption({ { QStringLiteral("trust") }, QStringLiteral("Trust the SSL certification") });
     auto excludeOption = addOption({ { QStringLiteral("exclude") }, QStringLiteral("Path to an exclude list [file]"), QStringLiteral("file") });
     auto unsyncedfoldersOption = addOption(
@@ -421,10 +386,6 @@ CmdOptions parseOptions(const QStringList &app_args)
 
     if (parser.isSet(remoteFolder)) {
         options.remoteFolder = parser.value(remoteFolder);
-    }
-
-    if (parser.isSet(httpproxyOption)) {
-        options.proxy = parser.value(httpproxyOption);
     }
 
     if (parser.isSet(trustOption)) {

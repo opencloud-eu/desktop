@@ -17,10 +17,7 @@
 
 #include "opencloudsynclib.h"
 
-#include <QNetworkProxy>
 #include <QSettings>
-#include <QString>
-#include <QVariant>
 
 #include <chrono>
 #include <memory>
@@ -99,16 +96,6 @@ public:
      * This method should be called during application startup to make sure no messages are missed.
      */
     void configureHttpLogging(std::optional<bool> enable = std::nullopt);
-
-    // proxy settings
-    void setProxyType(
-        QNetworkProxy::ProxyType proxyType, const QString &host = QString(), int port = 0, bool needsAuth = false, const QString &user = QString());
-
-    int proxyType() const;
-    QString proxyHostName() const;
-    int proxyPort() const;
-    bool proxyNeedsAuth() const;
-    QString proxyUser() const;
 
     /** 0: no limit, 1: manual, >0: automatic */
     int useUploadLimit() const;

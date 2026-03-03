@@ -70,8 +70,6 @@ Q_SIGNALS:
     void sslErrors(const QList<QSslError> &errors);
 
 protected Q_SLOTS:
-    void slotCheckServerAndAuth();
-
     void slotStatusFound(const QUrl &url, const QJsonObject &info);
 
 private:

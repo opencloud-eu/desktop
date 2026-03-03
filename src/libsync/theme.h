@@ -199,14 +199,6 @@ public:
     virtual bool wizardSkipAdvancedPage() const;
 
     /**
-     * If this returns true, the user cannot configure the proxy in the network settings.
-     * The proxy settings will be disabled in the configuration dialog.
-     * Default returns false.
-     */
-    virtual bool forceSystemNetworkProxy() const;
-
-
-    /**
      * The OAuth client_id, secret pair.
      * Note that client that change these value cannot connect to un-branded OpenCloud.
      */

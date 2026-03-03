@@ -210,8 +210,6 @@ public:
 
     /** Queues all folders for syncing. */
     void scheduleAllFolders();
-
-    void setDirtyProxy();
     void setDirtyNetworkLimits();
 
     /** If the folder configuration is no longer supported this will return an error string */

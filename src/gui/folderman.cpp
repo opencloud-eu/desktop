@@ -35,8 +35,6 @@
 #endif
 
 #include <QMessageBox>
-#include <QMutableSetIterator>
-#include <QNetworkProxy>
 #include <QtCore>
 
 using namespace Qt::Literals::StringLiterals;
@@ -481,19 +479,6 @@ QString FolderMan::getBackupName(QString fullPathName) const
     return newName;
 }
 
-void FolderMan::setDirtyProxy()
-{
-    for (auto *f : std::as_const(_folders)) {
-        if (f) {
-            if (f->accountState() && f->accountState()->account()
-                && f->accountState()->account()->accessManager()) {
-                // Need to do this so we do not use the old determined system proxy
-                f->accountState()->account()->accessManager()->setProxy(
-                    QNetworkProxy(QNetworkProxy::DefaultProxy));
-            }
-        }
-    }
-}
 
 void FolderMan::setDirtyNetworkLimits()
 {

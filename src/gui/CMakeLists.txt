@@ -37,7 +37,6 @@ target_sources(OpenCloudGui PRIVATE
 
     application.cpp
     fetchserversettings.cpp
-    clientproxy.cpp
     commonstrings.cpp
     connectionvalidator.cpp
     folder.cpp
