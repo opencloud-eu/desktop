@@ -1,5 +1,6 @@
 #include "configfile.h"
 #include "gui/networkinformation.h"
+#include "libsync/platform.h"
 #include "logger.h"
 #include "resources/loadresources.h"
 #include "testutils.h"
@@ -7,8 +8,12 @@
 #include <QCoreApplication>
 
 namespace {
+// create a platform object before qApp
+const auto platform = OCC::Platform::create(OCC::Platform::Type::Terminal);
+
 void setUpTests()
 {
+    Q_ASSERT(platform);
     // load the resources
     static const OCC::ResourcesLoader resources;
 
@@ -24,5 +29,6 @@ void setUpTests()
     // ensure we have an instance of NetworkInformation
     OCC::NetworkInformation::instance();
 }
+
 Q_COREAPP_STARTUP_FUNCTION(setUpTests)
 }

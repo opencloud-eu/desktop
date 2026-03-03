@@ -14,6 +14,8 @@
 
 #include "platform.h"
 
+#include <QNetworkProxyFactory>
+
 #if defined(Q_OS_WIN)
 #include "platform_win.h"
 #elif defined(Q_OS_MACOS)
@@ -67,6 +69,8 @@ std::unique_ptr<Platform> Platform::create(Type t)
     // we need to make sure the platform class is initialized before a Q(Core)Application has been set up
     // the constructors run some initialization code that affects Qt's initialization
     Q_ASSERT(QCoreApplication::instance() == nullptr);
+
+    QNetworkProxyFactory::setUseSystemConfiguration(true);
 
     return std::unique_ptr<Platform>{
 #if defined(Q_OS_WIN)
