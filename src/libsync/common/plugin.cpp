@@ -21,6 +21,10 @@
 namespace OCC {
 
 PluginFactory::~PluginFactory() = default;
+bool PluginFactory::checkAvailability() const
+{
+    return true;
+}
 
 QString pluginFileName(const QString &type, const QString &name)
 {

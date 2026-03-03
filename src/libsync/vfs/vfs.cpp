@@ -215,6 +215,10 @@ PluginFactory *VfsPluginManager::createPluginFactoryInternal(Vfs::Mode mode) con
             qCCritical(lcPlugin) << u"Plugin" << loader.fileName() << u"does not implement PluginFactory";
             return nullptr;
         }
+        if (!factory->checkAvailability()) {
+            qCCritical(lcPlugin) << u"Plugin" << loader.fileName() << u"does not implement PluginFactory";
+            return nullptr;
+        }
         return factory;
     }();
 }

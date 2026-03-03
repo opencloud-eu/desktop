@@ -234,6 +234,21 @@ bool VfsXAttr::socketApiPinStateActionsShown() const
 }
 
 
+bool XattrVfsPluginFactory::checkAvailability() const
+{
+#ifdef Q_OS_LINUX
+    if (!FileSystem::Path("/dev/fuse").exists()) {
+        qCWarning(lcVfsXAttr) << u"Fuse is not installed or available on the system";
+        return false;
+    }
+    if (QStandardPaths::findExecutable(u"fusermount3"_s).isEmpty()) {
+        qCWarning(lcVfsXAttr) << u"fusermount3 is not installed on the system";
+        return false;
+    }
+#endif
+    return true;
+}
+
 Result<void, QString> XattrVfsPluginFactory::prepare(const QString &path, const QUuid &accountUuid) const
 {
 #ifdef Q_OS_LINUX

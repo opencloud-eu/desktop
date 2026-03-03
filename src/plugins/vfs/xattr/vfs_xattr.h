@@ -74,6 +74,7 @@ class XattrVfsPluginFactory : public QObject, public DefaultPluginFactory<VfsXAt
     Q_INTERFACES(OCC::PluginFactory)
 
 public:
+    [[nodiscard]] bool checkAvailability() const override;
     Result<void, QString> prepare(const QString &path, const QUuid &accountUuid) const override;
 
 private:
