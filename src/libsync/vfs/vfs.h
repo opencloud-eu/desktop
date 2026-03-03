@@ -38,6 +38,7 @@ class SyncJournalDb;
 class SyncFileItem;
 class SyncEngine;
 class HydrationJob;
+class PluginFactory;
 
 /** Collection of parameters for initializing a Vfs instance. */
 struct OPENCLOUD_SYNC_EXPORT VfsSetupParams
@@ -275,13 +276,15 @@ public:
 
 protected:
     VfsPluginManager() = default;
-    std::pair<QString, class PluginFactory *> createVfsPluginFactory(Vfs::Mode mode) const;
+    std::pair<QString, PluginFactory *> createVfsPluginFactory(Vfs::Mode mode) const;
 
 
 private:
+    PluginFactory *createPluginFactoryInternal(Vfs::Mode mode) const;
+
     static VfsPluginManager *_instance;
 
-    mutable QMap<Vfs::Mode, bool> _pluginCache;
+    mutable QMap<Vfs::Mode, PluginFactory *> _pluginCache;
 };
 
 template <>

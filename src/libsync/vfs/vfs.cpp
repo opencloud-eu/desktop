@@ -129,51 +129,7 @@ OCC::VfsPluginManager *OCC::VfsPluginManager::_instance = nullptr;
 
 bool OCC::VfsPluginManager::isVfsPluginAvailable(Vfs::Mode mode) const
 {
-    {
-        auto result = _pluginCache.constFind(mode);
-        if (result != _pluginCache.cend()) {
-            return *result;
-        }
-    }
-    const bool out = [mode] {
-        const QString name = Utility::enumToString(mode);
-        if (!OC_ENSURE_NOT(name.isEmpty())) {
-            return false;
-        }
-        auto pluginPath = pluginFileName(QStringLiteral("vfs"), name);
-        QPluginLoader loader(pluginPath);
-
-        auto basemeta = loader.metaData();
-        if (basemeta.isEmpty() || !basemeta.contains(QStringLiteral("IID"))) {
-            qCDebug(lcPlugin) << u"Plugin doesn't exist:" << loader.fileName() << u"LibraryPath:" << QCoreApplication::libraryPaths();
-            return false;
-        }
-        if (basemeta[QStringLiteral("IID")].toString() != QLatin1String("eu.opencloud.PluginFactory")) {
-            qCWarning(lcPlugin) << u"Plugin has wrong IID" << loader.fileName() << basemeta[QStringLiteral("IID")];
-            return false;
-        }
-
-        auto metadata = basemeta[QStringLiteral("MetaData")].toObject();
-        if (metadata[QStringLiteral("type")].toString() != QLatin1String("vfs")) {
-            qCWarning(lcPlugin) << u"Plugin has wrong type" << loader.fileName() << metadata[QStringLiteral("type")];
-            return false;
-        }
-        if (metadata[QStringLiteral("version")].toString() != OCC::Version::version().toString()) {
-            qCWarning(lcPlugin) << u"Plugin has wrong version" << loader.fileName() << metadata[QStringLiteral("version")];
-            return false;
-        }
-
-        // Attempting to load the plugin is essential as it could have dependencies that
-        // can't be resolved and thus not be available after all.
-        if (!loader.load()) {
-            qCWarning(lcPlugin) << u"Plugin failed to load:" << loader.errorString();
-            return false;
-        }
-
-        return true;
-    }();
-    _pluginCache[mode] = out;
-    return out;
+    return createPluginFactoryInternal(mode) != nullptr;
 }
 
 Vfs::Mode OCC::VfsPluginManager::bestAvailableVfsMode() const
@@ -197,23 +153,70 @@ std::pair<QString, PluginFactory *> OCC::VfsPluginManager::createVfsPluginFactor
     auto pluginPath = pluginFileName(QStringLiteral("vfs"), name);
 
     if (!isVfsPluginAvailable(mode)) {
-        qCCritical(lcPlugin) << u"Could not load plugin: not existant or bad metadata" << pluginPath;
+        qCCritical(lcPlugin) << u"Could not load plugin: not existent or bad metadata" << pluginPath;
         return {pluginPath, nullptr};
     }
 
-    QPluginLoader loader(pluginPath);
-    auto plugin = loader.instance();
-    if (!plugin) {
-        qCCritical(lcPlugin) << u"Could not load plugin" << pluginPath << loader.errorString();
-        return {pluginPath, nullptr};
-    }
-
-    auto factory = qobject_cast<PluginFactory *>(plugin);
+    auto factory = createPluginFactoryInternal(mode);
     if (!factory) {
-        qCCritical(lcPlugin) << u"Plugin" << loader.fileName() << u"does not implement PluginFactory";
         return {pluginPath, nullptr};
     }
+
     return {pluginPath, factory};
+}
+PluginFactory *VfsPluginManager::createPluginFactoryInternal(Vfs::Mode mode) const
+{
+    if (auto result = _pluginCache.constFind(mode); result != _pluginCache.cend()) {
+        return *result;
+    }
+    return _pluginCache[mode] = [mode]() -> PluginFactory * {
+        const QString name = Utility::enumToString(mode);
+        if (!OC_ENSURE_NOT(name.isEmpty())) {
+            return nullptr;
+        }
+        auto pluginPath = pluginFileName(QStringLiteral("vfs"), name);
+        QPluginLoader loader(pluginPath);
+
+        auto basemeta = loader.metaData();
+        if (basemeta.isEmpty() || !basemeta.contains(QStringLiteral("IID"))) {
+            qCDebug(lcPlugin) << u"Plugin doesn't exist:" << loader.fileName() << u"LibraryPath:" << QCoreApplication::libraryPaths();
+            return nullptr;
+        }
+        if (basemeta[QStringLiteral("IID")].toString() != QLatin1String("eu.opencloud.PluginFactory")) {
+            qCWarning(lcPlugin) << u"Plugin has wrong IID" << loader.fileName() << basemeta[QStringLiteral("IID")];
+            return nullptr;
+        }
+
+        auto metadata = basemeta[QStringLiteral("MetaData")].toObject();
+        if (metadata[QStringLiteral("type")].toString() != QLatin1String("vfs")) {
+            qCWarning(lcPlugin) << u"Plugin has wrong type" << loader.fileName() << metadata[QStringLiteral("type")];
+            return nullptr;
+        }
+        if (metadata[QStringLiteral("version")].toString() != OCC::Version::version().toString()) {
+            qCWarning(lcPlugin) << u"Plugin has wrong version" << loader.fileName() << metadata[QStringLiteral("version")];
+            return nullptr;
+        }
+
+        // Attempting to load the plugin is essential as it could have dependencies that
+        // can't be resolved and thus not be available after all.
+        if (!loader.load()) {
+            qCWarning(lcPlugin) << u"Plugin failed to load:" << loader.errorString();
+            return nullptr;
+        }
+
+        auto plugin = loader.instance();
+        if (!plugin) {
+            qCCritical(lcPlugin) << u"Could not load plugin" << pluginPath << loader.errorString();
+            return nullptr;
+        }
+
+        auto factory = qobject_cast<PluginFactory *>(plugin);
+        if (!factory) {
+            qCCritical(lcPlugin) << u"Plugin" << loader.fileName() << u"does not implement PluginFactory";
+            return nullptr;
+        }
+        return factory;
+    }();
 }
 
 std::unique_ptr<Vfs> OCC::VfsPluginManager::createVfsFromPlugin(Vfs::Mode mode) const
