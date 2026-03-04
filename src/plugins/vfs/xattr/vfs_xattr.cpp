@@ -551,7 +551,7 @@ Vfs::AvailabilityResult VfsXAttr::availability(const QString &folderPath)
 void VfsXAttr::fileStatusChanged(const QString& systemFileName, SyncFileStatus fileStatus)
 {
     if (fileStatus.tag() == SyncFileStatus::StatusExcluded) {
-        const FileSystem::Path rel = std::filesystem::relative(FileSystem::Path(systemFileName), params().root());
+        const FileSystem::Path rel = FileSystem::Path(systemFileName)->lexically_relative(params().root());
         setPinState(rel.toString(), PinState::Excluded);
         return;
     }
