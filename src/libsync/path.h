@@ -37,6 +37,8 @@ namespace FileSystem {
         const std::filesystem::path &get() const { return _path; }
 
         [[nodiscard]] operator std::filesystem::path() const { return _path; }
+        [[nodiscard]] operator const std::filesystem::path &() const { return _path; }
+        const std::filesystem::path *operator->() const { return &_path; }
 
         explicit operator QString() const { return toString(); }
 
