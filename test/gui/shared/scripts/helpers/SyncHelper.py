@@ -336,9 +336,9 @@ def clear_waited_after_sync():
 
 
 def perform_file_explorer_vfs_action(resource_path, action):
-    if action == 'online-only':
+    if action == 'Free up space':
         make_online_only(resource_path)
-    elif action == 'available-locally':
+    elif action == 'Always keep on this device':
         make_available_locally(resource_path)
     else:
         raise ValueError(

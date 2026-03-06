@@ -81,23 +81,23 @@ Feature: VFS support
         And the file "parent/lorem.txt" should be downloaded
         And the placeholder file "parent/epsum.txt" should exist on the file system
 
-        # mark files available-locally
-        When user "Alice" marks file "testFile.txt" as available-locally from the file explorer
+        # mark files "Always keep on this device"
+        When user "Alice" marks file "testFile.txt" as "Always keep on this device" from the file explorer
         And the user waits for file "testFile.txt" to be synced
         Then the file "testFile.txt" should be downloaded
-        When user "Alice" marks file "simple.txt" as available-locally from the file explorer
+        When user "Alice" marks file "simple.txt" as "Always keep on this device" from the file explorer
         And the user waits for file "simple.txt" to be synced
         Then the file "simple.txt" should be downloaded
         And the placeholder file "large.txt" should exist on the file system
 
-        # mark files online-only
-        When user "Alice" marks file "testFile.txt" as online-only from the file explorer
+        # mark files "Free up space"
+        When user "Alice" marks file "testFile.txt" as "Free up space" from the file explorer
         And the user waits for file "testFile.txt" to be synced
         Then the placeholder file "testFile.txt" should exist on the file system
-        When user "Alice" marks file "parent/lorem.txt" as online-only from the file explorer
+        When user "Alice" marks file "parent/lorem.txt" as "Free up space" from the file explorer
         And the user waits for file "parent/lorem.txt" to be synced
         Then the placeholder file "parent/lorem.txt" should exist on the file system
-        When user "Alice" marks file "simple.txt" as online-only from the file explorer
+        When user "Alice" marks file "simple.txt" as "Free up space" from the file explorer
         And the user waits for file "simple.txt" to be synced
         Then the file "simple.txt" should be downloaded
 
@@ -121,9 +121,9 @@ Feature: VFS support
         And the placeholder file "nested/lorem.txt" should exist on the file system
         And the placeholder file "nested/subfol1/subfol2/subfol3/subfol4/subfile4.txt" should exist on the file system
 
-        # mark sub folder as available-locally
+        # mark sub folder as "Always keep on this device"
         When user "Alice" reads the content of file "nested/subfol1/subfol2/subfile2.txt"
-        And user "Alice" marks folder "nested/subfol1" as available-locally from the file explorer
+        And user "Alice" marks folder "nested/subfol1" as "Always keep on this device" from the file explorer
         And the user waits for folder "nested/subfol1" to be synced
         Then the file "nested/subfol1/subfile1.txt" should be downloaded
         And the file "nested/subfol1/subfol2/subfile2.txt" should be downloaded
@@ -131,7 +131,7 @@ Feature: VFS support
         And the file "nested/subfol1/subfol2/subfol3/subfol4/subfile4.txt" should be downloaded
         And the placeholder file "nested/lorem.txt" should exist on the file system
 
-        # create local files and folders in available-locally folder
+        # create local files and folders in "Always keep on this device" folder
         When user "Alice" creates a folder "nested/subfol1/subfol2/localFol" inside the sync folder
         And user "Alice" creates a file "nested/subfol1/subfol2/local.txt" with the following content inside the sync folder
             """
@@ -141,7 +141,7 @@ Feature: VFS support
         And the user waits for file "nested/subfol1/subfol2/local.txt" to be synced
         Then the file "nested/subfol1/subfol2/local.txt" should be downloaded
 
-        # create local files and folders in online-only folder
+        # create local files and folders in "Free up space" folder
         When user "Alice" creates a folder "nested/localFol" inside the sync folder
         And user "Alice" creates a file "nested/local.txt" with the following content inside the sync folder
             """
@@ -151,20 +151,20 @@ Feature: VFS support
         And the user waits for file "nested/local.txt" to be synced
         Then the file "nested/local.txt" should be downloaded
 
-        # upload files to available-locally folder in the server
+        # upload files to "Always keep on this device" folder in the server
         When user "Alice" uploads file with content "server content" to "nested/subfol1/subfol2/localFol/fromServer.txt" in the server
         And the user waits for file "nested/subfol1/subfol2/localFol/fromServer.txt" to be synced
         Then the file "nested/subfol1/subfol2/localFol/fromServer.txt" should be downloaded
 
-        # upload files to online-only folder in the server
+        # upload files to "Free up space" folder in the server
         When user "Alice" uploads file with content "server content" to "nested/fromServer.txt" in the server
         And user "Alice" uploads file with content "server content" to "nested/localFol/fromServer.txt" in the server
         And the user waits for the files to sync
         Then the placeholder file "nested/fromServer.txt" should exist on the file system
         And the placeholder file "nested/localFol/fromServer.txt" should exist on the file system
 
-        # mark sub folder as online-only
-        When user "Alice" marks folder "nested/subfol1/subfol2" as online-only from the file explorer
+        # mark sub folder as "Free up space"
+        When user "Alice" marks folder "nested/subfol1/subfol2" as "Free up space" from the file explorer
         And the user waits for folder "nested/subfol1/subfol2" to be synced
         Then the placeholder file "nested/subfol1/subfol2/subfile2.txt" should exist on the file system
         And the file "nested/subfol1/subfol2/local.txt" should be downloaded
