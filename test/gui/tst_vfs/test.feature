@@ -99,7 +99,7 @@ Feature: VFS support
         Then the placeholder file "parent/lorem.txt" should exist on the file system
         When user "Alice" marks file "simple.txt" as "Free up space" from the file explorer
         And the user waits for file "simple.txt" to be synced
-        Then the file "simple.txt" should be downloaded
+        Then the placeholder file "simple.txt" should exist on the file system
 
 
     Scenario: Hydration and dehydration of folders via file explorer
@@ -159,7 +159,7 @@ Feature: VFS support
         # upload files to "Free up space" folder in the server
         When user "Alice" uploads file with content "server content" to "nested/fromServer.txt" in the server
         And user "Alice" uploads file with content "server content" to "nested/localFol/fromServer.txt" in the server
-        And the user waits for the files to sync
+        And the user waits for file "nested/localFol/fromServer.txt" to be synced
         Then the placeholder file "nested/fromServer.txt" should exist on the file system
         And the placeholder file "nested/localFol/fromServer.txt" should exist on the file system
 
@@ -167,8 +167,8 @@ Feature: VFS support
         When user "Alice" marks folder "nested/subfol1/subfol2" as "Free up space" from the file explorer
         And the user waits for folder "nested/subfol1/subfol2" to be synced
         Then the placeholder file "nested/subfol1/subfol2/subfile2.txt" should exist on the file system
-        And the file "nested/subfol1/subfol2/local.txt" should be downloaded
-        And the file "nested/subfol1/subfol2/localFol/fromServer.txt" should be downloaded
-        And the file "nested/subfol1/subfol2/subfol3/subfile3.txt" should be downloaded
-        And the file "nested/subfol1/subfol2/subfol3/subfol4/subfile4.txt" should be downloaded
+        And the placeholder file "nested/subfol1/subfol2/local.txt" should exist on the file system
+        And the placeholder file "nested/subfol1/subfol2/localFol/fromServer.txt" should exist on the file system
+        And the placeholder file "nested/subfol1/subfol2/subfol3/subfile3.txt" should exist on the file system
+        And the placeholder file "nested/subfol1/subfol2/subfol3/subfol4/subfile4.txt" should exist on the file system
         And the file "nested/subfol1/subfile1.txt" should be downloaded

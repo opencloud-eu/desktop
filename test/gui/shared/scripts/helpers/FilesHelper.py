@@ -1,6 +1,5 @@
 import os
 import re
-import ctypes
 import shutil
 from pathlib import Path
 
@@ -8,8 +7,6 @@ from pypdf import PdfReader
 from docx import Document
 from pptx import Presentation
 from openpyxl import load_workbook
-
-import squish
 from helpers.ConfigHelper import is_windows, get_config
 
 
@@ -97,17 +94,6 @@ def get_size_in_bytes(size):
                 return size_num * (multiplier**3)
 
     raise ValueError("Invalid size: " + size)
-
-
-def get_file_size_on_disk(resource_path):
-    if is_windows():
-        timeout = get_config('maxSyncTimeout') * 1000
-        squish.waitFor(lambda: os.path.exists(resource_path), timeout)
-        file_size_high = ctypes.c_ulonglong(0)
-        return ctypes.windll.kernel32.GetCompressedFileSizeW(
-            ctypes.c_wchar_p(resource_path), ctypes.pointer(file_size_high)
-        )
-    raise OSError("'get_file_size_on_disk' function is only supported for Windows OS.")
 
 
 def get_file_size(resource_path):
