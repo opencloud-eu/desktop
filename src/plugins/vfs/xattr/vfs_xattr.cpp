@@ -66,7 +66,7 @@ OpenVfsAttributes::PlaceHolderAttributes placeHolderAttributes(const std::filesy
 {
     const auto data = OCC::FileSystem::Xattr::getxattr(path, QString::fromUtf8(OpenVfsConstants::XAttributeNames::Data));
     if (!data) {
-        qCWarning(lcVfsXAttr) << "No OpenVFS xattr found for" << path;
+        qCWarning(lcVfsXAttr) << u"No OpenVFS xattr found for" << path.native();
     }
     return OpenVfsAttributes::PlaceHolderAttributes::fromData(path, data ? std::vector<uint8_t>{data->cbegin(), data->cend()} : std::vector<uint8_t>{});
 }
@@ -388,7 +388,7 @@ void VfsXAttr::slotHydrateJobFinished()
     const auto targetPath = FileSystem::toFilesystemPath(hydration->targetFileName());
     Q_ASSERT(!targetPath.empty());
 
-    qCInfo(lcVfsXAttr) << u"Hydration Job finished for" << targetPath;
+    qCInfo(lcVfsXAttr) << u"Hydration Job finished for" << targetPath.native();
 
     if (std::filesystem::exists(targetPath)) {
         auto item = OCC::SyncFileItem::fromSyncJournalFileRecord(hydration->record());
@@ -398,17 +398,17 @@ void VfsXAttr::slotHydrateJobFinished()
         if (auto inode = FileSystem::getInode(targetPath)) {
             item->_inode = inode.value();
         } else {
-            qCWarning(lcVfsXAttr) << u"Failed to get inode for" << targetPath;
+            qCWarning(lcVfsXAttr) << u"Failed to get inode for" << targetPath.native();
         }
         // Update the client sync journal database if the file modifications have been successful
         const auto result = this->params().journal->setFileRecord(SyncJournalFileRecord::fromSyncFileItem(*item));
         if (!result) {
             qCWarning(lcVfsXAttr) << u"Error when setting the file record to the database" << result.error();
         } else {
-            qCInfo(lcVfsXAttr) << u"Hydration succeeded" << targetPath;
+            qCInfo(lcVfsXAttr) << u"Hydration succeeded" << targetPath.native();
         }
     } else {
-        qCWarning(lcVfsXAttr) << u"Hydration succeeded but the file appears to be moved" << targetPath;
+        qCWarning(lcVfsXAttr) << u"Hydration succeeded but the file appears to be moved" << targetPath.native();
     }
 
     hydration->deleteLater();
