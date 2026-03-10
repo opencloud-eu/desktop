@@ -105,7 +105,7 @@ FolderDefinition FolderDefinition::load(QSettings &settings)
 
     QString vfsModeString = settings.value("virtualFilesMode").toString();
 
-    const auto vfs = Utility::isWindows() ? Vfs::Mode::WindowsCfApi : Vfs::Mode::XAttr;
+    const auto vfs = Utility::isWindows() ? Vfs::Mode::WindowsCfApi : Vfs::Mode::OpenVFS;
     if (auto result = VfsPluginManager::instance().prepare(folder.localPath(), folder.accountUUID(), vfs); result) {
         vfsModeString = Utility::enumToString(vfs);
     } else {

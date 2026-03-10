@@ -55,8 +55,8 @@ Optional<Vfs::Mode> Vfs::modeFromString(const QString &str)
         return Mode::Off;
     } else if (str == QLatin1String("cfapi")) {
         return Mode::WindowsCfApi;
-    } else if (str == QLatin1String("xattr")) {
-        return Mode::XAttr;
+    } else if (str == QLatin1String("openvfs")) {
+        return Mode::OpenVFS;
     }
     return {};
 }
@@ -71,8 +71,8 @@ QString Utility::enumToString(Vfs::Mode mode)
         return QStringLiteral("cfapi");
     case Vfs::Mode::Off:
         return QStringLiteral("off");
-    case Vfs::Mode::XAttr:
-        return QStringLiteral("xattr");
+    case Vfs::Mode::OpenVFS:
+        return QStringLiteral("openvfs");
     }
     Q_UNREACHABLE();
 }
@@ -136,8 +136,8 @@ Vfs::Mode OCC::VfsPluginManager::bestAvailableVfsMode() const
 {
     if (isVfsPluginAvailable(Vfs::Mode::WindowsCfApi)) {
         return Vfs::Mode::WindowsCfApi;
-    } else if (isVfsPluginAvailable(Vfs::Mode::XAttr)) {
-        return Vfs::Mode::XAttr;
+    } else if (isVfsPluginAvailable(Vfs::Mode::OpenVFS)) {
+        return Vfs::Mode::OpenVFS;
     } else if (isVfsPluginAvailable(Vfs::Mode::Off)) {
         return Vfs::Mode::Off;
     }

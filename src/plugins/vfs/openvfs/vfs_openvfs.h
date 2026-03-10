@@ -11,9 +11,9 @@
 #include <QObject>
 #include <QScopedPointer>
 
-#include "vfs/vfs.h"
 #include "common/plugin.h"
 #include "common/result.h"
+#include "vfs/vfs.h"
 
 #include <QProcess>
 
@@ -21,13 +21,13 @@
 namespace OCC {
 class HydrationJob;
 
-class VfsXAttr : public Vfs
+class OpenVFS : public Vfs
 {
     Q_OBJECT
 
 public:
-    explicit VfsXAttr(QObject *parent = nullptr);
-    ~VfsXAttr() override;
+    explicit OpenVFS(QObject *parent = nullptr);
+    ~OpenVFS() override;
 
     [[nodiscard]] Mode mode() const override;
 
@@ -49,7 +49,7 @@ public:
     Optional<PinState> pinState(const QString &folderPath) override;
     AvailabilityResult availability(const QString &folderPath) override;
 
-    HydrationJob* hydrateFile(const QByteArray &fileId, const QString& targetPath) override;
+    HydrationJob *hydrateFile(const QByteArray &fileId, const QString &targetPath) override;
 
 Q_SIGNALS:
     void finished(Result<void, QString>);
@@ -63,11 +63,11 @@ protected:
     void startImpl(const VfsSetupParams &params) override;
 
 private:
-    QMap<QByteArray, HydrationJob*> _hydrationJobs;
+    QMap<QByteArray, HydrationJob *> _hydrationJobs;
     QPointer<QProcess> _openVfsProcess;
 };
 
-class XattrVfsPluginFactory : public QObject, public DefaultPluginFactory<VfsXAttr>
+class OpenVfsPluginFactory : public QObject, public DefaultPluginFactory<OpenVFS>
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "eu.opencloud.PluginFactory" FILE "libsync/vfs/vfspluginmetadata.json")
