@@ -6,7 +6,7 @@ from enum import IntFlag, Enum, unique
 from helpers.ConfigHelper import is_windows
 
 
-kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+error_message = "'%s' function is only supported in Windows OS."
 
 # ==========================
 # Structures
@@ -35,22 +35,27 @@ class FileAttributeConstants(IntFlag):
     FILE_ATTRIBUTE_UNPINNED = 0x00100000
     FILE_ATTRIBUTE_ARCHIVE = 0x00000020
 
-GetFileAttributesExW = kernel32.GetFileAttributesExW
-GetFileAttributesExW.argtypes = [
-    wintypes.LPCWSTR,
-    ctypes.c_int,
-    ctypes.POINTER(WIN32_FILE_ATTRIBUTE_DATA),
-]
-GetFileAttributesExW.restype = wintypes.BOOL
+GetFileAttributesExW = None
+GetCompressedFileSizeW = None
 
-GetCompressedFileSizeW = kernel32.GetCompressedFileSizeW
-GetCompressedFileSizeW.argtypes = [
-    wintypes.LPCWSTR,
-    ctypes.POINTER(wintypes.DWORD),
-]
-GetCompressedFileSizeW.restype = wintypes.DWORD
+if is_windows():
+    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
 
-error_message = "'%s' function is only supported in Windows OS."
+    GetFileAttributesExW = kernel32.GetFileAttributesExW
+    GetFileAttributesExW.argtypes = [
+        wintypes.LPCWSTR,
+        ctypes.c_int,
+        ctypes.POINTER(WIN32_FILE_ATTRIBUTE_DATA),
+    ]
+    GetFileAttributesExW.restype = wintypes.BOOL
+
+    GetCompressedFileSizeW = kernel32.GetCompressedFileSizeW
+    GetCompressedFileSizeW.argtypes = [
+        wintypes.LPCWSTR,
+        ctypes.POINTER(wintypes.DWORD),
+    ]
+    GetCompressedFileSizeW.restype = wintypes.DWORD
+
 
 def get_file_attributes(path):
     if is_windows():
