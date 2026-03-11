@@ -15,7 +15,7 @@
 #include "syncfileitem.h"
 #include "vfs/hydrationjob.h"
 
-#include <openvfs/openvfsattributes.h>
+#include <openvfs/openvfs.h>
 
 #include <QDir>
 #include <QFile>
@@ -42,9 +42,9 @@ OCC::FileSystem::Path openVFSExePath()
 }
 
 
-QByteArray xattrOwnerString(const QUuid &accountUuid)
+QString xattrOwnerString(const QUuid &accountUuid)
 {
-    return OCC::Theme::instance()->appName().toUtf8() + ":" + accountUuid.toByteArray(QUuid::WithoutBraces);
+    return u"%1:%2"_s.arg(OCC::Theme::instance()->appName(), accountUuid.toString(QUuid::WithoutBraces));
 }
 
 OCC::FileSystem::Path openVFSConfigFilePath()
@@ -62,29 +62,29 @@ OCC::FileSystem::Path openVFSConfigFilePath()
     return {};
 }
 
-OpenVfsAttributes::PlaceHolderAttributes placeHolderAttributes(const std::filesystem::path &path)
+OpenVFS::PlaceHolderAttributes placeHolderAttributes(const std::filesystem::path &path)
 {
-    const auto data = OCC::FileSystem::Xattr::getxattr(path, QString::fromUtf8(OpenVfsConstants::XAttributeNames::Data));
+    const auto data = OCC::FileSystem::Xattr::getxattr(path, QString::fromUtf8(OpenVFS::Constants::XAttributeNames::Data));
     if (!data) {
         qCWarning(lcOpenVFS) << u"No OpenVFS xattr found for" << path.native();
     }
-    return OpenVfsAttributes::PlaceHolderAttributes::fromData(path, data ? std::vector<uint8_t>{data->cbegin(), data->cend()} : std::vector<uint8_t>{});
+    return OpenVFS::PlaceHolderAttributes::fromData(path, data ? std::vector<uint8_t>{data->cbegin(), data->cend()} : std::vector<uint8_t>{});
 }
 
-OpenVfsAttributes::PlaceHolderAttributes placeHolderAttributes(const QString &path)
+OpenVFS::PlaceHolderAttributes placeHolderAttributes(const QString &path)
 {
     return placeHolderAttributes(OCC::FileSystem::toFilesystemPath(path));
 }
 
-OCC::Result<void, QString> setPlaceholderAttributes(const OpenVfsAttributes::PlaceHolderAttributes &attributes)
+OCC::Result<void, QString> setPlaceholderAttributes(const OpenVFS::PlaceHolderAttributes &attributes)
 {
     Q_ASSERT(attributes.validate());
     const auto data = attributes.toData();
-    return OCC::FileSystem::Xattr::setxattr(attributes.absolutePath, QString::fromUtf8(OpenVfsConstants::XAttributeNames::Data),
+    return OCC::FileSystem::Xattr::setxattr(attributes.absolutePath, QString::fromUtf8(OpenVFS::Constants::XAttributeNames::Data),
         {reinterpret_cast<const char *>(data.data()), static_cast<qsizetype>(data.size())});
 }
 
-OCC::Result<void, QString> setPlaceholderAttributes(const OpenVfsAttributes::PlaceHolderAttributes &attributes, time_t modtime)
+OCC::Result<void, QString> setPlaceholderAttributes(const OpenVFS::PlaceHolderAttributes &attributes, time_t modtime)
 {
     if (const auto result = setPlaceholderAttributes(attributes); !result) {
         return result;
@@ -93,35 +93,35 @@ OCC::Result<void, QString> setPlaceholderAttributes(const OpenVfsAttributes::Pla
     return {};
 }
 
-OpenVfsConstants::PinStates convertPinState(OCC::PinState pState)
+OpenVFS::Constants::PinStates convertPinState(OCC::PinState pState)
 {
     switch (pState) {
     case OCC::PinState::AlwaysLocal:
-        return OpenVfsConstants::PinStates::AlwaysLocal;
+        return OpenVFS::Constants::PinStates::AlwaysLocal;
     case OCC::PinState::Inherited:
-        return OpenVfsConstants::PinStates::Inherited;
+        return OpenVFS::Constants::PinStates::Inherited;
     case OCC::PinState::OnlineOnly:
-        return OpenVfsConstants::PinStates::OnlineOnly;
+        return OpenVFS::Constants::PinStates::OnlineOnly;
     case OCC::PinState::Excluded:
-        return OpenVfsConstants::PinStates::OnlineOnly;
+        return OpenVFS::Constants::PinStates::OnlineOnly;
     case OCC::PinState::Unspecified:
-        return OpenVfsConstants::PinStates::Unspecified;
+        return OpenVFS::Constants::PinStates::Unspecified;
     };
     Q_UNREACHABLE();
 }
 
-OCC::PinState convertPinState(OpenVfsConstants::PinStates pState)
+OCC::PinState convertPinState(OpenVFS::Constants::PinStates pState)
 {
     switch (pState) {
-    case OpenVfsConstants::PinStates::AlwaysLocal:
+    case OpenVFS::Constants::PinStates::AlwaysLocal:
         return OCC::PinState::AlwaysLocal;
-    case OpenVfsConstants::PinStates::Inherited:
+    case OpenVFS::Constants::PinStates::Inherited:
         return OCC::PinState::Inherited;
-    case OpenVfsConstants::PinStates::OnlineOnly:
+    case OpenVFS::Constants::PinStates::OnlineOnly:
         return OCC::PinState::OnlineOnly;
-    case OpenVfsConstants::PinStates::Unspecified:
+    case OpenVFS::Constants::PinStates::Unspecified:
         return OCC::PinState::Unspecified;
-    case OpenVfsConstants::PinStates::Excluded:
+    case OpenVFS::Constants::PinStates::Excluded:
         return OCC::PinState::Excluded;
     }
     Q_UNREACHABLE();
@@ -192,8 +192,13 @@ void OpenVFS::startImpl(const VfsSetupParams &params)
 
     // Lets claim the sync root directory for us
     // set the owner to opencloud to claim it
-    if (!FileSystem::Xattr::setxattr(params.root(), QString::fromUtf8(OpenVfsConstants::XAttributeNames::Owner), xattrOwnerString(params.account->uuid()))) {
-        Q_EMIT error(tr("Unable to claim the sync root for files on demand"));
+    const auto owner = xattrOwnerString(params.account->uuid()).toStdString();
+    if (const auto info = ::OpenVFS::RegistrationInfo::registerFilesystem(params.root(), owner); !info) {
+        if (info.owner() != owner) {
+            Q_EMIT error(tr("Unable to claim the sync root for files on demand, the folder is already claimed by %1").arg(info.owner()));
+            return;
+        }
+        Q_EMIT error(tr("Unable to retrieve registration info. Error: %1").arg(info.error()));
         return;
     }
 
@@ -210,7 +215,9 @@ void OpenVFS::startImpl(const VfsSetupParams &params)
         QTimer::singleShot(1s, this, &Vfs::started);
     });
     connect(_openVfsProcess, &QProcess::errorOccurred, this, [logPrefix, this] { qCWarning(lcOpenVFS) << logPrefix() << _openVfsProcess->errorString(); });
-    _openVfsProcess->start(openVFSExePath().toString(), {u"-d"_s, u"-i"_s, openVFSConfigFilePath().toString(), params.root().toString()}, QIODevice::ReadOnly);
+    _openVfsProcess->start(openVFSExePath().toString(),
+        {u"-d"_s, u"-i"_s, openVFSConfigFilePath().toString(), u"-o"_s, xattrOwnerString(params.account->uuid()), params.root().toString()},
+        QIODevice::ReadOnly);
 }
 
 void OpenVFS::stop()
@@ -224,7 +231,10 @@ void OpenVFS::stop()
     }
 }
 
-void OpenVFS::unregisterFolder() { }
+void OpenVFS::unregisterFolder()
+{
+    ::OpenVFS::RegistrationInfo::unregisterFilesystem({params().root(), xattrOwnerString(params().account->uuid()).toStdString()});
+}
 
 bool OpenVFS::socketApiPinStateActionsShown() const
 {
@@ -289,15 +299,8 @@ Result<void, QString> OpenVfsPluginFactory::prepare(const QString &path, const Q
         qCDebug(lcOpenVFS) << path << "does not support xattributes";
         return tr("The filesystem for %1 does not support xattributes.").arg(path);
     }
-    if (const auto owner = FileSystem::Xattr::getxattr(fsPath, QString::fromUtf8(OpenVfsConstants::XAttributeNames::Owner))) {
-        if (accountUuid.isNull()) {
-            qCDebug(lcOpenVFS) << path << "has an owner set" << owner << "Not our vfs!";
-            return tr("The sync path is already claimed by a different account, please check your setup");
-        } else if (owner != xattrOwnerString(accountUuid)) {
-            // owner is set. See if it is us
-            qCDebug(lcOpenVFS) << path << "is claimed by a different account" << owner << "Not our vfs!";
-            return tr("The sync path is claimed by a different cloud, please check your setup");
-        }
+    if (const auto info = ::OpenVFS::RegistrationInfo::fromAttributes(fsPath); info && info.owner() != xattrOwnerString(accountUuid).toStdString()) {
+        return tr("The sync path is already claimed by %1").arg(info.owner());
     }
     if (!openVFSExePath().exists()) {
         qCDebug(lcOpenVFS) << "OpenVFS executable not found at" << openVFSExePath().toString();
@@ -323,7 +326,7 @@ OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> OpenVFS::updateMetada
         }
         return ConvertToPlaceholderResult::Ok;
     } else {
-        OpenVfsAttributes::PlaceHolderAttributes attributes = [&] {
+        ::OpenVFS::PlaceHolderAttributes attributes = [&] {
             // load the previous attributes
             if (!replacesFile.isEmpty()) {
                 if (const auto attr = placeHolderAttributes(replacesFile)) {
@@ -335,9 +338,9 @@ OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> OpenVFS::updateMetada
             }
             Q_ASSERT(QFileInfo::exists(filePath));
             // generate new meta data for an existing file
-            auto attr = OpenVfsAttributes::PlaceHolderAttributes::create(
+            auto attr = ::OpenVFS::PlaceHolderAttributes::create(
                 FileSystem::toFilesystemPath(filePath), syncItem._etag.toStdString(), syncItem._fileId.toStdString(), syncItem._size);
-            attr.state = OpenVfsConstants::States::Hydrated;
+            attr.state = ::OpenVFS::Constants::States::Hydrated;
             return attr;
         }();
         Q_ASSERT(attributes);
@@ -350,13 +353,13 @@ OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> OpenVFS::updateMetada
 
         switch (syncItem._type) {
         case ItemTypeVirtualFileDownload:
-            attributes.state = OpenVfsConstants::States::Hydrating;
+            attributes.state = ::OpenVFS::Constants::States::Hydrating;
             break;
         case ItemTypeVirtualFile:
             [[fallthrough]];
         case ItemTypeVirtualFileDehydration:
             qCDebug(lcOpenVFS) << "updateMetadata for virtual file " << syncItem._type;
-            attributes.state = OpenVfsConstants::States::DeHydrated;
+            attributes.state = ::OpenVFS::Constants::States::DeHydrated;
             break;
         case ItemTypeFile:
             // hydrated files must not have a size attribute != 0
@@ -364,7 +367,7 @@ OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> OpenVFS::updateMetada
             [[fallthrough]];
         case ItemTypeDirectory:
             qCDebug(lcOpenVFS) << "updateMetadata for" << syncItem._type;
-            attributes.state = OpenVfsConstants::States::Hydrated;
+            attributes.state = ::OpenVFS::Constants::States::Hydrated;
             break;
         case ItemTypeSymLink:
             [[fallthrough]];
@@ -430,7 +433,7 @@ Result<void, QString> OpenVFS::createPlaceholder(const SyncFileItem &item)
     file.write("");
     file.close();
 
-    const auto attributes = OpenVfsAttributes::PlaceHolderAttributes::create(path, item._etag.toStdString(), item._fileId.toStdString(), item._size);
+    const auto attributes = ::OpenVFS::PlaceHolderAttributes::create(path, item._etag.toStdString(), item._fileId.toStdString(), item._size);
     return setPlaceholderAttributes(attributes, item._modtime);
 }
 
@@ -443,7 +446,7 @@ HydrationJob *OpenVFS::hydrateFile(const QByteArray &fileId, const QString &targ
     }
 
     if (auto attr = placeHolderAttributes(targetPath)) {
-        attr.state = OpenVfsConstants::States::Hydrating;
+        attr.state = ::OpenVFS::Constants::States::Hydrating;
         if (auto res = setPlaceholderAttributes(attr); !res) {
             qCWarning(lcOpenVFS) << u"Failed to set attributes for" << targetPath << res.error();
             return nullptr;
@@ -476,7 +479,7 @@ bool OpenVFS::needsMetadataUpdate(const SyncFileItem &item)
 bool OpenVFS::isDehydratedPlaceholder(const QString &filePath)
 {
     if (QFileInfo::exists(filePath)) {
-        return placeHolderAttributes(filePath).state == OpenVfsConstants::States::DeHydrated;
+        return placeHolderAttributes(filePath).state == ::OpenVFS::Constants::States::DeHydrated;
     }
     return false;
 }
@@ -485,7 +488,7 @@ LocalInfo OpenVFS::statTypeVirtualFile(const std::filesystem::directory_entry &p
 {
     if (type == ItemTypeFile) {
         const auto attribs = placeHolderAttributes(path.path());
-        if (attribs.state == OpenVfsConstants::States::DeHydrated) {
+        if (attribs.state == ::OpenVFS::Constants::States::DeHydrated) {
             type = ItemTypeVirtualFile;
             if (attribs.pinState == convertPinState(PinState::AlwaysLocal)) {
                 type = ItemTypeVirtualFileDownload;
@@ -525,7 +528,7 @@ Optional<PinState> OpenVFS::pinState(const QString &folderPath)
             return {};
         }
         // if the state is inherited and we still have a parent path, retreive that instead.
-        if (attributes.pinState != OpenVfsConstants::PinStates::Inherited || !relativePath.has_relative_path()) {
+        if (attributes.pinState != ::OpenVFS::Constants::PinStates::Inherited || !relativePath.has_relative_path()) {
             return convertPinState(attributes.pinState);
         }
     }
@@ -542,11 +545,11 @@ Vfs::AvailabilityResult OpenVFS::availability(const QString &folderPath)
             return VfsItemAvailability::OnlineOnly;
         case OCC::PinState::Inherited: {
             switch (attribs.state) {
-            case OpenVfsConstants::States::Hydrated:
+            case ::OpenVFS::Constants::States::Hydrated:
                 return VfsItemAvailability::AllHydrated;
-            case OpenVfsConstants::States::DeHydrated:
+            case ::OpenVFS::Constants::States::DeHydrated:
                 return VfsItemAvailability::AllDehydrated;
-            case OpenVfsConstants::States::Hydrating:
+            case ::OpenVFS::Constants::States::Hydrating:
                 return VfsItemAvailability::Mixed;
             }
         }
