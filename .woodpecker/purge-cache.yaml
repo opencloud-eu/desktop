@@ -39,9 +39,6 @@ matrix:
     - JOB_NAME: purge-browsers-cache
       PURGE_PATH: web/browsers-cache/
       TTL: 14d
-    - JOB_NAME: purge-opencloud
-      PURGE_PATH: opencloud-build/
-      TTL: 1d
     - JOB_NAME: purge-logs
       PURGE_PATH: desktop/testlogs/
       USE_PUBLIC_BUCKET: true

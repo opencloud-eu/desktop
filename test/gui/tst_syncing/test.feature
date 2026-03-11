@@ -563,6 +563,7 @@ Feature: Syncing files
         And the user copies file "simple.pdf" from outside the sync folder to "simple-folder/simple.pdf" in the sync folder
         And the user overwrites the file "simple-folder/uploaded-lorem.txt" with content "overwrite openCloud test text file"
         And the user waits for the files to sync
+        And the user waits for folder "simple-folder/sub-folder" to be synced
         Then the folder "simple-folder/sub-folder" should exist on the file system
         And the file "simple-folder/simple.pdf" should exist on the file system
         And as "Brian" folder "Shares/simple-folder/sub-folder" should exist in the server
