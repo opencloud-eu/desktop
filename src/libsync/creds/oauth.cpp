@@ -238,6 +238,7 @@ OAuth::OAuth(const QUrl &serverUrl, QNetworkAccessManager *networkAccessManager,
     , _networkAccessManager(networkAccessManager)
     , _clientId(Theme::instance()->oauthClientId())
     , _clientSecret(Theme::instance()->oauthClientSecret())
+    , _scopes(Theme::instance()->openIdConnectScopes())
     , _supportedPromtValues(defaultOauthPromtValue())
 {
 }
@@ -434,7 +435,7 @@ QNetworkReply *OAuth::postTokenRequest(QUrlQuery &&queryItems)
     req.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded; charset=UTF-8"));
     req.setAttribute(HttpCredentials::DontAddCredentialsAttribute, true);
 
-    queryItems.addQueryItem(QStringLiteral("scope"), QString::fromUtf8(QUrl::toPercentEncoding(Theme::instance()->openIdConnectScopes())));
+    queryItems.addQueryItem(QStringLiteral("scope"), QString::fromUtf8(QUrl::toPercentEncoding(this->_scopes)));
     req.setUrl(_tokenEndpoint);
     return _networkAccessManager->post(req, queryItems.toString(QUrl::FullyEncoded).toUtf8());
 }
@@ -461,7 +462,7 @@ QUrl OAuth::authorisationLink() const
         {QStringLiteral("redirect_uri"), QStringLiteral("%1:%2").arg(redirectUrlC(), QString::number(_server.serverPort()))},
         {QStringLiteral("code_challenge"), QString::fromLatin1(code_challenge)},
         {QStringLiteral("code_challenge_method"), QStringLiteral("S256")},
-        {QStringLiteral("scope"), QString::fromUtf8(QUrl::toPercentEncoding(Theme::instance()->openIdConnectScopes()))},
+        {QStringLiteral("scope"), QString::fromUtf8(QUrl::toPercentEncoding(this->_scopes))},
         {QStringLiteral("prompt"), QString::fromUtf8(QUrl::toPercentEncoding(toString(_supportedPromtValues)))},
         {QStringLiteral("state"), QString::fromUtf8(_state)},
     };
@@ -540,8 +541,12 @@ void OAuth::fetchWellKnown()
     } else {
         QNetworkRequest webfingerReq;
         webfingerReq.setAttribute(HttpCredentials::DontAddCredentialsAttribute, true);
-        webfingerReq.setUrl(
-            Utility::concatUrlPath(_serverUrl, QStringLiteral("/.well-known/webfinger"), {{QStringLiteral("resource"), _serverUrl.toString()}}));
+        webfingerReq.setUrl(Utility::concatUrlPath(_serverUrl, QStringLiteral("/.well-known/webfinger"),
+            {
+                {QStringLiteral("resource"), _serverUrl.toString()},
+                {QStringLiteral("rel"), QStringLiteral("http://openid.net/specs/connect/1.0/issuer")},
+                {QStringLiteral("platform"), QStringLiteral("desktop")},
+            }));
         webfingerReq.setTransferTimeout(defaultTimeoutMs());
 
         auto webfingerReply = _networkAccessManager->get(webfingerReq);
@@ -594,6 +599,34 @@ void OAuth::fetchWellKnown()
                 qCWarning(lcOauth) << u"could not find href in WebFinger response";
                 Q_EMIT result(Error);
                 return;
+            }
+
+            const auto properties = doc.object().value(QStringLiteral("properties")).toObject();
+            if (const auto clientId = properties.value(QStringLiteral("http://opencloud.eu/ns/oidc/client_id")).toString(); !clientId.isNull()) {
+                this->_clientId = clientId;
+            }
+            if (const auto scopes = properties.value(QStringLiteral("http://opencloud.eu/ns/oidc/scopes")); scopes.isArray()) {
+                QString scopesJoined;
+                for (auto element : scopes.toArray()) {
+                    auto scope = element.toString();
+
+                    if (scope.isNull()) {
+                        qCWarning(lcOauth) << u"unexpected non-string scope received from WebFinger, ignoring";
+                        continue;
+                    }
+                    if (scope.isEmpty()) {
+                        qCWarning(lcOauth) << u"empty scope received from WebFinger, ignoring";
+                        continue;
+                    }
+
+                    if (scopesJoined.isEmpty()) {
+                        scopesJoined = scope;
+                    } else {
+                        scopesJoined.append(QStringLiteral(" "));
+                        scopesJoined.append(scope);
+                    }
+                }
+                this->_scopes = scopesJoined;
             }
 
             auto const oidcWellKnownUrl = Utility::concatUrlPath(QUrl(issuerUrl), wellKnownPathC);
