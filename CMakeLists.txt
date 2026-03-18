@@ -115,6 +115,7 @@ endif()
 
 if(APPLE)
   set( SOCKETAPI_TEAM_IDENTIFIER_PREFIX "" CACHE STRING "SocketApi prefix (including a following dot) that must match the codesign key's TeamIdentifier/Organizational Unit" )
+  set( APPLE_DEVELOPMENT_TEAM "" CACHE STRING "Apple Development Team ID used for code signing and App Group identifiers" )
 endif()
 
 

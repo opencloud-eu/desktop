@@ -14,7 +14,11 @@ NS_ASSUME_NONNULL_BEGIN
 static NSString *const kOpenCloudXPCServiceName = @"eu.opencloud.desktop.fileprovider.xpc";
 
 /// App Group identifier used to share data between the main app and extension.
-static NSString *const kOpenCloudAppGroupIdentifier = @"P4D766R5ZA.eu.opencloud.desktop";
+/// Set via -DAPP_GROUP_IDENTIFIER=... compile definition from CMake.
+#ifndef APP_GROUP_IDENTIFIER
+#define APP_GROUP_IDENTIFIER "eu.opencloud.desktop"
+#endif
+static NSString *const kOpenCloudAppGroupIdentifier = @APP_GROUP_IDENTIFIER;
 
 /// Filename for the XPC listener endpoint stored in the App Group shared container.
 /// The main app writes this file; the extension reads it to establish the XPC connection.

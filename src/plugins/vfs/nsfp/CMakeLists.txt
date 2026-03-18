@@ -2,6 +2,8 @@
 # Only compiled on Apple platforms (macOS 12+).
 
 if(APPLE)
+    set(APP_GROUP_IDENTIFIER "${APPLE_DEVELOPMENT_TEAM}.${APPLICATION_REV_DOMAIN}")
+
     add_vfs_plugin(NAME nsfp
         SRC
             nsfpdomainmanager.mm
@@ -11,6 +13,10 @@ if(APPLE)
             "-framework Foundation"
             "-framework FileProvider"
             "-lsqlite3"
+    )
+
+    target_compile_definitions(vfs_nsfp PRIVATE
+        APP_GROUP_IDENTIFIER="${APP_GROUP_IDENTIFIER}"
     )
 
     # Enable ARC for all Objective-C++ sources in this plugin.

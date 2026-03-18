@@ -5,6 +5,14 @@
 if(APPLE)
     enable_language(OBJCXX)
 
+    # Generate entitlements with the configured App Group identifier.
+    set(APP_GROUP_IDENTIFIER "${APPLE_DEVELOPMENT_TEAM}.${APPLICATION_REV_DOMAIN}")
+    configure_file(
+        "${CMAKE_CURRENT_SOURCE_DIR}/OpenCloudFileProvider.entitlements"
+        "${CMAKE_CURRENT_BINARY_DIR}/OpenCloudFileProvider.entitlements"
+        @ONLY
+    )
+
     set(FILEPROVIDER_EXTENSION_SOURCES
         OpenCloudFileProviderExtension.mm
         FileProviderXPCService.mm
@@ -38,11 +46,16 @@ if(APPLE)
         MACOSX_BUNDLE_BUNDLE_VERSION "${MIRALL_VERSION_FULL}"
         MACOSX_BUNDLE_SHORT_VERSION_STRING "${MIRALL_VERSION}"
         MACOSX_BUNDLE_GUI_IDENTIFIER "${APPLICATION_REV_DOMAIN}.fileprovider"
-        XCODE_ATTRIBUTE_CODE_SIGN_ENTITLEMENTS "${CMAKE_CURRENT_SOURCE_DIR}/OpenCloudFileProvider.entitlements"
+        XCODE_ATTRIBUTE_CODE_SIGN_ENTITLEMENTS "${CMAKE_CURRENT_BINARY_DIR}/OpenCloudFileProvider.entitlements"
         XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "$(CODE_SIGN_IDENTITY)"
-        XCODE_ATTRIBUTE_DEVELOPMENT_TEAM "P4D766R5ZA"
+        XCODE_ATTRIBUTE_DEVELOPMENT_TEAM "${APPLE_DEVELOPMENT_TEAM}"
         XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER "${APPLICATION_REV_DOMAIN}.fileprovider"
         XCODE_ATTRIBUTE_ENABLE_HARDENED_RUNTIME YES
+    )
+
+    # Pass the App Group identifier to source code.
+    target_compile_definitions(OpenCloudFileProviderExtension PRIVATE
+        APP_GROUP_IDENTIFIER="${APP_GROUP_IDENTIFIER}"
     )
 
     # App Extension compile flag: restricts API surface to extension-safe APIs
