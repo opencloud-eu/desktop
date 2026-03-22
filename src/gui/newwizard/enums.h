@@ -22,8 +22,10 @@ namespace OCC::Wizard {
 Q_NAMESPACE
 
 enum class SetupWizardState {
+    SyncFolderSetupState,
+    FirstState = SyncFolderSetupState,
+
     ServerUrlState,
-    FirstState = ServerUrlState,
 
     CredentialsState,
 
