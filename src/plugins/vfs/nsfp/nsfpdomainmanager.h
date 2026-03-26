@@ -64,6 +64,10 @@ public:
     /// @param completionHandler  Called with empty string on success, error description on failure.
     void evictItem(const QString &identifier, const QString &fileId, NsfpDomainCompletionHandler completionHandler);
 
+    /// Signal the working set enumerator. This covers ALL items across all
+    /// folders and is critical for detecting deletions in subdirectories.
+    void signalWorkingSet(const QString &identifier);
+
     /// Signal the system to perform storage-pressure eviction.
     /// The framework will decide which items to evict based on their
     /// allowsEviction capability and last-access timestamps.

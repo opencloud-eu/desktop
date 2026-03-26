@@ -35,8 +35,8 @@ static void appendTrace(NSString *line) {
 }
 
 /// Reads the shared metadata plist from the App Group container.
-/// Returns an array of NSDictionary items, or nil if unavailable.
-static NSArray<NSDictionary *> *readSharedMetadata(void) {
+/// Uses per-domain file if available, falls back to legacy global file.
+static NSArray<NSDictionary *> *readSharedMetadata(NSFileProviderDomain *domain) {
     NSURL *containerURL = [[NSFileManager defaultManager]
         containerURLForSecurityApplicationGroupIdentifier:kOpenCloudAppGroupIdentifier];
     if (!containerURL) {
@@ -44,7 +44,12 @@ static NSArray<NSDictionary *> *readSharedMetadata(void) {
         return nil;
     }
 
-    NSURL *metadataURL = [containerURL URLByAppendingPathComponent:@"fileprovider_items.plist"];
+    // Try per-domain file first, fall back to legacy.
+    NSString *perDomainName = [NSString stringWithFormat:@"fileprovider_items_%@.plist", domain.identifier];
+    NSURL *perDomainURL = [containerURL URLByAppendingPathComponent:perDomainName];
+    NSURL *metadataURL = [[NSFileManager defaultManager] fileExistsAtPath:perDomainURL.path]
+        ? perDomainURL
+        : [containerURL URLByAppendingPathComponent:@"fileprovider_items.plist"];
     NSData *data = [NSData dataWithContentsOfURL:metadataURL];
     if (!data) {
         os_log_error(enumeratorLog(), "Shared metadata file not found at: %{public}@", metadataURL.path);
@@ -71,18 +76,21 @@ API_AVAILABLE(macos(12.0))
 @implementation FileProviderEnumerator {
     NSFileProviderItemIdentifier _containerId;
     FileProviderXPCService *_xpcService;
+    NSFileProviderDomain *_domain;
     BOOL _invalidated;
 }
 
 - (instancetype)initWithContainerIdentifier:(NSFileProviderItemIdentifier)containerId
-                                 xpcService:(FileProviderXPCService *)service {
+                                 xpcService:(FileProviderXPCService *)service
+                                     domain:(NSFileProviderDomain *)domain {
     self = [super init];
     if (self) {
         _containerId = [containerId copy];
         _xpcService = service;
+        _domain = domain;
         _invalidated = NO;
 
-        os_log_fault(enumeratorLog(), ">>> Enumerator CREATED for container: %{public}@", containerId);
+        os_log_debug(enumeratorLog(), "Enumerator CREATED for container: %{public}@", containerId);
     }
     return self;
 }
@@ -92,7 +100,7 @@ API_AVAILABLE(macos(12.0))
 - (void)enumerateItemsForObserver:(id<NSFileProviderEnumerationObserver>)observer
                    startingAtPage:(NSFileProviderPage)page {
     // Use fault-level logging to ensure it's always persisted
-    os_log_fault(enumeratorLog(), ">>> enumerateItems CALLED container=%{public}@ invalidated=%d", _containerId, _invalidated);
+    os_log_debug(enumeratorLog(), "enumerateItems CALLED container=%{public}@ invalidated=%d", _containerId, _invalidated);
 
     appendTrace([NSString stringWithFormat:@"[%@] enumerateItems container=%@ invalidated=%d\n",
         [NSDate date], _containerId, _invalidated]);
@@ -108,7 +116,7 @@ API_AVAILABLE(macos(12.0))
     os_log_info(enumeratorLog(), "enumerateItems container=%{public}@", _containerId);
 
     // Read file metadata from the App Group shared container.
-    NSArray<NSDictionary *> *allItems = readSharedMetadata();
+    NSArray<NSDictionary *> *allItems = readSharedMetadata(_domain);
     if (!allItems) {
         os_log_error(enumeratorLog(), "No shared metadata available — main app may not be running");
         [observer didEnumerateItems:@[]];
@@ -173,7 +181,7 @@ API_AVAILABLE(macos(12.0))
 
 - (void)enumerateChangesForObserver:(id<NSFileProviderChangeObserver>)observer
                      fromSyncAnchor:(NSFileProviderSyncAnchor)anchor {
-    os_log_fault(enumeratorLog(), ">>> enumerateChanges CALLED container=%{public}@", _containerId);
+    os_log_debug(enumeratorLog(), "enumerateChanges CALLED container=%{public}@", _containerId);
 
     {
         NSString *inAnchorStr = anchor ? [[NSString alloc] initWithData:anchor encoding:NSUTF8StringEncoding] : @"(nil)";
@@ -184,7 +192,7 @@ API_AVAILABLE(macos(12.0))
     os_log_info(enumeratorLog(), "enumerateChanges container=%{public}@", _containerId);
 
     // Read current metadata to build a content-based sync anchor.
-    NSArray<NSDictionary *> *allItems = readSharedMetadata();
+    NSArray<NSDictionary *> *allItems = readSharedMetadata(_domain);
     NSString *currentAnchorString = @"empty";
     if (allItems) {
         // Use item count + latest modtime as a simple content anchor.
@@ -229,6 +237,11 @@ API_AVAILABLE(macos(12.0))
                     break;
                 }
             }
+            if (!targetParentPath) {
+                os_log_error(enumeratorLog(), "enumerateChanges: container %{public}@ not found in metadata — skipping", _containerId);
+                [observer finishEnumeratingChangesUpToSyncAnchor:currentAnchor moreComing:NO];
+                return;
+            }
         }
 
         for (NSDictionary *dict in allItems) {
@@ -250,7 +263,10 @@ API_AVAILABLE(macos(12.0))
         // Detect deleted items by comparing current fileIds with the set from the
         // previous enumerateChanges call. Report deletions so fileproviderd removes
         // them from Finder.
-        NSString *cacheKey = [NSString stringWithFormat:@"prevFileIds_%@",
+        // Cache key must include the domain identifier so that multiple
+        // domains (spaces/accounts) don't overwrite each other's caches.
+        NSString *cacheKey = [NSString stringWithFormat:@"prevFileIds_%@_%@",
+            _domain.identifier,
             [_containerId stringByReplacingOccurrencesOfString:@"/" withString:@"_"]];
         NSURL *containerURL = [[NSFileManager defaultManager]
             containerURLForSecurityApplicationGroupIdentifier:kOpenCloudAppGroupIdentifier];
@@ -278,7 +294,7 @@ API_AVAILABLE(macos(12.0))
 
 - (void)currentSyncAnchorWithCompletionHandler:(void (^)(NSFileProviderSyncAnchor _Nullable))completionHandler {
     // Build a content-based anchor from the shared metadata.
-    NSArray<NSDictionary *> *allItems = readSharedMetadata();
+    NSArray<NSDictionary *> *allItems = readSharedMetadata(_domain);
     NSString *anchorString = @"empty";
     if (allItems) {
         int64_t latestModtime = 0;

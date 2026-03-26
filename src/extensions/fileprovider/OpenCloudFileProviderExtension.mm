@@ -74,6 +74,28 @@ static NSError *xpcUnavailableError(void) {
     return configUnavailableError(@"Hintergrund-Synchronisation nicht verfügbar");
 }
 
+/// Returns the per-domain config plist filename, falling back to the legacy
+/// global filename if the per-domain file does not exist yet.
+static NSString *configPlistName(NSFileProviderDomain *domain, NSURL *containerURL) {
+    NSString *perDomain = [NSString stringWithFormat:@"fileprovider_config_%@.plist", domain.identifier];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:
+         [[containerURL URLByAppendingPathComponent:perDomain] path]]) {
+        return perDomain;
+    }
+    return @"fileprovider_config.plist"; // legacy fallback
+}
+
+/// Returns the per-domain items plist filename, falling back to the legacy
+/// global filename if the per-domain file does not exist yet.
+static NSString *itemsPlistName(NSFileProviderDomain *domain, NSURL *containerURL) {
+    NSString *perDomain = [NSString stringWithFormat:@"fileprovider_items_%@.plist", domain.identifier];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:
+         [[containerURL URLByAppendingPathComponent:perDomain] path]]) {
+        return perDomain;
+    }
+    return @"fileprovider_items.plist"; // legacy fallback
+}
+
 #pragma mark - Default Item Capabilities
 
 /// Returns default NSFileProviderItemCapabilities for items served by this extension.
@@ -111,7 +133,7 @@ API_AVAILABLE(macos(12.0))
         _domain = domain;
         // Multiple trace mechanisms to diagnose
         NSLog(@">>> EXTENSION INIT domain=%@", domain.identifier);
-        os_log_fault(extensionLog(), ">>> EXTENSION INIT domain=%{public}@", domain.identifier);
+        os_log_debug(extensionLog(), "EXTENSION INIT domain=%{public}@", domain.identifier);
 
         // Try writing to a KNOWN writable location
         NSString *homeDir = NSHomeDirectory();
@@ -165,7 +187,7 @@ API_AVAILABLE(macos(12.0))
     NSURL *containerURL = [[NSFileManager defaultManager]
         containerURLForSecurityApplicationGroupIdentifier:kOpenCloudAppGroupIdentifier];
     if (containerURL) {
-        NSURL *metadataURL = [containerURL URLByAppendingPathComponent:@"fileprovider_items.plist"];
+        NSURL *metadataURL = [containerURL URLByAppendingPathComponent:itemsPlistName(self->_domain, containerURL)];
         NSData *data = [NSData dataWithContentsOfURL:metadataURL];
         if (data) {
             NSArray *items = [NSPropertyListSerialization propertyListWithData:data
@@ -228,7 +250,7 @@ API_AVAILABLE(macos(12.0))
         }
 
         // Read server config (davUrl + accessToken).
-        NSURL *configURL = [containerURL URLByAppendingPathComponent:@"fileprovider_config.plist"];
+        NSURL *configURL = [containerURL URLByAppendingPathComponent:configPlistName(self->_domain, containerURL)];
         NSData *configData = [NSData dataWithContentsOfURL:configURL];
         if (!configData) {
             os_log_error(extensionLog(), "fetchContents: config plist not found at %{public}@", configURL.path);
@@ -239,25 +261,17 @@ API_AVAILABLE(macos(12.0))
         NSDictionary *config = [NSPropertyListSerialization propertyListWithData:configData
                                                                          options:NSPropertyListImmutable
                                                                           format:nil error:nil];
-        NSString *davUrl = config[@"davUrl"];
+        NSString *davUrl = config[@"davUrl"]; // fallback
         NSString *accessToken = config[@"accessToken"];
-        if (!davUrl || davUrl.length == 0) {
-            os_log_error(extensionLog(), "fetchContents: no davUrl in config");
-            [self _completeHydrationForFileId:fileId url:nil item:nil
-                error:configUnavailableError(@"Server-URL nicht konfiguriert")];
-            return;
-        }
         if (!accessToken || accessToken.length == 0) {
             os_log_error(extensionLog(), "fetchContents: no access token — app may still be starting");
-            // Use a transient error so fileproviderd retries later instead of
-            // removing the item from Finder (which NotAuthenticated would do).
             [self _completeHydrationForFileId:fileId url:nil item:nil
                 error:configUnavailableError(@"Anmeldung wird vorbereitet — bitte kurz warten")];
             return;
         }
 
         // Look up the file path from the items plist.
-        NSURL *metadataURL = [containerURL URLByAppendingPathComponent:@"fileprovider_items.plist"];
+        NSURL *metadataURL = [containerURL URLByAppendingPathComponent:itemsPlistName(self->_domain, containerURL)];
         NSData *metaData = [NSData dataWithContentsOfURL:metadataURL];
         NSString *filePath = nil;
         NSDictionary *itemDict = nil;
@@ -281,6 +295,17 @@ API_AVAILABLE(macos(12.0))
                                       userInfo:@{NSLocalizedDescriptionKey:
                     NSLocalizedString(@"Diese Datei wurde nicht gefunden. Möglicherweise wurde sie verschoben oder gelöscht.",
                                       @"FileProvider item not found")}]];
+            return;
+        }
+
+        // Use per-item davUrl if available (correct space), fall back to global config.
+        if (itemDict[@"davUrl"]) {
+            davUrl = itemDict[@"davUrl"];
+        }
+        if (!davUrl || davUrl.length == 0) {
+            os_log_error(extensionLog(), "fetchContents: no davUrl for %{public}@", fileId);
+            [self _completeHydrationForFileId:fileId url:nil item:nil
+                error:configUnavailableError(@"Server-URL nicht konfiguriert")];
             return;
         }
 
@@ -334,11 +359,14 @@ API_AVAILABLE(macos(12.0))
                         @"Die Anmeldung ist abgelaufen. Bitte melde dich in der OpenCloud App erneut an.",
                         @"FileProvider HTTP 401/403");
                 } else if (http.statusCode == 404) {
-                    fpCode = NSFileProviderErrorNoSuchItem;
+                    // Use a transient error so fileproviderd retries later
+                    // instead of permanently removing the item from Finder.
+                    // The item will be cleaned up by the next sync cycle if
+                    // it was truly deleted on the server.
+                    fpCode = NSFileProviderErrorServerUnreachable;
                     userMessage = NSLocalizedString(
                         @"Diese Datei wurde auf dem Server nicht gefunden. Sie wurde möglicherweise gelöscht oder verschoben.",
                         @"FileProvider HTTP 404");
-                    [self _removeStaleItemFromPlist:fileId];
                 } else if (http.statusCode >= 500) {
                     fpCode = NSFileProviderErrorServerUnreachable;
                     userMessage = [NSString stringWithFormat:
@@ -421,7 +449,7 @@ API_AVAILABLE(macos(12.0))
         containerURLForSecurityApplicationGroupIdentifier:kOpenCloudAppGroupIdentifier];
     if (!containerURL) return;
 
-    NSURL *metadataURL = [containerURL URLByAppendingPathComponent:@"fileprovider_items.plist"];
+    NSURL *metadataURL = [containerURL URLByAppendingPathComponent:itemsPlistName(self->_domain, containerURL)];
     NSData *data = [NSData dataWithContentsOfURL:metadataURL];
     if (!data) return;
 
@@ -456,6 +484,113 @@ API_AVAILABLE(macos(12.0))
     }
 }
 
+/// Updates an existing item's path and parent in the plist after a MOVE.
+/// Does NOT set extensionCreated, so the item behaves like a journal-sourced
+/// entry and gets cleaned up normally when deleted on the server.
+- (void)_updateItemPathInPlist:(NSString *)fileId
+                       newPath:(NSString *)newPath
+                   newParentId:(NSString *)newParentId
+                 newParentPath:(NSString *)newParentPath
+                        davUrl:(NSString *)davUrl {
+    NSURL *containerURL = [[NSFileManager defaultManager]
+        containerURLForSecurityApplicationGroupIdentifier:kOpenCloudAppGroupIdentifier];
+    if (!containerURL) return;
+
+    NSURL *metadataURL = [containerURL URLByAppendingPathComponent:itemsPlistName(self->_domain, containerURL)];
+    NSData *data = [NSData dataWithContentsOfURL:metadataURL];
+    if (!data) return;
+
+    NSArray *items = [NSPropertyListSerialization propertyListWithData:data
+                                                              options:NSPropertyListImmutable
+                                                               format:nil error:nil];
+    if (![items isKindOfClass:[NSArray class]]) return;
+
+    NSMutableArray *mutableItems = [items mutableCopy];
+    for (NSUInteger i = 0; i < mutableItems.count; i++) {
+        NSDictionary *item = mutableItems[i];
+        if ([item[@"fileId"] isEqualToString:fileId]) {
+            NSMutableDictionary *updated = [item mutableCopy];
+            updated[@"path"] = newPath;
+            updated[@"parentId"] = newParentId;
+            updated[@"parentPath"] = newParentPath;
+            if (davUrl) updated[@"davUrl"] = davUrl;
+            // Remove extensionCreated but add movedAt timestamp.
+            // The merge logic preserves moved items briefly so the
+            // enumerator can register them in prevFileIds. Without
+            // this, server-side deletions of moved files are never
+            // detected because the item was never in prevFileIds
+            // for the new parent container.
+            [updated removeObjectForKey:@"extensionCreated"];
+            [updated removeObjectForKey:@"extensionCreatedAt"];
+            updated[@"movedAt"] = @((int64_t)[[NSDate date] timeIntervalSince1970]);
+            [mutableItems replaceObjectAtIndex:i withObject:updated];
+            break;
+        }
+    }
+
+    NSData *newData = [NSPropertyListSerialization dataWithPropertyList:mutableItems
+                                                                format:NSPropertyListBinaryFormat_v1_0
+                                                               options:0 error:nil];
+    if (newData) {
+        [newData writeToURL:metadataURL atomically:YES];
+        os_log_info(extensionLog(), "Updated item %{public}@ path to %{public}@ in plist", fileId, newPath);
+    }
+}
+
+/// Appends a newly created item to the shared fileprovider_items.plist so
+/// subsequent enumerations include it. Without this, items created via
+/// createItemBasedOnTemplate would disappear from Finder on the next
+/// enumeration cycle because the enumerator only reports plist contents.
+- (void)_appendItemToPlist:(NSDictionary *)itemDict {
+    NSURL *containerURL = [[NSFileManager defaultManager]
+        containerURLForSecurityApplicationGroupIdentifier:kOpenCloudAppGroupIdentifier];
+    if (!containerURL) return;
+
+    NSURL *metadataURL = [containerURL URLByAppendingPathComponent:itemsPlistName(self->_domain, containerURL)];
+    NSMutableArray *items = nil;
+    NSData *data = [NSData dataWithContentsOfURL:metadataURL];
+    if (data) {
+        NSArray *existing = [NSPropertyListSerialization propertyListWithData:data
+                                                                     options:NSPropertyListImmutable
+                                                                      format:nil error:nil];
+        items = existing ? [existing mutableCopy] : [NSMutableArray array];
+    } else {
+        items = [NSMutableArray array];
+    }
+
+    // Mark the item as extension-created so syncMetadataToSharedContainer
+    // in the main app preserves it until the sync engine discovers it.
+    // Items without this flag are treated as journal-sourced and will be
+    // removed when they disappear from the journal (e.g. server-side delete).
+    NSMutableDictionary *markedItem = [itemDict mutableCopy];
+    markedItem[@"extensionCreated"] = @YES;
+    markedItem[@"extensionCreatedAt"] = @((int64_t)[[NSDate date] timeIntervalSince1970]);
+
+    // Replace any existing entry with the same fileId to avoid duplicates.
+    NSString *newFileId = markedItem[@"fileId"];
+    NSUInteger existingIndex = NSNotFound;
+    for (NSUInteger i = 0; i < items.count; i++) {
+        if ([items[i][@"fileId"] isEqualToString:newFileId]) {
+            existingIndex = i;
+            break;
+        }
+    }
+    if (existingIndex != NSNotFound) {
+        [items replaceObjectAtIndex:existingIndex withObject:markedItem];
+    } else {
+        [items addObject:markedItem];
+    }
+
+    NSData *newData = [NSPropertyListSerialization dataWithPropertyList:items
+                                                                format:NSPropertyListBinaryFormat_v1_0
+                                                               options:0 error:nil];
+    if (newData) {
+        [newData writeToURL:metadataURL atomically:YES];
+        os_log_info(extensionLog(), "Appended item %{public}@ to shared plist (total: %lu)",
+                    newFileId, (unsigned long)items.count);
+    }
+}
+
 #pragma mark - NSFileProviderReplicatedExtension (Create)
 
 - (NSProgress *)createItemBasedOnTemplate:(id<NSFileProviderItem>)itemTemplate
@@ -485,7 +620,7 @@ API_AVAILABLE(macos(12.0))
         NSURL *containerURL = [[NSFileManager defaultManager]
             containerURLForSecurityApplicationGroupIdentifier:kOpenCloudAppGroupIdentifier];
         if (containerURL) {
-            NSURL *metadataURL = [containerURL URLByAppendingPathComponent:@"fileprovider_items.plist"];
+            NSURL *metadataURL = [containerURL URLByAppendingPathComponent:itemsPlistName(self->_domain, containerURL)];
             NSData *data = [NSData dataWithContentsOfURL:metadataURL];
             if (data) {
                 NSArray *items = [NSPropertyListSerialization propertyListWithData:data
@@ -498,7 +633,7 @@ API_AVAILABLE(macos(12.0))
                     if ([filename isEqualToString:templateName]
                         && [parentId isEqualToString:templateParent]) {
                         FileProviderItem *item = [[FileProviderItem alloc] initWithDictionary:dict];
-                        os_log_fault(extensionLog(), "createItem: PLIST MATCH %{public}@ id=%{public}@",
+                        os_log_info(extensionLog(), "createItem: PLIST MATCH %{public}@ id=%{public}@",
                                     filename, item.itemIdentifier);
                         completionHandler(item, NSFileProviderItemFields(0), NO, nil);
                         return progress;
@@ -535,35 +670,46 @@ API_AVAILABLE(macos(12.0))
             return progress;
         }
 
-        // Read config
-        NSURL *configURL = [containerURL URLByAppendingPathComponent:@"fileprovider_config.plist"];
+        // Read access token from global config.
+        NSURL *configURL = [containerURL URLByAppendingPathComponent:configPlistName(self->_domain, containerURL)];
         NSData *configData = [NSData dataWithContentsOfURL:configURL];
         NSDictionary *config = configData
             ? [NSPropertyListSerialization propertyListWithData:configData options:NSPropertyListImmutable format:nil error:nil]
             : nil;
-        NSString *davUrl = config[@"davUrl"];
         NSString *accessToken = config[@"accessToken"];
 
-        if (!davUrl || davUrl.length == 0 || !accessToken || accessToken.length == 0) {
-            completionHandler(nil, 0, NO, configUnavailableError(@"Server-Konfiguration oder Anmeldung fehlt"));
+        if (!accessToken || accessToken.length == 0) {
+            completionHandler(nil, 0, NO, configUnavailableError(@"Anmeldung fehlt"));
             return progress;
         }
 
-        // Resolve parent path from items plist
+        // Resolve parent path and davUrl from items plist.
+        // Each item carries its own davUrl so we use the correct space.
         NSString *parentPath = @"";
-        if (![parentId isEqualToString:NSFileProviderRootContainerItemIdentifier]) {
-            NSURL *metaURL = [containerURL URLByAppendingPathComponent:@"fileprovider_items.plist"];
-            NSData *metaData = [NSData dataWithContentsOfURL:metaURL];
-            if (metaData) {
-                NSArray *items = [NSPropertyListSerialization propertyListWithData:metaData
-                                                                          options:NSPropertyListImmutable format:nil error:nil];
-                for (NSDictionary *item in items) {
-                    if ([item[@"fileId"] isEqualToString:parentId]) {
-                        parentPath = item[@"path"] ?: @"";
-                        break;
-                    }
+        NSString *davUrl = config[@"davUrl"]; // fallback to global config
+        NSURL *metaURL = [containerURL URLByAppendingPathComponent:itemsPlistName(self->_domain, containerURL)];
+        NSData *metaData = [NSData dataWithContentsOfURL:metaURL];
+        if (metaData) {
+            NSArray *items = [NSPropertyListSerialization propertyListWithData:metaData
+                                                                      options:NSPropertyListImmutable format:nil error:nil];
+            for (NSDictionary *item in items) {
+                if (![parentId isEqualToString:NSFileProviderRootContainerItemIdentifier]
+                    && [item[@"fileId"] isEqualToString:parentId]) {
+                    parentPath = item[@"path"] ?: @"";
+                    if (item[@"davUrl"]) davUrl = item[@"davUrl"];
+                    break;
+                }
+                // For root-level items, grab davUrl from any item in the plist.
+                if ([parentId isEqualToString:NSFileProviderRootContainerItemIdentifier]
+                    && item[@"davUrl"] && !davUrl) {
+                    davUrl = item[@"davUrl"];
                 }
             }
+        }
+
+        if (!davUrl || davUrl.length == 0) {
+            completionHandler(nil, 0, NO, configUnavailableError(@"Server-URL nicht konfiguriert"));
+            return progress;
         }
 
         NSString *filename = itemTemplate.filename;
@@ -605,16 +751,54 @@ API_AVAILABLE(macos(12.0))
                 NSString *newFileId = [http.allHeaderFields[@"OC-FileId"] copy]
                     ?: [NSString stringWithFormat:@"%@!%@", parentId, [[NSUUID UUID] UUIDString]];
 
-                FileProviderItem *createdItem = [[FileProviderItem alloc]
-                    initWithIdentifier:newFileId filename:filename parentIdentifier:parentId
-                    isDirectory:YES size:0 modDate:[NSDate date]];
+                NSString *dirPath = parentPath.length > 0
+                    ? [NSString stringWithFormat:@"%@/%@", parentPath, filename]
+                    : filename;
+
+                NSDictionary *dirDict = @{
+                    @"fileId": newFileId,
+                    @"filename": filename,
+                    @"path": dirPath,
+                    @"parentId": parentId,
+                    @"parentPath": parentPath,
+                    @"isDirectory": @YES,
+                    @"size": @0,
+                    @"modtime": @((int64_t)[[NSDate date] timeIntervalSince1970]),
+                    @"etag": @"",
+                    @"isVirtualFile": @NO,
+                    @"isDownloaded": @YES,
+                    @"davUrl": davUrl,
+                };
+
+                FileProviderItem *createdItem = [[FileProviderItem alloc] initWithDictionary:dirDict];
                 os_log_info(extensionLog(), "createItem: directory created id=%{public}@", newFileId);
+
+                [self _appendItemToPlist:dirDict];
+
                 progress.completedUnitCount = 100;
                 completionHandler(createdItem, NSFileProviderItemFields(0), NO, nil);
             }] resume];
 
         } else {
             // --- File upload via PUT ---
+
+            // Stage the content to a temporary file before the async upload.
+            // The system-provided content URL may become invalid after this
+            // method returns, so we must copy it synchronously.
+            NSString *stagingDir = NSTemporaryDirectory();
+            NSString *stagingFilename = [NSString stringWithFormat:@"upload-%@-%@",
+                                         filename, [[NSUUID UUID] UUIDString]];
+            NSURL *stagingURL = [NSURL fileURLWithPath:[stagingDir stringByAppendingPathComponent:stagingFilename]];
+
+            NSError *copyError = nil;
+            [[NSFileManager defaultManager] copyItemAtURL:url toURL:stagingURL error:&copyError];
+            if (copyError) {
+                os_log_error(extensionLog(), "createItem: failed to stage content: %{public}@",
+                             copyError.localizedDescription);
+                completionHandler(nil, 0, NO, copyError);
+                return progress;
+            }
+
             NSString *filePath = parentPath.length > 0
                 ? [NSString stringWithFormat:@"%@/%@", parentPath, filename]
                 : filename;
@@ -630,7 +814,17 @@ API_AVAILABLE(macos(12.0))
             [req setValue:[NSString stringWithFormat:@"Bearer %@", accessToken] forHTTPHeaderField:@"Authorization"];
 
             NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
-            [[session uploadTaskWithRequest:req fromFile:url completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            // Get file size before the async upload (staging file is deleted in the handler).
+            int64_t stagedFileSize = 0;
+            {
+                NSDictionary *attrs = [[NSFileManager defaultManager] attributesOfItemAtPath:stagingURL.path error:nil];
+                if (attrs) stagedFileSize = [attrs[NSFileSize] longLongValue];
+            }
+
+            [[session uploadTaskWithRequest:req fromFile:stagingURL completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                // Clean up staging file.
+                [[NSFileManager defaultManager] removeItemAtURL:stagingURL error:nil];
+
                 if (error) {
                     os_log_error(extensionLog(), "createItem: PUT failed: %{public}@", error.localizedDescription);
                     completionHandler(nil, 0, NO, error);
@@ -648,13 +842,7 @@ API_AVAILABLE(macos(12.0))
 
                 NSString *newFileId = [http.allHeaderFields[@"OC-FileId"] copy]
                     ?: [NSString stringWithFormat:@"%@!%@", parentId, [[NSUUID UUID] UUIDString]];
-                NSDictionary *sizeHeader = http.allHeaderFields;
-                int64_t fileSize = [sizeHeader[@"Content-Length"] longLongValue];
-                if (fileSize == 0) {
-                    // Get size from the uploaded file
-                    NSDictionary *attrs = [[NSFileManager defaultManager] attributesOfItemAtPath:url.path error:nil];
-                    fileSize = [attrs[NSFileSize] longLongValue];
-                }
+                int64_t fileSize = stagedFileSize;
 
                 NSMutableDictionary *itemDict = [@{
                     @"fileId": newFileId,
@@ -668,10 +856,18 @@ API_AVAILABLE(macos(12.0))
                     @"etag": [http.allHeaderFields[@"ETag"] copy] ?: @"",
                     @"isVirtualFile": @NO,
                     @"isDownloaded": @YES,
+                    @"davUrl": davUrl,
                 } mutableCopy];
 
                 FileProviderItem *createdItem = [[FileProviderItem alloc] initWithDictionary:itemDict];
                 os_log_info(extensionLog(), "createItem: uploaded %{public}@ id=%{public}@", filename, newFileId);
+
+                // Persist the new item in the shared plist so subsequent
+                // enumerations include it. Without this, the enumerator
+                // would not report the item, and fileproviderd would
+                // eventually remove it from Finder.
+                [self _appendItemToPlist:itemDict];
+
                 progress.completedUnitCount = 100;
                 completionHandler(createdItem, NSFileProviderItemFields(0), NO, nil);
             }] resume];
@@ -701,39 +897,116 @@ API_AVAILABLE(macos(12.0))
 
     NSString *fileId = [item.itemIdentifier copy];
 
-    // Check which fields actually require XPC communication with the main app.
-    const NSFileProviderItemFields criticalFields =
-        NSFileProviderItemFilename |
-        NSFileProviderItemParentItemIdentifier |
-        NSFileProviderItemContents;
+    // Handle re-parent (move) via direct WebDAV MOVE — no XPC needed.
+    // This must be checked BEFORE the XPC proxy check below, otherwise
+    // moves fail when XPC is unavailable and Finder creates a copy instead.
+    if (changedFields & NSFileProviderItemParentItemIdentifier) {
+        NSString *newParentId = [item.parentItemIdentifier copy];
+        os_log_info(extensionLog(), "modifyItem: moving %{public}@ to parent %{public}@", fileId, newParentId);
 
-    id<OpenCloudXPCServiceProtocol> proxy = _xpcService.remoteObjectProxy;
-    if (!proxy) {
-        if (changedFields & criticalFields) {
-            // Rename, move, or content upload requires XPC — report error.
-            os_log_error(extensionLog(), "modifyItem: no XPC proxy for critical change 0x%lx on %{public}@",
-                         (unsigned long)changedFields, fileId);
-            completionHandler(nil, 0, NO, xpcUnavailableError());
+        NSURL *containerURL = [[NSFileManager defaultManager]
+            containerURLForSecurityApplicationGroupIdentifier:kOpenCloudAppGroupIdentifier];
+        if (!containerURL) {
+            completionHandler(nil, 0, NO, configUnavailableError(@"App-Container nicht verfügbar"));
             return progress;
         }
-        // Non-critical fields (e.g. lastUsedDate, contentPolicy) — return item
-        // unchanged so fileproviderd does not mark it as errored.
-        os_log_info(extensionLog(), "modifyItem: no XPC needed for fields 0x%lx on %{public}@",
-                    (unsigned long)changedFields, fileId);
-        FileProviderItem *unchanged = [[FileProviderItem alloc]
-            initWithIdentifier:fileId
-                      filename:item.filename
-              parentIdentifier:item.parentItemIdentifier
-                   isDirectory:NO
-                          size:[item.documentSize longLongValue]
-                       modDate:item.contentModificationDate];
-        progress.completedUnitCount = 100;
-        completionHandler(unchanged, 0, NO, nil);
+
+        NSURL *cfgURL = [containerURL URLByAppendingPathComponent:configPlistName(self->_domain, containerURL)];
+        NSData *cfgData = [NSData dataWithContentsOfURL:cfgURL];
+        NSDictionary *cfg = cfgData ? [NSPropertyListSerialization propertyListWithData:cfgData
+                                          options:NSPropertyListImmutable format:nil error:nil] : nil;
+        NSString *movAccessToken = cfg[@"accessToken"];
+        NSString *movDavUrl = cfg[@"davUrl"];
+
+        // Look up source path and per-item davUrl.
+        NSString *srcPath = nil;
+        NSString *newParentPath = @"";
+        NSURL *metURL = [containerURL URLByAppendingPathComponent:itemsPlistName(self->_domain, containerURL)];
+        NSData *metData = [NSData dataWithContentsOfURL:metURL];
+        if (metData) {
+            NSArray *allItems = [NSPropertyListSerialization propertyListWithData:metData
+                                    options:NSPropertyListImmutable format:nil error:nil];
+            for (NSDictionary *it in allItems) {
+                if ([it[@"fileId"] isEqualToString:fileId]) {
+                    srcPath = it[@"path"];
+                    if (it[@"davUrl"]) movDavUrl = it[@"davUrl"];
+                }
+                if ([it[@"fileId"] isEqualToString:newParentId]) {
+                    newParentPath = it[@"path"] ?: @"";
+                }
+            }
+        }
+
+        if (!srcPath || !movDavUrl || !movAccessToken) {
+            completionHandler(nil, 0, NO, configUnavailableError(@"Verschieben nicht möglich — Konfiguration fehlt"));
+            return progress;
+        }
+
+        NSString *filename = item.filename;
+        NSString *destPath = newParentPath.length > 0
+            ? [NSString stringWithFormat:@"%@/%@", newParentPath, filename] : filename;
+        NSString *movDavBase = [movDavUrl hasSuffix:@"/"] ? [movDavUrl substringToIndex:movDavUrl.length - 1] : movDavUrl;
+
+        NSString *srcEncoded = [srcPath stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLPathAllowedCharacterSet]];
+        NSString *destEncoded = [destPath stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLPathAllowedCharacterSet]];
+        NSString *srcURLString = [NSString stringWithFormat:@"%@/%@", movDavBase, srcEncoded];
+        NSString *destURLString = [NSString stringWithFormat:@"%@/%@", movDavBase, destEncoded];
+
+        os_log_info(extensionLog(), "modifyItem: MOVE %{public}@ -> %{public}@", srcURLString, destURLString);
+
+        NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:srcURLString]];
+        req.HTTPMethod = @"MOVE";
+        [req setValue:[NSString stringWithFormat:@"Bearer %@", movAccessToken] forHTTPHeaderField:@"Authorization"];
+        [req setValue:destURLString forHTTPHeaderField:@"Destination"];
+        [req setValue:@"F" forHTTPHeaderField:@"Overwrite"];
+
+        NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+        [[session dataTaskWithRequest:req completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            if (error) {
+                os_log_error(extensionLog(), "modifyItem: MOVE failed: %{public}@", error.localizedDescription);
+                completionHandler(nil, 0, NO, error);
+                return;
+            }
+            NSHTTPURLResponse *http = (NSHTTPURLResponse *)response;
+            if (http.statusCode < 200 || http.statusCode >= 300) {
+                os_log_error(extensionLog(), "modifyItem: MOVE HTTP %ld", (long)http.statusCode);
+                completionHandler(nil, 0, NO, [NSError errorWithDomain:NSFileProviderErrorDomain
+                    code:NSFileProviderErrorServerUnreachable
+                    userInfo:@{NSLocalizedDescriptionKey:
+                        [NSString stringWithFormat:@"Verschieben fehlgeschlagen (HTTP %ld)", (long)http.statusCode]}]);
+                return;
+            }
+
+            // Update the plist entry in-place: change path/parent but do NOT
+            // mark as extensionCreated. The file was already in the journal —
+            // the sync engine will discover it at the new location. Without
+            // extensionCreated, server-side deletions propagate correctly.
+            [self _updateItemPathInPlist:fileId
+                                newPath:destPath
+                            newParentId:newParentId
+                          newParentPath:newParentPath
+                                 davUrl:movDavUrl];
+
+            FileProviderItem *movedItem = [[FileProviderItem alloc]
+                initWithIdentifier:fileId filename:filename parentIdentifier:newParentId
+                isDirectory:NO size:[item.documentSize longLongValue] modDate:item.contentModificationDate];
+            os_log_info(extensionLog(), "modifyItem: MOVE succeeded for %{public}@", fileId);
+            progress.completedUnitCount = 100;
+            completionHandler(movedItem, NSFileProviderItemFields(0), NO, nil);
+        }] resume];
         return progress;
     }
 
-    // Handle rename.
+    // For remaining operations (rename, content update), check XPC availability.
+    id<OpenCloudXPCServiceProtocol> proxy = _xpcService.remoteObjectProxy;
+
+    // Handle rename via XPC.
     if (changedFields & NSFileProviderItemFilename) {
+        if (!proxy) {
+            os_log_error(extensionLog(), "modifyItem: no XPC proxy for rename of %{public}@", fileId);
+            completionHandler(nil, 0, NO, xpcUnavailableError());
+            return progress;
+        }
         NSString *newName = [item.filename copy];
         os_log_info(extensionLog(), "modifyItem: renaming %{public}@ to '%{public}@'", fileId, newName);
 
@@ -753,29 +1026,13 @@ API_AVAILABLE(macos(12.0))
         return progress;
     }
 
-    // Handle re-parent (move).
-    if (changedFields & NSFileProviderItemParentItemIdentifier) {
-        NSString *newParentId = [item.parentItemIdentifier copy];
-        os_log_info(extensionLog(), "modifyItem: moving %{public}@ to parent %{public}@", fileId, newParentId);
-
-        [proxy moveItem:fileId newParent:newParentId completionHandler:^(NSDictionary *itemDict, NSError *error) {
-            if (error) {
-                os_log_error(extensionLog(), "modifyItem: move failed: %{public}@",
-                             error.localizedDescription);
-                completionHandler(nil, 0, NO, error);
-                return;
-            }
-
-            FileProviderItem *updatedItem = [[FileProviderItem alloc] initWithDictionary:itemDict];
-            os_log_info(extensionLog(), "modifyItem: move succeeded for %{public}@", fileId);
-            progress.completedUnitCount = 100;
-            completionHandler(updatedItem, NSFileProviderItemFields(0), NO, nil);
-        }];
-        return progress;
-    }
-
-    // Handle content update (re-upload).
+    // Handle content update (re-upload via XPC).
     if (changedFields & NSFileProviderItemContents) {
+        if (!proxy) {
+            os_log_error(extensionLog(), "modifyItem: no XPC proxy for content update of %{public}@", fileId);
+            completionHandler(nil, 0, NO, xpcUnavailableError());
+            return progress;
+        }
         if (!newContents) {
             os_log_error(extensionLog(), "modifyItem: content change flagged but no content URL for %{public}@",
                          fileId);
@@ -852,28 +1109,96 @@ API_AVAILABLE(macos(12.0))
     os_log_info(extensionLog(), "deleteItem: %{public}@", identifier);
 
     NSProgress *progress = [NSProgress discreteProgressWithTotalUnitCount:1];
+    NSString *fileId = [identifier copy];
 
-    id<OpenCloudXPCServiceProtocol> proxy = _xpcService.remoteObjectProxy;
-    if (!proxy) {
-        os_log_error(extensionLog(), "deleteItem: no XPC proxy available");
-        completionHandler(xpcUnavailableError());
+    // --- Direct WebDAV DELETE (no XPC needed) ---
+    NSURL *containerURL = [[NSFileManager defaultManager]
+        containerURLForSecurityApplicationGroupIdentifier:kOpenCloudAppGroupIdentifier];
+    if (!containerURL) {
+        completionHandler(configUnavailableError(@"App-Container nicht verfügbar"));
         return progress;
     }
 
-    NSString *fileId = [identifier copy];
+    // Read access token from global config.
+    NSURL *configURL = [containerURL URLByAppendingPathComponent:configPlistName(self->_domain, containerURL)];
+    NSData *configData = [NSData dataWithContentsOfURL:configURL];
+    NSDictionary *config = configData
+        ? [NSPropertyListSerialization propertyListWithData:configData options:NSPropertyListImmutable format:nil error:nil]
+        : nil;
+    NSString *davUrl = config[@"davUrl"]; // fallback
+    NSString *accessToken = config[@"accessToken"];
 
-    [proxy deleteItem:fileId completionHandler:^(NSError *error) {
+    if (!accessToken || accessToken.length == 0) {
+        completionHandler(configUnavailableError(@"Anmeldung fehlt"));
+        return progress;
+    }
+
+    // Look up file path and per-item davUrl from items plist.
+    NSString *filePath = nil;
+    NSURL *metaURL = [containerURL URLByAppendingPathComponent:itemsPlistName(self->_domain, containerURL)];
+    NSData *metaData = [NSData dataWithContentsOfURL:metaURL];
+    if (metaData) {
+        NSArray *items = [NSPropertyListSerialization propertyListWithData:metaData
+                                                                  options:NSPropertyListImmutable format:nil error:nil];
+        for (NSDictionary *item in items) {
+            if ([item[@"fileId"] isEqualToString:fileId]) {
+                filePath = item[@"path"];
+                if (item[@"davUrl"]) davUrl = item[@"davUrl"];
+                break;
+            }
+        }
+    }
+
+    if (!davUrl || davUrl.length == 0) {
+        completionHandler(configUnavailableError(@"Server-URL nicht konfiguriert"));
+        return progress;
+    }
+
+    if (!filePath || filePath.length == 0) {
+        os_log_error(extensionLog(), "deleteItem: fileId %{public}@ not found in items plist", fileId);
+        completionHandler([NSError errorWithDomain:NSFileProviderErrorDomain
+                                              code:NSFileProviderErrorNoSuchItem
+                                          userInfo:@{NSLocalizedDescriptionKey: @"Item not found in metadata"}]);
+        return progress;
+    }
+
+    NSString *davBase = [davUrl hasSuffix:@"/"] ? [davUrl substringToIndex:davUrl.length - 1] : davUrl;
+    NSString *encodedPath = [filePath stringByAddingPercentEncodingWithAllowedCharacters:
+                             [NSCharacterSet URLPathAllowedCharacterSet]];
+    NSString *deleteURLString = [NSString stringWithFormat:@"%@/%@", davBase, encodedPath];
+    NSURL *deleteURL = [NSURL URLWithString:deleteURLString];
+
+    os_log_info(extensionLog(), "deleteItem: DELETE %{public}@", deleteURLString);
+
+    NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:deleteURL];
+    req.HTTPMethod = @"DELETE";
+    [req setValue:[NSString stringWithFormat:@"Bearer %@", accessToken] forHTTPHeaderField:@"Authorization"];
+
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+    [[session dataTaskWithRequest:req completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         if (error) {
-            os_log_error(extensionLog(), "deleteItem: failed for %{public}@: %{public}@",
-                         fileId, error.localizedDescription);
+            os_log_error(extensionLog(), "deleteItem: DELETE failed: %{public}@", error.localizedDescription);
             completionHandler(error);
             return;
         }
-
-        os_log_info(extensionLog(), "deleteItem: succeeded for %{public}@", fileId);
-        progress.completedUnitCount = 1;
-        completionHandler(nil);
-    }];
+        NSHTTPURLResponse *http = (NSHTTPURLResponse *)response;
+        if (http.statusCode >= 200 && http.statusCode < 300) {
+            os_log_info(extensionLog(), "deleteItem: DELETE succeeded for %{public}@ (HTTP %ld)",
+                        fileId, (long)http.statusCode);
+            // Remove the item from the shared plist so the enumerator
+            // no longer returns it.
+            [self _removeStaleItemFromPlist:fileId];
+            progress.completedUnitCount = 1;
+            completionHandler(nil);
+        } else {
+            os_log_error(extensionLog(), "deleteItem: DELETE HTTP %ld for %{public}@",
+                         (long)http.statusCode, fileId);
+            completionHandler([NSError errorWithDomain:NSFileProviderErrorDomain
+                code:NSFileProviderErrorServerUnreachable
+                userInfo:@{NSLocalizedDescriptionKey:
+                    [NSString stringWithFormat:@"Löschen fehlgeschlagen (HTTP %ld)", (long)http.statusCode]}]);
+        }
+    }] resume];
 
     return progress;
 }
@@ -893,7 +1218,8 @@ API_AVAILABLE(macos(12.0))
 
         FileProviderEnumerator *enumerator =
             [[FileProviderEnumerator alloc] initWithContainerIdentifier:containerItemIdentifier
-                                                            xpcService:_xpcService];
+                                                            xpcService:_xpcService
+                                                                domain:_domain];
         return enumerator;
     }
 

@@ -23,6 +23,7 @@
 #include <QMap>
 #include <QMetaObject>
 #include <QPointer>
+#include <QSet>
 #include <QVector>
 
 #include <sys/mount.h>
@@ -41,7 +42,7 @@ using namespace OCC;
 
 /// Writes the WebDAV URL and access token to the App Group shared container
 /// so the FileProvider extension can download file contents directly from the server.
-static void syncConfigToSharedContainer(const VfsSetupParams &params)
+static void syncConfigToSharedContainer(const VfsSetupParams &params, const QString &domainId)
 {
     NSURL *containerURL = [[NSFileManager defaultManager]
         containerURLForSecurityApplicationGroupIdentifier:kOpenCloudAppGroupIdentifier];
@@ -50,17 +51,18 @@ static void syncConfigToSharedContainer(const VfsSetupParams &params)
         return;
     }
 
+    // Per-domain config file so multiple accounts/spaces don't overwrite each other.
+    NSString *configFilename = [NSString stringWithFormat:@"fileprovider_config_%@.plist",
+                                domainId.toNSString()];
+
     // Extract access token from credentials.
     QString accessToken;
     if (auto *httpCreds = qobject_cast<OCC::HttpCredentials *>(params.account->credentials())) {
         accessToken = httpCreds->accessToken();
     }
 
-    // Don't overwrite an existing config with an empty token — the extension
-    // would lose the ability to download files until the token is refreshed.
     if (accessToken.isEmpty()) {
-        // Check if a config with a valid token already exists.
-        NSURL *existingConfig = [containerURL URLByAppendingPathComponent:@"fileprovider_config.plist"];
+        NSURL *existingConfig = [containerURL URLByAppendingPathComponent:configFilename];
         NSData *existingData = [NSData dataWithContentsOfURL:existingConfig];
         if (existingData) {
             NSDictionary *existing = [NSPropertyListSerialization propertyListWithData:existingData
@@ -75,10 +77,6 @@ static void syncConfigToSharedContainer(const VfsSetupParams &params)
         qCWarning(lcVfsNSFP) << "syncConfigToSharedContainer: writing config with empty token (credentials not yet available)";
     }
 
-    // OCIS space IDs use '$' as a separator (e.g. driveId$dirId). When constructing a
-    // WebDAV URL the server expects this character to be percent-encoded as '%24'.
-    // QUrl considers '$' a valid path character (sub-delimiter per RFC 3986) and never
-    // encodes it, even with QUrl::FullyEncoded. We must replace it manually.
     auto davUrl = params.baseUrl().toString(QUrl::FullyEncoded);
     davUrl.replace(QLatin1Char('$'), QStringLiteral("%24"));
 
@@ -87,7 +85,7 @@ static void syncConfigToSharedContainer(const VfsSetupParams &params)
         @"accessToken": accessToken.toNSString(),
     };
 
-    NSURL *configURL = [containerURL URLByAppendingPathComponent:@"fileprovider_config.plist"];
+    NSURL *configURL = [containerURL URLByAppendingPathComponent:configFilename];
     NSError *error = nil;
     NSData *data = [NSPropertyListSerialization dataWithPropertyList:config
                                                              format:NSPropertyListBinaryFormat_v1_0
@@ -98,19 +96,40 @@ static void syncConfigToSharedContainer(const VfsSetupParams &params)
         return;
     }
 
-    // Make file readable by the extension (group container is accessible to all group members).
     [data writeToURL:configURL atomically:YES];
-    // Set read permissions for group members
     [[NSFileManager defaultManager] setAttributes:@{NSFilePosixPermissions: @0644}
                                      ofItemAtPath:configURL.path
                                             error:nil];
-    qCInfo(lcVfsNSFP) << "syncConfigToSharedContainer: wrote config with davUrl" << davUrl;
+    qCInfo(lcVfsNSFP) << "syncConfigToSharedContainer: wrote config for domain" << domainId << "davUrl" << davUrl;
+
+    // One-time cleanup: remove legacy global files (and their stale caches)
+    // only if they still exist. Once removed, this block is a no-op.
+    {
+        NSFileManager *fm = [NSFileManager defaultManager];
+        NSURL *legacyConfig = [containerURL URLByAppendingPathComponent:@"fileprovider_config.plist"];
+        NSURL *legacyItems = [containerURL URLByAppendingPathComponent:@"fileprovider_items.plist"];
+        BOOL hasLegacy = [fm fileExistsAtPath:legacyConfig.path]
+                      || [fm fileExistsAtPath:legacyItems.path];
+        if (hasLegacy) {
+            [fm removeItemAtURL:legacyConfig error:nil];
+            [fm removeItemAtURL:legacyItems error:nil];
+            qCInfo(lcVfsNSFP) << "Removed legacy plist files";
+            // Also remove stale prevFileIds caches from the legacy era.
+            NSArray *contents = [fm contentsOfDirectoryAtPath:containerURL.path error:nil];
+            for (NSString *name in contents) {
+                if ([name hasPrefix:@"prevFileIds_"]) {
+                    [fm removeItemAtURL:[containerURL URLByAppendingPathComponent:name] error:nil];
+                    qCInfo(lcVfsNSFP) << "Removed stale cache:" << QString::fromNSString(name);
+                }
+            }
+        }
+    }
 }
 
 /// Writes all file records from the sync journal to a plist file in the
 /// App Group shared container so the FileProvider extension can enumerate items
 /// without needing an XPC connection to the main app.
-static void syncMetadataToSharedContainer(SyncJournalDb *journal)
+static void syncMetadataToSharedContainer(SyncJournalDb *journal, const VfsSetupParams &params, const QString &domainId)
 {
     if (!journal) {
         qCWarning(lcVfsNSFP) << "syncMetadataToSharedContainer: no journal";
@@ -179,7 +198,7 @@ static void syncMetadataToSharedContainer(SyncJournalDb *journal)
         records.append(info);
     });
 
-    os_log_fault(OS_LOG_DEFAULT, "syncMetadataToSharedContainer: callbacks=%d invalid=%d dirs=%d virtualFiles=%d other=%d records=%d",
+    os_log_info(OS_LOG_DEFAULT, "syncMetadataToSharedContainer: callbacks=%d invalid=%d dirs=%d virtualFiles=%d other=%d records=%d",
                  totalCallbacks, invalidCount, dirCount, virtualFileCount, otherCount, (int)records.size());
 
     // If the journal query returned no virtual files, they may have been deleted
@@ -245,6 +264,13 @@ static void syncMetadataToSharedContainer(SyncJournalDb *journal)
         }
     }
 
+    // Compute the davUrl for this space so each item carries its own WebDAV
+    // base URL. This prevents cross-space confusion when multiple spaces are
+    // synced simultaneously (each space has a different davUrl).
+    auto davUrl = params.baseUrl().toString(QUrl::FullyEncoded);
+    davUrl.replace(QLatin1Char('$'), QStringLiteral("%24"));
+    NSString *nsDavUrl = davUrl.toNSString();
+
     // Second pass: resolve parent file IDs and build the plist array.
     NSMutableArray<NSDictionary *> *items = [NSMutableArray arrayWithCapacity:records.size()];
     for (const auto &info : records) {
@@ -268,14 +294,77 @@ static void syncMetadataToSharedContainer(SyncJournalDb *journal)
             @"modtime" : @(info.modtime),
             @"etag" : info.etag.toNSString() ?: @"",
             @"isVirtualFile" : @(info.isVirtualFile),
-            // isDownloaded: true for fully hydrated files, false for virtual/dehydrated placeholders.
-            // Directories are always considered "downloaded" since they have no content to fetch.
             @"isDownloaded" : @(info.isDirectory || !info.isVirtualFile),
+            @"davUrl" : nsDavUrl,
         };
         [items addObject:dict];
     }
 
-    NSURL *metadataURL = [containerURL URLByAppendingPathComponent:@"fileprovider_items.plist"];
+    // Preserve items that were added by the FileProvider extension (e.g. via
+    // createItemBasedOnTemplate) but haven't been synced to the journal yet.
+    // Without this merge, syncMetadataToSharedContainer would overwrite the
+    // plist and the extension-created items would be reported as deleted by
+    // the enumerator's change-detection diff.
+    NSString *itemsFilename = [NSString stringWithFormat:@"fileprovider_items_%@.plist",
+                               domainId.toNSString()];
+    NSURL *metadataURL = [containerURL URLByAppendingPathComponent:itemsFilename];
+    {
+        NSData *existingData = [NSData dataWithContentsOfURL:metadataURL];
+        if (existingData) {
+            NSArray *existingItems = [NSPropertyListSerialization propertyListWithData:existingData
+                                                                              options:NSPropertyListImmutable
+                                                                               format:nil error:nil];
+            if ([existingItems isKindOfClass:[NSArray class]]) {
+                // Build a set of fileIds from the journal so we can quickly
+                // check whether an existing plist entry is already covered.
+                NSMutableSet<NSString *> *journalFileIds = [NSMutableSet setWithCapacity:items.count];
+                // Also track paths to detect items at the same location.
+                NSMutableSet<NSString *> *journalPaths = [NSMutableSet setWithCapacity:items.count];
+                for (NSDictionary *item in items) {
+                    [journalFileIds addObject:item[@"fileId"] ?: @""];
+                    [journalPaths addObject:item[@"path"] ?: @""];
+                }
+
+                // Only preserve extension-created items that are recent (< 120s).
+                // After that the sync engine should have discovered them. If they
+                // are still not in the journal, they were deleted on the server.
+                int64_t now = (int64_t)[[NSDate date] timeIntervalSince1970];
+                static const int64_t MAX_PRESERVE_AGE = 120; // seconds
+
+                int preservedCount = 0;
+                for (NSDictionary *existing in existingItems) {
+                    BOOL isExtCreated = [existing[@"extensionCreated"] boolValue];
+                    int64_t movedAt = [existing[@"movedAt"] longLongValue];
+
+                    if (!isExtCreated && movedAt == 0) {
+                        // Regular journal item — not preserved.
+                        continue;
+                    }
+
+                    // Check TTL for both extension-created and moved items.
+                    int64_t timestamp = isExtCreated
+                        ? [existing[@"extensionCreatedAt"] longLongValue]
+                        : movedAt;
+                    if (timestamp > 0 && (now - timestamp) > MAX_PRESERVE_AGE) {
+                        continue;
+                    }
+
+                    NSString *existingId = existing[@"fileId"] ?: @"";
+                    NSString *existingPath = existing[@"path"] ?: @"";
+                    if (![journalFileIds containsObject:existingId]
+                        && ![journalPaths containsObject:existingPath]) {
+                        [items addObject:existing];
+                        preservedCount++;
+                    }
+                }
+                if (preservedCount > 0) {
+                    qCInfo(lcVfsNSFP) << "syncMetadataToSharedContainer: preserved"
+                                      << preservedCount << "extension-created items not yet in journal";
+                }
+            }
+        }
+    }
+
     NSError *writeError = nil;
     NSData *data = [NSPropertyListSerialization dataWithPropertyList:items
                                                              format:NSPropertyListBinaryFormat_v1_0
@@ -289,6 +378,40 @@ static void syncMetadataToSharedContainer(SyncJournalDb *journal)
         qCWarning(lcVfsNSFP) << "syncMetadataToSharedContainer: write failed:"
                               << QString::fromNSString(writeError.localizedDescription);
     }
+}
+
+/// Reads the metadata plist for the given domain and returns the set of unique
+/// parent container identifiers (folder fileIds). Used to determine which folder
+/// enumerators need signalling after a sync cycle so that deletions in
+/// subdirectories are detected.
+static QSet<QString> collectParentContainerIds(const QString &domainId)
+{
+    QSet<QString> result;
+
+    NSURL *containerURL = [[NSFileManager defaultManager]
+        containerURLForSecurityApplicationGroupIdentifier:kOpenCloudAppGroupIdentifier];
+    if (!containerURL) return result;
+
+    NSString *filename = [NSString stringWithFormat:@"fileprovider_items_%@.plist",
+                          domainId.toNSString()];
+    NSURL *url = [containerURL URLByAppendingPathComponent:filename];
+    NSData *data = [NSData dataWithContentsOfURL:url];
+    if (!data) return result;
+
+    NSArray *items = [NSPropertyListSerialization propertyListWithData:data
+                                                              options:NSPropertyListImmutable
+                                                               format:nil error:nil];
+    if (![items isKindOfClass:[NSArray class]]) return result;
+
+    for (NSDictionary *item in items) {
+        NSString *parentId = item[@"parentId"];
+        if (parentId.length > 0
+            && ![parentId isEqualToString:NSFileProviderRootContainerItemIdentifier]) {
+            result.insert(QString::fromNSString(parentId));
+        }
+    }
+
+    return result;
 }
 
 VfsNSFP::VfsNSFP(QObject *parent)
@@ -413,7 +536,7 @@ Result<void, QString> VfsNSFP::createPlaceholder(const SyncFileItem &item)
     // If parentContainerId is empty, signalEnumerator will use root container.
 
     // Update the shared metadata file so the extension can see the new item.
-    syncMetadataToSharedContainer(journal);
+    syncMetadataToSharedContainer(journal, params(), _domainId);
 
     // Signal the File Provider framework to re-enumerate the parent container
     // so Finder picks up the new placeholder.
@@ -778,7 +901,7 @@ Result<Vfs::ConvertToPlaceholderResult, QString> VfsNSFP::updateMetadata(
     }
 
     // Update the shared metadata so the extension sees the changes.
-    syncMetadataToSharedContainer(journal);
+    syncMetadataToSharedContainer(journal, params(), _domainId);
 
     // Signal the File Provider framework to refresh Finder's view.
     _domainManager->signalEnumerator(_domainId, parentContainerId);
@@ -859,7 +982,7 @@ void VfsNSFP::startImpl(const VfsSetupParams &params)
                      this, [self]() {
         if (self) {
             qCInfo(lcVfsNSFP) << "Credentials fetched — updating extension config";
-            syncConfigToSharedContainer(self->params());
+            syncConfigToSharedContainer(self->params(), self->_domainId);
         }
     });
 
@@ -879,12 +1002,12 @@ void VfsNSFP::startImpl(const VfsSetupParams &params)
 
                     // Write initial file metadata to the shared container
                     // so the extension can enumerate items immediately.
-                    syncMetadataToSharedContainer(self->params().journal);
+                    syncMetadataToSharedContainer(self->params().journal, self->params(), self->_domainId);
 
                     // Write WebDAV URL + access token so extension can download directly.
                     // The fetched() signal connection was already established before
                     // addDomain to avoid race conditions.
-                    syncConfigToSharedContainer(self->params());
+                    syncConfigToSharedContainer(self->params(), self->_domainId);
 
                     // Signal the enumerator so fileproviderd picks up the new items.
                     self->_domainManager->signalEnumerator(self->_domainId, QString());
@@ -899,10 +1022,41 @@ void VfsNSFP::startImpl(const VfsSetupParams &params)
                                 return;
                             }
                             qCInfo(lcVfsNSFP) << "Sync finished (success=" << success << ") — refreshing shared metadata";
-                            syncMetadataToSharedContainer(self->params().journal);
-                            syncConfigToSharedContainer(self->params());
-                            // Signal both root and working set so Finder updates all views.
+
+                            // Collect parent container IDs BEFORE updating the plist.
+                            // This captures containers that currently have items — if items
+                            // are removed (remote delete), the container's enumerator must
+                            // be signalled so it can detect the deletion via its prevFileIds diff.
+                            const auto oldParentIds = collectParentContainerIds(self->_domainId);
+
+                            syncMetadataToSharedContainer(self->params().journal, self->params(), self->_domainId);
+                            syncConfigToSharedContainer(self->params(), self->_domainId);
+
+                            // Collect parent container IDs AFTER updating the plist.
+                            const auto newParentIds = collectParentContainerIds(self->_domainId);
+
+                            // Signal all affected parent containers (union of old and new).
+                            // Old containers need signalling to detect item deletions/moves-out.
+                            // New containers need signalling to detect item additions/moves-in.
+                            auto allParentIds = oldParentIds;
+                            allParentIds.unite(newParentIds);
+
+                            if (!allParentIds.isEmpty()) {
+                                qCInfo(lcVfsNSFP) << "Signalling" << allParentIds.size()
+                                                  << "parent container enumerators after sync";
+                            }
+                            for (const auto &parentId : allParentIds) {
+                                self->_domainManager->signalEnumerator(self->_domainId, parentId);
+                            }
+
+                            // Signal root container.
                             self->_domainManager->signalEnumerator(self->_domainId, QString());
+
+                            // Signal working set — this enumerator covers ALL items across
+                            // all folders and is the most reliable way to detect deletions
+                            // in subdirectories (its prevFileIds cache spans everything).
+                            self->_domainManager->signalWorkingSet(self->_domainId);
+
                             self->_domainManager->requestSystemEviction(self->_domainId);
                         });
                     }
@@ -917,7 +1071,7 @@ void VfsNSFP::startImpl(const VfsSetupParams &params)
                             return;
                         }
                         // Keep the access token up to date for the extension.
-                        syncConfigToSharedContainer(self->params());
+                        syncConfigToSharedContainer(self->params(), self->_domainId);
                         // Ask the sync scheduler to run a sync cycle.
                         Q_EMIT self->needSync();
                     });

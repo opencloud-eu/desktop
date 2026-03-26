@@ -19,7 +19,9 @@ API_AVAILABLE(macos(12.0))
 /// @param containerId  The identifier of the container to enumerate
 ///                     (e.g. root container or a folder's file ID).
 /// @param service      The XPC service used to communicate with the main app.
-- (instancetype)initWithContainerIdentifier:(NSFileProviderItemIdentifier)containerId xpcService:(FileProviderXPCService *)service;
+- (instancetype)initWithContainerIdentifier:(NSFileProviderItemIdentifier)containerId
+                                 xpcService:(FileProviderXPCService *)service
+                                     domain:(NSFileProviderDomain *)domain;
 
 @end
 

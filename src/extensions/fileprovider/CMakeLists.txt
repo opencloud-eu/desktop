@@ -103,10 +103,10 @@ if(APPLE)
             if(DEFINED CODESIGN_IDENTITY AND NOT CODESIGN_IDENTITY STREQUAL "")
                 add_custom_command(TARGET OpenCloudFileProviderExtension POST_BUILD
                     COMMAND codesign --force --sign "${CODESIGN_IDENTITY}"
-                        --entitlements "${CMAKE_CURRENT_SOURCE_DIR}/OpenCloudFileProvider.entitlements"
+                        --entitlements "${CMAKE_CURRENT_BINARY_DIR}/OpenCloudFileProvider.entitlements"
                         "$<TARGET_BUNDLE_DIR:OpenCloudFileProviderExtension>"
                     COMMAND codesign --force --sign "${CODESIGN_IDENTITY}"
-                        --entitlements "${CMAKE_CURRENT_SOURCE_DIR}/OpenCloudFileProvider.entitlements"
+                        --entitlements "${CMAKE_CURRENT_BINARY_DIR}/OpenCloudFileProvider.entitlements"
                         "$<TARGET_FILE_DIR:${APPLICATION_EXECUTABLE}>/../PlugIns/OpenCloudFileProviderExtension.appex"
                     COMMENT "Code-signing FileProviderExtension with sandbox entitlements"
                 )

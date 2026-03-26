@@ -179,6 +179,7 @@ API_AVAILABLE(macos(12.0))
     return NSFileProviderItemCapabilitiesAllowsReading
          | NSFileProviderItemCapabilitiesAllowsWriting
          | NSFileProviderItemCapabilitiesAllowsRenaming
+         | NSFileProviderItemCapabilitiesAllowsReparenting
          | NSFileProviderItemCapabilitiesAllowsDeleting
          | NSFileProviderItemCapabilitiesAllowsEvicting;
 }

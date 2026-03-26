@@ -351,6 +351,35 @@ void NsfpDomainManager::signalEnumerator(const QString &identifier, const QStrin
     });
 }
 
+void NsfpDomainManager::signalWorkingSet(const QString &identifier)
+{
+    qCInfo(lcNsfpDomainManager) << "signalWorkingSet requested for domain:" << identifier;
+
+    QString identifierCopy = identifier;
+    dispatch_async(_p->dispatchQueue, ^{
+        NSFileProviderManager *manager = nil;
+        {
+            QMutexLocker lock(&_p->cacheMutex);
+            manager = _p->managerCache.value(identifierCopy, nil);
+        }
+
+        if (!manager) {
+            qCWarning(lcNsfpDomainManager) << "signalWorkingSet: no manager for domain:" << identifierCopy;
+            return;
+        }
+
+        [manager signalEnumeratorForContainerItemIdentifier:NSFileProviderWorkingSetContainerItemIdentifier
+                                          completionHandler:^(NSError *error) {
+            if (error) {
+                qCWarning(lcNsfpDomainManager) << "signalWorkingSet failed:"
+                                               << QString::fromNSString(error.localizedDescription);
+            } else {
+                qCDebug(lcNsfpDomainManager) << "signalWorkingSet succeeded for domain:" << identifierCopy;
+            }
+        }];
+    });
+}
+
 void NsfpDomainManager::evictItem(const QString &identifier, const QString &fileId,
                                   NsfpDomainCompletionHandler completionHandler)
 {
