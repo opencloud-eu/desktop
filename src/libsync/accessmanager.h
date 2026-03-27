@@ -17,6 +17,8 @@
 
 #include "opencloudsynclib.h"
 #include <QNetworkAccessManager>
+#include <QSslCertificate>
+#include <QSslKey>
 
 class QByteArray;
 class QUrl;
@@ -48,6 +50,12 @@ public:
      */
     void addCustomTrustedCaCertificates(const QList<QSslCertificate> &certificates);
 
+    /***
+     * Set the client certificate and private key for mTLS authentication.
+     * Warning calling this will break running network jobs.
+     */
+    void setClientCertificate(const QSslCertificate &cert, const QSslKey &key);
+
     CookieJar *openCloudCookieJar() const;
 
     /***
@@ -60,6 +68,8 @@ protected:
 
 private:
     QSet<QSslCertificate> _customTrustedCaCertificates;
+    QSslCertificate _clientCertificate;
+    QSslKey _clientPrivateKey;
 };
 
 } // namespace OCC
