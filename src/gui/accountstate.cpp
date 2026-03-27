@@ -75,6 +75,7 @@ AccountState::AccountState(AccountPtr account)
     connect(account.data(), &Account::credentialsAsked,
         this, &AccountState::slotCredentialsAsked);
     connect(account.data(), &Account::unknownConnectionState, this, [this] { checkConnectivity(true); });
+    connect(account.data(), &Account::clientCertificateChanged, this, [this] { checkConnectivity(true); });
 
     connect(account.data(), &Account::capabilitiesChanged, this, [this] {
         if (_account->capabilities().checkForUpdates() && isOcApp()) {
