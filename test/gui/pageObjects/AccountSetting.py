@@ -1,5 +1,5 @@
 import names
-import squish
+# import squish
 
 from helpers.UserHelper import get_displayname_for_user
 from helpers.SetupClientHelper import substitute_inline_codes
@@ -22,7 +22,7 @@ class AccountSetting:
         "enabled": True,
         "type": "MenuItem",
         "unnamed": 1,
-        "visible": True
+        "visible": True,
     }
     CONFIRM_REMOVE_CONNECTION_BUTTON = {
         "container": names.settings_dialogStack_QStackedWidget,
@@ -34,7 +34,7 @@ class AccountSetting:
     ACCOUNT_CONNECTION_LABEL = {
         "container": names.stackedWidget_quickWidget_OCC_QmlUtils_OCQuickWidget,
         "type": "Label",
-        "visible": 1
+        "visible": 1,
     }
     LOG_BROWSER_WINDOW = {
         "name": "OCC__LogBrowser",
@@ -60,9 +60,7 @@ class AccountSetting:
         squish.mouseClick(squish.waitForObject(AccountSetting.MANAGE_ACCOUNT_BUTTON))
         selector = AccountSetting.ACCOUNT_MENU.copy()
         selector['text'] = action
-        squish.mouseClick(
-            squish.waitForObject(selector)
-        )
+        squish.mouseClick(squish.waitForObject(selector))
 
     @staticmethod
     def remove_account_connection():

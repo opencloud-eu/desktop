@@ -3,25 +3,25 @@ import re
 import shutil
 from pathlib import Path
 
-from pypdf import PdfReader
-from docx import Document
-from pptx import Presentation
-from openpyxl import load_workbook
+# from pypdf import PdfReader
+# from docx import Document
+# from pptx import Presentation
+# from openpyxl import load_workbook
 from helpers.ConfigHelper import is_windows, get_config
 
 
-def build_conflicted_regex(filename):
-    if "." in filename:
-        # TODO: improve this for complex filenames
-        namepart = filename.split(".")[0]
-        extpart = filename.split(".")[1]
-        # pylint: disable=anomalous-backslash-in-string
-        return "%s \(conflicted copy \d{4}-\d{2}-\d{2} \d{6}\)\.%s" % (
-            namepart,
-            extpart,
-        )
-    # pylint: disable=anomalous-backslash-in-string
-    return "%s \(conflicted copy \d{4}-\d{2}-\d{2} \d{6}\)" % filename
+# def build_conflicted_regex(filename):
+#     if "." in filename:
+#         # TODO: improve this for complex filenames
+#         namepart = filename.split(".")[0]
+#         extpart = filename.split(".")[1]
+#         # pylint: disable=anomalous-backslash-in-string
+#         return "%s \(conflicted copy \d{4}-\d{2}-\d{2} \d{6}\)\.%s" % (
+#             namepart,
+#             extpart,
+#         )
+#     # pylint: disable=anomalous-backslash-in-string
+#     return "%s \(conflicted copy \d{4}-\d{2}-\d{2} \d{6}\)" % filename
 
 
 def sanitize_path(path):
