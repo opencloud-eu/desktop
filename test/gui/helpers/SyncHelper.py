@@ -173,10 +173,12 @@ def generate_sync_pattern_from_messages(messages):
 
     sync_messages = filter_sync_messages(messages)
     for message in sync_messages:
-        # E.g; from "STATUS:OK:/tmp/client-bdd/Alice/"
+        # E.g; from;
+        #    Linux: "STATUS:OK:/tmp/client-bdd/Alice/"
+        #      Win: "STATUS:OK:C:\tmp\client-bdd\Alice\"
         # excludes ":/tmp/client-bdd/Alice/"
         # adds only "STATUS:OK" to the pattern list
-        if match := re.search(':(/|[A-Z]{1}:\\\\|[A-Z]{1}:\/).*', message):
+        if match := re.search(r':(/|[A-Za-z]:[\\/]).*', message):
             (end, _) = match.span()
             # shared resources will have status like "STATUS:OK+SWM"
             status = message[:end].replace('+SWM', '')
@@ -361,10 +363,10 @@ def make_available_locally(resource_path):
 
 
 def wait_for(condition, timeout, interval=0.5):
-    start = time.time()
+    start = time.time() * 1000
     while True:
         if condition():
             return True
-        if time.time() - start > timeout:
+        if time.time() * 1000 - start > timeout:
             return False
         time.sleep(interval)

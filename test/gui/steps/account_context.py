@@ -29,7 +29,7 @@ def step(context):
     account_details = get_client_details(data_table)
     AccountConnectionWizard.add_account(account_details)
     # # wait for files to sync
-    # wait_for_initial_sync_to_complete(get_resource_path('/', account_details['user']))
+    wait_for_initial_sync_to_complete(get_resource_path('/', account_details['user']))
 
 
 @Then('the account with displayname "{displayname}" should be displayed')
