@@ -237,7 +237,7 @@ def wait_for_resource_to_sync(resource, resource_type='FOLDER', patterns=None):
         # and pass the step if the last sync status is STATUS:OK
         status = get_current_sync_status(resource, resource_type)
         if status.startswith(SYNC_STATUS['OK']):
-            test.log(
+            print(
                 '[WARN] Failed to match sync pattern for resource: '
                 + resource
                 + f'\nBut its last status is "{SYNC_STATUS["OK"]}"'
