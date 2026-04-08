@@ -40,7 +40,7 @@ class AccountConnectionWizard:
     CONF_SYNC_MANUALLY_RADIO_BUTTON = SimpleNamespace(by=None, selector=None)
     ADVANCED_CONFIGURATION_CHECKBOX = SimpleNamespace(
         by=By.NAME,
-        selector="Advanced Configuration",
+        selector="Advanced configuration",
     )
     DIRECTORY_NAME_EDIT_BOX = SimpleNamespace(
         by=By.ACCESSIBILITY_ID,
