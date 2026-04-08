@@ -1,15 +1,11 @@
 import os
 import re
-import sys
 import time
-
-# import test
 import urllib.request
-
-# import squish
 
 from helpers.ConfigHelper import get_config, is_linux, is_windows
 from helpers.FilesHelper import sanitize_path
+
 
 if is_windows():
     from helpers.WinPipeHelper import WinPipeConnect as SocketConnect
@@ -32,7 +28,6 @@ else:
     #   see https://kb.froglogic.com/squish/howto/using-external-python-interpreter-squish-6-6/
     # if the IDE fails to reference the script,
     # add the folder in Edit->Preferences->PyDev->Interpreters->Libraries
-    # sys.path.append(custom_lib)
     from helpers.custom_lib.syncstate import SocketConnect
 
 # socket messages
@@ -276,7 +271,6 @@ def has_sync_pattern(patterns, resource=None):
             if pattern_len == len(actual_pattern) and pattern == actual_pattern:
                 return True
     # 100 milliseconds polling interval
-    # squish.snooze(0.1)
     time.sleep(0.1)
     return False
 

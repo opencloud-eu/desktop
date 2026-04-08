@@ -1,12 +1,7 @@
-# import test
-# import names
-
-# import squish
 import os
-
+from types import SimpleNamespace
 from appium.webdriver.common.appiumby import AppiumBy as By
 
-# from pageObjects.EnterPassword import EnterPassword
 from helpers.WebUIHelper import authorize_via_webui
 from helpers.ConfigHelper import get_config
 from helpers.SetupClientHelper import (
@@ -19,104 +14,45 @@ from helpers.SetupClientHelper import get_app_driver
 
 
 class AccountConnectionWizard:
-    # SERVER_ADDRESS_BOX = {
-    #     "container": names.setupWizardWindow_contentWidget_QStackedWidget,
-    #     "name": "urlLineEdit",
-    #     "type": "QLineEdit",
-    #     "visible": 1,
-    # }
-    SERVER_ADDRESS_BOX = "QApplication.Settings.centralwidget.dialogStack.SetupWizardWidget.contentWidget.ServerUrlSetupWizardPage.urlLineEdit"
-    # NEXT_BUTTON = {
-    #     "container": names.settings_dialogStack_QStackedWidget,
-    #     "name": "nextButton",
-    #     "type": "QPushButton",
-    #     "visible": 1,
-    # }
-    NEXT_BUTTON = (
-        "QApplication.Settings.centralwidget.dialogStack.SetupWizardWidget.nextButton"
+    SERVER_ADDRESS_BOX = SimpleNamespace(
+        by=By.ACCESSIBILITY_ID,
+        selector="QApplication.Settings.centralwidget.dialogStack.SetupWizardWidget.contentWidget.ServerUrlSetupWizardPage.urlLineEdit",
     )
-    # CONFIRM_INSECURE_CONNECTION_BUTTON = {
-    #     "text": "Confirm",
-    #     "type": "QPushButton",
-    #     "unnamed": 1,
-    #     "visible": 1,
-    #     "window": names.insecure_connection_QMessageBox,
-    # }
-    # USERNAME_BOX = {
-    #     "container": names.contentWidget_OCC_QmlUtils_OCQuickWidget,
-    #     "id": "userNameField",
-    #     "type": "TextField",
-    #     "visible": True,
-    # }
-    # SELECT_LOCAL_FOLDER = {
-    #     "container": names.advancedConfigGroupBox_localDirectoryGroupBox_QGroupBox,
-    #     "name": "localDirectoryLineEdit",
-    #     "type": "QLineEdit",
-    #     "visible": 1,
-    # }
-    # DIRECTORY_NAME_BOX = {
-    #     "container": names.advancedConfigGroupBox_localDirectoryGroupBox_QGroupBox,
-    #     "name": "chooseLocalDirectoryButton",
-    #     "type": "QToolButton",
-    #     "visible": 1,
-    # }
-    DIRECTORY_NAME_BOX = "QApplication.Settings.centralwidget.dialogStack.SetupWizardWidget.contentWidget.AccountConfiguredWizardPage.advancedConfigGroupBox.advancedConfigGroupBoxContentWidget.localDirectoryGroupBox.chooseLocalDirectoryButton"
-    # CHOOSE_BUTTON = {
-    #     "text": "Choose",
-    #     "type": "QPushButton",
-    #     "unnamed": 1,
-    #     "visible": 1,
-    #     "window": names.qFileDialog_QFileDialog,
-    # }
-    CHOOSE_BUTTON = "Choose"
-    # OAUTH_CREDENTIAL_PAGE = {
-    #     "container": names.contentWidget_contentWidget_QStackedWidget,
-    #     "type": "OCC::Wizard::OAuthCredentialsSetupWizardPage",
-    #     "visible": 1,
-    # }
-    # COPY_URL_TO_CLIPBOARD_BUTTON = {
-    #     "container": names.contentWidget_OCC_QmlUtils_OCQuickWidget,
-    #     "id": "copyToClipboardButton",
-    #     "type": "Button",
-    #     "visible": True,
-    # }
-    # CONF_SYNC_MANUALLY_RADIO_BUTTON = {
-    #     "container": names.advancedConfigGroupBox_syncModeGroupBox_QGroupBox,
-    #     "name": "configureSyncManuallyRadioButton",
-    #     "type": "QRadioButton",
-    #     "visible": 1,
-    # }
-    # ADVANCED_CONFIGURATION_CHECKBOX = {
-    #     "container": names.setupWizardWindow_contentWidget_QStackedWidget,
-    #     "name": "advancedConfigGroupBox",
-    #     "type": "QGroupBox",
-    #     "visible": 1,
-    # }
-    # DIRECTORY_NAME_EDIT_BOX = {
-    #     "buddy": names.qFileDialog_fileNameLabel_QLabel,
-    #     "name": "fileNameEdit",
-    #     "type": "QLineEdit",
-    #     "visible": 1,
-    # }
-    DIRECTORY_NAME_EDIT_BOX = "QApplication.QFileDialog.fileNameEdit"
-    # SYNC_EVERYTHING_RADIO_BUTTON = {
-    #     "container": names.advancedConfigGroupBox_syncModeGroupBox_QGroupBox,
-    #     "name": "syncEverythingRadioButton",
-    #     "type": "QRadioButton",
-    #     "visible": 1,
-    # }
+    NEXT_BUTTON = SimpleNamespace(
+        by=By.ACCESSIBILITY_ID,
+        selector="QApplication.Settings.centralwidget.dialogStack.SetupWizardWidget.nextButton",
+    )
+    ACCEPT_CERTIFICATE_YES = SimpleNamespace(
+        by=By.NAME,
+        selector="Yes",
+    )
+    SELECT_LOCAL_FOLDER = SimpleNamespace(by=None, selector=None)
+    DIRECTORY_NAME_BOX = SimpleNamespace(
+        by=By.ACCESSIBILITY_ID,
+        selector="QApplication.Settings.centralwidget.dialogStack.SetupWizardWidget.contentWidget.AccountConfiguredWizardPage.advancedConfigGroupBox.advancedConfigGroupBoxContentWidget.localDirectoryGroupBox.chooseLocalDirectoryButton",
+    )
+    CHOOSE_FOLDER_BUTTON = SimpleNamespace(by=By.NAME, selector="Choose")
+    OAUTH_CREDENTIAL_PAGE = SimpleNamespace(by=None, selector=None)
+    COPY_URL_TO_CLIPBOARD_BUTTON = SimpleNamespace(
+        by=By.NAME,
+        selector="Copy URL",
+    )
+    CONF_SYNC_MANUALLY_RADIO_BUTTON = SimpleNamespace(by=None, selector=None)
+    ADVANCED_CONFIGURATION_CHECKBOX = SimpleNamespace(
+        by=By.NAME,
+        selector="Advanced Configuration",
+    )
+    DIRECTORY_NAME_EDIT_BOX = SimpleNamespace(
+        by=By.ACCESSIBILITY_ID,
+        selector="QApplication.QFileDialog.fileNameEdit",
+    )
+    SYNC_EVERYTHING_RADIO_BUTTON = SimpleNamespace(by=None, selector=None)
 
     @staticmethod
     def add_server(server_url):
-        # squish.mouseClick(
-        #     squish.waitForObject(AccountConnectionWizard.SERVER_ADDRESS_BOX)
-        # )
-        # squish.type(
-        #     squish.waitForObject(AccountConnectionWizard.SERVER_ADDRESS_BOX),
-        #     server_url,
-        # )
         url_input = get_app_driver().find_element(
-            By.ACCESSIBILITY_ID, AccountConnectionWizard.SERVER_ADDRESS_BOX
+            AccountConnectionWizard.SERVER_ADDRESS_BOX.by,
+            AccountConnectionWizard.SERVER_ADDRESS_BOX.selector,
         )
         url_input.clear()
         url_input.send_keys(get_config("localBackendUrl"))
@@ -125,8 +61,10 @@ class AccountConnectionWizard:
 
     @staticmethod
     def accept_certificate():
-        # squish.clickButton(squish.waitForObject(EnterPassword.ACCEPT_CERTIFICATE_YES))
-        get_app_driver().find_element(By.NAME, "Yes").click()
+        get_app_driver().find_element(
+            AccountConnectionWizard.ACCEPT_CERTIFICATE_YES.by,
+            AccountConnectionWizard.ACCEPT_CERTIFICATE_YES.selector,
+        ).click()
 
     @staticmethod
     def add_user_credentials(username, password):
@@ -134,25 +72,21 @@ class AccountConnectionWizard:
 
     @staticmethod
     def oidc_login(username, password):
-        AccountConnectionWizard.browser_login(username, password, "oidc")
+        AccountConnectionWizard.browser_login(username, password)
 
     @staticmethod
-    def browser_login(username, password, login_type=None):
-        # wait 500ms for copy button to fully load
-        # squish.snooze(1 / 2)
-        # squish.mouseClick(
-        #     squish.waitForObject(AccountConnectionWizard.COPY_URL_TO_CLIPBOARD_BUTTON)
-        # )
-        get_app_driver().find_element(By.NAME, "Copy URL").click()
-        authorize_via_webui(username, password, login_type)
+    def browser_login(username, password):
+        get_app_driver().find_element(
+            AccountConnectionWizard.COPY_URL_TO_CLIPBOARD_BUTTON.by,
+            AccountConnectionWizard.COPY_URL_TO_CLIPBOARD_BUTTON.selector,
+        ).click()
+        authorize_via_webui(username, password)
 
     @staticmethod
     def next_step():
-        # squish.clickButton(
-        #     squish.waitForObjectExists(AccountConnectionWizard.NEXT_BUTTON)
-        # )
         get_app_driver().find_element(
-            By.ACCESSIBILITY_ID, AccountConnectionWizard.NEXT_BUTTON
+            AccountConnectionWizard.NEXT_BUTTON.by,
+            AccountConnectionWizard.NEXT_BUTTON.selector,
         ).click()
 
     @staticmethod
@@ -161,24 +95,19 @@ class AccountConnectionWizard:
         sync_path = create_user_sync_path(user)
 
         AccountConnectionWizard.select_advanced_config()
-        # squish.mouseClick(
-        #     squish.waitForObject(AccountConnectionWizard.DIRECTORY_NAME_BOX)
-        # )
-        # squish.type(
-        #     squish.waitForObject(AccountConnectionWizard.DIRECTORY_NAME_EDIT_BOX),
-        #     sync_path,
-        # )
-        # squish.clickButton(squish.waitForObject(AccountConnectionWizard.CHOOSE_BUTTON))
         get_app_driver().find_element(
-            By.ACCESSIBILITY_ID, AccountConnectionWizard.DIRECTORY_NAME_BOX
+            AccountConnectionWizard.DIRECTORY_NAME_BOX.by,
+            AccountConnectionWizard.DIRECTORY_NAME_BOX.selector,
         ).click()
         dir_location_input = get_app_driver().find_element(
-            By.ACCESSIBILITY_ID, AccountConnectionWizard.DIRECTORY_NAME_EDIT_BOX
+            AccountConnectionWizard.DIRECTORY_NAME_EDIT_BOX.by,
+            AccountConnectionWizard.DIRECTORY_NAME_EDIT_BOX.selector,
         )
         dir_location_input.clear()
         dir_location_input.send_keys(sync_path)
         get_app_driver().find_element(
-            By.NAME, AccountConnectionWizard.CHOOSE_BUTTON
+            AccountConnectionWizard.CHOOSE_FOLDER_BUTTON.by,
+            AccountConnectionWizard.CHOOSE_FOLDER_BUTTON.selector,
         ).click()
         return os.path.join(sync_path, get_config('syncConnectionName'))
 
@@ -265,10 +194,10 @@ class AccountConnectionWizard:
 
     @staticmethod
     def select_advanced_config():
-        # squish.waitForObject(
-        #     AccountConnectionWizard.ADVANCED_CONFIGURATION_CHECKBOX
-        # ).setChecked(True)
-        get_app_driver().find_element(By.NAME, "Advanced configuration").click()
+        get_app_driver().find_element(
+            AccountConnectionWizard.ADVANCED_CONFIGURATION_CHECKBOX.by,
+            AccountConnectionWizard.ADVANCED_CONFIGURATION_CHECKBOX.selector,
+        ).click()
 
     @staticmethod
     def can_change_local_sync_dir():
@@ -278,7 +207,7 @@ class AccountConnectionWizard:
             squish.clickButton(
                 squish.waitForObject(AccountConnectionWizard.DIRECTORY_NAME_BOX)
             )
-            squish.waitForObjectExists(AccountConnectionWizard.CHOOSE_BUTTON)
+            squish.waitForObjectExists(AccountConnectionWizard.CHOOSE_FOLDER_BUTTON)
             can_change = True
         except:
             pass

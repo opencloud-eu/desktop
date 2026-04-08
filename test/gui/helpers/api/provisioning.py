@@ -1,10 +1,11 @@
+import json
+from PySide6.QtCore import QJsonDocument
+
+import helpers.api.http_helper as request
 from helpers.ConfigHelper import get_config
 from helpers import UserHelper
-import helpers.api.http_helper as request
 from helpers.api.utils import url_join
-import json
 
-# from PySide6.QtCore import QJsonDocument
 
 created_groups = {}
 created_users = {}
@@ -58,12 +59,12 @@ def delete_created_users():
         del created_users[username]
 
 
-# def get_capabilities():
-#     server_url = get_config('localBackendUrl')
-#     url = url_join(server_url, '/ocs/v1.php/cloud/capabilities?format=json')
-#     response = request.get(url)
-#     response_str = response.text
-#     response_doc = QJsonDocument.fromJson(response_str.encode("utf-8"))
-#     response_obj = response_doc.object()
-#     capabilities = response_obj.get('ocs').get('data').get('capabilities')
-#     return capabilities
+def get_capabilities():
+    server_url = get_config('localBackendUrl')
+    url = url_join(server_url, '/ocs/v1.php/cloud/capabilities?format=json')
+    response = request.get(url)
+    response_str = response.text
+    response_doc = QJsonDocument.fromJson(response_str.encode("utf-8"))
+    response_obj = response_doc.object()
+    capabilities = response_obj.get('ocs').get('data').get('capabilities')
+    return capabilities

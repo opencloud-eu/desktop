@@ -1,13 +1,11 @@
-﻿import time
-import uuid
+﻿import uuid
 import os
 import subprocess
+import test
+import psutil
 from urllib.parse import urlparse
 from os import makedirs
 from os.path import exists, join
-import test
-import psutil
-
 from PySide6.QtCore import QSettings, QUuid, QUrl, QJsonValue
 from appium import webdriver
 from appium.options.common.base import AppiumOptions
@@ -17,7 +15,6 @@ from helpers.ConfigHelper import get_config, set_config, is_windows
 from helpers.SyncHelper import listen_sync_status_for_item
 from helpers.api.utils import url_join
 from helpers.UserHelper import get_displayname_for_user, get_password_for_user
-from helpers.ReportHelper import is_video_enabled
 from helpers.api import provisioning
 
 
@@ -114,7 +111,7 @@ def start_client():
     global app_driver
     log_command_suffix = ""
     logfile = get_config("clientLogFile")
-    logdir = ""  # get_config("clientLogDir") + "/" + squishinfo.testCaseName
+    logdir = get_config("clientLogDir")
     if logfile != "":
         log_command_suffix = f' --logfile {logfile}'
     elif logdir != "":
@@ -125,7 +122,6 @@ def start_client():
         'app',
         f'{get_config("app_path")} -s {log_command_suffix} --logdebug',
     )
-    print(f'{get_config("app_path")} -s {log_command_suffix} --logdebug')
     options.set_capability(
         'appium:environ',
         {
@@ -147,6 +143,7 @@ remotePollInterval={polling_interval}
     polling_interval = polling_interval.format(**args)
     return polling_interval
 
+
 def generate_account_config(users, space='Personal'):
     sync_paths = {}
     settings = QSettings(get_config('clientConfigFile'), QSettings.Format.IniFormat)
@@ -158,7 +155,7 @@ def generate_account_config(users, space='Personal'):
     for idx, username in enumerate(users):
         users_uuids[username] = QUuid.createUuid()
         settings.beginGroup("Accounts")
-        settings.beginWriteArray(str(idx+1),len(users))
+        settings.beginWriteArray(str(idx + 1), len(users))
 
         settings.setValue("capabilities", capabilities_variant)
         settings.setValue("default_sync_root", create_user_sync_path(username))
@@ -174,7 +171,7 @@ def generate_account_config(users, space='Personal'):
     settings.beginGroup("Folders")
     for idx, username in enumerate(users):
         sync_path = create_space_path(username, space)
-        settings.beginWriteArray(str(idx+1),len(users))
+        settings.beginWriteArray(str(idx + 1), len(users))
 
         if space == 'Personal':
             space_id = get_personal_space_id(username)
@@ -194,16 +191,16 @@ def generate_account_config(users, space='Personal'):
             settings.setValue("virtualFilesMode", 'cfapi')
         else:
             settings.setValue("virtualFilesMode", 'off')
-        settings.setValue("journalPath",".sync_journal.db")
+        settings.setValue("journalPath", ".sync_journal.db")
         settings.endArray()
         settings.setValue("size", len(users))
         sync_paths.update({username: sync_path})
 
     settings.endGroup()
 
-
     settings.sync()
     return sync_paths
+
 
 def setup_client(username, space='Personal'):
     set_config('syncConnectionName', space)

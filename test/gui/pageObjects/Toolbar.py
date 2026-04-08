@@ -1,6 +1,4 @@
-# import names
-# import squish
-# import object  # pylint: disable=redefined-builtin
+from types import SimpleNamespace
 from urllib.parse import urlparse
 from appium.webdriver.common.appiumby import AppiumBy as By
 
@@ -10,50 +8,15 @@ from helpers.SetupClientHelper import get_app_driver
 
 
 class Toolbar:
-    # TOOLBAR_ROW = {
-    #     "container": names.dialogStack_quickWidget_OCC_QmlUtils_OCQuickWidget,
-    #     "type": "RowLayout",
-    #     "visible": True,
-    # }
-    # ACCOUNT_BUTTON = {
-    #     "checkable": False,
-    #     "container": names.dialogStack_quickWidget_OCC_QmlUtils_OCQuickWidget,
-    #     "type": "AccountButton",
-    #     "visible": True,
-    # }
-    # ADD_ACCOUNT_BUTTON = {
-    #     "container": names.dialogStack_quickWidget_QQuickWidget,
-    #     "id": "addAccountButton",
-    #     "type": "AccountButton",
-    #     "visible": True,
-    # }
-    # ACTIVITY_BUTTON = {
-    #     "container": names.dialogStack_quickWidget_QQuickWidget,
-    #     "id": "logButton",
-    #     "type": "AccountButton",
-    #     "visible": True,
-    # }
-    # SETTINGS_BUTTON = {
-    #     "container": names.dialogStack_quickWidget_QQuickWidget,
-    #     "id": "settingsButton",
-    #     "type": "AccountButton",
-    #     "visible": True,
-    # }
-    # QUIT_BUTTON = {
-    #     "container": names.dialogStack_quickWidget_QQuickWidget,
-    #     "id": "quitButton",
-    #     "type": "AccountButton",
-    #     "visible": True,
-    # }
-    # CONFIRM_QUIT_BUTTON = {
-    #     "text": "Yes",
-    #     "type": "QPushButton",
-    #     "unnamed": 1,
-    #     "visible": 1,
-    #     "window": names.quit_OpenCloud_Desktop_QMessageBox,
-    # }
+    TOOLBAR_ROW = SimpleNamespace(by=None, selector=None)
+    ACCOUNT_BUTTON = SimpleNamespace(by=None, selector=None)
+    ADD_ACCOUNT_BUTTON = SimpleNamespace(by=None, selector=None)
+    ACTIVITY_BUTTON = SimpleNamespace(by=None, selector=None)
+    SETTINGS_BUTTON = SimpleNamespace(by=None, selector=None)
+    QUIT_BUTTON = SimpleNamespace(by=None, selector=None)
+    CONFIRM_QUIT_BUTTON = SimpleNamespace(by=None, selector=None)
 
-    # TOOLBAR_ITEMS = ["Add Account", "Activity", "Settings", "Quit"]
+    TOOLBAR_ITEMS = ["Add Account", "Activity", "Settings", "Quit"]
 
     @staticmethod
     def get_item_selector(item_name):
@@ -153,11 +116,3 @@ class Toolbar:
         server_host = urlparse(get_config('localBackendUrl')).netloc
         account_label = f"{display_name}@{server_host}"
         get_app_driver().find_element(By.NAME, account_label)
-        # account, selector = Toolbar.get_account(display_name)
-        # if (
-        #     account is None
-        #     or selector is None
-        #     and account["displayname"] != display_name
-        # ):
-        #     raise LookupError(f'Account "{display_name}" does not exist')
-        # squish.waitForObject(selector)
