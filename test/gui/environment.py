@@ -6,7 +6,7 @@ from helpers.ConfigHelper import init_config
 from helpers.api.provisioning import delete_created_users
 from helpers.ConfigHelper import set_config, get_config
 from helpers.FilesHelper import prefix_path_namespace, cleanup_created_paths
-from helpers.SetupClientHelper import get_app_driver
+from helpers.SetupClientHelper import app
 
 
 def before_feature(context, feature):
@@ -35,7 +35,7 @@ def after_scenario(context, scenario):
     cleanup_created_paths()
     delete_created_users()
     # quit the application
-    get_app_driver().quit()
+    app().quit()
     for process in psutil.process_iter(['pid', 'exe']):
         if process.info['exe'] == get_config("app_path"):
             print("Closing desktop client...")

@@ -21,7 +21,7 @@ from helpers.api import provisioning
 app_driver = None
 
 
-def get_app_driver():
+def app():
     return app_driver
 
 

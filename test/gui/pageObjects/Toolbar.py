@@ -4,7 +4,7 @@ from appium.webdriver.common.appiumby import AppiumBy as By
 
 from helpers.SetupClientHelper import wait_until_app_killed
 from helpers.ConfigHelper import get_config
-from helpers.SetupClientHelper import get_app_driver
+from helpers.SetupClientHelper import app
 
 
 class Toolbar:
@@ -115,4 +115,4 @@ class Toolbar:
     def account_exists(display_name):
         server_host = urlparse(get_config('localBackendUrl')).netloc
         account_label = f"{display_name}@{server_host}"
-        get_app_driver().find_element(By.NAME, account_label)
+        app().find_element(By.NAME, account_label)

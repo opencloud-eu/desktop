@@ -10,7 +10,7 @@ from helpers.SetupClientHelper import (
     set_current_user_sync_path,
 )
 from helpers.SyncHelper import listen_sync_status_for_item
-from helpers.SetupClientHelper import get_app_driver
+from helpers.SetupClientHelper import app
 
 
 class AccountConnectionWizard:
@@ -50,7 +50,7 @@ class AccountConnectionWizard:
 
     @staticmethod
     def add_server(server_url):
-        url_input = get_app_driver().find_element(
+        url_input = app().find_element(
             AccountConnectionWizard.SERVER_ADDRESS_BOX.by,
             AccountConnectionWizard.SERVER_ADDRESS_BOX.selector,
         )
@@ -61,7 +61,7 @@ class AccountConnectionWizard:
 
     @staticmethod
     def accept_certificate():
-        get_app_driver().find_element(
+        app().find_element(
             AccountConnectionWizard.ACCEPT_CERTIFICATE_YES.by,
             AccountConnectionWizard.ACCEPT_CERTIFICATE_YES.selector,
         ).click()
@@ -76,7 +76,7 @@ class AccountConnectionWizard:
 
     @staticmethod
     def browser_login(username, password):
-        get_app_driver().find_element(
+        app().find_element(
             AccountConnectionWizard.COPY_URL_TO_CLIPBOARD_BUTTON.by,
             AccountConnectionWizard.COPY_URL_TO_CLIPBOARD_BUTTON.selector,
         ).click()
@@ -84,7 +84,7 @@ class AccountConnectionWizard:
 
     @staticmethod
     def next_step():
-        get_app_driver().find_element(
+        app().find_element(
             AccountConnectionWizard.NEXT_BUTTON.by,
             AccountConnectionWizard.NEXT_BUTTON.selector,
         ).click()
@@ -95,17 +95,17 @@ class AccountConnectionWizard:
         sync_path = create_user_sync_path(user)
 
         AccountConnectionWizard.select_advanced_config()
-        get_app_driver().find_element(
+        app().find_element(
             AccountConnectionWizard.DIRECTORY_NAME_BOX.by,
             AccountConnectionWizard.DIRECTORY_NAME_BOX.selector,
         ).click()
-        dir_location_input = get_app_driver().find_element(
+        dir_location_input = app().find_element(
             AccountConnectionWizard.DIRECTORY_NAME_EDIT_BOX.by,
             AccountConnectionWizard.DIRECTORY_NAME_EDIT_BOX.selector,
         )
         dir_location_input.clear()
         dir_location_input.send_keys(sync_path)
-        get_app_driver().find_element(
+        app().find_element(
             AccountConnectionWizard.CHOOSE_FOLDER_BUTTON.by,
             AccountConnectionWizard.CHOOSE_FOLDER_BUTTON.selector,
         ).click()
@@ -194,7 +194,7 @@ class AccountConnectionWizard:
 
     @staticmethod
     def select_advanced_config():
-        get_app_driver().find_element(
+        app().find_element(
             AccountConnectionWizard.ADVANCED_CONFIGURATION_CHECKBOX.by,
             AccountConnectionWizard.ADVANCED_CONFIGURATION_CHECKBOX.selector,
         ).click()
