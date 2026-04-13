@@ -17,7 +17,7 @@ Feature: adding accounts
         Then the download everything option should be selected by default for Linux
         And the user should be able to choose the local download directory
 
-
+    @smoke
     Scenario: Adding normal Account
         Given the user has started the client
         When the user adds the following account:

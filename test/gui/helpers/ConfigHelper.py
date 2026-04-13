@@ -11,7 +11,7 @@ CURRENT_DIR = Path(__file__).resolve().parent
 def read_env_file():
     envs = {}
     script_path = os.path.dirname(os.path.realpath(__file__))
-    env_path = os.path.abspath(os.path.join(script_path, '..', '..', '..', 'envs.txt'))
+    env_path = os.path.abspath(os.path.join(script_path, '..', 'envs.txt'))
     with open(env_path, 'rt', encoding='UTF-8') as f:
         for line in f:
             if not line.strip():
@@ -64,6 +64,7 @@ def get_default_home_dir():
 
 # map environment variables to config keys
 CONFIG_ENV_MAP = {
+    'app_path': 'APP_PATH',
     'localBackendUrl': 'BACKEND_HOST',
     'maxSyncTimeout': 'MAX_SYNC_TIMEOUT',
     'minSyncTimeout': 'MIN_SYNC_TIMEOUT',
@@ -73,14 +74,17 @@ CONFIG_ENV_MAP = {
     'clientRootSyncPath': 'CLIENT_ROOT_SYNC_PATH',
     'tempFolderPath': 'TEMP_FOLDER_PATH',
     'guiTestReportDir': 'GUI_TEST_REPORT_DIR',
-    'record_video_on_failure': 'RECORD_VIDEO_ON_FAILURE'
+    'record_video_on_failure': 'RECORD_VIDEO_ON_FAILURE',
 }
 
 DEFAULT_PATH_CONFIG = {
-    'custom_lib': os.path.abspath('../shared/scripts/custom_lib'),
+    'custom_lib': os.path.abspath(
+        os.path.join(os.path.dirname(__file__), 'custom_lib')
+    ),
     'home_dir': get_default_home_dir(),
     # allow to record first 5 videos
     'video_record_limit': 5,
+    'app_path': None,
 }
 
 # default config values
@@ -98,13 +102,13 @@ CONFIG = {
     'guiTestReportDir': os.path.abspath('../reports'),
     'record_video_on_failure': False,
     'files_for_upload': os.path.join(CURRENT_DIR.parent.parent, 'files-for-upload'),
-    'syncConnectionName': 'Personal'
+    'syncConnectionName': 'Personal',
 }
 
 # Permission roles mapping
 PERMISSION_ROLES = {
     'Viewer': 'b1e2218d-eef8-4d4c-b82d-0f1a1b48f3b5',
-    'Editor': 'fb6c3e19-e378-47e5-b277-9732f9de6e21'
+    'Editor': 'fb6c3e19-e378-47e5-b277-9732f9de6e21',
 }
 
 CONFIG.update(DEFAULT_PATH_CONFIG)
@@ -130,9 +134,7 @@ def init_config():
     # try reading configs from config.ini
     try:
         script_path = os.path.dirname(os.path.realpath(__file__))
-        cfg_path = os.path.abspath(
-            os.path.join(script_path, '..', '..', '..', 'config.ini')
-        )
+        cfg_path = os.path.abspath(os.path.join(script_path, '..', 'config.ini'))
         read_cfg_file(cfg_path)
     except:
         pass
@@ -164,6 +166,9 @@ def init_config():
                 CONFIG[key] = value.rstrip('\\') + '\\'
             else:
                 CONFIG[key] = value.rstrip('/') + '/'
+
+    if 'app_path' not in CONFIG or not CONFIG['app_path']:
+        raise KeyError('APP_PATH must be set in config.ini or environment variables')
 
 
 def get_config(key):

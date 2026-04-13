@@ -34,6 +34,9 @@ when:
       <<: *trigger_path
   - event: tag
   - event: pull_request
+    branch:
+      - main
+      - stable-*
     path:
       <<: *trigger_path
     evaluate: |

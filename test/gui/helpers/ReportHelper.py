@@ -2,8 +2,6 @@ import os
 import glob
 import shutil
 import test
-import squish
-import squishinfo
 
 from helpers.ConfigHelper import get_config
 from helpers.FilesHelper import prefix_path_namespace
