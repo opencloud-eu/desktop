@@ -20,6 +20,9 @@ when:
       - push
       - manual
   - event: pull_request
+    branch:
+      - main
+      - stable-*
   - event: tag
   - event: cron
     cron: nightly*

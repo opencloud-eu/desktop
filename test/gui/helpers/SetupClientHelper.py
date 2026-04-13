@@ -1,23 +1,28 @@
 ﻿import uuid
 import os
 import subprocess
+import test
+import psutil
 from urllib.parse import urlparse
 from os import makedirs
 from os.path import exists, join
-import test
-import psutil
-import squish
-import squishinfo
 from PySide6.QtCore import QSettings, QUuid, QUrl, QJsonValue
+from appium import webdriver
+from appium.options.common.base import AppiumOptions
 
 from helpers.SpaceHelper import get_space_id, get_personal_space_id
 from helpers.ConfigHelper import get_config, set_config, is_windows
 from helpers.SyncHelper import listen_sync_status_for_item
 from helpers.api.utils import url_join
 from helpers.UserHelper import get_displayname_for_user, get_password_for_user
-from helpers.ReportHelper import is_video_enabled
 from helpers.api import provisioning
 
+
+app_driver = None
+
+
+def app():
+    return app_driver
 
 
 def substitute_inline_codes(value):
@@ -32,7 +37,7 @@ def substitute_inline_codes(value):
     return value
 
 
-def get_client_details(context):
+def get_client_details(table):
     client_details = {
         'server': '',
         'user': '',
@@ -40,16 +45,16 @@ def get_client_details(context):
         'sync_folder': '',
         'oauth': False,
     }
-    for row in context.table[0:]:
-        row[1] = substitute_inline_codes(row[1])
-        if row[0] == 'server':
-            client_details.update({'server': row[1]})
-        elif row[0] == 'user':
-            client_details.update({'user': row[1]})
-        elif row[0] == 'password':
-            client_details.update({'password': row[1]})
-        elif row[0] == 'sync_folder':
-            client_details.update({'sync_folder': row[1]})
+    for key, value in table.items():
+        value = substitute_inline_codes(value)
+        if key == 'server':
+            client_details.update({'server': value})
+        elif key == 'user':
+            client_details.update({'user': value})
+        elif key == 'password':
+            client_details.update({'password': value})
+        elif key == 'sync_folder':
+            client_details.update({'sync_folder': value})
     return client_details
 
 
@@ -103,26 +108,30 @@ def get_current_user_sync_path():
 
 
 def start_client():
+    global app_driver
     log_command_suffix = ""
     logfile = get_config("clientLogFile")
-    logdir = get_config("clientLogDir") + "/" + squishinfo.testCaseName
+    logdir = get_config("clientLogDir")
     if logfile != "":
         log_command_suffix = f' --logfile {logfile}'
     elif logdir != "":
         log_command_suffix = f' --logdir {logdir}'
 
-    squish.startApplication(
-        'opencloud -s'
-        + f' {log_command_suffix}'
-        + ' --logdebug'
+    options = AppiumOptions()
+    options.set_capability(
+        'app',
+        f'{get_config("app_path")} -s {log_command_suffix} --logdebug',
     )
-    if is_video_enabled():
-        test.startVideoCapture()
-    else:
-        test.log(
-            f'Video recordings reached the maximum limit of {get_config("video_record_limit")}.'
-            + 'Skipping video recording...'
-        )
+    options.set_capability(
+        'appium:environ',
+        {
+            'XDG_CONFIG_HOME': '/tmp/opencloudtest/.config',
+        },
+    )
+    app_driver = webdriver.Remote(
+        command_executor='http://127.0.0.1:4723', options=options
+    )
+    app_driver.implicitly_wait = 10
 
 
 def get_polling_interval():
@@ -133,6 +142,7 @@ remotePollInterval={polling_interval}
     args = {'polling_interval': 5000}
     polling_interval = polling_interval.format(**args)
     return polling_interval
+
 
 def generate_account_config(users, space='Personal'):
     sync_paths = {}
@@ -145,7 +155,7 @@ def generate_account_config(users, space='Personal'):
     for idx, username in enumerate(users):
         users_uuids[username] = QUuid.createUuid()
         settings.beginGroup("Accounts")
-        settings.beginWriteArray(str(idx+1),len(users))
+        settings.beginWriteArray(str(idx + 1), len(users))
 
         settings.setValue("capabilities", capabilities_variant)
         settings.setValue("default_sync_root", create_user_sync_path(username))
@@ -161,7 +171,7 @@ def generate_account_config(users, space='Personal'):
     settings.beginGroup("Folders")
     for idx, username in enumerate(users):
         sync_path = create_space_path(username, space)
-        settings.beginWriteArray(str(idx+1),len(users))
+        settings.beginWriteArray(str(idx + 1), len(users))
 
         if space == 'Personal':
             space_id = get_personal_space_id(username)
@@ -181,16 +191,16 @@ def generate_account_config(users, space='Personal'):
             settings.setValue("virtualFilesMode", 'cfapi')
         else:
             settings.setValue("virtualFilesMode", 'off')
-        settings.setValue("journalPath",".sync_journal.db")
+        settings.setValue("journalPath", ".sync_journal.db")
         settings.endArray()
         settings.setValue("size", len(users))
         sync_paths.update({username: sync_path})
 
     settings.endGroup()
 
-
     settings.sync()
     return sync_paths
+
 
 def setup_client(username, space='Personal'):
     set_config('syncConnectionName', space)

@@ -1,2 +1,3 @@
-shared/scripts/custom_lib
+custom_lib/
 reports
+venv/

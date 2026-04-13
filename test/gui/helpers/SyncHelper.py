@@ -1,12 +1,11 @@
 import os
 import re
-import sys
-import test
+import time
 import urllib.request
-import squish
 
 from helpers.ConfigHelper import get_config, is_linux, is_windows
 from helpers.FilesHelper import sanitize_path
+
 
 if is_windows():
     from helpers.WinPipeHelper import WinPipeConnect as SocketConnect
@@ -29,8 +28,7 @@ else:
     #   see https://kb.froglogic.com/squish/howto/using-external-python-interpreter-squish-6-6/
     # if the IDE fails to reference the script,
     # add the folder in Edit->Preferences->PyDev->Interpreters->Libraries
-    sys.path.append(custom_lib)
-    from custom_lib.syncstate import SocketConnect
+    from helpers.custom_lib.syncstate import SocketConnect
 
 # socket messages
 socket_messages = []
@@ -170,10 +168,12 @@ def generate_sync_pattern_from_messages(messages):
 
     sync_messages = filter_sync_messages(messages)
     for message in sync_messages:
-        # E.g; from "STATUS:OK:/tmp/client-bdd/Alice/"
+        # E.g; from;
+        #    Linux: "STATUS:OK:/tmp/client-bdd/Alice/"
+        #      Win: "STATUS:OK:C:\tmp\client-bdd\Alice\"
         # excludes ":/tmp/client-bdd/Alice/"
         # adds only "STATUS:OK" to the pattern list
-        if match := re.search(':(/|[A-Z]{1}:\\\\|[A-Z]{1}:\/).*', message):
+        if match := re.search(r':(/|[A-Za-z]:[\\/]).*', message):
             (end, _) = match.span()
             # shared resources will have status like "STATUS:OK+SWM"
             status = message[:end].replace('+SWM', '')
@@ -222,7 +222,7 @@ def wait_for_resource_to_sync(resource, resource_type='FOLDER', patterns=None):
     if patterns is None:
         patterns = get_synced_pattern(resource)
 
-    synced = squish.waitFor(
+    synced = wait_for(
         lambda: has_sync_pattern(patterns, resource),
         timeout,
     )
@@ -232,7 +232,7 @@ def wait_for_resource_to_sync(resource, resource_type='FOLDER', patterns=None):
         # and pass the step if the last sync status is STATUS:OK
         status = get_current_sync_status(resource, resource_type)
         if status.startswith(SYNC_STATUS['OK']):
-            test.log(
+            print(
                 '[WARN] Failed to match sync pattern for resource: '
                 + resource
                 + f'\nBut its last status is "{SYNC_STATUS["OK"]}"'
@@ -271,7 +271,7 @@ def has_sync_pattern(patterns, resource=None):
             if pattern_len == len(actual_pattern) and pattern == actual_pattern:
                 return True
     # 100 milliseconds polling interval
-    squish.snooze(0.1)
+    time.sleep(0.1)
     return False
 
 
@@ -299,7 +299,7 @@ def wait_for_resource_to_have_sync_status(
     if not timeout:
         timeout = get_config('maxSyncTimeout') * 1000
 
-    result = squish.waitFor(
+    result = wait_for(
         lambda: has_sync_status(resource, status),
         timeout,
     )
@@ -341,9 +341,7 @@ def perform_file_explorer_vfs_action(resource_path, action):
     elif action == 'Always keep on this device':
         make_available_locally(resource_path)
     else:
-        raise ValueError(
-            f'Invalid file explorer action: {action}'
-        )
+        raise ValueError(f'Invalid file explorer action: {action}')
 
 
 def make_online_only(resource_path):
@@ -356,3 +354,13 @@ def make_available_locally(resource_path):
     socket_connect = get_socket_connection()
     resource_path = resource_path.rstrip('\\').rstrip('/')
     socket_connect.sendCommand(f'MAKE_AVAILABLE_LOCALLY:{resource_path}\n')
+
+
+def wait_for(condition, timeout, interval=0.5):
+    start = time.time() * 1000
+    while True:
+        if condition():
+            return True
+        if time.time() * 1000 - start > timeout:
+            return False
+        time.sleep(interval)
