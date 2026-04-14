@@ -1285,7 +1285,7 @@ Please consider removing this folder from the account and adding it again.</sour
     <message>
         <location filename="../src/gui/generalsettings.ui" line="127"/>
         <source>Edit Ignored Files</source>
-        <translation>Изменить игнорируемые файлф</translation>
+        <translation>Изменить игнорируемые файлы</translation>
     </message>
     <message>
         <location filename="../src/gui/generalsettings.ui" line="134"/>
