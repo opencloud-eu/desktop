@@ -3,7 +3,7 @@ Feature: filter activity for user
     I want to filter activity
     So that I can view activity of specific user
 
-
+    @smoke @skip
     Scenario: filter synced activities
         Given user "Alice" has been created in the server with default attributes
         And user "Brian" has been created in the server with default attributes

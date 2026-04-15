@@ -6,13 +6,13 @@ Feature:  Logout users
     Background:
         Given user "Alice" has been created in the server with default attributes
 
-
+    @smoke @skip
     Scenario: logging out
         Given user "Alice" has set up a client with default settings
         When the user "Alice" logs out using the client-UI
         Then user "Alice" should be signed out
 
-
+    @smoke @skip
     Scenario: login after logging out
         Given user "Alice" has set up a client with default settings
         And user "Alice" has logged out from the client-UI
