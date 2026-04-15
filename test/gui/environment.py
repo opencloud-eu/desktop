@@ -18,10 +18,6 @@ def before_scenario(context, feature):
 
 
 def after_scenario(context, scenario):
-    # clean up config dir
-    confi_dir = get_config("clientConfigDir")
-    if os.path.exists(confi_dir):
-        shutil.rmtree(confi_dir)
     # clean up sync dir
     for entry in os.scandir(get_config("clientRootSyncPath")):
         try:
