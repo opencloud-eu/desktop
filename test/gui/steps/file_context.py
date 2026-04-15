@@ -9,11 +9,11 @@ import parse
 from behave import when as When, register_type
 
 from helpers.SetupClientHelper import (
-	get_resource_path, 
+	get_resource_path,
 	# get_temp_resource_path
 )
 from helpers.SyncHelper import (
-	wait_for_client_to_be_ready, 
+	wait_for_client_to_be_ready,
 	# listen_sync_status_for_item
 )
 # from helpers.ConfigHelper import get_config, is_windows

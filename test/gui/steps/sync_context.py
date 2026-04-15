@@ -1,8 +1,8 @@
-from behave import when as When
+from behave import when as When, then as Then
 # from pageObjects.SyncConnectionWizard import SyncConnectionWizard
 # from pageObjects.SyncConnection import SyncConnection
-# from pageObjects.Toolbar import Toolbar
-# from pageObjects.Activity import Activity
+from pageObjects.Toolbar import Toolbar
+from pageObjects.Activity import Activity
 # from pageObjects.Settings import Settings
 
 # from helpers.ConfigHelper import get_config, is_windows, set_config
@@ -13,7 +13,7 @@ from helpers.SyncHelper import (
 from helpers.SetupClientHelper import (
     # get_temp_resource_path,
     # set_current_user_sync_path,
-    # substitute_inline_codes,
+    substitute_inline_codes,
     get_resource_path,
 )
 # from helpers.FilesHelper import convert_path_separators_for_os
@@ -75,9 +75,9 @@ def step(context):
 #     )
 
 
-# @When('the user clicks on the activity tab')
-# def step(context):
-#     Toolbar.open_activity()
+@When('the user clicks on the activity tab')
+def step(context):
+    Toolbar.open_activity()
 
 
 # @Then('the table of conflict warnings should include file "|any|"')
@@ -102,9 +102,9 @@ def step(context):
 #     test.compare(True, Activity.is_resource_excluded(filename), 'File is Excluded')
 
 
-# @When('the user selects "|any|" tab in the activity')
-# def step(context, tab_name):
-#     Activity.click_tab(tab_name)
+@When('the user selects "{tab_name}" tab in the activity')
+def step(context, tab_name):
+    Activity.click_tab(tab_name)
 
 
 # @Then('the toolbar should have the following tabs:')
@@ -252,23 +252,19 @@ def step(context):
 #     )
 
 
-# @When('the user checks the activities of account "|any|"')
-# def step(context, account):
-#     account = substitute_inline_codes(account)
-#     Activity.select_synced_filter(account)
+@When('the user checks the activities of account "{account}"')
+def step(context, account):
+    account = substitute_inline_codes(account)
+    Activity.select_synced_filter(account)
 
 
-# @Then('the following activities should be displayed in synced table')
-# def step(context):
-#     for row in context.table[1:]:
-#         resource = row[0]
-#         action = row[1]
-#         account = substitute_inline_codes(row[2])
-#         test.compare(
-#             Activity.check_synced_table(resource, action, account),
-#             True,
-#             'Resource should be displayed in the synced table',
-#         )
+@Then('the following activities should be displayed in synced table')
+def step(context):
+    for row in context.table:
+        resource = row[0]
+        action = row[1]
+        account = substitute_inline_codes(row[2])
+        Activity.check_synced_table(resource, action, account)
 
 
 # @Then(r'the following activities (should|should not) be displayed in not synced table', regexp=True)
