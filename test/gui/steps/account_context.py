@@ -46,7 +46,7 @@ def step(context, displayname):
     )
 
 
-@Given('user "|any|" has set up a client with default settings')
+@Given('user "{username}" has set up a client with default settings')
 def step(context, username):
     password = get_password_for_user(username)
     setup_client(username)
