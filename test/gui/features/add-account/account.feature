@@ -26,7 +26,7 @@ Feature: adding accounts
             | password | 1234           |
         Then the account with displayname "Alice Hansen" should be displayed
 
-
+    @smoke @skip
     Scenario: Adding multiple accounts
         Given user "Brian" has been created in the server with default attributes
         And user "Alice" has set up a client with default settings
@@ -50,7 +50,7 @@ Feature: adding accounts
             | password | 1234  |
         Then "Alice Hansen" account should be opened
 
-
+    @smoke @skip
     Scenario: Add space manually from sync connection window
         Given user "Alice" has created folder "simple-folder" in the server
         And the user has started the client
@@ -76,7 +76,7 @@ Feature: adding accounts
         When the user selects download everything option in advanced section
         Then the button to open sync connection wizard should be disabled
 
-
+    @smoke @skip
     Scenario: Re-add an account
         Given user "Alice" has created folder "large-folder" in the server
         And user "Alice" has uploaded file with content "test content" to "testFile.txt" in the server

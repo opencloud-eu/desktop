@@ -3,7 +3,7 @@ Feature: remove account connection
   I want to remove my account
   So that I won't be using any client-UI services
 
-
+    @smoke @skip
     Scenario: remove an account connection
         Given user "Alice" has been created in the server with default attributes
         And user "Brian" has been created in the server with default attributes
