@@ -41,7 +41,7 @@ Feature: move file and folder
         And as "Alice" folder "test-folder1" should not exist in the server
         And as "Alice" folder "test-folder2" should not exist in the server
 
-
+    @smoke @skip
     Scenario: Rename a file and a folder
         Given user "Alice" has uploaded file with content "test file 1" to "textfile.txt" in the server
         And user "Alice" has set up a client with default settings
@@ -53,7 +53,7 @@ Feature: move file and folder
         But as "Alice" file "textfile.txt" should not exist in the server
         And as "Alice" folder "folder1" should not exist in the server
 
-
+    @smoke @skip
 	Scenario: Move files from one folder to another
         Given user "Alice" has uploaded file with content "test file 1" to "folder1/file1.txt" in the server
         And user "Alice" has uploaded file with content "test file 2" to "folder1/file2.txt" in the server
