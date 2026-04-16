@@ -10,7 +10,7 @@ from helpers.SetupClientHelper import app
 class Toolbar:
     TOOLBAR_ROW = SimpleNamespace(by=None, selector=None)
     ACCOUNT_BUTTON = SimpleNamespace(by=None, selector=None)
-    ADD_ACCOUNT_BUTTON = SimpleNamespace(by=None, selector=None)
+    ADD_ACCOUNT_BUTTON = SimpleNamespace(by=By.NAME, selector="Add Account")
     ACTIVITY_BUTTON = SimpleNamespace(by=None, selector=None)
     SETTINGS_BUTTON = SimpleNamespace(by=None, selector=None)
     QUIT_BUTTON = SimpleNamespace(by=None, selector=None)
@@ -41,7 +41,10 @@ class Toolbar:
 
     @staticmethod
     def open_new_account_setup():
-        squish.mouseClick(squish.waitForObject(Toolbar.ADD_ACCOUNT_BUTTON))
+        app().find_element(
+            Toolbar.ADD_ACCOUNT_BUTTON.by,
+            Toolbar.ADD_ACCOUNT_BUTTON.selector,
+        ).click()
 
     @staticmethod
     def open_account(displayname):
@@ -95,8 +98,14 @@ class Toolbar:
 
     @staticmethod
     def get_account(display_name):
-        accounts, selectors = Toolbar.get_accounts()
-        return accounts.get(display_name), selectors.get(display_name)
+        server_host = urlparse(get_config('localBackendUrl')).netloc
+        account_label = f"{display_name}@{server_host}"
+        account = None
+        try:
+            account = app().find_element(By.NAME, account_label)
+        except:
+            pass
+        return account
 
     @staticmethod
     def get_active_account():
@@ -108,11 +117,10 @@ class Toolbar:
 
     @staticmethod
     def account_has_focus(display_name):
-        account, selector = Toolbar.get_account(display_name)
-        return account["current"] and squish.waitForObject(selector).checked
+        account = Toolbar.get_account(display_name)
+        return account.get_attribute("checked") == "true"
 
     @staticmethod
     def account_exists(display_name):
-        server_host = urlparse(get_config('localBackendUrl')).netloc
-        account_label = f"{display_name}@{server_host}"
-        app().find_element(By.NAME, account_label)
+        account = Toolbar.get_account(display_name)
+        return account is not None
