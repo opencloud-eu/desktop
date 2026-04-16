@@ -1,12 +1,13 @@
 import os
 import platform
 import builtins
+import tempfile
 from tempfile import gettempdir
 from configparser import ConfigParser
 from pathlib import Path
 
 CURRENT_DIR = Path(__file__).resolve().parent
-
+APP_CONFIG_FILE = "opencloud.cfg"
 
 def read_env_file():
     envs = {}
@@ -39,7 +40,7 @@ def is_linux():
 
 
 def get_win_user_home():
-    return os.environ.get('UserProfile')
+    return os.environ.get('USERPROFILE', '')
 
 
 def get_client_root_path():
@@ -48,12 +49,18 @@ def get_client_root_path():
     return os.path.join(gettempdir(), 'opencloudtest')
 
 
+def get_config_home_linux():
+    return os.path.join(tempfile.gettempdir(), 'opencloudtest', '.config')
+
+
+def get_config_home_win():
+    return os.path.join(get_win_user_home(), 'AppData', 'Local', 'Temp', 'opencloudtest', '.config')
+
+
 def get_config_home():
     if is_windows():
-        # There is no way to set custom config path in windows
-        # TODO: set to different path if option is available
-        return os.path.join(get_win_user_home(), 'AppData', 'Roaming', 'OpenCloud')
-    return os.path.join(get_config_from_env_file('XDG_CONFIG_HOME'), 'OpenCloud')
+        return get_config_home_win()
+    return get_config_home_linux()
 
 
 def get_default_home_dir():
@@ -61,6 +68,12 @@ def get_default_home_dir():
         return get_win_user_home()
     return os.environ.get('HOME')
 
+
+def get_app_env():
+    return {
+        'XDG_CONFIG_HOME': get_config_home(),
+        'APPDATA': get_config_home(),
+    }
 
 # map environment variables to config keys
 CONFIG_ENV_MAP = {
@@ -97,8 +110,7 @@ CONFIG = {
     'clientLogDir': '',
     'clientRootSyncPath': get_client_root_path(),
     'tempFolderPath': os.path.join(get_client_root_path(), 'temp'),
-    'clientConfigDir': get_config_home(),
-    'clientConfigFile': os.path.join(get_config_home(), "opencloud.cfg"),
+    'clientConfigFile': os.path.join(get_config_home(), "OpenCloud", APP_CONFIG_FILE),
     'guiTestReportDir': os.path.abspath('../reports'),
     'record_video_on_failure': False,
     'files_for_upload': os.path.join(CURRENT_DIR.parent.parent, 'files-for-upload'),
@@ -157,7 +169,6 @@ def init_config():
         elif key in (
             'clientRootSyncPath',
             'tempFolderPath',
-            'clientConfigDir',
             'guiTestReportDir',
         ):
             # make sure there is always one trailing slash

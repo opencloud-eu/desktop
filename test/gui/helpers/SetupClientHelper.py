@@ -11,10 +11,10 @@ from appium import webdriver
 from appium.options.common.base import AppiumOptions
 
 from helpers.SpaceHelper import get_space_id, get_personal_space_id
-from helpers.ConfigHelper import get_config, set_config, is_windows
+from helpers.ConfigHelper import get_config, set_config, is_windows, get_app_env
 from helpers.SyncHelper import listen_sync_status_for_item
 from helpers.api.utils import url_join
-from helpers.UserHelper import get_displayname_for_user, get_password_for_user
+from helpers.UserHelper import get_displayname_for_user
 from helpers.api import provisioning
 
 
@@ -122,12 +122,7 @@ def start_client():
         'app',
         f'{get_config("app_path")} -s {log_command_suffix} --logdebug',
     )
-    options.set_capability(
-        'appium:environ',
-        {
-            'XDG_CONFIG_HOME': '/tmp/opencloudtest/.config',
-        },
-    )
+    options.set_capability('appium:environ', get_app_env())
     app_driver = webdriver.Remote(
         command_executor='http://127.0.0.1:4723', options=options
     )

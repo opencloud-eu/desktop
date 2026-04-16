@@ -1,55 +1,16 @@
-import names
-import squish
+from types import SimpleNamespace
+from appium.webdriver.common.appiumby import AppiumBy as By
 
-
+from pageObjects.AccountConnectionWizard import AccountConnectionWizard
 from helpers.WebUIHelper import authorize_via_webui
-from helpers.ConfigHelper import get_config
+from helpers.SetupClientHelper import app
 
 
 class EnterPassword:
-    LOGIN_CONTAINER = {
-        "name": "LoginRequiredDialog",
-        "type": "OCC::LoginRequiredDialog",
-        "visible": 1,
-    }
-    LOGIN_USER_LABEL = {
-        "container": names.groupBox_OCC_QmlUtils_OCQuickWidget,
-        "type": "Label",
-        "visible": True,
-    }
-    USERNAME_BOX = {
-        "name": "usernameLineEdit",
-        "type": "QLineEdit",
-        "visible": 1,
-        "window": LOGIN_CONTAINER,
-    }
-    LOGOUT_BUTTON = {
-        "container": names.groupBox_OCC_QmlUtils_OCQuickWidget,
-        "id": "logOutButton",
-        "type": "Button",
-        "visible": True,
-    }
-    COPY_URL_TO_CLIPBOARD_BUTTON = {
-        "container": names.groupBox_OCC_QmlUtils_OCQuickWidget,
-        "id": "copyToClipboardButton",
-        "type": "Button",
-        "visible": True,
-    }
-    TLS_CERT_WINDOW = {
-        "name": "OCC__TlsErrorDialog",
-        "type": "OCC::TlsErrorDialog",
-        "visible": 1,
-    }
-    ACCEPT_CERTIFICATE_YES = {
-        "text": "Yes",
-        "type": "QPushButton",
-        "visible": 1,
-        "window": TLS_CERT_WINDOW,
-    }
-
-    def __init__(self, occurrence=1):
-        if occurrence > 1:
-            self.TLS_CERT_WINDOW.update({"occurrence": occurrence})
+    LOGIN_CONTAINER = SimpleNamespace(by=None, selector=None)
+    LOGIN_USER_LABEL = SimpleNamespace(by=None, selector=None)
+    USERNAME_BOX = SimpleNamespace(by=None, selector=None)
+    LOGOUT_BUTTON = SimpleNamespace(by=None, selector=None)
 
     def get_username(self):
         # Parse username from the login label:
@@ -58,9 +19,7 @@ class EnterPassword:
         return username.capitalize()
 
     def oidc_relogin(self, username, password):
-        # wait 500ms for copy button to fully load
-        squish.snooze(1 / 2)
-        squish.mouseClick(squish.waitForObject(self.COPY_URL_TO_CLIPBOARD_BUTTON))
+        AccountConnectionWizard.copy_login_url()
         authorize_via_webui(username, password)
 
     def relogin(self, username, password, oauth=False):
@@ -70,4 +29,4 @@ class EnterPassword:
         self.oidc_relogin(username, password)
 
     def accept_certificate(self):
-        squish.clickButton(squish.waitForObject(self.ACCEPT_CERTIFICATE_YES))
+        AccountConnectionWizard.accept_certificate()

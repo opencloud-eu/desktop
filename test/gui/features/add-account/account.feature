@@ -26,7 +26,7 @@ Feature: adding accounts
             | password | 1234           |
         Then the account with displayname "Alice Hansen" should be displayed
 
-    @smoke @skip
+    @smoke
     Scenario: Adding multiple accounts
         Given user "Brian" has been created in the server with default attributes
         And user "Alice" has set up a client with default settings
