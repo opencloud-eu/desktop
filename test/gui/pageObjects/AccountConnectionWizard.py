@@ -75,11 +75,15 @@ class AccountConnectionWizard:
         AccountConnectionWizard.browser_login(username, password)
 
     @staticmethod
-    def browser_login(username, password):
+    def copy_login_url():
         app().find_element(
             AccountConnectionWizard.COPY_URL_TO_CLIPBOARD_BUTTON.by,
             AccountConnectionWizard.COPY_URL_TO_CLIPBOARD_BUTTON.selector,
         ).click()
+
+    @staticmethod
+    def browser_login(username, password):
+        AccountConnectionWizard.copy_login_url()
         authorize_via_webui(username, password)
 
     @staticmethod

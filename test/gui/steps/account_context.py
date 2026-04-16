@@ -1,17 +1,18 @@
 from behave import given as Given, when as When, then as Then
+from sure import expect
 
 from pageObjects.AccountConnectionWizard import AccountConnectionWizard
-
 from pageObjects.Toolbar import Toolbar
-
+from pageObjects.EnterPassword import EnterPassword
 from helpers.SetupClientHelper import (
     start_client,
+    setup_client,
     substitute_inline_codes,
     get_client_details,
     get_resource_path,
 )
-
 from helpers.SyncHelper import wait_for_initial_sync_to_complete
+from helpers.UserHelper import get_displayname_for_user, get_password_for_user
 
 
 @Given('the user has started the client')
@@ -31,7 +32,7 @@ def step(context):
 @Then('the account with displayname "{displayname}" should be displayed')
 def step(context, displayname):
     displayname = substitute_inline_codes(displayname)
-    Toolbar.account_exists(displayname)
+    expect(Toolbar.account_exists(displayname)).to.be.true
 
 
 @Then('the account with displayname "|any|" should not be displayed')
@@ -46,7 +47,7 @@ def step(context, displayname):
     )
 
 
-@Given('user "|any|" has set up a client with default settings')
+@Given('user "{username}" has set up a client with default settings')
 def step(context, username):
     password = get_password_for_user(username)
     setup_client(username)
@@ -241,11 +242,10 @@ def step(context):
     Toolbar.quit_opencloud()
 
 
-@Then('"|any|" account should be opened')
+@Then('"{displayname}" account should be opened')
 def step(context, displayname):
     displayname = substitute_inline_codes(displayname)
-    if not Toolbar.account_has_focus(displayname):
-        raise LookupError(f"Account '{displayname}' should be opened, but it is not")
+    expect(Toolbar.account_has_focus(displayname)).to.be.true
 
 
 @Then(
