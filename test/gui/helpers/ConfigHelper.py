@@ -110,7 +110,7 @@ CONFIG = {
     'clientLogDir': '',
     'clientRootSyncPath': get_client_root_path(),
     'tempFolderPath': os.path.join(get_client_root_path(), 'temp'),
-    'clientConfigFile': os.path.join(get_config_home(), "OpenCloud", "opencloud.cfg"),
+    'clientConfigFile': os.path.join(get_config_home(), "OpenCloud", APP_CONFIG_FILE),
     'guiTestReportDir': os.path.abspath('../reports'),
     'record_video_on_failure': False,
     'files_for_upload': os.path.join(CURRENT_DIR.parent.parent, 'files-for-upload'),
