@@ -1,10 +1,14 @@
-from behave import given as Given, then as Then
+from behave import given as Given, then as Then, register_type
 from sure import ensure
 
 from helpers.api import provisioning, webdav_helper as webdav
 from helpers.TableParser import table_rows_hash
 
+@parse.with_pattern(r"file|folder")
+def parse_resource_type(text):
+    return text
 register_type(ResourceType=parse_resource_type)
+
 
 @Given('user "{user}" has been created in the server with default attributes')
 def step(context, user):
