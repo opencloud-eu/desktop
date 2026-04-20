@@ -4,6 +4,7 @@ from sure import ensure
 from helpers.api import provisioning, webdav_helper as webdav
 from helpers.TableParser import table_rows_hash
 
+register_type(ResourceType=parse_resource_type)
 
 @Given('user "{user}" has been created in the server with default attributes')
 def step(context, user):
