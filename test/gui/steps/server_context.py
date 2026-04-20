@@ -1,34 +1,26 @@
-from behave import given as Given
+from behave import given as Given, then as Then, register_type
+from helpers.api import provisioning, webdav_helper as webdav
+import parse
 
-from helpers.api import provisioning
+@parse.with_pattern(r"file|folder")
+def parse_resource_type(text):
+    return text
 
+register_type(ResourceType=parse_resource_type)
 
 @Given('user "{user}" has been created in the server with default attributes')
 def step(context, user):
     provisioning.create_user(user)
 
+@Then('as "{user_name}" {resource_type:ResourceType} "{resource_name}" should not exist in the server')
+def step(context, user_name, resource_type, resource_name):
+    resource_exists = webdav.resource_exists(user_name, resource_name)
+    assert resource_exists is False, f"Resource '{resource_name}' should not exist, but does"
 
-# @Then(
-#     r'^as "([^"].*)" (?:file|folder) "([^"].*)" should not exist in the server',
-#     regexp=True,
-# )
-# def step(context, user_name, resource_name):
-#     test.compare(
-#         webdav.resource_exists(user_name, resource_name),
-#         False,
-#         f"Resource '{resource_name}' should not exist, but does",
-#     )
-
-
-# @Then(
-#     r'^as "([^"].*)" (?:file|folder) "([^"].*)" should exist in the server', regexp=True
-# )
-# def step(context, user_name, resource_name):
-#     test.compare(
-#         webdav.resource_exists(user_name, resource_name),
-#         True,
-#         f"Resource '{resource_name}' should exist, but does not",
-#     )
+@Then('as "{user_name}" {resource_type:ResourceType} "{resource_name}" should exist in the server')
+def step(context, user_name, resource_type, resource_name):
+    resource_exists = webdav.resource_exists(user_name, resource_name)
+    assert resource_exists is True, f"Resource '{resource_name}' should exist, but does not"
 
 
 # @Then('as "|any|" the file "|any|" should have the content "|any|" in the server')
@@ -52,14 +44,18 @@ def step(context, user):
 #     )
 
 
-# @Given('user "|any|" has created folder "|any|" in the server')
-# def step(context, user, folder_name):
-#     webdav.create_folder(user, folder_name)
+@Given('user "{user}" has created folder "{folder_name}" in the server')
+def step(context, user, folder_name):
+    webdav.create_folder(user, folder_name)
 
 
-# @Given('user "|any|" has uploaded file with content "|any|" to "|any|" in the server')
-# def step(context, user, file_content, file_name):
-#     webdav.create_file(user, file_name, file_content)
+# @Given('user "{user}" has been created in the server with default attributes')
+# def step(context, user):
+#     provisioning.create_user(user)
+
+@Given('user "{user}" has uploaded file with content "{file_content}" to "{file_name}" in the server')
+def step(context, user, file_content, file_name):
+    webdav.create_file(user, file_name, file_content)
 
 
 # @When('the user clicks on the settings tab')

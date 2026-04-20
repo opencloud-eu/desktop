@@ -326,7 +326,7 @@ def wait_for_resource_to_have_sync_error(resource, resource_type):
 def wait_for_client_to_be_ready():
     global WAITED_AFTER_SYNC
     if not WAITED_AFTER_SYNC:
-        squish.snooze(get_config('minSyncTimeout'))
+        time.sleep(get_config('minSyncTimeout'))
         WAITED_AFTER_SYNC = True
 
 
