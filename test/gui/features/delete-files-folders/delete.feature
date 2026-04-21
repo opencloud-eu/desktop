@@ -6,7 +6,7 @@ Feature: deleting files and folders
     Background:
         Given user "Alice" has been created in the server with default attributes
 
-    @issue-9439 @smoke @skip
+    @issue-9439 @smoke
     Scenario Outline: Delete a file
         Given user "Alice" has uploaded file with content "openCloud test text file 0" to "<fileName>" in the server
         And user "Alice" has set up a client with default settings
@@ -19,7 +19,7 @@ Feature: deleting files and folders
             | textfile0-with-name-more-than-20-characters |
             |  ~`!@#$^&()-_=+{[}];',textfile.txt	  |
 
-    @issue-9439 @smoke @skip
+    @issue-9439 @smoke
     Scenario Outline: Delete a folder
         Given user "Alice" has created folder "<folderName>" in the server
         And user "Alice" has set up a client with default settings
@@ -31,7 +31,7 @@ Feature: deleting files and folders
             | simple-empty-folder                             |
             | simple-folder-with-name-more-than-20-characters |
 
-    @smoke @skip
+    @smoke
     Scenario: Delete a file and a folder
         Given user "Alice" has uploaded file with content "test file 1" to "textfile1.txt" in the server
         And user "Alice" has uploaded file with content "test file 2" to "textfile2.txt" in the server
