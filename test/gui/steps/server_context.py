@@ -1,6 +1,7 @@
 from behave import given as Given, then as Then, register_type
-from helpers.api import provisioning, webdav_helper as webdav
+from sure import ensure
 import parse
+from helpers.api import provisioning, webdav_helper as webdav
 
 @parse.with_pattern(r"file|folder")
 def parse_resource_type(text):
@@ -15,12 +16,17 @@ def step(context, user):
 @Then('as "{user_name}" {resource_type:ResourceType} "{resource_name}" should not exist in the server')
 def step(context, user_name, resource_type, resource_name):
     resource_exists = webdav.resource_exists(user_name, resource_name)
-    assert resource_exists is False, f"Resource '{resource_name}' should not exist, but does"
+    
+    with ensure('{0} "{1}" should not exist, but it does', resource_type.capitalize(), resource_name):
+        resource_exists.should.be.false
+
 
 @Then('as "{user_name}" {resource_type:ResourceType} "{resource_name}" should exist in the server')
 def step(context, user_name, resource_type, resource_name):
     resource_exists = webdav.resource_exists(user_name, resource_name)
-    assert resource_exists is True, f"Resource '{resource_name}' should exist, but does not"
+    
+    with ensure('{0} "{1}" should exist, but it does not', resource_type.capitalize(), resource_name):
+        resource_exists.should.be.true
 
 
 # @Then('as "|any|" the file "|any|" should have the content "|any|" in the server')
