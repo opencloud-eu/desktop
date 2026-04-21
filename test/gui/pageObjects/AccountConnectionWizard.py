@@ -37,7 +37,9 @@ class AccountConnectionWizard:
         by=By.NAME,
         selector="Copy URL",
     )
-    CONF_SYNC_MANUALLY_RADIO_BUTTON = SimpleNamespace(by=None, selector=None)
+    CONF_SYNC_MANUALLY_RADIO_BUTTON = SimpleNamespace(
+        by=By.NAME, selector="Configure synchronization manually"
+    )
     ADVANCED_CONFIGURATION_CHECKBOX = SimpleNamespace(
         by=By.NAME,
         selector="Advanced configuration",
@@ -164,11 +166,10 @@ class AccountConnectionWizard:
 
     @staticmethod
     def select_manual_sync_folder_option():
-        squish.clickButton(
-            squish.waitForObject(
-                AccountConnectionWizard.CONF_SYNC_MANUALLY_RADIO_BUTTON
-            )
-        )
+        app().find_element(
+            AccountConnectionWizard.CONF_SYNC_MANUALLY_RADIO_BUTTON.by,
+            AccountConnectionWizard.CONF_SYNC_MANUALLY_RADIO_BUTTON.selector,
+        ).click()
 
     @staticmethod
     def select_download_everything_option():

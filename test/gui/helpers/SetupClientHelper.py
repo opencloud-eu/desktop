@@ -43,7 +43,6 @@ def get_client_details(table):
         'user': '',
         'password': '',
         'sync_folder': '',
-        'oauth': False,
     }
     for key, value in table.items():
         value = substitute_inline_codes(value)

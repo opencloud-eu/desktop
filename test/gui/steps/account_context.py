@@ -14,6 +14,7 @@ from helpers.SetupClientHelper import (
 )
 from helpers.SyncHelper import wait_for_initial_sync_to_complete, listen_sync_status_for_item
 from helpers.UserHelper import get_displayname_for_user, get_password_for_user
+from helpers.TableParser import table_rows_hash
 
 
 @Given('the user has started the client')
@@ -96,12 +97,8 @@ def step(context):
 
 @When('the user adds the following account:')
 def step(context):
-    data_table = {}
-    for row in context.table:
-        if row.headings[0] not in data_table:
-            data_table[row.headings[0]] = row.headings[1]
-        data_table[row[0]] = row[1]
-    account_details = get_client_details(data_table)
+    data = table_rows_hash(context.table)
+    account_details = get_client_details(data)
     AccountConnectionWizard.add_account(account_details)
     # # wait for files to sync
     wait_for_initial_sync_to_complete(get_resource_path('/', account_details['user']))
@@ -109,7 +106,8 @@ def step(context):
 
 @Given('the user has entered the following account information:')
 def step(context):
-    account_details = get_client_details(context)
+    data = table_rows_hash(context.table)
+    account_details = get_client_details(data)
     AccountConnectionWizard.add_account_information(account_details)
 
 
