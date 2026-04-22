@@ -44,16 +44,10 @@ def step(context, displayname):
     expect(Toolbar.account_exists(displayname)).to.be.true
 
 
-@Then('the account with displayname "|any|" should not be displayed')
+@Then('the account with displayname "{displayname}" should not be displayed')
 def step(context, displayname):
     displayname = substitute_inline_codes(displayname)
-    timeout = get_config('lowestSyncTimeout') * 1000
-
-    test.compare(
-        False,
-        Toolbar.has_item(displayname, timeout),
-        f"Expected account '{displayname}' to be removed",
-    )
+    expect(Toolbar.account_exists(displayname)).to.be.false
 
 
 @Given('user "{username}" has set up a client with default settings')
@@ -161,7 +155,7 @@ def step(context, _):
     AccountSetting.wait_until_sync_folder_is_configured()
 
 
-@When('the user removes the connection for user "|any|"')
+@When('the user removes the connection for user "{username}"')
 def step(context, username):
     AccountSetting.remove_connection_for_user(username)
 

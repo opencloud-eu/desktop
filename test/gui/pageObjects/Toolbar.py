@@ -6,10 +6,13 @@ from helpers.SetupClientHelper import wait_until_app_killed
 from helpers.ConfigHelper import get_config
 from helpers.SetupClientHelper import app
 
+import time
+
 
 class Toolbar:
     TOOLBAR_ROW = SimpleNamespace(by=None, selector=None)
-    ACCOUNT_BUTTON = SimpleNamespace(by=None, selector=None)
+    ACCOUNT_BUTTON = SimpleNamespace(by=By.NAME, selector=None)
+    # ACCOUNT_BUTTON_LABEL = SimpleNamespace(by=By.XPATH, selector="//label[@name='BM']")
     ADD_ACCOUNT_BUTTON = SimpleNamespace(by=By.NAME, selector="Add Account")
     ACTIVITY_BUTTON = SimpleNamespace(by=By.NAME, selector="Activity")
     SETTINGS_BUTTON = SimpleNamespace(by=None, selector=None)
@@ -51,7 +54,12 @@ class Toolbar:
     @staticmethod
     def open_account(displayname):
         account_tab = Toolbar.get_account(displayname)
+        # print(f"DEBUG: Before click - checked='{account_tab.get_attribute('checked')}'")
+        # print(f"DEBUG: Before click - focused='{account_tab.get_attribute('focused')}'")
         account_tab.click()
+        # print(f"DEBUG: After click - checked='{account_tab.get_attribute('checked')}'")
+        # print(f"DEBUG: After click - focused='{account_tab.get_attribute('focused')}'")
+        # breakpoint()
 
     @staticmethod
     def get_displayed_account_text(displayname, host):
@@ -98,6 +106,36 @@ class Toolbar:
                 account_idx += 1
         return accounts, selectors
 
+# account = app().find_element(
+#     By.XPATH,
+#     f"//*[contains(@name, '{display_name}')]"
+# )
+
+    # @staticmethod
+    # def get_account(display_name):
+    #     server_host = urlparse(get_config('localBackendUrl')).netloc
+    #     account_label = f"{display_name}@{server_host}"
+    #     # account = None
+    #     try:
+    #         # nav_bar = app().find_element(By.NAME, "Navigation bar")
+    #         # account = nav_bar.find_element(By.NAME, account_label)
+    #         # account = app().find_element(
+    #         #     By.XPATH,
+    #         #     f'//panel[@name="Navigation bar"]//pagetab[@name="{account_label}"]'
+    #         # )
+    #         all_matches = app().find_elements(By.NAME, account_label)
+    #         print(f"DEBUG: Looking for '{account_label}'")
+    #         print(f"DEBUG: Found {len(all_matches)} elements")
+    #         for i, el in enumerate(all_matches):
+    #             print(f"DEBUG: [{i}] name='{el.get_attribute('name')}' "
+    #                   f"role='{el.get_attribute('role')}' "
+    #                   f"displayed='{el.is_displayed()}'")
+    #         return all_matches[0] if all_matches else None
+    #         # return account
+    #     except:
+    #         return None
+    #     # return account
+
     @staticmethod
     def get_account(display_name):
         server_host = urlparse(get_config('localBackendUrl')).netloc
@@ -124,5 +162,6 @@ class Toolbar:
 
     @staticmethod
     def account_exists(display_name):
+        time.sleep(5)
         account = Toolbar.get_account(display_name)
         return account is not None
