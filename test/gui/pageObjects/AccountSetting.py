@@ -1,5 +1,11 @@
+# pyright: reportUndefinedVariable=false
+
 from types import SimpleNamespace
 from appium.webdriver.common.appiumby import AppiumBy as By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.common.exceptions import TimeoutException, NoSuchElementException
+from helpers.UserHelper import get_displayname_for_user
+from helpers.SetupClientHelper import substitute_inline_codes, app
 
 from pageObjects.Toolbar import Toolbar
 from helpers.UserHelper import get_displayname_for_user
@@ -61,9 +67,8 @@ class AccountSetting:
 
     @staticmethod
     def get_account_connection_label():
-        return str(
-            squish.waitForObjectExists(AccountSetting.ACCOUNT_CONNECTION_LABEL).text
-        )
+        label = app().find_element(AccountSetting.ACCOUNT_CONNECTION_LABEL.by, AccountSetting.ACCOUNT_CONNECTION_LABEL.selector).text
+        return str(label)
 
     @staticmethod
     def is_connecting():
@@ -93,18 +98,15 @@ class AccountSetting:
 
     @staticmethod
     def wait_until_account_is_connected(timeout=5000):
-        result = squish.waitFor(
-            AccountSetting.is_user_signed_in,
-            timeout,
-        )
-
-        if not result:
+        wait = WebDriverWait(app(), timeout / 1000)  # Convert to seconds
+        try:
+            wait.until(lambda _: AccountSetting.is_user_signed_in())
+            return True
+        except TimeoutException:
             raise TimeoutError(
-                "Timeout waiting for the account to be connected for "
-                + str(timeout)
-                + " milliseconds"
+                f"Timeout waiting for the account to be connected for {timeout} milliseconds"
             )
-        return result
+
 
     @staticmethod
     def wait_until_sync_folder_is_configured(timeout=5000):
