@@ -93,6 +93,10 @@ Pane {
                 width: scrollView.availableWidth
                 implicitHeight: normalSize
 
+                function selectSpace() {
+                    spaceDelegate.ListView.view.currentIndex = spaceDelegate.index;
+                }
+
                 Pane {
                     id: delegatePane
 
@@ -102,6 +106,9 @@ Pane {
                     Accessible.role: Accessible.ListItem
                     Accessible.selectable: true
                     Accessible.selected: space === spacesBrowser.currentSpace
+                    Accessible.onPressAction: {
+                        spaceDelegate.selectSpace();
+                    }
 
                     clip: true
 
@@ -132,7 +139,7 @@ Pane {
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-                            spaceDelegate.ListView.view.currentIndex = spaceDelegate.index;
+                            spaceDelegate.selectSpace();
                         }
                     }
                 }
