@@ -16,7 +16,7 @@ def step(context, user):
 @Then('as "{user_name}" {resource_type:ResourceType} "{resource_name}" should not exist in the server')
 def step(context, user_name, resource_type, resource_name):
     resource_exists = webdav.resource_exists(user_name, resource_name)
-    
+
     with ensure('{0} "{1}" should not exist, but it does', resource_type.capitalize(), resource_name):
         resource_exists.should.be.false
 
@@ -24,7 +24,7 @@ def step(context, user_name, resource_type, resource_name):
 @Then('as "{user_name}" {resource_type:ResourceType} "{resource_name}" should exist in the server')
 def step(context, user_name, resource_type, resource_name):
     resource_exists = webdav.resource_exists(user_name, resource_name)
-    
+
     with ensure('{0} "{1}" should exist, but it does not', resource_type.capitalize(), resource_name):
         resource_exists.should.be.true
 
