@@ -1,7 +1,10 @@
+import shutil
+import os
 from behave import given as Given, when as When, then as Then
 from sure import expect
 
 from pageObjects.AccountConnectionWizard import AccountConnectionWizard
+from pageObjects.AccountSetting import AccountSetting
 from pageObjects.Toolbar import Toolbar
 from pageObjects.EnterPassword import EnterPassword
 from helpers.SetupClientHelper import (
@@ -12,8 +15,12 @@ from helpers.SetupClientHelper import (
     generate_account_config,
     get_resource_path,
 )
-from helpers.SyncHelper import wait_for_initial_sync_to_complete, listen_sync_status_for_item
+from helpers.SyncHelper import (
+    wait_for_initial_sync_to_complete,
+    listen_sync_status_for_item,
+)
 from helpers.UserHelper import get_displayname_for_user, get_password_for_user
+from helpers.ConfigHelper import get_config
 from helpers.TableParser import table_rows_hash
 
 
@@ -277,7 +284,7 @@ def step(context, warn_message):
     )
 
 
-@Given('the user has removed the connection for user "|any|"')
+@Given('the user has removed the connection for user "{username}"')
 def step(context, username):
     AccountSetting.remove_connection_for_user(username)
     AccountSetting.wait_until_account_is_removed(username)

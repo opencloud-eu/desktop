@@ -38,8 +38,7 @@ class Toolbar:
     @staticmethod
     def open_activity():
         app().find_element(
-            Toolbar.ACTIVITY_BUTTON.by,
-            Toolbar.ACTIVITY_BUTTON.selector
+            Toolbar.ACTIVITY_BUTTON.by, Toolbar.ACTIVITY_BUTTON.selector
         ).click()
 
     @staticmethod
@@ -51,8 +50,8 @@ class Toolbar:
 
     @staticmethod
     def open_account(displayname):
-        _, selector = Toolbar.get_account(displayname)
-        squish.mouseClick(squish.waitForObject(selector))
+        account_tab = Toolbar.get_account(displayname)
+        account_tab.click()
 
     @staticmethod
     def get_displayed_account_text(displayname, host):

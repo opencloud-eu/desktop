@@ -76,7 +76,7 @@ Feature: adding accounts
         When the user selects download everything option in advanced section
         Then the button to open sync connection wizard should be disabled
 
-    @smoke @skip
+    @smoke
     Scenario: Re-add an account
         Given user "Alice" has created folder "large-folder" in the server
         And user "Alice" has uploaded file with content "test content" to "testFile.txt" in the server
