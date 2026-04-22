@@ -130,12 +130,15 @@ class SyncConnectionWizard:
             SyncConnectionWizard.SPACES_LIST.by,
             SyncConnectionWizard.SPACES_LIST.selector,
         )
-        spaces_list.find_element(
+        space_item = spaces_list.find_element(
             SyncConnectionWizard.SPACE_NAME_SELECTOR.by,
             SyncConnectionWizard.SPACE_NAME_SELECTOR.selector.format(
                 space_name=space_name
             ),
-        ).click()
+        )
+        space_item.click()
+        if space_item.get_attribute("selected") != "true":
+            raise AssertionError("Failed to select the space: " + space_name)
 
     @staticmethod
     def sync_space(space_name):
