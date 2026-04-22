@@ -11,7 +11,7 @@ class Toolbar:
     TOOLBAR_ROW = SimpleNamespace(by=None, selector=None)
     ACCOUNT_BUTTON = SimpleNamespace(by=None, selector=None)
     ADD_ACCOUNT_BUTTON = SimpleNamespace(by=By.NAME, selector="Add Account")
-    ACTIVITY_BUTTON = SimpleNamespace(by=None, selector=None)
+    ACTIVITY_BUTTON = SimpleNamespace(by=By.NAME, selector="Activity")
     SETTINGS_BUTTON = SimpleNamespace(by=None, selector=None)
     QUIT_BUTTON = SimpleNamespace(by=None, selector=None)
     CONFIRM_QUIT_BUTTON = SimpleNamespace(by=None, selector=None)
@@ -37,7 +37,10 @@ class Toolbar:
 
     @staticmethod
     def open_activity():
-        squish.mouseClick(squish.waitForObject(Toolbar.ACTIVITY_BUTTON))
+        app().find_element(
+            Toolbar.ACTIVITY_BUTTON.by,
+            Toolbar.ACTIVITY_BUTTON.selector
+        ).click()
 
     @staticmethod
     def open_new_account_setup():

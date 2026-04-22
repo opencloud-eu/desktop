@@ -9,9 +9,10 @@ from helpers.SetupClientHelper import (
     setup_client,
     substitute_inline_codes,
     get_client_details,
+    generate_account_config,
     get_resource_path,
 )
-from helpers.SyncHelper import wait_for_initial_sync_to_complete
+from helpers.SyncHelper import wait_for_initial_sync_to_complete, listen_sync_status_for_item
 from helpers.UserHelper import get_displayname_for_user, get_password_for_user
 
 
@@ -69,13 +70,12 @@ def step(context):
     start_client()
     # accept certificate for each user
     for idx, _ in enumerate(users):
-        enter_password = EnterPassword(len(users) - idx)
+        enter_password = EnterPassword()
         enter_password.accept_certificate()
 
     for idx, _ in enumerate(sync_paths.values()):
         # login from last dialog
-        account_idx = len(sync_paths) - idx
-        enter_password = EnterPassword(account_idx)
+        enter_password = EnterPassword()
         username = enter_password.get_username()
         password = get_password_for_user(username)
         listen_sync_status_for_item(sync_paths[username])

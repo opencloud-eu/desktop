@@ -3,12 +3,13 @@ Feature: filter activity for user
     I want to filter activity
     So that I can view activity of specific user
 
-    @smoke @skip
+    @smoke
     Scenario: filter synced activities
         Given user "Alice" has been created in the server with default attributes
         And user "Brian" has been created in the server with default attributes
         And user "Alice" has created folder "simple-folder" in the server
         And the user has set up the following accounts with default settings:
+            | users |
             | Alice |
             | Brian |
         When the user clicks on the activity tab
