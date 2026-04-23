@@ -7,6 +7,7 @@ from helpers.api.provisioning import delete_created_users
 from helpers.ConfigHelper import set_config, get_config
 from helpers.FilesHelper import prefix_path_namespace, cleanup_created_paths
 from helpers.SetupClientHelper import app
+from step_types.types import *  # register all step types
 
 
 def before_feature(context, feature):

@@ -1,22 +1,19 @@
-# # -*- coding: utf-8 -*-
 import os
-# import re
-# import builtins
+import re
+import builtins
 import shutil
-# import zipfile
-# from os.path import isfile, join, isdir
-import parse
-from behave import when as When, register_type
+import zipfile
+from os.path import isfile, join, isdir
+from behave import when as When, then as Then
+from sure import ensure
 
-from helpers.SetupClientHelper import (
-	get_resource_path,
-	# get_temp_resource_path
-)
+from helpers.SetupClientHelper import get_resource_path, get_temp_resource_path
 from helpers.SyncHelper import (
-	wait_for_client_to_be_ready,
-	# listen_sync_status_for_item
+    wait_for_client_to_be_ready,
+    listen_sync_status_for_item,
+    wait_for,
 )
-# from helpers.ConfigHelper import get_config, is_windows
+from helpers.ConfigHelper import get_config, is_windows
 from helpers.FilesHelper import (
     # build_conflicted_regex,
     sanitize_path,
@@ -30,25 +27,19 @@ from helpers.FilesHelper import (
     # get_file_for_upload,
 )
 
-@parse.with_pattern(r"file|folder")
-def parse_resource_type(text):
-    return text
 
-register_type(ResourceType=parse_resource_type)
-
-
-# def folder_exists(folder_path, timeout=1000):
-#     return squish.waitFor(
-#         lambda: isdir(sanitize_path(folder_path)),
-#         timeout,
-#     )
+def folder_exists(folder_path, timeout=1000):
+    return wait_for(
+        lambda: isdir(sanitize_path(folder_path)),
+        timeout,
+    )
 
 
-# def file_exists(file_path, timeout=1000):
-#     return squish.waitFor(
-#         lambda: isfile(sanitize_path(file_path)),
-#         timeout,
-#     )
+def file_exists(file_path, timeout=1000):
+    return wait_for(
+        lambda: isfile(sanitize_path(file_path)),
+        timeout,
+    )
 
 
 # To create folders in a temporary directory, we set is_temp_folder True
@@ -209,30 +200,42 @@ def deleteResource(resource, resource_type):
 #     )
 
 
-# @Then(
-#     r'^the (file|folder) "([^"]*)" (should|should not) exist on the file system$',
-#     regexp=True,
-# )
-# def step(context, resource_type, resource, should_or_should_not):
-#     resource_path = get_resource_path(resource)
-#     resource_exists = False
-#     if resource_type == 'file':
-#         if should_or_should_not == 'should':
-#             resource_exists = file_exists(
-#                 resource_path, get_config('maxSyncTimeout') * 1000
-#             )
-#     else:
-#         if should_or_should_not == 'should':
-#             resource_exists = folder_exists(
-#                 resource_path, get_config('maxSyncTimeout') * 1000
-#             )
+@Then('the {resource_type:ResourceType} "{resource}" should exist on the file system')
+def step(context, resource_type, resource):
+    resource_path = get_resource_path(resource)
+    resource_exists = False
+    timeout = get_config('maxSyncTimeout') * 1000
+    if resource_type == 'file':
+        resource_exists = file_exists(resource_path, timeout)
+    else:
+        resource_exists = folder_exists(resource_path, timeout)
 
-#     expected = should_or_should_not == 'should'
-#     test.compare(
-#         expected,
-#         resource_exists,
-#         f'{resource_type.capitalize()} "{resource}" {"exists" if resource_exists else "does not exist"} on the system',
-#     )
+    with ensure(
+        '{0} "{1}" should exist, but it does not',
+        resource_type.capitalize(),
+        resource,
+    ):
+        resource_exists.should.be.true
+
+
+@Then(
+    'the {resource_type:ResourceType} "{resource}" should not exist on the file system'
+)
+def step(context, resource_type, resource):
+    resource_path = get_resource_path(resource)
+    resource_exists = False
+    timeout = get_config('maxSyncTimeout') * 1000
+    if resource_type == 'file':
+        resource_exists = file_exists(resource_path, timeout)
+    else:
+        resource_exists = folder_exists(resource_path, timeout)
+
+    with ensure(
+        '{0} "{1}" should not exist, but it does',
+        resource_type.capitalize(),
+        resource,
+    ):
+        resource_exists.should.be.false
 
 
 # @Given('the user has changed the content of local file "|any|" to:')

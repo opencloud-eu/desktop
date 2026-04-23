@@ -1,8 +1,11 @@
 from behave import when as When, then as Then
-# from pageObjects.SyncConnectionWizard import SyncConnectionWizard
+
+from pageObjects.SyncConnectionWizard import SyncConnectionWizard
+
 # from pageObjects.SyncConnection import SyncConnection
 from pageObjects.Toolbar import Toolbar
 from pageObjects.Activity import Activity
+
 # from pageObjects.Settings import Settings
 
 # from helpers.ConfigHelper import get_config, is_windows, set_config
@@ -16,6 +19,7 @@ from helpers.SetupClientHelper import (
     substitute_inline_codes,
     get_resource_path,
 )
+
 # from helpers.FilesHelper import convert_path_separators_for_os
 
 
@@ -170,9 +174,9 @@ def step(context, tab_name):
 #     set_current_user_sync_path(sync_path)
 
 
-# @When('the user syncs the "|any|" space')
-# def step(context, space_name):
-#     SyncConnectionWizard.sync_space(space_name)
+@When('the user syncs the "{space_name}" space')
+def step(context, space_name):
+    SyncConnectionWizard.sync_space(space_name)
 
 
 # @Then('the settings tab should have the following options in the general section:')
