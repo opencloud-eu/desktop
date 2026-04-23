@@ -1,5 +1,6 @@
 from types import SimpleNamespace
 from appium.webdriver.common.appiumby import AppiumBy as By
+from selenium.webdriver.common.keys import Keys
 import time
 
 from helpers.SetupClientHelper import get_current_user_sync_path
@@ -136,7 +137,11 @@ class SyncConnectionWizard:
                 space_name=space_name
             ),
         )
-        space_item.click()
+        # ISSUE: https://github.com/opencloud-eu/desktop/pull/879
+        # Workaround until above fix is merged
+        # TODO: Remove 'send_keys' and uncomment 'click' action
+        space_item.send_keys(Keys.ARROW_DOWN)
+        # space_item.click()
         if space_item.get_attribute("selected") != "true":
             raise AssertionError("Failed to select the space: " + space_name)
 
