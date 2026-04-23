@@ -50,7 +50,7 @@ Feature: adding accounts
             | password | 1234  |
         Then "Alice Hansen" account should be opened
 
-    @smoke @skip
+    @smoke
     Scenario: Add space manually from sync connection window
         Given user "Alice" has created folder "simple-folder" in the server
         And the user has started the client
