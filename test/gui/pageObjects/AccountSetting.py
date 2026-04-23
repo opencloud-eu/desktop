@@ -1,75 +1,42 @@
-import names
-import squish
-
-from helpers.UserHelper import get_displayname_for_user
-from helpers.SetupClientHelper import substitute_inline_codes
+from types import SimpleNamespace
+from appium.webdriver.common.appiumby import AppiumBy as By
 
 from pageObjects.Toolbar import Toolbar
+from helpers.UserHelper import get_displayname_for_user
+from helpers.SetupClientHelper import app, substitute_inline_codes
+from helpers.SyncHelper import wait_for
 
 
 class AccountSetting:
-    MANAGE_ACCOUNT_BUTTON = {
-        "container": names.stackedWidget_quickWidget_OCC_QmlUtils_OCQuickWidget,
-        "id": "manageAccountButton",
-        "text": "Manage Account",
-        "type": "Button",
-        "visible": 1,
-    }
-    ACCOUNT_MENU = {
-        "checkable": False,
-        "container": names.quickWidget_Overlay,
-        "text": "",
-        "enabled": True,
-        "type": "MenuItem",
-        "unnamed": 1,
-        "visible": True
-    }
-    CONFIRM_REMOVE_CONNECTION_BUTTON = {
-        "container": names.settings_dialogStack_QStackedWidget,
-        "text": "Remove connection",
-        "type": "QPushButton",
-        "unnamed": 1,
-        "visible": 1,
-    }
-    ACCOUNT_CONNECTION_LABEL = {
-        "container": names.stackedWidget_quickWidget_OCC_QmlUtils_OCQuickWidget,
-        "type": "Label",
-        "visible": 1
-    }
-    LOG_BROWSER_WINDOW = {
-        "name": "OCC__LogBrowser",
-        "type": "OCC::LogBrowser",
-        "visible": 1,
-    }
-    ACCOUNT_LOADING = {
-        "window": names.settings_OCC_SettingsDialog,
-        "name": "loadingPage",
-        "type": "QWidget",
-        "visible": 0,
-    }
-    DIALOG_STACK = {
-        "name": "dialogStack",
-        "type": "QStackedWidget",
-        "visible": 1,
-        "window": names.settings_OCC_SettingsDialog,
-    }
-    CONFIRMATION_YES_BUTTON = {"text": "Yes", "type": "QPushButton", "visible": 1}
+    MANAGE_ACCOUNT_BUTTON = SimpleNamespace(by=By.NAME, selector="Manage Account")
+    ACCOUNT_MENU = SimpleNamespace(by=By.NAME, selector="{menu_item}")
+    CONFIRM_REMOVE_CONNECTION_BUTTON = SimpleNamespace(
+        by=By.NAME, selector="Remove connection"
+    )
+    ACCOUNT_CONNECTION_LABEL = SimpleNamespace(by=None, selector=None)
+    LOG_BROWSER_WINDOW = SimpleNamespace(by=None, selector=None)
+    ACCOUNT_LOADING = SimpleNamespace(by=None, selector=None)
+    DIALOG_STACK = SimpleNamespace(by=None, selector=None)
+    CONFIRMATION_YES_BUTTON = SimpleNamespace(by=None, selector=None)
 
     @staticmethod
     def account_action(action):
-        squish.mouseClick(squish.waitForObject(AccountSetting.MANAGE_ACCOUNT_BUTTON))
-        selector = AccountSetting.ACCOUNT_MENU.copy()
-        selector['text'] = action
-        squish.mouseClick(
-            squish.waitForObject(selector)
-        )
+        app().find_element(
+            AccountSetting.MANAGE_ACCOUNT_BUTTON.by,
+            AccountSetting.MANAGE_ACCOUNT_BUTTON.selector,
+        ).click()
+        app().find_element(
+            AccountSetting.ACCOUNT_MENU.by,
+            AccountSetting.ACCOUNT_MENU.selector.format(menu_item=action),
+        ).click()
 
     @staticmethod
     def remove_account_connection():
         AccountSetting.account_action("Remove")
-        squish.clickButton(
-            squish.waitForObject(AccountSetting.CONFIRM_REMOVE_CONNECTION_BUTTON)
-        )
+        app().find_element(
+            AccountSetting.CONFIRM_REMOVE_CONNECTION_BUTTON.by,
+            AccountSetting.CONFIRM_REMOVE_CONNECTION_BUTTON.selector,
+        ).click()
 
     @staticmethod
     def logout():
@@ -172,11 +139,11 @@ class AccountSetting:
         displayname = get_displayname_for_user(username)
         displayname = substitute_inline_codes(displayname)
 
-        def account_gone():
-            account, _ = Toolbar.get_account(displayname)
+        def account_removed():
+            account = Toolbar.get_account(displayname)
             return account is None
 
-        result = squish.waitFor(account_gone, timeout)
+        result = wait_for(account_removed, timeout)
 
         if not result:
             raise TimeoutError(

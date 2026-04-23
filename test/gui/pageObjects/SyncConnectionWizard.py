@@ -1,138 +1,46 @@
-from os import path
-import names
-import squish
+from types import SimpleNamespace
+from appium.webdriver.common.appiumby import AppiumBy as By
+import time
 
-from helpers.SetupClientHelper import (
-    get_current_user_sync_path,
-    set_current_user_sync_path,
-)
-from helpers.ConfigHelper import get_config
+from helpers.SetupClientHelper import get_current_user_sync_path
+from helpers.SetupClientHelper import app
 
 
 class SyncConnectionWizard:
-    CHOOSE_LOCAL_SYNC_FOLDER = {
-        "buddy": names.add_Space_label_QLabel,
-        "name": "localFolderLineEdit",
-        "type": "QLineEdit",
-        "visible": 1
-    }
-    BACK_BUTTON = {
-        "window": names.stackedWidget_Add_Space_QGroupBox,
-        "name": "__qt__passive_wizardbutton0",
-        "type": "QPushButton",
-        "visible": 1,
-    }
-    NEXT_BUTTON = {
-        "window": names.stackedWidget_Add_Space_QGroupBox,
-        "name": "__qt__passive_wizardbutton1",
-        "type": "QPushButton",
-        "visible": 1,
-    }
-    SELECTIVE_SYNC_ROOT_FOLDER = {
-        "column": 0,
-        "container": names.add_Space_Deselect_remote_folders_you_do_not_wish_to_synchronize_QTreeWidget,
-        "text": "Personal",
-        "type": "QModelIndex",
-    }
-    ADD_SPACE_FOLDER_TREE = {
-        "column": 0,
-        "container": names.deselect_remote_folders_you_do_not_wish_to_synchronize_OpenCloud_QModelIndex,
-        "type": "QModelIndex",
-    }
-    ADD_SYNC_CONNECTION_BUTTON = {
-        "name": "qt_wizard_finish",
-        "type": "QPushButton",
-        "visible": 1,
-        "window": names.stackedWidget_Add_Space_QGroupBox,
-    }
-    REMOTE_FOLDER_TREE = {
-        "container": names.add_Folder_Sync_Connection_groupBox_QGroupBox,
-        "name": "folderTreeWidget",
-        "type": "QTreeWidget",
-        "visible": 1,
-    }
-    SELECTIVE_SYNC_TREE_HEADER = {
-        "container": names.add_Space_Deselect_remote_folders_you_do_not_wish_to_synchronize_QTreeWidget,
-        "orientation": 1,
-        "type": "QHeaderView",
-        "unnamed": 1,
-        "visible": 1,
-    }
-    CANCEL_FOLDER_SYNC_CONNECTION_WIZARD = {
-        "window": names.stackedWidget_Add_Space_QGroupBox,
-        "name": "qt_wizard_cancel",
-        "type": "QPushButton",
-        "visible": 1,
-    }
-    SPACE_NAME_SELECTOR = {
-        "container": names.quickWidget_scrollView_ScrollView,
-        "type": "Label",
-        "visible": True,
-    }
-    CREATE_REMOTE_FOLDER_BUTTON = {
-        "container": names.add_Folder_Sync_Connection_groupBox_QGroupBox,
-        "name": "addFolderButton",
-        "type": "QPushButton",
-        "visible": 1,
-    }
-    CREATE_REMOTE_FOLDER_INPUT = {
-        "buddy": names.create_Remote_Folder_Enter_the_name_of_the_new_folder_to_be_created_below_QLabel,
-        "type": "QLineEdit",
-        "unnamed": 1,
-        "visible": 1,
-    }
-    CREATE_REMOTE_FOLDER_CONFIRM_BUTTON = {
-        "text": "OK",
-        "type": "QPushButton",
-        "unnamed": 1,
-        "visible": 1,
-        "window": names.create_Remote_Folder_QInputDialog,
-    }
-    REFRESH_BUTTON = {
-        "container": names.add_Folder_Sync_Connection_groupBox_QGroupBox,
-        "name": "refreshButton",
-        "type": "QPushButton",
-        "visible": 1,
-    }
-    REMOTE_FOLDER_SELECTION_INPUT = {
-        "name": "folderEntry",
-        "type": "QLineEdit",
-        "visible": 1,
-        "window": names.add_Folder_Sync_Connection_OCC_FolderWizard,
-    }
-    ADD_FOLDER_SYNC_BUTTON = {
-        "checkable": False,
-        "container": names.stackedWidget_quickWidget_OCC_QmlUtils_OCQuickWidget,
-        "id": "addSyncButton",
-        "type": "Button",
-        "unnamed": 1,
-        "visible": True,
-    }
-    WARN_LABEL = {
-        "window": names.add_Folder_Sync_Connection_OCC_FolderWizard,
-        "name": "warnLabel",
-        "type": "QLabel",
-        "visible": 1,
-    }
-
-    CHOOSE_WHAT_TO_SYNC_FOLDER_TREE = {
-        "column": 0,
-        "container": names.deselect_remote_folders_you_do_not_wish_to_synchronize_Personal_QModelIndex,
-        "type": "QModelIndex",
-    }
+    CHOOSE_LOCAL_SYNC_FOLDER = SimpleNamespace(
+        by=By.ACCESSIBILITY_ID, selector="localFolderLineEdit"
+    )
+    BACK_BUTTON = SimpleNamespace(by=By.NAME, selector="< Back")
+    NEXT_BUTTON = SimpleNamespace(by=By.NAME, selector="Next >")
+    SELECTIVE_SYNC_ROOT_FOLDER = SimpleNamespace(by=None, selector=None)
+    ADD_SPACE_FOLDER_TREE = SimpleNamespace(by=None, selector=None)
+    ADD_SYNC_CONNECTION_BUTTON = SimpleNamespace(
+        by=By.XPATH, selector="//dialog[@name='Add Space']//*[@name='Add Space']"
+    )
+    REMOTE_FOLDER_TREE = SimpleNamespace(by=None, selector=None)
+    SELECTIVE_SYNC_TREE_HEADER = SimpleNamespace(by=None, selector=None)
+    CANCEL_FOLDER_SYNC_CONNECTION_WIZARD = SimpleNamespace(by=None, selector=None)
+    SPACES_LIST = SimpleNamespace(by=By.NAME, selector="Spaces list")
+    SPACE_NAME_SELECTOR = SimpleNamespace(by=By.NAME, selector="{space_name},")
+    CREATE_REMOTE_FOLDER_BUTTON = SimpleNamespace(by=None, selector=None)
+    CREATE_REMOTE_FOLDER_INPUT = SimpleNamespace(by=None, selector=None)
+    CREATE_REMOTE_FOLDER_CONFIRM_BUTTON = SimpleNamespace(by=None, selector=None)
+    REFRESH_BUTTON = SimpleNamespace(by=None, selector=None)
+    REMOTE_FOLDER_SELECTION_INPUT = SimpleNamespace(by=None, selector=None)
+    ADD_FOLDER_SYNC_BUTTON = SimpleNamespace(by=None, selector=None)
+    WARN_LABEL = SimpleNamespace(by=None, selector=None)
+    CHOOSE_WHAT_TO_SYNC_FOLDER_TREE = SimpleNamespace(by=None, selector=None)
 
     @staticmethod
     def set_sync_path_oc(sync_path):
         if not sync_path:
             sync_path = get_current_user_sync_path()
-        squish.type(
-            squish.waitForObject(SyncConnectionWizard.CHOOSE_LOCAL_SYNC_FOLDER),
-            "<Ctrl+A>",
+        sync_path_input = app().find_element(
+            SyncConnectionWizard.CHOOSE_LOCAL_SYNC_FOLDER.by,
+            SyncConnectionWizard.CHOOSE_LOCAL_SYNC_FOLDER.selector,
         )
-        squish.type(
-            SyncConnectionWizard.CHOOSE_LOCAL_SYNC_FOLDER,
-            sync_path,
-        )
+        sync_path_input.clear()
+        sync_path_input.send_keys(sync_path)
         SyncConnectionWizard.next_step()
 
     @staticmethod
@@ -141,7 +49,13 @@ class SyncConnectionWizard:
 
     @staticmethod
     def next_step():
-        squish.clickButton(squish.waitForObject(SyncConnectionWizard.NEXT_BUTTON))
+        next_button = app().find_element(
+            SyncConnectionWizard.NEXT_BUTTON.by,
+            SyncConnectionWizard.NEXT_BUTTON.selector,
+        )
+        if not next_button.is_enabled():
+            raise AssertionError("Next button is not enabled")
+        next_button.click()
 
     @staticmethod
     def back():
@@ -166,7 +80,6 @@ class SyncConnectionWizard:
             squish.Qt.LeftButton,
         )
 
-
     @staticmethod
     def sort_by(header_text):
         squish.mouseClick(
@@ -182,9 +95,10 @@ class SyncConnectionWizard:
 
     @staticmethod
     def add_sync_connection():
-        squish.clickButton(
-            squish.waitForObject(SyncConnectionWizard.ADD_SYNC_CONNECTION_BUTTON)
-        )
+        app().find_element(
+            SyncConnectionWizard.ADD_SYNC_CONNECTION_BUTTON.by,
+            SyncConnectionWizard.ADD_SYNC_CONNECTION_BUTTON.selector,
+        ).click()
 
     @staticmethod
     def get_item_name_from_row(row_index):
@@ -212,9 +126,19 @@ class SyncConnectionWizard:
 
     @staticmethod
     def select_space(space_name):
-        selector = SyncConnectionWizard.SPACE_NAME_SELECTOR.copy()
-        selector["text"] = space_name
-        squish.mouseClick(squish.waitForObject(selector))
+        spaces_list = app().find_element(
+            SyncConnectionWizard.SPACES_LIST.by,
+            SyncConnectionWizard.SPACES_LIST.selector,
+        )
+        space_item = spaces_list.find_element(
+            SyncConnectionWizard.SPACE_NAME_SELECTOR.by,
+            SyncConnectionWizard.SPACE_NAME_SELECTOR.selector.format(
+                space_name=space_name
+            ),
+        )
+        space_item.click()
+        if space_item.get_attribute("selected") != "true":
+            raise AssertionError("Failed to select the space: " + space_name)
 
     @staticmethod
     def sync_space(space_name):
@@ -271,11 +195,15 @@ class SyncConnectionWizard:
         ).enabled
 
     @staticmethod
-    def select_or_unselect_folders_to_sync(folders, should_select=True, new_sync_connection_wizard=False):
+    def select_or_unselect_folders_to_sync(
+        folders, should_select=True, new_sync_connection_wizard=False
+    ):
         if should_select:
             # First deselect all
             SyncConnectionWizard.deselect_all_remote_folders()
-        folder_tree_locator = SyncConnectionWizard.get_folder_tree_locator(new_sync_connection_wizard)
+        folder_tree_locator = SyncConnectionWizard.get_folder_tree_locator(
+            new_sync_connection_wizard
+        )
         for folder in folders:
             folder_levels = folder.strip("/").split("/")
             parent_selector = None
@@ -316,7 +244,7 @@ class SyncConnectionWizard:
         SyncConnectionWizard.select_or_unselect_folders_to_sync(
             folders,
             should_select=should_select,
-            new_sync_connection_wizard=new_sync_connection_wizard
+            new_sync_connection_wizard=new_sync_connection_wizard,
         )
 
         if new_sync_connection_wizard:
@@ -327,13 +255,17 @@ class SyncConnectionWizard:
     @staticmethod
     def unselect_folders_to_sync(folders, new_sync_connection_wizard=False):
         SyncConnectionWizard.__handle_folder_selection(
-            folders, should_select=False, new_sync_connection_wizard=new_sync_connection_wizard
+            folders,
+            should_select=False,
+            new_sync_connection_wizard=new_sync_connection_wizard,
         )
 
     @staticmethod
     def select_folders_to_sync(folders, new_sync_connection_wizard=False):
         SyncConnectionWizard.__handle_folder_selection(
-            folders, should_select=True, new_sync_connection_wizard=new_sync_connection_wizard
+            folders,
+            should_select=True,
+            new_sync_connection_wizard=new_sync_connection_wizard,
         )
 
     @staticmethod
