@@ -1,10 +1,12 @@
 from types import SimpleNamespace
 from urllib.parse import urlparse
 from appium.webdriver.common.appiumby import AppiumBy as By
+from selenium.webdriver.common.keys import Keys
 
 from helpers.SetupClientHelper import wait_until_app_killed
 from helpers.ConfigHelper import get_config
 from helpers.SetupClientHelper import app
+from helpers.UserHelper import get_displayname_for_user
 
 
 class Toolbar:
@@ -49,9 +51,15 @@ class Toolbar:
         ).click()
 
     @staticmethod
-    def open_account(displayname):
-        account_tab = Toolbar.get_account(displayname)
-        account_tab.click()
+    def open_account(username):
+        account_tab = Toolbar.get_account(username)
+        # ISSUE: https://github.com/opencloud-eu/desktop/pull/879
+        # Cannot activate account tab by click event
+        # Select the account tab using keyboard events as a workaround
+        # TODO: Remove the workaround and uncomment 'click' action
+        # account_tab.click()
+        account_tab.send_keys(Keys.TAB)
+        account_tab.send_keys(Keys.ENTER)
 
     @staticmethod
     def get_displayed_account_text(displayname, host):
@@ -99,7 +107,8 @@ class Toolbar:
         return accounts, selectors
 
     @staticmethod
-    def get_account(display_name):
+    def get_account(username):
+        display_name = get_displayname_for_user(username)
         server_host = urlparse(get_config('localBackendUrl')).netloc
         account_label = f"{display_name}@{server_host}"
         account = None
@@ -118,11 +127,11 @@ class Toolbar:
         return None, None
 
     @staticmethod
-    def account_has_focus(display_name):
-        account = Toolbar.get_account(display_name)
+    def account_has_focus(username):
+        account = Toolbar.get_account(username)
         return account.get_attribute("checked") == "true"
 
     @staticmethod
-    def account_exists(display_name):
-        account = Toolbar.get_account(display_name)
+    def account_exists(username):
+        account = Toolbar.get_account(username)
         return account is not None

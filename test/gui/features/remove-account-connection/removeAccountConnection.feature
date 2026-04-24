@@ -3,16 +3,17 @@ Feature: remove account connection
   I want to remove my account
   So that I won't be using any client-UI services
 
-    @smoke @skip
+    @smoke
     Scenario: remove an account connection
         Given user "Alice" has been created in the server with default attributes
         And user "Brian" has been created in the server with default attributes
         And the user has set up the following accounts with default settings:
+            | users |
             | Alice |
             | Brian |
         When the user removes the connection for user "Brian"
-        Then the account with displayname "Brian Murphy" should not be displayed
-        But the account with displayname "Alice Hansen" should be displayed
+        Then "Brian" account should not be displayed
+        But "Alice" account should be added
 
 
     Scenario: remove the only account connection

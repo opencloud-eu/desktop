@@ -138,7 +138,8 @@ class SyncConnectionWizard:
             ),
         )
         # ISSUE: https://github.com/opencloud-eu/desktop/pull/879
-        # Workaround until above fix is merged
+        # Cannot select space by click event
+        # Select space using keyboard events as a workaround
         # TODO: Remove 'send_keys' and uncomment 'click' action
         space_item.send_keys(Keys.ARROW_DOWN)
         # space_item.click()

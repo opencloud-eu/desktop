@@ -24,7 +24,7 @@ Feature: adding accounts
             | server   | %local_server% |
             | user     | Alice          |
             | password | 1234           |
-        Then the account with displayname "Alice Hansen" should be displayed
+        Then "Alice" account should be added
 
     @smoke
     Scenario: Adding multiple accounts
@@ -35,9 +35,8 @@ Feature: adding accounts
             | server   | %local_server% |
             | user     | Brian          |
             | password | AaBb2Cc3Dd4    |
-        Then "Brian Murphy" account should be opened
-        And the account with displayname "Alice Hansen" should be displayed
-        And the account with displayname "Brian Murphy" should be displayed
+        Then "Brian" account should be opened
+        And "Alice" account should be added
 
 
     Scenario: Adding account with self signed certificate for the first time
@@ -48,7 +47,7 @@ Feature: adding accounts
         When the user adds the following account:
             | user     | Alice |
             | password | 1234  |
-        Then "Alice Hansen" account should be opened
+        Then "Alice" account should be opened
 
     @smoke
     Scenario: Add space manually from sync connection window
@@ -87,6 +86,6 @@ Feature: adding accounts
             | server   | %local_server% |
             | user     | Alice          |
             | password | 1234           |
-        Then the account with displayname "Alice Hansen" should be displayed
+        Then "Alice" account should be added
         And the folder "large-folder" should exist on the file system
         And the file "testFile.txt" should exist on the file system
