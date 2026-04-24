@@ -1,69 +1,53 @@
-import names
-import squish
-import object  # pylint: disable=redefined-builtin
+from types import SimpleNamespace
+from appium.webdriver.common.appiumby import AppiumBy as By
+from selenium.webdriver.common.keys import Keys
 
 from helpers.ConfigHelper import get_config
+from helpers.SetupClientHelper import app
 
 
 class SyncConnection:
-    FOLDER_SYNC_CONNECTION_LIST = {
-        "container": names.quickWidget_scrollView_ScrollView,
-        "type": "ListView",
-        "visible": True,
-    }
-    FOLDER_SYNC_CONNECTION = {
-        "container": names.settings_stack_QStackedWidget,
-        "name": "_folderList",
-        "type": "QListView",
-        "visible": 1,
-    }
-    FOLDER_SYNC_CONNECTION_MENU_BUTTON = {
-        "container": names.quickWidget_scrollView_ScrollView,
-        "id": "moreButton",
-        "type": "Image",
-        "visible": True,
-    }
-    MENU = {
-        "checkable": False,
-        "container": names.quickWidget_Overlay,
-        "enabled": True,
-        "text": "",
-        "type": "MenuItem",
-        "unnamed": 1,
-        "visible": True,
-    }
-    SELECTIVE_SYNC_APPLY_BUTTON = {
-        "container": names.settings_stack_QStackedWidget,
-        "name": "selectiveSyncApply",
-        "type": "QPushButton",
-        "visible": 1,
-    }
-    CANCEL_FOLDER_SYNC_CONNECTION_DIALOG = {
-        "text": "Cancel",
-        "type": "QPushButton",
-        "unnamed": 1,
-        "visible": 1,
-        "window": names.confirm_Folder_Sync_Connection_Removal_QMessageBox,
-    }
-    REMOVE_FOLDER_SYNC_CONNECTION_BUTTON = {
-        "text": "Remove Space",
-        "type": "QPushButton",
-        "unnamed": 1,
-        "visible": 1,
-        "window": names.confirm_removal_of_Space_QMessageBox,
-    }
-    PERMISSION_ERROR_LABEL = {
-        "container": names.folderError_Container,
-        "type": "Label",
-        "visible": True,
-    }
+    ACCOUNT_CONNECTION_CONTAINER = SimpleNamespace(
+        by=By.NAME, selector="Sync connections"
+    )
+    FOLDER_SYNC_CONNECTION_LIST = SimpleNamespace(by=None, selector=None)
+    FOLDER_SYNC_CONNECTION = SimpleNamespace(by=None, selector=None)
+    FOLDER_SYNC_CONNECTION_MENU_BUTTON = SimpleNamespace(
+        by=By.XPATH,
+        selector="//*[@name='Folder Sync']//*[contains(@name, '/{sync_folder}')]",
+    )
+    MENU = SimpleNamespace(by=None, selector=None)
+    SELECTIVE_SYNC_APPLY_BUTTON = SimpleNamespace(by=None, selector=None)
+    CANCEL_FOLDER_SYNC_CONNECTION_DIALOG = SimpleNamespace(by=None, selector=None)
+    REMOVE_FOLDER_SYNC_CONNECTION_BUTTON = SimpleNamespace(by=None, selector=None)
+    PERMISSION_ERROR_LABEL = SimpleNamespace(by=None, selector=None)
 
     @staticmethod
-    def open_menu():
-        menu_button = squish.waitForObject(
-            SyncConnection.FOLDER_SYNC_CONNECTION_MENU_BUTTON
+    def open_menu(sync_folder=None):
+        if sync_folder is None:
+            sync_folder = get_config('syncConnectionName')
+
+        connections = app().find_elements(
+            SyncConnection.ACCOUNT_CONNECTION_CONTAINER.by,
+            SyncConnection.ACCOUNT_CONNECTION_CONTAINER.selector,
         )
-        squish.mouseClick(menu_button)
+        menu_button = None
+        for connection in connections:
+            # use the active connection
+            if connection.get_attribute("showing") == "true":
+                menu_button = connection.find_element(
+                    SyncConnection.FOLDER_SYNC_CONNECTION_MENU_BUTTON.by,
+                    SyncConnection.FOLDER_SYNC_CONNECTION_MENU_BUTTON.selector.format(
+                        sync_folder=sync_folder
+                    ),
+                )
+                print(menu_button)
+                break
+        # cannot click sync folder menu button
+        # Workaround: use mouse right click to open the menu
+        # menu_button.click()
+        print(menu_button)
+        menu_button.send_keys(Keys.SHIFT, Keys.F10)
 
     @staticmethod
     def perform_action(action):
