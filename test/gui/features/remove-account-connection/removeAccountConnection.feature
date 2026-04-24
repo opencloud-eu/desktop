@@ -12,8 +12,8 @@ Feature: remove account connection
             | Alice |
             | Brian |
         When the user removes the connection for user "Brian"
-        Then the account with displayname "Brian Murphy" should not be displayed
-        But the account with displayname "Alice Hansen" should be displayed
+        Then "Brian" account should not be displayed
+        But "Alice" account should be added
 
 
     Scenario: remove the only account connection

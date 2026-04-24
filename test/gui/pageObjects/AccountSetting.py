@@ -8,6 +8,9 @@ from helpers.SyncHelper import wait_for
 
 
 class AccountSetting:
+    ACCOUNT_CONNECTION_CONTAINER = SimpleNamespace(
+        by=By.NAME, selector="Sync connections"
+    )
     MANAGE_ACCOUNT_BUTTON = SimpleNamespace(by=By.NAME, selector="Manage Account")
     ACCOUNT_MENU = SimpleNamespace(by=By.NAME, selector="{menu_item}")
     CONFIRM_REMOVE_CONNECTION_BUTTON = SimpleNamespace(
@@ -21,10 +24,20 @@ class AccountSetting:
 
     @staticmethod
     def account_action(action):
-        app().find_element(
-            AccountSetting.MANAGE_ACCOUNT_BUTTON.by,
-            AccountSetting.MANAGE_ACCOUNT_BUTTON.selector,
-        ).click()
+        connections = app().find_elements(
+            AccountSetting.ACCOUNT_CONNECTION_CONTAINER.by,
+            AccountSetting.ACCOUNT_CONNECTION_CONTAINER.selector,
+        )
+        manage_button = None
+        for connection in connections:
+            # use the active connection
+            if connection.get_attribute("showing") == "true":
+                manage_button = connection.find_element(
+                    AccountSetting.MANAGE_ACCOUNT_BUTTON.by,
+                    AccountSetting.MANAGE_ACCOUNT_BUTTON.selector,
+                )
+                break
+        manage_button.click()
         app().find_element(
             AccountSetting.ACCOUNT_MENU.by,
             AccountSetting.ACCOUNT_MENU.selector.format(menu_item=action),
@@ -129,9 +142,7 @@ class AccountSetting:
 
     @staticmethod
     def remove_connection_for_user(username):
-        displayname = get_displayname_for_user(username)
-        displayname = substitute_inline_codes(displayname)
-        Toolbar.open_account(displayname)
+        Toolbar.open_account(username)
         AccountSetting.remove_account_connection()
 
     @staticmethod
@@ -140,7 +151,7 @@ class AccountSetting:
         displayname = substitute_inline_codes(displayname)
 
         def account_removed():
-            account = Toolbar.get_account(displayname)
+            account = Toolbar.get_account(username)
             return account is None
 
         result = wait_for(account_removed, timeout)

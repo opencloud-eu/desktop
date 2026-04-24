@@ -437,7 +437,7 @@ Feature: Syncing files
             | password | 1234           |
         When the user selects manual sync folder option in advanced section
         And the user cancels the sync connection wizard
-        Then the account with displayname "Alice Hansen" should be displayed
+        Then "Alice" account should be added
         And the sync folder list should be empty
 
 

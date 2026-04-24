@@ -1,18 +1,17 @@
 from types import SimpleNamespace
 from urllib.parse import urlparse
 from appium.webdriver.common.appiumby import AppiumBy as By
+from selenium.webdriver.common.keys import Keys
 
 from helpers.SetupClientHelper import wait_until_app_killed
 from helpers.ConfigHelper import get_config
 from helpers.SetupClientHelper import app
-
-import time
+from helpers.UserHelper import get_displayname_for_user
 
 
 class Toolbar:
     TOOLBAR_ROW = SimpleNamespace(by=None, selector=None)
-    ACCOUNT_BUTTON = SimpleNamespace(by=By.NAME, selector=None)
-    # ACCOUNT_BUTTON_LABEL = SimpleNamespace(by=By.XPATH, selector="//label[@name='BM']")
+    ACCOUNT_BUTTON = SimpleNamespace(by=None, selector=None)
     ADD_ACCOUNT_BUTTON = SimpleNamespace(by=By.NAME, selector="Add Account")
     ACTIVITY_BUTTON = SimpleNamespace(by=By.NAME, selector="Activity")
     SETTINGS_BUTTON = SimpleNamespace(by=None, selector=None)
@@ -52,14 +51,15 @@ class Toolbar:
         ).click()
 
     @staticmethod
-    def open_account(displayname):
-        account_tab = Toolbar.get_account(displayname)
-        # print(f"DEBUG: Before click - checked='{account_tab.get_attribute('checked')}'")
-        # print(f"DEBUG: Before click - focused='{account_tab.get_attribute('focused')}'")
-        account_tab.click()
-        # print(f"DEBUG: After click - checked='{account_tab.get_attribute('checked')}'")
-        # print(f"DEBUG: After click - focused='{account_tab.get_attribute('focused')}'")
-        # breakpoint()
+    def open_account(username):
+        account_tab = Toolbar.get_account(username)
+        # ISSUE: https://github.com/opencloud-eu/desktop/pull/879
+        # Cannot activate account tab by click event
+        # Select the account tab using keyboard events as a workaround
+        # TODO: Remove the workaround and uncomment 'click' action
+        # account_tab.click()
+        account_tab.send_keys(Keys.TAB)
+        account_tab.send_keys(Keys.ENTER)
 
     @staticmethod
     def get_displayed_account_text(displayname, host):
@@ -106,38 +106,9 @@ class Toolbar:
                 account_idx += 1
         return accounts, selectors
 
-# account = app().find_element(
-#     By.XPATH,
-#     f"//*[contains(@name, '{display_name}')]"
-# )
-
-    # @staticmethod
-    # def get_account(display_name):
-    #     server_host = urlparse(get_config('localBackendUrl')).netloc
-    #     account_label = f"{display_name}@{server_host}"
-    #     # account = None
-    #     try:
-    #         # nav_bar = app().find_element(By.NAME, "Navigation bar")
-    #         # account = nav_bar.find_element(By.NAME, account_label)
-    #         # account = app().find_element(
-    #         #     By.XPATH,
-    #         #     f'//panel[@name="Navigation bar"]//pagetab[@name="{account_label}"]'
-    #         # )
-    #         all_matches = app().find_elements(By.NAME, account_label)
-    #         print(f"DEBUG: Looking for '{account_label}'")
-    #         print(f"DEBUG: Found {len(all_matches)} elements")
-    #         for i, el in enumerate(all_matches):
-    #             print(f"DEBUG: [{i}] name='{el.get_attribute('name')}' "
-    #                   f"role='{el.get_attribute('role')}' "
-    #                   f"displayed='{el.is_displayed()}'")
-    #         return all_matches[0] if all_matches else None
-    #         # return account
-    #     except:
-    #         return None
-    #     # return account
-
     @staticmethod
-    def get_account(display_name):
+    def get_account(username):
+        display_name = get_displayname_for_user(username)
         server_host = urlparse(get_config('localBackendUrl')).netloc
         account_label = f"{display_name}@{server_host}"
         account = None
@@ -156,12 +127,11 @@ class Toolbar:
         return None, None
 
     @staticmethod
-    def account_has_focus(display_name):
-        account = Toolbar.get_account(display_name)
+    def account_has_focus(username):
+        account = Toolbar.get_account(username)
         return account.get_attribute("checked") == "true"
 
     @staticmethod
-    def account_exists(display_name):
-        time.sleep(5)
-        account = Toolbar.get_account(display_name)
+    def account_exists(username):
+        account = Toolbar.get_account(username)
         return account is not None

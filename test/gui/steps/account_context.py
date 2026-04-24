@@ -38,16 +38,16 @@ def step(context):
     )
 
 
-@Then('the account with displayname "{displayname}" should be displayed')
-def step(context, displayname):
-    displayname = substitute_inline_codes(displayname)
-    expect(Toolbar.account_exists(displayname)).to.be.true
+@Then('"{username}" account should be added')
+def step(context, username):
+    username = substitute_inline_codes(username)
+    expect(Toolbar.account_exists(username)).to.be.true
 
 
-@Then('the account with displayname "{displayname}" should not be displayed')
-def step(context, displayname):
-    displayname = substitute_inline_codes(displayname)
-    expect(Toolbar.account_exists(displayname)).to.be.false
+@Then('"{username}" account should not be displayed')
+def step(context, username):
+    username = substitute_inline_codes(username)
+    expect(Toolbar.account_exists(username)).to.be.false
 
 
 @Given('user "{username}" has set up a client with default settings')
@@ -157,6 +157,7 @@ def step(context, _):
 
 @When('the user removes the connection for user "{username}"')
 def step(context, username):
+    username = substitute_inline_codes(username)
     AccountSetting.remove_connection_for_user(username)
 
 
@@ -241,10 +242,10 @@ def step(context):
     Toolbar.quit_opencloud()
 
 
-@Then('"{displayname}" account should be opened')
-def step(context, displayname):
-    displayname = substitute_inline_codes(displayname)
-    expect(Toolbar.account_has_focus(displayname)).to.be.true
+@Then('"{username}" account should be opened')
+def step(context, username):
+    username = substitute_inline_codes(username)
+    expect(Toolbar.account_has_focus(username)).to.be.true
 
 
 @Then(
@@ -280,6 +281,7 @@ def step(context, warn_message):
 
 @Given('the user has removed the connection for user "{username}"')
 def step(context, username):
+    username = substitute_inline_codes(username)
     AccountSetting.remove_connection_for_user(username)
     AccountSetting.wait_until_account_is_removed(username)
     shutil.rmtree(os.path.join(get_config("clientRootSyncPath"), username))
