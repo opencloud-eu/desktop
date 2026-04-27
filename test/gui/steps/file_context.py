@@ -52,10 +52,10 @@ def file_exists(file_path, timeout=1000):
 #     os.makedirs(prefix_path_namespace(convert_path_separators_for_os(folder_path)))
 
 
-# def rename_file_folder(source, destination):
-#     source = get_resource_path(source)
-#     destination = get_resource_path(destination)
-#     os.rename(source, destination)
+def rename_file_folder(source, destination):
+    source = get_resource_path(source)
+    destination = get_resource_path(destination)
+    os.rename(source, destination)
 
 
 # def create_file_with_size(filename, filesize, is_temp_folder=False):
@@ -124,16 +124,16 @@ def file_exists(file_path, timeout=1000):
 #     return shutil.copy2(source, destination)
 
 
-# def move_resource(username, resource_type, source, destination, is_temp_folder=False):
-#     if not is_temp_folder:
-#         source = get_resource_path(source, username)
-#     if destination == '/':
-#         destination = ''
-#     destination = get_resource_path(destination, username)
+def move_resource(username, resource_type, source, destination, is_temp_folder=False):
+    if not is_temp_folder:
+        source = get_resource_path(source, username)
+    if destination == '/':
+        destination = ''
+    destination = get_resource_path(destination, username)
 
-#     wait_for_client_to_be_ready()
-#     listen_sync_status_for_item(destination, resource_type)
-#     shutil.move(source, destination)
+    wait_for_client_to_be_ready()
+    listen_sync_status_for_item(destination, resource_type)
+    shutil.move(source, destination)
 
 
 def deleteResource(resource, resource_type):
@@ -179,10 +179,11 @@ def deleteResource(resource, resource_type):
 #     copy_resource(resource_type, resource_name, resource_name, False)
 
 
-# @When(r'the user renames a (?:file|folder) "([^"]*)" to "([^"]*)"', regexp=True)
-# def step(context, source, destination):
-#     wait_for_client_to_be_ready()
-#     rename_file_folder(source, destination)
+@When('the user renames a file "{source}" to "{destination}"')
+@When('the user renames a folder "{source}" to "{destination}"')
+def step(context, source, destination):
+    wait_for_client_to_be_ready()
+    rename_file_folder(source, destination)
 
 
 # @Then('the file "|any|" should exist on the file system with the following content')
@@ -349,12 +350,11 @@ def step(context, resource_type, resource_name):
 #     move_resource(username, resource_type, resource_name, destination)
 
 
-# @When(
-#     r'user "([^"]*)" moves (file|folder) "([^"]*)" to "([^"]*)" in the sync folder',
-#     regexp=True,
-# )
-# def step(context, username, resource_type, source, destination):
-#     move_resource(username, resource_type, source, destination)
+@When(
+    'user "{username}" moves {resource_type:ResourceType} "{source}" to "{destination}" in the sync folder'
+)
+def step(context, username, resource_type, source, destination):
+    move_resource(username, resource_type, source, destination)
 
 
 # @Then('user "|any|" should be able to open the file "|any|" on the file system')
