@@ -64,7 +64,7 @@ Feature: Project spaces
         And the administrator has added user "Alice" to space "Project101" with role "manager"
         And user "Alice" has set up a client with space "Project101"
         When the user removes the folder sync connection
-        Then the sync folder list should be empty
+        Then for user "Alice" sync folder "Project101" should not be displayed
         But the file "testfile.txt" should exist on the file system
 
 
@@ -82,7 +82,7 @@ Feature: Project spaces
             | resource      | status      | account                              |
             | simple-folder | Blacklisted | Alice Hansen@%local_server_hostname% |
 
-    @smoke @skip
+    @smoke
     Scenario: Sharee with Editor role deletes the shared resource
         Given user "Brian" has been created in the server with default attributes
         And user "Alice" has created folder "simple-folder" in the server

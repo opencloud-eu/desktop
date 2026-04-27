@@ -2,6 +2,7 @@ from behave import given as Given, then as Then
 from sure import ensure
 
 from helpers.api import provisioning, webdav_helper as webdav
+from helpers.TableParser import table_rows_hash
 
 
 @Given('user "{user}" has been created in the server with default attributes')
@@ -84,7 +85,7 @@ def step(context, user, file_content, file_name):
     webdav.create_file(user, file_name, file_content)
 
 
-@When('user "|any|" deletes the folder "|any|" in the server')
+@When('user "{user}" deletes the folder "{folder_name}" in the server')
 def step(context, user, folder_name):
     webdav.delete_resource(user, folder_name)
 
@@ -136,9 +137,9 @@ def step(context, user):
         webdav.create_file(user, file_name, file_content)
 
 
-@Given('user "|any|" has sent the following resource share invitation:')
+@Given('user "{user}" has sent the following resource share invitation:')
 def step(context, user):
-    resource_details = {row[0]: row[1] for row in context.table}
+    resource_details = table_rows_hash(context.table)
     webdav.send_resource_share_invitation(
         user,
         resource_details['resource'],

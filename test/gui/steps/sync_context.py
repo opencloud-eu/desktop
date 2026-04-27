@@ -1,4 +1,5 @@
 from behave import when as When, then as Then
+from sure import ensure
 
 from pageObjects.SyncConnectionWizard import SyncConnectionWizard
 from pageObjects.Toolbar import Toolbar
@@ -215,13 +216,14 @@ def step(context):
     SyncConnectionWizard.deselect_all_remote_folders()
 
 
-@Then('the sync folder list should be empty')
-def step(context):
-    test.compare(
-        0,
-        SyncConnection.get_folder_connection_count(),
-        'Sync connections should be empty',
-    )
+@Then('for user "{user}" sync folder "{sync_folder}" should not be displayed')
+def step(context, user, sync_folder):
+    Toolbar.open_account(user)
+    has_sync_connection = SyncConnection.has_sync_connection(sync_folder)
+    with ensure(
+        'There should not be "{0}" folder sync connection, but found.', sync_folder
+    ):
+        has_sync_connection.should.be.false
 
 
 @When('the user navigates back in the sync connection wizard')

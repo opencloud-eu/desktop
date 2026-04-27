@@ -3,7 +3,7 @@ import re
 import builtins
 import shutil
 import zipfile
-from os.path import isfile, join, isdir
+from os.path import isfile, join, isdir, exists
 from behave import when as When, then as Then
 from sure import ensure
 
@@ -225,19 +225,12 @@ def step(context, resource_type, resource):
 )
 def step(context, resource_type, resource):
     resource_path = get_resource_path(resource)
-    resource_exists = False
-    timeout = get_config('maxSyncTimeout') * 1000
-    if resource_type == 'file':
-        resource_exists = file_exists(resource_path, timeout)
-    else:
-        resource_exists = folder_exists(resource_path, timeout)
-
     with ensure(
         '{0} "{1}" should not exist, but it does',
         resource_type.capitalize(),
         resource,
     ):
-        resource_exists.should.be.false
+        exists(resource_path).should.be.false
 
 
 @Given('the user has changed the content of local file "|any|" to:')

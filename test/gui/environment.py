@@ -4,6 +4,7 @@ import os
 
 from helpers.ConfigHelper import init_config
 from helpers.api.provisioning import delete_created_users
+from helpers.SpaceHelper import delete_project_spaces
 from helpers.ConfigHelper import set_config, get_config
 from helpers.FilesHelper import prefix_path_namespace, cleanup_created_paths
 from helpers.SetupClientHelper import app
@@ -33,6 +34,7 @@ def after_scenario(context, scenario):
                 print(f"Failed to delete '{entry.name}'.\nReason: {e}.")
     # cleanup paths created outside of the temporary directory during the test
     cleanup_created_paths()
+    delete_project_spaces()
     delete_created_users()
     # quit the application
     if app() is not None:
