@@ -7,7 +7,7 @@ Feature: Project spaces
         Given user "Alice" has been created in the server with default attributes
         And the administrator has created a space "Project101"
 
-    @smoke @skip
+    @smoke
     Scenario: User with Viewer role can open the file
         Given the administrator has created a folder "planning" in space "Project101"
         And the administrator has uploaded a file "testfile.txt" with content "some content" inside space "Project101"
@@ -25,7 +25,7 @@ Feature: Project spaces
         Then user "Alice" should not be able to edit the file "testfile.txt" on the file system
         And as "Alice" the file "testfile.txt" in the space "Project101" should have content "some content" in the server
 
-    @smoke @skip
+    @smoke
     Scenario: User with Editor role can edit the file
         Given the administrator has created a folder "planning" in space "Project101"
         And the administrator has uploaded a file "testfile.txt" with content "some content" inside space "Project101"
@@ -35,7 +35,7 @@ Feature: Project spaces
         And the user waits for file "testfile.txt" to be synced
         Then as "Alice" the file "testfile.txt" in the space "Project101" should have content "some content edited" in the server
 
-    @smoke @skip
+    @smoke
     Scenario: User with Manager role can add files and folders
         Given the administrator has added user "Alice" to space "Project101" with role "manager"
         And user "Alice" has set up a client with space "Project101"
@@ -48,7 +48,7 @@ Feature: Project spaces
         Then as "Alice" the file "localFile.txt" in the space "Project101" should have content "test content" in the server
         And as "Alice" the space "Project101" should have folder "localFolder" in the server
 
-    @smoke @skip
+    @smoke
     Scenario: User with Editor role can rename a file
         Given the administrator has uploaded a file "testfile.txt" with content "some content" inside space "Project101"
         And the administrator has added user "Alice" to space "Project101" with role "editor"
@@ -58,13 +58,13 @@ Feature: Project spaces
         Then as "Alice" the space "Project101" should have file "renamedFile.txt" in the server
         And as "Alice" the file "renamedFile.txt" in the space "Project101" should have content "some content" in the server
 
-    @smoke @skip
+    @smoke
     Scenario: Remove folder sync connection (Project Space)
         Given the administrator has uploaded a file "testfile.txt" with content "some content" inside space "Project101"
         And the administrator has added user "Alice" to space "Project101" with role "manager"
         And user "Alice" has set up a client with space "Project101"
         When the user removes the folder sync connection
-        Then the sync folder list should be empty
+        Then for user "Alice" sync folder "Project101" should not be displayed
         But the file "testfile.txt" should exist on the file system
 
 
@@ -82,7 +82,7 @@ Feature: Project spaces
             | resource      | status      | account                              |
             | simple-folder | Blacklisted | Alice Hansen@%local_server_hostname% |
 
-    @smoke @skip
+    @smoke
     Scenario: Sharee with Editor role deletes the shared resource
         Given user "Brian" has been created in the server with default attributes
         And user "Alice" has created folder "simple-folder" in the server

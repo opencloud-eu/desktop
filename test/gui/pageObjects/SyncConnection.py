@@ -1,76 +1,70 @@
-import names
-import squish
-import object  # pylint: disable=redefined-builtin
+from types import SimpleNamespace
+from appium.webdriver.common.appiumby import AppiumBy as By
+from selenium.webdriver.common.keys import Keys
 
 from helpers.ConfigHelper import get_config
+from helpers.SetupClientHelper import app
 
 
 class SyncConnection:
-    FOLDER_SYNC_CONNECTION_LIST = {
-        "container": names.quickWidget_scrollView_ScrollView,
-        "type": "ListView",
-        "visible": True,
-    }
-    FOLDER_SYNC_CONNECTION = {
-        "container": names.settings_stack_QStackedWidget,
-        "name": "_folderList",
-        "type": "QListView",
-        "visible": 1,
-    }
-    FOLDER_SYNC_CONNECTION_MENU_BUTTON = {
-        "container": names.quickWidget_scrollView_ScrollView,
-        "id": "moreButton",
-        "type": "Image",
-        "visible": True,
-    }
-    MENU = {
-        "checkable": False,
-        "container": names.quickWidget_Overlay,
-        "enabled": True,
-        "text": "",
-        "type": "MenuItem",
-        "unnamed": 1,
-        "visible": True,
-    }
-    SELECTIVE_SYNC_APPLY_BUTTON = {
-        "container": names.settings_stack_QStackedWidget,
-        "name": "selectiveSyncApply",
-        "type": "QPushButton",
-        "visible": 1,
-    }
-    CANCEL_FOLDER_SYNC_CONNECTION_DIALOG = {
-        "text": "Cancel",
-        "type": "QPushButton",
-        "unnamed": 1,
-        "visible": 1,
-        "window": names.confirm_Folder_Sync_Connection_Removal_QMessageBox,
-    }
-    REMOVE_FOLDER_SYNC_CONNECTION_BUTTON = {
-        "text": "Remove Space",
-        "type": "QPushButton",
-        "unnamed": 1,
-        "visible": 1,
-        "window": names.confirm_removal_of_Space_QMessageBox,
-    }
-    PERMISSION_ERROR_LABEL = {
-        "container": names.folderError_Container,
-        "type": "Label",
-        "visible": True,
-    }
+    ACCOUNT_CONNECTION_CONTAINER = SimpleNamespace(
+        by=By.NAME, selector="Sync connections"
+    )
+    FOLDER_SYNC_CONNECTION_MENU_BUTTON = SimpleNamespace(
+        by=By.NAME,
+        selector="{sync_folder},Success,Local folder: {sync_path}{sync_folder}",
+    )
+    MENU_ITEM = SimpleNamespace(by=By.NAME, selector=None)
+    SELECTIVE_SYNC_APPLY_BUTTON = SimpleNamespace(by=None, selector=None)
+    CANCEL_FOLDER_SYNC_CONNECTION_DIALOG = SimpleNamespace(by=None, selector=None)
+    CONFIRM_FOLDER_SYNC_CONNECTION_REMOVE = SimpleNamespace(
+        by=By.NAME, selector="Remove Space"
+    )
+    PERMISSION_ERROR_LABEL = SimpleNamespace(by=None, selector=None)
 
     @staticmethod
-    def open_menu():
-        menu_button = squish.waitForObject(
-            SyncConnection.FOLDER_SYNC_CONNECTION_MENU_BUTTON
+    def get_current_account_connection():
+        connections = app().find_elements(
+            SyncConnection.ACCOUNT_CONNECTION_CONTAINER.by,
+            SyncConnection.ACCOUNT_CONNECTION_CONTAINER.selector,
         )
-        squish.mouseClick(menu_button)
+        for connection in connections:
+            # use the active connection
+            if connection.get_attribute("showing") == "true":
+                return connection
+        return None
+
+    @staticmethod
+    def open_menu(sync_folder=None):
+        if sync_folder is None:
+            sync_folder = get_config('syncConnectionName')
+
+        connection = SyncConnection.get_current_account_connection()
+        menu_button = connection.find_element(
+            SyncConnection.FOLDER_SYNC_CONNECTION_MENU_BUTTON.by,
+            SyncConnection.FOLDER_SYNC_CONNECTION_MENU_BUTTON.selector.format(
+                sync_folder=sync_folder,
+                sync_path=get_config('currentUserSyncPath'),
+            ),
+        )
+        # Cannot select sync folder menu button.
+        # This is a messy workaround to open the context menu using keyboard navigation.
+        # Ideally, we should be able to do: click() and send_keys(" ") to open the menu
+        # but it doesn't work for some reason.
+        # Also, send_keys(Keys.SPACE) doesn't work.
+        menu_button.click()
+        menu_button.send_keys(Keys.TAB)
+        menu_button.send_keys(Keys.TAB)
+        menu_button.send_keys(Keys.TAB)
+        menu_button.send_keys(Keys.TAB)
+        menu_button.send_keys(Keys.TAB)
+        menu_button.send_keys(Keys.TAB)
+        menu_button.send_keys(" ")
 
     @staticmethod
     def perform_action(action):
         SyncConnection.open_menu()
-        selector = SyncConnection.MENU.copy()
-        selector["text"] = action
-        squish.mouseClick(squish.waitForObject(selector))
+        app().find_element(SyncConnection.MENU_ITEM.by, action).click()
 
     @staticmethod
     def force_sync():
@@ -86,11 +80,11 @@ class SyncConnection:
 
     @staticmethod
     def has_menu_item(item):
-        return squish.waitForObjectItem(SyncConnection.MENU, item)
+        return squish.waitForObjectItem(SyncConnection.MENU_ITEM, item)
 
     @staticmethod
     def menu_item_exists(menu_item):
-        obj = SyncConnection.MENU.copy()
+        obj = SyncConnection.MENU_ITEM.copy()
         obj.update({"type": "QAction", "text": menu_item})
         return object.exists(obj)
 
@@ -100,8 +94,19 @@ class SyncConnection:
         SyncConnection.perform_action("Choose what to sync")
 
     @staticmethod
-    def get_folder_connection_count():
-        return squish.waitForObject(SyncConnection.FOLDER_SYNC_CONNECTION_LIST).count
+    def has_sync_connection(sync_folder):
+        connection = SyncConnection.get_current_account_connection()
+        try:
+            connection.find_element(
+                SyncConnection.FOLDER_SYNC_CONNECTION_MENU_BUTTON.by,
+                SyncConnection.FOLDER_SYNC_CONNECTION_MENU_BUTTON.selector.format(
+                    sync_folder=sync_folder,
+                    sync_path=get_config('currentUserSyncPath'),
+                ),
+            )
+            return True
+        except:
+            return False
 
     @staticmethod
     def remove_folder_sync_connection():
@@ -115,9 +120,10 @@ class SyncConnection:
 
     @staticmethod
     def confirm_folder_sync_connection_removal():
-        squish.clickButton(
-            squish.waitForObject(SyncConnection.REMOVE_FOLDER_SYNC_CONNECTION_BUTTON)
-        )
+        app().find_element(
+            SyncConnection.CONFIRM_FOLDER_SYNC_CONNECTION_REMOVE.by,
+            SyncConnection.CONFIRM_FOLDER_SYNC_CONNECTION_REMOVE.selector,
+        ).click()
 
     @staticmethod
     def wait_for_error_label(to_exist=True):

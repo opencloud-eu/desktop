@@ -438,7 +438,8 @@ Feature: Syncing files
         When the user selects manual sync folder option in advanced section
         And the user cancels the sync connection wizard
         Then "Alice" account should be added
-        And the sync folder list should be empty
+        And for user "Alice" sync folder "Personal" should not be displayed
+        And for user "Alice" sync folder "Shares" should not be displayed
 
 
     Scenario: extract a zip file in the sync folder
@@ -501,7 +502,7 @@ Feature: Syncing files
         Given user "Alice" has created folder "simple-folder" in the server
         And user "Alice" has set up a client with default settings
         When the user removes the folder sync connection
-        Then the sync folder list should be empty
+        Then for user "Alice" sync folder "Personal" should not be displayed
         And the folder "simple-folder" should exist on the file system
         And as "Alice" folder "simple-folder" should exist in the server
 
