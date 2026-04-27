@@ -1,56 +1,16 @@
-import names
-import squish
+from types import SimpleNamespace
+from appium.webdriver.common.appiumby import AppiumBy as By
 
 
 class Settings:
-    CHECKBOX_OPTION_ITEM = {
-        "container": names.stack_scrollArea_QScrollArea,
-        "type": "QCheckBox",
-        "visible": 1,
-    }
-    NETWORK_OPTION_ITEM = {
-        "container": names.stack_scrollArea_QScrollArea,
-        "type": "QGroupBox",
-        "visible": 1,
-    }
-    ABOUT_BUTTON = {
-        "container": names.settings_stack_QStackedWidget,
-        "name": "about_pushButton",
-        "type": "QPushButton",
-        "visible": 1,
-    }
-    ABOUT_DIALOG = {
-        "name": "OCC__AboutDialog",
-        "type": "OCC::AboutDialog",
-        "visible": 1,
-    }
-    ABOUT_DIALOG_OK_BUTTON = {
-        "text": "OK",
-        "type": "QPushButton",
-        "unnamed": 1,
-        "visible": 1,
-        "window": ABOUT_DIALOG,
-    }
-
-    GENERAL_OPTIONS_MAP = {
-        "Start on Login": "autostartCheckBox",
-        "Use Monochrome Icons in the system tray": "monoIconsCheckBox",
-        "Language": "languageDropdown",
-        "Show desktop Notifications": "desktopNotificationsCheckBox",
-    }
-    ADVANCED_OPTION_MAP = {
-        "Sync hidden files": "syncHiddenFilesCheckBox",
-        "Show crash reporter": "",
-        "Edit ignored files": "ignoredFilesButton",
-        "Log settings": "logSettingsButton",
-        "Ask for confirmation before synchronizing folders larger than 500 MB": "newFolderLimitCheckBox",
-        "Ask for confirmation before synchronizing external storages": "newExternalStorage",
-    }
-    NETWORK_OPTION_MAP = {
-        "Proxy Settings": "proxyGroupBox",
-        "Download Bandwidth": "downloadBox",
-        "Upload Bandwidth": "uploadBox",
-    }
+    CHECKBOX_OPTION_ITEM = SimpleNamespace(by=None, selector=None)
+    NETWORK_OPTION_ITEM = SimpleNamespace(by=None, selector=None)
+    ABOUT_BUTTON = SimpleNamespace(by=None, selector=None)
+    ABOUT_DIALOG = SimpleNamespace(by=None, selector=None)
+    ABOUT_DIALOG_OK_BUTTON = SimpleNamespace(by=None, selector=None)
+    GENERAL_OPTIONS_MAP = SimpleNamespace(by=None, selector=None)
+    ADVANCED_OPTION_MAP = SimpleNamespace(by=None, selector=None)
+    NETWORK_OPTION_MAP = SimpleNamespace(by=None, selector=None)
 
     @staticmethod
     def get_checkbox_option_selector(name):
