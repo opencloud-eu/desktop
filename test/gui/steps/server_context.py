@@ -1,4 +1,4 @@
-from behave import given as Given, then as Then, register_type
+from behave import given as Given, then as Then
 from sure import ensure
 
 from helpers.api import provisioning, webdav_helper as webdav

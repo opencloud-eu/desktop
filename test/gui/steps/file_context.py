@@ -1,5 +1,5 @@
 import os
-# import re
+import re
 import builtins
 import shutil
 import zipfile
