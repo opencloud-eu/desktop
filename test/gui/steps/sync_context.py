@@ -20,7 +20,7 @@ from helpers.SetupClientHelper import (
     get_resource_path,
 )
 
-# from helpers.FilesHelper import convert_path_separators_for_os
+from helpers.FilesHelper import convert_path_separators_for_os
 
 
 # @Given('the user has paused the file sync')
@@ -43,10 +43,10 @@ def step(context):
     wait_for_resource_to_sync(get_resource_path('/'))
 
 
-# @When(r'the user waits for (file|folder) "([^"]*)" to be synced', regexp=True)
-# def step(context, resource_type, resource):
-#     resource = get_resource_path(resource)
-#     wait_for_resource_to_sync(convert_path_separators_for_os(resource), resource_type)
+@When('the user waits for {resource_type:ResourceType} "{resource}" to be synced')
+def step(context, resource_type, resource):
+    resource = get_resource_path(resource)
+    wait_for_resource_to_sync(convert_path_separators_for_os(resource), resource_type)
 
 
 # @When(r'the user waits for (file|folder) "([^"]*)" to have sync error', regexp=True)
