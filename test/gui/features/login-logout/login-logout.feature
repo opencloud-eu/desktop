@@ -6,11 +6,11 @@ Feature:  Logout users
     Background:
         Given user "Alice" has been created in the server with default attributes
 
-    # @smoke
-    # Scenario: logging out
-    #     Given user "Alice" has set up a client with default settings
-    #     When the user "Alice" logs out using the client-UI
-    #     Then user "Alice" should be signed out
+    @smoke
+    Scenario: logging out
+        Given user "Alice" has set up a client with default settings
+        When the user "Alice" logs out using the client-UI
+        Then user "Alice" should be signed out
 
     @smoke
     Scenario: login after logging out
@@ -18,6 +18,6 @@ Feature:  Logout users
         And user "Alice" has logged out from the client-UI
         When user "Alice" logs in using the client-UI
         Then user "Alice" should be connected to the server
-        # When the user quits the client
-        # And the user starts the client
-        # Then user "Alice" should be connected to the server
+        When the user quits the client
+        And the user starts the client
+        Then user "Alice" should be connected to the server

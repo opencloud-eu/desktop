@@ -16,6 +16,7 @@ from helpers.SetupClientHelper import (
     get_client_details,
     generate_account_config,
     get_resource_path,
+    app,
 )
 from helpers.SyncHelper import (
     wait_for_initial_sync_to_complete,

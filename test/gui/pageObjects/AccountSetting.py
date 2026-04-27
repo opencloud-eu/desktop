@@ -3,7 +3,7 @@
 from types import SimpleNamespace
 from appium.webdriver.common.appiumby import AppiumBy as By
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.common.exceptions import TimeoutException, NoSuchElementException
+from selenium.common.exceptions import TimeoutException
 from helpers.UserHelper import get_displayname_for_user
 from helpers.SetupClientHelper import substitute_inline_codes, app
 
@@ -22,7 +22,10 @@ class AccountSetting:
     CONFIRM_REMOVE_CONNECTION_BUTTON = SimpleNamespace(
         by=By.NAME, selector="Remove connection"
     )
-    ACCOUNT_CONNECTION_LABEL = SimpleNamespace(by=None, selector=None)
+    ACCOUNT_CONNECTION_LABEL = SimpleNamespace(
+        by=By.XPATH,
+        selector="//list[@name='Folder Sync']//label",
+    )
     LOG_BROWSER_WINDOW = SimpleNamespace(by=None, selector=None)
     ACCOUNT_LOADING = SimpleNamespace(by=None, selector=None)
     DIALOG_STACK = SimpleNamespace(by=None, selector=None)
