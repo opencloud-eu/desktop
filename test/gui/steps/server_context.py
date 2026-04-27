@@ -90,7 +90,7 @@ def step(context, user, folder_name):
     webdav.delete_resource(user, folder_name)
 
 
-@Given('user "|any|" has uploaded file "|any|" to "|any|" in the server')
+@Given('user "{user}" has uploaded file "{file_name}" to "{destination}" in the server')
 def step(context, user, file_name, destination):
     webdav.upload_file(user, file_name, destination)
 

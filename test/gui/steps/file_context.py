@@ -194,7 +194,7 @@ def step(context, file_path):
     with open(file_path, 'r', encoding='utf-8') as f:
         contents = f.read()
     with ensure(
-            '{0} expected to exist with content "{1}" but exists with content "{2}"',
+            '{0} expected to exist with content "{1}" but has content "{2}"',
             file_path,
             expected,
             contents,

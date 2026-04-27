@@ -327,7 +327,7 @@ Feature: Syncing files
         But the folder "CON" should not exist on the file system
         And the file "PRN" should not exist on the file system
 
-    @smoke @skip
+    @smoke
     Scenario: various types of files can be synced from server to client
         Given user "Alice" has created folder "simple-folder" in the server
         And user "Alice" has uploaded file "testavatar.png" to "simple-folder/testavatar.png" in the server
@@ -428,7 +428,7 @@ Feature: Syncing files
         And as "Alice" folder "folder3" should exist in the server
         And as user "Alice" folder "folder3" should contain "1000" items in the server
 
-    @smoke @skip
+    @smoke
     Scenario: Skip sync folder configuration
         Given the user has started the client
         And the user has entered the following account information:

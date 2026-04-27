@@ -4,6 +4,7 @@ from behave import given as Given, when as When, then as Then
 from sure import expect
 
 from pageObjects.AccountConnectionWizard import AccountConnectionWizard
+from pageObjects.SyncConnectionWizard import SyncConnectionWizard
 from pageObjects.AccountSetting import AccountSetting
 from pageObjects.Toolbar import Toolbar
 from pageObjects.EnterPassword import EnterPassword
