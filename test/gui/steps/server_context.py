@@ -1,6 +1,5 @@
 from behave import given as Given, then as Then
 from sure import ensure
-import parse
 from helpers.api import provisioning, webdav_helper as webdav
 
 
@@ -24,14 +23,11 @@ def step(context, user_name, resource_type, resource_name):
         resource_exists.should.be.true
 
 
-# @Then('as "|any|" the file "|any|" should have the content "|any|" in the server')
-# def step(context, user_name, file_name, content):
-#     text_content = webdav.get_file_content(user_name, file_name)
-#     test.compare(
-#         text_content,
-#         content,
-#         f"File '{file_name}' should have content '{content}' but found '{text_content}'",
-#     )
+@Then('as "{user_name}" the file "{file_name}" should have the content "{content}" in the server')
+def step(context, user_name, file_name, content):
+    text_content = webdav.get_file_content(user_name, file_name)
+    with ensure('{0}  should have content "{1}" but found "{2}"', file_name, content, text_content):
+        text_content.should.equal(content)
 
 
 # @Then(
