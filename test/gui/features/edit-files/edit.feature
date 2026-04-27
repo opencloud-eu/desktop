@@ -38,7 +38,7 @@ Feature: edit files
         And the user waits for the files to sync
         Then as "Alice" the content of file "<initialFile>" in the server should match the content of local file "<updateFile3>"
         Examples:
-        | initialFile | updateFile1  | updateFile2  | updateFile3  |
-        | simple.pdf  | simple1.pdf  | simple2.pdf  | simple3.pdf  |
-        | simple.docx | simple1.docx | simple2.docx | simple3.docx |
-        | simple.xlsx | simple1.xlsx | simple2.xlsx | simple3.xlsx |
+            | initialFile | updateFile1  | updateFile2  | updateFile3  |
+            | simple.pdf  | simple1.pdf  | simple2.pdf  | simple3.pdf  |
+            | simple.docx | simple1.docx | simple2.docx | simple3.docx |
+            | simple.xlsx | simple1.xlsx | simple2.xlsx | simple3.xlsx |
