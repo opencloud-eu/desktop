@@ -18,6 +18,7 @@ class Activity:
     NOT_SYNCED_FILTER_OPTION_SELECTOR = SimpleNamespace(by=None, selector=None)
     SYNCED_ACTIVITY_TABLE_HEADER_SELECTOR = SimpleNamespace(by=None, selector=None)
     NOT_SYNCED_ACTIVITY_TABLE_HEADER_SELECTOR = SimpleNamespace(by=None, selector=None)
+    SYNCED_ACTIVITY_STATUS = SimpleNamespace(by=By.NAME, selector=None)
 
 
     @staticmethod
@@ -83,13 +84,11 @@ class Activity:
     @staticmethod
     def has_sync_status(filename, status):
         try:
-            file_row = squish.waitForObject(
-                Activity.get_not_synced_file_selector(filename),
-                get_config("lowestSyncTimeout") * 1000,
-                )["row"]
-            if Activity.get_not_synced_status(file_row) == status:
-                return True
-            return False
+            app().find_element(
+                Activity.SYNCED_ACTIVITY_STATUS.by,
+                status
+            )
+            return True
         except:
             return False
 

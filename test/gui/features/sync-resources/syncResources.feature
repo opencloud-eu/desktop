@@ -6,7 +6,7 @@ Feature: Syncing files
     Background:
         Given user "Alice" has been created in the server with default attributes
 
-    @issue-9281 @smoke @skip
+    @issue-9281 @smoke
     Scenario: Syncing a file to the server
         Given user "Alice" has set up a client with default settings
         When user "Alice" creates a file "lorem-for-upload.txt" with the following content inside the sync folder
@@ -19,7 +19,7 @@ Feature: Syncing files
         Then the file "lorem-for-upload.txt" should have status "Uploaded" in the activity tab
         And as "Alice" the file "lorem-for-upload.txt" should have the content "test content" in the server
 
-    @smoke @skip
+    @smoke
     Scenario: Syncing all files and folders from the server
         Given user "Alice" has created folder "simple-folder" in the server
         And user "Alice" has created folder "large-folder" in the server
@@ -235,7 +235,7 @@ Feature: Syncing files
         And as "Alice" folder "parent/subfolder4" should exist in the server
         And as "Alice" folder "parent/subfolder5" should exist in the server
 
-    @smoke @skip
+    @smoke
     Scenario: Both original and copied folders can be synced
         Given user "Alice" has set up a client with default settings
         When user "Alice" creates a folder "original" inside the sync folder
@@ -299,7 +299,7 @@ Feature: Syncing files
             | foldername                                                      |
             | An empty folder which name is obviously more than 59 characters |
 
-    @skipOnWindows @smoke @skip
+    @skipOnWindows @smoke
     Scenario: Invalid system names are synced (Linux only)
         Given user "Alice" has created folder "CON" in the server
         And user "Alice" has created folder "test%" in the server
