@@ -157,7 +157,7 @@ Feature: Syncing files
             | bFolder   |
         And the user cancels the sync connection wizard
 
-    @smoke @skip
+    @smoke
     Scenario Outline: Syncing a folder to the server
         Given user "Alice" has set up a client with default settings
         When user "Alice" creates a folder <foldername> inside the sync folder
@@ -189,7 +189,7 @@ Feature: Syncing files
         Then the file "trailing-space.txt " should be ignored
         And the file "folder with space at end " should be ignored
 
-    @smoke @skip
+    @smoke
     Scenario: Many subfolders can be synced
         Given user "Alice" has created folder "parent" in the server
         And user "Alice" has set up a client with default settings
@@ -250,7 +250,7 @@ Feature: Syncing files
         And as "Alice" folder "original (Copy)" should exist in the server
         And as "Alice" the file "original (Copy)/localFile.txt" should have the content "test content" in the server
 
-    @issue-9281 @smoke @skip
+    @issue-9281 @smoke
     Scenario: Verify that you can create a subfolder with long name(~220 characters)
         Given user "Alice" has created a folder "Folder1" inside the sync folder
         And user "Alice" has set up a client with default settings
@@ -259,7 +259,7 @@ Feature: Syncing files
         Then the folder "Folder1/thisIsAVeryLongFolderNameToCheckThatItWorks-thisIsAVeryLongFolderNameToCheckThatItWorks-thisIsAVeryLongFolderNameToCheckThatItWorks-thisIsAVeryLongFolderNameToCheckThatItWorks" should exist on the file system
         And as "Alice" folder "Folder1/thisIsAVeryLongFolderNameToCheckThatItWorks-thisIsAVeryLongFolderNameToCheckThatItWorks-thisIsAVeryLongFolderNameToCheckThatItWorks-thisIsAVeryLongFolderNameToCheckThatItWorks" should exist in the server
 
-    @smoke @skip
+    @smoke
     Scenario: Verify pre existing folders in local (Desktop client) are copied over to the server
         Given user "Alice" has created a folder "Folder1" inside the sync folder
         And user "Alice" has created a folder "Folder1/subFolder1" inside the sync folder
@@ -376,7 +376,7 @@ Feature: Syncing files
         And as "Alice" file "simple.pptx" should exist in the server
         And as "Alice" file "simple.xlsx" should exist in the server
 
-    @smoke @skip
+    @smoke
     Scenario Outline: File with long name can be synced
         Given user "Alice" has set up a client with default settings
         When user "Alice" creates a file "<filename>" with the following content inside the sync folder
@@ -389,7 +389,7 @@ Feature: Syncing files
             | filename                                                                                                                                                                                                                     |
             | thisIsAVeryLongFileNameToCheckThatItWorks-thisIsAVeryLongFileNameToCheckThatItWorks-thisIsAVeryLongFileNameToCheckThatItWorks-thisIsAVeryLongFileNameToCheckThatItWorks-thisIsAVeryLongFileNameToCheckThatItWorks-thisIs.txt |
 
-    @smoke @skip
+    @smoke
     Scenario: Syncing file of 1 GB size
         Given user "Alice" has set up a client with default settings
         When user "Alice" creates a file "newfile.txt" with size "1GB" inside the sync folder

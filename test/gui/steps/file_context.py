@@ -20,11 +20,11 @@ from helpers.FilesHelper import (
     # can_read,
     # can_write,
     # read_file_content,
-    # get_size_in_bytes,
-    # prefix_path_namespace,
+    get_size_in_bytes,
+    prefix_path_namespace,
     # remember_path,
-    # convert_path_separators_for_os,
-    # get_file_for_upload,
+    convert_path_separators_for_os,
+    get_file_for_upload,
 )
 
 
@@ -44,12 +44,12 @@ def file_exists(file_path, timeout=1000):
 
 # To create folders in a temporary directory, we set is_temp_folder True
 # And if is_temp_folder is True, the create_folder function create folders in tempFolderPath
-# def create_folder(foldername, username=None, is_temp_folder=False):
-#     if is_temp_folder:
-#         folder_path = join(get_config('tempFolderPath'), foldername)
-#     else:
-#         folder_path = get_resource_path(foldername, username)
-#     os.makedirs(prefix_path_namespace(convert_path_separators_for_os(folder_path)))
+def create_folder(foldername, username=None, is_temp_folder=False):
+    if is_temp_folder:
+        folder_path = join(get_config('tempFolderPath'), foldername)
+    else:
+        folder_path = get_resource_path(foldername, username)
+    os.makedirs(prefix_path_namespace(convert_path_separators_for_os(folder_path)))
 
 
 def rename_file_folder(source, destination):
@@ -58,25 +58,25 @@ def rename_file_folder(source, destination):
     os.rename(source, destination)
 
 
-# def create_file_with_size(filename, filesize, is_temp_folder=False):
-#     if is_temp_folder:
-#         file = join(get_config('tempFolderPath'), filename)
-#     else:
-#         file = get_resource_path(filename)
-#     with open(prefix_path_namespace(file), 'wb') as f:
-#         f.seek(get_size_in_bytes(filesize) - 1)
-#         f.write(b'\0')
+def create_file_with_size(filename, filesize, is_temp_folder=False):
+    if is_temp_folder:
+        file = join(get_config('tempFolderPath'), filename)
+    else:
+        file = get_resource_path(filename)
+    with open(prefix_path_namespace(file), 'wb') as f:
+        f.seek(get_size_in_bytes(filesize) - 1)
+        f.write(b'\0')
 
 
-# def write_file(resource, content):
-#     with open(prefix_path_namespace(resource), 'w', encoding='utf-8') as f:
-#         f.write(content)
+def write_file(resource, content):
+    with open(prefix_path_namespace(resource), 'w', encoding='utf-8') as f:
+        f.write(content)
 
 
-# def wait_and_write_file(path, content):
-#     wait_for_client_to_be_ready()
-#     listen_sync_status_for_item(get_resource_path(path), 'FILE')
-#     write_file(path, content)
+def wait_and_write_file(path, content):
+    wait_for_client_to_be_ready()
+    listen_sync_status_for_item(get_resource_path(path), 'FILE')
+    write_file(path, content)
 
 
 # def wait_and_try_to_write_file(resource, content):
@@ -116,7 +116,7 @@ def rename_file_folder(source, destination):
 #     destination = get_resource_path(destination)
 #     if source == destination and destination != '/':
 #         destination = add_copy_suffix(source, resource_type)
-
+#
 #     wait_for_client_to_be_ready()
 #     listen_sync_status_for_item(destination, resource_type)
 #     if resource_type == 'folder':
@@ -144,29 +144,29 @@ def deleteResource(resource, resource_type):
         shutil.rmtree(resource_path)
 
 
-# @When(
-#     'user "|any|" creates a file "|any|" with the following content inside the sync folder'
-# )
-# def step(context, username, filename):
-#     file_content = '\n'.join(context.multiLineText)
-#     file = get_resource_path(filename, username)
-#     wait_and_write_file(convert_path_separators_for_os(file), file_content)
+@When(
+    'user "{username}" creates a file "{filename}" with the following content inside the sync folder'
+)
+def step(context, username, filename):
+    file_content = context.text
+    file = get_resource_path(filename, username)
+    wait_and_write_file(convert_path_separators_for_os(file), file_content)
 
 
-# @When('user "|any|" creates a folder "|any|" inside the sync folder')
-# def step(context, username, foldername):
-#     wait_for_client_to_be_ready()
-#     create_folder(foldername, username)
+@When('user "{username}" creates a folder "{foldername}" inside the sync folder')
+def step(context, username, foldername):
+    wait_for_client_to_be_ready()
+    create_folder(foldername, username)
 
 
-# @Given('user "|any|" has created a folder "|any|" inside the sync folder')
-# def step(context, username, foldername):
-#     create_folder(foldername, username)
+@Given('user "{username}" has created a folder "{foldername}" inside the sync folder')
+def step(context, username, foldername):
+    create_folder(foldername, username)
 
 
-# @When('user "|any|" creates a file "|any|" with size "|any|" inside the sync folder')
-# def step(context, _, filename, filesize):
-#     create_file_with_size(filename, filesize)
+@When('user "{user}" creates a file "{filename}" with size "{filesize}" inside the sync folder')
+def step(context, user, filename, filesize):
+    create_file_with_size(filename, filesize)
 
 
 # @When(r'the user copies (file|folder) "([^"]*)" into folder "([^"]*)"', regexp=True)
