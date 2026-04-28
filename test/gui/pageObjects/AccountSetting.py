@@ -97,13 +97,18 @@ class AccountSetting:
 
     @staticmethod
     def wait_until_account_is_connected(timeout=5000):
-        try:
-            wait_for(AccountSetting.is_user_signed_in, timeout)
-            return True
-        except TimeoutError:
+        result = wait_for(
+            AccountSetting.is_user_signed_in,
+            timeout,
+        )
+
+        if not result:
             raise TimeoutError(
-                f"Timeout waiting for the account to be connected for {timeout} milliseconds"
+                "Timeout waiting for the account to be connected for "
+                + str(timeout)
+                + " milliseconds"
             )
+        return result
 
 
     @staticmethod
