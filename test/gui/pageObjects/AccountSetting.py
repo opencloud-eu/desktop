@@ -1,9 +1,5 @@
-# pyright: reportUndefinedVariable=false
-
 from types import SimpleNamespace
 from appium.webdriver.common.appiumby import AppiumBy as By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.common.exceptions import TimeoutException
 from helpers.UserHelper import get_displayname_for_user
 from helpers.SetupClientHelper import substitute_inline_codes, app
 
@@ -71,7 +67,7 @@ class AccountSetting:
     @staticmethod
     def get_account_connection_label():
         label = app().find_element(AccountSetting.ACCOUNT_CONNECTION_LABEL.by, AccountSetting.ACCOUNT_CONNECTION_LABEL.selector).text
-        return str(label)
+        return label
 
     @staticmethod
     def is_connecting():
@@ -101,11 +97,10 @@ class AccountSetting:
 
     @staticmethod
     def wait_until_account_is_connected(timeout=5000):
-        wait = WebDriverWait(app(), timeout / 1000)  # Convert to seconds
         try:
-            wait.until(lambda _: AccountSetting.is_user_signed_in())
+            wait_for(AccountSetting.is_user_signed_in, timeout)
             return True
-        except TimeoutException:
+        except TimeoutError:
             raise TimeoutError(
                 f"Timeout waiting for the account to be connected for {timeout} milliseconds"
             )

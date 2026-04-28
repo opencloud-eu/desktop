@@ -280,21 +280,15 @@ def close_and_kill_app():
     global app_driver
     # Quit Appium session
     if app_driver is not None:
-        try:
-            app_driver.quit()
-        except Exception:
-            pass
+        app_driver.quit()
     
     # Kill remaining process by exe path
     app_path = get_config("app_path")
     for process in psutil.process_iter(['pid', 'exe']):
-        try:
-            if process.info['exe'] == app_path:
-                print("Closing desktop client...")
-                psutil.Process(process.info['pid']).kill()
-                break
-        except (psutil.NoSuchProcess, psutil.AccessDenied):
-            pass
+        if process.info['exe'] == app_path:
+            print("Closing desktop client...")
+            psutil.Process(process.info['pid']).kill()
+            break
     
     # Reset driver for reuse
     app_driver = None
