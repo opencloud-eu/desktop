@@ -3,9 +3,8 @@ from urllib.parse import urlparse
 from appium.webdriver.common.appiumby import AppiumBy as By
 from selenium.webdriver.common.keys import Keys
 
-from helpers.SetupClientHelper import wait_until_app_killed
+from helpers.SetupClientHelper import app, close_and_kill_app
 from helpers.ConfigHelper import get_config
-from helpers.SetupClientHelper import app
 from helpers.UserHelper import get_displayname_for_user
 
 
@@ -15,8 +14,14 @@ class Toolbar:
     ADD_ACCOUNT_BUTTON = SimpleNamespace(by=By.NAME, selector="Add Account")
     ACTIVITY_BUTTON = SimpleNamespace(by=By.NAME, selector="Activity")
     SETTINGS_BUTTON = SimpleNamespace(by=None, selector=None)
-    QUIT_BUTTON = SimpleNamespace(by=None, selector=None)
-    CONFIRM_QUIT_BUTTON = SimpleNamespace(by=None, selector=None)
+    QUIT_BUTTON = SimpleNamespace(
+        by=By.NAME,
+        selector="Quit"
+    )
+    CONFIRM_QUIT_BUTTON = SimpleNamespace(
+        by=By.ACCESSIBILITY_ID,
+        selector="QApplication.QMessageBox.qt_msgbox_buttonbox.QPushButton"
+    )
 
     TOOLBAR_ITEMS = ["Add Account", "Activity", "Settings", "Quit"]
 
@@ -75,12 +80,16 @@ class Toolbar:
 
     @staticmethod
     def quit_opencloud():
-        squish.mouseClick(squish.waitForObject(Toolbar.QUIT_BUTTON))
-        squish.clickButton(squish.waitForObject(Toolbar.CONFIRM_QUIT_BUTTON))
-        for ctx in squish.applicationContextList():
-            pid = ctx.pid
-            ctx.detach()
-            wait_until_app_killed(pid)
+        app().find_element(
+            Toolbar.QUIT_BUTTON.by,
+            Toolbar.QUIT_BUTTON.selector
+        ).click()
+        app().find_element(
+            Toolbar.CONFIRM_QUIT_BUTTON.by,
+            Toolbar.CONFIRM_QUIT_BUTTON.selector
+        ).click()
+        close_and_kill_app()
+
 
     @staticmethod
     def get_accounts():

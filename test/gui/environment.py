@@ -1,4 +1,3 @@
-import psutil
 import shutil
 import os
 
@@ -7,7 +6,7 @@ from helpers.api.provisioning import delete_created_users
 from helpers.SpaceHelper import delete_project_spaces
 from helpers.ConfigHelper import set_config, get_config
 from helpers.FilesHelper import prefix_path_namespace, cleanup_created_paths
-from helpers.SetupClientHelper import app
+from helpers.SetupClientHelper import close_and_kill_app
 from step_types.types import *  # register all step types
 
 
@@ -37,10 +36,4 @@ def after_scenario(context, scenario):
     delete_project_spaces()
     delete_created_users()
     # quit the application
-    if app() is not None:
-        app().quit()
-    for process in psutil.process_iter(['pid', 'exe']):
-        if process.info['exe'] == get_config("app_path"):
-            print("Closing desktop client...")
-            psutil.Process(process.info['pid']).kill()
-            break
+    close_and_kill_app()

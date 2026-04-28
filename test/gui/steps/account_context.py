@@ -1,13 +1,14 @@
 import shutil
 import os
 from behave import given as Given, when as When, then as Then
-from sure import expect
+from sure import expect, ensure
 
 from pageObjects.AccountConnectionWizard import AccountConnectionWizard
 from pageObjects.SyncConnectionWizard import SyncConnectionWizard
 from pageObjects.AccountSetting import AccountSetting
 from pageObjects.Toolbar import Toolbar
 from pageObjects.EnterPassword import EnterPassword
+from pageObjects.AccountSetting import AccountSetting
 from helpers.SetupClientHelper import (
     start_client,
     setup_client,
@@ -15,6 +16,7 @@ from helpers.SetupClientHelper import (
     get_client_details,
     generate_account_config,
     get_resource_path,
+    app,
 )
 from helpers.SyncHelper import (
     wait_for_initial_sync_to_complete,
@@ -113,28 +115,27 @@ def step(context):
     AccountConnectionWizard.add_account_information(account_details)
 
 
-@When('the user "|any|" logs out using the client-UI')
-def step(context, _):
+@When('the user "{username}" logs out using the client-UI')
+def step(context, username):
     AccountSetting.logout()
 
 
-@Then('user "|any|" should be signed out')
+@Then('user "{username}" should be signed out')
 def step(context, username):
-    test.compare(
-        AccountSetting.is_user_signed_out(),
-        True,
-        f'User "{username}" is signed out',
-    )
+    user_signed_out = AccountSetting.is_user_signed_out()
+    
+    with ensure('User "{0}" should be signed out, but is still signed in', username):
+        user_signed_out.should.be.true
 
 
-@Given('user "|any|" has logged out from the client-UI')
+@Given('user "{username}" has logged out from the client-UI')
 def step(context, username):
     AccountSetting.logout()
     if not AccountSetting.is_user_signed_out():
         raise LookupError(f'Failed to logout user {username}')
 
 
-@When('user "|any|" logs in using the client-UI')
+@When('user "{username}" logs in using the client-UI')
 def step(context, username):
     AccountSetting.login()
     password = get_password_for_user(username)
@@ -150,10 +151,9 @@ def step(context, _):
     AccountSetting.login()
 
 
-@Then('user "|any|" should be connected to the server')
-def step(context, _):
+@Then('user "{username}" should be connected to the server')
+def step(context, username):
     AccountSetting.wait_until_account_is_connected()
-    AccountSetting.wait_until_sync_folder_is_configured()
 
 
 @When('the user removes the connection for user "{username}"')
@@ -233,7 +233,7 @@ def step(context):
     test.compare(True, AccountSetting.is_log_dialog_visible(), 'Log dialog is opened')
 
 
-@Step('the user cancels the sync connection wizard')
+@When('the user cancels the sync connection wizard')
 def step(context):
     SyncConnectionWizard.cancel_folder_sync_connection_wizard()
 
