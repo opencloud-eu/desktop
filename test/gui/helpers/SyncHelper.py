@@ -2,6 +2,8 @@ import os
 import re
 import time
 import urllib.request
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.common.exceptions import TimeoutException
 
 from helpers.ConfigHelper import get_config, is_linux, is_windows
 from helpers.FilesHelper import sanitize_path
@@ -357,10 +359,10 @@ def make_available_locally(resource_path):
 
 
 def wait_for(condition, timeout, interval=0.5):
-    start = time.time() * 1000
-    while True:
-        if condition():
-            return True
-        if time.time() * 1000 - start > timeout:
-            return False
-        time.sleep(interval)
+    from helpers.SetupClientHelper import app
+    wait = WebDriverWait(app(), timeout / 1000, poll_frequency=interval)
+    try:
+        wait.until(lambda _: condition())
+        return True
+    except TimeoutException:
+        return False
