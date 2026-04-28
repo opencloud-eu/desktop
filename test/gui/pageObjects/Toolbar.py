@@ -3,7 +3,7 @@ from urllib.parse import urlparse
 from appium.webdriver.common.appiumby import AppiumBy as By
 from selenium.webdriver.common.keys import Keys
 
-from helpers.SetupClientHelper import app
+from helpers.SetupClientHelper import app, close_and_kill_app
 from helpers.ConfigHelper import get_config
 from helpers.UserHelper import get_displayname_for_user
 
@@ -88,7 +88,7 @@ class Toolbar:
             Toolbar.CONFIRM_QUIT_BUTTON.by,
             Toolbar.CONFIRM_QUIT_BUTTON.selector
         ).click()
-        app().quit()
+        close_and_kill_app()
 
 
     @staticmethod
