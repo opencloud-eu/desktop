@@ -20,7 +20,7 @@ class SyncConnectionWizard:
     )
     REMOTE_FOLDER_TREE = SimpleNamespace(by=None, selector=None)
     SELECTIVE_SYNC_TREE_HEADER = SimpleNamespace(by=None, selector=None)
-    CANCEL_FOLDER_SYNC_CONNECTION_WIZARD = SimpleNamespace(by=None, selector=None)
+    CANCEL_FOLDER_SYNC_CONNECTION_WIZARD = SimpleNamespace(by=By.NAME, selector="Cancel")
     SPACES_LIST = SimpleNamespace(by=By.NAME, selector="Spaces list")
     SPACE_NAME_SELECTOR = SimpleNamespace(by=By.NAME, selector="{space_name},")
     CREATE_REMOTE_FOLDER_BUTTON = SimpleNamespace(by=None, selector=None)
@@ -119,11 +119,10 @@ class SyncConnectionWizard:
 
     @staticmethod
     def cancel_folder_sync_connection_wizard():
-        squish.clickButton(
-            squish.waitForObject(
-                SyncConnectionWizard.CANCEL_FOLDER_SYNC_CONNECTION_WIZARD
-            )
-        )
+        app().find_element(
+            SyncConnectionWizard.CANCEL_FOLDER_SYNC_CONNECTION_WIZARD.by,
+            SyncConnectionWizard.CANCEL_FOLDER_SYNC_CONNECTION_WIZARD.selector,
+        ).click()
 
     @staticmethod
     def select_space(space_name):
