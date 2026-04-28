@@ -50,7 +50,11 @@ steps:
   - name: fix-permissions
     image: owncloud/ubuntu:20.04
     commands:
-      - chmod o+w /woodpecker/desktop/ -R
+      - cat /etc/os-release && chmod o+w /woodpecker/desktop/ -R
+  - name: fix-permissions
+    image: owncloud/ubuntu:24.04
+    commands:
+      - cat /etc/os-release
   - name: build-client-for-ui-tests
     image: *squish_image
     commands:
