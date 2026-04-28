@@ -175,7 +175,7 @@ def step(context, resource_type, resource_name, destination_dir):
     copy_resource(resource_type, resource_name, destination_dir, False)
 
 
-@When(r'the user copies (file|folder) "([^"]*)" into the same directory', regexp=True)
+@When('the user copies {resource_type:ResourceType} "{resource_name}" into the same directory')
 def step(context, resource_type, resource_name):
     copy_resource(resource_type, resource_name, resource_name, False)
 
@@ -187,19 +187,19 @@ def step(context, source, destination):
     rename_file_folder(source, destination)
 
 
-@Then('the file "|any|" should exist on the file system with the following content')
+@Then('the file "{file_path}" should exist on the file system with the following content')
 def step(context, file_path):
-    expected = '\n'.join(context.multiLineText)
+    expected = context.text
     file_path = get_resource_path(file_path)
     with open(file_path, 'r', encoding='utf-8') as f:
         contents = f.read()
-    test.compare(
-        expected,
-        contents,
-        'file expected to exist with content '
-        + expected
-        + ' but does not have the expected content',
-    )
+    with ensure(
+            '{0} expected to exist with content "{1}" but has content "{2}"',
+            file_path,
+            expected,
+            contents,
+    ):
+        contents.should.equal(expected)
 
 
 @Then('the {resource_type:ResourceType} "{resource}" should exist on the file system')
