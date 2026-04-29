@@ -1,5 +1,5 @@
 variables:
-  - &squish_image 'opencloudeu/squish@sha256:efaaa7749b9987dd3164288a55b2dc5514acd5eef01b0ec72f6b9b41d761378f'
+  - &build_image 'sawjan/opencloud-desktop-build'
   - &minio_image 'minio/mc:RELEASE.2021-10-07T04-19-58Z'
   - &minio_environment
     AWS_ACCESS_KEY_ID:
@@ -34,9 +34,6 @@ when:
     path:
       <<: *trigger_path
   - event: pull_request
-    branch:
-      - main
-      - stable-*
     path:
       <<: *trigger_path
     evaluate: |
@@ -45,21 +42,22 @@ when:
   - event: cron
     cron: nightly*
 
-workspace:
-  base: /woodpecker/
-  path: desktop
+# workspace:
+#   base: /woodpecker/
+#   path: desktop
 
 steps:
-  - name: fix-permissions
-    image: owncloud/ubuntu:20.04
-    commands:
-      - chmod o+w /woodpecker/desktop/ -R
+  # - name: fix-permissions
+  #   image: owncloud/ubuntu:20.04
+  #   commands:
+  #     - chmod o+w /woodpecker/desktop/ -R
   - name: build-client-for-ui-tests
-    image: *squish_image
+    image: *build_image
     commands:
+      - pwd
       - mkdir -p /woodpecker/desktop/build
       - cd /woodpecker/desktop/build
-      - cmake %s -S .. -GNinja  -DCMAKE_BUILD_TYPE=Debug  -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
+      - cmake -GNinja -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=Debug -DVIRTUAL_FILE_SYSTEM_PLUGINS=off -S ..
       - ninja
   - name: upload-desktop-client-cache
     image: *minio_image

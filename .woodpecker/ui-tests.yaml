@@ -1,5 +1,5 @@
 variables:
-  - &squish_image 'opencloudeu/squish@sha256:efaaa7749b9987dd3164288a55b2dc5514acd5eef01b0ec72f6b9b41d761378f'
+  - &build_image 'sawjan/opencloud-desktop-build'
   - &minio_image 'minio/mc:RELEASE.2021-10-07T04-19-58Z'
   - &ubuntu_image 'owncloud/ubuntu:20.04'
   - &minio_environment
@@ -20,16 +20,12 @@ when:
       - push
       - manual
   - event: pull_request
-    branch:
-      - main
-      - stable-*
   - event: tag
   - event: cron
     cron: nightly*
 
 depends_on:
   - build
-  - cache-pnpm
   - cache-python
 
 workspace:
@@ -37,13 +33,13 @@ workspace:
   path: desktop
 
 steps:
-  - name: pnpm-install
-    image: owncloudci/nodejs:20
-    commands:
-      - cd test/gui/
-      - npm i -s -g -f "$(jq -r ".packageManager" < webUI/package.json)"
-      - pnpm config set store-dir ./.pnpm-store
-      - make pnpm-install
+  # - name: pnpm-install
+  #   image: owncloudci/nodejs:20
+  #   commands:
+  #     - cd test/gui/
+  #     - npm i -s -g -f "$(jq -r ".packageManager" < webUI/package.json)"
+  #     - pnpm config set store-dir ./.pnpm-store
+  #     - make pnpm-install
 
   - name: restore-python-cache
     image: *minio_image
@@ -55,13 +51,17 @@ steps:
       - mc cp -a s3/$CACHE_BUCKET/desktop/python-cache/python-cache-$requirements_sha.tar.gz /woodpecker/desktop
 
   - name: install-python-modules
-    image: *squish_image
-    environment:
-      PYTHONUSERBASE: /woodpecker/desktop/
+    image: *build_image
     commands:
       - tar -xvf python-cache-*.tar.gz -C .
-      - make -C test/gui/ pip-install
-      - python3.10 -m pip list -v
+      - ls -al
+      - cd test/gui/
+      - ls -al
+      - du -sh .venv/lib/python3.12/site-packages
+      - python3 -m venv .venv --system-site-packages
+      - source .venv/bin/activate
+      - make pip-install
+      - python3 -m pip list -v
 
   - name: restore-browsers-cache
     image: *minio_image
@@ -76,6 +76,9 @@ steps:
     image: owncloud/ubuntu:20.04
     commands:
       - tar -xvf /woodpecker/desktop/playwright-browsers.tar.gz -C .
+      - ls -al
+      - ls -al test/gui/
+      - ls -al test/gui/.playwright
 
   - name: opencloud
     image: quay.io/opencloudeu/opencloud-rolling:latest
@@ -128,22 +131,18 @@ steps:
       - tail -f /woodpecker/desktop/test/gui/guiReportUpload/serverlog.log
 
   - name: UI-tests
-    image: *squish_image
+    image: *build_image
     environment:
-      PYTHONUSERBASE: /woodpecker/desktop/
-      TMPDIR: /woodpecker/desktop/test/gui/tmp/
       CLIENT_LOG_DIR: /woodpecker/desktop/test/gui/clientLog/
       PLAYWRIGHT_BROWSERS_PATH: /woodpecker/desktop/.playwright
-      SQUISH_LICENSE_SERVER:
-        from_secret: squish_license_key
-      SQUISH_LICENSE_SERVER_API: squish.jankari.tech:49346
-      SQUISH_LICENSE_SERVER_API_TOKEN: phzq4o1tJIVebL1kgSTAeKqZ5AoIDJfci
+      APP_PATH: /woodpecker/desktop/build/bin/OpenCloud
       BACKEND_HOST: https://opencloud:9200
       SECURE_BACKEND_HOST: https://opencloud:9200
       GUI_TEST_REPORT_DIR: /woodpecker/desktop/test/gui/guiReportUpload
-      SERVER_INI: /woodpecker/desktop/test/gui/woodpecker/server.ini
-      SQUISH_PARAMETERS: --testsuite /woodpecker/desktop/test/gui --reportgen html,/woodpecker/desktop/test/gui/guiReportUpload --envvar QT_LOGGING_RULES=sync.httplogger=true;gui.socketapi=false --tags ~@skip --tags ~@skipOnLinux
-      WAIT_FOR_SQUISH_LICENSE_MINUTES: 30
+    commands:
+      - pwd
+      - whoami
+      - ls -al
 
   - name: crash-log
     image: *ubuntu_image

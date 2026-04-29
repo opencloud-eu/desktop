@@ -1,5 +1,5 @@
 variables:
-  - &squish_image 'opencloudeu/squish@sha256:efaaa7749b9987dd3164288a55b2dc5514acd5eef01b0ec72f6b9b41d761378f'
+  - &build_image 'sawjan/opencloud-desktop-build'
   - &minio_image 'minio/mc:RELEASE.2021-10-07T04-19-58Z'
   - &minio_environment
     AWS_ACCESS_KEY_ID:
@@ -35,9 +35,6 @@ when:
       <<: *trigger_path
   - event: tag
   - event: pull_request
-    branch:
-      - main
-      - stable-*
     path:
       <<: *trigger_path
     evaluate: |
@@ -60,16 +57,41 @@ steps:
       - bash test/gui/woodpecker/script.sh check_python_cache
 
   - name: install-python-modules
-    image: *squish_image
-    environment:
-      PYTHONUSERBASE: /woodpecker/desktop
+    image: *build_image
     commands:
       - . ./.woodpecker.env
       - if $PYTHON_CACHE_FOUND; then exit 0; fi
-      - make -C test/gui/ pip-install
-      - python3.10 -m pip list -v
-      - requirements_sha=$(sha1sum test/gui/requirements.txt | cut -d" " -f1)
-      - tar -czvf /woodpecker/desktop/python-cache-$requirements_sha.tar.gz lib/python3.10/site-packages
+      - cd test/gui/
+      - python3 -m venv .venv --system-site-packages
+      - source .venv/bin/activate
+      - make install
+      - python3 -m pip list -v
+      - du -sh .venv/lib/python3.12/site-packages
+      - requirements_sha=$(sha1sum requirements.txt | cut -d" " -f1)
+      - tar -czvf /woodpecker/desktop/python-cache-$requirements_sha.tar.gz .venv/lib/python3.12/site-packages
+
+  - name: install-browsers
+    image: *build_image
+    environment:
+      PLAYWRIGHT_BROWSERS_PATH: .playwright
+    commands:
+      - . ./.woodpecker.env
+      - if $BROWSER_CACHE_FOUND; then exit 0; fi
+      - cd test/gui/
+      - ls -al .playwright
+      - tar -czvf /woodpecker/desktop/playwright-browsers.tar.gz .playwright
+
+  - name: upload-browsers-cache
+    image: *minio_image
+    environment:
+      <<: *minio_environment
+    commands:
+      - . ./.woodpecker.env
+      - if $BROWSER_CACHE_FOUND; then exit 0; fi
+      - playwright_version=$(bash test/gui/woodpecker/script.sh get_playwright_version)
+      - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
+      - mc cp -r -a /woodpecker/desktop/playwright-browsers.tar.gz s3/$CACHE_BUCKET/web/browsers-cache/$playwright_version/
+      - mc ls --recursive s3/$CACHE_BUCKET/web
 
   - name: upload-python-cache
     image: *minio_image
