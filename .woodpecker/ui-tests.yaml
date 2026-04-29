@@ -1,7 +1,9 @@
 variables:
+  - &opencloud_image 'quay.io/opencloudeu/opencloud-rolling:latest'
   - &build_image 'sawjan/opencloud-desktop-build'
   - &minio_image 'minio/mc:RELEASE.2021-10-07T04-19-58Z'
-  - &ubuntu_image 'owncloud/ubuntu:20.04'
+  # - &ubuntu_image 'owncloud/ubuntu:20.04'
+  - &alpine_image 'alpine:3.22.4'
   - &minio_environment
     AWS_ACCESS_KEY_ID:
       from_secret: cache_s3_access_key
@@ -48,12 +50,12 @@ steps:
     commands:
       - requirements_sha=$(sha1sum test/gui/requirements.txt | cut -d" " -f1)
       - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-      - mc cp -a s3/$CACHE_BUCKET/desktop/python-cache/python-cache-$requirements_sha.tar.gz /woodpecker/desktop
+      - mc cp -a s3/$CACHE_BUCKET/desktop/python-cache/python-cache-$requirements_sha.tar.gz $CI_WORKSPACE
 
   - name: install-python-modules
     image: *build_image
     commands:
-      - tar -xvf python-cache-*.tar.gz -C .
+      - tar -xf python-cache-*.tar.gz -C .
       - ls -al
       - cd test/gui/
       - ls -al
@@ -70,18 +72,18 @@ steps:
     commands:
       - playwright_version=$(bash test/gui/woodpecker/script.sh get_playwright_version)
       - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-      - mc cp -r -a s3/$CACHE_BUCKET/web/browsers-cache/$playwright_version/playwright-browsers.tar.gz /woodpecker/desktop
+      - mc cp -r -a s3/$CACHE_BUCKET/web/browsers-cache/$playwright_version/playwright-browsers.tar.gz $CI_WORKSPACE
 
   - name: unzip-browsers-cache
     image: owncloud/ubuntu:20.04
     commands:
-      - tar -xvf /woodpecker/desktop/playwright-browsers.tar.gz -C .
+      - tar -xf playwright-browsers.tar.gz -C .
       - ls -al
       - ls -al test/gui/
       - ls -al test/gui/.playwright
 
   - name: opencloud
-    image: quay.io/opencloudeu/opencloud-rolling:latest
+    image: *opencloud_image
     detach: true
     environment:
       FRONTEND_SEARCH_MIN_LENGTH: '2'
@@ -111,26 +113,26 @@ steps:
       <<: *minio_environment
     commands:
       - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-      - mc cp -a -r s3/$CACHE_BUCKET/desktop/client-build/${CI_COMMIT_SHA}/ /woodpecker/desktop/build
-      - ls -lh /woodpecker/desktop/build/bin
+      - mc cp -a -r s3/$CACHE_BUCKET/desktop/client-build/${CI_COMMIT_SHA}/ $CI_WORKSPACE/build
+      - ls -lh $CI_WORKSPACE/build/bin
 
   - name: create-extra-directories
-    image: *ubuntu_image
+    image: *alpine_image
     commands:
-      - mkdir /woodpecker/desktop/test/gui/guiReportUpload/screenshots -p
-      - mkdir /woodpecker/desktop/test/gui/tmp -p
-      - mkdir /woodpecker/desktop/test/gui/clientLog -p
-      - chmod 777 /woodpecker/desktop/test/gui/ -R
+      - mkdir test/gui/guiReportUpload/screenshots -p
+      # - mkdir test/gui/tmp -p
+      # - mkdir test/gui/clientLog -p
+      # - chmod 777 test/gui/ -R
 
-  - name: squish-server-logs
-    image: *ubuntu_image
-    detach: true
-    commands:
-      - touch /woodpecker/desktop/test/gui/guiReportUpload/serverlog.log
-      - chmod 777 /woodpecker/desktop/test/gui/guiReportUpload/serverlog.log
-      - tail -f /woodpecker/desktop/test/gui/guiReportUpload/serverlog.log
+  # - name: squish-server-logs
+  #   image: *ubuntu_image
+  #   detach: true
+  #   commands:
+  #     - touch test/gui/guiReportUpload/serverlog.log
+  #     - chmod 777 test/gui/guiReportUpload/serverlog.log
+  #     - tail -f test/gui/guiReportUpload/serverlog.log
 
-  - name: UI-tests
+  - name: gui-tests
     image: *build_image
     environment:
       CLIENT_LOG_DIR: /woodpecker/desktop/test/gui/clientLog/
@@ -145,13 +147,13 @@ steps:
       - ls -al
 
   - name: crash-log
-    image: *ubuntu_image
+    image: *alpine_image
     when:
       - status:
           - success
           - failure
     commands:
-      - cat /woodpecker/desktop/test/gui/tmp/OpenCloud-crash.log 2>/dev/null || exit 0
+      - cat test/gui/tmp/OpenCloud-crash.log 2>/dev/null || exit 0
 
   - name: upload-test-reports
     image: *minio_image
@@ -161,8 +163,8 @@ steps:
       <<: *minio_environment
     commands:
       - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-      - mc cp -a -r /woodpecker/desktop/test/gui/guiReportUpload s3/$PUBLIC_BUCKET/desktop/testlogs/$CI_PIPELINE_NUMBER
-      - mc cp -a -r /woodpecker/desktop/test/gui/clientLog/* s3/$PUBLIC_BUCKET/desktop/testlogs/$CI_PIPELINE_NUMBER/logs/
+      - mc cp -a -r $CI_WORKSPACE/test/gui/guiReportUpload s3/$PUBLIC_BUCKET/desktop/testlogs/$CI_PIPELINE_NUMBER
+      - mc cp -a -r $CI_WORKSPACE/test/gui/clientLog/* s3/$PUBLIC_BUCKET/desktop/testlogs/$CI_PIPELINE_NUMBER/logs/
 
   - name: gui-test-reports
     image: *minio_image
@@ -182,7 +184,7 @@ steps:
       <<: *minio_environment
     commands:
       - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-      - cd /woodpecker/desktop/test/gui/clientLog/
+      - cd test/gui/clientLog/
       - echo "To download the logs, access the following links:"
       - logs=$(mc find s3/$PUBLIC_BUCKET/desktop/testlogs/$CI_PIPELINE_NUMBER/logs/)
       - "for f in $logs; do echo \"$MC_HOST/$f \n \" | cut -d '/' -f1-3,5-99; done"

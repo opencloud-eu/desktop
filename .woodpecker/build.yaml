@@ -1,4 +1,5 @@
 variables:
+  - &alpine_image 'alpine:3.22.4'
   - &build_image 'sawjan/opencloud-desktop-build'
   - &minio_image 'minio/mc:RELEASE.2021-10-07T04-19-58Z'
   - &minio_environment
@@ -42,28 +43,29 @@ when:
   - event: cron
     cron: nightly*
 
-# workspace:
-#   base: /woodpecker/
-#   path: desktop
+workspace:
+  base: /woodpecker/
+  path: desktop
 
 steps:
-  # - name: fix-permissions
-  #   image: owncloud/ubuntu:20.04
-  #   commands:
-  #     - chmod o+w /woodpecker/desktop/ -R
+  - name: fix-permissions
+    image: *alpine_image
+    commands:
+      - chmod o+w $CI_WORKSPACE/ -R
+
   - name: build-client-for-ui-tests
     image: *build_image
     commands:
-      - pwd
-      - mkdir -p /woodpecker/desktop/build
-      - cd /woodpecker/desktop/build
+      - mkdir -p build
+      - cd build
       - cmake -GNinja -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=Debug -DVIRTUAL_FILE_SYSTEM_PLUGINS=off -S ..
       - ninja
+
   - name: upload-desktop-client-cache
     image: *minio_image
     environment:
       <<: *minio_environment
     commands:
       - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-      - mc cp -a -r /woodpecker/desktop/build/bin s3/$CACHE_BUCKET/desktop/client-build/${CI_COMMIT_SHA}/
+      - mc cp -a -r $CI_WORKSPACE/build/bin s3/$CACHE_BUCKET/desktop/client-build/${CI_COMMIT_SHA}/
       - mc ls --recursive s3/$CACHE_BUCKET/desktop/client-build

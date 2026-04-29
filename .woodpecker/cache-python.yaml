@@ -68,18 +68,17 @@ steps:
       - python3 -m pip list -v
       - du -sh .venv/lib/python3.12/site-packages
       - requirements_sha=$(sha1sum requirements.txt | cut -d" " -f1)
-      - tar -czvf /woodpecker/desktop/python-cache-$requirements_sha.tar.gz .venv/lib/python3.12/site-packages
+      - tar -czf python-cache-$requirements_sha.tar.gz $CI_WORKSPACE/test/gui/.venv/lib/python3.12/site-packages
 
-  - name: install-browsers
+  - name: archive-browsers
     image: *build_image
     environment:
       PLAYWRIGHT_BROWSERS_PATH: .playwright
     commands:
       - . ./.woodpecker.env
       - if $BROWSER_CACHE_FOUND; then exit 0; fi
-      - cd test/gui/
-      - ls -al .playwright
-      - tar -czvf /woodpecker/desktop/playwright-browsers.tar.gz .playwright
+      - ls -al test/gui/.playwright
+      - tar -czf playwright-browsers.tar.gz $CI_WORKSPACE/test/gui/.playwright
 
   - name: upload-browsers-cache
     image: *minio_image
@@ -90,7 +89,7 @@ steps:
       - if $BROWSER_CACHE_FOUND; then exit 0; fi
       - playwright_version=$(bash test/gui/woodpecker/script.sh get_playwright_version)
       - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-      - mc cp -r -a /woodpecker/desktop/playwright-browsers.tar.gz s3/$CACHE_BUCKET/web/browsers-cache/$playwright_version/
+      - mc cp -r -a $CI_WORKSPACE/playwright-browsers.tar.gz s3/$CACHE_BUCKET/web/browsers-cache/$playwright_version/
       - mc ls --recursive s3/$CACHE_BUCKET/web
 
   - name: upload-python-cache
@@ -101,5 +100,5 @@ steps:
       - . ./.woodpecker.env
       - if $PYTHON_CACHE_FOUND; then exit 0; fi
       - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-      - mc cp -r -a /woodpecker/desktop/python-cache*.tar.gz s3/$CACHE_BUCKET/desktop/python-cache/
+      - mc cp -r -a $CI_WORKSPACE/python-cache*.tar.gz s3/$CACHE_BUCKET/desktop/python-cache/
       - mc ls s3/$CACHE_BUCKET/desktop/python-cache/
