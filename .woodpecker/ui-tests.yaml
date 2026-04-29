@@ -55,10 +55,9 @@ steps:
   - name: install-python-modules
     image: *build_image
     commands:
-      - tar -xf python-cache-*.tar.gz -C .
-      - ls -al
-      - cd test/gui/
-      - ls -al
+      - cd test/gui
+      - mkdir -p .venv/lib/python3.12/site-packages
+      - tar -xf $CI_WORKSPACE/python-cache-*.tar.gz -C .venv/lib/python3.12/site-packages
       - du -sh .venv/lib/python3.12/site-packages
       - python3 -m venv .venv --system-site-packages
       - source .venv/bin/activate
@@ -77,10 +76,11 @@ steps:
   - name: unzip-browsers-cache
     image: owncloud/ubuntu:20.04
     commands:
-      - tar -xf playwright-browsers.tar.gz -C .
+      - cd test/gui
+      - mkdir -p .playwright
+      - tar -xf playwright-browsers.tar.gz -C .playwright
       - ls -al
-      - ls -al test/gui/
-      - ls -al test/gui/.playwright
+      - ls -al .playwright
 
   - name: opencloud
     image: *opencloud_image
