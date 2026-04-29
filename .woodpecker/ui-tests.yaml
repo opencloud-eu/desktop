@@ -60,7 +60,7 @@ steps:
       - tar -xf $CI_WORKSPACE/python-cache-*.tar.gz -C .venv/lib/python3.12/site-packages
       - du -sh .venv/lib/python3.12/site-packages
       - python3 -m venv .venv --system-site-packages
-      - source .venv/bin/activate
+      - . .venv/bin/activate
       - make pip-install
       - python3 -m pip list -v
 
@@ -78,7 +78,7 @@ steps:
     commands:
       - cd test/gui
       - mkdir -p .playwright
-      - tar -xf playwright-browsers.tar.gz -C .playwright
+      - tar -xf $CI_WORKSPACE/playwright-browsers.tar.gz -C .playwright
       - ls -al
       - ls -al .playwright
 
@@ -145,6 +145,8 @@ steps:
       - pwd
       - whoami
       - ls -al
+      - . .venv/bin/activate
+      - python3 -m pip list -v
 
   - name: crash-log
     image: *alpine_image
