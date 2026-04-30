@@ -142,6 +142,7 @@ steps:
       BACKEND_HOST: https://opencloud:9200
       SECURE_BACKEND_HOST: https://opencloud:9200
       GUI_TEST_REPORT_DIR: /woodpecker/desktop/test/gui/guiReportUpload
+      BEHAVE_TEST_DIR: /woodpecker/desktop/test/gui
       BEHAVE_PARAMETERS: "--tags='@smoke and not @skip' features/add-account/account.feature:21"
     # commands:
     #   - pwd
