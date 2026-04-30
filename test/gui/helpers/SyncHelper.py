@@ -8,7 +8,6 @@ from selenium.common.exceptions import TimeoutException
 from helpers.ConfigHelper import get_config, is_linux, is_windows
 from helpers.FilesHelper import sanitize_path
 
-
 if is_windows():
     from helpers.WinPipeHelper import WinPipeConnect as SocketConnect
 else:
@@ -22,8 +21,14 @@ else:
     if not os.path.exists(syncstate_lib_file):
         urllib.request.urlretrieve(
             'https://raw.githubusercontent.com/opencloud-eu/desktop-shell-integration-nautilus/refs/heads/main/src/syncstate.py',
-            os.path.join(custom_lib, 'syncstate.py'),
+            syncstate_lib_file,
         )
+    # do not instantiate SocketConnect in the script.
+    with open(syncstate_lib_file, 'r') as f:
+        content = f.read()
+    content = content.replace('socketConnect = SocketConnect()', '')
+    with open(syncstate_lib_file, 'w') as f:
+        f.write(content)
 
     # the script needs to use the system-wide python
     # to switch from the built-in interpreter
@@ -176,7 +181,7 @@ def generate_sync_pattern_from_messages(messages):
         # excludes ":/tmp/client-bdd/Alice/"
         # adds only "STATUS:OK" to the pattern list
         if match := re.search(r':(/|[A-Za-z]:[\\/]).*', message):
-            (end, _) = match.span()
+            end, _ = match.span()
             # shared resources will have status like "STATUS:OK+SWM"
             status = message[:end].replace('+SWM', '')
             pattern.append(status)
@@ -360,6 +365,7 @@ def make_available_locally(resource_path):
 
 def wait_for(condition, timeout, interval=0.5):
     from helpers.SetupClientHelper import app
+
     wait = WebDriverWait(app(), timeout / 1000, poll_frequency=interval)
     try:
         wait.until(lambda _: condition())
