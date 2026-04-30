@@ -61,26 +61,26 @@ steps:
       - du -sh .venv/lib/python3.12/site-packages
       - python3 -m venv .venv --system-site-packages
       - . .venv/bin/activate
-      - make pip-install
+      - make install
       - python3 -m pip list -v
 
-  - name: restore-browsers-cache
-    image: *minio_image
-    environment:
-      <<: *minio_environment
-    commands:
-      - playwright_version=$(bash test/gui/woodpecker/script.sh get_playwright_version)
-      - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-      - mc cp -r -a s3/$CACHE_BUCKET/web/browsers-cache/$playwright_version/playwright-browsers.tar.gz $CI_WORKSPACE
+  # - name: restore-browsers-cache
+  #   image: *minio_image
+  #   environment:
+  #     <<: *minio_environment
+  #   commands:
+  #     - playwright_version=$(bash test/gui/woodpecker/script.sh get_playwright_version)
+  #     - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
+  #     - mc cp -r -a s3/$CACHE_BUCKET/web/browsers-cache/$playwright_version/playwright-browsers.tar.gz $CI_WORKSPACE
 
-  - name: unzip-browsers-cache
-    image: owncloud/ubuntu:20.04
-    commands:
-      - cd test/gui
-      - mkdir -p .playwright
-      - tar -xf $CI_WORKSPACE/playwright-browsers.tar.gz -C .playwright
-      - ls -al
-      - ls -al .playwright
+  # - name: unzip-browsers-cache
+  #   image: owncloud/ubuntu:20.04
+  #   commands:
+  #     - cd test/gui
+  #     - mkdir -p .playwright
+  #     - tar -xf $CI_WORKSPACE/playwright-browsers.tar.gz -C .playwright
+  #     - ls -al
+  #     - ls -al .playwright
 
   - name: opencloud
     image: *opencloud_image
@@ -145,6 +145,7 @@ steps:
       - pwd
       - whoami
       - ls -al
+      - cd test/gui
       - . .venv/bin/activate
       - python3 -m pip list -v
 
