@@ -135,6 +135,7 @@ steps:
     image: *build_image
     pull: true
     environment:
+      PYTHONUSERBASE: /woodpecker/desktop/test/gui/.venv
       CLIENT_LOG_DIR: /woodpecker/desktop/test/gui/clientLog/
       PLAYWRIGHT_BROWSERS_PATH: /woodpecker/desktop/.playwright
       APP_PATH: /woodpecker/desktop/build/bin/OpenCloud
