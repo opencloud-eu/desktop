@@ -131,9 +131,9 @@ steps:
   #     - touch test/gui/guiReportUpload/serverlog.log
   #     - chmod 777 test/gui/guiReportUpload/serverlog.log
   #     - tail -f test/gui/guiReportUpload/serverlog.log
-
   - name: gui-tests
     image: *build_image
+    pull: true
     environment:
       CLIENT_LOG_DIR: /woodpecker/desktop/test/gui/clientLog/
       PLAYWRIGHT_BROWSERS_PATH: /woodpecker/desktop/.playwright
@@ -141,13 +141,14 @@ steps:
       BACKEND_HOST: https://opencloud:9200
       SECURE_BACKEND_HOST: https://opencloud:9200
       GUI_TEST_REPORT_DIR: /woodpecker/desktop/test/gui/guiReportUpload
-    commands:
-      - pwd
-      - whoami
-      - ls -al
-      - cd test/gui
-      - . .venv/bin/activate
-      - python3 -m pip list -v
+      BEHAVE_PARAMETERS: "--tags='@smoke and not @skip' features/add-account/account.feature:21"
+    # commands:
+    #   - pwd
+    #   - whoami
+    #   - ls -al
+    #   - cd test/gui
+    #   - . .venv/bin/activate
+    #   - python3 -m pip list -v
 
   - name: crash-log
     image: *alpine_image
