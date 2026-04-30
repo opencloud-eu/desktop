@@ -64,8 +64,7 @@ steps:
       - . .venv/bin/activate
       - make install
       - python3 -m pip list -v
-      - du -sh .venv/lib/python3.12/site-packages
-      - .venv/lib/python3.12/
+      - du -sh .venv/lib/python3.12/site-packages/*
 
   # - name: restore-browsers-cache
   #   image: *minio_image
