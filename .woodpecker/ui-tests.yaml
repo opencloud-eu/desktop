@@ -58,8 +58,7 @@ steps:
       - cd test/gui
       - mkdir -p .venv/lib/python3.12/site-packages
       - tar -xf $CI_WORKSPACE/python-cache-*.tar.gz -C .venv/lib/python3.12/site-packages
-      - du -sh .venv/lib/python3.12/site-packages
-      - ls -al .venv/lib/python3.12/
+      - du -sh .venv/lib/python3.12/site-packages/*
       - python3 -m venv .venv --system-site-packages
       - . .venv/bin/activate
       - make install
@@ -145,7 +144,7 @@ steps:
       SECURE_BACKEND_HOST: https://opencloud:9200
       GUI_TEST_REPORT_DIR: /woodpecker/desktop/test/gui/guiReportUpload
       BEHAVE_TEST_DIR: /woodpecker/desktop/test/gui
-      BEHAVE_PARAMETERS: "-v --tags='@smoke' features/add-account/account.feature:21"
+      BEHAVE_PARAMETERS: "features/add-account/account.feature:21"
     # commands:
     #   - pwd
     #   - whoami
