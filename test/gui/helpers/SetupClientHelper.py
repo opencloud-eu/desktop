@@ -123,7 +123,7 @@ def start_client():
     )
     options.set_capability('appium:environ', get_app_env())
     app_driver = webdriver.Remote(
-        command_executor='http://127.0.0.1:4723', options=options
+        command_executor='http://webdriver:4723', options=options
     )
     app_driver.implicitly_wait = 10
 
