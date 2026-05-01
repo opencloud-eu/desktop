@@ -83,6 +83,18 @@ steps:
   #     - ls -al
   #     - ls -al .playwright
 
+  - name: webdriver
+    image: *build_image
+    environment:
+      FLASK_APP: /woodpecker/desktop/test/gui/webdriver-atspi.py
+      FLASK_ENV: production
+    commands:
+      - cd gui/test
+      - curl -sL https://raw.githubusercontent.com/KDE/selenium-webdriver-at-spi/refs/heads/master/selenium-webdriver-at-spi.py -o webdriver-atspi.py
+      - curl -sL https://raw.githubusercontent.com/KDE/selenium-webdriver-at-spi/refs/heads/master/app_roles.py -o app_roles.py
+      - . .venv/bin/activate
+      - flask run --port 4723 --no-reload
+
   - name: opencloud
     image: *opencloud_image
     detach: true
