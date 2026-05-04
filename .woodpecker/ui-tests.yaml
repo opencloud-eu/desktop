@@ -54,15 +54,16 @@ steps:
 
   - name: install-python-modules
     image: *build_image
+    environment:
+      PLAYWRIGHT_BROWSERS_PATH: /woodpecker/desktop/test/gui/.playwright
     commands:
       - cd test/gui
       - mkdir -p .venv/lib/python3.12/site-packages
-      # - tar -xf $CI_WORKSPACE/python-cache-*.tar.gz -C .venv/lib/python3.12/site-packages
+      # - tar -xf $CI_WORKSPACE/python-cache-*.tar.gz -C .venv
       - python3 -m venv .venv --system-site-packages
       - . .venv/bin/activate
       - make install
       - python3 -m pip list -v
-      - du -sh .venv/lib/python3.12/site-packages/*
 
   # - name: restore-browsers-cache
   #   image: *minio_image
@@ -81,19 +82,6 @@ steps:
   #     - tar -xf $CI_WORKSPACE/playwright-browsers.tar.gz -C .playwright
   #     - ls -al
   #     - ls -al .playwright
-
-  - name: webdriver
-    image: *build_image
-    detach: true
-    environment:
-      FLASK_APP: /woodpecker/desktop/test/gui/webdriver-atspi.py
-      FLASK_ENV: production
-    commands:
-      - cd test/gui
-      - curl -sL https://raw.githubusercontent.com/KDE/selenium-webdriver-at-spi/refs/heads/master/selenium-webdriver-at-spi.py -o webdriver-atspi.py
-      - curl -sL https://raw.githubusercontent.com/KDE/selenium-webdriver-at-spi/refs/heads/master/app_roles.py -o app_roles.py
-      - . .venv/bin/activate
-      - flask run --host=0.0.0.0 --port 4723 --no-reload
 
   - name: opencloud
     image: *opencloud_image
@@ -148,22 +136,21 @@ steps:
     image: *build_image
     pull: true
     environment:
+      # system cache environment variables
       PYTHONUSERBASE: /woodpecker/desktop/test/gui/.venv
-      CLIENT_LOG_DIR: /woodpecker/desktop/test/gui/clientLog/
-      PLAYWRIGHT_BROWSERS_PATH: /woodpecker/desktop/.playwright
+      PLAYWRIGHT_BROWSERS_PATH: /woodpecker/desktop/test/gui/.playwright
+      # webdriver environment variables
+      WEBDRIVER_HOST: 0.0.0.0
+      WEBDRIVER_PORT: 4723
+      WEBDRIVER_RUNNER: /woodpecker/desktop/test/gui/woodpecker/run_atspi_webdriver.sh
+      # test environment variables
       APP_PATH: /woodpecker/desktop/build/bin/opencloud
       BACKEND_HOST: https://opencloud:9200
       SECURE_BACKEND_HOST: https://opencloud:9200
-      GUI_TEST_REPORT_DIR: /woodpecker/desktop/test/gui/guiReportUpload
+      CLIENT_LOG_DIR: /woodpecker/desktop/test/gui/clientLog/
+      GUI_TEST_REPORT_DIR: /woodpecker/desktop/test/gui/reports
       BEHAVE_TEST_DIR: /woodpecker/desktop/test/gui
       BEHAVE_PARAMETERS: 'features/add-account/account.feature:21'
-    # commands:
-    #   - pwd
-    #   - whoami
-    #   - ls -al
-    #   - cd test/gui
-    #   - . .venv/bin/activate
-    #   - python3 -m pip list -v
 
   - name: crash-log
     image: *alpine_image
