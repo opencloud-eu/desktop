@@ -64,7 +64,7 @@ steps:
       PLAYWRIGHT_BROWSERS_PATH: /woodpecker/desktop/test/gui/.playwright
     commands:
       - cd test/gui
-      - tar -xf $CI_WORKSPACE/python-cache-*.tar.gz -C ./
+      - tar -xf $CI_WORKSPACE/python-cache.tar.gz -C ./
       - python3 -m venv .venv --system-site-packages
       - . .venv/bin/activate
       - make install
@@ -123,7 +123,7 @@ steps:
       GUI_TEST_REPORT_DIR: /woodpecker/desktop/test/gui/reports
       BEHAVE_TEST_DIR: /woodpecker/desktop/test/gui
       # Cannot handle this tags format inside a container: --tags='@smoke and not @skip'
-      BEHAVE_PARAMETERS: '--tags=@smoke --tags=~@skip features/login-logout/login-logout.feature:16 features/sync-resources/syncResources.feature:193'
+      BEHAVE_PARAMETERS: '--tags=@smoke --tags=~@skip features'
 
   # - name: crash-log
   #   image: *alpine_image
