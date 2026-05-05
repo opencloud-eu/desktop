@@ -63,7 +63,7 @@ steps:
       - if $PYTHON_CACHE_FOUND; then exit 0; fi
       - cd test/gui/
       - python3 -m venv .venv --system-site-packages
-      - source .venv/bin/activate
+      - . .venv/bin/activate
       - make install
       - python3 -m pip list -v
       - du -sh .venv/lib/python3.12/site-packages

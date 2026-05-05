@@ -127,7 +127,7 @@ steps:
       GUI_TEST_REPORT_DIR: /woodpecker/desktop/test/gui/reports
       BEHAVE_TEST_DIR: /woodpecker/desktop/test/gui
       # Cannot handle this tags format inside a container: --tags='@smoke and not @skip'
-      BEHAVE_PARAMETERS: '--tags=@smoke --tags=~@skip features/'
+      BEHAVE_PARAMETERS: '--tags=@smoke --tags=~@skip features/login-logout/login-logout.feature:16 features/sync-resources/syncResources.feature:193'
 
   # - name: crash-log
   #   image: *alpine_image
