@@ -41,7 +41,22 @@ steps:
     commands:
       - requirements_sha=$(sha1sum test/gui/requirements.txt | cut -d" " -f1)
       - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-      - mc cp -a s3/$CACHE_BUCKET/desktop/python-cache/python-cache-$requirements_sha.tar.gz $CI_WORKSPACE
+      - mc cp -a s3/$CACHE_BUCKET/desktop/python-cache/$requirements_sha/python-cache.tar.gz $CI_WORKSPACE
+
+  - name: restore-browsers-cache
+    image: *minio_image
+    environment:
+      <<: *minio_environment
+    commands:
+      - playwright_version=$(bash test/gui/woodpecker/script.sh get_playwright_version)
+      - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
+      - mc cp -r -a s3/$CACHE_BUCKET/desktop/browsers-cache/$playwright_version/playwright-browsers.tar.gz $CI_WORKSPACE
+
+  - name: unzip-browsers-cache
+    image: owncloud/ubuntu:20.04
+    commands:
+      - cd test/gui
+      - tar -xf $CI_WORKSPACE/playwright-browsers.tar.gz -C ./
 
   - name: install-python-modules
     image: *build_image
@@ -49,30 +64,11 @@ steps:
       PLAYWRIGHT_BROWSERS_PATH: /woodpecker/desktop/test/gui/.playwright
     commands:
       - cd test/gui
-      - mkdir -p .venv/lib/python3.12/site-packages
-      # - tar -xf $CI_WORKSPACE/python-cache-*.tar.gz -C .venv
+      - tar -xf $CI_WORKSPACE/python-cache-*.tar.gz -C ./
       - python3 -m venv .venv --system-site-packages
       - . .venv/bin/activate
       - make install
       - python3 -m pip list -v
-
-  # - name: restore-browsers-cache
-  #   image: *minio_image
-  #   environment:
-  #     <<: *minio_environment
-  #   commands:
-  #     - playwright_version=$(bash test/gui/woodpecker/script.sh get_playwright_version)
-  #     - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-  #     - mc cp -r -a s3/$CACHE_BUCKET/web/browsers-cache/$playwright_version/playwright-browsers.tar.gz $CI_WORKSPACE
-
-  # - name: unzip-browsers-cache
-  #   image: owncloud/ubuntu:20.04
-  #   commands:
-  #     - cd test/gui
-  #     - mkdir -p .playwright
-  #     - tar -xf $CI_WORKSPACE/playwright-browsers.tar.gz -C .playwright
-  #     - ls -al
-  #     - ls -al .playwright
 
   - name: opencloud
     image: *opencloud_image
