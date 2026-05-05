@@ -2,7 +2,6 @@ variables:
   - &opencloud_image 'quay.io/opencloudeu/opencloud-rolling:latest'
   - &build_image 'sawjan/opencloud-desktop-build'
   - &minio_image 'minio/mc:RELEASE.2021-10-07T04-19-58Z'
-  # - &ubuntu_image 'owncloud/ubuntu:20.04'
   - &alpine_image 'alpine:3.22.4'
   - &minio_environment
     AWS_ACCESS_KEY_ID:
@@ -35,14 +34,6 @@ workspace:
   path: desktop
 
 steps:
-  # - name: pnpm-install
-  #   image: owncloudci/nodejs:20
-  #   commands:
-  #     - cd test/gui/
-  #     - npm i -s -g -f "$(jq -r ".packageManager" < webUI/package.json)"
-  #     - pnpm config set store-dir ./.pnpm-store
-  #     - make pnpm-install
-
   - name: restore-python-cache
     image: *minio_image
     environment:
@@ -117,21 +108,6 @@ steps:
       - mc cp -a -r s3/$CACHE_BUCKET/desktop/client-build/${CI_COMMIT_SHA}/ $CI_WORKSPACE/build
       - ls -lh $CI_WORKSPACE/build/bin
 
-  - name: create-extra-directories
-    image: *alpine_image
-    commands:
-      - mkdir test/gui/guiReportUpload/screenshots -p
-      # - mkdir test/gui/tmp -p
-      # - mkdir test/gui/clientLog -p
-      # - chmod 777 test/gui/ -R
-
-  # - name: squish-server-logs
-  #   image: *ubuntu_image
-  #   detach: true
-  #   commands:
-  #     - touch test/gui/guiReportUpload/serverlog.log
-  #     - chmod 777 test/gui/guiReportUpload/serverlog.log
-  #     - tail -f test/gui/guiReportUpload/serverlog.log
   - name: gui-tests
     image: *build_image
     pull: true
@@ -150,47 +126,48 @@ steps:
       CLIENT_LOG_DIR: /woodpecker/desktop/test/gui/clientLog/
       GUI_TEST_REPORT_DIR: /woodpecker/desktop/test/gui/reports
       BEHAVE_TEST_DIR: /woodpecker/desktop/test/gui
-      BEHAVE_PARAMETERS: 'features/add-account/account.feature:21'
+      # Cannot handle this tags format inside a container: --tags='@smoke and not @skip'
+      BEHAVE_PARAMETERS: '--tags=@smoke --tags=~@skip features/'
 
-  - name: crash-log
-    image: *alpine_image
-    when:
-      - status:
-          - success
-          - failure
-    commands:
-      - cat test/gui/tmp/OpenCloud-crash.log 2>/dev/null || exit 0
+  # - name: crash-log
+  #   image: *alpine_image
+  #   when:
+  #     - status:
+  #         - success
+  #         - failure
+  #   commands:
+  #     - cat test/gui/tmp/OpenCloud-crash.log 2>/dev/null || exit 0
 
-  - name: upload-test-reports
-    image: *minio_image
-    when:
-      - status: failure
-    environment:
-      <<: *minio_environment
-    commands:
-      - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-      - mc cp -a -r $CI_WORKSPACE/test/gui/guiReportUpload s3/$PUBLIC_BUCKET/desktop/testlogs/$CI_PIPELINE_NUMBER
-      - mc cp -a -r $CI_WORKSPACE/test/gui/clientLog/* s3/$PUBLIC_BUCKET/desktop/testlogs/$CI_PIPELINE_NUMBER/logs/
+  # - name: upload-test-reports
+  #   image: *minio_image
+  #   when:
+  #     - status: failure
+  #   environment:
+  #     <<: *minio_environment
+  #   commands:
+  #     - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
+  #     - mc cp -a -r $CI_WORKSPACE/test/gui/guiReportUpload s3/$PUBLIC_BUCKET/desktop/testlogs/$CI_PIPELINE_NUMBER
+  #     - mc cp -a -r $CI_WORKSPACE/test/gui/clientLog/* s3/$PUBLIC_BUCKET/desktop/testlogs/$CI_PIPELINE_NUMBER/logs/
 
-  - name: gui-test-reports
-    image: *minio_image
-    when:
-      - status: failure
-    environment:
-      <<: *minio_environment
-    commands:
-      - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-      - bash test/gui/woodpecker/gui_test_reports.sh
+  # - name: gui-test-reports
+  #   image: *minio_image
+  #   when:
+  #     - status: failure
+  #   environment:
+  #     <<: *minio_environment
+  #   commands:
+  #     - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
+  #     - bash test/gui/woodpecker/gui_test_reports.sh
 
-  - name: client-log
-    image: *minio_image
-    when:
-      - status: failure
-    environment:
-      <<: *minio_environment
-    commands:
-      - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-      - cd test/gui/clientLog/
-      - echo "To download the logs, access the following links:"
-      - logs=$(mc find s3/$PUBLIC_BUCKET/desktop/testlogs/$CI_PIPELINE_NUMBER/logs/)
-      - "for f in $logs; do echo \"$MC_HOST/$f \n \" | cut -d '/' -f1-3,5-99; done"
+  # - name: client-log
+  #   image: *minio_image
+  #   when:
+  #     - status: failure
+  #   environment:
+  #     <<: *minio_environment
+  #   commands:
+  #     - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
+  #     - cd test/gui/clientLog/
+  #     - echo "To download the logs, access the following links:"
+  #     - logs=$(mc find s3/$PUBLIC_BUCKET/desktop/testlogs/$CI_PIPELINE_NUMBER/logs/)
+  #     - "for f in $logs; do echo \"$MC_HOST/$f \n \" | cut -d '/' -f1-3,5-99; done"
