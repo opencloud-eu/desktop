@@ -117,7 +117,7 @@ def step(context):
 @When('the user selects the following folders to sync:')
 def step(context):
     folders = []
-    for row in context.table[1:]:
+    for row in context.table:
         folders.append(row[0])
     SyncConnectionWizard.select_folders_to_sync(
         folders, new_sync_connection_wizard=True
@@ -152,7 +152,7 @@ def step(context):
         row_index += 1
 
 
-@When('the user selects "|any|" space in sync connection wizard')
+@When('the user selects "{space_name}" space in sync connection wizard')
 def step(context, space_name):
     SyncConnectionWizard.select_space(space_name)
     SyncConnectionWizard.next_step()
@@ -320,7 +320,7 @@ def step(context, wait_for):
 def step(context):
     SyncConnection.choose_what_to_sync()
     folders = []
-    for row in context.table[1:]:
+    for row in context.table:
         folders.append(row[0])
     SyncConnectionWizard.unselect_folders_to_sync(
         folders, new_sync_connection_wizard=False
