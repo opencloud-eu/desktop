@@ -80,7 +80,7 @@ def step(context):
     Toolbar.open_settings_tab()
 
 
-@When('user "|any|" uploads file with content "|any|" to "|any|" in the server')
+@When('user "{user}" uploads file with content "{file_content}" to "{file_name}" in the server')
 def step(context, user, file_content, file_name):
     webdav.create_file(user, file_name, file_content)
 
