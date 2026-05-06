@@ -1,6 +1,6 @@
 variables:
   - &alpine_image 'alpine:3.22.4'
-  - &build_image 'sawjan/opencloud-desktop-build'
+  - &build_image 'opencloudeu/desktop-client-build:ubuntu-24.04-qt6.10'
   - &minio_image 'minio/mc:RELEASE.2021-10-07T04-19-58Z'
   - &minio_environment
     AWS_ACCESS_KEY_ID:
@@ -58,6 +58,8 @@ steps:
     commands:
       - mkdir -p build
       - cd build
+      # currently, vfs plugin is broken so disable it to be able to build the client and run tests
+      # TODO: fix the vfs plugin and enable it back
       - cmake -GNinja -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=Debug -DVIRTUAL_FILE_SYSTEM_PLUGINS=off -S ..
       - ninja
 

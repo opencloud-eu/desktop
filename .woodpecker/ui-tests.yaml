@@ -1,6 +1,6 @@
 variables:
   - &opencloud_image 'quay.io/opencloudeu/opencloud-rolling:latest'
-  - &build_image 'sawjan/opencloud-desktop-build'
+  - &build_image 'opencloudeu/desktop-client-build:ubuntu-24.04-qt6.10'
   - &minio_image 'minio/mc:RELEASE.2021-10-07T04-19-58Z'
   - &alpine_image 'alpine:3.22.4'
   - &minio_environment
