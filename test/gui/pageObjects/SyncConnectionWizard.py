@@ -2,6 +2,7 @@ from types import SimpleNamespace
 from appium.webdriver.common.appiumby import AppiumBy as By
 from selenium.webdriver.common.keys import Keys
 import time
+import pyautogui
 
 from helpers.SetupClientHelper import get_current_user_sync_path
 from helpers.SetupClientHelper import app
@@ -14,7 +15,6 @@ class SyncConnectionWizard:
     BACK_BUTTON = SimpleNamespace(by=By.NAME, selector="< Back")
     NEXT_BUTTON = SimpleNamespace(by=By.NAME, selector="Next >")
     SELECTIVE_SYNC_ROOT_FOLDER = SimpleNamespace(by=None, selector=None)
-    ADD_SPACE_FOLDER_TREE = SimpleNamespace(by=None, selector=None)
     ADD_SYNC_CONNECTION_BUTTON = SimpleNamespace(
         by=By.XPATH, selector="//dialog[@name='Add Space']//*[@name='Add Space']"
     )
@@ -71,15 +71,12 @@ class SyncConnectionWizard:
 
     @staticmethod
     def deselect_all_remote_folders():
-        # NOTE: checkbox does not have separate object
-        # click on (11,11) which is a checkbox
-        squish.mouseClick(
-            squish.waitForObject(SyncConnectionWizard.SELECTIVE_SYNC_ROOT_FOLDER),
-            11,
-            11,
-            squish.Qt.NoModifier,
-            squish.Qt.LeftButton,
+        element = app().find_element(
+            By.NAME,
+            "Add Space"
         )
+        element.send_keys(Keys.ARROW_DOWN)
+        element.send_keys(" ")
 
     @staticmethod
     def sort_by(header_text):
@@ -201,55 +198,46 @@ class SyncConnectionWizard:
 
     @staticmethod
     def select_or_unselect_folders_to_sync(
-        folders, should_select=True, new_sync_connection_wizard=False
+            folders,
+            should_select=True
     ):
         if should_select:
-            # First deselect all
             SyncConnectionWizard.deselect_all_remote_folders()
-        folder_tree_locator = SyncConnectionWizard.get_folder_tree_locator(
-            new_sync_connection_wizard
-        )
+
         for folder in folders:
-            folder_levels = folder.strip("/").split("/")
-            parent_selector = None
-            for sub_folder in folder_levels:
-                if not parent_selector:
-                    folder_tree_locator["text"] = sub_folder
-                    parent_selector = folder_tree_locator
-                    selector = parent_selector
-                else:
-                    selector = {
-                        "column": "0",
-                        "container": parent_selector,
-                        "text": sub_folder,
-                        "type": "QModelIndex",
-                    }
-                if (
-                    len(folder_levels) == 1
-                    or folder_levels.index(sub_folder) == len(folder_levels) - 1
-                ):
-                    # NOTE: checkbox does not have separate object
-                    # click on (11,11) which is a checkbox
-                    squish.mouseClick(
-                        squish.waitForObject(selector),
-                        11,
-                        11,
-                        squish.Qt.NoModifier,
-                        squish.Qt.LeftButton,
-                    )
-                else:
-                    squish.doubleClick(squish.waitForObject(selector))
+            path_parts = folder.strip("/").split("/")
+
+            for i in range(len(path_parts) - 1):
+                parent_folder_name = path_parts[i]
+                parent_elements = app().find_elements(By.NAME, parent_folder_name)
+
+                for element in parent_elements:
+                    isChecked = element.get_attribute("checked")
+                    if isChecked == "true":
+                        parent_bounds = element.rect
+                        center_x = int(parent_bounds['x'] + parent_bounds['width'] // 2)
+                        center_y = int(parent_bounds['y'] + parent_bounds['height'] // 2)
+                        pyautogui.doubleClick(center_x, center_y)
+
+            target_folder_name = path_parts[-1]
+            folder_element = app().find_element(By.NAME, target_folder_name)
+
+            element_bounds = folder_element.rect
+            checkbox_x_position = int(element_bounds['x'] + 10)
+            checkbox_y_position = int(element_bounds['y'] + element_bounds['height'] // 2)
+
+            pyautogui.moveTo(checkbox_x_position, checkbox_y_position, duration=0.1)
+            pyautogui.click()
 
     @staticmethod
     def confirm_choose_what_to_sync_selection():
-        squish.clickButton(squish.waitForObject(names.stackedWidget_OK_QPushButton))
+        app().find_element(By.NAME, "OK").click()
 
     @staticmethod
     def __handle_folder_selection(folders, should_select, new_sync_connection_wizard):
         SyncConnectionWizard.select_or_unselect_folders_to_sync(
             folders,
-            should_select=should_select,
-            new_sync_connection_wizard=new_sync_connection_wizard,
+            should_select=should_select
         )
 
         if new_sync_connection_wizard:
@@ -271,12 +259,4 @@ class SyncConnectionWizard:
             folders,
             should_select=True,
             new_sync_connection_wizard=new_sync_connection_wizard,
-        )
-
-    @staticmethod
-    def get_folder_tree_locator(new_sync_connection_wizard=False):
-        return (
-            SyncConnectionWizard.ADD_SPACE_FOLDER_TREE.copy()
-            if new_sync_connection_wizard
-            else SyncConnectionWizard.CHOOSE_WHAT_TO_SYNC_FOLDER_TREE.copy()
         )
