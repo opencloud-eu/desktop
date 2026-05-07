@@ -8,6 +8,8 @@ from pathlib import Path
 
 CURRENT_DIR = Path(__file__).resolve().parent
 APP_CONFIG_FILE = "opencloud.cfg"
+CUMULATIVE_APP_LOG_FILE = "opencloud.log"
+CURRENT_APP_LOG_FILE = "app.log"
 
 
 def is_windows():
@@ -64,8 +66,6 @@ CONFIG_ENV_MAP = {
     'maxSyncTimeout': 'MAX_SYNC_TIMEOUT',
     'minSyncTimeout': 'MIN_SYNC_TIMEOUT',
     'lowestSyncTimeout': 'LOWEST_SYNC_TIMEOUT',
-    'clientLogFile': 'CLIENT_LOG_FILE',
-    'clientLogDir': 'CLIENT_LOG_DIR',
     'clientRootSyncPath': 'CLIENT_ROOT_SYNC_PATH',
     'tempFolderPath': 'TEMP_FOLDER_PATH',
     'guiTestReportDir': 'GUI_TEST_REPORT_DIR',
@@ -88,12 +88,10 @@ CONFIG = {
     'maxSyncTimeout': 60,
     'minSyncTimeout': 5,
     'lowestSyncTimeout': 1,
-    'clientLogFile': '',
-    'clientLogDir': '',
     'clientRootSyncPath': get_client_root_path(),
-    'tempFolderPath': os.path.join(get_client_root_path(), 'temp'),
     'clientConfigFile': os.path.join(get_config_home(), "OpenCloud", APP_CONFIG_FILE),
-    'guiTestReportDir': os.path.abspath('../reports'),
+    'guiTestReportDir': os.path.join(CURRENT_DIR.parent, 'reports'),
+    'tempFolderPath': os.path.join(get_client_root_path(), 'temp'),
     'record_video_on_failure': False,
     'files_for_upload': os.path.join(CURRENT_DIR.parent, 'files-for-upload'),
     'syncConnectionName': 'Personal',
@@ -108,8 +106,6 @@ PERMISSION_ROLES = {
 CONFIG.update(DEFAULT_PATH_CONFIG)
 
 READONLY_CONFIG = list(CONFIG_ENV_MAP.keys()) + list(DEFAULT_PATH_CONFIG.keys())
-
-SCENARIO_CONFIGS = {}
 
 
 def read_cfg_file(cfg_path):
@@ -127,8 +123,7 @@ def read_cfg_file(cfg_path):
 def init_config():
     # try reading configs from config.ini
     try:
-        script_path = os.path.dirname(os.path.realpath(__file__))
-        cfg_path = os.path.abspath(os.path.join(script_path, '..', 'config.ini'))
+        cfg_path = os.path.abspath(os.path.join(CURRENT_DIR.parent, 'config.ini'))
         read_cfg_file(cfg_path)
     except:
         pass
@@ -163,6 +158,20 @@ def init_config():
     if 'app_path' not in CONFIG or not CONFIG['app_path']:
         raise KeyError('APP_PATH must be set in config.ini or environment variables')
 
+    ### initialize dynamic config values
+    # file to store app logs for the current scenario run
+    CONFIG['currentAppLogFile'] = os.path.join(
+        CONFIG["guiTestReportDir"], CURRENT_APP_LOG_FILE
+    )
+    # file to store cumulative app logs for the entire test run
+    CONFIG['appLogFile'] = os.path.join(
+        CONFIG["guiTestReportDir"], CUMULATIVE_APP_LOG_FILE
+    )
+    # create report dir if it not exist
+    if not os.path.exists(CONFIG['guiTestReportDir']):
+        os.makedirs(CONFIG['guiTestReportDir'])
+    CONFIG['currentUserSyncPath'] = ''
+
 
 def get_config(key):
     return CONFIG[key]
@@ -171,12 +180,4 @@ def get_config(key):
 def set_config(key, value):
     if key in READONLY_CONFIG:
         raise KeyError(f'Cannot set read-only config: {key}')
-    # save the initial config value
-    if key not in SCENARIO_CONFIGS:
-        SCENARIO_CONFIGS[key] = CONFIG.get(key)
     CONFIG[key] = value
-
-
-def clear_scenario_config():
-    for key, value in SCENARIO_CONFIGS.items():
-        CONFIG[key] = value
