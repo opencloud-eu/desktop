@@ -9,27 +9,6 @@ from pathlib import Path
 CURRENT_DIR = Path(__file__).resolve().parent
 APP_CONFIG_FILE = "opencloud.cfg"
 
-def read_env_file():
-    envs = {}
-    script_path = os.path.dirname(os.path.realpath(__file__))
-    env_path = os.path.abspath(os.path.join(script_path, '..', 'envs.txt'))
-    with open(env_path, 'rt', encoding='UTF-8') as f:
-        for line in f:
-            if not line.strip():
-                continue
-            if line.startswith('#'):
-                continue
-            key, value = line.split('=', 1)
-            envs[key] = value.strip()
-    return envs
-
-
-def get_config_from_env_file(env):
-    envs = read_env_file()
-    if env in envs:
-        return envs[env]
-    raise KeyError(f'Environment "{env}" not found in envs.txt')
-
 
 def is_windows():
     return platform.system() == 'Windows'
@@ -54,7 +33,9 @@ def get_config_home_linux():
 
 
 def get_config_home_win():
-    return os.path.join(get_win_user_home(), 'AppData', 'Local', 'Temp', 'opencloudtest', '.config')
+    return os.path.join(
+        get_win_user_home(), 'AppData', 'Local', 'Temp', 'opencloudtest', '.config'
+    )
 
 
 def get_config_home():
@@ -74,6 +55,7 @@ def get_app_env():
         'XDG_CONFIG_HOME': get_config_home(),
         'APPDATA': get_config_home(),
     }
+
 
 # map environment variables to config keys
 CONFIG_ENV_MAP = {
