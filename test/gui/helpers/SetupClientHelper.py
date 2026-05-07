@@ -17,7 +17,6 @@ from helpers.api.utils import url_join
 from helpers.UserHelper import get_displayname_for_user
 from helpers.api import provisioning
 
-
 app_driver = None
 
 
@@ -123,7 +122,7 @@ def start_client():
     )
     options.set_capability('appium:environ', get_app_env())
     app_driver = webdriver.Remote(
-        command_executor='http://127.0.0.1:4723', options=options
+        command_executor='http://localhost:4723', options=options
     )
     app_driver.implicitly_wait = 10
 
@@ -281,7 +280,7 @@ def close_and_kill_app():
     # Quit Appium session
     if app_driver is not None:
         app_driver.quit()
-    
+
     # Kill remaining process by exe path
     app_path = get_config("app_path")
     for process in psutil.process_iter(['pid', 'exe']):
@@ -289,6 +288,6 @@ def close_and_kill_app():
             print("Closing desktop client...")
             psutil.Process(process.info['pid']).kill()
             break
-    
+
     # Reset driver for reuse
     app_driver = None
