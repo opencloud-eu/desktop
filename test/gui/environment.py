@@ -61,7 +61,9 @@ def after_scenario(context, scenario):
     close_and_kill_app()
 
     # store app log on scenario failure
-    if scenario.status in [Status.failed, Status.error]:
+    if scenario.status in [Status.failed, Status.error] and os.path.exists(
+        get_config('currentAppLogFile')
+    ):
         append_scenario_to_app_log(scenario)
         store_app_log()
     cleanup_app_log()
