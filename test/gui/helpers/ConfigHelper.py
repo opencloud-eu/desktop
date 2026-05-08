@@ -157,6 +157,8 @@ def init_config():
 
     if 'app_path' not in CONFIG or not CONFIG['app_path']:
         raise KeyError('APP_PATH must be set in config.ini or environment variables')
+    if not os.path.exists(CONFIG['app_path']):
+        raise KeyError(f'App not found: {CONFIG["app_path"]}')
 
     ### initialize dynamic config values
     # file to store app logs for the current scenario run
