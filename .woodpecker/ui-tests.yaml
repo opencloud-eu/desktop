@@ -142,12 +142,12 @@ steps:
       - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
       - mc cp -a -r $CI_WORKSPACE/test/gui/reports s3/$PUBLIC_BUCKET/desktop/testlogs/$CI_PIPELINE_NUMBER
 
-  # - name: gui-test-reports
-  #   image: *minio_image
-  #   when:
-  #     - status: failure
-  #   environment:
-  #     <<: *minio_environment
-  #   commands:
-  #     - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-  #     - bash test/gui/woodpecker/gui_test_reports.sh
+  - name: gui-test-reports
+    image: *minio_image
+    when:
+      - status: failure
+    environment:
+      <<: *minio_environment
+    commands:
+      - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
+      - bash $CI_WORKSPACE/test/gui/woodpecker/gui_test_reports.sh
