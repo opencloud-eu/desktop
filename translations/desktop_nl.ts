@@ -1657,7 +1657,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="367"/>
         <source>Unsupported token type: %1</source>
-        <translation>Niet ondersteund type token: %1</translation>
+        <translation>Type token niet ondersteund: %1</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="369"/>
