@@ -134,7 +134,9 @@ public:
         account->setCredentials(new FakeCredentials{fakeAm});
         fakeAm->setOverride([this](QNetworkAccessManager::Operation op, const QNetworkRequest &req, QIODevice *device) {
             if (req.url().path().endsWith(QLatin1String(".well-known/openid-configuration"))) {
-                return this->wellKnownReply(op, req);
+                return this->wellKnownOpenidConfigurationReply(op, req);
+            } else if (req.url().path().endsWith(QLatin1String(".well-known/webfinger"))) {
+                return this->wellKnownWebfingerReply(op, req);
             } else if (req.url().path().endsWith(QLatin1String("status.php"))) {
                 return this->statusPhpReply(op, req);
             } else if (req.url().path().endsWith(QLatin1String("clients-registrations"))) {
@@ -224,7 +226,7 @@ public:
         return new FakePostReply(op, req, std::move(payload), fakeAm);
     }
 
-    virtual QNetworkReply *wellKnownReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req)
+    virtual QNetworkReply *wellKnownOpenidConfigurationReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req)
     {
         OC_ASSERT(op == QNetworkAccessManager::GetOperation);
         QJsonDocument jsondata(QJsonObject{
@@ -233,7 +235,25 @@ public:
             {QStringLiteral("token_endpoint"), Utility::concatUrlPath(sOAuthTestServer, QStringLiteral("token_endpoint")).toString()},
             {QStringLiteral("token_endpoint_auth_methods_supported"), QJsonArray{QStringLiteral("client_secret_post")}},
         });
-        return new FakePayloadReply(op, req, jsondata.toJson(), fakeAm);
+        return new FakePayloadReply(op, req, jsondata.toJson(), {}, fakeAm);
+    }
+
+    virtual QNetworkReply *wellKnownWebfingerReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req)
+    {
+        OC_ASSERT(op == QNetworkAccessManager::GetOperation);
+        QJsonDocument jsondata(QJsonObject{
+            {QStringLiteral("subject"), sOAuthTestServer.toString() },
+            {QStringLiteral("links"), QJsonArray{
+                QJsonObject{
+                    {QStringLiteral("rel"), QStringLiteral("http://openid.net/specs/connect/1.0/issuer") },
+                    {QStringLiteral("href"), QStringLiteral("oauthtest://openidserver") },
+                }
+            }},
+        });
+        QHttpHeaders headers;
+        headers.append(QHttpHeaders::WellKnownHeader::ContentType, QStringLiteral("application/json"));
+
+        return new FakePayloadReply(op, req, jsondata.toJson(), headers, fakeAm);
     }
 
     virtual QNetworkReply *clientRegistrationReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req)
@@ -470,7 +490,7 @@ private Q_SLOTS:
         {
             Test() { }
 
-            QNetworkReply *wellKnownReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req) override
+            QNetworkReply *wellKnownOpenidConfigurationReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req) override
             {
                 OC_ASSERT(op == QNetworkAccessManager::GetOperation);
                 const QJsonDocument jsondata(QJsonObject{
@@ -480,7 +500,7 @@ private Q_SLOTS:
                     {QStringLiteral("registration_endpoint"), QStringLiteral("%1/clients-registrations").arg(localHost)},
                     {QStringLiteral("token_endpoint_auth_methods_supported"), QJsonArray{QStringLiteral("client_secret_basic")}},
                 });
-                return new FakePayloadReply(op, req, jsondata.toJson(), fakeAm);
+                return new FakePayloadReply(op, req, jsondata.toJson(), {}, fakeAm);
             }
 
             void openBrowserHook(const QUrl &url) override
@@ -513,7 +533,7 @@ private Q_SLOTS:
         {
             Test() { }
 
-            QNetworkReply *wellKnownReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req) override
+            QNetworkReply *wellKnownOpenidConfigurationReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req) override
             {
                 OC_ASSERT(op == QNetworkAccessManager::GetOperation);
                 const QJsonDocument jsondata(QJsonObject{
@@ -524,7 +544,7 @@ private Q_SLOTS:
                     {QStringLiteral("token_endpoint_auth_methods_supported"),
                         QJsonArray{QStringLiteral("client_secret_basic"), QStringLiteral("client_secret_post")}},
                 });
-                return new FakePayloadReply(op, req, jsondata.toJson(), fakeAm);
+                return new FakePayloadReply(op, req, jsondata.toJson(), {}, fakeAm);
             }
 
             void openBrowserHook(const QUrl &url) override
@@ -548,7 +568,7 @@ private Q_SLOTS:
 
             QNetworkReply *clientRegistrationReply(QNetworkAccessManager::Operation op, const QNetworkRequest &request) override
             {
-                return new FakePayloadReply(op, request, {}, fakeAm);
+                return new FakePayloadReply(op, request, {}, {}, fakeAm);
             }
 
         } test;
@@ -563,7 +583,7 @@ private Q_SLOTS:
         {
             Test() { _expectedClientId = QStringLiteral("3e4ea0f3-59ea-434a-92f2-b0d3b54443e9"); }
 
-            QNetworkReply *wellKnownReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req) override
+            QNetworkReply *wellKnownOpenidConfigurationReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req) override
             {
                 OC_ASSERT(op == QNetworkAccessManager::GetOperation);
                 const QJsonDocument jsondata(QJsonObject{
@@ -574,7 +594,7 @@ private Q_SLOTS:
                     {QStringLiteral("token_endpoint_auth_methods_supported"), QJsonArray{QStringLiteral("client_secret_basic")}},
 
                 });
-                return new FakePayloadReply(op, req, jsondata.toJson(), fakeAm);
+                return new FakePayloadReply(op, req, jsondata.toJson(), {}, fakeAm);
             }
 
             void openBrowserHook(const QUrl &url) override
@@ -614,7 +634,7 @@ private Q_SLOTS:
                     "v1giSvpnKw1hTtBYZaqdp3JqnZ5mvCKYhQDKkT7x8Us\",\"backchannel_logout_session_required\":false,\"require_pushed_authorization_requests\":"
                     "false}"));
 
-                auto *out = new FakePayloadReply(op, request, payload, fakeAm);
+                auto *out = new FakePayloadReply(op, request, payload, {}, fakeAm);
                 out->setAttribute(QNetworkRequest::HttpStatusCodeAttribute, 201);
                 return out;
             }
@@ -644,7 +664,7 @@ private Q_SLOTS:
             QString _expectedClientSecret = QStringLiteral("rmoEXFc1Z5tGTApxanBW7STlWODqRTYx");
             Test() { _expectedClientId = QStringLiteral("3e4ea0f3-59ea-434a-92f2-b0d3b54443e9"); }
 
-            QNetworkReply *wellKnownReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req) override
+            QNetworkReply *wellKnownOpenidConfigurationReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req) override
             {
                 OC_ASSERT(op == QNetworkAccessManager::GetOperation);
                 const QJsonDocument jsondata(QJsonObject{
@@ -655,7 +675,7 @@ private Q_SLOTS:
                     // this test explicitly check for the client secret in the post body
                     {QStringLiteral("token_endpoint_auth_methods_supported"), QJsonArray{QStringLiteral("client_secret_post")}},
                 });
-                return new FakePayloadReply(op, req, jsondata.toJson(), fakeAm);
+                return new FakePayloadReply(op, req, jsondata.toJson(), {}, fakeAm);
             }
 
             void openBrowserHook(const QUrl &) override { Q_UNREACHABLE(); }
@@ -679,7 +699,7 @@ private Q_SLOTS:
 
             QNetworkReply *clientRegistrationReply(QNetworkAccessManager::Operation op, const QNetworkRequest &request) override
             {
-                auto *out = new FakePayloadReply(op, request, TestUtils::getPayload("testDynamicTokenRefresh/clientRegistrationReply.json"), fakeAm);
+                auto *out = new FakePayloadReply(op, request, TestUtils::getPayload("testDynamicTokenRefresh/clientRegistrationReply.json"), {}, fakeAm);
                 out->setAttribute(QNetworkRequest::HttpStatusCodeAttribute, 201);
                 return out;
             }
@@ -707,7 +727,7 @@ private Q_SLOTS:
         {
             Test() { }
 
-            QNetworkReply *wellKnownReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req) override
+            QNetworkReply *wellKnownOpenidConfigurationReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req) override
             {
                 OC_ASSERT(op == QNetworkAccessManager::GetOperation);
                 const QJsonDocument jsondata(QJsonObject{
@@ -718,7 +738,7 @@ private Q_SLOTS:
                     // this test explicitly check for the client secret in the post body
                     {QStringLiteral("token_endpoint_auth_methods_supported"), QJsonArray{QStringLiteral("client_secret_post")}},
                 });
-                return new FakePayloadReply(op, req, jsondata.toJson(), fakeAm);
+                return new FakePayloadReply(op, req, jsondata.toJson(), {}, fakeAm);
             }
 
             void openBrowserHook(const QUrl &) override { Q_UNREACHABLE(); }
@@ -742,7 +762,7 @@ private Q_SLOTS:
 
             QNetworkReply *clientRegistrationReply(QNetworkAccessManager::Operation op, const QNetworkRequest &request) override
             {
-                return new FakePayloadReply(op, request, {}, fakeAm);
+                return new FakePayloadReply(op, request, {}, {}, fakeAm);
             }
 
             virtual void test() override

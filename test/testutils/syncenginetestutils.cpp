@@ -685,9 +685,10 @@ qint64 FakeGetReply::readData(char *data, qint64 maxlen)
     return len;
 }
 
-FakePayloadReply::FakePayloadReply(QNetworkAccessManager::Operation op, const QNetworkRequest &request, const QByteArray &body, QObject *parent)
+FakePayloadReply::FakePayloadReply(QNetworkAccessManager::Operation op, const QNetworkRequest &request, const QByteArray &body, const QHttpHeaders &headers, QObject *parent)
     : FakeReply { parent }
     , _body(body)
+    , _headers(headers)
 {
     setRequest(request);
     setUrl(request.url());
@@ -701,6 +702,7 @@ void FakePayloadReply::respond()
 {
     if (error() == QNetworkReply::NoError) {
         setHeader(QNetworkRequest::ContentLengthHeader, _body.size());
+        setHeaders(_headers);
         Q_EMIT metaDataChanged();
         Q_EMIT readyRead();
         checkedFinished();
