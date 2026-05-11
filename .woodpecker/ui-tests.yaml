@@ -35,10 +35,10 @@ workspace:
 
 matrix:
   include:
-    - SUITES: 'features/activity features/add-account features/delete-files-folders features/edit-files features/login-logout features/move-files-folders'
-      MATRIX_NAME: gui-tests-1
-    - SUITES: 'features/remove-account-connection features/spaces features/sync-resources features/tabs-settings features/vfs'
-      MATRIX_NAME: gui-tests-2
+    - MATRIX_NAME: gui-tests-1
+      SUITES: 'features/activity features/add-account features/delete-files-folders features/edit-files features/login-logout features/move-files-folders'
+    - MATRIX_NAME: gui-tests-2
+      SUITES: 'features/remove-account-connection features/spaces features/sync-resources features/tabs-settings features/vfs'
 
 steps:
   - name: restore-python-cache
@@ -147,7 +147,7 @@ steps:
       <<: *minio_environment
     commands:
       - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-      - mc cp -a -r $CI_WORKSPACE/test/gui/reports s3/$PUBLIC_BUCKET/desktop/testlogs/$CI_PIPELINE_NUMBER
+      - mc cp -a -r $CI_WORKSPACE/test/gui/reports s3/$PUBLIC_BUCKET/desktop/testlogs/$CI_PIPELINE_NUMBER/$MATRIX_NAME
 
   - name: gui-test-reports
     image: *minio_image
