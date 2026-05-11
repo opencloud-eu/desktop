@@ -118,8 +118,6 @@ steps:
       # test environment variables
       APP_PATH: /woodpecker/desktop/build/bin/opencloud
       BACKEND_HOST: https://opencloud:9200
-      SECURE_BACKEND_HOST: https://opencloud:9200
-      CLIENT_LOG_DIR: /woodpecker/desktop/test/gui/clientLog/
       GUI_TEST_REPORT_DIR: /woodpecker/desktop/test/gui/reports
       BEHAVE_TEST_DIR: /woodpecker/desktop/test/gui
       # Cannot handle this tags format inside a container: --tags='@smoke and not @skip'
@@ -134,36 +132,22 @@ steps:
   #   commands:
   #     - cat test/gui/tmp/OpenCloud-crash.log 2>/dev/null || exit 0
 
-  # - name: upload-test-reports
-  #   image: *minio_image
-  #   when:
-  #     - status: failure
-  #   environment:
-  #     <<: *minio_environment
-  #   commands:
-  #     - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-  #     - mc cp -a -r $CI_WORKSPACE/test/gui/guiReportUpload s3/$PUBLIC_BUCKET/desktop/testlogs/$CI_PIPELINE_NUMBER
-  #     - mc cp -a -r $CI_WORKSPACE/test/gui/clientLog/* s3/$PUBLIC_BUCKET/desktop/testlogs/$CI_PIPELINE_NUMBER/logs/
+  - name: upload-test-reports
+    image: *minio_image
+    when:
+      - status: failure
+    environment:
+      <<: *minio_environment
+    commands:
+      - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
+      - mc cp -a -r $CI_WORKSPACE/test/gui/reports s3/$PUBLIC_BUCKET/desktop/testlogs/$CI_PIPELINE_NUMBER
 
-  # - name: gui-test-reports
-  #   image: *minio_image
-  #   when:
-  #     - status: failure
-  #   environment:
-  #     <<: *minio_environment
-  #   commands:
-  #     - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-  #     - bash test/gui/woodpecker/gui_test_reports.sh
-
-  # - name: client-log
-  #   image: *minio_image
-  #   when:
-  #     - status: failure
-  #   environment:
-  #     <<: *minio_environment
-  #   commands:
-  #     - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-  #     - cd test/gui/clientLog/
-  #     - echo "To download the logs, access the following links:"
-  #     - logs=$(mc find s3/$PUBLIC_BUCKET/desktop/testlogs/$CI_PIPELINE_NUMBER/logs/)
-  #     - "for f in $logs; do echo \"$MC_HOST/$f \n \" | cut -d '/' -f1-3,5-99; done"
+  - name: gui-test-reports
+    image: *minio_image
+    when:
+      - status: failure
+    environment:
+      <<: *minio_environment
+    commands:
+      - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
+      - bash $CI_WORKSPACE/test/gui/woodpecker/gui_test_reports.sh

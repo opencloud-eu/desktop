@@ -1,21 +1,43 @@
 import shutil
 import os
+from behave.model_core import Status
 
 from helpers.ConfigHelper import init_config
 from helpers.api.provisioning import delete_created_users
 from helpers.SpaceHelper import delete_project_spaces
-from helpers.ConfigHelper import set_config, get_config
+from helpers.ConfigHelper import get_config
 from helpers.FilesHelper import prefix_path_namespace, cleanup_created_paths
 from helpers.SetupClientHelper import close_and_kill_app
 from step_types.types import *  # register all step types
 
 
+def append_scenario_to_app_log(scenario):
+    with open(get_config('appLogFile'), 'a') as log_file:
+        logs = ["=" * 80]
+        logs.append(
+            f"Scenario: {scenario.name}\nLocation: {scenario.filename}:{scenario.line}"
+        )
+        logs.append("-" * 80)
+        logs.append("")  # extra line break
+        log_file.write("\n".join(logs))
+
+
+def store_app_log():
+    with open(get_config('appLogFile'), 'a') as log_file:
+        # client log is stored in utf-16.
+        with open(
+            get_config('currentAppLogFile'), 'r', encoding='utf-16'
+        ) as current_log:
+            log_file.write(f"{current_log.read()}\n\n")
+
+
+def cleanup_app_log():
+    if os.path.exists(get_config('currentAppLogFile')):
+        os.remove(get_config('currentAppLogFile'))
+
+
 def before_feature(context, feature):
     init_config()
-
-
-def before_scenario(context, feature):
-    set_config("currentUserSyncPath", "")
 
 
 def after_scenario(context, scenario):
@@ -37,3 +59,11 @@ def after_scenario(context, scenario):
     delete_created_users()
     # quit the application
     close_and_kill_app()
+
+    # store app log on scenario failure
+    if scenario.status in [Status.failed, Status.error] and os.path.exists(
+        get_config('currentAppLogFile')
+    ):
+        append_scenario_to_app_log(scenario)
+        store_app_log()
+    cleanup_app_log()

@@ -107,18 +107,13 @@ def get_current_user_sync_path():
 
 def start_client():
     global app_driver
-    log_command_suffix = ""
-    logfile = get_config("clientLogFile")
-    logdir = get_config("clientLogDir")
-    if logfile != "":
-        log_command_suffix = f' --logfile {logfile}'
-    elif logdir != "":
-        log_command_suffix = f' --logdir {logdir}'
+    logfile = get_config("currentAppLogFile")
+    command_args = f' --logfile {logfile}'
 
     options = AppiumOptions()
     options.set_capability(
         'app',
-        f'{get_config("app_path")} -s {log_command_suffix} --logdebug',
+        f'{get_config("app_path")} -s {command_args} --logdebug',
     )
     options.set_capability('appium:environ', get_app_env())
     app_driver = webdriver.Remote(
