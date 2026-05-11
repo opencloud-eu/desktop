@@ -33,6 +33,13 @@ workspace:
   base: /woodpecker
   path: desktop
 
+matrix:
+  include:
+    - MATRIX_NAME: gui-tests-1
+      SUITES: 'features/activity features/add-account features/delete-files-folders features/edit-files features/login-logout features/move-files-folders'
+    - MATRIX_NAME: gui-tests-2
+      SUITES: 'features/remove-account-connection features/spaces features/sync-resources features/tabs-settings features/vfs'
+
 steps:
   - name: restore-python-cache
     image: *minio_image
@@ -121,7 +128,7 @@ steps:
       GUI_TEST_REPORT_DIR: /woodpecker/desktop/test/gui/reports
       BEHAVE_TEST_DIR: /woodpecker/desktop/test/gui
       # Cannot handle this tags format inside a container: --tags='@smoke and not @skip'
-      BEHAVE_PARAMETERS: '--tags=@smoke --tags=~@skip features'
+      BEHAVE_PARAMETERS: '--tags=@smoke --tags=~@skip ${SUITES}'
 
   # - name: crash-log
   #   image: *alpine_image
@@ -140,7 +147,7 @@ steps:
       <<: *minio_environment
     commands:
       - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-      - mc cp -a -r $CI_WORKSPACE/test/gui/reports s3/$PUBLIC_BUCKET/desktop/testlogs/$CI_PIPELINE_NUMBER
+      - mc cp -a -r $CI_WORKSPACE/test/gui/reports s3/$PUBLIC_BUCKET/desktop/testlogs/$CI_PIPELINE_NUMBER/$MATRIX_NAME
 
   - name: gui-test-reports
     image: *minio_image
