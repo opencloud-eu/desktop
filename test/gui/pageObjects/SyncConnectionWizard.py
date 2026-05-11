@@ -1,10 +1,10 @@
+import pyautogui
 from types import SimpleNamespace
 from appium.webdriver.common.appiumby import AppiumBy as By
 from selenium.webdriver.common.keys import Keys
-import time
-import pyautogui
 
 from helpers.SetupClientHelper import get_current_user_sync_path
+from helpers.ElementHelper import get_element_center_xy
 from helpers.SetupClientHelper import app
 
 
@@ -20,7 +20,9 @@ class SyncConnectionWizard:
     )
     REMOTE_FOLDER_TREE = SimpleNamespace(by=None, selector=None)
     SELECTIVE_SYNC_TREE_HEADER = SimpleNamespace(by=None, selector=None)
-    CANCEL_FOLDER_SYNC_CONNECTION_WIZARD = SimpleNamespace(by=By.NAME, selector="Cancel")
+    CANCEL_FOLDER_SYNC_CONNECTION_WIZARD = SimpleNamespace(
+        by=By.NAME, selector="Cancel"
+    )
     SPACES_LIST = SimpleNamespace(by=By.NAME, selector="Spaces list")
     SPACE_NAME_SELECTOR = SimpleNamespace(by=By.NAME, selector="{space_name},")
     CREATE_REMOTE_FOLDER_BUTTON = SimpleNamespace(by=None, selector=None)
@@ -71,10 +73,7 @@ class SyncConnectionWizard:
 
     @staticmethod
     def deselect_all_remote_folders():
-        element = app().find_element(
-            By.NAME,
-            "Add Space"
-        )
+        element = app().find_element(By.NAME, "Add Space")
         element.send_keys(Keys.ARROW_DOWN)
         element.send_keys(" ")
 
@@ -197,37 +196,43 @@ class SyncConnectionWizard:
         ).enabled
 
     @staticmethod
-    def select_or_unselect_folders_to_sync(
-            folders,
-            should_select=True
-    ):
-        if should_select:
+    def select_or_unselect_folders_to_sync(folders, select=True):
+        expected_state = "true" if select else "false"
+
+        if select:
             SyncConnectionWizard.deselect_all_remote_folders()
 
-        for folder in folders:
-            path_parts = folder.strip("/").split("/")
+        for folder_path in folders:
+            parents = folder_path.strip("/").split("/")
+            target_folder = parents.pop()
 
-            for i in range(len(path_parts) - 1):
-                parent_folder_name = path_parts[i]
-                parent_elements = app().find_elements(By.NAME, parent_folder_name)
+            parent_element = None
+            for parent in parents:
+                if parent_element:
+                    p_elements = parent_element.find_elements(By.NAME, parent)
+                else:
+                    p_elements = app().find_elements(By.NAME, parent)
+                for p_element in p_elements:
+                    if p_element.get_attribute("checked") == 'true':
+                        parent_element = p_element
+                px, py = get_element_center_xy(parent_element)
+                pyautogui.doubleClick(px, py)  # expand the folder
 
-                for element in parent_elements:
-                    isChecked = element.get_attribute("checked")
-                    if isChecked == "true":
-                        parent_bounds = element.rect
-                        center_x = int(parent_bounds['x'] + parent_bounds['width'] // 2)
-                        center_y = int(parent_bounds['y'] + parent_bounds['height'] // 2)
-                        pyautogui.doubleClick(center_x, center_y)
+            folder_element = app().find_element(By.NAME, target_folder)
+            is_checked = folder_element.get_attribute("checked")
+            # return early if the folder is already in the expected state.
+            if is_checked == expected_state:
+                return
 
-            target_folder_name = path_parts[-1]
-            folder_element = app().find_element(By.NAME, target_folder_name)
+            x, y = get_element_center_xy(folder_element)
+            pyautogui.click(x, y)
+            pyautogui.press('space')  # select the folder
 
-            element_bounds = folder_element.rect
-            checkbox_x_position = int(element_bounds['x'] + 10)
-            checkbox_y_position = int(element_bounds['y'] + element_bounds['height'] // 2)
-
-            pyautogui.moveTo(checkbox_x_position, checkbox_y_position, duration=0.1)
-            pyautogui.click()
+            is_checked = folder_element.get_attribute("checked")
+            if is_checked != expected_state:
+                raise AssertionError(
+                    f"Failed to {'select' if select else 'unselect'} folder: {folder_path}"
+                )
 
     @staticmethod
     def confirm_choose_what_to_sync_selection():
@@ -235,10 +240,7 @@ class SyncConnectionWizard:
 
     @staticmethod
     def __handle_folder_selection(folders, should_select, new_sync_connection_wizard):
-        SyncConnectionWizard.select_or_unselect_folders_to_sync(
-            folders,
-            should_select=should_select
-        )
+        SyncConnectionWizard.select_or_unselect_folders_to_sync(folders, should_select)
 
         if new_sync_connection_wizard:
             SyncConnectionWizard.add_sync_connection()
