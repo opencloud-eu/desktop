@@ -10,7 +10,7 @@ from helpers.SetupClientHelper import (
     set_current_user_sync_path,
 )
 from helpers.SyncHelper import listen_sync_status_for_item
-from helpers.SetupClientHelper import app
+from helpers.AppHelper import app
 
 
 class AccountConnectionWizard:

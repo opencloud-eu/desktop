@@ -5,7 +5,7 @@ from selenium.webdriver.common.keys import Keys
 
 from helpers.ConfigHelper import get_config
 from helpers.ElementHelper import get_element_center_xy
-from helpers.SetupClientHelper import app
+from helpers.AppHelper import app
 
 
 class SyncConnection:

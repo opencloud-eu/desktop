@@ -10,7 +10,7 @@ from helpers.api.provisioning import delete_created_users
 from helpers.SpaceHelper import delete_project_spaces
 from helpers.ConfigHelper import get_config
 from helpers.FilesHelper import prefix_path_namespace, cleanup_created_paths
-from helpers.SetupClientHelper import close_and_kill_app
+from helpers.AppHelper import close_and_kill_app
 from step_types.types import *  # register all step types
 
 

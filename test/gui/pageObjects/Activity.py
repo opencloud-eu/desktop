@@ -4,7 +4,7 @@ from appium.webdriver.common.appiumby import AppiumBy as By
 
 from helpers.FilesHelper import build_conflicted_regex
 from helpers.ConfigHelper import get_config
-from helpers.SetupClientHelper import app
+from helpers.AppHelper import app
 
 
 class Activity:
@@ -19,7 +19,6 @@ class Activity:
     SYNCED_ACTIVITY_TABLE_HEADER_SELECTOR = SimpleNamespace(by=None, selector=None)
     NOT_SYNCED_ACTIVITY_TABLE_HEADER_SELECTOR = SimpleNamespace(by=None, selector=None)
     SYNCED_ACTIVITY_STATUS = SimpleNamespace(by=By.NAME, selector=None)
-
 
     @staticmethod
     def get_not_synced_file_selector(resource):
@@ -44,10 +43,7 @@ class Activity:
     @staticmethod
     def click_tab(tab_name):
         selector = Activity.SUBTAB_CONTAINER.selector.format(tab_name=tab_name)
-        app().find_element(
-            Activity.SUBTAB_CONTAINER.by,
-            selector
-        ).click()
+        app().find_element(Activity.SUBTAB_CONTAINER.by, selector).click()
 
     @staticmethod
     def check_file_exist(filename):
@@ -62,7 +58,7 @@ class Activity:
         result = squish.waitFor(
             lambda: Activity.has_sync_status(filename, "Blacklisted"),
             get_config("maxSyncTimeout") * 1000,
-            )
+        )
         return result
 
     @staticmethod
@@ -70,7 +66,7 @@ class Activity:
         result = squish.waitFor(
             lambda: Activity.has_sync_status(filename, "File Ignored"),
             get_config("maxSyncTimeout") * 1000,
-            )
+        )
         return result
 
     @staticmethod
@@ -78,16 +74,13 @@ class Activity:
         result = squish.waitFor(
             lambda: Activity.has_sync_status(filename, "Excluded"),
             get_config("maxSyncTimeout") * 1000,
-            )
+        )
         return result
 
     @staticmethod
     def has_sync_status(filename, status):
         try:
-            app().find_element(
-                Activity.SYNCED_ACTIVITY_STATUS.by,
-                status
-            )
+            app().find_element(Activity.SYNCED_ACTIVITY_STATUS.by, status)
             return True
         except:
             return False
@@ -96,11 +89,10 @@ class Activity:
     def select_synced_filter(sync_filter):
         app().find_element(
             Activity.LOCAL_ACTIVITY_FILTER_BUTTON.by,
-            Activity.LOCAL_ACTIVITY_FILTER_BUTTON.selector
+            Activity.LOCAL_ACTIVITY_FILTER_BUTTON.selector,
         ).click()
         app().find_element(
-            Activity.SYNCED_ACTIVITY_FILTER_OPTION_SELECTOR.by,
-            sync_filter
+            Activity.SYNCED_ACTIVITY_FILTER_OPTION_SELECTOR.by, sync_filter
         )
 
     @staticmethod
@@ -155,7 +147,7 @@ class Activity:
             file_row = squish.waitForObject(
                 Activity.get_not_synced_file_selector(resource),
                 get_config("lowestSyncTimeout") * 1000,
-                )["row"]
+            )["row"]
             squish.waitForObjectExists(
                 {
                     "column": Activity.get_not_synced_table_column_number_by_name(
