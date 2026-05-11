@@ -1,10 +1,8 @@
-import pyautogui
 from types import SimpleNamespace
 from appium.webdriver.common.appiumby import AppiumBy as By
 from selenium.webdriver.common.keys import Keys
 
 from helpers.SetupClientHelper import get_current_user_sync_path
-from helpers.ElementHelper import get_element_center_xy
 from helpers.AppHelper import app
 
 
@@ -75,7 +73,7 @@ class SyncConnectionWizard:
     def deselect_all_remote_folders():
         element = app().find_element(By.NAME, "Add Space")
         element.send_keys(Keys.ARROW_DOWN)
-        element.send_keys(" ")
+        element.native_send_keys(Keys.SPACE)  # uncheck the root folder
 
     @staticmethod
     def sort_by(header_text):
@@ -215,8 +213,7 @@ class SyncConnectionWizard:
                 for p_element in p_elements:
                     if p_element.get_attribute("checked") == 'true':
                         parent_element = p_element
-                px, py = get_element_center_xy(parent_element)
-                pyautogui.doubleClick(px, py)  # expand the folder
+                parent_element.native_double_click()  # expand the folder
 
             folder_element = app().find_element(By.NAME, target_folder)
             is_checked = folder_element.get_attribute("checked")
@@ -224,9 +221,8 @@ class SyncConnectionWizard:
             if is_checked == expected_state:
                 return
 
-            x, y = get_element_center_xy(folder_element)
-            pyautogui.click(x, y)
-            pyautogui.press('space')  # select the folder
+            folder_element.native_click()
+            folder_element.native_send_keys(Keys.SPACE)  # select the folder
 
             is_checked = folder_element.get_attribute("checked")
             if is_checked != expected_state:

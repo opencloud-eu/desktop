@@ -16,7 +16,6 @@ from helpers.SetupClientHelper import (
     get_client_details,
     generate_account_config,
     get_resource_path,
-    app,
 )
 from helpers.SyncHelper import (
     wait_for_initial_sync_to_complete,
@@ -123,7 +122,7 @@ def step(context, username):
 @Then('user "{username}" should be signed out')
 def step(context, username):
     user_signed_out = AccountSetting.is_user_signed_out()
-    
+
     with ensure('User "{0}" should be signed out, but is still signed in', username):
         user_signed_out.should.be.true
 

@@ -1,10 +1,8 @@
-import pyautogui
 from types import SimpleNamespace
 from appium.webdriver.common.appiumby import AppiumBy as By
 from selenium.webdriver.common.keys import Keys
 
 from helpers.ConfigHelper import get_config
-from helpers.ElementHelper import get_element_center_xy
 from helpers.AppHelper import app
 
 
@@ -49,8 +47,7 @@ class SyncConnection:
                 sync_path=get_config('currentUserSyncPath'),
             ),
         )
-        x, y = get_element_center_xy(menu_button)
-        pyautogui.click(x, y, button='right')
+        menu_button.native_click(button='right')
 
     @staticmethod
     def perform_action(action):

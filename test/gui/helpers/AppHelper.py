@@ -8,14 +8,14 @@ from helpers.ElementHelper import get_element_center_xy
 from helpers.keys.keys_map import get_key
 
 
-def native_click(self):
+def native_click(self, **kwargs):
     x, y = get_element_center_xy(self)
-    pyautogui.click(x, y)
+    pyautogui.click(x, y, **kwargs)
 
 
-def native_double_click(self):
+def native_double_click(self, **kwargs):
     x, y = get_element_center_xy(self)
-    pyautogui.doubleClick(x, y)
+    pyautogui.doubleClick(x, y, **kwargs)
 
 
 def native_send_keys(self, key):

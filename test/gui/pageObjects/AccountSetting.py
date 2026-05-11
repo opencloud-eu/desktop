@@ -1,11 +1,11 @@
 from types import SimpleNamespace
 from appium.webdriver.common.appiumby import AppiumBy as By
-from helpers.UserHelper import get_displayname_for_user
-from helpers.SetupClientHelper import substitute_inline_codes, app
 
 from pageObjects.Toolbar import Toolbar
 from helpers.UserHelper import get_displayname_for_user
-from helpers.AppHelper import app, substitute_inline_codes
+from helpers.SetupClientHelper import substitute_inline_codes
+from helpers.UserHelper import get_displayname_for_user
+from helpers.AppHelper import app
 from helpers.SyncHelper import wait_for
 
 
