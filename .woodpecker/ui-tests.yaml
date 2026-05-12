@@ -113,7 +113,6 @@ steps:
 
   - name: gui-tests
     image: *build_image
-    pull: true
     environment:
       # system cache environment variables
       PYTHONUSERBASE: /woodpecker/desktop/test/gui/.venv
