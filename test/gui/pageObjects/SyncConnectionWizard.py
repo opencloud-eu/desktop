@@ -216,6 +216,7 @@ class SyncConnectionWizard:
                 parent_element.native_double_click()  # expand the folder
                 # retry once if the folder is not expanded
                 if parent_element.is_selected():
+                    print('[WARN] Folder was not expanded, retrying with space key')
                     # expand using space key
                     parent_element.native_click()
                     parent_element.native_send_keys(Keys.SPACE)
