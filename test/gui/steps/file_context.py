@@ -137,6 +137,8 @@ def move_resource(username, resource_type, source, destination, is_temp_folder=F
 
 
 def deleteResource(resource, resource_type):
+    wait_for_client_to_be_ready()
+    listen_sync_status_for_item(resource, resource_type)
     resource_path = sanitize_path(get_resource_path(resource))
     if resource_type == 'file':
         os.remove(resource_path)
@@ -175,7 +177,9 @@ def step(context, resource_type, resource_name, destination_dir):
     copy_resource(resource_type, resource_name, destination_dir, False)
 
 
-@When('the user copies {resource_type:ResourceType} "{resource_name}" into the same directory')
+@When(
+    'the user copies {resource_type:ResourceType} "{resource_name}" into the same directory'
+)
 def step(context, resource_type, resource_name):
     copy_resource(resource_type, resource_name, resource_name, False)
 
@@ -187,17 +191,19 @@ def step(context, source, destination):
     rename_file_folder(source, destination)
 
 
-@Then('the file "{file_path}" should exist on the file system with the following content')
+@Then(
+    'the file "{file_path}" should exist on the file system with the following content'
+)
 def step(context, file_path):
     expected = context.text
     file_path = get_resource_path(file_path)
     with open(file_path, 'r', encoding='utf-8') as f:
         contents = f.read()
     with ensure(
-            '{0} expected to exist with content "{1}" but has content "{2}"',
-            file_path,
-            expected,
-            contents,
+        '{0} expected to exist with content "{1}" but has content "{2}"',
+        file_path,
+        expected,
+        contents,
     ):
         contents.should.equal(expected)
 
@@ -281,17 +287,14 @@ def step(context, user, resource, content):
 
 @When('the user deletes the {resource_type:ResourceType} "{resource_name}"')
 def step(context, resource_type, resource_name):
-    wait_for_client_to_be_ready()
     deleteResource(resource_name, resource_type)
 
 
 @When('user "|any|" creates the following files inside the sync folder:')
 def step(context, username):
-    wait_for_client_to_be_ready()
-
     for row in context.table[1:]:
         file = get_resource_path(row[0], username)
-        write_file(file, '')
+        wait_and_write_file(file, '')
 
 
 @Given('the user has created a folder "|any|" in temp folder')

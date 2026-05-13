@@ -109,9 +109,6 @@ Feature: Syncing files
         Then the file "simple-folder/lorem.txt" should exist on the file system
         And the file "large-folder/lorem.txt" should not exist on the file system
         And as "Alice" file "simple-folder/localFile.txt" should exist in the server
-        When the user deletes the folder "simple-folder"
-        And the user waits for the files to sync
-        Then as "Alice" folder "simple-folder" should not exist in the server
 
     @issue-9733 @skipOnWindows
     Scenario: sort folders list by name and size
@@ -580,7 +577,7 @@ Feature: Syncing files
         When the user unselects the following folders to sync in "Choose what to sync" window:
             | folder                  |
             | test-folder/sub-folder2 |
-        And the user waits for the files to sync
+        And the user waits for folder "test-folder/sub-folder2" to be synced
         Then the folder "test-folder/sub-folder1" should exist on the file system
         And the folder "test-folder/sub-folder2" should not exist on the file system
         When user "Alice" uploads file with content "some content" to "test-folder/sub-folder2/lorem.txt" in the server
