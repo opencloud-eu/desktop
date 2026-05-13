@@ -223,7 +223,7 @@ Feature: Syncing files
             """
             test content
             """
-        And the user waits for the files to sync
+        And the user waits for folder "parent/subfolder5/test.txt" to be synced
         Then as "Alice" folder "parent/subfolderEmpty1" should exist in the server
         And as "Alice" folder "parent/subfolderEmpty2" should exist in the server
         And as "Alice" folder "parent/subfolderEmpty3" should exist in the server
@@ -582,8 +582,9 @@ Feature: Syncing files
             | test-folder/sub-folder2 |
         And the user waits for the files to sync
         Then the folder "test-folder/sub-folder1" should exist on the file system
-        But the folder "test-folder/sub-folder2" should not exist on the file system
+        And the folder "test-folder/sub-folder2" should not exist on the file system
         When user "Alice" uploads file with content "some content" to "test-folder/sub-folder2/lorem.txt" in the server
+        And the user force syncs the files
         And the user waits for the files to sync
         Then the file "test-folder/sub-folder2/lorem.txt" should not exist on the file system
 
