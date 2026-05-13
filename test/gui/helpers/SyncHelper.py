@@ -281,6 +281,7 @@ def has_sync_pattern(patterns, resource=None):
             if len(actual_pattern) < pattern_len:
                 break
             if pattern_len == len(actual_pattern) and pattern == actual_pattern:
+                print("MATCHED SYNC PATTERN:", pattern)
                 return True
     # 100 milliseconds polling interval
     time.sleep(0.1)
