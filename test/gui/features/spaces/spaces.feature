@@ -44,7 +44,8 @@ Feature: Project spaces
             test content
             """
         And user "Alice" creates a folder "localFolder" inside the sync folder
-        And the user waits for the files to sync
+        And the user waits for file "localFile.txt" to be synced
+        And the user waits for folder "localFolder" to be synced
         Then as "Alice" the file "localFile.txt" in the space "Project101" should have content "test content" in the server
         And as "Alice" the space "Project101" should have folder "localFolder" in the server
 
