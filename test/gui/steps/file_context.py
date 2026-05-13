@@ -282,7 +282,6 @@ def step(context, user, resource, content):
 @When('the user deletes the {resource_type:ResourceType} "{resource_name}"')
 def step(context, resource_type, resource_name):
     wait_for_client_to_be_ready()
-    print(f"Deleting {resource_type} '{resource_name}'")
     deleteResource(resource_name, resource_type)
 
 
