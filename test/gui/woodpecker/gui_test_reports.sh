@@ -1,11 +1,13 @@
 #!/bin/bash
 
-REPORT_PATH="$PUBLIC_BUCKET/desktop/testlogs/$CI_PIPELINE_NUMBER/guiReportUpload"
+REPORT_PATH="$PUBLIC_BUCKET/desktop/testlogs/$CI_PIPELINE_NUMBER/$MATRIX_NAME/reports"
 REPORT_URL="$MC_HOST/$REPORT_PATH"
 
 echo ""
 echo "--- GUI Test Reports ---"
-echo "GUI Test Report: $REPORT_URL/index.html"
+echo "Test Report: $REPORT_URL/report.html"
+echo "Client Log: $REPORT_URL/opencloud.log"
+echo "AT_SPI Driver Log: $REPORT_URL/atspi_webdriver.log"
 
 screenshots=$(mc find s3/$REPORT_PATH/screenshots/ 2>/dev/null || true)
 if [[ -n "$screenshots" ]]; then

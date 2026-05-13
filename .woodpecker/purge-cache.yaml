@@ -37,7 +37,7 @@ matrix:
       PURGE_PATH: desktop/python-cache/
       TTL: 14d
     - JOB_NAME: purge-browsers-cache
-      PURGE_PATH: web/browsers-cache/
+      PURGE_PATH: desktop/browsers-cache/
       TTL: 14d
     - JOB_NAME: purge-logs
       PURGE_PATH: desktop/testlogs/

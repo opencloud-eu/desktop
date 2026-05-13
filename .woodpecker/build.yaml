@@ -1,5 +1,6 @@
 variables:
-  - &squish_image 'opencloudeu/squish@sha256:efaaa7749b9987dd3164288a55b2dc5514acd5eef01b0ec72f6b9b41d761378f'
+  - &alpine_image 'alpine:3.22.4'
+  - &build_image 'opencloudeu/desktop-client-build:ubuntu-24.04-qt6.10'
   - &minio_image 'minio/mc:RELEASE.2021-10-07T04-19-58Z'
   - &minio_environment
     AWS_ACCESS_KEY_ID:
@@ -48,21 +49,25 @@ workspace:
 
 steps:
   - name: fix-permissions
-    image: owncloud/ubuntu:20.04
+    image: *alpine_image
     commands:
-      - chmod o+w /woodpecker/desktop/ -R
+      - chmod o+w $CI_WORKSPACE/ -R
+
   - name: build-client-for-ui-tests
-    image: *squish_image
+    image: *build_image
     commands:
-      - mkdir -p /woodpecker/desktop/build
-      - cd /woodpecker/desktop/build
-      - cmake %s -S .. -GNinja  -DCMAKE_BUILD_TYPE=Debug  -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
+      - mkdir -p build
+      - cd build
+      # currently, vfs plugin is broken so disable it to be able to build the client and run tests
+      # TODO: fix the vfs plugin and enable it back
+      - cmake -GNinja -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=Debug -DVIRTUAL_FILE_SYSTEM_PLUGINS=off -S ..
       - ninja
+
   - name: upload-desktop-client-cache
     image: *minio_image
     environment:
       <<: *minio_environment
     commands:
       - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-      - mc cp -a -r /woodpecker/desktop/build/bin s3/$CACHE_BUCKET/desktop/client-build/${CI_COMMIT_SHA}/
+      - mc cp -a -r $CI_WORKSPACE/build/bin s3/$CACHE_BUCKET/desktop/client-build/${CI_COMMIT_SHA}/
       - mc ls --recursive s3/$CACHE_BUCKET/desktop/client-build
