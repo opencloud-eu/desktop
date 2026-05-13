@@ -7,15 +7,21 @@ variables:
     from_secret: oc_ci_url
 
 when:
-  - event: [push, manual]
+  - event:
+      - push
+      - manual
     branch:
       - main
       - stable-*
+    status:
+      - success
+      - failure
   - event: pull_request
-  - event: tag
+    status:
+      - failure
   - event: cron
     cron: nightly*
-  - status:
+    status:
       - success
       - failure
 
