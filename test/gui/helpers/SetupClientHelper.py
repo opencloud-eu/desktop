@@ -2,26 +2,18 @@
 import os
 import subprocess
 import test
-import psutil
 from urllib.parse import urlparse
 from os import makedirs
 from os.path import exists, join
 from PySide6.QtCore import QSettings, QUuid, QUrl, QJsonValue
-from appium import webdriver
-from appium.options.common.base import AppiumOptions
 
 from helpers.SpaceHelper import get_space_id, get_personal_space_id
-from helpers.ConfigHelper import get_config, set_config, is_windows, get_app_env
+from helpers.ConfigHelper import get_config, set_config, is_windows
 from helpers.SyncHelper import listen_sync_status_for_item
 from helpers.api.utils import url_join
 from helpers.UserHelper import get_displayname_for_user
 from helpers.api import provisioning
-
-app_driver = None
-
-
-def app():
-    return app_driver
+from helpers.AppHelper import create_app_session
 
 
 def substitute_inline_codes(value):
@@ -106,20 +98,7 @@ def get_current_user_sync_path():
 
 
 def start_client():
-    global app_driver
-    logfile = get_config("currentAppLogFile")
-    command_args = f' --logfile {logfile}'
-
-    options = AppiumOptions()
-    options.set_capability(
-        'app',
-        f'{get_config("app_path")} -s {command_args} --logdebug',
-    )
-    options.set_capability('appium:environ', get_app_env())
-    app_driver = webdriver.Remote(
-        command_executor='http://localhost:4723', options=options
-    )
-    app_driver.implicitly_wait = 10
+    create_app_session()
 
 
 def get_polling_interval():
@@ -198,24 +177,6 @@ def setup_client(username, space='Personal'):
         listen_sync_status_for_item(sync_path)
 
 
-def is_app_killed(pid):
-    try:
-        psutil.Process(pid)
-        return False
-    except psutil.NoSuchProcess:
-        return True
-
-
-def wait_until_app_killed(pid=0):
-    timeout = 5 * 1000
-    killed = squish.waitFor(
-        lambda: is_app_killed(pid),
-        timeout,
-    )
-    if not killed:
-        test.log(f'Application was not terminated within {timeout} milliseconds')
-
-
 def generate_uuidv4():
     return str(uuid.uuid4())
 
@@ -264,25 +225,3 @@ def run_sys_command(command=None, shell=False):
         check=False,
     )
     return cmd.stdout, cmd.stderr, cmd.returncode
-
-
-def close_and_kill_app():
-    """
-    Close Appium session and kill the desktop client process.
-    Use this for both mid-scenario and end-of-scenario cleanup.
-    """
-    global app_driver
-    # Quit Appium session
-    if app_driver is not None:
-        app_driver.quit()
-
-    # Kill remaining process by exe path
-    app_path = get_config("app_path")
-    for process in psutil.process_iter(['pid', 'exe']):
-        if process.info['exe'] == app_path:
-            print("Closing desktop client...")
-            psutil.Process(process.info['pid']).kill()
-            break
-
-    # Reset driver for reuse
-    app_driver = None
