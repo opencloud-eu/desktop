@@ -58,9 +58,7 @@ steps:
     commands:
       - mkdir -p build
       - cd build
-      # currently, vfs plugin is broken so disable it to be able to build the client and run tests
-      # TODO: fix the vfs plugin and enable it back
-      - cmake -GNinja -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=Debug -DVIRTUAL_FILE_SYSTEM_PLUGINS=off -S ..
+      - cmake -GNinja -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=Debug -S ..
       - ninja
 
   - name: upload-desktop-client-cache

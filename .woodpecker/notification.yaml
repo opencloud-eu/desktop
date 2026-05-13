@@ -15,14 +15,13 @@ when:
   - event: tag
   - event: cron
     cron: nightly*
+  - status:
+      - success
+      - failure
 
 depends_on:
   - build
   - ui-tests
-
-runs_on:
-  - success
-  - failure
 
 skip_clone: true
 
