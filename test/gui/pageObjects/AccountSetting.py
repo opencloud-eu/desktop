@@ -1,11 +1,11 @@
 from types import SimpleNamespace
 from appium.webdriver.common.appiumby import AppiumBy as By
-from helpers.UserHelper import get_displayname_for_user
-from helpers.SetupClientHelper import substitute_inline_codes, app
 
 from pageObjects.Toolbar import Toolbar
 from helpers.UserHelper import get_displayname_for_user
-from helpers.SetupClientHelper import app, substitute_inline_codes
+from helpers.SetupClientHelper import substitute_inline_codes
+from helpers.UserHelper import get_displayname_for_user
+from helpers.AppHelper import app
 from helpers.SyncHelper import wait_for
 
 
@@ -66,7 +66,14 @@ class AccountSetting:
 
     @staticmethod
     def get_account_connection_label():
-        label = app().find_element(AccountSetting.ACCOUNT_CONNECTION_LABEL.by, AccountSetting.ACCOUNT_CONNECTION_LABEL.selector).text
+        label = (
+            app()
+            .find_element(
+                AccountSetting.ACCOUNT_CONNECTION_LABEL.by,
+                AccountSetting.ACCOUNT_CONNECTION_LABEL.selector,
+            )
+            .text
+        )
         return label
 
     @staticmethod
@@ -109,7 +116,6 @@ class AccountSetting:
                 + " milliseconds"
             )
         return result
-
 
     @staticmethod
     def wait_until_sync_folder_is_configured(timeout=5000):

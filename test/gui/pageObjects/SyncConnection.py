@@ -3,7 +3,7 @@ from appium.webdriver.common.appiumby import AppiumBy as By
 from selenium.webdriver.common.keys import Keys
 
 from helpers.ConfigHelper import get_config
-from helpers.SetupClientHelper import app
+from helpers.AppHelper import app
 
 
 class SyncConnection:
@@ -47,19 +47,7 @@ class SyncConnection:
                 sync_path=get_config('currentUserSyncPath'),
             ),
         )
-        # Cannot select sync folder menu button.
-        # This is a messy workaround to open the context menu using keyboard navigation.
-        # Ideally, we should be able to do: click() and send_keys(" ") to open the menu
-        # but it doesn't work for some reason.
-        # Also, send_keys(Keys.SPACE) doesn't work.
-        menu_button.click()
-        menu_button.send_keys(Keys.TAB)
-        menu_button.send_keys(Keys.TAB)
-        menu_button.send_keys(Keys.TAB)
-        menu_button.send_keys(Keys.TAB)
-        menu_button.send_keys(Keys.TAB)
-        menu_button.send_keys(Keys.TAB)
-        menu_button.send_keys(" ")
+        menu_button.native_click(button='right')
 
     @staticmethod
     def perform_action(action):
