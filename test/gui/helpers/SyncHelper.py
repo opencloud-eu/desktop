@@ -369,7 +369,7 @@ def make_available_locally(resource_path):
 
 
 def wait_for(condition, timeout, interval=0.5):
-    from helpers.SetupClientHelper import app
+    from helpers.AppHelper import app
 
     wait = WebDriverWait(app(), timeout / 1000, poll_frequency=interval)
     try:

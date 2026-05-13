@@ -1,0 +1,76 @@
+from selenium.webdriver.common.keys import Keys
+
+# Key mapping from Selenium's Keys to pyautogui's key names
+# See:
+#  - https://selenium-python.readthedocs.io/api.html#module-selenium.webdriver.common.keys
+#  - https://pyautogui.readthedocs.io/en/latest/keyboard.html?highlight=keys#keyboard-keys
+KEY_MAP = {
+    Keys.ADD: 'add',
+    Keys.ALT: 'alt',
+    Keys.ARROW_DOWN: 'down',
+    Keys.ARROW_LEFT: 'left',
+    Keys.ARROW_RIGHT: 'right',
+    Keys.ARROW_UP: 'up',
+    Keys.BACKSPACE: 'backspace',
+    Keys.BACK_SPACE: 'backspace',
+    Keys.CLEAR: 'clear',
+    Keys.COMMAND: 'command',
+    Keys.CONTROL: 'ctrl',
+    Keys.DECIMAL: 'decimal',
+    Keys.DELETE: 'delete',
+    Keys.DIVIDE: 'divide',
+    Keys.DOWN: 'down',
+    Keys.END: 'end',
+    Keys.ENTER: 'enter',
+    Keys.EQUALS: '=',
+    Keys.ESCAPE: 'escape',
+    Keys.F1: 'f1',
+    Keys.F10: 'f10',
+    Keys.F11: 'f11',
+    Keys.F12: 'f12',
+    Keys.F2: 'f2',
+    Keys.F3: 'f3',
+    Keys.F4: 'f4',
+    Keys.F5: 'f5',
+    Keys.F6: 'f6',
+    Keys.F7: 'f7',
+    Keys.F8: 'f8',
+    Keys.F9: 'f9',
+    Keys.HELP: 'help',
+    Keys.HOME: 'home',
+    Keys.INSERT: 'insert',
+    Keys.LEFT: 'left',
+    Keys.LEFT_ALT: 'altleft',
+    Keys.LEFT_CONTROL: 'ctrlleft',
+    Keys.LEFT_SHIFT: 'shiftleft',
+    Keys.META: 'win',
+    Keys.MULTIPLY: 'multiply',
+    Keys.NUMPAD0: 'num0',
+    Keys.NUMPAD1: 'num1',
+    Keys.NUMPAD2: 'num2',
+    Keys.NUMPAD3: 'num3',
+    Keys.NUMPAD4: 'num4',
+    Keys.NUMPAD5: 'num5',
+    Keys.NUMPAD6: 'num6',
+    Keys.NUMPAD7: 'num7',
+    Keys.NUMPAD8: 'num8',
+    Keys.NUMPAD9: 'num9',
+    Keys.PAGE_DOWN: 'pagedown',
+    Keys.PAGE_UP: 'pageup',
+    Keys.PAUSE: 'pause',
+    Keys.RETURN: 'return',
+    Keys.RIGHT: 'right',
+    Keys.SEMICOLON: ';',
+    Keys.SEPARATOR: 'separator',
+    Keys.SHIFT: 'shift',
+    Keys.SPACE: 'space',
+    Keys.SUBTRACT: 'subtract',
+    Keys.TAB: 'tab',
+    Keys.UP: 'up',
+}
+
+
+def get_key(key):
+    if key in KEY_MAP:
+        return KEY_MAP[key]
+    return key
