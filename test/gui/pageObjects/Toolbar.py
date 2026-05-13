@@ -62,6 +62,9 @@ class Toolbar:
         # account_tab.click()
         account_tab.send_keys(Keys.TAB)
         account_tab.send_keys(Keys.ENTER)
+        # confirm account is active
+        if account_tab.get_attribute("checked") != "true":
+            raise ValueError(f"Account is not active: {username}")
 
     @staticmethod
     def get_displayed_account_text(displayname, host):
