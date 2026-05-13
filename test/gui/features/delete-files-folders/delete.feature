@@ -11,7 +11,7 @@ Feature: deleting files and folders
         Given user "Alice" has uploaded file with content "openCloud test text file 0" to "<fileName>" in the server
         And user "Alice" has set up a client with default settings
         When the user deletes the file "<fileName>"
-        And the user waits for the files to sync
+        And the user waits for file "<fileName>" to be synced
         Then as "Alice" file "<fileName>" should not exist in the server
         Examples:
             | fileName                                    |
@@ -24,7 +24,7 @@ Feature: deleting files and folders
         Given user "Alice" has created folder "<folderName>" in the server
         And user "Alice" has set up a client with default settings
         When the user deletes the folder "<folderName>"
-        And the user waits for the files to sync
+        And the user waits for folder "<folderName>" to be synced
         Then as "Alice" file "<folderName>" should not exist in the server
         Examples:
             | folderName                                      |
