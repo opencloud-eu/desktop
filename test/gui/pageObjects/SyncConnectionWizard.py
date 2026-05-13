@@ -214,6 +214,11 @@ class SyncConnectionWizard:
                     if p_element.get_attribute("checked") == 'true':
                         parent_element = p_element
                 parent_element.native_double_click()  # expand the folder
+                # retry once if the folder is not expanded
+                if parent_element.is_selected():
+                    # expand using space key
+                    parent_element.native_click()
+                    parent_element.native_send_keys(Keys.SPACE)
 
             folder_element = app().find_element(By.NAME, target_folder)
             is_checked = folder_element.get_attribute("checked")
