@@ -1,7 +1,9 @@
 import pyautogui
 import psutil
+import threading
 from appium.webdriver import Remote, WebElement
 from appium.options.common.base import AppiumOptions
+from selenium.common.exceptions import WebDriverException, NoSuchElementException
 
 from helpers.ConfigHelper import get_config, get_app_env
 from helpers.ElementHelper import get_element_center_xy
@@ -22,10 +24,36 @@ def native_send_keys(self, key):
     pyautogui.press(get_key(key))
 
 
+def find_element(self, by, selector):
+    """
+    Returns a visible element.
+    Throws if no elements are found or if multiple visible elements are found.
+    """
+    elements = self.find_elements(by, selector)
+    elements_count = len(elements)
+    if elements_count > 1:
+        visible_elements = [el for el in elements if el.is_displayed()]
+        if len(visible_elements) == 1:
+            return visible_elements.pop()
+        raise WebDriverException(
+            f'Found {elements_count} elements using "{by}={selector}"'
+        )
+    if elements_count == 0:
+        raise NoSuchElementException(f'No element found for "{by}={selector}"')
+    return elements[0]
+
+
+def pause(self):
+    threading.Event().wait()
+
+
 # bind custom element methods
+Remote.find_element = find_element
+Remote.pause = pause
 WebElement.native_click = native_click
 WebElement.native_double_click = native_double_click
 WebElement.native_send_keys = native_send_keys
+WebElement.find_element = find_element
 
 app_driver = None
 
