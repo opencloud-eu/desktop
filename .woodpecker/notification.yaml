@@ -7,19 +7,25 @@ variables:
     from_secret: oc_ci_url
 
 when:
-  - event: [push, manual]
+  - event:
+      - push
+      - manual
     branch: ${CI_REPO_DEFAULT_BRANCH}
+    status:
+      - success
+      - failure
   - event: pull_request
+    status:
+      - failure
   - event: cron
     cron: nightly*
+    status:
+      - success
+      - failure
 
 depends_on:
   - build
   - ui-tests
-
-runs_on:
-  - success
-  - failure
 
 skip_clone: true
 

@@ -44,14 +44,14 @@ def before_feature(context, feature):
 
 
 def after_step(context, step):
-    if step.status in [Status.failed, Status.error]:
-
-        step_name = re.sub(r'[^a-zA-Z0-9_]', '_', step.name)
+    if step.status in [Status.failed, Status.error] and os.getenv("CI"):
+        scenario = context.scenario.name.lower()
+        scenario = re.sub(r'[^a-zA-Z0-9_]', '_', scenario)
         timestamp = datetime.now().strftime("%d-%b-%Y_%H-%M-%S")
         screenshots_dir = os.path.join(get_config("guiTestReportDir"), "screenshots")
         os.makedirs(screenshots_dir, exist_ok=True)
 
-        file_path = os.path.join(screenshots_dir, f"{step_name}_{timestamp}.png")
+        file_path = os.path.join(screenshots_dir, f"{scenario}_{timestamp}.png")
         pyautogui.screenshot(file_path)
 
 
