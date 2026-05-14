@@ -12,6 +12,7 @@ from helpers.SpaceHelper import delete_project_spaces
 from helpers.ConfigHelper import get_config
 from helpers.FilesHelper import prefix_path_namespace, cleanup_created_paths
 from helpers.AppHelper import close_and_kill_app
+from helpers.SyncHelper import clear_socket_messages
 from step_types.types import *  # register all step types
 
 
@@ -93,3 +94,4 @@ def after_scenario(context, scenario):
         append_scenario_to_app_log(scenario)
         store_app_log()
     cleanup_app_log()
+    clear_socket_messages()
