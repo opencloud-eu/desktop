@@ -18,3 +18,5 @@ numpy==1.26.*; python_version >= "3.10" and sys_platform == 'linux'
 sure==2.0.*; python_version >= "3.10"
 pyautogui==0.9.*; python_version >= "3.10"
 behave-html-pretty-formatter==1.16.*; python_version >= "3.10"
+mss==9.*; python_version >= "3.10"
+imageio-ffmpeg==0.6.*; python_version >= "3.10"

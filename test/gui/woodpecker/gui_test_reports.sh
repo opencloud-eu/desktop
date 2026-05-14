@@ -20,3 +20,16 @@ if [[ -n "$screenshots" ]]; then
 else
   echo "No screenshots found."
 fi
+
+recordings=$(mc find s3/$REPORT_PATH/recordings/ 2>/dev/null || true)
+if [[ -n "$recordings" ]]; then
+  echo ""
+  echo "Recordings:"
+  for f in $recordings; do
+    # remove 's3/' prefix
+    f=${f/s3\//}
+    echo "  - $MC_HOST/$f"
+  done
+else
+  echo "No recordings found."
+fi
