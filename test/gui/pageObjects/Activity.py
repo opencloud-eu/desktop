@@ -1,6 +1,7 @@
 # from objectmaphelper import RegularExpression
 from types import SimpleNamespace
 from appium.webdriver.common.appiumby import AppiumBy as By
+from selenium.common.exceptions import NoSuchElementException
 
 from helpers.FilesHelper import build_conflicted_regex
 from helpers.ConfigHelper import get_config
@@ -9,11 +10,14 @@ from helpers.AppHelper import app
 
 class Activity:
     TAB_CONTAINER = SimpleNamespace(by=None, selector=None)
-    SUBTAB_CONTAINER = SimpleNamespace(by=By.XPATH, selector="//*[@name='{tab_name}']")
+    SUBTAB_CONTAINER = SimpleNamespace(
+        by=By.CLASS_NAME, selector="[page tab | {tab_name}]"
+    )
     NOT_SYNCED_TABLE = SimpleNamespace(by=None, selector=None)
     LOCAL_ACTIVITY_FILTER_BUTTON = SimpleNamespace(by=By.NAME, selector="Filter")
-    SYNCED_ACTIVITY_FILTER_OPTION_SELECTOR = SimpleNamespace(by=By.NAME, selector=None)
-    SYNCED_ACTIVITY_TABLE = SimpleNamespace(by=None, selector=None)
+    LOCAL_ACTIVITY_FILTER_OPTION_SELECTOR = SimpleNamespace(by=By.NAME, selector=None)
+    LOCAL_ACTIVITY_TABLE = SimpleNamespace(by=By.NAME, selector="Local activity table")
+    FILTER_BUTTON_SELECTED_STATE = SimpleNamespace(by=By.NAME, selector="1 Filter")
     NOT_SYNCED_FILTER_BUTTON = SimpleNamespace(by=None, selector=None)
     NOT_SYNCED_FILTER_OPTION_SELECTOR = SimpleNamespace(by=None, selector=None)
     SYNCED_ACTIVITY_TABLE_HEADER_SELECTOR = SimpleNamespace(by=None, selector=None)
@@ -91,15 +95,25 @@ class Activity:
             Activity.LOCAL_ACTIVITY_FILTER_BUTTON.by,
             Activity.LOCAL_ACTIVITY_FILTER_BUTTON.selector,
         ).click()
-        app().find_element(
-            Activity.SYNCED_ACTIVITY_FILTER_OPTION_SELECTOR.by, sync_filter
+        container = app().find_element(
+            Activity.LOCAL_ACTIVITY_TABLE.by, Activity.LOCAL_ACTIVITY_TABLE.selector
         )
+        # NOTE: clicking filter options does not work
+        container.find_element(
+            Activity.LOCAL_ACTIVITY_FILTER_OPTION_SELECTOR.by, sync_filter
+        ).click()
+        # FIXME: enable the check below once the filter options are clickable
+        # confirm filter is applied
+        # app().find_element(
+        #     Activity.FILTER_BUTTON_SELECTED_STATE.by,
+        #     Activity.FILTER_BUTTON_SELECTED_STATE.selector,
+        # )
 
     @staticmethod
     def get_synced_file_selector(resource):
         return {
             "column": Activity.get_synced_table_column_number_by_name("File"),
-            "container": Activity.SYNCED_ACTIVITY_TABLE,
+            "container": Activity.LOCAL_ACTIVITY_TABLE,
             "text": resource,
             "type": "QModelIndex",
         }
@@ -116,10 +130,34 @@ class Activity:
         )["section"]
 
     @staticmethod
-    def check_synced_table(resource, action, account):
-        app().find_element(By.NAME, resource)
-        app().find_element(By.NAME, action)
-        app().find_element(By.NAME, account)
+    def has_activity(resource, action, account):
+        try:
+            row = app().find_element(By.NAME, resource)
+            row_y = row.rect['y']
+            # check other properties using current row position
+            action_cells = app().find_elements(By.NAME, action)
+            found_action_cell = False
+            for action_el in action_cells:
+                if action_el.rect['y'] == row_y:
+                    found_action_cell = True
+                    break
+            if not found_action_cell:
+                raise NoSuchElementException(
+                    f'Activity for "{resource}" does not have "{action}" action'
+                )
+            account_cells = app().find_elements(By.NAME, account)
+            found_account_cell = False
+            for account_el in account_cells:
+                if account_el.rect['y'] == row_y:
+                    found_account_cell = True
+                    break
+            if not found_account_cell:
+                raise NoSuchElementException(
+                    f'Activity for "{resource}" does not have "{account}" account label'
+                )
+            return True
+        except:
+            return False
 
     @staticmethod
     def select_not_synced_filter(filter_option):
