@@ -7,10 +7,14 @@ from selenium.common.exceptions import NoSuchElementException
 from helpers.AppHelper import app
 from helpers.ConfigHelper import get_config
 from helpers.UserHelper import get_displayname_for_user
+from helpers.SyncHelper import wait_for
 
 
 class Toolbar:
     TOOLBAR_ROW = SimpleNamespace(by=None, selector=None)
+    NAVIGATION_BAR = SimpleNamespace(
+        by=By.XPATH, selector="//*[@name='Navigation bar']/.."
+    )
     ACCOUNT_BUTTON = SimpleNamespace(by=By.CLASS_NAME, selector="[page tab | {text}]")
     ADD_ACCOUNT_BUTTON = SimpleNamespace(
         by=By.CLASS_NAME, selector="[push button | Add Account]"
@@ -26,6 +30,19 @@ class Toolbar:
     )
 
     TOOLBAR_ITEMS = ["Add Account", "Activity", "Settings", "Quit"]
+
+    @staticmethod
+    def wait_toolbar_enabled():
+        toolbar = app().find_element(
+            Toolbar.NAVIGATION_BAR.by, Toolbar.NAVIGATION_BAR.selector
+        )
+        timeout = get_config('maxSyncTimeout') * 1000
+        enabled = wait_for(
+            lambda: toolbar.is_enabled(),
+            timeout,
+        )
+        if not enabled:
+            raise AssertionError(f"Toolbar is not enabled within {timeout} ms")
 
     @staticmethod
     def get_item_selector(item_name):
