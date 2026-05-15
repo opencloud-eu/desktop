@@ -75,10 +75,10 @@ SYNC_PATTERNS = {
             SYNC_STATUS['UPDATE'],
         ],
         # when syncing empty account (hidden files are ignored)
-        [SYNC_STATUS['UPDATE'], SYNC_STATUS['OK']],
-        [SYNC_STATUS['UPDATE'], SYNC_STATUS['OKAL']],
+        # [SYNC_STATUS['UPDATE'], SYNC_STATUS['OK']],
+        # [SYNC_STATUS['UPDATE'], SYNC_STATUS['OKAL']],
         # when syncing an account that has some files/folders
-        [SYNC_STATUS['SYNC'], SYNC_STATUS['OK']],
+        # [SYNC_STATUS['SYNC'], SYNC_STATUS['OK']],
         # initial root sync
         [
             SYNC_STATUS['OK'],
@@ -270,6 +270,9 @@ def wait_for_resource_to_sync(
         lambda: has_sync_pattern(patterns, resource),
         timeout - initial_timeout,
     )
+    # import time
+
+    # time.sleep(30)
     messages = read_and_update_socket_messages()
     messages = filter_messages_for_item(messages, resource)
     clear_socket_messages(resource)
