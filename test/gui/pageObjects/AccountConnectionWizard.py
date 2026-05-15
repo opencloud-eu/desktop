@@ -63,10 +63,13 @@ class AccountConnectionWizard:
 
     @staticmethod
     def accept_certificate():
-        app().find_element(
+        buttons = app().find_elements(
             AccountConnectionWizard.ACCEPT_CERTIFICATE_YES.by,
             AccountConnectionWizard.ACCEPT_CERTIFICATE_YES.selector,
-        ).click()
+        )
+        # click the last button
+        last_button = buttons.pop()
+        last_button.click()
 
     @staticmethod
     def add_user_credentials(username, password):

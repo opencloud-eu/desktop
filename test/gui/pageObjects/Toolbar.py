@@ -12,7 +12,9 @@ class Toolbar:
     TOOLBAR_ROW = SimpleNamespace(by=None, selector=None)
     ACCOUNT_BUTTON = SimpleNamespace(by=None, selector=None)
     ADD_ACCOUNT_BUTTON = SimpleNamespace(by=By.NAME, selector="Add Account")
-    ACTIVITY_BUTTON = SimpleNamespace(by=By.NAME, selector="Activity")
+    ACTIVITY_BUTTON = SimpleNamespace(
+        by=By.CLASS_NAME, selector="[page tab | Activity]"
+    )
     SETTINGS_BUTTON = SimpleNamespace(by=None, selector=None)
     QUIT_BUTTON = SimpleNamespace(by=By.NAME, selector="Quit")
     CONFIRM_QUIT_BUTTON = SimpleNamespace(
@@ -41,9 +43,16 @@ class Toolbar:
 
     @staticmethod
     def open_activity():
-        app().find_element(
+        tab = app().find_element(
             Toolbar.ACTIVITY_BUTTON.by, Toolbar.ACTIVITY_BUTTON.selector
-        ).click()
+        )
+        # ISSUE: https://github.com/opencloud-eu/desktop/pull/879
+        # Cannot select navigation tab by click event
+        # Select the navigation tab using keyboard events as a workaround
+        # TODO: Remove the workaround and uncomment 'click' action
+        # account_tab.click()
+        tab.send_keys(Keys.TAB)
+        tab.send_keys(Keys.ENTER)
 
     @staticmethod
     def open_new_account_setup():
