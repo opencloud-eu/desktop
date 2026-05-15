@@ -86,7 +86,7 @@ class Activity:
         try:
             app().find_element(Activity.SYNCED_ACTIVITY_STATUS.by, status)
             return True
-        except:
+        except NoSuchElementException:
             return False
 
     @staticmethod

@@ -66,15 +66,12 @@ class AccountSetting:
 
     @staticmethod
     def get_account_connection_label():
-        label = (
-            app()
-            .find_element(
-                AccountSetting.ACCOUNT_CONNECTION_LABEL.by,
-                AccountSetting.ACCOUNT_CONNECTION_LABEL.selector,
-            )
-            .text
+        labels = app().find_elements(
+            AccountSetting.ACCOUNT_CONNECTION_LABEL.by,
+            AccountSetting.ACCOUNT_CONNECTION_LABEL.selector,
         )
-        return label
+        # first label is the sync status label
+        return labels[0].text
 
     @staticmethod
     def is_connecting():
