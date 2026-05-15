@@ -18,6 +18,7 @@ from helpers.SetupClientHelper import (
     get_resource_path,
 )
 from helpers.FilesHelper import convert_path_separators_for_os
+from helpers.TableParser import table_hashes
 
 
 @Given('the user has paused the file sync')
@@ -264,11 +265,36 @@ def step(context, account):
 
 @Then('the following activities should be displayed in synced table')
 def step(context):
-    for row in context.table:
-        resource = row[0]
-        action = row[1]
-        account = substitute_inline_codes(row[2])
-        Activity.check_synced_table(resource, action, account)
+    activities = table_hashes(context.table)
+    for activity in activities:
+        activity["account"] = substitute_inline_codes(activity["account"])
+        has_activity = Activity.has_activity(
+            activity["resource"], activity["action"], activity["account"]
+        )
+        with ensure(
+            'Activity should exist: {0} | {1} | {2}',
+            activity["resource"],
+            activity["action"],
+            activity["account"],
+        ):
+            has_activity.should.be.true
+
+
+@Then('the following activities should not be displayed in synced table')
+def step(context):
+    activities = table_hashes(context.table)
+    for activity in activities:
+        activity["account"] = substitute_inline_codes(activity["account"])
+        has_activity = Activity.has_activity(
+            activity["resource"], activity["action"], activity["account"]
+        )
+        with ensure(
+            'Activity should not exist: {0} | {1} | {2}',
+            activity["resource"],
+            activity["action"],
+            activity["account"],
+        ):
+            has_activity.should.be.false
 
 
 @Then(
