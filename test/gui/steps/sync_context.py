@@ -45,6 +45,7 @@ def step(context):
 def step(context, resource_type, resource):
     resource = get_resource_path(resource)
     wait_for_resource_to_sync(convert_path_separators_for_os(resource), resource_type)
+    Toolbar.wait_toolbar_enabled()
 
 
 @When(r'the user waits for (file|folder) "([^"]*)" to have sync error', regexp=True)
