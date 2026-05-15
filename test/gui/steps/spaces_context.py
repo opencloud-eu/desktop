@@ -1,6 +1,7 @@
 from sure import ensure
 
 from pageObjects.EnterPassword import EnterPassword
+from pageObjects.Toolbar import Toolbar
 from helpers.UserHelper import get_password_for_user
 from helpers.SetupClientHelper import setup_client, get_resource_path
 from helpers.SyncHelper import wait_for_initial_sync_to_complete
@@ -49,6 +50,7 @@ def step(context, user, space_name):
     enter_password.login_after_setup(user, password)
     # wait for files to sync
     wait_for_initial_sync_to_complete(get_resource_path('/', user, space_name))
+    Toolbar.wait_toolbar_enabled()
 
 
 @Then(
