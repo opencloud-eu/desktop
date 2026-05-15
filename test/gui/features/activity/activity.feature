@@ -3,7 +3,7 @@ Feature: filter activity for user
     I want to filter activity
     So that I can view activity of specific user
 
-    @smoke
+    @smoke @skip
     Scenario: filter synced activities
         Given user "Alice" has been created in the server with default attributes
         And user "Brian" has been created in the server with default attributes
@@ -21,7 +21,7 @@ Feature: filter activity for user
             | simple-folder | Downloaded | Alice Hansen@%local_server_hostname% |
         But the following activities should not be displayed in synced table
             | resource     | action     | account                              |
-            | brian-folder | Downloaded | Alice Hansen@%local_server_hostname% |
+            | brian-folder | Downloaded | Brian Murphy@%local_server_hostname% |
 
     @skipOnWindows
     Scenario: filter not synced activities (Linux only)

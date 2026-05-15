@@ -2,6 +2,7 @@ from types import SimpleNamespace
 from urllib.parse import urlparse
 from appium.webdriver.common.appiumby import AppiumBy as By
 from selenium.webdriver.common.keys import Keys
+from selenium.common.exceptions import NoSuchElementException
 
 from helpers.AppHelper import app
 from helpers.ConfigHelper import get_config
@@ -10,16 +11,18 @@ from helpers.UserHelper import get_displayname_for_user
 
 class Toolbar:
     TOOLBAR_ROW = SimpleNamespace(by=None, selector=None)
-    ACCOUNT_BUTTON = SimpleNamespace(by=None, selector=None)
-    ADD_ACCOUNT_BUTTON = SimpleNamespace(by=By.NAME, selector="Add Account")
+    ACCOUNT_BUTTON = SimpleNamespace(by=By.CLASS_NAME, selector="[page tab | {text}]")
+    ADD_ACCOUNT_BUTTON = SimpleNamespace(
+        by=By.CLASS_NAME, selector="[push button | Add Account]"
+    )
     ACTIVITY_BUTTON = SimpleNamespace(
         by=By.CLASS_NAME, selector="[page tab | Activity]"
     )
     SETTINGS_BUTTON = SimpleNamespace(by=None, selector=None)
-    QUIT_BUTTON = SimpleNamespace(by=By.NAME, selector="Quit")
+    QUIT_BUTTON = SimpleNamespace(by=By.CLASS_NAME, selector="[push button | Quit]")
     CONFIRM_QUIT_BUTTON = SimpleNamespace(
-        by=By.ACCESSIBILITY_ID,
-        selector="QApplication.QMessageBox.qt_msgbox_buttonbox.QPushButton",
+        by=By.NAME,
+        selector="Yes",
     )
 
     TOOLBAR_ITEMS = ["Add Account", "Activity", "Settings", "Quit"]
@@ -50,9 +53,11 @@ class Toolbar:
         # Cannot select navigation tab by click event
         # Select the navigation tab using keyboard events as a workaround
         # TODO: Remove the workaround and uncomment 'click' action
-        # account_tab.click()
+        tab.click()
         tab.send_keys(Keys.TAB)
         tab.send_keys(Keys.ENTER)
+        if tab.get_attribute("checked") != "true":
+            raise AssertionError("Activity tab is not active")
 
     @staticmethod
     def open_new_account_setup():
@@ -68,12 +73,12 @@ class Toolbar:
         # Cannot activate account tab by click event
         # Select the account tab using keyboard events as a workaround
         # TODO: Remove the workaround and uncomment 'click' action
-        # account_tab.click()
+        account_tab.click()
         account_tab.send_keys(Keys.TAB)
         account_tab.send_keys(Keys.ENTER)
         # confirm account is active
         if account_tab.get_attribute("checked") != "true":
-            raise ValueError(f"Account is not active: {username}")
+            raise AssertionError(f"Account is not active: {username}")
 
     @staticmethod
     def get_displayed_account_text(displayname, host):
@@ -125,8 +130,11 @@ class Toolbar:
         account_label = f"{display_name}@{server_host}"
         account = None
         try:
-            account = app().find_element(By.NAME, account_label)
-        except:
+            account = app().find_element(
+                Toolbar.ACCOUNT_BUTTON.by,
+                Toolbar.ACCOUNT_BUTTON.selector.format(text=account_label),
+            )
+        except NoSuchElementException:
             pass
         return account
 
