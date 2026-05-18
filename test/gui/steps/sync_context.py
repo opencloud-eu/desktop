@@ -18,7 +18,7 @@ from helpers.SetupClientHelper import (
     get_resource_path,
 )
 from helpers.FilesHelper import convert_path_separators_for_os
-from helpers.TableParser import table_hashes
+from helpers.TableParser import table_hashes, table_raw
 
 
 @Given('the user has paused the file sync')
@@ -112,8 +112,11 @@ def step(context, tab_name):
 
 @Then('the toolbar should have the following tabs:')
 def step(context):
-    for tab_name in context.table:
-        Toolbar.has_item(tab_name[0])
+    tabs = table_raw(context.table)
+    for tab_name in tabs:
+        tab_name = tab_name[0]
+        with ensure('Tab not found: {0}', tab_name):
+            Toolbar.has_tab(tab_name).should.be.true
 
 
 @When('the user selects the following folders to sync:')
