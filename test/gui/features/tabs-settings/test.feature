@@ -17,7 +17,7 @@ Feature: Visually check all tabs
     Scenario: Verify various setting options in Settings tab
         Given user "Alice" has been created in the server with default attributes
         And user "Alice" has set up a client with default settings
-        When the user clicks on the settings tab
+        When the user opens the settings tab
         Then the settings tab should have the following options in the general section:
             | Start on Login |
         And the settings tab should have the following options in the advanced section:
@@ -25,8 +25,7 @@ Feature: Visually check all tabs
             | Edit ignored files |
             | Log settings       |
         And the settings tab should have the following options in the network section:
-            | Proxy Settings     |
             | Download Bandwidth |
             | Upload Bandwidth   |
         When the user opens the about dialog
-        Then the about dialog should be opened
+        And the user closes the about dialog

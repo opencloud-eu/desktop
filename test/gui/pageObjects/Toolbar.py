@@ -106,7 +106,15 @@ class Toolbar:
 
     @staticmethod
     def open_settings_tab():
-        squish.mouseClick(squish.waitForObject(Toolbar.SETTINGS_TAB))
+        tab = app().find_element(Toolbar.SETTINGS_TAB.by, Toolbar.SETTINGS_TAB.selector)
+        # ISSUE: https://github.com/opencloud-eu/desktop/pull/879
+        # Cannot select navigation tab by click event
+        # Select the navigation tab using keyboard events as a workaround
+        # TODO: Remove the workaround and uncomment 'click' action
+        # tab.click()
+        tab.native_click()
+        if tab.get_attribute("checked") != "true":
+            raise AssertionError("Settings tab is not active")
 
     @staticmethod
     def quit_opencloud():
