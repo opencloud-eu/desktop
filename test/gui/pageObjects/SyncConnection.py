@@ -1,6 +1,6 @@
 from types import SimpleNamespace
 from appium.webdriver.common.appiumby import AppiumBy as By
-from selenium.webdriver.common.keys import Keys
+from selenium.common.exceptions import NoSuchElementException
 
 from helpers.ConfigHelper import get_config
 from helpers.AppHelper import app
@@ -93,7 +93,7 @@ class SyncConnection:
                 ),
             )
             return True
-        except:
+        except NoSuchElementException:
             return False
 
     @staticmethod

@@ -2,25 +2,47 @@ from types import SimpleNamespace
 from urllib.parse import urlparse
 from appium.webdriver.common.appiumby import AppiumBy as By
 from selenium.webdriver.common.keys import Keys
+from selenium.common.exceptions import NoSuchElementException
 
-from helpers.AppHelper import app
+from helpers.AppHelper import app, get_window_location
 from helpers.ConfigHelper import get_config
 from helpers.UserHelper import get_displayname_for_user
+from helpers.SyncHelper import wait_for
 
 
 class Toolbar:
     TOOLBAR_ROW = SimpleNamespace(by=None, selector=None)
-    ACCOUNT_BUTTON = SimpleNamespace(by=None, selector=None)
-    ADD_ACCOUNT_BUTTON = SimpleNamespace(by=By.NAME, selector="Add Account")
-    ACTIVITY_BUTTON = SimpleNamespace(by=By.NAME, selector="Activity")
+    NAVIGATION_BAR = SimpleNamespace(
+        by=By.XPATH, selector="//*[@name='Navigation bar']/.."
+    )
+    ACCOUNT_BUTTON = SimpleNamespace(by=By.CLASS_NAME, selector="[page tab | {text}]")
+    ADD_ACCOUNT_BUTTON = SimpleNamespace(
+        by=By.CLASS_NAME, selector="[push button | Add Account]"
+    )
+    ACTIVITY_BUTTON = SimpleNamespace(
+        by=By.CLASS_NAME, selector="[page tab | Activity]"
+    )
     SETTINGS_BUTTON = SimpleNamespace(by=None, selector=None)
-    QUIT_BUTTON = SimpleNamespace(by=By.NAME, selector="Quit")
+    QUIT_BUTTON = SimpleNamespace(by=By.CLASS_NAME, selector="[push button | Quit]")
     CONFIRM_QUIT_BUTTON = SimpleNamespace(
-        by=By.ACCESSIBILITY_ID,
-        selector="QApplication.QMessageBox.qt_msgbox_buttonbox.QPushButton",
+        by=By.NAME,
+        selector="Yes",
     )
 
     TOOLBAR_ITEMS = ["Add Account", "Activity", "Settings", "Quit"]
+
+    @staticmethod
+    def wait_toolbar_enabled():
+        toolbar = app().find_element(
+            Toolbar.NAVIGATION_BAR.by, Toolbar.NAVIGATION_BAR.selector
+        )
+        timeout = get_config('maxSyncTimeout') * 1000
+        enabled = wait_for(
+            lambda: toolbar.is_enabled(),
+            timeout,
+        )
+        if not enabled:
+            raise AssertionError(f"Toolbar is not enabled within {timeout} ms")
 
     @staticmethod
     def get_item_selector(item_name):
@@ -41,9 +63,17 @@ class Toolbar:
 
     @staticmethod
     def open_activity():
-        app().find_element(
+        tab = app().find_element(
             Toolbar.ACTIVITY_BUTTON.by, Toolbar.ACTIVITY_BUTTON.selector
-        ).click()
+        )
+        # ISSUE: https://github.com/opencloud-eu/desktop/pull/879
+        # Cannot select navigation tab by click event
+        # Select the navigation tab using keyboard events as a workaround
+        # TODO: Remove the workaround and uncomment 'click' action
+        # tab.click()
+        tab.native_click()
+        if tab.get_attribute("checked") != "true":
+            raise AssertionError("Activity tab is not active")
 
     @staticmethod
     def open_new_account_setup():
@@ -60,8 +90,10 @@ class Toolbar:
         # Select the account tab using keyboard events as a workaround
         # TODO: Remove the workaround and uncomment 'click' action
         # account_tab.click()
-        account_tab.send_keys(Keys.TAB)
-        account_tab.send_keys(Keys.ENTER)
+        account_tab.native_click()
+        # confirm account is active
+        if account_tab.get_attribute("checked") != "true":
+            raise AssertionError(f"Account is not active: {username}")
 
     @staticmethod
     def get_displayed_account_text(displayname, host):
@@ -113,8 +145,11 @@ class Toolbar:
         account_label = f"{display_name}@{server_host}"
         account = None
         try:
-            account = app().find_element(By.NAME, account_label)
-        except:
+            account = app().find_element(
+                Toolbar.ACCOUNT_BUTTON.by,
+                Toolbar.ACCOUNT_BUTTON.selector.format(text=account_label),
+            )
+        except NoSuchElementException:
             pass
         return account
 

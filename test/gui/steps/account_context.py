@@ -63,6 +63,7 @@ def step(context, username):
 
     # wait for files to sync
     wait_for_initial_sync_to_complete(get_resource_path('/', username))
+    Toolbar.wait_toolbar_enabled()
 
 
 @Given('the user has set up the following accounts with default settings:')
@@ -86,6 +87,7 @@ def step(context):
         enter_password.login_after_setup(username, password)
         # wait for files to sync
         wait_for_initial_sync_to_complete(sync_paths[username])
+    Toolbar.wait_toolbar_enabled()
 
 
 @When('the user starts the client')
@@ -105,6 +107,7 @@ def step(context):
     AccountConnectionWizard.add_account(account_details)
     # # wait for files to sync
     wait_for_initial_sync_to_complete(get_resource_path('/', account_details['user']))
+    Toolbar.wait_toolbar_enabled()
 
 
 @Given('the user has entered the following account information:')
@@ -143,6 +146,7 @@ def step(context, username):
 
     # wait for files to sync
     wait_for_initial_sync_to_complete(get_resource_path('/', username))
+    Toolbar.wait_toolbar_enabled()
 
 
 @When('user "|any|" opens login dialog')

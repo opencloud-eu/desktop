@@ -5,6 +5,7 @@ import urllib.request
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException
 
+from pageObjects.SyncConnection import SyncConnection
 from helpers.ConfigHelper import get_config, is_linux, is_windows
 from helpers.FilesHelper import sanitize_path
 
@@ -74,36 +75,51 @@ SYNC_PATTERNS = {
             SYNC_STATUS['UPDATE'],
         ],
         # when syncing empty account (hidden files are ignored)
-        [SYNC_STATUS['UPDATE'], SYNC_STATUS['OK']],
-        [SYNC_STATUS['UPDATE'], SYNC_STATUS['OKAL']],
+        # [SYNC_STATUS['UPDATE'], SYNC_STATUS['OK']],
+        # [SYNC_STATUS['UPDATE'], SYNC_STATUS['OKAL']],
         # when syncing an account that has some files/folders
-        [SYNC_STATUS['SYNC'], SYNC_STATUS['OK']],
+        # [SYNC_STATUS['SYNC'], SYNC_STATUS['OK']],
+        # initial root sync
+        [
+            SYNC_STATUS['OK'],
+            SYNC_STATUS['OK'],
+            SYNC_STATUS['UPDATE'],
+        ],
     ],
     'root_synced': [
         [
-            SYNC_STATUS['SYNC'],
-            SYNC_STATUS['OK'],
-            SYNC_STATUS['OK'],
-            SYNC_STATUS['OK'],
-            SYNC_STATUS['UPDATE'],
-        ],
-        [
-            SYNC_STATUS['SYNC'],
-            SYNC_STATUS['UPDATE'],
-            SYNC_STATUS['OK'],
             SYNC_STATUS['OK'],
             SYNC_STATUS['OK'],
             SYNC_STATUS['UPDATE'],
         ],
-        # used for local resource creation and deletion
-        [
-            SYNC_STATUS['OKAL'],
-            SYNC_STATUS['OK'],
-            SYNC_STATUS['OK'],
-            SYNC_STATUS['UPDATE'],
-        ],
+        # [
+        #     SYNC_STATUS['SYNC'],
+        #     SYNC_STATUS['OK'],
+        #     SYNC_STATUS['OK'],
+        #     SYNC_STATUS['OK'],
+        #     SYNC_STATUS['UPDATE'],
+        # ],
+        # [
+        #     SYNC_STATUS['SYNC'],
+        #     SYNC_STATUS['UPDATE'],
+        #     SYNC_STATUS['OK'],
+        #     SYNC_STATUS['OK'],
+        #     SYNC_STATUS['OK'],
+        #     SYNC_STATUS['UPDATE'],
+        # ],
+        # # used for local resource creation and deletion
+        # [
+        #     SYNC_STATUS['OKAL'],
+        #     SYNC_STATUS['OK'],
+        #     SYNC_STATUS['OK'],
+        #     SYNC_STATUS['UPDATE'],
+        # ],
     ],
-    'single_synced': [SYNC_STATUS['SYNC'], SYNC_STATUS['OK']],
+    'single_synced': [
+        [SYNC_STATUS['SYNC'], SYNC_STATUS['OK']],
+        # file/folder deletion
+        [SYNC_STATUS['SYNC'], SYNC_STATUS['NOP']],
+    ],
     'error': [SYNC_STATUS['ERROR']],
 }
 
@@ -226,20 +242,45 @@ def get_current_sync_status(resource, resource_type):
     return messages[-1]
 
 
-def wait_for_resource_to_sync(resource, resource_type='FOLDER', patterns=None):
+def wait_for_resource_to_sync(
+    resource, resource_type='FOLDER', patterns=None, force_sync=False
+):
     listen_sync_status_for_item(resource, resource_type)
 
+    initial_timeout = 0
     timeout = get_config('maxSyncTimeout') * 1000
 
     if patterns is None:
         patterns = get_synced_pattern(resource)
 
+    if force_sync:
+        initial_timeout = 5000
+        # first try with 5 seconds timeout
+        synced = wait_for(
+            lambda: has_sync_pattern(patterns, resource),
+            initial_timeout,
+        )
+        if not synced:
+            # trigger force sync if the current status is OK
+            status = get_current_sync_status(resource, resource_type)
+            if status.startswith(SYNC_STATUS['OK']):
+                print('[WARN] Retrying sync pattern check with force sync')
+                SyncConnection.force_sync()
+        else:
+            clear_socket_messages(resource)
+            return
+
     synced = wait_for(
         lambda: has_sync_pattern(patterns, resource),
-        timeout,
+        timeout - initial_timeout,
     )
+
+    messages = read_and_update_socket_messages()
+    messages = filter_messages_for_item(messages, resource)
     clear_socket_messages(resource)
-    if not synced:
+    if synced:
+        return
+    elif not force_sync:
         # if the sync pattern doesn't match then check the last sync status
         # and pass the step if the last sync status is STATUS:OK
         status = get_current_sync_status(resource, resource_type)
@@ -251,11 +292,11 @@ def wait_for_resource_to_sync(resource, resource_type='FOLDER', patterns=None):
                 + '. So passing the step.'
             )
             return
-        raise TimeoutError(
-            'Timeout while waiting for sync to complete for '
-            + str(timeout)
-            + ' milliseconds'
-        )
+    raise TimeoutError(
+        'Timeout while waiting for sync to complete for '
+        + str(timeout)
+        + ' milliseconds'
+    )
 
 
 def wait_for_initial_sync_to_complete(path):
@@ -263,6 +304,7 @@ def wait_for_initial_sync_to_complete(path):
         path,
         'FOLDER',
         get_initial_sync_patterns(),
+        True,
     )
 
 
@@ -281,6 +323,7 @@ def has_sync_pattern(patterns, resource=None):
             if len(actual_pattern) < pattern_len:
                 break
             if pattern_len == len(actual_pattern) and pattern == actual_pattern:
+                print("MATCHED SYNC PATTERN:", pattern)
                 return True
     # 100 milliseconds polling interval
     time.sleep(0.1)

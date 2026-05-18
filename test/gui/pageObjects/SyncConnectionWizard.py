@@ -71,7 +71,10 @@ class SyncConnectionWizard:
 
     @staticmethod
     def deselect_all_remote_folders():
-        element = app().find_element(By.NAME, "Add Space")
+        element = app().find_element(
+            SyncConnectionWizard.ADD_SYNC_CONNECTION_BUTTON.by,
+            SyncConnectionWizard.ADD_SYNC_CONNECTION_BUTTON.selector,
+        )
         element.send_keys(Keys.ARROW_DOWN)
         element.native_send_keys(Keys.SPACE)  # uncheck the root folder
 
@@ -214,6 +217,14 @@ class SyncConnectionWizard:
                     if p_element.get_attribute("checked") == 'true':
                         parent_element = p_element
                 parent_element.native_double_click()  # expand the folder
+                # retry once if the folder is not expanded
+                if parent_element.is_selected():
+                    print('[WARN] Folder was not expanded, retrying with space key')
+                    # expand using space key
+                    parent_element.native_click()
+                    parent_element.native_send_keys(Keys.SPACE)
+                if parent_element.is_selected():
+                    raise AssertionError(f'Failed to expand folder: {parent}')
 
             folder_element = app().find_element(By.NAME, target_folder)
             is_checked = folder_element.get_attribute("checked")
