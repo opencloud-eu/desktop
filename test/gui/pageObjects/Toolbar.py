@@ -1,10 +1,9 @@
 from types import SimpleNamespace
 from urllib.parse import urlparse
 from appium.webdriver.common.appiumby import AppiumBy as By
-from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
 
-from helpers.AppHelper import app, get_window_location
+from helpers.AppHelper import app
 from helpers.ConfigHelper import get_config
 from helpers.UserHelper import get_displayname_for_user
 from helpers.SyncHelper import wait_for

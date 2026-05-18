@@ -1,6 +1,7 @@
 # from objectmaphelper import RegularExpression
 from types import SimpleNamespace
 from appium.webdriver.common.appiumby import AppiumBy as By
+from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
 
 from helpers.FilesHelper import build_conflicted_regex
@@ -91,23 +92,23 @@ class Activity:
 
     @staticmethod
     def select_synced_filter(sync_filter):
-        app().find_element(
+        menu = app().find_element(
             Activity.LOCAL_ACTIVITY_FILTER_BUTTON.by,
             Activity.LOCAL_ACTIVITY_FILTER_BUTTON.selector,
-        ).click()
-        container = app().find_element(
-            Activity.LOCAL_ACTIVITY_TABLE.by, Activity.LOCAL_ACTIVITY_TABLE.selector
         )
-        # NOTE: clicking filter options does not work
-        container.find_element(
-            Activity.LOCAL_ACTIVITY_FILTER_OPTION_SELECTOR.by, sync_filter
-        ).click()
-        # FIXME: enable the check below once the filter options are clickable
+        menu.click()
+
+        # NOTE: Filter options are not visible in the accessibility tree.
+        # As a workaround, select the second filter option (which is an account filter).
+        # This means we cannot select a specific account filter for now.
+        menu.send_keys(Keys.ARROW_DOWN)
+        menu.send_keys(Keys.ARROW_DOWN)
+        menu.send_keys(Keys.ENTER)
         # confirm filter is applied
-        # app().find_element(
-        #     Activity.FILTER_BUTTON_SELECTED_STATE.by,
-        #     Activity.FILTER_BUTTON_SELECTED_STATE.selector,
-        # )
+        app().find_element(
+            Activity.FILTER_BUTTON_SELECTED_STATE.by,
+            Activity.FILTER_BUTTON_SELECTED_STATE.selector,
+        )
 
     @staticmethod
     def get_synced_file_selector(resource):
