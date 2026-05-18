@@ -4,7 +4,7 @@ from appium.webdriver.common.appiumby import AppiumBy as By
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
 
-from helpers.AppHelper import app
+from helpers.AppHelper import app, get_window_location
 from helpers.ConfigHelper import get_config
 from helpers.UserHelper import get_displayname_for_user
 from helpers.SyncHelper import wait_for
@@ -70,9 +70,8 @@ class Toolbar:
         # Cannot select navigation tab by click event
         # Select the navigation tab using keyboard events as a workaround
         # TODO: Remove the workaround and uncomment 'click' action
-        tab.click()
-        tab.send_keys(Keys.TAB)
-        tab.send_keys(Keys.ENTER)
+        # tab.click()
+        tab.native_click()
         if tab.get_attribute("checked") != "true":
             raise AssertionError("Activity tab is not active")
 
@@ -90,9 +89,8 @@ class Toolbar:
         # Cannot activate account tab by click event
         # Select the account tab using keyboard events as a workaround
         # TODO: Remove the workaround and uncomment 'click' action
-        account_tab.click()
-        account_tab.send_keys(Keys.TAB)
-        account_tab.send_keys(Keys.ENTER)
+        # account_tab.click()
+        account_tab.native_click()
         # confirm account is active
         if account_tab.get_attribute("checked") != "true":
             raise AssertionError(f"Account is not active: {username}")

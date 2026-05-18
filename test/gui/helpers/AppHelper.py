@@ -3,6 +3,7 @@ import psutil
 import threading
 from appium.webdriver import Remote, WebElement
 from appium.options.common.base import AppiumOptions
+from appium.webdriver.common.appiumby import AppiumBy as By
 from selenium.common.exceptions import WebDriverException, NoSuchElementException
 
 from helpers.ConfigHelper import get_config, get_app_env
@@ -12,6 +13,11 @@ from helpers.keys.keys_map import get_key
 
 def native_click(self, **kwargs):
     x, y = get_element_center_xy(self)
+    win_x, win_y = get_window_location()
+    if x < win_x:
+        x = x + win_x
+    if y < win_y:
+        y = y + win_y
     pyautogui.click(x, y, **kwargs)
 
 
@@ -97,3 +103,12 @@ def close_and_kill_app():
 
     # Reset driver for reuse
     app_driver = None
+
+
+def get_window_location():
+    window = (
+        app()
+        .find_element(By.XPATH, "//*[contains(@name,'OpenCloud Desktop')]")
+        .location
+    )
+    return window['x'], window['y']
