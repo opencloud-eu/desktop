@@ -115,7 +115,11 @@ SYNC_PATTERNS = {
         #     SYNC_STATUS['UPDATE'],
         # ],
     ],
-    'single_synced': [SYNC_STATUS['SYNC'], SYNC_STATUS['OK']],
+    'single_synced': [
+        [SYNC_STATUS['SYNC'], SYNC_STATUS['OK']],
+        # file/folder deletion
+        [SYNC_STATUS['SYNC'], SYNC_STATUS['NOP']],
+    ],
     'error': [SYNC_STATUS['ERROR']],
 }
 
