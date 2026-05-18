@@ -5,6 +5,7 @@ import pyautogui
 from behave.model_core import Status
 from datetime import datetime
 
+from helpers import ScreenRecorder
 from helpers.ConfigHelper import init_config
 from helpers.api.provisioning import delete_created_users
 from helpers.SpaceHelper import delete_project_spaces
@@ -43,6 +44,11 @@ def before_feature(context, feature):
     init_config()
 
 
+def before_scenario(context, scenario):
+    if os.getenv("CI"):
+        ScreenRecorder.start_recording(scenario)
+
+
 def after_step(context, step):
     if step.status in [Status.failed, Status.error] and os.getenv("CI"):
         scenario = context.scenario.name.lower()
@@ -56,6 +62,11 @@ def after_step(context, step):
 
 
 def after_scenario(context, scenario):
+
+    # stop screen recording
+    if os.getenv("CI"):
+        ScreenRecorder.stop_recording(passed=scenario.status == Status.passed)
+
     # clean up sync dir
     if os.path.exists(get_config("clientRootSyncPath")):
         for entry in os.scandir(get_config("clientRootSyncPath")):
