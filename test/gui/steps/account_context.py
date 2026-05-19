@@ -8,7 +8,6 @@ from pageObjects.SyncConnectionWizard import SyncConnectionWizard
 from pageObjects.AccountSetting import AccountSetting
 from pageObjects.Toolbar import Toolbar
 from pageObjects.EnterPassword import EnterPassword
-from pageObjects.AccountSetting import AccountSetting
 from helpers.SetupClientHelper import (
     start_client,
     setup_client,
@@ -24,6 +23,7 @@ from helpers.SyncHelper import (
 from helpers.UserHelper import get_displayname_for_user, get_password_for_user
 from helpers.ConfigHelper import get_config
 from helpers.TableParser import table_rows_hash
+from helpers.AppHelper import close_and_kill_app
 
 
 @Given('the user has started the client')
@@ -244,6 +244,7 @@ def step(context):
 @When('the user quits the client')
 def step(context):
     Toolbar.quit_opencloud()
+    close_and_kill_app()
 
 
 @Then('"{username}" account should be opened')
