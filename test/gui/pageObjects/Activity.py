@@ -18,7 +18,9 @@ class Activity:
     LOCAL_ACTIVITY_FILTER_BUTTON = SimpleNamespace(by=By.NAME, selector="Filter")
     LOCAL_ACTIVITY_FILTER_OPTION_SELECTOR = SimpleNamespace(by=By.NAME, selector=None)
     LOCAL_ACTIVITY_TABLE = SimpleNamespace(by=By.NAME, selector="Local activity table")
-    FILTER_BUTTON_SELECTED_STATE = SimpleNamespace(by=By.NAME, selector="1 Filter")
+    FILTER_BUTTON_SELECTED_STATE = SimpleNamespace(
+        by=By.XPATH, selector="//*[contains(@name, '1 Filter')]"
+    )
     NOT_SYNCED_FILTER_BUTTON = SimpleNamespace(by=None, selector=None)
     NOT_SYNCED_FILTER_OPTION_SELECTOR = SimpleNamespace(by=None, selector=None)
     SYNCED_ACTIVITY_TABLE_HEADER_SELECTOR = SimpleNamespace(by=None, selector=None)
