@@ -11,20 +11,27 @@ variables:
     PUBLIC_BUCKET: public
 
 when:
-  - event: [push, manual]
+  - event:
+      - push
+      - manual
     branch: ${CI_REPO_DEFAULT_BRANCH}
+    status:
+      - success
+      - failure
   - event: pull_request
     evaluate: |
       !(CI_COMMIT_SOURCE_BRANCH matches "next-release/(main|stable-*)" && CI_COMMIT_AUTHOR == "openclouders")
+    status:
+      - success
+      - failure
   - event: cron
     cron: nightly*
+    status:
+      - success
+      - failure
 
 depends_on:
   - ui-tests
-
-runs_on:
-  - success
-  - failure
 
 skip_clone: true
 
@@ -37,7 +44,7 @@ matrix:
       PURGE_PATH: desktop/python-cache/
       TTL: 14d
     - JOB_NAME: purge-browsers-cache
-      PURGE_PATH: web/browsers-cache/
+      PURGE_PATH: desktop/browsers-cache/
       TTL: 14d
     - JOB_NAME: purge-logs
       PURGE_PATH: desktop/testlogs/

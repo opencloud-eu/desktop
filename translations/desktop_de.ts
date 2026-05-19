@@ -2638,7 +2638,7 @@ Beachten Sie, dass Kommandozeilenoptionen bezüglich der Protokollierung diese E
     <message>
         <location filename="../src/gui/systray.cpp" line="154"/>
         <source>Synchronization paused</source>
-        <translation>Sychronisierung pausiert</translation>
+        <translation>Synchronisierung pausiert</translation>
     </message>
     <message>
         <location filename="../src/gui/systray.cpp" line="188"/>
