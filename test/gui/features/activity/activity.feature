@@ -13,7 +13,7 @@ Feature: filter activity for user
             | users |
             | Alice |
             | Brian |
-        When the user clicks on the activity tab
+        When the user opens the activity tab
         And the user selects "Local Activity" tab in the activity
         And the user checks the activities of account "Alice Hansen@%local_server_hostname%"
         Then the following activities should be displayed in synced table
@@ -32,7 +32,7 @@ Feature: filter activity for user
             | files             |
             | /.htaccess        |
             | /Folder1/a\\a.txt |
-        And the user clicks on the activity tab
+        And the user opens the activity tab
         And the user selects "Not Synced" tab in the activity
         Then the file "Folder1/a\\a.txt" should be blacklisted
         And the file ".htaccess" should be excluded
@@ -48,7 +48,7 @@ Feature: filter activity for user
         When user "Alice" creates the following files inside the sync folder:
             | files      |
             | /.htaccess |
-        And the user clicks on the activity tab
+        And the user opens the activity tab
         And the user selects "Not Synced" tab in the activity
         Then the file ".htaccess" should be excluded
         When the user unchecks the "Excluded" filter

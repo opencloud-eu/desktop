@@ -14,14 +14,12 @@ class Toolbar:
     NAVIGATION_BAR = SimpleNamespace(
         by=By.XPATH, selector="//*[@name='Navigation bar']/.."
     )
-    ACCOUNT_BUTTON = SimpleNamespace(by=By.CLASS_NAME, selector="[page tab | {text}]")
+    ACCOUNT_TAB = SimpleNamespace(by=By.CLASS_NAME, selector="[page tab | {text}]")
     ADD_ACCOUNT_BUTTON = SimpleNamespace(
         by=By.CLASS_NAME, selector="[push button | Add Account]"
     )
-    ACTIVITY_BUTTON = SimpleNamespace(
-        by=By.CLASS_NAME, selector="[page tab | Activity]"
-    )
-    SETTINGS_BUTTON = SimpleNamespace(by=None, selector=None)
+    ACTIVITY_TAB = SimpleNamespace(by=By.CLASS_NAME, selector="[page tab | Activity]")
+    SETTINGS_TAB = SimpleNamespace(by=By.CLASS_NAME, selector="[page tab | Settings]")
     QUIT_BUTTON = SimpleNamespace(by=By.CLASS_NAME, selector="[push button | Quit]")
     CONFIRM_QUIT_BUTTON = SimpleNamespace(
         by=By.NAME,
@@ -53,18 +51,22 @@ class Toolbar:
         }
 
     @staticmethod
-    def has_item(item_name, timeout=get_config("minSyncTimeout") * 1000):
-        try:
-            squish.waitForObject(Toolbar.get_item_selector(item_name), timeout)
-            return True
-        except:
-            return False
+    def has_tab(tab_name):
+        if tab_name.lower() == "add account":
+            tab = Toolbar.ADD_ACCOUNT_BUTTON
+        elif tab_name.lower() == "activity":
+            tab = Toolbar.ACTIVITY_TAB
+        elif tab_name.lower() == "settings":
+            tab = Toolbar.SETTINGS_TAB
+        elif tab_name.lower() == "quit":
+            tab = Toolbar.QUIT_BUTTON
+        else:
+            raise ValueError(f"Unknown tab: {tab_name}")
+        return app().find_element(tab.by, tab.selector).is_displayed()
 
     @staticmethod
     def open_activity():
-        tab = app().find_element(
-            Toolbar.ACTIVITY_BUTTON.by, Toolbar.ACTIVITY_BUTTON.selector
-        )
+        tab = app().find_element(Toolbar.ACTIVITY_TAB.by, Toolbar.ACTIVITY_TAB.selector)
         # ISSUE: https://github.com/opencloud-eu/desktop/pull/879
         # Cannot select navigation tab by click event
         # Select the navigation tab using keyboard events as a workaround
@@ -104,7 +106,15 @@ class Toolbar:
 
     @staticmethod
     def open_settings_tab():
-        squish.mouseClick(squish.waitForObject(Toolbar.SETTINGS_BUTTON))
+        tab = app().find_element(Toolbar.SETTINGS_TAB.by, Toolbar.SETTINGS_TAB.selector)
+        # ISSUE: https://github.com/opencloud-eu/desktop/pull/879
+        # Cannot select navigation tab by click event
+        # Select the navigation tab using keyboard events as a workaround
+        # TODO: Remove the workaround and uncomment 'click' action
+        # tab.click()
+        tab.native_click()
+        if tab.get_attribute("checked") != "true":
+            raise AssertionError("Settings tab is not active")
 
     @staticmethod
     def quit_opencloud():
@@ -127,7 +137,7 @@ class Toolbar:
                     "initials": str(obj.accountState.account.initials),
                     "current": obj.checked,
                 }
-                account_locator = Toolbar.ACCOUNT_BUTTON.copy()
+                account_locator = Toolbar.ACCOUNT_TAB.copy()
                 if account_idx > 1:
                     account_locator.update({"occurrence": account_idx})
                 account_locator.update({"text": account_info["hostname"]})
@@ -145,8 +155,8 @@ class Toolbar:
         account = None
         try:
             account = app().find_element(
-                Toolbar.ACCOUNT_BUTTON.by,
-                Toolbar.ACCOUNT_BUTTON.selector.format(text=account_label),
+                Toolbar.ACCOUNT_TAB.by,
+                Toolbar.ACCOUNT_TAB.selector.format(text=account_label),
             )
         except NoSuchElementException:
             pass
