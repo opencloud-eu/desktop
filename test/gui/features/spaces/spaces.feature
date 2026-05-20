@@ -77,7 +77,7 @@ Feature: Project spaces
             """
             simple-folder: Not allowed because you don't have permission to add subfolders to that folder
             """
-        When the user clicks on the activity tab
+        When the user opens the activity tab
         And the user selects "Not Synced" tab in the activity
         Then the following activities should be displayed in not synced table
             | resource      | status      | account                              |

@@ -14,7 +14,7 @@ Feature: Syncing files
             test content
             """
         And the user waits for file "lorem-for-upload.txt" to be synced
-        And the user clicks on the activity tab
+        And the user opens the activity tab
         And the user selects "Local Activity" tab in the activity
         Then the file "lorem-for-upload.txt" should have status "Uploaded" in the activity tab
         And as "Alice" the file "lorem-for-upload.txt" should have the content "test content" in the server
@@ -45,7 +45,7 @@ Feature: Syncing files
         And user "Alice" has uploaded file with content "changed server content" to "/conflict.txt" in the server
         And the user has waited for "5" seconds
         When the user resumes the file sync on the client
-        And the user clicks on the activity tab
+        And the user opens the activity tab
         And the user selects "Not Synced" tab in the activity
         Then the table of conflict warnings should include file "conflict.txt"
         And the file "conflict.txt" should exist on the file system with the following content
@@ -181,7 +181,7 @@ Feature: Syncing files
         And user "Alice" has set up a client with default settings
         When user "Alice" creates a folder "folder with space at end " inside the sync folder
         And the user force syncs the files
-        And the user clicks on the activity tab
+        And the user opens the activity tab
         And the user selects "Not Synced" tab in the activity
         Then the file "trailing-space.txt " should be ignored
         And the file "folder with space at end " should be ignored
@@ -274,7 +274,7 @@ Feature: Syncing files
             """
             test content
             """
-        And the user clicks on the activity tab
+        And the user opens the activity tab
         And the user selects "Not Synced" tab in the activity
         Then the file "Folder1/a\\a.txt" should exist on the file system
         And the file "Folder1/a\\a.txt" should be blacklisted
@@ -527,7 +527,7 @@ Feature: Syncing files
             """
         And as "Brian" folder "simple-folder/sub-folder" should not exist in the server
         And as "Brian" file "simple-folder/simple.pdf" should not exist in the server
-        When the user clicks on the activity tab
+        When the user opens the activity tab
         And the user selects "Not Synced" tab in the activity
         Then the following activities should be displayed in not synced table
             | resource                 | status      | account                              |
