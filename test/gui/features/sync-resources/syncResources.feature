@@ -220,7 +220,7 @@ Feature: Syncing files
             """
             test content
             """
-        And the user waits for folder "parent/subfolder5/test.txt" to be synced
+        And the user waits for file "parent/subfolder5/test.txt" to be synced
         Then as "Alice" folder "parent/subfolderEmpty1" should exist in the server
         And as "Alice" folder "parent/subfolderEmpty2" should exist in the server
         And as "Alice" folder "parent/subfolderEmpty3" should exist in the server
