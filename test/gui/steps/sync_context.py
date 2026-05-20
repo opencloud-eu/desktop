@@ -220,6 +220,12 @@ def step(context):
     Settings.open_about_dialog()
 
 
+@Then('the about dialog should be opened')
+def step(context):
+    with ensure('About dialog is not opened.'):
+        Settings.has_about_dialog().should.be.true
+
+
 @When('the user closes the about dialog')
 def step(context):
     Settings.close_about_dialog()

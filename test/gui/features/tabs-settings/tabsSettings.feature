@@ -28,4 +28,4 @@ Feature: Visually check all tabs
             | Download Bandwidth |
             | Upload Bandwidth   |
         When the user opens the about dialog
-        And the user closes the about dialog
+        Then the about dialog should be opened

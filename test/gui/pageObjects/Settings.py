@@ -8,6 +8,7 @@ class Settings:
     CHECKBOX_OPTION_ITEM = SimpleNamespace(by=None, selector=None)
     NETWORK_OPTION_ITEM = SimpleNamespace(by=None, selector=None)
     ABOUT_BUTTON = SimpleNamespace(by=By.NAME, selector="About")
+    ABOUT_DIALOG = SimpleNamespace(by=By.CLASS_NAME, selector="[page tab | About]")
     ABOUT_DIALOG_OK_BUTTON = SimpleNamespace(by=By.NAME, selector="OK")
     GENERAL_SETTING_START_ON_LOGIN = SimpleNamespace(
         by=By.XPATH, selector="//panel/*[@name='Start on Login']"
@@ -84,6 +85,14 @@ class Settings:
         app().find_element(
             Settings.ABOUT_BUTTON.by, Settings.ABOUT_BUTTON.selector
         ).click()
+
+    @staticmethod
+    def has_about_dialog():
+        return (
+            app()
+            .find_element(Settings.ABOUT_DIALOG.by, Settings.ABOUT_DIALOG.selector)
+            .is_displayed()
+        )
 
     @staticmethod
     def close_about_dialog():
