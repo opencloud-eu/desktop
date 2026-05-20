@@ -75,7 +75,9 @@ steps:
       - . ./.woodpecker.env
       - if $BROWSER_CACHE_FOUND; then exit 0; fi
       - cd test/gui/
+      - python3 -m venv .venv --system-site-packages
       - . .venv/bin/activate
+      - grep "^playwright" requirements.txt | pip install -r /dev/stdin
       - make install-chromium
       - tar -czf playwright-browsers.tar.gz .playwright
 
