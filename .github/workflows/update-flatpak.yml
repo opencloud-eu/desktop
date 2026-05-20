@@ -2,8 +2,10 @@ name: Update Flatpak
 
 on:
   push:
-    tags:
-      - 'v*'
+    branches:
+      - main
+    paths:
+      - VERSION.cmake
   workflow_dispatch:
 
 permissions:
@@ -19,20 +21,17 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Get latest release info
+      - name: Read version from VERSION.cmake
         id: release
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Get the latest release from GitHub API
-          RELEASE=$(gh api repos/opencloud-eu/desktop/releases/latest)
+          MAJOR=$(grep 'MIRALL_VERSION_MAJOR' VERSION.cmake | grep -oP '\d+')
+          MINOR=$(grep 'MIRALL_VERSION_MINOR' VERSION.cmake | grep -oP '\d+')
+          PATCH=$(grep 'MIRALL_VERSION_PATCH' VERSION.cmake | grep -oP '\d+')
 
-          TAG=$(echo "$RELEASE" | jq -r '.tag_name')
-          DATE=$(echo "$RELEASE" | jq -r '.published_at' | cut -dT -f1)
-          VERSION="${TAG#v}"
-
-          # Get the commit SHA for the tag
-          COMMIT=$(gh api "repos/opencloud-eu/desktop/commits/$TAG" --jq '.sha')
+          VERSION="${MAJOR}.${MINOR}.${PATCH}"
+          TAG="v${VERSION}"
+          DATE=$(date +%Y-%m-%d)
+          COMMIT="${{ github.sha }}"
 
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
@@ -72,40 +71,3 @@ jobs:
           git add ${{ env.FLATPAK_ID }}.metainfo.xml ${{ env.FLATPAK_ID }}.yml
           git commit -m "chore: update flatpak to ${{ steps.release.outputs.version }}"
           git push origin HEAD:main
-
-  publish:
-    name: "Update Flathub"
-    needs: update
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v6
-
-      - name: Get version from metainfo
-        id: version
-        run: |
-          VERSION=$(grep -oP '<release version="\K[^"]+' ${{ env.FLATPAK_ID }}.metainfo.xml)
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-
-      - name: Checkout Flathub repo
-        uses: actions/checkout@v6
-        with:
-          repository: flathub/${{ env.FLATPAK_ID }}
-          token: ${{ secrets.FLATHUB_TOKEN }}
-          path: flathub
-
-      - name: Copy updated files
-        run: |
-          cp ${{ env.FLATPAK_ID }}.metainfo.xml flathub/
-          cp ${{ env.FLATPAK_ID }}.yml flathub/
-
-      - name: Create Pull Request to Flathub
-        uses: peter-evans/create-pull-request@v7
-        with:
-          token: ${{ secrets.FLATHUB_TOKEN }}
-          path: flathub
-          title: "Update to ${{ steps.version.outputs.version }}"
-          body: |
-            Automated update to [v${{ steps.version.outputs.version }}](https://github.com/opencloud-eu/desktop/releases/tag/v${{ steps.version.outputs.version }}).
-          branch: update-${{ steps.version.outputs.version }}
-          commit-message: "Update to ${{ steps.version.outputs.version }}"
-          delete-branch: true
