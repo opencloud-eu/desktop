@@ -12,7 +12,7 @@
     <p>The OpenCloud desktop client keeps photos and documents always up to date, enabling you to work like you always did.
 Any file you add, modify or delete in the synced folders on your desktop or laptop will show up, change or disappear on the server and all other connected devices.</p>
   </description>
-  <icon type="stock">eu.opencloud.OpenCloudDesktop</icon>
+  <icon>eu.opencloud.OpenCloudDesktop</icon>
   <categories>
     <category>Network</category>
     <category>Utility</category>
