@@ -18,7 +18,7 @@ from helpers.SetupClientHelper import (
     get_resource_path,
 )
 from helpers.FilesHelper import convert_path_separators_for_os
-from helpers.TableParser import table_hashes
+from helpers.TableParser import table_hashes, table_raw
 
 
 @Given('the user has paused the file sync')
@@ -78,9 +78,14 @@ def step(context, item):
     )
 
 
-@When('the user clicks on the activity tab')
+@When('the user opens the activity tab')
 def step(context):
     Toolbar.open_activity()
+
+
+@When('the user opens the settings tab')
+def step(context):
+    Toolbar.open_settings_tab()
 
 
 @Then('the table of conflict warnings should include file "|any|"')
@@ -112,8 +117,11 @@ def step(context, tab_name):
 
 @Then('the toolbar should have the following tabs:')
 def step(context):
-    for tab_name in context.table:
-        Toolbar.has_item(tab_name[0])
+    tabs = table_raw(context.table)
+    for tab_name in tabs:
+        tab_name = tab_name[0]
+        with ensure('Tab not found: {0}', tab_name):
+            Toolbar.has_tab(tab_name).should.be.true
 
 
 @When('the user selects the following folders to sync:')
@@ -182,30 +190,45 @@ def step(context, space_name):
 
 @Then('the settings tab should have the following options in the general section:')
 def step(context):
-    for item in context.table:
-        Settings.check_general_option(item[0])
+    settings = table_raw(context.table)
+    for setting in settings:
+        setting = setting[0]
+        with ensure('General setting not found: {0}', setting):
+            Settings.has_general_setting(setting).should.be.true
 
 
 @Then('the settings tab should have the following options in the advanced section:')
 def step(context):
-    for item in context.table:
-        Settings.check_advanced_option(item[0])
+    settings = table_raw(context.table)
+    for setting in settings:
+        setting = setting[0]
+        with ensure('Advanced setting not found: {0}', setting):
+            Settings.has_advanced_setting(setting).should.be.true
 
 
 @Then('the settings tab should have the following options in the network section:')
 def step(context):
-    for item in context.table:
-        Settings.check_network_option(item[0])
+    settings = table_raw(context.table)
+    for setting in settings:
+        setting = setting[0]
+        with ensure('Network setting not found: {0}', setting):
+            Settings.has_network_setting(setting).should.be.true
 
 
 @When('the user opens the about dialog')
 def step(context):
-    Settings.open_about_button()
+    Settings.open_about_dialog()
 
 
 @Then('the about dialog should be opened')
 def step(context):
-    Settings.wait_for_about_dialog_to_be_visible()
+    with ensure('About dialog is not opened.'):
+        Settings.has_about_dialog().should.be.true
+
+
+@When('the user closes the about dialog')
+def step(context):
+    Settings.close_about_dialog()
 
 
 @When('the user adds the folder sync connection')

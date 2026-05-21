@@ -208,14 +208,18 @@ class SyncConnectionWizard:
             target_folder = parents.pop()
 
             parent_element = None
+            parent_position = 0
             for parent in parents:
-                if parent_element:
-                    p_elements = parent_element.find_elements(By.NAME, parent)
-                else:
-                    p_elements = app().find_elements(By.NAME, parent)
+                p_elements = app().find_elements(By.NAME, parent)
+                # select nested folders based on the position of the parent folder
                 for p_element in p_elements:
-                    if p_element.get_attribute("checked") == 'true':
+                    if (
+                        p_element.get_attribute("checked") == 'true'
+                        and p_element.rect["x"] > parent_position
+                    ):
                         parent_element = p_element
+                        parent_position = p_element.rect["x"]
+                        break
                 parent_element.native_double_click()  # expand the folder
                 # retry once if the folder is not expanded
                 if parent_element.is_selected():
@@ -226,14 +230,22 @@ class SyncConnectionWizard:
                 if parent_element.is_selected():
                     raise AssertionError(f'Failed to expand folder: {parent}')
 
-            folder_element = app().find_element(By.NAME, target_folder)
+            folder_element = None
+            target_folders = app().find_elements(By.NAME, target_folder)
+            # select the folder that is inside the current parent position
+            for folder in target_folders:
+                if folder.rect["x"] > parent_position:
+                    folder_element = folder
+                    break
             is_checked = folder_element.get_attribute("checked")
             # return early if the folder is already in the expected state.
             if is_checked == expected_state:
                 return
 
             folder_element.native_click()
-            folder_element.native_send_keys(Keys.SPACE)  # select the folder
+            if not folder_element.is_selected():
+                raise AssertionError(f"Failed to focus folder: {target_folder}")
+            folder_element.native_send_keys(Keys.SPACE)  # toggle the folder selection
 
             is_checked = folder_element.get_attribute("checked")
             if is_checked != expected_state:

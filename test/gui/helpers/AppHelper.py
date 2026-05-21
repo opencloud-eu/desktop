@@ -23,6 +23,11 @@ def native_click(self, **kwargs):
 
 def native_double_click(self, **kwargs):
     x, y = get_element_center_xy(self)
+    win_x, win_y = get_window_location()
+    if x < win_x:
+        x = x + win_x
+    if y < win_y:
+        y = y + win_y
     pyautogui.doubleClick(x, y, **kwargs)
 
 
