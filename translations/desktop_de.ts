@@ -70,7 +70,7 @@
     <message>
         <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.ui" line="160"/>
         <source>Configure synchronization manually</source>
-        <translation>Synchronisation manuell einrichten</translation>
+        <translation>Synchronisierung manuell einrichten</translation>
     </message>
     <message>
         <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.ui" line="200"/>
@@ -145,7 +145,7 @@ Desktop-Client zur Dateisynchronisierung.</translation>
     <message>
         <location filename="../src/gui/main.cpp" line="131"/>
         <source>Write each sync log output in a new file in folder.</source>
-        <translation>Jedes Synchronisationsprotokoll in eine neue Datei im Ordner schreiben.</translation>
+        <translation>Jedes Synchronisierungsprotokoll in eine neue Datei im Ordner schreiben.</translation>
     </message>
     <message>
         <location filename="../src/gui/main.cpp" line="132"/>
@@ -232,7 +232,7 @@ Desktop-Client zur Dateisynchronisierung.</translation>
     <message>
         <location filename="../src/gui/qml/FolderDelegate.qml" line="32"/>
         <source>Folder Sync</source>
-        <translation>Ordner-Synchronisation</translation>
+        <translation>Ordner-Synchronisierung</translation>
     </message>
     <message>
         <location filename="../src/gui/qml/FolderDelegate.qml" line="72"/>
@@ -267,7 +267,7 @@ Desktop-Client zur Dateisynchronisierung.</translation>
     <message>
         <location filename="../src/gui/qml/FolderDelegate.qml" line="332"/>
         <source>Restart sync</source>
-        <translation>Synchronistation neustarten</translation>
+        <translation>Synchronisierung neustarten</translation>
     </message>
     <message>
         <location filename="../src/gui/qml/FolderDelegate.qml" line="332"/>
@@ -277,12 +277,12 @@ Desktop-Client zur Dateisynchronisierung.</translation>
     <message>
         <location filename="../src/gui/qml/FolderDelegate.qml" line="340"/>
         <source>Resume sync</source>
-        <translation>Synchronisation fortsetzen</translation>
+        <translation>Synchronisierung fortsetzen</translation>
     </message>
     <message>
         <location filename="../src/gui/qml/FolderDelegate.qml" line="340"/>
         <source>Pause sync</source>
-        <translation>Synchronisation pausieren</translation>
+        <translation>Synchronisierung pausieren</translation>
     </message>
     <message>
         <location filename="../src/gui/qml/FolderDelegate.qml" line="348"/>
@@ -536,7 +536,7 @@ Desktop-Client zur Dateisynchronisierung.</translation>
     <message>
         <location filename="../src/gui/aboutdialog.cpp" line="159"/>
         <source>&lt;html&gt;The update channel determines which client updates will be offered for installation.&lt;ul&gt;&lt;li&gt;&quot;stable&quot; contains only upgrades that are considered reliable&lt;/li&gt;%1&lt;/ul&gt;&lt;br&gt;⚠️Downgrades are not supported. If you switch to a stable channel this change will only be applied with the next major release.&lt;/html&gt;</source>
-        <translation>&lt;html&gt;Der Update Kanal bestimmt, welche Client Aktualisierungen zur Installation angeboten werden.&lt;ul&gt;&lt;li&gt;&quot;stable&quot; enthält nur als zuverlässig gekennzeichnete Aktualisierungen.&lt;/li&gt;%1&lt;/ul&gt;&lt;br&gt;⚠️Aktualisierungen können nicht zurückgenommen werden. Wenn du zu einem zuverlässigeren Update Kanal zurückkehren möchtest, kann diese Änderung erst mit der nächsten Hauptveröffentlichung übernommen werden.&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;Der Update Kanal bestimmt, welche Client Aktualisierungen zur Installation angeboten werden.&lt;ul&gt;&lt;li&gt;&quot;stable&quot; enthält nur als zuverlässig gekennzeichnete Aktualisierungen.&lt;/li&gt;%1&lt;/ul&gt;&lt;br&gt;⚠️Aktualisierungen können nicht zurückgenommen werden. Wenn Sie zu einem zuverlässigeren Update Kanal zurückkehren möchten, kann diese Änderung erst mit der nächsten Hauptveröffentlichung übernommen werden.&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../src/gui/aboutdialog.cpp" line="165"/>
@@ -629,7 +629,7 @@ Desktop-Client zur Dateisynchronisierung.</translation>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="198"/>
         <source>&lt;p&gt;Do you really want to stop syncing the Space »%1«?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; This will &lt;b&gt;not&lt;/b&gt; delete any files.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Möchten Sie wirklich die Synchronisation des Spaces &lt;i&gt;»%1«&lt;/i&gt; abbrechen?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Hinweis:&lt;/b&gt; Dadurch werden &lt;b&gt;keine&lt;/b&gt; Dateien gelöscht.&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;Möchten Sie wirklich die Synchronisierung des Spaces &lt;i&gt;»%1«&lt;/i&gt; abbrechen?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Hinweis:&lt;/b&gt; Dadurch werden &lt;b&gt;keine&lt;/b&gt; Dateien gelöscht.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="203"/>
@@ -639,12 +639,12 @@ Desktop-Client zur Dateisynchronisierung.</translation>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="240"/>
         <source>Sync Running</source>
-        <translation>Synchronisation läuft</translation>
+        <translation>Synchronisierung läuft</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="240"/>
         <source>The sync operation is running.&lt;br/&gt;Do you want to stop it?</source>
-        <translation>Die Synchronisation läuft gerade.&lt;br/&gt;Trotzdem beenden?</translation>
+        <translation>Die Synchronisierung läuft gerade.&lt;br/&gt;Trotzdem beenden?</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="263"/>
@@ -792,7 +792,7 @@ Das Update wird im Hintergrund ausgeführt und überschreibt die aktuelle AppIma
     <message>
         <location filename="../src/plugins/vfs/cfapi/vfs_cfapi.cpp" line="140"/>
         <source>The Virtual filesystem feature does not support a drive as sync root</source>
-        <translation>Virtuelle Dateisysteme unterstützen kein Laufwerk als Synchronisationspunkt</translation>
+        <translation>Virtuelle Dateisysteme unterstützen kein Laufwerk als Synchronisierungspunkt</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/cfapi/vfs_cfapi.cpp" line="144"/>
@@ -978,12 +978,12 @@ Das Update wird im Hintergrund ausgeführt und überschreibt die aktuelle AppIma
     <message numerus="yes">
         <location filename="../src/gui/folder.cpp" line="497"/>
         <source>»%1« and %n other file(s) have sync conflicts.</source>
-        <translation><numerusform>%1 und %n andere Datei haben Synchronisationskonflikte.</numerusform><numerusform>»%1« und %n andere Dateien haben Synchronisationskonflikte.</numerusform></translation>
+        <translation><numerusform>%1 und %n andere Datei haben Synchronisationskonflikte.</numerusform><numerusform>»%1« und %n andere Dateien haben Synchronisierungskonflikte.</numerusform></translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="499"/>
         <source>»%1« has a sync conflict. Please check the conflict file!</source>
-        <translation>»%1« hat einen Synchronisationskonflikt. Bitte überprüfen Sie die Konfliktdatei.</translation>
+        <translation>»%1« hat einen Synchronisierungskonflikt. Bitte überprüfen Sie die Konfliktdatei.</translation>
     </message>
     <message numerus="yes">
         <location filename="../src/gui/folder.cpp" line="504"/>
@@ -1008,12 +1008,12 @@ Das Update wird im Hintergrund ausgeführt und überschreibt die aktuelle AppIma
     <message>
         <location filename="../src/gui/folder.cpp" line="1054"/>
         <source>The folder »%1« was created but was excluded from synchronization previously. Data inside it will not be synchronized.</source>
-        <translation>Der Ordner »%1« wurde erstellt, aber zuvor von der Synchronisation ausgeschlossen. Dateien in diesem Ordner werden nicht synchronisiert.</translation>
+        <translation>Der Ordner »%1« wurde erstellt, aber zuvor von der Synchronisierung ausgeschlossen. Dateien in diesem Ordner werden nicht synchronisiert.</translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="1057"/>
         <source>The file »%1« was created but was excluded from synchronization previously. It will not be synchronized.</source>
-        <translation>Die Datei »%1«wurde erstellt, aber zuvor von der Synchronisation ausgeschlossen. Die Datei wird nicht synchronisiert.</translation>
+        <translation>Die Datei »%1« wurde erstellt, aber zuvor von der Synchronisierung ausgeschlossen. Die Datei wird nicht synchronisiert.</translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="1061"/>
@@ -1034,7 +1034,7 @@ This means that the synchronization client might not upload local changes immedi
 %1</source>
         <translation>Veränderungen in synchronisierten Ordnern konnten nicht zuverlässig verfolgt werden.
 
-Das bedeutet, dass der Synchronisations-Client möglicherweise lokale Veränderungen nicht sofort hochlädt, sondern stattdessen nach lokalen Veränderungen scannt und diese nur gelegentlich hochlädt (standardmäßig alle zwei Stunden).
+Das bedeutet, dass der Synchronisierungs-Client möglicherweise lokale Veränderungen nicht sofort hochlädt, sondern stattdessen nach lokalen Veränderungen scannt und diese nur gelegentlich hochlädt (standardmäßig alle zwei Stunden).
 
 %1 </translation>
     </message>
@@ -1049,7 +1049,7 @@ Das bedeutet, dass der Synchronisations-Client möglicherweise lokale Veränderu
     <message>
         <location filename="../src/gui/folderman.cpp" line="240"/>
         <source>An old sync journal %1 was found, but could not be removed. Please make sure that no application is currently using it.</source>
-        <translation>Ein altes Synchronisationsjournal %1 wurde gefunden und konnte nicht entfernt werden. Bitte stelle sicher, dass es momentan von keiner Anwendung verwendet wird.</translation>
+        <translation>Ein altes Synchronisierungsjournal %1 wurde gefunden und konnte nicht entfernt werden. Bitte stellen Sie sicher, dass es momentan von keiner Anwendung verwendet wird.</translation>
     </message>
     <message>
         <location filename="../src/gui/folderman.cpp" line="302"/>
@@ -1074,12 +1074,12 @@ Das bedeutet, dass der Synchronisations-Client möglicherweise lokale Veränderu
     <message>
         <location filename="../src/gui/folderman.cpp" line="515"/>
         <source>Sync was successful, unresolved conflicts.</source>
-        <translation>Synchronisation war erfolgreich, ungelöste Konflikte.</translation>
+        <translation>Synchronisierung war erfolgreich, ungelöste Konflikte.</translation>
     </message>
     <message>
         <location filename="../src/gui/folderman.cpp" line="524"/>
         <source>%1 (Sync is paused)</source>
-        <translation>%1 (Synchronisation ist pausiert)</translation>
+        <translation>%1 (Synchronisierung ist pausiert)</translation>
     </message>
     <message>
         <location filename="../src/gui/folderman.cpp" line="535"/>
@@ -1094,12 +1094,12 @@ Das bedeutet, dass der Synchronisations-Client möglicherweise lokale Veränderu
     <message>
         <location filename="../src/gui/folderman.cpp" line="624"/>
         <source>The local folder »%1« already contains a folder used in a folder sync connection. Please pick another local folder!</source>
-        <translation>Der lokale Ordner »%1« enthält bereits einen Ordner, der zur Synchronisation verwendet wird. Bitte wählen Sie einen anderen lokalen Ordner.</translation>
+        <translation>Der lokale Ordner »%1« enthält bereits einen Ordner, der zur Synchronisierung verwendet wird. Bitte wählen Sie einen anderen lokalen Ordner.</translation>
     </message>
     <message>
         <location filename="../src/gui/folderman.cpp" line="630"/>
         <source>The local folder »%1« is already contained in a folder used in a folder sync connection. Please pick another local folder!</source>
-        <translation>Der lokale Ordner »%1« befindet sich bereits in einem Ordner, der zur Synchronisation verwendet wird. Bitte wählen Sie einen anderen lokalen Ordner.</translation>
+        <translation>Der lokale Ordner »%1« befindet sich bereits in einem Ordner, der zur Synchronisierung verwendet wird. Bitte wählen Sie einen anderen lokalen Ordner.</translation>
     </message>
     <message>
         <location filename="../src/gui/folderman.cpp" line="638"/>
@@ -1128,7 +1128,7 @@ Bitte entfernen Sie diesen Ordner aus dem Konto und legen Sie ihn erneut an.</tr
     <message>
         <location filename="../src/gui/folderman.cpp" line="585"/>
         <source>The folder »%1« is used in a folder sync connection!</source>
-        <translation>Der Ordner »%1« wird bereits als Synchronisationsordner verwendet.</translation>
+        <translation>Der Ordner »%1« wird bereits als Synchronisierungsordner verwendet.</translation>
     </message>
     <message>
         <location filename="../src/gui/folderman.cpp" line="591"/>
@@ -1184,7 +1184,7 @@ Bitte entfernen Sie diesen Ordner aus dem Konto und legen Sie ihn erneut an.</tr
     <message>
         <location filename="../src/gui/folderwatcher.cpp" line="143"/>
         <source>The watcher did not receive a test notification.</source>
-        <translation>Der Watcher hat keine Test-Benachritigung erhalten.</translation>
+        <translation>Der Watcher hat keine Test-Benachrichtigung erhalten.</translation>
     </message>
 </context>
 <context>
@@ -1232,7 +1232,7 @@ Bitte entfernen Sie diesen Ordner aus dem Konto und legen Sie ihn erneut an.</tr
     <message>
         <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="138"/>
         <source>We received an unexpected download Content-Length.</source>
-        <translation>Wir haben eine unerwartete Download-Inhaltlänge empfangen.</translation>
+        <translation>Wir haben eine unerwartete Download-Inhaltslänge empfangen.</translation>
     </message>
     <message>
         <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="166"/>
@@ -1280,7 +1280,7 @@ Bitte entfernen Sie diesen Ordner aus dem Konto und legen Sie ihn erneut an.</tr
     <message>
         <location filename="../src/gui/generalsettings.ui" line="118"/>
         <source>Move remotely deleted files to the local trash bin instead of deleting them</source>
-        <translation>Entfernt gelöschte Dateien in den lokalen Mülleimer verschieben, anstatt sie zu löschen.</translation>
+        <translation>Verschiebe entfernt gelöschte Dateien in den lokalen Mülleimer, anstatt sie zu löschen.</translation>
     </message>
     <message>
         <location filename="../src/gui/generalsettings.ui" line="127"/>
@@ -1382,7 +1382,7 @@ Bitte entfernen Sie diesen Ordner aus dem Konto und legen Sie ihn erneut an.</tr
     <message>
         <location filename="../src/gui/ignorelisteditor.ui" line="20"/>
         <source>Files Ignored by Patterns</source>
-        <translation>Dateien ignoriert vom Muster</translation>
+        <translation>Dateien ignoriert durch Muster</translation>
     </message>
     <message>
         <location filename="../src/gui/ignorelisteditor.ui" line="59"/>
@@ -1771,7 +1771,7 @@ Beachten Sie, dass Kommandozeilenoptionen bezüglich der Protokollierung diese E
     <message>
         <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="198"/>
         <source>Unable to claim the sync root for files on demand, the folder is already claimed by %1</source>
-        <translation>Der Synchronisationspunkt kann für &quot;Dateien bei Bedarf&quot; nicht belegt werden. Der Ordner wird bereits von %1 verwendet.</translation>
+        <translation>Der Synchronisierungspunkt kann für &quot;Dateien bei Bedarf&quot; nicht belegt werden. Der Ordner wird bereits von %1 verwendet.</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="201"/>
@@ -1830,7 +1830,7 @@ Beachten Sie, dass Kommandozeilenoptionen bezüglich der Protokollierung diese E
     <message>
         <location filename="../src/libsync/discovery.cpp" line="172"/>
         <source>Symbolic links are not supported in syncing.</source>
-        <translation>Symbolische Verknüpfungen werden bei der Synchronisation nicht unterstützt.</translation>
+        <translation>Symbolische Verknüpfungen werden bei der Synchronisierung nicht unterstützt.</translation>
     </message>
     <message>
         <location filename="../src/libsync/discovery.cpp" line="186"/>
@@ -1910,7 +1910,7 @@ Beachten Sie, dass Kommandozeilenoptionen bezüglich der Protokollierung diese E
     <message>
         <location filename="../src/libsync/discovery.cpp" line="1017"/>
         <source>Selective sync: Ignored because its path is deselected</source>
-        <translation>Selektive Synchronisation: Ignoriert, weil der Pfad abgewählt ist</translation>
+        <translation>Selektive Synchronisierung: Ignoriert, weil der Pfad abgewählt ist</translation>
     </message>
     <message>
         <location filename="../src/libsync/discovery.cpp" line="1054"/>
@@ -2397,7 +2397,7 @@ Beachten Sie, dass Kommandozeilenoptionen bezüglich der Protokollierung diese E
     <message>
         <location filename="../src/gui/settingsdialog.ui" line="14"/>
         <source>MainWindow</source>
-        <translation>HauptFenster</translation>
+        <translation>Hauptfenster</translation>
     </message>
 </context>
 <context>
@@ -2537,7 +2537,7 @@ Beachten Sie, dass Kommandozeilenoptionen bezüglich der Protokollierung diese E
     <message>
         <location filename="../src/libsync/syncengine.cpp" line="354"/>
         <source>Unable to open or create the local sync database. Make sure you have write access in the sync folder.</source>
-        <translation>Die lokale Synchronisationsdatenbank kann nicht geöffnet oder erstellt werden. Stellen Sie sicher, dass Schreibzugriff auf den Synchronisationsordner vorliegt.</translation>
+        <translation>Die lokale Synchronisierungsdatenbank kann nicht geöffnet oder erstellt werden. Stellen Sie sicher, dass Schreibzugriff auf den Synchronisierungsordner vorliegt.</translation>
     </message>
     <message>
         <location filename="../src/libsync/syncengine.cpp" line="770"/>
@@ -2562,12 +2562,12 @@ Beachten Sie, dass Kommandozeilenoptionen bezüglich der Protokollierung diese E
     <message>
         <location filename="../src/libsync/syncengine.cpp" line="402"/>
         <source>Unable to read from the sync journal.</source>
-        <translation>Fehler beim Einlesen des Synchronisierungsprotokolls.</translation>
+        <translation>Fehler beim Einlesen des Synchronisierungsjournals.</translation>
     </message>
     <message>
         <location filename="../src/libsync/syncengine.cpp" line="473"/>
         <source>Cannot open the sync journal</source>
-        <translation>Synchronisationsbericht kann nicht geöffnet werden</translation>
+        <translation>Synchronisierungsjournal kann nicht geöffnet werden</translation>
     </message>
     <message>
         <location filename="../src/libsync/syncengine.cpp" line="753"/>
@@ -2694,7 +2694,7 @@ Beachten Sie, dass Kommandozeilenoptionen bezüglich der Protokollierung diese E
     <message>
         <location filename="../src/gui/tlserrordialog.cpp" line="72"/>
         <source>&lt;div id=&quot;cert&quot;&gt;&lt;h3&gt;with Certificate %1&lt;/h3&gt;&lt;div id=&quot;ccert&quot;&gt;&lt;p&gt;Organization: %2&lt;br/&gt;Unit: %3&lt;br/&gt;Country: %4&lt;/p&gt;&lt;p&gt;Fingerprint (MD5): &lt;tt&gt;%5&lt;/tt&gt;&lt;br/&gt;Fingerprint (SHA1): &lt;tt&gt;%6&lt;/tt&gt;&lt;br/&gt;Fingerprint (SHA256): &lt;tt&gt;%7&lt;/tt&gt;&lt;br/&gt;&lt;br/&gt;Effective Date: %8&lt;br/&gt;Expiration Date: %9&lt;/div&gt;&lt;h3&gt;Issuer: %10&lt;/h3&gt;&lt;div id=&quot;issuer&quot;&gt;&lt;p&gt;Organization: %11&lt;br/&gt;Unit: %12&lt;br/&gt;Country: %13&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;</source>
-        <translation>&lt;div id=&quot;cert&quot;&gt;&lt;h3&gt;mit Zertifikat %1&lt;/h3&gt;&lt;div id=&quot;ccert&quot;&gt;&lt;p&gt;Organisation: %2&lt;br/&gt;Einheit: %3&lt;br/&gt;Land: %4&lt;/p&gt;&lt;p&gt;Fingerabdruck print (MD5): &lt;tt&gt;%5&lt;/tt&gt;&lt;br/&gt;Fingerabdruck (SHA1): &lt;tt&gt;%6&lt;/tt&gt;&lt;br/&gt;Fingerabdruck (SHA256): &lt;tt&gt;%7&lt;/tt&gt;&lt;br/&gt;&lt;br/&gt;Gültigkeitsdatum: %8Ablaufdatum: %9&lt;/div&gt;&lt;h3&gt;Aussteller: %10&lt;/h3&gt;&lt;div id=&quot;issuer&quot;&gt;&lt;p&gt;Organisation: %11&lt;br/&gt;Einheit: %12&lt;br/&gt;Land: %13&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;</translation>
+        <translation>&lt;div id=&quot;cert&quot;&gt;&lt;h3&gt;mit Zertifikat %1&lt;/h3&gt;&lt;div id=&quot;ccert&quot;&gt;&lt;p&gt;Organisation: %2&lt;br/&gt;Einheit: %3&lt;br/&gt;Land: %4&lt;/p&gt;&lt;p&gt;Fingerabdruck print (MD5): &lt;tt&gt;%5&lt;/tt&gt;&lt;br/&gt;Fingerabdruck (SHA1): &lt;tt&gt;%6&lt;/tt&gt;&lt;br/&gt;Fingerabdruck (SHA256): &lt;tt&gt;%7&lt;/tt&gt;&lt;br/&gt;&lt;br/&gt;Gültigkeitsdatum: %8 &lt;br/&gt;Ablaufdatum: %9&lt;/div&gt;&lt;h3&gt;Aussteller: %10&lt;/h3&gt;&lt;div id=&quot;issuer&quot;&gt;&lt;p&gt;Organisation: %11 &lt;br/&gt;Einheit: %12&lt;br/&gt;Land: %13&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;</translation>
     </message>
 </context>
 <context>
@@ -2806,7 +2806,7 @@ Beachten Sie, dass Kommandozeilenoptionen bezüglich der Protokollierung diese E
     <message>
         <location filename="../src/gui/newwizard/pages/accountconfiguredwizardpage.cpp" line="43"/>
         <source>Sync location not supported</source>
-        <translation>Synchronisationspfad wird nicht unterstützt</translation>
+        <translation>Synchronisierungspfad wird nicht unterstützt</translation>
     </message>
 </context>
 <context>
@@ -3408,7 +3408,7 @@ Beachten Sie, dass Kommandozeilenoptionen bezüglich der Protokollierung diese E
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="78"/>
         <source>error</source>
-        <translation>fehler</translation>
+        <translation>Fehler</translation>
     </message>
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="80"/>
