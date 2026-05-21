@@ -1,5 +1,5 @@
 variables:
-  - &opencloud_image 'quay.io/opencloudeu/opencloud-rolling:latest'
+  - &opencloud_image 'quay.io/opencloudeu/opencloud-rolling:7.0.0-rc.0'
   - &build_image 'opencloudeu/desktop-client-build:ubuntu-24.04-qt6.10'
   - &minio_image 'minio/mc:RELEASE.2021-10-07T04-19-58Z'
   - &alpine_image 'alpine:3.22.4'
