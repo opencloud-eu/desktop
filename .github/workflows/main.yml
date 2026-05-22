@@ -190,10 +190,11 @@ jobs:
       run: |
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --no-cache --package opencloud/opencloud-desktop
 
-    - name: Package Appx
+    - name: Package Appx / MSIX
       if: ${{ matrix.os  == 'windows-latest' && github.event_name != 'pull_request' }}
       run: |
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --no-cache --package --options "[Packager]PackageType=AppxPackager" --options "[Packager]Destination=${{ github.workspace }}/appx/" opencloud/opencloud-desktop
+        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --no-cache --package --options "[Packager]PackageType=MsixPackager" --options "[Packager]Destination=${{ github.workspace }}/msix/" opencloud/opencloud-desktop
 
     - name: Prepare artifacts
       run: |
@@ -207,6 +208,20 @@ jobs:
           }
         }
 
+    - name: Release
+      if: ${{ github.ref_type == 'tag' }}
+      uses: softprops/action-gh-release@v2
+      with:
+        files: |
+          ${{ github.workspace }}/binaries/*
+          ${{ github.workspace }}/appx/*
+          ${{ github.workspace }}/msix/*
+        generate_release_notes: true
+        draft: false
+        prerelease: ${{ inputs.releaseChannel == 'beta' }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     - name: Upload artifacts
       uses: actions/upload-artifact@v7
       with:
@@ -219,3 +234,10 @@ jobs:
       with:
         name: ${{ matrix.target }}-appx-${{ github.run_number }}
         path: ${{ github.workspace }}/appx/*
+
+    - name: Upload msix
+      if: ${{ matrix.os  == 'windows-latest' && github.event_name != 'pull_request' }}
+      uses: actions/upload-artifact@v7
+      with:
+        name: ${{ matrix.target }}-msix-${{ github.run_number }}
+        path: ${{ github.workspace }}/msix/*
