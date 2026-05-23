@@ -346,7 +346,7 @@ QString Theme::openIdConnectScopes() const
 
 QString Theme::openIdConnectPrompt() const
 {
-    return QStringLiteral("select_account consent");
+    return QStringLiteral("consent");
 }
 
 bool Theme::oidcEnableDynamicRegistration() const
