@@ -32,7 +32,7 @@ class AccountConnectionWizard:
         selector="QApplication.Settings.centralwidget.dialogStack.SetupWizardWidget.contentWidget.AccountConfiguredWizardPage.advancedConfigGroupBox.advancedConfigGroupBoxContentWidget.localDirectoryGroupBox.chooseLocalDirectoryButton",
     )
     CHOOSE_FOLDER_BUTTON = SimpleNamespace(by=By.NAME, selector="Choose")
-    OAUTH_CREDENTIAL_PAGE = SimpleNamespace(by=None, selector=None)
+    OAUTH_CREDENTIAL_PAGE = SimpleNamespace(by=By.XPATH, selector="//label[@name='Log in with your web browser']")
     COPY_URL_TO_CLIPBOARD_BUTTON = SimpleNamespace(
         by=By.NAME,
         selector="Copy URL",
@@ -194,7 +194,10 @@ class AccountConnectionWizard:
     def is_credential_window_visible():
         visible = False
         try:
-            squish.waitForObject(AccountConnectionWizard.OAUTH_CREDENTIAL_PAGE)
+            app().find_element(
+            AccountConnectionWizard.OAUTH_CREDENTIAL_PAGE.by,
+            AccountConnectionWizard.OAUTH_CREDENTIAL_PAGE.selector
+            )
             visible = True
         except:
             pass

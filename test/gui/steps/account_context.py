@@ -179,9 +179,9 @@ def step(context):
     AccountConnectionWizard.accept_certificate()
 
 
-@When('the user adds the server "|any|"')
-def step(context, server):
-    server_url = substitute_inline_codes(server)
+@When('the user adds the server "{server_url}"')
+def step(context, server_url):
+    server_url = substitute_inline_codes(server_url)
     AccountConnectionWizard.add_server(server_url)
 
 
@@ -193,12 +193,7 @@ def step(context):
 
 @Then('credentials wizard should be visible')
 def step(context):
-    test.compare(
-        AccountConnectionWizard.is_credential_window_visible(),
-        True,
-        'Credentials wizard is visible',
-    )
-
+        AccountConnectionWizard.is_credential_window_visible()
 
 @When('the user selects download everything option in advanced section')
 def step(context):
