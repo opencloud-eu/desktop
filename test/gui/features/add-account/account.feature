@@ -38,7 +38,7 @@ Feature: adding accounts
         Then "Brian" account should be opened
         And "Alice" account should be added
 
-    @skip
+
     Scenario: Adding account with self signed certificate for the first time
         Given the user has started the client
         When the user adds the server "%local_server%"
