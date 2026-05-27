@@ -47,11 +47,17 @@ ConnectionValidator::ConnectionValidator(AccountPtr account, QObject *parent)
     : QObject(parent)
     , _account(account)
 {
-    // TODO: 6.0 abort validator on 5min timeout
+    // Hard timeout: abort the validator if it hasn't completed within 60 seconds.
+    // This prevents the account from getting stuck in "Connecting" state when
+    // a network change leaves HTTP requests hanging on a dead socket.
     auto timer = new QTimer(this);
-    timer->setInterval(30s);
-    connect(timer, &QTimer::timeout, this,
-        [this] { qCInfo(lcConnectionValidator) << u"ConnectionValidator" << _account->displayNameWithHost() << u"still running after" << _duration; });
+    timer->setSingleShot(true);
+    timer->setInterval(60s);
+    connect(timer, &QTimer::timeout, this, [this] {
+        qCWarning(lcConnectionValidator) << u"ConnectionValidator for" << _account->displayNameWithHost() << u"timed out after" << _duration;
+        _errors.append(tr("timeout"));
+        reportResult(Timeout);
+    });
     timer->start();
 }
 
