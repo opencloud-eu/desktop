@@ -19,7 +19,6 @@
 #include "account.h"
 #include "accountstate.h"
 #include "application.h"
-#include "common/depreaction.h"
 #include "common/filesystembase.h"
 #include "common/syncjournalfilerecord.h"
 #include "common/version.h"
@@ -39,6 +38,7 @@
 #include "syncresult.h"
 #include "syncrunfilelog.h"
 #include "theme.h"
+#include "guiutility.h"
 
 #ifdef Q_OS_WIN
 #include "common/utility_win.h"
@@ -524,6 +524,7 @@ void Folder::startVfs()
     vfsParams.providerDisplayName = Theme::instance()->appNameGUI();
     vfsParams.providerName = Theme::instance()->appName();
     vfsParams.providerVersion = Version::version();
+    vfsParams.socketPath = Utility::socketApiSocketPath();
 
     connect(&_engine->syncFileStatusTracker(), &SyncFileStatusTracker::fileStatusChanged,
         _vfs.data(), &Vfs::fileStatusChanged);
