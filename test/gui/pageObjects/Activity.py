@@ -7,6 +7,7 @@ from selenium.common.exceptions import NoSuchElementException
 from helpers.FilesHelper import build_conflicted_regex
 from helpers.ConfigHelper import get_config
 from helpers.AppHelper import app
+from helpers.SyncHelper import wait_for
 
 
 class Activity:
@@ -21,7 +22,9 @@ class Activity:
     FILTER_BUTTON_SELECTED_STATE = SimpleNamespace(
         by=By.XPATH, selector="//*[contains(@name, '1 Filter')]"
     )
-    NOT_SYNCED_FILTER_BUTTON = SimpleNamespace(by=None, selector=None)
+    NOT_SYNCED_FILTER_BUTTON = SimpleNamespace(by=By.ACCESSIBILITY_ID,
+         selector="QApplication.Settings.centralwidget.dialogStack.page.stack.OCC::ActivitySettings.QTabWidget.qt_tabwidget_stackedwidget.OCC__IssuesWidget._filterButton"
+    )
     NOT_SYNCED_FILTER_OPTION_SELECTOR = SimpleNamespace(by=None, selector=None)
     SYNCED_ACTIVITY_TABLE_HEADER_SELECTOR = SimpleNamespace(by=None, selector=None)
     NOT_SYNCED_ACTIVITY_TABLE_HEADER_SELECTOR = SimpleNamespace(by=None, selector=None)
@@ -62,7 +65,7 @@ class Activity:
 
     @staticmethod
     def is_resource_blacklisted(filename):
-        result = squish.waitFor(
+        result = wait_for(
             lambda: Activity.has_sync_status(filename, "Blacklisted"),
             get_config("maxSyncTimeout") * 1000,
         )
@@ -78,7 +81,7 @@ class Activity:
 
     @staticmethod
     def is_resource_excluded(filename):
-        result = squish.waitFor(
+        result = wait_for(
             lambda: Activity.has_sync_status(filename, "Excluded"),
             get_config("maxSyncTimeout") * 1000,
         )
@@ -164,12 +167,16 @@ class Activity:
 
     @staticmethod
     def select_not_synced_filter(filter_option):
-        squish.clickButton(squish.waitForObject(Activity.NOT_SYNCED_FILTER_BUTTON))
-        squish.activateItem(
-            squish.waitForObjectItem(
-                Activity.NOT_SYNCED_FILTER_OPTION_SELECTOR, filter_option
-            )
-        )
+        menu = app().find_element(
+            Activity.NOT_SYNCED_FILTER_BUTTON.by,
+            Activity.NOT_SYNCED_FILTER_BUTTON.selector)
+        menu.click()
+        # NOTE: Filter options are not visible in the accessibility tree.
+        # As a workaround, select the 6th filter option (which is an Excluded filter).
+        # This means we cannot select a specific Excluded filter for now.
+        for _ in range(6):
+            menu.send_keys(Keys.ARROW_DOWN)
+        menu.send_keys(Keys.ENTER)
 
     @staticmethod
     def get_not_synced_table_column_number_by_name(column_name):
