@@ -79,6 +79,9 @@ Pane {
                 ToolTip.delay: 500
 
                 Accessible.name: accountState.account.displayNameWithHost
+                Accessible.onPressAction: {
+                    clicked();
+                }
 
                 Connections {
                     target: accountState.account
