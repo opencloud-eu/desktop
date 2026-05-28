@@ -210,14 +210,15 @@ void OpenVFS::startImpl(const VfsSetupParams &params)
     connect(_openVfsProcess, &QProcess::finished, this, [logPrefix, this] { qCFatal(lcOpenVFS) << logPrefix() << "finished" << _openVfsProcess->exitCode(); });
     connect(_openVfsProcess, &QProcess::started, this, [logPrefix, this] {
         qCInfo(lcOpenVFS) << logPrefix() << u"started";
-        // TODO:
-        // give it time to mount
+
         QTimer::singleShot(1s, this, &Vfs::started);
     });
     connect(_openVfsProcess, &QProcess::errorOccurred, this, [logPrefix, this] { qCWarning(lcOpenVFS) << logPrefix() << _openVfsProcess->errorString(); });
-    _openVfsProcess->start(openVFSExePath().toString(),
-        {u"-d"_s, u"-i"_s, openVFSConfigFilePath().toString(), u"-o"_s, xattrOwnerString(params.account->uuid()), params.root().toString()},
-        QIODevice::ReadOnly);
+
+    const QStringList pparams{u"-d"_s, u"-i"_s, openVFSConfigFilePath().toString(), u"-o"_s, xattrOwnerString(params.account->uuid()),
+                u"-s"_s, params.socketPath, params.root().toString()};
+    qCDebug(lcOpenVFS) << "Starting openvfs" << pparams;
+    _openVfsProcess->start(openVFSExePath().toString(), pparams, QIODevice::ReadOnly);
 }
 
 void OpenVFS::stop()
