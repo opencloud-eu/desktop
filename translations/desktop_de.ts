@@ -1280,7 +1280,7 @@ Bitte entfernen Sie diesen Ordner aus dem Konto und legen Sie ihn erneut an.</tr
     <message>
         <location filename="../src/gui/generalsettings.ui" line="118"/>
         <source>Move remotely deleted files to the local trash bin instead of deleting them</source>
-        <translation>Verschiebe entfernt gelöschte Dateien in den lokalen Mülleimer, anstatt sie zu löschen.</translation>
+        <translation>Entfernt gelöschte Dateien in den lokalen Papierkorb verschieben, anstatt sie zu löschen</translation>
     </message>
     <message>
         <location filename="../src/gui/generalsettings.ui" line="127"/>
@@ -1320,7 +1320,7 @@ Bitte entfernen Sie diesen Ordner aus dem Konto und legen Sie ihn erneut an.</tr
     <message>
         <location filename="../src/gui/generalsettings.cpp" line="53"/>
         <source>Language changes require a restart of this application to take effect.</source>
-        <translation>Sprachänderungen erfordern einen Neustart der Applikation, um wirksam zu werden.</translation>
+        <translation>Sprachänderungen erfordern einen Neustart der Anwendung, um wirksam zu werden.</translation>
     </message>
     <message>
         <location filename="../src/gui/generalsettings.cpp" line="178"/>
