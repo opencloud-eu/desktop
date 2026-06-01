@@ -7,6 +7,7 @@
 #include "states/accountconfiguredsetupwizardstate.h"
 #include "states/oauthcredentialssetupwizardstate.h"
 #include "states/serverurlsetupwizardstate.h"
+#include "states/syncfoldersetupwizardstate.h"
 #include "theme.h"
 
 using namespace std::chrono_literals;
@@ -97,6 +98,10 @@ void SetupWizardController::changeStateTo(SetupWizardState nextState, ChangeReas
     }
 
     switch (nextState) {
+    case SetupWizardState::SyncFolderSetupState: {
+        _currentState = new SyncFolderSetupWizardState(_context);
+        break;
+    }
     case SetupWizardState::ServerUrlState: {
         _currentState = new ServerUrlSetupWizardState(_context);
         break;
@@ -131,6 +136,10 @@ void SetupWizardController::changeStateTo(SetupWizardState nextState, ChangeReas
 
     connect(_currentState, &AbstractSetupWizardState::evaluationSuccessful, this, [this]() {
         switch (_currentState->state()) {
+        case SetupWizardState::SyncFolderSetupState: {
+            changeStateTo(SetupWizardState::ServerUrlState);
+            return;
+        }
         case SetupWizardState::ServerUrlState: {
             changeStateTo(SetupWizardState::CredentialsState);
             return;

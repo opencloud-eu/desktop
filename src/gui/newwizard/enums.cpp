@@ -25,6 +25,8 @@ template <>
 QString OCC::Utility::enumToDisplayName(SetupWizardState state)
 {
     switch (state) {
+    case SetupWizardState::SyncFolderSetupState:
+        return QApplication::translate("SetupWizardState", "Sync Folder");
     case SetupWizardState::ServerUrlState:
         if (GlobalConfig::serverUrl().isValid()) {
             return QApplication::translate("SetupWizardState", "Server URL");

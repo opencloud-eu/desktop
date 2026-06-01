@@ -15,6 +15,10 @@ target_sources(OpenCloudGui PRIVATE
     pages/accountconfiguredwizardpage.h
     pages/accountconfiguredwizardpage.cpp
 
+    pages/syncfoldersetupwizardpage.ui
+    pages/syncfoldersetupwizardpage.h
+    pages/syncfoldersetupwizardpage.cpp
+
     setupwizardwidget.ui
     setupwizardwidget.h
     setupwizardwidget.cpp
@@ -43,6 +47,8 @@ target_sources(OpenCloudGui PRIVATE
     states/serverurlsetupwizardstate.cpp
     states/oauthcredentialssetupwizardstate.cpp
     states/accountconfiguredsetupwizardstate.cpp
+    states/syncfoldersetupwizardstate.cpp
+    states/syncfoldersetupwizardstate.h
 
     setupwizardcontext.cpp
 )
