@@ -17,7 +17,7 @@ Feature: deleting files and folders
             | fileName                                    |
             | textfile0.txt                               |
             | textfile0-with-name-more-than-20-characters |
-            |  ~`!@#$^&()-_=+{[}];',textfile.txt	  |
+            |  ~`!@#$^&()-_=+{[}];',textfile.txt	      |
 
     @issue-9439 @smoke
     Scenario Outline: Delete a folder
@@ -46,7 +46,7 @@ Feature: deleting files and folders
         And as "Alice" file "textfile2.txt" should exist in the server
         And as "Alice" folder "test-folder2" should exist in the server
 
-    @skip
+
     Scenario: Delete multiple files
         Given user "Alice" has uploaded the following files to the server
             | file          | content                     |
@@ -65,7 +65,7 @@ Feature: deleting files and folders
             | textfile1.txt |
         And as "Alice" file "textfile2.txt" should exist in the server
 
-    @skip
+
     Scenario Outline: Create and delete a file with special characters
         Given user "Alice" has set up a client with default settings
         When user "Alice" creates a file "<fileName>" with the following content inside the sync folder
