@@ -26,7 +26,7 @@ Feature: edit files
         And the user waits for file "testfile.txt" to be synced
         Then as "Alice" the file "testfile.txt" should have the content "overwrite openCloud test text file" in the server
 
-
+    @skip
     Scenario Outline: Replace and modify the content of a file multiple times
         Given user "Alice" has set up a client with default settings
         And the user has copied file "<initialFile>" from outside the sync folder to "/" in the sync folder

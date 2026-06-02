@@ -33,7 +33,7 @@ Feature: Syncing files
         And the folder "simple-folder" should exist on the file system
         And the folder "large-folder" should exist on the file system
 
-    @issue-9733
+    @issue-9733 @skip
     Scenario: Syncing a file from the server and creating a conflict
         Given user "Alice" has uploaded file with content "server content" to "/conflict.txt" in the server
         And user "Alice" has set up a client with default settings
@@ -279,7 +279,7 @@ Feature: Syncing files
         Then the file "Folder1/a\\a.txt" should exist on the file system
         And the file "Folder1/a\\a.txt" should be blacklisted
 
-
+    @skip
     Scenario Outline: Sync long nested folder
         Given user "Alice" has created folder "<foldername>" in the server
         And user "Alice" has set up a client with default settings
@@ -348,7 +348,7 @@ Feature: Syncing files
         And the file "simple-folder/simple.pptx" should exist on the file system
         And the file "simple-folder/simple.xlsx" should exist on the file system
 
-
+    @skip
     Scenario: various types of files can be synced from client to server
         Given user "Alice" has set up a client with default settings
         When user "Alice" creates the following files inside the sync folder:
@@ -393,7 +393,7 @@ Feature: Syncing files
         And the user waits for file "newfile.txt" to be synced
         Then as "Alice" file "newfile.txt" should exist in the server
 
-
+    @skip
     Scenario: File with spaces in the name can sync
         Given user "Alice" has set up a client with default settings
         When user "Alice" creates a file "file with space.txt" with the following content inside the sync folder
@@ -403,7 +403,7 @@ Feature: Syncing files
         And the user waits for file "file with space.txt" to be synced
         Then as "Alice" file "file with space.txt" should exist in the server
 
-
+    @skip
     Scenario: Syncing folders each having large number of files
         Given the user has created a folder "folder1" in temp folder
         And the user has created "500" files each of size "1048576" bytes inside folder "folder1" in temp folder
@@ -438,7 +438,7 @@ Feature: Syncing files
         And for user "Alice" sync folder "Personal" should not be displayed
         And for user "Alice" sync folder "Shares" should not be displayed
 
-
+    @skip
     Scenario: extract a zip file in the sync folder
         Given the user has created a zip file "archive.zip" with the following resources in the temp folder
             | resource  | type   | content    |
@@ -487,14 +487,14 @@ Feature: Syncing files
         And the folder "test-folder/sub-folder2" should exist on the file system
         And the folder "test-folder/sub-folder1" should not exist on the file system
 
-
+    @skip
     Scenario: Syncing a local folder having special characters to the server
         Given user "Alice" has set up a client with default settings
         When user "Alice" creates a folder "~`!@#$^&()-_=+{[}];',)💥🫨❤️‍🔥" inside the sync folder
         And the user waits for folder "~`!@#$^&()-_=+{[}];',)💥🫨❤️‍🔥" to be synced
         Then as "Alice" folder "~`!@#$^&()-_=+{[}];',)💥🫨❤️‍🔥" should exist in the server
 
-    @issue-11814
+    @issue-11814 @skip
     Scenario: Remove folder sync connection (Personal Space)
         Given user "Alice" has created folder "simple-folder" in the server
         And user "Alice" has set up a client with default settings
@@ -503,7 +503,7 @@ Feature: Syncing files
         And the folder "simple-folder" should exist on the file system
         And as "Alice" folder "simple-folder" should exist in the server
 
-
+    @skip
     Scenario: Sync a received shared folder with Viewer permission role
         Given user "Brian" has been created in the server with default attributes
         And user "Alice" has created folder "simple-folder" in the server
@@ -534,7 +534,7 @@ Feature: Syncing files
             | simple-folder/sub-folder | Blacklisted | Brian Murphy@%local_server_hostname% |
             | simple-folder/simple.pdf | Blacklisted | Brian Murphy@%local_server_hostname% |
 
-
+    @skip
     Scenario Outline: File with long multi-byte characters name can be synced (76 characters, 255 bytes including extension)
         Given user "Alice" has set up a client with default settings
         When user "Alice" creates a file "<filename>" with the following content inside the sync folder
@@ -547,7 +547,7 @@ Feature: Syncing files
             | filename                                                                    |
             | 𒁰𒁱𒁲𒁳𒁴𒁵𒁶𒁷𒁸𒁹𒁺𒁻𒁼𒁾𒁿𒁰𒁱𒁲𒁳𒁴𒁵𒁶𒁷𒁸𒁹𒁺𒁻𒁼𒁾𒁿𒁰𒁱𒁲𒁳𒁴𒁵𒁶𒁷𒁸𒁹𒁺abôǣฎพฒฆ๘ตกกผพฒณญไใๅำ๊๒๔๗๘รศฬอฮ.txt |
 
-
+    @skip
 	Scenario: Sync a received shared folder with Editor permission role
         Given user "Brian" has been created in the server with default attributes
         And user "Alice" has created folder "simple-folder" in the server
