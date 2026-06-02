@@ -109,7 +109,7 @@
     <message>
         <location filename="../src/libsync/common/checksums.cpp" line="128"/>
         <source>The checksum header contained an unknown checksum type &apos;%1&apos;</source>
-        <translation>Der Prüfsummen-Header enthielt einen unbekannten Prüfsummentyp &apos;%1&apos;</translation>
+        <translation>Der Prüfsummen-Header enthielt den unbekannten Prüfsummentyp »%1«</translation>
     </message>
 </context>
 <context>
@@ -409,12 +409,12 @@ Desktop-Client zur Dateisynchronisierung.</translation>
     <message>
         <location filename="../src/gui/folderwizard/folderwizardsourcepage.ui" line="20"/>
         <source>Select a local folder to synchronize your Spaces to:</source>
-        <translation>Einen lokalen Ordner auswählen, mit dem Ihre Spaces synchronisiert werden sollen:</translation>
+        <translation>Wählen Sie einen lokalen Ordner aus, mit dem Ihre Spaces synchronisiert werden sollen:</translation>
     </message>
     <message>
         <location filename="../src/gui/folderwizard/folderwizardsourcepage.ui" line="32"/>
         <source>Enter the path to the Spaces root folder. This folder will contain all your synchronized Spaces.</source>
-        <translation>Pfad zum Stammordner der Spaces eingeben. Dieser wird alle synchronisierten Spaces enthalten.</translation>
+        <translation>Geben Sie den Pfad zum Stammordner der Spaces ein. Dieser wird alle synchronisierten Spaces enthalten.</translation>
     </message>
     <message>
         <location filename="../src/gui/folderwizard/folderwizardsourcepage.ui" line="39"/>
@@ -465,7 +465,7 @@ Desktop-Client zur Dateisynchronisierung.</translation>
     <message>
         <location filename="../src/gui/qml/credentials/OAuthCredentials.qml" line="32"/>
         <source>Login failed, please try it again</source>
-        <translation>Die Anmeldung ist fehlgeschlagen, bitte versuchen Sie es erneut</translation>
+        <translation>Die Anmeldung ist fehlgeschlagen. Bitte versuchen Sie es erneut.</translation>
     </message>
     <message>
         <location filename="../src/gui/qml/credentials/OAuthCredentials.qml" line="51"/>
@@ -498,7 +498,7 @@ Desktop-Client zur Dateisynchronisierung.</translation>
     <message>
         <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="56"/>
         <source>Oauth2 authentication requires a secured connection.</source>
-        <translation>Oauth2 Authentifizierung benötigt eine gesicherte Verbindung.</translation>
+        <translation>Oauth2-Authentifizierung benötigt eine gesicherte Verbindung.</translation>
     </message>
 </context>
 <context>
@@ -536,12 +536,12 @@ Desktop-Client zur Dateisynchronisierung.</translation>
     <message>
         <location filename="../src/gui/aboutdialog.cpp" line="159"/>
         <source>&lt;html&gt;The update channel determines which client updates will be offered for installation.&lt;ul&gt;&lt;li&gt;&quot;stable&quot; contains only upgrades that are considered reliable&lt;/li&gt;%1&lt;/ul&gt;&lt;br&gt;⚠️Downgrades are not supported. If you switch to a stable channel this change will only be applied with the next major release.&lt;/html&gt;</source>
-        <translation>&lt;html&gt;Der Update Kanal bestimmt, welche Client Aktualisierungen zur Installation angeboten werden.&lt;ul&gt;&lt;li&gt;&quot;stable&quot; enthält nur als zuverlässig gekennzeichnete Aktualisierungen.&lt;/li&gt;%1&lt;/ul&gt;&lt;br&gt;⚠️Aktualisierungen können nicht zurückgenommen werden. Wenn Sie zu einem zuverlässigeren Update Kanal zurückkehren möchten, kann diese Änderung erst mit der nächsten Hauptveröffentlichung übernommen werden.&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;Der Update-Kanal bestimmt, welche Client-Aktualisierungen zur Installation angeboten werden.&lt;ul&gt;&lt;li&gt;Der Kanal »Stable« enthält ausschließlich Aktualisierungen, die als zuverlässig gelten.&lt;/li&gt;%1&lt;/ul&gt;&lt;br&gt;⚠️Downgrades werden nicht unterstützt. Wenn Sie zu einem stabilen Kanal wechseln, kann diese Änderung erst mit der nächsten Hauptveröffentlichung übernommen werden.&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../src/gui/aboutdialog.cpp" line="165"/>
         <source>&lt;li&gt;&quot;beta&quot; may contain newer features and bugfixes, but have not yet been tested thoroughly&lt;/li&gt;</source>
-        <translation>&lt;li&gt;&quot;Beta&quot; kann neuere Features und Problembehebungen enthalten, die aber noch nicht vollständig getestet wurden&lt;/li&gt;</translation>
+        <translation>&lt;li&gt;»Beta« kann neuere Funktionen und Problembehebungen enthalten, die aber noch nicht vollständig getestet wurden.&lt;/li&gt;</translation>
     </message>
     <message>
         <location filename="../src/gui/aboutdialog.cpp" line="167"/>
@@ -564,12 +564,12 @@ Desktop-Client zur Dateisynchronisierung.</translation>
     <message>
         <location filename="../src/libsync/abstractnetworkjob.cpp" line="249"/>
         <source>Unknown error: network reply was deleted</source>
-        <translation>Unbekannter Fehler: Netzwerk Antwort wurde gelöscht</translation>
+        <translation>Unbekannter Fehler: Netzwerkantwort wurde gelöscht</translation>
     </message>
     <message>
         <location filename="../src/libsync/abstractnetworkjob.cpp" line="355"/>
         <source>Server replied &quot;%1 %2&quot; to &quot;%3 %4&quot;</source>
-        <translation>Server antwortete &quot;%1 %2&quot; zu &quot;%3 %4&quot;</translation>
+        <translation>Server antwortete »%1 %2« zu »%3 %4«</translation>
     </message>
 </context>
 <context>
@@ -603,7 +603,7 @@ Desktop-Client zur Dateisynchronisierung.</translation>
     <message>
         <location filename="../src/gui/accountsettings.ui" line="58"/>
         <source>Preparing the account</source>
-        <translation>Vorbereiten des Kontos</translation>
+        <translation>Das Konto wird vorbereitet</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.ui" line="86"/>
@@ -684,7 +684,7 @@ Desktop-Client zur Dateisynchronisierung.</translation>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="367"/>
         <source>Captive portal prevents connections to the server.</source>
-        <translation>Ein &quot;Captive Portal&quot; verhindert die Verbindung zum Server.</translation>
+        <translation>Ein »Captive Portal« verhindert die Verbindung zum Server.</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="369"/>
@@ -704,7 +704,7 @@ Desktop-Client zur Dateisynchronisierung.</translation>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="496"/>
         <source>Confirm Account Removal</source>
-        <translation>Löschen des Benutzerkontos bestätigen</translation>
+        <translation>Löschen des Kontos bestätigen</translation>
     </message>
     <message>
         <location filename="../src/gui/accountsettings.cpp" line="497"/>
@@ -759,9 +759,9 @@ Desktop-Client zur Dateisynchronisierung.</translation>
         <source>An update is available for this AppImage of %1. Do you want to install this update?
 
 The update will be performed in the background, and overwrite the current AppImage file. You need to restart the app to complete the update.</source>
-        <translation>Ein Update für das AppImage von %1 ist verfügbar. Möchten Sie es installieren?
+        <translation>Für dieses AppImage von %1 ist ein Update verfügbar. Möchten Sie dieses Update installieren?
 
-Das Update wird im Hintergrund ausgeführt und überschreibt die aktuelle AppImage-Datei. Sie müssen die Anwendung neu starten, um das Update abzuschließen.</translation>
+Das Update wird im Hintergrund durchgeführt und überschreibt die aktuelle AppImage-Datei. Sie müssen die Anwendung neu starten, um das Update abzuschließen.</translation>
     </message>
 </context>
 <context>
@@ -792,17 +792,17 @@ Das Update wird im Hintergrund ausgeführt und überschreibt die aktuelle AppIma
     <message>
         <location filename="../src/plugins/vfs/cfapi/vfs_cfapi.cpp" line="140"/>
         <source>The Virtual filesystem feature does not support a drive as sync root</source>
-        <translation>Virtuelle Dateisysteme unterstützen kein Laufwerk als Synchronisierungspunkt</translation>
+        <translation>Virtuelle Dateisysteme unterstützen kein Laufwerk als Synchronisierungspunkt.</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/cfapi/vfs_cfapi.cpp" line="144"/>
         <source>The Virtual filesystem feature requires a NTFS file system, %1 is using %2</source>
-        <translation>Virtuelle Dateisysteme benötigen ein NTFS-Dateisystem, %1 verwendet %2</translation>
+        <translation>Virtuelle Dateisysteme benötigen ein NTFS-Dateisystem. %1 verwendet %2.</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/cfapi/vfs_cfapi.cpp" line="148"/>
         <source>The Virtual filesystem feature is not supported on network drives</source>
-        <translation>Virtuelle Dateisysteme werden auf Netzwerk-Laufwerken nicht unterstützt</translation>
+        <translation>Virtuelle Dateisysteme werden auf Netzwerk-Laufwerken nicht unterstützt.</translation>
     </message>
 </context>
 <context>
@@ -860,7 +860,7 @@ Das Update wird im Hintergrund ausgeführt und überschreibt die aktuelle AppIma
         <location filename="../src/libsync/discoveryphase.cpp" line="262"/>
         <location filename="../src/libsync/discoveryphase.cpp" line="304"/>
         <source>Server error: PROPFIND reply is not XML formatted!</source>
-        <translation>Server-Fehler: PROPFIND-Antwort ist nicht im XML-Format!</translation>
+        <translation>Server-Fehler: PROPFIND-Antwort ist nicht im XML-Format.</translation>
     </message>
 </context>
 <context>
@@ -873,7 +873,7 @@ Das Update wird im Hintergrund ausgeführt und überschreibt die aktuelle AppIma
     <message>
         <location filename="../src/libsync/discoveryphase.cpp" line="215"/>
         <source>Directory not accessible on client, permission denied</source>
-        <translation>Das Verzeichnis ist dem Client nicht zugänglich, Zugriff verweigert</translation>
+        <translation>Verzeichnis auf dem Client nicht zugänglich. Zugriff verweigert. </translation>
     </message>
     <message>
         <location filename="../src/libsync/discoveryphase.cpp" line="219"/>
@@ -1044,12 +1044,12 @@ Das bedeutet, dass der Synchronisierungs-Client möglicherweise lokale Veränder
     <message>
         <location filename="../src/gui/folderman.cpp" line="239"/>
         <source>Could not reset folder state</source>
-        <translation>Der Ordnerzustand konnte nicht zurückgesetzt werden</translation>
+        <translation>Der Ordnerzustand kann nicht zurückgesetzt werden</translation>
     </message>
     <message>
         <location filename="../src/gui/folderman.cpp" line="240"/>
         <source>An old sync journal %1 was found, but could not be removed. Please make sure that no application is currently using it.</source>
-        <translation>Ein altes Synchronisierungsjournal %1 wurde gefunden und konnte nicht entfernt werden. Bitte stellen Sie sicher, dass es momentan von keiner Anwendung verwendet wird.</translation>
+        <translation>Ein altes Synchronisierungsjournal %1 wurde gefunden, konnte aber nicht entfernt werden. Bitte stellen Sie sicher, dass es momentan von keiner Anwendung verwendet wird.</translation>
     </message>
     <message>
         <location filename="../src/gui/folderman.cpp" line="302"/>
@@ -1118,7 +1118,7 @@ Bitte entfernen Sie diesen Ordner aus dem Konto und legen Sie ihn erneut an.</tr
     <message>
         <location filename="../src/gui/folderman.cpp" line="563"/>
         <source>No valid folder selected!</source>
-        <translation>Kein gültiger Ordner gewählt.</translation>
+        <translation>Kein gültiger Ordner ausgewählt.</translation>
     </message>
     <message>
         <location filename="../src/gui/folderman.cpp" line="581"/>
@@ -1143,7 +1143,7 @@ Bitte entfernen Sie diesen Ordner aus dem Konto und legen Sie ihn erneut an.</tr
     <message>
         <location filename="../src/gui/folderman.cpp" line="621"/>
         <source>There is already a sync from the server to this local folder. Please pick another local folder!</source>
-        <translation>Es existiert bereits eine Synchronisierung vom Server mit diesem lokalen Ordner. Bitte wähle einen anderen lokalen Ordner.</translation>
+        <translation>Es besteht bereits eine Synchronisierung vom Server mit diesem lokalen Ordner. Bitte wählen Sie einen anderen lokalen Ordner aus.</translation>
     </message>
 </context>
 <context>
@@ -1161,17 +1161,17 @@ Bitte entfernen Sie diesen Ordner aus dem Konto und legen Sie ihn erneut an.</tr
     <message>
         <location filename="../src/gui/folderstatusmodel.cpp" line="386"/>
         <source>Checking for changes in remote »%1«</source>
-        <translation>Änderungen der nicht lokalen Ressource »%1« werden geprüft</translation>
+        <translation>Prüfung auf Änderungen an nicht lokalem Ordner »%1«</translation>
     </message>
     <message>
         <location filename="../src/gui/folderstatusmodel.cpp" line="388"/>
         <source>Checking for changes in local »%1«</source>
-        <translation>Änderungen an lokalem »%1« werden geprüft</translation>
+        <translation>Prüfung auf Änderungen an lokalem Ordner »%1«</translation>
     </message>
     <message>
         <location filename="../src/gui/folderstatusmodel.cpp" line="392"/>
         <source>Reconciling changes</source>
-        <translation>Änderungen zusammenführen</translation>
+        <translation>Änderungen werden abgeglichen</translation>
     </message>
     <message>
         <location filename="../src/gui/folderstatusmodel.cpp" line="269"/>
@@ -1222,7 +1222,7 @@ Bitte entfernen Sie diesen Ordner aus dem Konto und legen Sie ihn erneut an.</tr
     <message>
         <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="122"/>
         <source>No E-Tag received from server, check Proxy/Gateway</source>
-        <translation>Kein E-Tag vom Server empfangen, Proxy/Gateway überprüfen</translation>
+        <translation>Kein E-Tag vom Server empfangen. Proxy/Gateway überprüfen.</translation>
     </message>
     <message>
         <location filename="../src/libsync/networkjobs/getfilejob.cpp" line="128"/>
@@ -1382,7 +1382,7 @@ Bitte entfernen Sie diesen Ordner aus dem Konto und legen Sie ihn erneut an.</tr
     <message>
         <location filename="../src/gui/ignorelisteditor.ui" line="20"/>
         <source>Files Ignored by Patterns</source>
-        <translation>Dateien ignoriert durch Muster</translation>
+        <translation>Auf Grundlage eines Musters ignorierte Dateien</translation>
     </message>
     <message>
         <location filename="../src/gui/ignorelisteditor.ui" line="59"/>
@@ -1449,7 +1449,7 @@ Elemente, bei denen das Löschen erlaubt ist, werden gelöscht, wenn sie verhind
     <message>
         <location filename="../src/gui/issueswidget.ui" line="40"/>
         <source>Issues table</source>
-        <translation>Problemtabelle</translation>
+        <translation>Problemübersicht</translation>
     </message>
     <message>
         <location filename="../src/gui/issueswidget.ui" line="72"/>
@@ -1525,8 +1525,8 @@ Da die Protokolldateien sehr groß werden können, legt der Client für jeden Sy
         <location filename="../src/gui/logbrowser.ui" line="167"/>
         <source>These settings persist across client restarts.
 Note that using any logging command line options will override the settings.</source>
-        <translation>Diese Einstellungen bleiben nach einem Neustart des Clients erhalten.
-Beachten Sie, dass Kommandozeilenoptionen bezüglich der Protokollierung diese Einstellungen überschreiben.</translation>
+        <translation>Diese Einstellungen bleiben auch nach einem Neustart des Clients erhalten.
+Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszeile die Einstellungen überschreibt.</translation>
     </message>
     <message>
         <location filename="../src/gui/logbrowser.ui" line="178"/>
@@ -1554,7 +1554,7 @@ Beachten Sie, dass Kommandozeilenoptionen bezüglich der Protokollierung diese E
     <message>
         <location filename="../src/gui/issueswidget.cpp" line="373"/>
         <source>Status Filter:</source>
-        <translation>Status Filter:</translation>
+        <translation>Statusfilter:</translation>
     </message>
 </context>
 <context>
@@ -1771,7 +1771,7 @@ Beachten Sie, dass Kommandozeilenoptionen bezüglich der Protokollierung diese E
     <message>
         <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="198"/>
         <source>Unable to claim the sync root for files on demand, the folder is already claimed by %1</source>
-        <translation>Der Synchronisierungspunkt kann für &quot;Dateien bei Bedarf&quot; nicht belegt werden. Der Ordner wird bereits von %1 verwendet.</translation>
+        <translation>Der Synchronisierungspunkt kann für »Dateien bei Bedarf« nicht belegt werden. Der Ordner wird bereits von %1 verwendet.</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="201"/>
