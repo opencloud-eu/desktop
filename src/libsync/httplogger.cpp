@@ -94,7 +94,7 @@ void logHttp(const QByteArray &verb, HttpContext *ctx, QJsonObject &&header, QIO
             {QStringLiteral("durationString"), QDebug::toString(ctx->timer)},
             {QStringLiteral("version"),
                 QStringLiteral("HTTP %1").arg(
-                    reply->attribute(QNetworkRequest::Http2WasUsedAttribute).toBool() ? QStringLiteral("1.1") : QStringLiteral("2"))}};
+                    reply->attribute(QNetworkRequest::Http2WasUsedAttribute).toBool() ? QStringLiteral("2") : QStringLiteral("1.1"))}};
         if (reply->error() != QNetworkReply::NoError) {
             replyInfo.insert(QStringLiteral("error"), reply->errorString());
         }
