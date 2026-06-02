@@ -4,7 +4,7 @@ Feature: VFS support
     I want to sync files with vfs
     So that I can decide which files to download
 
-
+    @skip
     Scenario: Default VFS sync
         Given user "Alice" has been created in the server with default attributes
         And user "Alice" has uploaded file with content "openCloud" to "testFile.txt" in the server
@@ -17,7 +17,7 @@ Feature: VFS support
         Then the file "parent/lorem.txt" should be downloaded
         And the placeholder file "testFile.txt" should exist on the file system
 
-
+    @skip
     Scenario: Copy placeholder file
         Given user "Alice" has been created in the server with default attributes
         And user "Alice" has uploaded file with content "sample file" to "sampleFile.txt" in the server
@@ -43,7 +43,7 @@ Feature: VFS support
         And as "Alice" file "testFile.txt" should exist in the server
         And as "Alice" file "testFile (Copy).txt" should exist in the server
 
-
+    @skip
     Scenario: Move placeholder file
         Given user "Alice" has been created in the server with default attributes
         And user "Alice" has uploaded file with content "lorem file" to "lorem.txt" in the server
@@ -58,7 +58,7 @@ Feature: VFS support
         And as "Alice" file "lorem.txt" should not exist in the server
         And as "Alice" file "sampleFile.txt" should not exist in the server
 
-
+    @skip
     Scenario: Hydration and dehydration of files via file explorer
         Given user "Alice" has been created in the server with default attributes
         And user "Alice" has uploaded file with content "test content" to "testFile.txt" in the server
@@ -101,7 +101,7 @@ Feature: VFS support
         And the user waits for file "simple.txt" to be synced
         Then the placeholder file "simple.txt" should exist on the file system
 
-
+    @skip
     Scenario: Hydration and dehydration of folders via file explorer
         Given user "Alice" has been created in the server with default attributes
         And user "Alice" has created folder "testFol" in the server

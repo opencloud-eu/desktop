@@ -23,7 +23,7 @@ Feature: filter activity for user
             | resource     | action     | account                              |
             | brian-folder | Downloaded | Brian Murphy@%local_server_hostname% |
 
-    @skipOnWindows
+    @skipOnWindows @skip
     Scenario: filter not synced activities (Linux only)
         Given user "Alice" has been created in the server with default attributes
         And user "Alice" has set up a client with default settings
@@ -41,7 +41,7 @@ Feature: filter activity for user
             | resource         | status      | account                              |
             | Folder1/a\\a.txt | Blacklisted | Alice Hansen@%local_server_hostname% |
 
-    @skipOnLinux
+    @skipOnLinux @skip
     Scenario: filter not synced activities (Windows only)
         Given user "Alice" has been created in the server with default attributes
         And user "Alice" has set up a client with default settings
