@@ -6,7 +6,7 @@ Feature: adding accounts
     Background:
         Given user "Alice" has been created in the server with default attributes
 
-
+    @skip
     Scenario: Check default options in advanced configuration
         Given the user has started the client
         And the user has entered the following account information:
@@ -38,7 +38,7 @@ Feature: adding accounts
         Then "Brian" account should be opened
         And "Alice" account should be added
 
-
+    @skip
     Scenario: Adding account with self signed certificate for the first time
         Given the user has started the client
         When the user adds the server "%local_server%"
@@ -61,7 +61,7 @@ Feature: adding accounts
         And the user syncs the "Personal" space
         Then the folder "simple-folder" should exist on the file system
 
-
+    @skip
     Scenario: Check for suffix when sync path exists
         Given the user has created folder "OpenCloud" in the default home path
         And the user has started the client

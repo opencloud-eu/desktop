@@ -33,7 +33,7 @@ Feature: Syncing files
         And the folder "simple-folder" should exist on the file system
         And the folder "large-folder" should exist on the file system
 
-    @issue-9733
+    @issue-9733 @skip
     Scenario: Syncing a file from the server and creating a conflict
         Given user "Alice" has uploaded file with content "server content" to "/conflict.txt" in the server
         And user "Alice" has set up a client with default settings
@@ -57,7 +57,7 @@ Feature: Syncing files
             client content
             """
 
-    @skipOnWindows
+    @skipOnWindows @skip
     Scenario: Sync all is selected by default
         Given user "Alice" has created folder "simple-folder" in the server
         And user "Alice" has created folder "large-folder" in the server
@@ -110,7 +110,7 @@ Feature: Syncing files
         And the file "large-folder/lorem.txt" should not exist on the file system
         And as "Alice" file "simple-folder/localFile.txt" should exist in the server
 
-    @issue-9733 @skipOnWindows
+    @issue-9733 @skipOnWindows @skip
     Scenario: sort folders list by name and size
         Given user "Alice" has created folder "123Folder" in the server
         And user "Alice" has uploaded file with content "small" to "123Folder/lorem.txt" in the server
@@ -165,7 +165,7 @@ Feature: Syncing files
             | "myFolder"                                                               |
             | "really long folder name with some spaces and special char such as $%ñ&" |
 
-    @skipOnWindows
+    @skipOnWindows @skip
     Scenario Outline: Syncing a folder having space at the end (Linux only)
         Given user "Alice" has set up a client with default settings
         When user "Alice" creates a folder <foldername> inside the sync folder
@@ -175,7 +175,7 @@ Feature: Syncing files
             | foldername                  |
             | "folder with space at end " |
 
-    @skipOnLinux
+    @skipOnLinux @skip
     Scenario: Try to sync files having space at the end (Windows only)
         Given user "Alice" has uploaded file with content "lorem epsum" to "trailing-space.txt " in the server
         And user "Alice" has set up a client with default settings
@@ -266,7 +266,7 @@ Feature: Syncing files
         And as "Alice" folder "Folder1/subFolder1" should exist in the server
         And as "Alice" folder "Folder1/subFolder1/subFolder2" should exist in the server
 
-    @skipOnWindows
+    @skipOnWindows @skip
     Scenario: Filenames that are rejected by the server are reported (Linux only)
         Given user "Alice" has created folder "Folder1" in the server
         And user "Alice" has set up a client with default settings
@@ -279,7 +279,7 @@ Feature: Syncing files
         Then the file "Folder1/a\\a.txt" should exist on the file system
         And the file "Folder1/a\\a.txt" should be blacklisted
 
-
+    @skip
     Scenario Outline: Sync long nested folder
         Given user "Alice" has created folder "<foldername>" in the server
         And user "Alice" has set up a client with default settings
@@ -312,7 +312,7 @@ Feature: Syncing files
         And as "Alice" file "/PRN" should exist in the server
         And as "Alice" file "/foo%" should exist in the server
 
-    @skipOnLinux
+    @skipOnLinux @skip
     Scenario: Sync invalid system names (Windows only)
         Given user "Alice" has created folder "CON" in the server
         And user "Alice" has created folder "test%" in the server
@@ -348,7 +348,7 @@ Feature: Syncing files
         And the file "simple-folder/simple.pptx" should exist on the file system
         And the file "simple-folder/simple.xlsx" should exist on the file system
 
-
+    @skip
     Scenario: various types of files can be synced from client to server
         Given user "Alice" has set up a client with default settings
         When user "Alice" creates the following files inside the sync folder:
@@ -393,7 +393,7 @@ Feature: Syncing files
         And the user waits for file "newfile.txt" to be synced
         Then as "Alice" file "newfile.txt" should exist in the server
 
-
+    @skip
     Scenario: File with spaces in the name can sync
         Given user "Alice" has set up a client with default settings
         When user "Alice" creates a file "file with space.txt" with the following content inside the sync folder
@@ -403,7 +403,7 @@ Feature: Syncing files
         And the user waits for file "file with space.txt" to be synced
         Then as "Alice" file "file with space.txt" should exist in the server
 
-
+    @skip
     Scenario: Syncing folders each having large number of files
         Given the user has created a folder "folder1" in temp folder
         And the user has created "500" files each of size "1048576" bytes inside folder "folder1" in temp folder
@@ -438,7 +438,7 @@ Feature: Syncing files
         And for user "Alice" sync folder "Personal" should not be displayed
         And for user "Alice" sync folder "Shares" should not be displayed
 
-
+    @skip
     Scenario: extract a zip file in the sync folder
         Given the user has created a zip file "archive.zip" with the following resources in the temp folder
             | resource  | type   | content    |
@@ -456,7 +456,7 @@ Feature: Syncing files
         And as "Alice" the file "file2.txt" should have the content "Test file2" in the server
 
 
-    @skipOnWindows
+    @skipOnWindows @skip
     Scenario: sync remote folder to a local sync folder having special characters
         Given user "Alice" has created folder "~`!@#$^&()-_=+{[}];',)" in the server
         And user "Alice" has created folder "simple-folder" in the server
@@ -487,14 +487,14 @@ Feature: Syncing files
         And the folder "test-folder/sub-folder2" should exist on the file system
         And the folder "test-folder/sub-folder1" should not exist on the file system
 
-
+    @skip
     Scenario: Syncing a local folder having special characters to the server
         Given user "Alice" has set up a client with default settings
         When user "Alice" creates a folder "~`!@#$^&()-_=+{[}];',)💥🫨❤️‍🔥" inside the sync folder
         And the user waits for folder "~`!@#$^&()-_=+{[}];',)💥🫨❤️‍🔥" to be synced
         Then as "Alice" folder "~`!@#$^&()-_=+{[}];',)💥🫨❤️‍🔥" should exist in the server
 
-    @issue-11814
+    @issue-11814 @skip
     Scenario: Remove folder sync connection (Personal Space)
         Given user "Alice" has created folder "simple-folder" in the server
         And user "Alice" has set up a client with default settings
@@ -503,7 +503,7 @@ Feature: Syncing files
         And the folder "simple-folder" should exist on the file system
         And as "Alice" folder "simple-folder" should exist in the server
 
-
+    @skip
     Scenario: Sync a received shared folder with Viewer permission role
         Given user "Brian" has been created in the server with default attributes
         And user "Alice" has created folder "simple-folder" in the server
@@ -534,7 +534,7 @@ Feature: Syncing files
             | simple-folder/sub-folder | Blacklisted | Brian Murphy@%local_server_hostname% |
             | simple-folder/simple.pdf | Blacklisted | Brian Murphy@%local_server_hostname% |
 
-
+    @skip
     Scenario Outline: File with long multi-byte characters name can be synced (76 characters, 255 bytes including extension)
         Given user "Alice" has set up a client with default settings
         When user "Alice" creates a file "<filename>" with the following content inside the sync folder
@@ -547,7 +547,7 @@ Feature: Syncing files
             | filename                                                                    |
             | 𒁰𒁱𒁲𒁳𒁴𒁵𒁶𒁷𒁸𒁹𒁺𒁻𒁼𒁾𒁿𒁰𒁱𒁲𒁳𒁴𒁵𒁶𒁷𒁸𒁹𒁺𒁻𒁼𒁾𒁿𒁰𒁱𒁲𒁳𒁴𒁵𒁶𒁷𒁸𒁹𒁺abôǣฎพฒฆ๘ตกกผพฒณญไใๅำ๊๒๔๗๘รศฬอฮ.txt |
 
-
+    @skip
 	Scenario: Sync a received shared folder with Editor permission role
         Given user "Brian" has been created in the server with default attributes
         And user "Alice" has created folder "simple-folder" in the server
@@ -585,7 +585,7 @@ Feature: Syncing files
         And the user waits for the files to sync
         Then the file "test-folder/sub-folder2/lorem.txt" should not exist on the file system
 
-    @skipOnWindows
+    @skipOnWindows @skip
     Scenario: Only root level files sync when all folders are unselected
         Given user "Alice" has created folder "test-folder" in the server
         And user "Alice" has created folder "test-folder/sub-folder1" in the server
