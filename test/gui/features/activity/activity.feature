@@ -23,7 +23,7 @@ Feature: filter activity for user
             | resource     | action     | account                              |
             | brian-folder | Downloaded | Brian Murphy@%local_server_hostname% |
 
-    @skipOnWindows
+    @skipOnWindows @smoke
     Scenario: filter not synced activities (Linux only)
         Given user "Alice" has been created in the server with default attributes
         And user "Alice" has set up a client with default settings
