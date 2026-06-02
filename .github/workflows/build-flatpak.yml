@@ -1,0 +1,41 @@
+name: Flatpak Builder
+
+on:
+  workflow_dispatch: 
+
+env:
+  FLATPAK_ID: eu.opencloud.OpenCloudDesktop
+
+jobs:
+  # from https://github.com/flatpak/flatpak-github-actions
+  # this builds the flatpak for testing purposes
+  # flathub builds from source once submitted: https://docs.flathub.org/docs/for-app-authors/requirements
+  # alternatively, flatpak/flatpak-github-actions/flat-manager@v6 can be used for deploying to custom flatpak repo
+  flatpak:
+    name: "Flatpak"
+    container:
+      image: ghcr.io/flathub-infra/flatpak-github-actions:kde-6.9
+      options: --privileged
+    strategy:
+      matrix:
+        variant:
+          - arch: x86_64
+            runner: ubuntu-24.04
+          - arch: aarch64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.variant.runner }}
+    steps:
+      - uses: actions/checkout@v6
+      - name: Download libsecret only
+        run: |
+          git clone --filter=blob:none --no-checkout --depth 1 https://github.com/flathub/shared-modules
+          cd shared-modules
+          git sparse-checkout set libsecret
+          git checkout
+      - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+        with:
+          bundle: ${{ env.FLATPAK_ID }}.flatpak
+          manifest-path: ${{ env.FLATPAK_ID }}.yml
+          cache-key: flatpak-builder-${{ github.sha }}
+          arch: ${{ matrix.variant.arch }}
+          verbose: true

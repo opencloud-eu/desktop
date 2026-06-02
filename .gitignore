@@ -13,6 +13,7 @@ admin/win/nsi/l10n/pofiles/*.po
 *.swp
 *~$
 build*
+!build-flatpak.yml
 cscope.*
 tags
 t1.cfg

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>eu.opencloud.OpenCloudDesktop</id>
+  <name>Opencloud Desktop Client</name>
+  <project_license>GPL-2.0+</project_license>
+  <summary>Sync and collaborate on your desktop or laptop</summary>
+  <metadata_license>CC0-1.0</metadata_license>
+  <developer id="eu.opencloud">
+    <name>Heinlein Group</name>
+  </developer>
+  <description>
+    <p>The OpenCloud desktop client keeps photos and documents always up to date, enabling you to work like you always did.
+Any file you add, modify or delete in the synced folders on your desktop or laptop will show up, change or disappear on the server and all other connected devices.</p>
+  </description>
+  <icon>eu.opencloud.OpenCloudDesktop</icon>
+  <categories>
+    <category>Network</category>
+    <category>Utility</category>
+  </categories>
+  <launchable type="desktop-id">eu.opencloud.OpenCloudDesktop.desktop</launchable>
+  <screenshots>
+    <screenshot type="default">
+      <caption>The options dialog</caption>
+      <image>https://opencloud.eu/sites/default/files/styles/416x233/public/2025-01/OpenCloud_Filesharing_Desktop_mobil_Hauptscreen.webp</image>
+    </screenshot>
+  </screenshots>
+  <branding>
+    <color type="primary" scheme_preference="light">#0082c9</color>
+    <color type="primary" scheme_preference="dark">#0082c9</color>
+  </branding>
+  <url type="homepage">https://opencloud.eu</url>
+  <url type="bugtracker">https://github.com/opencloud-eu/desktop/issues</url>
+  <url type="faq">https://docs.opencloud.eu/docs/user/intro/</url>
+  <url type="vcs-browser">https://github.com/opencloud-eu/desktop</url>
+  <releases>
+    <release version="3.0.3" date="2025-12-08">
+      <description></description>
+    </release>
+  </releases>
+  <content_rating type="oars-1.1"/>
+</component>
