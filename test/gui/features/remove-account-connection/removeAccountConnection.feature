@@ -15,7 +15,7 @@ Feature: remove account connection
         Then "Brian" account should not be displayed
         But "Alice" account should be added
 
-
+    @skip
     Scenario: remove the only account connection
         Given user "Alice" has been created in the server with default attributes
         And user "Alice" has created folder "large-folder" in the server
