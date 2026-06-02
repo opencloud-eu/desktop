@@ -115,23 +115,21 @@ def step(context, user_name, server_file_name, local_file_name):
     )
 
 
-@Then(
-    r'as "([^"].*)" following files should not exist in the server',
-    regexp=True,
-)
+@Then('as "{user_name}" following files should not exist in the server',)
 def step(context, user_name):
-    for row in context.table[1:]:
+    for row in context.table:
         resource_name = row[0]
-        test.compare(
-            webdav.resource_exists(user_name, resource_name),
-            False,
-            f"Resource '{resource_name}' should not exist, but does",
-        )
+        resource_exists = webdav.resource_exists(user_name, resource_name)
+        with ensure(
+             f"Resource '{resource_name}' should not exist, but it does",
+        ):
+            resource_exists.should.be.false
+    
 
 
-@Given('user "|any|" has uploaded the following files to the server')
+@Given('user "{user}" has uploaded the following files to the server')
 def step(context, user):
-    for row in context.table[1:]:
+    for row in context.table:
         file_name = row[0]
         file_content = row[1]
         webdav.create_file(user, file_name, file_content)
