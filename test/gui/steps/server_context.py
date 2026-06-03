@@ -1,8 +1,11 @@
+import tempfile
+from pathlib import Path
 from behave import given as Given, then as Then
 from sure import ensure
 
 from helpers.api import provisioning, webdav_helper as webdav
 from helpers.TableParser import table_rows_hash
+from helpers.FilesHelper import get_file_for_upload, get_document_content
 
 
 @Given('user "{user}" has been created in the server with default attributes')
@@ -96,7 +99,7 @@ def step(context, user, file_name, destination):
 
 
 @Then(
-    'as "|any|" the content of file "|any|" in the server should match the content of local file "|any|"'
+    'as "{user_name}" the content of file "{server_file_name}" in the server should match the content of local file "{local_file_name}"'
 )
 def step(context, user_name, server_file_name, local_file_name):
     raw_server_content = webdav.get_file_content(user_name, server_file_name)
@@ -108,11 +111,10 @@ def step(context, user_name, server_file_name, local_file_name):
         server_content = get_document_content(tmp_file.name)
     local_content = get_document_content(get_file_for_upload(local_file_name))
 
-    test.compare(
-        server_content,
-        local_content,
-        f"Server file '{server_file_name}' differs from local file '{local_file_name}'",
-    )
+    with ensure(
+            f"Server file '{server_file_name}' differs from local file '{local_file_name}'",
+    ):
+        server_content.should.equal(local_content)
 
 
 @Then('as "{user_name}" following files should not exist in the server',)
@@ -124,7 +126,7 @@ def step(context, user_name):
              f"Resource '{resource_name}' should not exist, but it does",
         ):
             resource_exists.should.be.false
-    
+
 
 
 @Given('user "{user}" has uploaded the following files to the server')
