@@ -429,7 +429,7 @@ def step(context, folder_name):
 
 
 @Given(
-    r'the user has copied file "([^"]*)" from outside the sync folder to "([^"]*)" in the sync folder',
+    'the user has copied file "{resource_name}" from outside the sync folder to "{destination}" in the sync folder',
     regexp=True,
 )
 def step(context, resource_name, destination):
@@ -437,7 +437,7 @@ def step(context, resource_name, destination):
 
 
 @When(
-    r'the user copies file "([^"]*)" from outside the sync folder to "([^"]*)" in the sync folder',
+    'the user copies file "{resource_name}" from outside the sync folder to "{destination}" in the sync folder',
     regexp=True,
 )
 def step(context, resource_name, destination):
