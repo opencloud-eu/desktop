@@ -11,7 +11,7 @@ Feature: move file and folder
         And user "Alice" has created folder "folder1/folder2/folder3/folder4" in the server
         And user "Alice" has created folder "folder1/folder2/folder3/folder4/folder5" in the server
 
-    @skip
+
     Scenario: Move folder and file from level 5 sub-folder to sync root
         Given user "Alice" has created folder "folder1/folder2/folder3/folder4/folder5/test-folder" in the server
         And user "Alice" has uploaded file with content "openCloud" to "folder1/folder2/folder3/folder4/folder5/lorem.txt" in the server
@@ -24,7 +24,7 @@ Feature: move file and folder
         And as "Alice" file "folder1/folder2/folder3/folder4/folder5/lorem.txt" should not exist in the server
         And as "Alice" folder "folder1/folder2/folder3/folder4/folder5/test-folder" should not exist in the server
 
-    @skip
+
     Scenario: Move two folders and a file down to the level 5 sub-folder
         And user "Alice" has created folder "test-folder1" in the server
         And user "Alice" has created folder "test-folder2" in the server
@@ -67,7 +67,7 @@ Feature: move file and folder
         And as "Alice" file "folder1/file2.txt" should not exist in the server
 
 
-    @skip
+
     Scenario: Move resources from different sub-levels to sync root
         Given user "Alice" has created folder "folder1/folder2/folder3/folder4/test-folder" in the server
         And user "Alice" has uploaded file with content "openCloud" to "folder1/folder2/lorem.txt" in the server
@@ -80,11 +80,11 @@ Feature: move file and folder
         And as "Alice" file "folder1/folder2/lorem.txt" should not exist in the server
         And as "Alice" folder "folder1/folder2/folder3/folder4/test-folder" should not exist in the server
 
-    @skip
+
 	Scenario: Syncing a 50MB file moved into the local sync folder
         Given user "Alice" has set up a client with default settings
         And user "Alice" has created a folder "NewFolder" inside the sync folder
-        And user "Alice" has created a file "newfile.txt" with size "50MB" in the sync folder
+        And the user has created a file "newfile.txt" with size "50MB" in the sync folder
         When user "Alice" moves file "newfile.txt" to "NewFolder" in the sync folder
         And the user waits for file "NewFolder/newfile.txt" to be synced
         Then as "Alice" file "NewFolder/newfile.txt" should exist in the server
