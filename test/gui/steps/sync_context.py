@@ -21,7 +21,7 @@ from helpers.FilesHelper import convert_path_separators_for_os
 from helpers.TableParser import table_hashes, table_raw
 
 
-def _check_activities(context, not_synced=False):
+def _check_activities(context, not_synced=False, should_exist=True):
     field = "status" if not_synced else "action"
     activities = table_hashes(context.table)
     for activity in activities:
@@ -35,7 +35,10 @@ def _check_activities(context, not_synced=False):
             activity[field],
             activity["account"],
         ):
-            has_activity.should.be.true
+            if should_exist:
+                has_activity.should.be.true
+            else:
+                has_activity.should.be.false
 
 
 @Given('the user has paused the file sync')
@@ -316,40 +319,17 @@ def step(context):
 @Then('the following activities should be displayed in not synced table')
 def step(context):
     _check_activities(context, not_synced=True)
-
+    
 
 @Then('the following activities should not be displayed in synced table')
 def step(context):
-    activities = table_hashes(context.table)
-    for activity in activities:
-        activity["account"] = substitute_inline_codes(activity["account"])
-        has_activity = Activity.has_activity(
-            activity["resource"], activity["action"], activity["account"]
-        )
-        with ensure(
-            'Activity should not exist: {0} | {1} | {2}',
-            activity["resource"],
-            activity["action"],
-            activity["account"],
-        ):
-            has_activity.should.be.false
+    _check_activities(context, should_exist=False)
 
 
-@Then(
-    r'the following activities (should|should not) be displayed in not synced table',
-    regexp=True,
-)
-def step(context, should_or_should_not):
-    expected = should_or_should_not == "should"
-    for row in context.table[1:]:
-        resource = row[0]
-        status = row[1]
-        account = substitute_inline_codes(row[2])
-        test.compare(
-            Activity.check_not_synced_table(resource, status, account),
-            expected,
-            'Resource should be displayed in the not synced table',
-        )
+@Then('the following activities should not be displayed in not synced table')
+def step(context):
+    _check_activities(context, not_synced=True, should_exist=False)
+
 
 
 @When('the user unchecks the "{filter_option}" filter')
