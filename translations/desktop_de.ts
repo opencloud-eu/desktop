@@ -1723,12 +1723,12 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/gui/updater/ocupdater.cpp" line="156"/>
         <source>Could not check for new updates.</source>
-        <translation>Auf neue Aktualisierungen kann nicht geprüft werden.</translation>
+        <translation>Prüfung auf neue Aktualisierungen fehlgeschlagen.</translation>
     </message>
     <message>
         <location filename="../src/gui/updater/ocupdater.cpp" line="146"/>
         <source>Downloading %1. Please wait...</source>
-        <translation>Herunterladen von %1. Bitte warten…</translation>
+        <translation>%1 wird heruntergeladen. Bitte warten…</translation>
     </message>
     <message>
         <location filename="../src/gui/updater/ocupdater.cpp" line="149"/>
@@ -1743,27 +1743,27 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/gui/updater/ocupdater.cpp" line="162"/>
         <source>New %1 available. Please click &lt;a href=&apos;%2&apos;&gt;here&lt;/a&gt; to download the new AppImage manually.</source>
-        <translation>Neues %1 verfügbar. Bitte klicke &lt;a href=&apos;%2&apos;&gt;hier&lt;/a&gt;, um das neue AppImage manuell herunterzuladen.</translation>
+        <translation>%1 verfügbar. Bitte klicken Sie &lt;a href=&apos;%2&apos;&gt;hier&lt;/a&gt;, um das neue AppImage manuell herunterzuladen.</translation>
     </message>
     <message>
         <location filename="../src/gui/updater/ocupdater.cpp" line="165"/>
         <source>New %1 available. Please use the system&apos;s update tool to install it.</source>
-        <translation>Aktualisierung von %1 verfügbar. Bitte nutzen Sie zur Installation das Systemaktualisierungstool.</translation>
+        <translation>%1 verfügbar. Bitte nutzen Sie zur Installation das Aktualisierungswerkzeug Ihres Systems.</translation>
     </message>
     <message>
         <location filename="../src/gui/updater/ocupdater.cpp" line="167"/>
         <source>Checking update server...</source>
-        <translation>Aktualisierungsserver wird überprüft…</translation>
+        <translation>Aktualisierungsserver wird abgefragt…</translation>
     </message>
     <message>
         <location filename="../src/gui/updater/ocupdater.cpp" line="169"/>
         <source>Update status is unknown: Did not check for new updates.</source>
-        <translation>Aktualisierungsstatus unbekannt: Auf neue Aktualisierungen konnte nicht geprüft werden.</translation>
+        <translation>Aktualisierungsstatus unbekannt: Keine Prüfung auf neue Aktualisierungen erfolgt.</translation>
     </message>
     <message>
         <location filename="../src/gui/updater/ocupdater.cpp" line="173"/>
         <source>No updates available. Your installation is at the latest version.</source>
-        <translation>Keine Aktualisierungen verfügbar. Ihre Installation ist die aktuelle Version.</translation>
+        <translation>Keine Aktualisierungen verfügbar. Ihre Installation ist auf dem neuesten Stand.</translation>
     </message>
 </context>
 <context>
@@ -1835,17 +1835,17 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/libsync/discovery.cpp" line="186"/>
         <source>File names ending with a period are not supported on this file system.</source>
-        <translation>Dateinamen enden mit einem Punkt. Das wird in diesem Dateisystem nicht unterstützt.</translation>
+        <translation>Dateinamen, die auf einen Punkt enden, werden von diesem Dateisystem nicht unterstützt.</translation>
     </message>
     <message>
         <location filename="../src/libsync/discovery.cpp" line="199"/>
         <source>File names containing the character &apos;%1&apos; are not supported on this file system.</source>
-        <translation>Dateinamen beinhalten das Zeichen &apos;%1&apos;. Das wird in diesem Dateisystems nicht unterstützt.</translation>
+        <translation>Dateinamen, die das Zeichen »%1« enthalten, werden von diesem Dateisystem nicht unterstützt.</translation>
     </message>
     <message>
         <location filename="../src/libsync/discovery.cpp" line="202"/>
         <source>File name contains at least one invalid character</source>
-        <translation>Dateiname beinhaltet mindestens ein ungültiges Zeichen</translation>
+        <translation>Der Dateiname beinhaltet mindestens ein ungültiges Zeichen.</translation>
     </message>
     <message>
         <location filename="../src/libsync/discovery.cpp" line="204"/>
@@ -1860,7 +1860,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/libsync/discovery.cpp" line="216"/>
         <source>Filename is too long.</source>
-        <translation>Dateiname ist zu lang.</translation>
+        <translation>Der Dateiname ist zu lang.</translation>
     </message>
     <message>
         <location filename="../src/libsync/discovery.cpp" line="219"/>
@@ -1875,17 +1875,17 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/libsync/discovery.cpp" line="227"/>
         <source>The filename is blacklisted on the server.</source>
-        <translation>Der Dateiname steht auf dem Server auf der schwarzen Liste.</translation>
+        <translation>Der Dateiname steht auf der schwarzen Liste des Servers.</translation>
     </message>
     <message>
         <location filename="../src/libsync/discovery.cpp" line="1090"/>
         <source>Moved to invalid target, restoring</source>
-        <translation>Auf ungültiges Ziel verschoben, Wiederherstellung</translation>
+        <translation>In ungültiges Ziel verschoben – Wiederherstellung läuft.</translation>
     </message>
     <message>
         <location filename="../src/libsync/discovery.cpp" line="1103"/>
         <source>Not allowed to remove, restoring</source>
-        <translation>Entfernen nicht erlaubt, Wiederherstellung</translation>
+        <translation>Entfernen nicht gestattet – Wiederherstellung läuft.</translation>
     </message>
     <message>
         <location filename="../src/libsync/discovery.cpp" line="1259"/>
@@ -1910,7 +1910,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/libsync/discovery.cpp" line="1017"/>
         <source>Selective sync: Ignored because its path is deselected</source>
-        <translation>Selektive Synchronisierung: Ignoriert, weil der Pfad abgewählt ist</translation>
+        <translation>Selektive Synchronisierung: Ignoriert, weil der Pfad abgewählt ist.</translation>
     </message>
     <message>
         <location filename="../src/libsync/discovery.cpp" line="1054"/>
@@ -1920,7 +1920,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/libsync/discovery.cpp" line="1067"/>
         <source>Not allowed to upload this file because it is read-only on the server, restoring</source>
-        <translation>Diese Datei darf nicht hochgeladen werden, da sie auf dem Server schreibgeschützt ist, Wiederherstellung</translation>
+        <translation>Diese Datei darf nicht hochgeladen werden, da sie auf dem Server schreibgeschützt ist – Wiederherstellung läuft.</translation>
     </message>
     <message>
         <location filename="../src/libsync/discovery.cpp" line="1213"/>
@@ -1930,7 +1930,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/libsync/discovery.cpp" line="1238"/>
         <source>This Space is currently unavailable</source>
-        <translation>Dieser Space ist aktuell nicht verfügbar</translation>
+        <translation>Dieser Space ist aktuell nicht verfügbar.</translation>
     </message>
 </context>
 <context>
@@ -1938,7 +1938,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/libsync/owncloudpropagator.cpp" line="1108"/>
         <source>Error updating metadata: %1</source>
-        <translation>Fehler beim Aktualisieren von Metadaten: %1</translation>
+        <translation>Fehler beim Aktualisieren der Metadaten: %1</translation>
     </message>
     <message>
         <location filename="../src/libsync/owncloudpropagator.cpp" line="1111"/>
@@ -1951,18 +1951,18 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/libsync/propagatedownload.cpp" line="343"/>
         <source>The download would reduce free local disk space below the limit</source>
-        <translation>Der Download würde den freien Speicherplatz auf der lokalen Festplatte unter das Limit reduzieren</translation>
+        <translation>Der Download würde den freien Speicherplatz auf der lokalen Festplatte unter den Grenzwert reduzieren.</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatedownload.cpp" line="347"/>
         <source>Free space on disk is less than %1</source>
-        <translation>Der freie Speicher auf der Festplatte ist weniger als %1</translation>
+        <translation>Der freie Speicherplatz auf der Festplatte beträgt weniger als %1.</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatedownload.cpp" line="170"/>
         <location filename="../src/libsync/propagatedownload.cpp" line="666"/>
         <source>The file has changed since discovery</source>
-        <translation>Die Datei wurde seit der Entdeckung geändert</translation>
+        <translation>Die Datei wurde seit der Entdeckung geändert.</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatedownload.cpp" line="175"/>
@@ -1986,7 +1986,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/libsync/propagatedownload.cpp" line="441"/>
         <source>The file was deleted from server</source>
-        <translation>Die Datei wurde vom Server gelöscht</translation>
+        <translation>Die Datei wurde vom Server gelöscht.</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatedownload.cpp" line="500"/>
@@ -2001,7 +2001,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/libsync/propagatedownload.cpp" line="514"/>
         <source>The downloaded file is empty despite the server announced it should have been %1.</source>
-        <translation>Die heruntergeladene Datei ist leer, obwohl der Server angekündigt hat, dass sie %1 sein sollte.</translation>
+        <translation>Die heruntergeladene Datei ist leer, obwohl der Server angekündigt hatte, dass sie %1 groß sein sollte.</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatedownload.cpp" line="619"/>
@@ -2011,7 +2011,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/libsync/propagatedownload.cpp" line="706"/>
         <source>Error updating metadata: %1</source>
-        <translation>Fehler beim Aktualisieren von Metadaten: %1</translation>
+        <translation>Fehler beim Aktualisieren der Metadaten: %1</translation>
     </message>
 </context>
 <context>
@@ -2042,7 +2042,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="196"/>
         <source>Error updating metadata: %1</source>
-        <translation>Fehler beim Aktualisieren von Metadaten: %1</translation>
+        <translation>Fehler beim Aktualisieren der Metadaten: %1</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="199"/>
@@ -2055,7 +2055,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="77"/>
         <source>%1 failed with: %2</source>
-        <translation>%1 scheiterte mit: %2</translation>
+        <translation>%1 ist fehlgeschlagen mit: %2</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="87"/>
@@ -2089,7 +2089,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="262"/>
         <source>Error updating metadata: %1</source>
-        <translation>Fehler beim Aktualisieren von Metadaten: %1</translation>
+        <translation>Fehler beim Aktualisieren der Metadaten: %1</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="265"/>
@@ -2099,7 +2099,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/libsync/propagatorjobs.cpp" line="271"/>
         <source>Failed to rename file</source>
-        <translation>Dateiumbenennung fehlgeschlagen</translation>
+        <translation>Umbenennen der Datei fehlgeschlagen</translation>
     </message>
 </context>
 <context>
@@ -2107,7 +2107,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/libsync/propagateremotedelete.cpp" line="94"/>
         <source>Wrong HTTP code returned by server. Expected 204, but received &quot;%1 %2&quot;.</source>
-        <translation>Falscher HTTP-Code vom Server zurückgegeben. Erwartet 204, aber erhalten &quot;%1 %2&quot;.</translation>
+        <translation>Falscher HTTP-Code vom Server zurückgegeben. Erwartet wurde 204, empfangen wurde »%1 %2«.</translation>
     </message>
 </context>
 <context>
@@ -2115,7 +2115,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/libsync/propagateremotemkdir.cpp" line="105"/>
         <source>Wrong HTTP code returned by server. Expected 201, but received &quot;%1 %2&quot;.</source>
-        <translation>Falscher HTTP-Code vom Server zurückgegeben. Erwartet 201, aber erhalten &quot;%1 %2&quot;.</translation>
+        <translation>Falscher HTTP-Code vom Server zurückgegeben. Erwartet wurde 201, empfangen wurde »%1 %2«.</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagateremotemkdir.cpp" line="147"/>
@@ -2133,12 +2133,12 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/libsync/propagateremotemove.cpp" line="113"/>
         <source>Wrong HTTP code returned by server. Expected 201, but received &quot;%1 %2&quot;.</source>
-        <translation>Falscher HTTP-Code vom Server zurückgegeben. Erwartet 201, aber erhalten &quot;%1 %2&quot;.</translation>
+        <translation>Falscher HTTP-Code vom Server zurückgegeben. Erwartet wurde 201, empfangen wurde »%1 %2«.</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagateremotemove.cpp" line="147"/>
         <source>Error updating metadata: %1</source>
-        <translation>Fehler beim Aktualisieren von Metadaten: %1</translation>
+        <translation>Fehler beim Aktualisieren der Metadaten: %1</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagateremotemove.cpp" line="150"/>
@@ -2148,7 +2148,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/libsync/propagateremotemove.cpp" line="157"/>
         <source>Error writing metadata to the database</source>
-        <translation>Fehler beim Schreiben von Metadaten in die Datenbank</translation>
+        <translation>Fehler beim Schreiben der Metadaten in die Datenbank</translation>
     </message>
 </context>
 <context>
@@ -2174,7 +2174,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/libsync/propagateupload.cpp" line="112"/>
         <source>Local file changed during sync. It will be resumed.</source>
-        <translation>Lokale Datei wurde während der Synchronisierung geändert. Sie wird wiederaufgenommen.</translation>
+        <translation>Die lokale Datei wurde während der Synchronisierung geändert. Die Synchronisierung wird fortgesetzt.</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagateupload.cpp" line="130"/>
@@ -2190,18 +2190,18 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/libsync/propagateupload.cpp" line="562"/>
         <source>The server did not provide the file permissions</source>
-        <translation>Der Server hat keine Dateiberechtigungen bereitgestellt</translation>
+        <translation>Der Server hat keine Dateiberechtigungen bereitgestellt.</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagateupload.cpp" line="570"/>
         <source>Error updating metadata: %1</source>
-        <translation>Fehler beim Aktualisieren von Metadaten: %1</translation>
+        <translation>Fehler beim Aktualisieren der Metadaten: %1</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagateupload.cpp" line="141"/>
         <location filename="../src/libsync/propagateupload.cpp" line="459"/>
         <source>Upload of %1 exceeds the quota for the folder</source>
-        <translation>Der Upload von %1 überschreitet die Quota für den Ordner</translation>
+        <translation>Der Upload von %1 überschreitet die Quota für den Ordner.</translation>
     </message>
 </context>
 <context>
@@ -2220,7 +2220,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
         <location filename="../src/libsync/propagateuploadtus.cpp" line="218"/>
         <source>Upload did not receive a Content-Location.</source>
         <extracomment>Content-Location is a technical term, don't translate.</extracomment>
-        <translation>Der Upload ist aufgrund von fehlender Content-Location fehlgeschlagen.</translation>
+        <translation>Der Upload hat keine Content-Location erhalten.</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagateuploadtus.cpp" line="226"/>
@@ -2238,7 +2238,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/libsync/propagateuploadv1.cpp" line="100"/>
         <source>The server did ask for a removed legacy feature (polling)</source>
-        <translation>Der Server hat nach einem entfernten Legacy-Feature (Polling) gefragt</translation>
+        <translation>Der Server hat nach einem entfernten Legacy-Feature (Polling) gefragt.</translation>
     </message>
     <message>
         <location filename="../src/libsync/propagateuploadv1.cpp" line="120"/>
@@ -2248,7 +2248,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/libsync/propagateuploadv1.cpp" line="137"/>
         <source>The server did not acknowledge the last chunk. (No e-tag was present)</source>
-        <translation>Der Server hat den letzten Chunk nicht bestätigt. (Es war kein E-Tag vorhanden)</translation>
+        <translation>Der Server hat den letzten Chunk nicht bestätigt. (Es war kein E-Tag vorhanden.)</translation>
     </message>
 </context>
 <context>
@@ -2411,7 +2411,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/gui/socketapi/socketapi.cpp" line="603"/>
         <source>Confirm deletion</source>
-        <translation>Löschung bestätigen</translation>
+        <translation>Löschen bestätigen</translation>
     </message>
     <message>
         <location filename="../src/gui/socketapi/socketapi.cpp" line="605"/>
@@ -2438,14 +2438,14 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
         <source>Moving file failed:
 
 %1</source>
-        <translation>Datei verschieben ist fehlgeschlagen:
+        <translation>Verschieben der Datei fehlgeschlagen:
 
 %1</translation>
     </message>
     <message>
         <location filename="../src/gui/socketapi/socketapi.cpp" line="762"/>
         <source>I shared something with you</source>
-        <translation>Ich habe etwas mit Ihnen geteilt</translation>
+        <translation>Ich habe etwas mit Ihnen geteilt.</translation>
     </message>
     <message>
         <location filename="../src/gui/socketapi/socketapi.cpp" line="775"/>
@@ -2467,12 +2467,12 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/gui/socketapi/socketapi.cpp" line="803"/>
         <source>Resharing this file is not allowed</source>
-        <translation>Weiteres Teilen dieser Datei ist nicht erlaubt</translation>
+        <translation>Das weitere Teilen dieser Datei ist nicht erlaubt.</translation>
     </message>
     <message>
         <location filename="../src/gui/socketapi/socketapi.cpp" line="803"/>
         <source>Resharing this folder is not allowed</source>
-        <translation>Weiteres Teilen des Ordners ist nicht erlaubt</translation>
+        <translation>Das weitere Teilen des Ordners ist nicht erlaubt.</translation>
     </message>
     <message>
         <location filename="../src/gui/socketapi/socketapi.cpp" line="874"/>
@@ -2537,7 +2537,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/libsync/syncengine.cpp" line="354"/>
         <source>Unable to open or create the local sync database. Make sure you have write access in the sync folder.</source>
-        <translation>Die lokale Synchronisierungsdatenbank kann nicht geöffnet oder erstellt werden. Stellen Sie sicher, dass Schreibzugriff auf den Synchronisierungsordner vorliegt.</translation>
+        <translation>Die lokale Synchronisierungsdatenbank kann weder geöffnet noch erstellt werden. Stellen Sie sicher, dass Sie über Schreibzugriff auf den Synchronisierungsordner verfügen.</translation>
     </message>
     <message>
         <location filename="../src/libsync/syncengine.cpp" line="770"/>
@@ -2562,7 +2562,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/libsync/syncengine.cpp" line="402"/>
         <source>Unable to read from the sync journal.</source>
-        <translation>Fehler beim Einlesen des Synchronisierungsjournals.</translation>
+        <translation>Fehler beim Einlesen des Synchronisierungsjournals</translation>
     </message>
     <message>
         <location filename="../src/libsync/syncengine.cpp" line="473"/>
@@ -2598,7 +2598,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/gui/systray.cpp" line="96"/>
         <source>Disconnected from accounts:</source>
-        <translation>Getrennt von Konten:</translation>
+        <translation>Getrennt von folgenden Konten:</translation>
     </message>
     <message>
         <location filename="../src/gui/systray.cpp" line="98"/>
@@ -2694,7 +2694,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/gui/tlserrordialog.cpp" line="72"/>
         <source>&lt;div id=&quot;cert&quot;&gt;&lt;h3&gt;with Certificate %1&lt;/h3&gt;&lt;div id=&quot;ccert&quot;&gt;&lt;p&gt;Organization: %2&lt;br/&gt;Unit: %3&lt;br/&gt;Country: %4&lt;/p&gt;&lt;p&gt;Fingerprint (MD5): &lt;tt&gt;%5&lt;/tt&gt;&lt;br/&gt;Fingerprint (SHA1): &lt;tt&gt;%6&lt;/tt&gt;&lt;br/&gt;Fingerprint (SHA256): &lt;tt&gt;%7&lt;/tt&gt;&lt;br/&gt;&lt;br/&gt;Effective Date: %8&lt;br/&gt;Expiration Date: %9&lt;/div&gt;&lt;h3&gt;Issuer: %10&lt;/h3&gt;&lt;div id=&quot;issuer&quot;&gt;&lt;p&gt;Organization: %11&lt;br/&gt;Unit: %12&lt;br/&gt;Country: %13&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;</source>
-        <translation>&lt;div id=&quot;cert&quot;&gt;&lt;h3&gt;mit Zertifikat %1&lt;/h3&gt;&lt;div id=&quot;ccert&quot;&gt;&lt;p&gt;Organisation: %2&lt;br/&gt;Einheit: %3&lt;br/&gt;Land: %4&lt;/p&gt;&lt;p&gt;Fingerabdruck print (MD5): &lt;tt&gt;%5&lt;/tt&gt;&lt;br/&gt;Fingerabdruck (SHA1): &lt;tt&gt;%6&lt;/tt&gt;&lt;br/&gt;Fingerabdruck (SHA256): &lt;tt&gt;%7&lt;/tt&gt;&lt;br/&gt;&lt;br/&gt;Gültigkeitsdatum: %8 &lt;br/&gt;Ablaufdatum: %9&lt;/div&gt;&lt;h3&gt;Aussteller: %10&lt;/h3&gt;&lt;div id=&quot;issuer&quot;&gt;&lt;p&gt;Organisation: %11 &lt;br/&gt;Einheit: %12&lt;br/&gt;Land: %13&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;</translation>
+        <translation>&lt;div id=&quot;cert&quot;&gt;&lt;h3&gt;Mit Zertifikat %1&lt;/h3&gt;&lt;div id=&quot;ccert&quot;&gt;&lt;p&gt;Organisation: %2&lt;br/&gt;Einheit: %3&lt;br/&gt;Land: %4&lt;/p&gt;&lt;p&gt;Fingerabdruck print (MD5): &lt;tt&gt;%5&lt;/tt&gt;&lt;br/&gt;Fingerabdruck (SHA1): &lt;tt&gt;%6&lt;/tt&gt;&lt;br/&gt;Fingerabdruck (SHA256): &lt;tt&gt;%7&lt;/tt&gt;&lt;br/&gt;&lt;br/&gt;Gültigkeitsdatum: %8 &lt;br/&gt;Ablaufdatum: %9&lt;/div&gt;&lt;h3&gt;Aussteller: %10&lt;/h3&gt;&lt;div id=&quot;issuer&quot;&gt;&lt;p&gt;Organisation: %11 &lt;br/&gt;Einheit: %12&lt;br/&gt;Land: %13&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;</translation>
     </message>
 </context>
 <context>
@@ -2726,7 +2726,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/gui/updatenotifier.cpp" line="53"/>
         <source>Open Download Page</source>
-        <translation>Downloadseite öffnen</translation>
+        <translation>Download-Seite öffnen</translation>
     </message>
 </context>
 <context>
@@ -2755,7 +2755,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/libsync/common/checksums.cpp" line="376"/>
         <source>The downloaded file does not match the checksum, it will be resumed. &apos;%1&apos; != &apos;%2&apos;</source>
-        <translation>Die heruntergeladene Datei stimmt nicht mit der Prüfsumme überein, sie wird wiederaufgenommen. &apos;%1&apos; != &apos;%2&apos;</translation>
+        <translation>Die heruntergeladene Datei stimmt nicht mit der Prüfsumme überein. Der Download wird neu gestartet. &apos;%1&apos; != &apos;%2&apos;</translation>
     </message>
 </context>
 <context>
@@ -2773,12 +2773,12 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/gui/updater/ocupdater.cpp" line="376"/>
         <source>&lt;p&gt;A new version of the %1 Desktop App is available.&lt;/p&gt;&lt;p&gt;&lt;b&gt;%2&lt;/b&gt; is available for download. The installed version is %3.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Eine neue Version der %1 Desktop App ist verfügbar.&lt;/p&gt;&lt;p&gt;&lt;b&gt;%2&lt;/b&gt; steht zum Download bereit. Die installierte Version ist %3.&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;Eine neue Version der %1-Desktop-App ist verfügbar.&lt;/p&gt;&lt;p&gt;&lt;b&gt;%2&lt;/b&gt; steht zum Download bereit. Die installierte Version ist %3.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/gui/updater/ocupdater.cpp" line="409"/>
         <source>&lt;p&gt;A new version of the %1 Desktop App is available but the updating process failed.&lt;/p&gt;&lt;p&gt;&lt;b&gt;%2&lt;/b&gt; has been downloaded. The installed version is %3.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Eine neue Version der %1 Desktop App ist verfügbar, aber der Aktualisierungsvorgang ist fehlgeschlagen.&lt;/p&gt;&lt;p&gt;&lt;b&gt; %2&lt;/b&gt; wurde heruntergeladen. Die installierte Version ist %3.&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;Eine neue Version der %1-Desktop-App ist verfügbar, aber der Aktualisierungsvorgang ist fehlgeschlagen.&lt;/p&gt;&lt;p&gt;&lt;b&gt; %2&lt;/b&gt; wurde heruntergeladen. Die installierte Version ist %3.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/gui/updater/ocupdater.cpp" line="423"/>
@@ -2843,7 +2843,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/gui/newwizard/setupwizardwidget.cpp" line="50"/>
         <source>Do you really want to cancel the account setup?</source>
-        <translation>Die Benutzereinrichtung wirklich abbrechen?</translation>
+        <translation>Möchten Sie die Kontoeinrichtung wirklich abbrechen?</translation>
     </message>
     <message>
         <location filename="../src/gui/newwizard/setupwizardwidget.cpp" line="107"/>
@@ -2883,7 +2883,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/libsync/theme.cpp" line="238"/>
         <source>%1 %2%7%8Libraries Qt %3, %4%7Using virtual files plugin: %5%7%6</source>
-        <translation>%1 %2%7%8Qt Bibliotheken %3, %4%7Verwendete Erweiterung für virtuelle Dateien: %5%7%6</translation>
+        <translation>%1 %2%7%8Qt-Bibliotheken %3, %4%7Erweiterung für virtuelle Dateien verwendet: %5%7%6</translation>
     </message>
 </context>
 <context>
@@ -2891,7 +2891,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/libsync/theme.cpp" line="221"/>
         <source>%1 (Built against Qt %2)</source>
-        <translation>%1 (Gebaut mit Qt %2)</translation>
+        <translation>%1 (Kompiliert mit Qt %2)</translation>
     </message>
 </context>
 <context>
@@ -2907,7 +2907,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/libsync/common/utility.cpp" line="302"/>
         <source>in the future</source>
-        <translation>in der Zukunft</translation>
+        <translation>In der Zukunft</translation>
     </message>
     <message numerus="yes">
         <location filename="../src/libsync/common/utility.cpp" line="297"/>
@@ -2959,7 +2959,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/gui/newwizard/jobs/resolveurljobfactory.cpp" line="57"/>
         <source>Could not detect compatible server at %1</source>
-        <translation>Ein kompatibler Server konnte unter %1 nicht gefunden werden.</translation>
+        <translation>Es konnte kein kompatibler Server unter %1 erkannt werden.</translation>
     </message>
     <message>
         <location filename="../src/gui/newwizard/jobs/resolveurljobfactory.cpp" line="95"/>
@@ -2992,13 +2992,13 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/gui/newwizard/pages/serverurlsetupwizardpage.ui" line="85"/>
         <source>What is your server&apos;s address?</source>
-        <translation>Wie lautet die Serveradresse?</translation>
+        <translation>Wie lautet die Adresse Ihres Servers?</translation>
     </message>
     <message>
         <location filename="../src/gui/newwizard/pages/serverurlsetupwizardpage.cpp" line="66"/>
         <source>%1 logo</source>
         <extracomment>This is the accessibility text for the logo in the setup wizard page. The parameter is the name for the (branded) application.</extracomment>
-        <translation>%1 Logo</translation>
+        <translation>%1-Logo</translation>
     </message>
 </context>
 <context>
@@ -3183,7 +3183,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/libsync/syncresult.cpp" line="55"/>
         <source>Success, some files were ignored.</source>
-        <translation>Erfolg, manche Dateien wurden ignoriert.</translation>
+        <translation>Erfolg, einige Dateien wurden ignoriert.</translation>
     </message>
     <message>
         <location filename="../src/libsync/syncresult.cpp" line="57"/>
@@ -3262,7 +3262,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/libsync/platform_win.cpp" line="112"/>
         <source>Shutting down %1</source>
-        <translation>Herunterfahren %1</translation>
+        <translation>%1 wird geschlossen</translation>
     </message>
 </context>
 <context>
@@ -3275,7 +3275,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/libsync/vfs/vfs.cpp" line="255"/>
         <source>The Virtual filesystem %1 is not supported on this platform</source>
-        <translation>Das virtuelle Dateisystem %1 wird auf dieser Plattform nicht unterstützt</translation>
+        <translation>Das virtuelle Dateisystem %1 wird auf dieser Plattform nicht unterstützt.</translation>
     </message>
 </context>
 <context>
@@ -3296,7 +3296,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/gui/main.cpp" line="468"/>
         <source>There was an error while accessing the configuration file at %1.</source>
-        <translation>Fehler beim Zugriff auf Konfigurationsdatei bei %1.</translation>
+        <translation>Beim Zugriff auf die Konfigurationsdatei unter %1 ist ein Fehler aufgetreten.</translation>
     </message>
 </context>
 <context>
@@ -3357,7 +3357,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="43"/>
         <source>Server version downloaded, local copy was backed up as conflict file</source>
-        <translation>Serverversion heruntergeladen, lokale Kopie wurde als Konfliktdatei gespeichert</translation>
+        <translation>Serverversion heruntergeladen. Die lokale Kopie wurde als Konfliktdatei gesichert.</translation>
     </message>
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="47"/>
@@ -3383,27 +3383,27 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="68"/>
         <source>downloading</source>
-        <translation>herunterladen</translation>
+        <translation>Herunterladen</translation>
     </message>
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="70"/>
         <source>uploading</source>
-        <translation>hochladen</translation>
+        <translation>Hochladen</translation>
     </message>
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="72"/>
         <source>deleting</source>
-        <translation>löschen</translation>
+        <translation>Löschen</translation>
     </message>
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="74"/>
         <source>moving</source>
-        <translation>verschieben</translation>
+        <translation>Verschieben</translation>
     </message>
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="76"/>
         <source>ignoring</source>
-        <translation>ignorieren</translation>
+        <translation>Ignorieren</translation>
     </message>
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="78"/>
@@ -3413,7 +3413,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="80"/>
         <source>updating local metadata</source>
-        <translation>lokale Metadaten werden aktualisiert</translation>
+        <translation>Lokale Metadaten aktualisieren</translation>
     </message>
 </context>
 <context>
@@ -3431,7 +3431,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/gui/guiutility.cpp" line="76"/>
         <source>Could not open email client</source>
-        <translation>Die E-Mail-Anwendung konnte nicht geöffnet werden</translation>
+        <translation>Die E-Mail-Anwendung konnte nicht geöffnet werden.</translation>
     </message>
     <message>
         <location filename="../src/gui/guiutility.cpp" line="77"/>
