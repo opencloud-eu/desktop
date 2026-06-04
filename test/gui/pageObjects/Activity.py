@@ -29,6 +29,7 @@ class Activity:
     NOT_SYNCED_FILTER_OPTION_SELECTOR = SimpleNamespace(by=None, selector=None)
     SYNCED_ACTIVITY_TABLE_HEADER_SELECTOR = SimpleNamespace(by=None, selector=None)
     NOT_SYNCED_ACTIVITY_TABLE_HEADER_SELECTOR = SimpleNamespace(by=None, selector=None)
+    NOT_SYNCED_ACTIVITY_CONFLICT_FILE = SimpleNamespace(by=By.XPATH, selector="//*[starts-with(@name, '{filename} (conflicted copy')]")
     SYNCED_ACTIVITY_STATUS = SimpleNamespace(by=By.NAME, selector=None)
 
     @staticmethod
@@ -57,12 +58,17 @@ class Activity:
         app().find_element(Activity.SUBTAB_CONTAINER.by, selector).click()
 
     @staticmethod
-    def check_file_exist(filename):
-        squish.waitForObjectExists(
-            Activity.get_not_synced_file_selector(
-                RegularExpression(build_conflicted_regex(filename))
-            )
+    def has_conflict_file(filename):
+        filename = filename.rsplit(".", 1)[0]
+        has_activity = wait_for(
+            lambda: app().find_element(
+                Activity.NOT_SYNCED_ACTIVITY_CONFLICT_FILE.by,
+                Activity.NOT_SYNCED_ACTIVITY_CONFLICT_FILE.selector.format(filename=filename)
+            ).is_displayed(),
+            get_config('max_timeout')
         )
+        if not has_activity:
+            raise AssertionError(f"File conflict activity not found")
 
     @staticmethod
     def is_resource_blacklisted(filename):
