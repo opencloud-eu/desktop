@@ -379,10 +379,11 @@ def step(context, user, file_name, content):
         content.should.equal(file_content)
 
 
-@Then('user "|any|" should not be able to edit the file "|any|" on the file system')
+@Then('user "{user}" should not be able to edit the file "{file_name}" on the file system')
 def step(context, user, file_name):
     file_path = get_resource_path(file_name, user)
-    test.compare(not can_write(file_path), True, 'File should not be writable')
+    with ensure('File should not be writable, but it is'):
+        can_write(file_path).should.be.false
 
 
 @Given(

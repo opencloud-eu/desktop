@@ -132,7 +132,7 @@ def step(context, filename):
 
 @When('the user selects "{tab_name}" tab in the activity')
 def step(context, tab_name):
-    Activity.click_tab(tab_name)
+    Activity.open_tab(tab_name)
 
 
 @Then('the toolbar should have the following tabs:')
@@ -334,18 +334,15 @@ def step(context, filter_option):
 
 @Then('the following error message should appear in the client')
 def step(context):
-    expected_error_message = '\n'.join(context.multiLineText)
+    expected_error_message = context.text
 
     actual_error_message = SyncConnection.get_permission_error_message()
 
     # wait for error message to disappear
     SyncConnection.wait_for_error_label(False)
 
-    test.compare(
-        actual_error_message,
-        expected_error_message,
-        f'Expected error message: "{expected_error_message}" but got: "{actual_error_message}"',
-    )
+    with ensure(f'Expected error message: "{expected_error_message}" but got: "{actual_error_message}"'):
+        expected_error_message.should.equal(actual_error_message)
 
 
 @Given('the user has waited for "|any|" seconds')

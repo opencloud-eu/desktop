@@ -4,6 +4,7 @@ from selenium.common.exceptions import NoSuchElementException
 
 from helpers.ConfigHelper import get_config
 from helpers.AppHelper import app
+from helpers.Utils import wait_for
 
 
 class SyncConnection:
@@ -20,7 +21,10 @@ class SyncConnection:
     CONFIRM_FOLDER_SYNC_CONNECTION_REMOVE = SimpleNamespace(
         by=By.NAME, selector="Remove Space"
     )
-    PERMISSION_ERROR_LABEL = SimpleNamespace(by=None, selector=None)
+    PERMISSION_ERROR_LABEL = SimpleNamespace(
+        by=By.XPATH,
+        selector="//label[contains(@name, 'permission')]"
+    )
 
     @staticmethod
     def get_current_account_connection():
@@ -116,8 +120,12 @@ class SyncConnection:
     @staticmethod
     def wait_for_error_label(to_exist=True):
         """Wait for permission error label to appear or disappear"""
-        status = squish.waitFor(
-            lambda: object.exists(SyncConnection.PERMISSION_ERROR_LABEL) == to_exist,
+
+        status = wait_for(
+            lambda: (bool(app().find_elements(
+                SyncConnection.PERMISSION_ERROR_LABEL.by,
+                SyncConnection.PERMISSION_ERROR_LABEL.selector
+            ))) == to_exist,
             get_config("max_timeout"),
         )
         if not status:
@@ -128,4 +136,9 @@ class SyncConnection:
     def get_permission_error_message():
         """Get the permission error message text"""
         SyncConnection.wait_for_error_label(True)  # Wait for label to appear
-        return str(squish.waitForObject(SyncConnection.PERMISSION_ERROR_LABEL).text)
+        element = app().find_element(
+            SyncConnection.PERMISSION_ERROR_LABEL.by,
+            SyncConnection.PERMISSION_ERROR_LABEL.selector
+        )
+        return str(element.text)
+
