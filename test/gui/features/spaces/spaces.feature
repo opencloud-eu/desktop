@@ -16,7 +16,7 @@ Feature: Project spaces
         Then user "Alice" should be able to open the file "testfile.txt" on the file system
         And as "Alice" the file "testfile.txt" should have content "some content" on the file system
 
-    @skip
+
     Scenario: User with Viewer role cannot edit the file
         Given the administrator has created a folder "planning" in space "Project101"
         And the administrator has uploaded a file "testfile.txt" with content "some content" inside space "Project101"
@@ -68,7 +68,7 @@ Feature: Project spaces
         Then for user "Alice" sync folder "Project101" should not be displayed
         But the file "testfile.txt" should exist on the file system
 
-    @skip
+
     Scenario: User with Viewer role cannot create resource
         Given the administrator has added user "Alice" to space "Project101" with role "viewer"
         And user "Alice" has set up a client with space "Project101"
