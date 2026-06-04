@@ -4,7 +4,7 @@ import builtins
 import shutil
 import zipfile
 from os.path import isfile, join, isdir, exists
-from behave import when as When, then as Then
+from behave import when as When, then as Then, given as Given
 from sure import ensure
 
 from helpers.SetupClientHelper import get_resource_path, get_temp_resource_path
@@ -453,6 +453,6 @@ def step(context):
         deleteResource(filename, 'file')
 
 
-@Given('user "|any|" has created a file "|any|" with size "|any|" in the sync folder')
-def step(context, _, filename, filesize):
+@Given('the user has created a file "{filename}" with size "{filesize}" in the sync folder')
+def step(context, filename, filesize):
     create_file_with_size(filename, filesize)
