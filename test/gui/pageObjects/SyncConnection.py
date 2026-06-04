@@ -13,7 +13,7 @@ class SyncConnection:
     )
     FOLDER_SYNC_CONNECTION_MENU_BUTTON = SimpleNamespace(
         by=By.NAME,
-        selector="{sync_folder},Success,Local folder: {sync_path}{sync_folder}",
+        selector="{sync_folder},{status},Local folder: {sync_path}{sync_folder}",
     )
     MENU_ITEM = SimpleNamespace(by=By.NAME, selector=None)
     SELECTIVE_SYNC_APPLY_BUTTON = SimpleNamespace(by=None, selector=None)
@@ -38,23 +38,33 @@ class SyncConnection:
         return None
 
     @staticmethod
-    def open_menu(sync_folder=None):
+    def open_menu(sync_folder=None, sync_state="success"):
         if sync_folder is None:
             sync_folder = get_config('syncConnectionName')
+
+        if sync_state == "success":
+            status = "Success"
+        elif sync_state == "paused":
+            status = "Sync paused"
+        elif sync_state == "queued":
+            status = "Queued"
+        else:
+            raise ValueError(f"Unknown sync_state: {sync_state}")
 
         connection = SyncConnection.get_current_account_connection()
         menu_button = connection.find_element(
             SyncConnection.FOLDER_SYNC_CONNECTION_MENU_BUTTON.by,
             SyncConnection.FOLDER_SYNC_CONNECTION_MENU_BUTTON.selector.format(
                 sync_folder=sync_folder,
-                sync_path=get_config('currentUserSyncPath'),
+                sync_path=get_config("currentUserSyncPath"),
+                status=status,
             ),
         )
         menu_button.native_click(button='right')
 
     @staticmethod
-    def perform_action(action):
-        SyncConnection.open_menu()
+    def perform_action(action, sync_state="success"):
+        SyncConnection.open_menu(sync_state=sync_state)
         app().find_element(SyncConnection.MENU_ITEM.by, action).click()
 
     @staticmethod
@@ -67,7 +77,7 @@ class SyncConnection:
 
     @staticmethod
     def resume_sync():
-        SyncConnection.perform_action("Resume sync")
+        SyncConnection.perform_action("Resume sync", "paused")
 
     @staticmethod
     def has_menu_item(item):
@@ -93,6 +103,7 @@ class SyncConnection:
                 SyncConnection.FOLDER_SYNC_CONNECTION_MENU_BUTTON.selector.format(
                     sync_folder=sync_folder,
                     sync_path=get_config('currentUserSyncPath'),
+                    status="success"
                 ),
             )
             return True
