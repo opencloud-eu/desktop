@@ -1283,6 +1283,11 @@ Please consider removing this folder from the account and adding it again.</sour
         <translation>העברת קבצים שנמחקו מרחוק לסל המיחזור המקומי במקום למחוק אותם</translation>
     </message>
     <message>
+        <location filename="../src/gui/generalsettings.ui" line="125"/>
+        <source>Automatically merge text file conflicts when possible</source>
+        <translation>מיזוג אוטומטי של התנגשויות בקובצי טקסט כשאפשר</translation>
+    </message>
+    <message>
         <location filename="../src/gui/generalsettings.ui" line="127"/>
         <source>Edit Ignored Files</source>
         <translation>עריכת קבצים שמותעלמים מהם</translation>

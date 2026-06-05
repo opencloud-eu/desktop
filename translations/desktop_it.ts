@@ -1285,6 +1285,11 @@ Si consiglia di rimuovere questa cartella dall&apos;account e di aggiungerla nuo
         <translation>Sposta i file cancellati da remoto nel cestino locale invece di eliminarli.</translation>
     </message>
     <message>
+        <location filename="../src/gui/generalsettings.ui" line="125"/>
+        <source>Automatically merge text file conflicts when possible</source>
+        <translation>Unisci automaticamente i conflitti dei file di testo quando possibile</translation>
+    </message>
+    <message>
         <location filename="../src/gui/generalsettings.ui" line="127"/>
         <source>Edit Ignored Files</source>
         <translation>Modifica i file ignorati</translation>

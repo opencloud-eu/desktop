@@ -22,6 +22,8 @@
 
 namespace OCC {
 
+class ConflictAutoMerge;
+
 /**
  * @brief The PropagateDownloadFile class
  * @ingroup libsync
@@ -108,6 +110,7 @@ private Q_SLOTS:
     void transmissionChecksumValidated(CheckSums::Algorithm checksumType, const QByteArray &checksum);
     /// Called when the download's checksum computation is done
     void contentChecksumComputed(CheckSums::Algorithm checksumType, const QByteArray &checksum);
+    void autoMergeFinished(bool merged, const QString &mergedFileName);
     void downloadFinished();
     /// Called when it's time to update the db metadata
     void updateMetadata(bool isConflict);
@@ -118,12 +121,17 @@ private Q_SLOTS:
 
 private:
     void deleteExistingFolder();
+    bool startAutoMerge();
+    void removeAutoMergedFile();
 
     qint64 _resumeStart;
     qint64 _downloadProgress;
     QPointer<GETFileJob> _job;
+    QPointer<ConflictAutoMerge> _autoMergeJob;
     QFile _tmpFile;
     bool _deleteExisting;
+    bool _autoMergeResolved = false;
+    QString _autoMergedFileName;
     ConflictRecord _conflictRecord;
 
     QElapsedTimer _stopwatch;

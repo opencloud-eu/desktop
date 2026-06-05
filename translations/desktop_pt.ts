@@ -1283,6 +1283,11 @@ Considere remover esta pasta da conta e adicioná-la novamente.</translation>
         <translation>Mover ficheiros eliminados remotamente para o lixo local em vez de os eliminar</translation>
     </message>
     <message>
+        <location filename="../src/gui/generalsettings.ui" line="125"/>
+        <source>Automatically merge text file conflicts when possible</source>
+        <translation>Unir automaticamente conflitos de ficheiros de texto quando possível</translation>
+    </message>
+    <message>
         <location filename="../src/gui/generalsettings.ui" line="127"/>
         <source>Edit Ignored Files</source>
         <translation>Editar ficheiros ignorados</translation>

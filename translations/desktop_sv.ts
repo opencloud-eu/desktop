@@ -1272,6 +1272,11 @@ Please consider removing this folder from the account and adding it again.</sour
         <translation>Flytta fjärrraderade filer till den lokala papperskorgen istället för att radera dem</translation>
     </message>
     <message>
+        <location filename="../src/gui/generalsettings.ui" line="125"/>
+        <source>Automatically merge text file conflicts when possible</source>
+        <translation>Sammanfoga konflikter i textfiler automatiskt när det är möjligt</translation>
+    </message>
+    <message>
         <location filename="../src/gui/generalsettings.ui" line="127"/>
         <source>Edit Ignored Files</source>
         <translation>Redigera ignorerade filer</translation>

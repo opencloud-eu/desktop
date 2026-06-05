@@ -1283,6 +1283,11 @@ Please consider removing this folder from the account and adding it again.</sour
         <translation>نقل الملفات المحذوفة عن بُعد إلى سلة المهملات المحلية بدلاً من حذفها</translation>
     </message>
     <message>
+        <location filename="../src/gui/generalsettings.ui" line="125"/>
+        <source>Automatically merge text file conflicts when possible</source>
+        <translation>دمج تعارضات الملفات النصية تلقائيًا عند الإمكان</translation>
+    </message>
+    <message>
         <location filename="../src/gui/generalsettings.ui" line="127"/>
         <source>Edit Ignored Files</source>
         <translation>تحرير الملفات المتجاهلة</translation>

@@ -1283,6 +1283,11 @@ Veuillez envisager de supprimer ce dossier du compte et de l&apos;ajouter à nou
         <translation>Déplacer les fichiers distants qui ont été supprimés vers la corbeille locale au lieu de les supprimer définitivement</translation>
     </message>
     <message>
+        <location filename="../src/gui/generalsettings.ui" line="125"/>
+        <source>Automatically merge text file conflicts when possible</source>
+        <translation>Fusionner automatiquement les conflits de fichiers texte lorsque possible</translation>
+    </message>
+    <message>
         <location filename="../src/gui/generalsettings.ui" line="127"/>
         <source>Edit Ignored Files</source>
         <translation>Modifier les fichiers ignorés</translation>

@@ -14,6 +14,7 @@
 
 #include "propagatedownload.h"
 #include "account.h"
+#include "conflictautomerge.h"
 #include "filesystem.h"
 #include "libsync/networkjobs/getfilejob.h"
 #include "networkjobs.h"
@@ -604,6 +605,42 @@ void PropagateDownloadFile::contentChecksumComputed(CheckSums::Algorithm checksu
 {
     _item->_checksumHeader = ChecksumHeader(checksumType, checksum).makeChecksumHeader();
 
+    if (startAutoMerge()) {
+        return;
+    }
+
+    downloadFinished();
+}
+
+bool PropagateDownloadFile::startAutoMerge()
+{
+    auto autoMerge = new ConflictAutoMerge(propagator(), _item, propagator()->fullLocalPath(_item->localName()), _tmpFile.fileName(), this);
+    if (!autoMerge->canStart()) {
+        autoMerge->deleteLater();
+        return false;
+    }
+
+    qCInfo(lcPropagateDownload) << "Starting text conflict automerge" << _item->localName();
+    _autoMergeJob = autoMerge;
+    propagator()->_activeJobList.append(this);
+    connect(autoMerge, &ConflictAutoMerge::finished, this, &PropagateDownloadFile::autoMergeFinished);
+    autoMerge->start();
+    return true;
+}
+
+void PropagateDownloadFile::autoMergeFinished(bool merged, const QString &mergedFileName)
+{
+    propagator()->_activeJobList.removeOne(this);
+    if (_autoMergeJob) {
+        _autoMergeJob->deleteLater();
+        _autoMergeJob.clear();
+    }
+
+    if (merged) {
+        _autoMergeResolved = true;
+        _autoMergedFileName = mergedFileName;
+    }
+
     downloadFinished();
 }
 
@@ -615,6 +652,7 @@ void PropagateDownloadFile::downloadFinished()
     // In case of file name clash, report an error
     // This can happen if another parallel download saved a clashing file.
     if (auto clash = propagator()->localFileNameClash(_item->localName())) {
+        removeAutoMergedFile();
         done(SyncFileItem::NormalError,
             tr("The file »%1« cannot be saved because of a local file name clash with »%2«!")
                 .arg(QDir::toNativeSeparators(_item->localName()), QDir::toNativeSeparators(clash.get())));
@@ -638,16 +676,21 @@ void PropagateDownloadFile::downloadFinished()
         // Make the file a hydrated placeholder if possible
         const auto result = propagator()->updatePlaceholder(*_item, _tmpFile.fileName(), fn);
         if (!result) {
+            removeAutoMergedFile();
             done(SyncFileItem::NormalError, result.error());
             return;
         } else if (result.get() == Vfs::ConvertToPlaceholderResult::Locked) {
+            removeAutoMergedFile();
             done(SyncFileItem::SoftError, tr("The file »%1« is currently in use").arg(_item->localName()));
             return;
         }
     }
 
     bool isConflict = _item->instruction() == CSYNC_INSTRUCTION_CONFLICT && (QFileInfo(fn).isDir() || !FileSystem::fileEquals(fn, _tmpFile.fileName()));
-    if (isConflict) {
+    if (isConflict && _autoMergeResolved) {
+        isConflict = false;
+        previousFileExists = false;
+    } else if (isConflict) {
         QString error;
         if (!propagator()->createConflict(_item, _associatedComposite, &error)) {
             done(SyncFileItem::SoftError, error);
@@ -662,6 +705,7 @@ void PropagateDownloadFile::downloadFinished()
         // is necessary to avoid overwriting user changes that happened between
         // the discovery phase and now.
         if (FileSystem::fileChanged(FileSystem::toFilesystemPath(fn), FileSystem::FileChangedInfo::fromSyncFileItemPrevious(_item.data()))) {
+            removeAutoMergedFile();
             propagator()->_anotherSyncNeeded = true;
             done(SyncFileItem::SoftError, tr("The file has changed since discovery"));
             return;
@@ -670,8 +714,17 @@ void PropagateDownloadFile::downloadFinished()
     // If the file is locked, we want to retry this sync when it
     // becomes available again
     if (FileSystem::isFileLocked(fn, FileSystem::LockMode::Exclusive)) {
+        removeAutoMergedFile();
         Q_EMIT propagator()->seenLockedFile(fn, FileSystem::LockMode::Exclusive);
         done(SyncFileItem::SoftError, tr("The file »%1« is currently in use").arg(fn));
+        return;
+    }
+
+    if (_autoMergeResolved) {
+        // Record the downloaded remote metadata, then keep the merged file as a local change for the next sync.
+        _item->_size = FileSystem::getSize(FileSystem::toFilesystemPath(_tmpFile.fileName()));
+        FileSystem::remove(_tmpFile.fileName());
+        updateMetadata(false);
         return;
     }
 
@@ -679,6 +732,7 @@ void PropagateDownloadFile::downloadFinished()
     // The fileChanged() check is done above to generate better error messages.
     if (!FileSystem::uncheckedRenameReplace(_tmpFile.fileName(), fn, &error)) {
         qCWarning(lcPropagateDownload) << u"Rename failed:" << _tmpFile.fileName() << u"=>" << fn << u"with error:" << error;
+        removeAutoMergedFile();
         propagator()->_anotherSyncNeeded = true;
         done(SyncFileItem::SoftError, error);
         return;
@@ -703,14 +757,31 @@ void PropagateDownloadFile::updateMetadata(bool isConflict)
 {
     const auto result = propagator()->updateMetadata(*_item);
     if (!result) {
+        removeAutoMergedFile();
         done(SyncFileItem::FatalError, tr("Error updating metadata: %1").arg(result.error()));
         return;
     } else if (result.get() == Vfs::ConvertToPlaceholderResult::Locked) {
+        removeAutoMergedFile();
         done(SyncFileItem::SoftError, tr("The file »%1« is currently in use").arg(_item->localName()));
         return;
     }
     propagator()->_journal->setDownloadInfo(_item->localName(), SyncJournalDb::DownloadInfo());
     propagator()->_journal->commit(QStringLiteral("download file start2"));
+
+    if (_autoMergeResolved) {
+        const auto fn = propagator()->fullLocalPath(_item->localName());
+        QString error;
+        if (!FileSystem::uncheckedRenameReplace(_autoMergedFileName, fn, &error)) {
+            qCWarning(lcPropagateDownload) << u"Installing automerged file failed:" << _autoMergedFileName << u"=>" << fn << u"with error:" << error;
+            removeAutoMergedFile();
+            propagator()->_anotherSyncNeeded = true;
+            done(SyncFileItem::SoftError, error);
+            return;
+        }
+        _autoMergedFileName.clear();
+        FileSystem::setFileHidden(fn, false);
+        propagator()->_anotherSyncNeeded = true;
+    }
 
     done(isConflict ? SyncFileItem::Conflict : SyncFileItem::Success);
 
@@ -730,6 +801,14 @@ void PropagateDownloadFile::updateMetadata(bool isConflict)
     }
 }
 
+void PropagateDownloadFile::removeAutoMergedFile()
+{
+    if (!_autoMergedFileName.isEmpty()) {
+        QFile::remove(_autoMergedFileName);
+        _autoMergedFileName.clear();
+    }
+}
+
 void PropagateDownloadFile::slotDownloadProgress(qint64 received, qint64)
 {
     if (!_job)
@@ -745,6 +824,12 @@ void PropagateDownloadFile::abort(PropagatorJob::AbortType abortType)
     if (_job) {
         _job->abort();
     }
+    if (_autoMergeJob) {
+        propagator()->_activeJobList.removeOne(this);
+        _autoMergeJob->deleteLater();
+        _autoMergeJob.clear();
+    }
+    removeAutoMergedFile();
     if (abortType == AbortType::Asynchronous) {
         Q_EMIT abortFinished();
     }

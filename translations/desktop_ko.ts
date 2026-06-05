@@ -1284,6 +1284,11 @@ Please consider removing this folder from the account and adding it again.</sour
         <translation>원격에서 삭제된 파일을 삭제하는 대신 로컬 휴지통으로 이동</translation>
     </message>
     <message>
+        <location filename="../src/gui/generalsettings.ui" line="125"/>
+        <source>Automatically merge text file conflicts when possible</source>
+        <translation>가능한 경우 텍스트 파일 충돌을 자동으로 병합</translation>
+    </message>
+    <message>
         <location filename="../src/gui/generalsettings.ui" line="127"/>
         <source>Edit Ignored Files</source>
         <translation>무시된 파일 편집</translation>

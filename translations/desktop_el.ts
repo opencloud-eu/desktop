@@ -1283,6 +1283,11 @@ Please consider removing this folder from the account and adding it again.</sour
         <translation>Μετακίνηση των απομακρυσμένα διαγραμμένων αρχείων στον τοπικό κάδο ανακύκλωσης αντί για διαγραφή τους</translation>
     </message>
     <message>
+        <location filename="../src/gui/generalsettings.ui" line="125"/>
+        <source>Automatically merge text file conflicts when possible</source>
+        <translation>Αυτόματη συγχώνευση διενέξεων αρχείων κειμένου όταν είναι δυνατό</translation>
+    </message>
+    <message>
         <location filename="../src/gui/generalsettings.ui" line="127"/>
         <source>Edit Ignored Files</source>
         <translation>Επεξεργασία αγνοημένων αρχείων</translation>

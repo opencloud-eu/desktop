@@ -115,6 +115,10 @@ public:
     bool moveToTrash() const;
     void setMoveToTrash(bool);
 
+    /** Whether text file conflicts should be automatically merged when possible. */
+    bool autoMergeTextConflicts() const;
+    void setAutoMergeTextConflicts(bool);
+
     /// Used for testing, so we do not change the user's config file.
     static bool setConfDir(const QString &value);
 

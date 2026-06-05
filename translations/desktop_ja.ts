@@ -1283,6 +1283,11 @@ Please consider removing this folder from the account and adding it again.</sour
         <translation>リモートで削除されたファイルを、直接削除せずローカルのゴミ箱に移動する</translation>
     </message>
     <message>
+        <location filename="../src/gui/generalsettings.ui" line="125"/>
+        <source>Automatically merge text file conflicts when possible</source>
+        <translation>可能な場合はテキストファイルの競合を自動的にマージする</translation>
+    </message>
+    <message>
         <location filename="../src/gui/generalsettings.ui" line="127"/>
         <source>Edit Ignored Files</source>
         <translation>無視するファイルを編集</translation>

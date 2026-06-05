@@ -1283,6 +1283,11 @@ Please consider removing this folder from the account and adding it again.</sour
         <translation>ຍ້າຍໄຟລ໌ທີ່ຖືກລຶບຈາກເຊີບເວີໄປໄວ້ໃນຖັງຂີ້ເຫຍື້ອໃນເຄື່ອງ ແທນທີ່ຈະລຶບຖິ້ມທັນທີ</translation>
     </message>
     <message>
+        <location filename="../src/gui/generalsettings.ui" line="125"/>
+        <source>Automatically merge text file conflicts when possible</source>
+        <translation>ຮວມຂໍ້ຂັດແຍ່ງຂອງໄຟລ໌ຂໍ້ຄວາມໂດຍອັດຕະໂນມັດເມື່ອເປັນໄປໄດ້</translation>
+    </message>
+    <message>
         <location filename="../src/gui/generalsettings.ui" line="127"/>
         <source>Edit Ignored Files</source>
         <translation>ແກ້ໄຂລາຍຊື່ໄຟລ໌ທີ່ຖືກລະເວັ້ນ</translation>

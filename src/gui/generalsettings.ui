@@ -120,6 +120,13 @@
              </widget>
             </item>
             <item>
+             <widget class="QCheckBox" name="autoMergeTextConflictsCheckBox">
+              <property name="text">
+               <string>Automatically merge text file conflicts when possible</string>
+              </property>
+             </widget>
+            </item>
+            <item>
              <layout class="QHBoxLayout" name="horizontalLayout_4">
               <item>
                <widget class="QPushButton" name="ignoredFilesButton">
@@ -242,6 +249,7 @@
   <tabstop>syncHiddenFilesCheckBox</tabstop>
   <tabstop>crashreporterCheckBox</tabstop>
   <tabstop>moveToTrashCheckBox</tabstop>
+  <tabstop>autoMergeTextConflictsCheckBox</tabstop>
   <tabstop>ignoredFilesButton</tabstop>
   <tabstop>logSettingsButton</tabstop>
   <tabstop>widget</tabstop>

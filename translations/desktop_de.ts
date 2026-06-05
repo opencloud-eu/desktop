@@ -1283,6 +1283,11 @@ Bitte entfernen Sie diesen Ordner aus dem Konto und legen Sie ihn erneut an.</tr
         <translation>Auf anderen Geräten gelöschte Dateien in den lokalen Papierkorb verschieben, anstatt sie zu löschen</translation>
     </message>
     <message>
+        <location filename="../src/gui/generalsettings.ui" line="125"/>
+        <source>Automatically merge text file conflicts when possible</source>
+        <translation>Textdateikonflikte nach Möglichkeit automatisch zusammenführen</translation>
+    </message>
+    <message>
         <location filename="../src/gui/generalsettings.ui" line="127"/>
         <source>Edit Ignored Files</source>
         <translation>Ignorierte Dateien bearbeiten</translation>

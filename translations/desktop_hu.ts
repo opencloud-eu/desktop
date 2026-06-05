@@ -1283,6 +1283,11 @@ Kérjük vegye fontolóra a mappa eltávolítását a fiókból és újbóli hoz
         <translation>A távolról törölt fájlok áthelyezése a helyi lomtárba törlés helyett</translation>
     </message>
     <message>
+        <location filename="../src/gui/generalsettings.ui" line="125"/>
+        <source>Automatically merge text file conflicts when possible</source>
+        <translation>Szövegfájl-ütközések automatikus egyesítése, amikor lehetséges</translation>
+    </message>
+    <message>
         <location filename="../src/gui/generalsettings.ui" line="127"/>
         <source>Edit Ignored Files</source>
         <translation>Figyelmen kívül hagyott fájlok szerkesztése</translation>

@@ -1283,6 +1283,11 @@ Si us plau, considereu eliminar aquesta carpeta del compte i afegir-la de nou.</
         <translation>Mou els fitxers eliminats remotament a la paperera local en comptes d’eliminar-los definitivament.</translation>
     </message>
     <message>
+        <location filename="../src/gui/generalsettings.ui" line="125"/>
+        <source>Automatically merge text file conflicts when possible</source>
+        <translation>Fusiona automàticament els conflictes de fitxers de text quan sigui possible</translation>
+    </message>
+    <message>
         <location filename="../src/gui/generalsettings.ui" line="127"/>
         <source>Edit Ignored Files</source>
         <translation>Edita fitxers ignorats</translation>

@@ -1283,6 +1283,11 @@ Overweeg om deze map uit het account te verwijderen en deze opnieuw toe te voege
         <translation>Op afstand verwijderde bestanden naar de lokale prullenbak verplaatsen in plaats van ze te verwijderen</translation>
     </message>
     <message>
+        <location filename="../src/gui/generalsettings.ui" line="125"/>
+        <source>Automatically merge text file conflicts when possible</source>
+        <translation>Tekstbestandsconflicten automatisch samenvoegen wanneer mogelijk</translation>
+    </message>
+    <message>
         <location filename="../src/gui/generalsettings.ui" line="127"/>
         <source>Edit Ignored Files</source>
         <translation>Genegeerde bestanden bewerken</translation>

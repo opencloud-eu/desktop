@@ -87,6 +87,7 @@ const QString pauseSyncWhenMeteredC()
     return QStringLiteral("pauseWhenMetered");
 }
 const QString moveToTrashC() { return QStringLiteral("moveToTrash"); }
+const QString autoMergeTextConflictsC() { return QStringLiteral("autoMergeTextConflicts"); }
 
 const QString issuesWidgetFilterC()
 {
@@ -430,6 +431,16 @@ bool ConfigFile::moveToTrash() const
 void ConfigFile::setMoveToTrash(bool isChecked)
 {
     setValue(moveToTrashC(), isChecked);
+}
+
+bool ConfigFile::autoMergeTextConflicts() const
+{
+    return getValue(autoMergeTextConflictsC(), false).toBool();
+}
+
+void ConfigFile::setAutoMergeTextConflicts(bool isChecked)
+{
+    setValue(autoMergeTextConflictsC(), isChecked);
 }
 
 bool ConfigFile::crashReporter() const

@@ -67,6 +67,10 @@ GeneralSettings::GeneralSettings(QWidget *parent)
         ConfigFile().setMoveToTrash(checked);
         Q_EMIT syncOptionsChanged();
     });
+    connect(_ui->autoMergeTextConflictsCheckBox, &QCheckBox::toggled, this, [this](bool checked) {
+        ConfigFile().setAutoMergeTextConflicts(checked);
+        Q_EMIT syncOptionsChanged();
+    });
 
     connect(_ui->ignoredFilesButton, &QAbstractButton::clicked, this, &GeneralSettings::slotIgnoreFilesEditor);
     connect(_ui->logSettingsButton, &QPushButton::clicked, this, [] {
@@ -136,6 +140,7 @@ void GeneralSettings::reloadConfig()
 {
     _ui->syncHiddenFilesCheckBox->setChecked(!FolderMan::instance()->ignoreHiddenFiles());
     _ui->moveToTrashCheckBox->setChecked(ConfigFile().moveToTrash());
+    _ui->autoMergeTextConflictsCheckBox->setChecked(ConfigFile().autoMergeTextConflicts());
     if (Utility::isWindows() && Utility::isInstalledByStore()) {
         _ui->autostartCheckBox->setVisible(false);
     } else {

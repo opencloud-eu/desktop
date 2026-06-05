@@ -1,7 +1,13 @@
 find_package(LibreGraphAPI 1.0.4 REQUIRED)
+find_package(LibGit2 REQUIRED)
 set_package_properties(LibreGraphAPI PROPERTIES
         URL https://github.com/owncloud/libre-graph-api-cpp-qt-client.git
         DESCRIPTION "Libre Graph is a free API for cloud collaboration inspired by the MS Graph API"
+        TYPE REQUIRED
+)
+set_package_properties(LibGit2 PROPERTIES
+        URL https://libgit2.org
+        DESCRIPTION "Portable Git library used for three-way text conflict automerge"
         TYPE REQUIRED
 )
 
@@ -23,6 +29,7 @@ add_library(libsync SHARED
     logger.cpp
     accessmanager.cpp
     configfile.cpp
+    conflictautomerge.cpp
     globalconfig.cpp
     abstractnetworkjob.cpp
     networkjobs.cpp
@@ -101,6 +108,7 @@ target_link_libraries(libsync
     PRIVATE
         Qt::Concurrent
         ZLIB::ZLIB
+        LibGit2::LibGit2
         Qt6Keychain::Qt6Keychain
         SQLite::SQLite3
 )

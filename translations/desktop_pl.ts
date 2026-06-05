@@ -1281,6 +1281,11 @@ Rozważ usunięcie tego folderu z konta i dodanie go ponownie.</translation>
         <translation>Przenoś zdalnie usunięte pliki do lokalnego kosza zamiast je usuwać</translation>
     </message>
     <message>
+        <location filename="../src/gui/generalsettings.ui" line="125"/>
+        <source>Automatically merge text file conflicts when possible</source>
+        <translation>Automatycznie scalaj konflikty plików tekstowych, gdy to możliwe</translation>
+    </message>
+    <message>
         <location filename="../src/gui/generalsettings.ui" line="127"/>
         <source>Edit Ignored Files</source>
         <translation>Edytuj ignorowane pliki</translation>
