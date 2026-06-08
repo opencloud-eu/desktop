@@ -156,7 +156,7 @@ def step(context):
     )
 
 
-@When('the user sorts the folder list by "|any|"')
+@When('the user sorts the folder list by "{header_text}"')
 def step(context, header_text):
     if (header_text := header_text.capitalize()) in ['Size', 'Name']:
         SyncConnectionWizard.sort_by(header_text)
@@ -166,20 +166,20 @@ def step(context, header_text):
 
 @Then('the sync all checkbox should be checked')
 def step(context):
-    test.compare(
-        SyncConnectionWizard.is_root_folder_checked(),
-        True,
+    with ensure(
         'Sync all checkbox is checked',
-    )
+    ):
+        SyncConnectionWizard.is_root_folder_checked().should.be.true
 
 
 @Then('the folders should be in the following order:')
 def step(context):
     row_index = 0
-    for row in context.table[1:]:
+    for row in context.table:
         expected_folder = row[0]
         actual_folder = SyncConnectionWizard.get_item_name_from_row(row_index)
-        test.compare(actual_folder, expected_folder)
+        with ensure(f"Expected '{expected_folder}', got '{actual_folder}'"):
+            actual_folder.should.be.equal(expected_folder)
 
         row_index += 1
 
@@ -197,7 +197,7 @@ def step(context):
 
 
 @When(
-    'the user sets the temp folder "|any|" as local sync path in sync connection wizard'
+    'the user sets the temp folder "{folder_name}" as local sync path in sync connection wizard'
 )
 def step(context, folder_name):
     sync_path = get_temp_resource_path(folder_name)
