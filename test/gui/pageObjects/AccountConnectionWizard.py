@@ -26,7 +26,14 @@ class AccountConnectionWizard:
         by=By.NAME,
         selector="Yes",
     )
-    SELECT_LOCAL_FOLDER = SimpleNamespace(by=None, selector=None)
+    SELECT_LOCAL_FOLDER_BUTTON = SimpleNamespace(
+        by=By.ACCESSIBILITY_ID,
+        selector="QApplication.Settings.centralwidget.dialogStack.SetupWizardWidget.contentWidget.AccountConfiguredWizardPage.advancedConfigGroupBox.advancedConfigGroupBoxContentWidget.localDirectoryGroupBox.chooseLocalDirectoryButton"
+    )
+    LOCAL_DOWNLOAD_DIRECTORY_INPUT = SimpleNamespace(
+        by=By.ACCESSIBILITY_ID,
+        selector="QApplication.Settings.centralwidget.dialogStack.SetupWizardWidget.contentWidget.AccountConfiguredWizardPage.advancedConfigGroupBox.advancedConfigGroupBoxContentWidget.localDirectoryGroupBox.localDirectoryLineEdit"
+    )
     DIRECTORY_NAME_BOX = SimpleNamespace(
         by=By.ACCESSIBILITY_ID,
         selector="QApplication.Settings.centralwidget.dialogStack.SetupWizardWidget.contentWidget.AccountConfiguredWizardPage.advancedConfigGroupBox.advancedConfigGroupBoxContentWidget.localDirectoryGroupBox.chooseLocalDirectoryButton",
@@ -48,7 +55,7 @@ class AccountConnectionWizard:
         by=By.ACCESSIBILITY_ID,
         selector="QApplication.QFileDialog.fileNameEdit",
     )
-    SYNC_EVERYTHING_RADIO_BUTTON = SimpleNamespace(by=None, selector=None)
+    SYNC_EVERYTHING_RADIO_BUTTON = SimpleNamespace(by=By.NAME, selector="Synchronize all existing spaces")
 
     @staticmethod
     def add_server(server_url):
@@ -176,9 +183,11 @@ class AccountConnectionWizard:
 
     @staticmethod
     def select_download_everything_option():
-        squish.clickButton(
-            squish.waitForObject(AccountConnectionWizard.SYNC_EVERYTHING_RADIO_BUTTON)
-        )
+        app().find_element(
+            AccountConnectionWizard.SYNC_EVERYTHING_RADIO_BUTTON.by,
+            AccountConnectionWizard.SYNC_EVERYTHING_RADIO_BUTTON.selector
+        ).click()
+
 
     @staticmethod
     def is_new_connection_window_visible():
@@ -209,11 +218,18 @@ class AccountConnectionWizard:
     def can_change_local_sync_dir():
         can_change = False
         try:
-            squish.waitForObjectExists(AccountConnectionWizard.SELECT_LOCAL_FOLDER)
-            squish.clickButton(
-                squish.waitForObject(AccountConnectionWizard.DIRECTORY_NAME_BOX)
+            app().find_element(
+            AccountConnectionWizard.SELECT_LOCAL_FOLDER_BUTTON.by,
+            AccountConnectionWizard.SELECT_LOCAL_FOLDER_BUTTON.selector
+            ).click()
+            app().find_element(
+                AccountConnectionWizard.DIRECTORY_NAME_BOX.by,
+                AccountConnectionWizard.DIRECTORY_NAME_BOX.selector,
             )
-            squish.waitForObjectExists(AccountConnectionWizard.CHOOSE_FOLDER_BUTTON)
+            app().find_element(
+                AccountConnectionWizard.CHOOSE_FOLDER_BUTTON.by,
+                AccountConnectionWizard.CHOOSE_FOLDER_BUTTON.selector
+            )
             can_change = True
         except:
             pass
@@ -221,14 +237,16 @@ class AccountConnectionWizard:
 
     @staticmethod
     def is_sync_everything_option_checked():
-        return squish.waitForObjectExists(
-            AccountConnectionWizard.SYNC_EVERYTHING_RADIO_BUTTON
-        ).checked
+        element = app().find_element(
+            AccountConnectionWizard.SYNC_EVERYTHING_RADIO_BUTTON.by,
+            AccountConnectionWizard.SYNC_EVERYTHING_RADIO_BUTTON.selector
+        )
+        return element.get_attribute("checked") == "true"
 
     @staticmethod
     def get_local_sync_path():
-        return str(
-            squish.waitForObjectExists(
-                AccountConnectionWizard.SELECT_LOCAL_FOLDER
-            ).displayText
+        element = app().find_element(
+            AccountConnectionWizard.LOCAL_DOWNLOAD_DIRECTORY_INPUT.by,
+            AccountConnectionWizard.LOCAL_DOWNLOAD_DIRECTORY_INPUT.selector
         )
+        return str(element.text)

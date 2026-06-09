@@ -6,14 +6,15 @@ Feature: adding accounts
     Background:
         Given user "Alice" has been created in the server with default attributes
 
-    @skip
+
     Scenario: Check default options in advanced configuration
         Given the user has started the client
         And the user has entered the following account information:
-            | server   | %local_server% |
-            | user     | Alice          |
-            | password | 1234           |
-        When the user opens the advanced configuration
+            | server | %local_server% |
+        When the user adds the following user credentials:
+            | user     | Alice |
+            | password | 1234  |
+        And the user opens the advanced configuration
         Then the download everything option should be selected by default for Linux
         And the user should be able to choose the local download directory
 
@@ -25,6 +26,7 @@ Feature: adding accounts
             | user     | Alice          |
             | password | 1234           |
         Then "Alice" account should be added
+        Then the add space button should be disabled
 
     @smoke
     Scenario: Adding multiple accounts
@@ -61,7 +63,7 @@ Feature: adding accounts
         And the user syncs the "Personal" space
         Then the folder "simple-folder" should exist on the file system
 
-    @skip
+
     Scenario: Check for suffix when sync path exists
         Given the user has created folder "OpenCloud" in the default home path
         And the user has started the client
@@ -72,8 +74,6 @@ Feature: adding accounts
             | password | 1234  |
         And the user opens the advanced configuration
         Then the default local sync path should contain "%home%/OpenCloud (2)" in the configuration wizard
-        When the user selects download everything option in advanced section
-        Then the button to open sync connection wizard should be disabled
 
     @smoke
     Scenario: Re-add an account

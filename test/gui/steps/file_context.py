@@ -420,7 +420,7 @@ def step(context, username, source):
     shutil.copy2(source_dir, destination_dir)
 
 
-@Given('the user has created folder "|any|" in the default home path')
+@Given('the user has created folder "{folder_name}" in the default home path')
 def step(context, folder_name):
     folder_path = join(get_config('home_dir'), folder_name)
     os.makedirs(prefix_path_namespace(folder_path))
