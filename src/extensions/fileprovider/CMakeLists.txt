@@ -19,6 +19,10 @@ if(APPLE)
         FileProviderItem.mm
         FileProviderEnumerator.mm
         FileProviderThumbnails.mm
+        FileProviderWebDAV.mm
+        FileProviderItemCache.mm
+        FileProviderConfig.mm
+        FileProviderWorkingSetDelta.mm
     )
 
     set(FILEPROVIDER_EXTENSION_HEADERS
@@ -27,6 +31,10 @@ if(APPLE)
         FileProviderItem.h
         FileProviderEnumerator.h
         FileProviderThumbnails.h
+        FileProviderWebDAV.h
+        FileProviderItemCache.h
+        FileProviderConfig.h
+        FileProviderWorkingSetDelta.h
     )
 
     # Must be add_executable (not add_library MODULE) so the Mach-O filetype

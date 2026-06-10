@@ -1,11 +1,15 @@
-// FileProviderEnumerator -- NSFileProviderEnumerator implementation.
-// Serves directory listings to Finder by reading file metadata from the
-// App Group shared container (written by the main app's sync engine).
+// FileProviderEnumerator -- serves directory listings to Finder by querying the
+// server live (PROPFIND Depth:1). The extension is the source of truth; results
+// are cached for itemForIdentifier, change detection and offline display.
 
 #import "FileProviderEnumerator.h"
 
 #import "FileProviderItem.h"
-#import "FileProviderXPCService.h"
+#import "FileProviderItemCache.h"
+#import "FileProviderWebDAV.h"
+#import "FileProviderConfig.h"
+#import "FileProviderWorkingSetDelta.h"
+#import "FileProviderXPCService.h" // kOpenCloudAppGroupIdentifier
 
 #import <os/log.h>
 
@@ -34,40 +38,117 @@ static void appendTrace(NSString *line) {
     [fh closeFile];
 }
 
-/// Reads the shared metadata plist from the App Group container.
-/// Uses per-domain file if available, falls back to legacy global file.
+/// Reads the shared metadata plist for a domain (written by the main app's sync
+/// engine after each sync). Used to drive the working-set change channel so that
+/// items newly discovered on the server propagate to Finder. Returns nil if absent.
 static NSArray<NSDictionary *> *readSharedMetadata(NSFileProviderDomain *domain) {
     NSURL *containerURL = [[NSFileManager defaultManager]
         containerURLForSecurityApplicationGroupIdentifier:kOpenCloudAppGroupIdentifier];
-    if (!containerURL) {
-        os_log_error(enumeratorLog(), "Cannot access App Group container");
-        return nil;
+    if (!containerURL) return nil;
+    NSString *perDomain = [NSString stringWithFormat:@"fileprovider_items_%@.plist", domain.identifier];
+    NSURL *url = [containerURL URLByAppendingPathComponent:perDomain];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:url.path]) {
+        url = [containerURL URLByAppendingPathComponent:@"fileprovider_items.plist"];
     }
-
-    // Try per-domain file first, fall back to legacy.
-    NSString *perDomainName = [NSString stringWithFormat:@"fileprovider_items_%@.plist", domain.identifier];
-    NSURL *perDomainURL = [containerURL URLByAppendingPathComponent:perDomainName];
-    NSURL *metadataURL = [[NSFileManager defaultManager] fileExistsAtPath:perDomainURL.path]
-        ? perDomainURL
-        : [containerURL URLByAppendingPathComponent:@"fileprovider_items.plist"];
-    NSData *data = [NSData dataWithContentsOfURL:metadataURL];
-    if (!data) {
-        os_log_error(enumeratorLog(), "Shared metadata file not found at: %{public}@", metadataURL.path);
-        return nil;
-    }
-
-    NSError *readError = nil;
+    NSData *data = [NSData dataWithContentsOfURL:url];
+    if (!data) return nil;
     NSArray *items = [NSPropertyListSerialization propertyListWithData:data
                                                               options:NSPropertyListImmutable
-                                                               format:nil
-                                                                error:&readError];
-    if (!items || readError) {
-        os_log_error(enumeratorLog(), "Failed to read shared metadata: %{public}@",
-                     readError.localizedDescription);
-        return nil;
-    }
+                                                               format:nil error:nil];
+    if (![items isKindOfClass:[NSArray class]]) return nil;
 
-    return items;
+    // Filter out oCIS-internal items that the live PROPFIND enumeration does NOT
+    // return (e.g. the ".space" space-metadata marker). Reporting them in the
+    // working set while the per-folder PROPFIND enumeration omits them makes
+    // fileproviderd see an inconsistency → endless reconciliation (createItem
+    // ".space" loop) that blocks new creates and change propagation.
+    NSMutableArray<NSDictionary *> *filtered = [NSMutableArray arrayWithCapacity:items.count];
+    for (NSDictionary *dict in items) {
+        NSString *name = dict[@"filename"] ?: dict[@"name"] ?: @"";
+        if ([name isEqualToString:@".space"]) continue;
+        [filtered addObject:dict];
+    }
+    return filtered;
+}
+
+/// Cache key (not a real path) for the per-domain working-set snapshot.
+static NSString *const kWorkingSetCacheKey = @"::workingset::";
+
+/// oCIS-internal items that must NOT be shown to the user and that the main app's
+/// sync does NOT put in the plist. The live PROPFIND returns ".space" at a space
+/// root; if the folder enumeration shows it but the working set/plist omits it,
+/// fileproviderd loops reconciliation (createItem ".space"). Filter it from BOTH
+/// the PROPFIND folder enumeration and the plist so the two sources agree.
+static BOOL isHiddenOcEntry(NSString *name) {
+    return [name isEqualToString:@".space"];
+}
+
+/// Content signature of the shared metadata, used as the working-set sync anchor
+/// so fileproviderd re-checks when the main app's sync changes the plist.
+static NSString *workingSetSignature(NSArray<NSDictionary *> *allItems) {
+    int64_t latest = 0;
+    for (NSDictionary *d in allItems) {
+        int64_t mt = [d[@"modtime"] longLongValue];
+        if (mt > latest) latest = mt;
+    }
+    return [NSString stringWithFormat:@"%lu-%lld", (unsigned long)allItems.count, latest];
+}
+
+/// Content signature of a single folder's direct children FROM THE SHARED PLIST
+/// (refreshed by the main app's sync). Used as the per-folder sync anchor so the
+/// anchor CHANGES when the server adds/removes a child — which is what makes
+/// fileproviderd call enumerateChanges for that folder. (A cached PROPFIND etag
+/// would never change on its own, so folders were never re-enumerated.)
+static NSString *folderChildrenSignature(NSFileProviderDomain *domain, NSString *relPath) {
+    NSArray<NSDictionary *> *all = readSharedMetadata(domain) ?: @[];
+    int64_t latest = 0;
+    NSUInteger count = 0;
+    NSString *target = relPath ?: @"";
+    for (NSDictionary *d in all) {
+        NSString *pp = d[@"parentPath"] ?: @"";
+        if (![pp isEqualToString:target]) continue;
+        count++;
+        int64_t mt = [d[@"modtime"] longLongValue];
+        if (mt > latest) latest = mt;
+    }
+    return [NSString stringWithFormat:@"%lu-%lld", (unsigned long)count, latest];
+}
+
+typedef NS_ENUM(NSInteger, FPContainerKind) {
+    FPContainerKindRoot,
+    FPContainerKindWorkingSet,
+    FPContainerKindTrash,
+    FPContainerKindFolder,
+    FPContainerKindUnknown,
+};
+
+/// Maps a raw PROPFIND/network error into a user-friendly NSFileProviderError that
+/// Finder surfaces nicely (instead of e.g. "PROPFIND HTTP 401"). The common case is
+/// that the OpenCloud app is closed, so its access token is no longer being refreshed.
+static NSError *friendlyEnumerationError(NSError *err) {
+    BOOL isHTTP = [err.domain isEqualToString:@"FileProviderWebDAV"];
+    NSInteger code = err.code;
+
+    if (isHTTP && (code == 401 || code == 403)) {
+        return [NSError errorWithDomain:NSFileProviderErrorDomain
+                                   code:NSFileProviderErrorNotAuthenticated
+                               userInfo:@{NSLocalizedDescriptionKey:
+            NSLocalizedString(@"Bitte öffne die OpenCloud App und melde dich an, um auf deine Dateien zuzugreifen.",
+                              @"FileProvider enumerate 401")}];
+    }
+    if (isHTTP && code == 404) {
+        return [NSError errorWithDomain:NSFileProviderErrorDomain
+                                   code:NSFileProviderErrorNoSuchItem
+                               userInfo:@{NSLocalizedDescriptionKey:
+            NSLocalizedString(@"Dieser Ordner ist auf dem Server nicht mehr vorhanden.",
+                              @"FileProvider enumerate 404")}];
+    }
+    // Network failure / server not reachable / app not running.
+    return [NSError errorWithDomain:NSFileProviderErrorDomain
+                               code:NSFileProviderErrorServerUnreachable
+                           userInfo:@{NSLocalizedDescriptionKey:
+        NSLocalizedString(@"OpenCloud ist gerade nicht erreichbar. Bitte öffne die OpenCloud App und versuche es erneut.",
+                          @"FileProvider enumerate unreachable")}];
 }
 
 #pragma mark - FileProviderEnumerator
@@ -75,247 +156,395 @@ static NSArray<NSDictionary *> *readSharedMetadata(NSFileProviderDomain *domain)
 API_AVAILABLE(macos(12.0))
 @implementation FileProviderEnumerator {
     NSFileProviderItemIdentifier _containerId;
-    FileProviderXPCService *_xpcService;
     NSFileProviderDomain *_domain;
+    FileProviderItemCache *_cache;
     BOOL _invalidated;
 }
 
 - (instancetype)initWithContainerIdentifier:(NSFileProviderItemIdentifier)containerId
-                                 xpcService:(FileProviderXPCService *)service
-                                     domain:(NSFileProviderDomain *)domain {
+                                     domain:(NSFileProviderDomain *)domain
+                                      cache:(FileProviderItemCache *)cache {
     self = [super init];
     if (self) {
         _containerId = [containerId copy];
-        _xpcService = service;
         _domain = domain;
+        _cache = cache;
         _invalidated = NO;
-
         os_log_debug(enumeratorLog(), "Enumerator CREATED for container: %{public}@", containerId);
     }
     return self;
+}
+
+#pragma mark - Container resolution
+
+/// Classifies the container and, for folders, resolves its space-relative path
+/// (via the cache) and the identifier to report as children's parent.
+- (FPContainerKind)kindForContainerRelPath:(NSString **)outRelPath
+                            parentItemFileId:(NSString **)outFileId {
+    if ([_containerId isEqualToString:NSFileProviderRootContainerItemIdentifier]) {
+        if (outRelPath) *outRelPath = @"";
+        if (outFileId) *outFileId = NSFileProviderRootContainerItemIdentifier;
+        return FPContainerKindRoot;
+    }
+    if ([_containerId isEqualToString:NSFileProviderWorkingSetContainerItemIdentifier]) {
+        return FPContainerKindWorkingSet;
+    }
+    if ([_containerId isEqualToString:NSFileProviderTrashContainerItemIdentifier]) {
+        return FPContainerKindTrash;
+    }
+    NSString *path = [_cache pathForFileId:_containerId];
+    if (path == nil) {
+        return FPContainerKindUnknown;
+    }
+    if (outRelPath) *outRelPath = path;
+    if (outFileId) *outFileId = _containerId;
+    return FPContainerKindFolder;
+}
+
+/// Builds the metadata dict consumed by FileProviderItem from a parsed entry.
+static NSDictionary *itemDictFromEntry(FileProviderWebDAVEntry *e,
+                                       NSString *parentFileId,
+                                       NSString *davBase) {
+    return @{
+        @"fileId": e.fileId ?: @"",
+        @"filename": e.name ?: @"",
+        @"path": e.relativePath ?: @"",
+        @"parentId": parentFileId ?: NSFileProviderRootContainerItemIdentifier,
+        @"isDirectory": @(e.isDirectory),
+        @"size": @(e.size),
+        @"modtime": @(e.modtime),
+        @"etag": e.etag ?: @"",
+        @"isDownloaded": @(e.isDirectory ? YES : NO),
+        @"davUrl": davBase ?: @"",
+    };
 }
 
 #pragma mark - NSFileProviderEnumerator
 
 - (void)enumerateItemsForObserver:(id<NSFileProviderEnumerationObserver>)observer
                    startingAtPage:(NSFileProviderPage)page {
-    // Use fault-level logging to ensure it's always persisted
-    os_log_debug(enumeratorLog(), "enumerateItems CALLED container=%{public}@ invalidated=%d", _containerId, _invalidated);
-
-    appendTrace([NSString stringWithFormat:@"[%@] enumerateItems container=%@ invalidated=%d\n",
-        [NSDate date], _containerId, _invalidated]);
-
     if (_invalidated) {
         [observer finishEnumeratingWithError:
             [NSError errorWithDomain:NSFileProviderErrorDomain
                                 code:NSFileProviderErrorServerUnreachable
-                            userInfo:@{NSLocalizedDescriptionKey: @"Enumerator has been invalidated"}]];
+                            userInfo:@{NSLocalizedDescriptionKey: @"Enumerator invalidated"}]];
         return;
     }
 
-    os_log_info(enumeratorLog(), "enumerateItems container=%{public}@", _containerId);
+    NSString *relPath = nil;
+    NSString *parentFileId = nil;
+    FPContainerKind kind = [self kindForContainerRelPath:&relPath parentItemFileId:&parentFileId];
 
-    // Read file metadata from the App Group shared container.
-    NSArray<NSDictionary *> *allItems = readSharedMetadata(_domain);
-    if (!allItems) {
-        os_log_error(enumeratorLog(), "No shared metadata available — main app may not be running");
+    appendTrace([NSString stringWithFormat:@"[%@] enumerateItems container=%@ kind=%ld relPath=%@\n",
+        [NSDate date], _containerId, (long)kind, relPath ?: @"(nil)"]);
+
+    if (kind == FPContainerKindTrash) {
         [observer didEnumerateItems:@[]];
-        [observer finishEnumeratingWithError:nil];
+        [observer finishEnumeratingUpToPage:nil];
         return;
     }
-
-    // Determine which items belong to this container.
-    NSString *targetParentPath = nil;
-
-    if ([_containerId isEqualToString:NSFileProviderRootContainerItemIdentifier]) {
-        // Root container: items whose parentPath is empty.
-        targetParentPath = @"";
-    } else if ([_containerId isEqualToString:NSFileProviderWorkingSetContainerItemIdentifier]) {
-        // Working set: return all items.
-        targetParentPath = nil; // nil means "all items"
-    } else if ([_containerId isEqualToString:NSFileProviderTrashContainerItemIdentifier]) {
-        // Trash: return empty (no trashed items tracked).
-        os_log_info(enumeratorLog(), "Enumerated 0 items for trash container");
-        [observer didEnumerateItems:@[]];
-        [observer finishEnumeratingWithError:nil];
-        return;
-    } else {
-        // Specific folder: find the folder's path by its fileId,
-        // then list items whose parentPath matches that path.
-        for (NSDictionary *item in allItems) {
-            if ([item[@"fileId"] isEqualToString:_containerId]) {
-                targetParentPath = item[@"path"];
-                break;
-            }
+    // Working set: seed from the shared plist (kept current by the main app's
+    // sync). This is the global item set fileproviderd tracks; the per-folder
+    // enumerators drive the live, browsable tree.
+    if (kind == FPContainerKindWorkingSet) {
+        NSArray<NSDictionary *> *allItems = readSharedMetadata(_domain) ?: @[];
+        NSMutableArray<FileProviderItem *> *items = [NSMutableArray array];
+        for (NSDictionary *dict in allItems) {
+            [items addObject:[[FileProviderItem alloc] initWithDictionary:dict]];
+            [_cache setMetadata:dict forFileId:dict[@"fileId"]];
         }
-        if (!targetParentPath) {
-            os_log_error(enumeratorLog(), "Container not found in metadata: %{public}@", _containerId);
-            [observer didEnumerateItems:@[]];
-            [observer finishEnumeratingWithError:nil];
+        appendTrace([NSString stringWithFormat:@"[%@] enumerateItems WORKINGSET items=%lu\n",
+            [NSDate date], (unsigned long)items.count]);
+        [observer didEnumerateItems:items];
+        [observer finishEnumeratingUpToPage:nil];
+        return;
+    }
+    if (kind == FPContainerKindUnknown) {
+        os_log_error(enumeratorLog(), "enumerateItems: container %{public}@ not in cache", _containerId);
+        // Transient so fileproviderd retries after the parent is enumerated.
+        [observer finishEnumeratingWithError:
+            [NSError errorWithDomain:NSFileProviderErrorDomain
+                                code:NSFileProviderErrorServerUnreachable
+                            userInfo:@{NSLocalizedDescriptionKey: @"Container not yet resolved"}]];
+        return;
+    }
+
+    NSString *domainId = _domain.identifier;
+    NSString *davBase = [FileProviderConfig davBaseForDomainIdentifier:domainId];
+    NSString *token = [FileProviderConfig accessTokenForDomainIdentifier:domainId];
+
+    if (davBase.length == 0 || token.length == 0) {
+        // Not signed in yet: serve cached children if we have them, else error.
+        if (![self serveCachedChildrenForRelPath:relPath toObserver:observer]) {
+            [observer finishEnumeratingWithError:
+                [NSError errorWithDomain:NSFileProviderErrorDomain
+                                    code:NSFileProviderErrorNotAuthenticated
+                                userInfo:@{NSLocalizedDescriptionKey:
+                    @"Bitte in der OpenCloud App anmelden."}]];
+        }
+        return;
+    }
+
+    // Cache-first: if we already have a live snapshot of this folder, show it
+    // instantly and refresh in the background, so Finder doesn't block on the
+    // network for folders that were opened before. The first visit is still
+    // served live (authoritative), so nothing goes missing.
+    NSArray<NSString *> *cachedChildIds = [_cache childFileIdsForContainerPath:relPath];
+    NSString *prevEtag = [_cache etagForContainerPath:relPath] ?: @"";
+    BOOL alreadyServed = NO;
+    if (cachedChildIds.count > 0) {
+        [self serveCachedChildrenForRelPath:relPath toObserver:observer];
+        alreadyServed = YES;
+    }
+
+    __block FileProviderEnumerator *strongSelf = self;
+    [FileProviderWebDAV propfindChildrenAtDavBase:davBase
+                                     relativePath:relPath
+                                            token:token
+                                       completion:^(NSArray<FileProviderWebDAVEntry *> *entries,
+                                                    NSError *error) {
+        if (error || entries == nil) {
+            os_log_error(enumeratorLog(), "enumerateItems PROPFIND failed for %{public}@: %{public}@",
+                         relPath, error.localizedDescription);
+            if (alreadyServed) {
+                // Cached contents were already shown; ignore the transient error.
+                strongSelf = nil;
+                return;
+            }
+            // Offline / transient: fall back to cached children.
+            if (![strongSelf serveCachedChildrenForRelPath:relPath toObserver:observer]) {
+                [observer finishEnumeratingWithError:friendlyEnumerationError(error)];
+            }
+            strongSelf = nil;
             return;
         }
-    }
 
-    // Filter items by parent path.
-    NSMutableArray<FileProviderItem *> *providerItems = [NSMutableArray array];
-    for (NSDictionary *dict in allItems) {
-        if (targetParentPath == nil) {
-            // Working set: include all items.
-        } else if (![dict[@"parentPath"] isEqualToString:targetParentPath]) {
-            continue;
+        // Cache-first PROBE: when we already served from cache, do NOT mutate the
+        // cache here. Just check the folder's etag. If it changed (oCIS bumps the
+        // folder etag on ANY child add/remove/modify), ask Finder to re-enumerate
+        // — enumerateChanges then runs the authoritative diff, which needs the OLD
+        // cached child list as its baseline to detect DELETIONS. Overwriting the
+        // cache here would erase that baseline and a deleted file would linger.
+        if (alreadyServed) {
+            NSString *newEtag = @"";
+            for (FileProviderWebDAVEntry *e in entries) {
+                if ([e.relativePath isEqualToString:relPath]) { newEtag = e.etag ?: @""; break; }
+            }
+            BOOL changed = ![newEtag isEqualToString:prevEtag];
+            appendTrace([NSString stringWithFormat:@"[%@] enumerateItems PROBE container=%@ changed=%d\n",
+                [NSDate date], strongSelf->_containerId, changed]);
+            if (changed) {
+                NSFileProviderManager *mgr = [NSFileProviderManager managerForDomain:strongSelf->_domain];
+                [mgr signalEnumeratorForContainerItemIdentifier:strongSelf->_containerId
+                                              completionHandler:^(NSError *e) {}];
+            }
+            strongSelf = nil;
+            return;
         }
 
-        FileProviderItem *item = [[FileProviderItem alloc] initWithDictionary:dict];
-        [providerItems addObject:item];
+        // First visit: build the listing live, populate the cache, serve it.
+        NSMutableArray<FileProviderItem *> *items = [NSMutableArray array];
+        NSMutableArray<NSString *> *childIds = [NSMutableArray array];
+        NSString *selfEtag = @"";
+
+        for (FileProviderWebDAVEntry *e in entries) {
+            // The folder itself (self): record its etag, do not list it as a child.
+            if ([e.relativePath isEqualToString:relPath]) {
+                selfEtag = e.etag ?: @"";
+                continue;
+            }
+            if (isHiddenOcEntry(e.name)) continue; // keep consistent with the plist
+            NSDictionary *dict = itemDictFromEntry(e, parentFileId, davBase);
+            [items addObject:[[FileProviderItem alloc] initWithDictionary:dict]];
+            [childIds addObject:e.fileId ?: @""];
+            [strongSelf->_cache setMetadata:dict forFileId:e.fileId];
+        }
+
+        [strongSelf->_cache setContainerPath:relPath etag:selfEtag childFileIds:childIds];
+        [strongSelf->_cache save];
+
+        os_log_info(enumeratorLog(), "enumerateItems: %lu items for %{public}@",
+                    (unsigned long)items.count, relPath);
+        appendTrace([NSString stringWithFormat:@"[%@] enumerateItems RESULT container=%@ items=%lu\n",
+            [NSDate date], strongSelf->_containerId, (unsigned long)items.count]);
+
+        [observer didEnumerateItems:items];
+        [observer finishEnumeratingUpToPage:nil];
+        strongSelf = nil;
+    }];
+}
+
+/// Serves the last-known children of a folder from the cache (offline path).
+/// Returns NO if nothing is cached.
+- (BOOL)serveCachedChildrenForRelPath:(NSString *)relPath
+                           toObserver:(id<NSFileProviderEnumerationObserver>)observer {
+    NSArray<NSString *> *childIds = [_cache childFileIdsForContainerPath:relPath];
+    if (childIds.count == 0) return NO;
+
+    NSMutableArray<FileProviderItem *> *items = [NSMutableArray array];
+    for (NSString *fid in childIds) {
+        NSDictionary *md = [_cache metadataForFileId:fid];
+        if (md) [items addObject:[[FileProviderItem alloc] initWithDictionary:md]];
     }
-
-    os_log_info(enumeratorLog(), "Enumerated %lu items for container %{public}@",
-                (unsigned long)providerItems.count, _containerId);
-
-    appendTrace([NSString stringWithFormat:@"[%@] enumerateItems RESULT container=%@ items=%lu allItems=%lu\n",
-        [NSDate date], _containerId, (unsigned long)providerItems.count, (unsigned long)allItems.count]);
-
-    [observer didEnumerateItems:providerItems];
-    [observer finishEnumeratingWithError:nil];
+    [observer didEnumerateItems:items];
+    [observer finishEnumeratingUpToPage:nil];
+    os_log_info(enumeratorLog(), "enumerateItems: served %lu cached items for %{public}@",
+                (unsigned long)items.count, relPath);
+    return YES;
 }
 
 - (void)enumerateChangesForObserver:(id<NSFileProviderChangeObserver>)observer
                      fromSyncAnchor:(NSFileProviderSyncAnchor)anchor {
-    os_log_debug(enumeratorLog(), "enumerateChanges CALLED container=%{public}@", _containerId);
-
-    {
-        NSString *inAnchorStr = anchor ? [[NSString alloc] initWithData:anchor encoding:NSUTF8StringEncoding] : @"(nil)";
-        appendTrace([NSString stringWithFormat:@"[%@] enumerateChanges container=%@ anchor=%@\n",
-            [NSDate date], _containerId, inAnchorStr]);
+    if (_invalidated) {
+        [observer finishEnumeratingWithError:
+            [NSError errorWithDomain:NSFileProviderErrorDomain
+                                code:NSFileProviderErrorServerUnreachable
+                            userInfo:@{NSLocalizedDescriptionKey: @"Enumerator invalidated"}]];
+        return;
     }
 
-    os_log_info(enumeratorLog(), "enumerateChanges container=%{public}@", _containerId);
+    NSString *relPath = nil;
+    NSString *parentFileId = nil;
+    FPContainerKind kind = [self kindForContainerRelPath:&relPath parentItemFileId:&parentFileId];
 
-    // Read current metadata to build a content-based sync anchor.
-    NSArray<NSDictionary *> *allItems = readSharedMetadata(_domain);
-    NSString *currentAnchorString = @"empty";
-    if (allItems) {
-        // Use item count + latest modtime as a simple content anchor.
-        int64_t latestModtime = 0;
-        for (NSDictionary *dict in allItems) {
-            int64_t mt = [dict[@"modtime"] longLongValue];
-            if (mt > latestModtime) latestModtime = mt;
+    // Working set: the global change channel. Diff the shared plist (refreshed by
+    // the main app's sync) against the last snapshot so server-side additions and
+    // deletions propagate to Finder.
+    if (kind == FPContainerKindWorkingSet) {
+        NSArray<NSDictionary *> *allItems = readSharedMetadata(_domain) ?: @[];
+
+        // Diff against the previous snapshot so only genuinely new/changed items
+        // are reported. Reporting every item on every pass made fileproviderd
+        // re-index the whole tree every ~30s (huge CPU + constant Finder view
+        // churn). Build the previous etag map from the cache BEFORE overwriting.
+        NSArray<NSString *> *prevIds = [_cache childFileIdsForContainerPath:kWorkingSetCacheKey] ?: @[];
+        NSMutableDictionary<NSString *, NSString *> *prevEtags =
+            [NSMutableDictionary dictionaryWithCapacity:prevIds.count];
+        for (NSString *fid in prevIds) {
+            NSDictionary *md = [_cache metadataForFileId:fid];
+            if (md) prevEtags[fid] = md[@"etag"] ?: @"";
         }
-        currentAnchorString = [NSString stringWithFormat:@"%lu-%lld",
-                               (unsigned long)allItems.count, latestModtime];
+
+        FPWorkingSetDelta *delta = FPComputeWorkingSetDelta(allItems, prevEtags, prevIds);
+
+        // Refresh the cache for all current items (path/parent lookups stay current).
+        for (NSDictionary *dict in allItems) {
+            [_cache setMetadata:dict forFileId:dict[@"fileId"]];
+        }
+
+        if (delta.deletedFileIds.count > 0) {
+            [observer didDeleteItemsWithIdentifiers:delta.deletedFileIds];
+        }
+        if (delta.changedItems.count > 0) {
+            NSMutableArray<FileProviderItem *> *updated =
+                [NSMutableArray arrayWithCapacity:delta.changedItems.count];
+            for (NSDictionary *dict in delta.changedItems) {
+                [updated addObject:[[FileProviderItem alloc] initWithDictionary:dict]];
+            }
+            [observer didUpdateItems:updated];
+        }
+
+        NSString *sig = workingSetSignature(allItems);
+        [_cache setContainerPath:kWorkingSetCacheKey etag:sig childFileIds:delta.currentFileIds];
+        [_cache save];
+        appendTrace([NSString stringWithFormat:@"[%@] enumerateChanges WORKINGSET upd=%lu del=%lu (of %lu)\n",
+            [NSDate date], (unsigned long)delta.changedItems.count,
+            (unsigned long)delta.deletedFileIds.count, (unsigned long)allItems.count]);
+        [observer finishEnumeratingChangesUpToSyncAnchor:[self anchorData:sig] moreComing:NO];
+        return;
     }
-    NSData *currentAnchor = [currentAnchorString dataUsingEncoding:NSUTF8StringEncoding];
+    // Trash / unknown: report no changes.
+    if (kind != FPContainerKindRoot && kind != FPContainerKindFolder) {
+        [observer finishEnumeratingChangesUpToSyncAnchor:[self anchorData:@""] moreComing:NO];
+        return;
+    }
 
-    // Compare with incoming anchor. If different (or first call), report all items as updates.
-    NSString *incomingAnchorString = anchor ? [[NSString alloc] initWithData:anchor encoding:NSUTF8StringEncoding] : @"";
+    NSString *domainId = _domain.identifier;
+    NSString *davBase = [FileProviderConfig davBaseForDomainIdentifier:domainId];
+    NSString *token = [FileProviderConfig accessTokenForDomainIdentifier:domainId];
+    if (davBase.length == 0 || token.length == 0) {
+        [observer finishEnumeratingChangesUpToSyncAnchor:
+            [self anchorData:folderChildrenSignature(_domain, relPath)] moreComing:NO];
+        return;
+    }
 
-    // Always report all items as updates. The system may have a cached anchor
-    // from a previous run where items were enumerated but not successfully stored
-    // (e.g. due to a crash). Reporting all items is idempotent — fileproviderd
-    // will reconcile against its database.
-    os_log_info(enumeratorLog(), "enumerateChanges: reporting all items (incoming=%{public}@ current=%{public}@)",
-                incomingAnchorString, currentAnchorString);
+    NSArray<NSString *> *previousChildIds = [_cache childFileIdsForContainerPath:relPath] ?: @[];
 
-    if (allItems) {
-        // Filter items for this container and report them as updates.
-        NSMutableArray<FileProviderItem *> *updatedItems = [NSMutableArray array];
-        NSMutableSet<NSString *> *currentFileIds = [NSMutableSet set];
-        NSString *targetParentPath = nil;
-
-        if ([_containerId isEqualToString:NSFileProviderRootContainerItemIdentifier]) {
-            targetParentPath = @"";
-        } else if ([_containerId isEqualToString:NSFileProviderWorkingSetContainerItemIdentifier]) {
-            targetParentPath = nil;
-        } else if ([_containerId isEqualToString:NSFileProviderTrashContainerItemIdentifier]) {
-            // Trash: no changes.
-            [observer finishEnumeratingChangesUpToSyncAnchor:currentAnchor moreComing:NO];
+    __block FileProviderEnumerator *strongSelf = self;
+    [FileProviderWebDAV propfindChildrenAtDavBase:davBase
+                                     relativePath:relPath
+                                            token:token
+                                       completion:^(NSArray<FileProviderWebDAVEntry *> *entries,
+                                                    NSError *error) {
+        if (error || entries == nil) {
+            // Keep the existing anchor; try again on the next signal.
+            [observer finishEnumeratingChangesUpToSyncAnchor:
+                [strongSelf anchorData:folderChildrenSignature(strongSelf->_domain, relPath)] moreComing:NO];
+            strongSelf = nil;
             return;
-        } else {
-            for (NSDictionary *item in allItems) {
-                if ([item[@"fileId"] isEqualToString:_containerId]) {
-                    targetParentPath = item[@"path"];
-                    break;
-                }
-            }
-            if (!targetParentPath) {
-                os_log_error(enumeratorLog(), "enumerateChanges: container %{public}@ not found in metadata — skipping", _containerId);
-                [observer finishEnumeratingChangesUpToSyncAnchor:currentAnchor moreComing:NO];
-                return;
-            }
         }
 
-        for (NSDictionary *dict in allItems) {
-            if (targetParentPath != nil && ![dict[@"parentPath"] isEqualToString:targetParentPath]) {
-                continue;
-            }
-            FileProviderItem *item = [[FileProviderItem alloc] initWithDictionary:dict];
-            [updatedItems addObject:item];
-            [currentFileIds addObject:dict[@"fileId"] ?: @""];
+        NSMutableArray<FileProviderItem *> *updated = [NSMutableArray array];
+        NSMutableArray<NSString *> *currentIds = [NSMutableArray array];
+        NSString *selfEtag = @"";
+
+        for (FileProviderWebDAVEntry *e in entries) {
+            if ([e.relativePath isEqualToString:relPath]) { selfEtag = e.etag ?: @""; continue; }
+            if (isHiddenOcEntry(e.name)) continue; // keep consistent with the plist
+            NSDictionary *dict = itemDictFromEntry(e, parentFileId, davBase);
+            [updated addObject:[[FileProviderItem alloc] initWithDictionary:dict]];
+            [currentIds addObject:e.fileId ?: @""];
+            [strongSelf->_cache setMetadata:dict forFileId:e.fileId];
         }
 
-        os_log_info(enumeratorLog(), "enumerateChanges: reporting %lu updated items for %{public}@",
-                    (unsigned long)updatedItems.count, _containerId);
-
-        if (updatedItems.count > 0) {
-            [observer didUpdateItems:updatedItems];
+        // Deletions: previously-known children no longer present.
+        NSMutableSet<NSString *> *deleted = [NSMutableSet setWithArray:previousChildIds];
+        [deleted minusSet:[NSSet setWithArray:currentIds]];
+        if (deleted.count > 0) {
+            [observer didDeleteItemsWithIdentifiers:[deleted allObjects]];
+        }
+        if (updated.count > 0) {
+            [observer didUpdateItems:updated];
         }
 
-        // Detect deleted items by comparing current fileIds with the set from the
-        // previous enumerateChanges call. Report deletions so fileproviderd removes
-        // them from Finder.
-        // Cache key must include the domain identifier so that multiple
-        // domains (spaces/accounts) don't overwrite each other's caches.
-        NSString *cacheKey = [NSString stringWithFormat:@"prevFileIds_%@_%@",
-            _domain.identifier,
-            [_containerId stringByReplacingOccurrencesOfString:@"/" withString:@"_"]];
-        NSURL *containerURL = [[NSFileManager defaultManager]
-            containerURLForSecurityApplicationGroupIdentifier:kOpenCloudAppGroupIdentifier];
-        if (containerURL) {
-            NSURL *cacheURL = [containerURL URLByAppendingPathComponent:
-                [NSString stringWithFormat:@"%@.plist", cacheKey]];
-            NSArray *previousIds = [NSArray arrayWithContentsOfURL:cacheURL];
-            if (previousIds) {
-                NSMutableSet *previousSet = [NSMutableSet setWithArray:previousIds];
-                [previousSet minusSet:currentFileIds];
-                if (previousSet.count > 0) {
-                    NSArray<NSFileProviderItemIdentifier> *deletedIds = [previousSet allObjects];
-                    os_log_info(enumeratorLog(), "enumerateChanges: reporting %lu deleted items for %{public}@",
-                                (unsigned long)deletedIds.count, _containerId);
-                    [observer didDeleteItemsWithIdentifiers:deletedIds];
-                }
-            }
-            // Save current set for next comparison.
-            [[currentFileIds allObjects] writeToURL:cacheURL atomically:YES];
-        }
-    }
+        [strongSelf->_cache setContainerPath:relPath etag:selfEtag childFileIds:currentIds];
+        [strongSelf->_cache save];
 
-    [observer finishEnumeratingChangesUpToSyncAnchor:currentAnchor moreComing:NO];
+        NSString *folderAnchor = folderChildrenSignature(strongSelf->_domain, relPath);
+        appendTrace([NSString stringWithFormat:@"[%@] enumerateChanges RESULT container=%@ upd=%lu del=%lu anchor=%@\n",
+            [NSDate date], strongSelf->_containerId,
+            (unsigned long)updated.count, (unsigned long)deleted.count, folderAnchor]);
+
+        [observer finishEnumeratingChangesUpToSyncAnchor:[strongSelf anchorData:folderAnchor] moreComing:NO];
+        strongSelf = nil;
+    }];
+}
+
+- (NSData *)anchorData:(NSString *)s {
+    return [(s ?: @"") dataUsingEncoding:NSUTF8StringEncoding];
 }
 
 - (void)currentSyncAnchorWithCompletionHandler:(void (^)(NSFileProviderSyncAnchor _Nullable))completionHandler {
-    // Build a content-based anchor from the shared metadata.
-    NSArray<NSDictionary *> *allItems = readSharedMetadata(_domain);
-    NSString *anchorString = @"empty";
-    if (allItems) {
-        int64_t latestModtime = 0;
-        for (NSDictionary *dict in allItems) {
-            int64_t mt = [dict[@"modtime"] longLongValue];
-            if (mt > latestModtime) latestModtime = mt;
-        }
-        anchorString = [NSString stringWithFormat:@"%lu-%lld",
-                        (unsigned long)allItems.count, latestModtime];
+    NSString *relPath = nil;
+    FPContainerKind kind = [self kindForContainerRelPath:&relPath parentItemFileId:nil];
+    NSString *anchor;
+    if (kind == FPContainerKindWorkingSet) {
+        // Content signature of the shared plist so the anchor changes whenever the
+        // main app's sync adds/removes items → fileproviderd calls enumerateChanges.
+        anchor = workingSetSignature(readSharedMetadata(_domain) ?: @[]);
+    } else if (kind == FPContainerKindRoot || kind == FPContainerKindFolder) {
+        // Per-folder child signature from the plist: changes when a child is added
+        // or removed on the server → fileproviderd re-enumerates this folder.
+        anchor = folderChildrenSignature(_domain, relPath);
+    } else {
+        anchor = @"";
     }
-    NSData *anchorData = [anchorString dataUsingEncoding:NSUTF8StringEncoding];
-
-    os_log_info(enumeratorLog(), "currentSyncAnchor: %{public}@", anchorString);
-
-    completionHandler(anchorData);
+    completionHandler([self anchorData:anchor]);
 }
 
 - (void)invalidate {
     os_log_info(enumeratorLog(), "Enumerator invalidated for container: %{public}@", _containerId);
     _invalidated = YES;
-    _xpcService = nil;
 }
 
 @end

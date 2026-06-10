@@ -5,6 +5,7 @@
 
 #import "FileProviderEnumerator.h"
 #import "FileProviderItem.h"
+#import "FileProviderItemCache.h"
 #import "FileProviderThumbnails.h"
 #import "FileProviderXPCService.h"
 
@@ -123,6 +124,10 @@ API_AVAILABLE(macos(12.0))
     /// hydration requests. When a hydration is already in progress for a given fileId,
     /// subsequent requests queue their handlers here instead of issuing a second XPC call.
     NSMutableDictionary<NSString *, NSMutableArray *> *_pendingHydrations;
+
+    /// Shared per-domain metadata cache populated by the enumerator's live
+    /// PROPFIND results. Source of truth for itemForIdentifier and hydration paths.
+    FileProviderItemCache *_itemCache;
 }
 
 #pragma mark - Lifecycle
@@ -147,6 +152,16 @@ API_AVAILABLE(macos(12.0))
         _hydrationQueue = dispatch_queue_create("eu.opencloud.desktop.fileprovider.hydration",
                                                 DISPATCH_QUEUE_SERIAL);
         _pendingHydrations = [[NSMutableDictionary alloc] init];
+
+        // Per-domain metadata cache backing server-driven enumeration.
+        NSURL *groupURL = [[NSFileManager defaultManager]
+            containerURLForSecurityApplicationGroupIdentifier:kOpenCloudAppGroupIdentifier];
+        if (groupURL) {
+            NSURL *cacheURL = [groupURL URLByAppendingPathComponent:
+                [NSString stringWithFormat:@"fileprovider_idcache_%@.plist", domain.identifier]];
+            _itemCache = [[FileProviderItemCache alloc] initWithFileURL:cacheURL];
+        }
+
         _thumbnails = [[FileProviderThumbnails alloc] initWithXPCService:_xpcService];
         os_log_info(extensionLog(), "Extension initialized for domain: %{public}@", domain.identifier);
     }
@@ -183,7 +198,18 @@ API_AVAILABLE(macos(12.0))
         return [NSProgress discreteProgressWithTotalUnitCount:0];
     }
 
-    // Look up the item from the shared metadata plist in the App Group container.
+    // Cache first: populated by the enumerator's live PROPFIND results.
+    if (_itemCache) {
+        NSDictionary *md = [_itemCache metadataForFileId:identifier];
+        if (md) {
+            os_log_info(extensionLog(), "itemForIdentifier: found %{public}@ in cache", identifier);
+            completionHandler([[FileProviderItem alloc] initWithDictionary:md], nil);
+            return [NSProgress discreteProgressWithTotalUnitCount:0];
+        }
+    }
+
+    // Fallback: look up the item from the shared metadata plist in the App Group
+    // container (legacy path while the main app still writes it).
     NSURL *containerURL = [[NSFileManager defaultManager]
         containerURLForSecurityApplicationGroupIdentifier:kOpenCloudAppGroupIdentifier];
     if (containerURL) {
@@ -270,11 +296,16 @@ API_AVAILABLE(macos(12.0))
             return;
         }
 
-        // Look up the file path from the items plist.
-        NSURL *metadataURL = [containerURL URLByAppendingPathComponent:itemsPlistName(self->_domain, containerURL)];
-        NSData *metaData = [NSData dataWithContentsOfURL:metadataURL];
+        // Resolve the file path. Cache first (server-driven enumeration), then
+        // fall back to the legacy items plist.
         NSString *filePath = nil;
         NSDictionary *itemDict = nil;
+        if (self->_itemCache) {
+            NSDictionary *md = [self->_itemCache metadataForFileId:fileId];
+            if (md[@"path"]) { filePath = md[@"path"]; itemDict = md; }
+        }
+        NSURL *metadataURL = [containerURL URLByAppendingPathComponent:itemsPlistName(self->_domain, containerURL)];
+        NSData *metaData = filePath ? nil : [NSData dataWithContentsOfURL:metadataURL];
         if (metaData) {
             NSArray *items = [NSPropertyListSerialization propertyListWithData:metaData
                                                                        options:NSPropertyListImmutable
@@ -614,8 +645,8 @@ API_AVAILABLE(macos(12.0))
         NSString *templateName = itemTemplate.filename;
         NSString *templateParent = itemTemplate.parentItemIdentifier;
 
-        appendTrace([NSString stringWithFormat:@"[%@] createItem: name=%@ parent=%@ options=%lu\n",
-            [NSDate date], templateName, templateParent, (unsigned long)options]);
+        appendTrace([NSString stringWithFormat:@"[%@] createItem: name=%@ parent=%@ options=%lu url=%@\n",
+            [NSDate date], templateName, templateParent, (unsigned long)options, url.path ?: @"(nil)"]);
 
         NSURL *containerURL = [[NSFileManager defaultManager]
             containerURLForSecurityApplicationGroupIdentifier:kOpenCloudAppGroupIdentifier];
@@ -748,35 +779,103 @@ API_AVAILABLE(macos(12.0))
                     return;
                 }
 
-                NSString *newFileId = [http.allHeaderFields[@"OC-FileId"] copy]
-                    ?: [NSString stringWithFormat:@"%@!%@", parentId, [[NSUUID UUID] UUIDString]];
-
                 NSString *dirPath = parentPath.length > 0
                     ? [NSString stringWithFormat:@"%@/%@", parentPath, filename]
                     : filename;
 
-                NSDictionary *dirDict = @{
-                    @"fileId": newFileId,
-                    @"filename": filename,
-                    @"path": dirPath,
-                    @"parentId": parentId,
-                    @"parentPath": parentPath,
-                    @"isDirectory": @YES,
-                    @"size": @0,
-                    @"modtime": @((int64_t)[[NSDate date] timeIntervalSince1970]),
-                    @"etag": @"",
-                    @"isVirtualFile": @NO,
-                    @"isDownloaded": @YES,
-                    @"davUrl": davUrl,
+                // Block that finalises the created-item and calls completionHandler.
+                // Extracted so it can be called from both the PROPFIND path and the
+                // direct fallback path below.
+                void (^finish)(NSString *, NSString *, int64_t) =
+                    ^(NSString *canonicalFileId, NSString *etag, int64_t modtime) {
+                    NSDictionary *dirDict = @{
+                        @"fileId": canonicalFileId,
+                        @"filename": filename,
+                        @"path": dirPath,
+                        @"parentId": parentId,
+                        @"parentPath": parentPath,
+                        @"isDirectory": @YES,
+                        @"size": @0,
+                        @"modtime": @(modtime),
+                        @"etag": etag ?: @"",
+                        @"isVirtualFile": @NO,
+                        @"isDownloaded": @YES,
+                        @"davUrl": davUrl,
+                    };
+                    FileProviderItem *createdItem = [[FileProviderItem alloc] initWithDictionary:dirDict];
+                    os_log_info(extensionLog(), "createItem: directory done id=%{public}@", canonicalFileId);
+                    [self _appendItemToPlist:dirDict];
+                    progress.completedUnitCount = 100;
+                    completionHandler(createdItem, NSFileProviderItemFields(0), NO, nil);
                 };
 
-                FileProviderItem *createdItem = [[FileProviderItem alloc] initWithDictionary:dirDict];
-                os_log_info(extensionLog(), "createItem: directory created id=%{public}@", newFileId);
+                // Do a PROPFIND (Depth: 0) on the newly created folder to retrieve
+                // the canonical fileId (oc:id) that the sync engine will later store
+                // in its journal. Using the MKCOL OC-FileId header alone is not
+                // reliable — the header may use a different format (e.g. bare numeric)
+                // than the journal (e.g. "spaceId!numeric"). A mismatch causes
+                // NSFileProvider to see two items with the same name → "abc 2" duplicate.
+                NSMutableURLRequest *pfReq = [NSMutableURLRequest requestWithURL:mkcolURL];
+                pfReq.HTTPMethod = @"PROPFIND";
+                [pfReq setValue:[NSString stringWithFormat:@"Bearer %@", accessToken]
+                     forHTTPHeaderField:@"Authorization"];
+                [pfReq setValue:@"0" forHTTPHeaderField:@"Depth"];
+                [pfReq setValue:@"application/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+                pfReq.HTTPBody = [@"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                    "<d:propfind xmlns:d=\"DAV:\" xmlns:oc=\"http://owncloud.org/ns\">"
+                    "<d:prop><oc:id/><d:getetag/><d:getlastmodified/></d:prop>"
+                    "</d:propfind>" dataUsingEncoding:NSUTF8StringEncoding];
 
-                [self _appendItemToPlist:dirDict];
+                NSURLSession *pfSession = [NSURLSession sessionWithConfiguration:
+                    [NSURLSessionConfiguration defaultSessionConfiguration]];
+                [[pfSession dataTaskWithRequest:pfReq
+                             completionHandler:^(NSData *pfData, NSURLResponse *pfResp, NSError *pfErr) {
+                    NSString *canonicalId = nil;
+                    NSString *etag        = nil;
+                    int64_t  modtime      = (int64_t)[[NSDate date] timeIntervalSince1970];
 
-                progress.completedUnitCount = 100;
-                completionHandler(createdItem, NSFileProviderItemFields(0), NO, nil);
+                    if (!pfErr && pfData) {
+                        NSString *xml = [[NSString alloc] initWithData:pfData encoding:NSUTF8StringEncoding];
+                        // Extract oc:id — the canonical fileId the sync journal uses.
+                        NSRegularExpression *idRe = [NSRegularExpression
+                            regularExpressionWithPattern:@"<[^:>]+:id[^>]*>([^<]+)</[^:>]+:id>"
+                                                 options:0 error:nil];
+                        NSTextCheckingResult *m = [idRe firstMatchInString:xml options:0
+                                                                      range:NSMakeRange(0, xml.length)];
+                        if (m && m.numberOfRanges > 1) {
+                            canonicalId = [xml substringWithRange:[m rangeAtIndex:1]];
+                        }
+                        // Extract etag.
+                        NSRegularExpression *etagRe = [NSRegularExpression
+                            regularExpressionWithPattern:@"<[^:>]+:getetag[^>]*>\"?([^<\"]+)\"?</[^:>]+:getetag>"
+                                                 options:0 error:nil];
+                        NSTextCheckingResult *em = [etagRe firstMatchInString:xml options:0
+                                                                         range:NSMakeRange(0, xml.length)];
+                        if (em && em.numberOfRanges > 1) {
+                            etag = [xml substringWithRange:[em rangeAtIndex:1]];
+                        }
+                    }
+
+                    // Fall back to OC-FileId header if PROPFIND failed or returned no id.
+                    if (!canonicalId || canonicalId.length == 0) {
+                        canonicalId = [http.allHeaderFields[@"OC-FileId"] copy]
+                            ?: [NSString stringWithFormat:@"ext!%@", [[NSUUID UUID] UUIDString]];
+                        os_log_info(extensionLog(),
+                            "createItem: PROPFIND id not found, using fallback: %{public}@", canonicalId);
+                        appendTrace([NSString stringWithFormat:
+                            @"[%@] createItem PROPFIND-FALLBACK name=%@ id=%@ pfErr=%@ pfStatus=%ld\n",
+                            [NSDate date], filename, canonicalId, pfErr.localizedDescription ?: @"nil",
+                            (long)((NSHTTPURLResponse *)pfResp).statusCode]);
+                    } else {
+                        os_log_info(extensionLog(),
+                            "createItem: PROPFIND canonical id=%{public}@", canonicalId);
+                        appendTrace([NSString stringWithFormat:
+                            @"[%@] createItem PROPFIND-OK name=%@ id=%@\n",
+                            [NSDate date], filename, canonicalId]);
+                    }
+
+                    finish(canonicalId, etag, modtime);
+                }] resume];
             }] resume];
 
         } else {
@@ -840,36 +939,100 @@ API_AVAILABLE(macos(12.0))
                     return;
                 }
 
-                NSString *newFileId = [http.allHeaderFields[@"OC-FileId"] copy]
-                    ?: [NSString stringWithFormat:@"%@!%@", parentId, [[NSUUID UUID] UUIDString]];
+                NSString *putEtag = [http.allHeaderFields[@"ETag"] copy] ?: @"";
                 int64_t fileSize = stagedFileSize;
 
-                NSMutableDictionary *itemDict = [@{
-                    @"fileId": newFileId,
-                    @"filename": filename,
-                    @"path": filePath,
-                    @"parentId": parentId,
-                    @"parentPath": parentPath,
-                    @"isDirectory": @NO,
-                    @"size": @(fileSize),
-                    @"modtime": @((int64_t)[[NSDate date] timeIntervalSince1970]),
-                    @"etag": [http.allHeaderFields[@"ETag"] copy] ?: @"",
-                    @"isVirtualFile": @NO,
-                    @"isDownloaded": @YES,
-                    @"davUrl": davUrl,
-                } mutableCopy];
+                // Helper block to finish item creation with a confirmed fileId.
+                void (^finishFile)(NSString *, NSString *, int64_t) =
+                    ^(NSString *fileId, NSString *etag, int64_t modtime) {
+                    NSMutableDictionary *itemDict = [@{
+                        @"fileId": fileId,
+                        @"filename": filename,
+                        @"path": filePath,
+                        @"parentId": parentId,
+                        @"parentPath": parentPath,
+                        @"isDirectory": @NO,
+                        @"size": @(fileSize),
+                        @"modtime": @(modtime),
+                        @"etag": etag ?: @"",
+                        @"isVirtualFile": @NO,
+                        @"isDownloaded": @YES,
+                        @"davUrl": davUrl,
+                    } mutableCopy];
+                    FileProviderItem *createdItem = [[FileProviderItem alloc] initWithDictionary:itemDict];
+                    os_log_info(extensionLog(), "createItem: uploaded %{public}@ id=%{public}@", filename, fileId);
+                    // Persist the new item in the shared plist so subsequent
+                    // enumerations include it. Without this, the enumerator
+                    // would not report the item, and fileproviderd would
+                    // eventually remove it from Finder.
+                    [self _appendItemToPlist:itemDict];
+                    progress.completedUnitCount = 100;
+                    completionHandler(createdItem, NSFileProviderItemFields(0), NO, nil);
+                };
 
-                FileProviderItem *createdItem = [[FileProviderItem alloc] initWithDictionary:itemDict];
-                os_log_info(extensionLog(), "createItem: uploaded %{public}@ id=%{public}@", filename, newFileId);
+                // PROPFIND (Depth: 0) to get the canonical oc:id the sync journal will store.
+                // PUT's OC-FileId header may use a different format (bare numeric) than
+                // the journal (spaceId!UUID). A mismatch causes NSFileProvider to see two
+                // items with the same name → file "reappears" in the source folder.
+                NSMutableURLRequest *pfReq = [NSMutableURLRequest requestWithURL:putURL];
+                pfReq.HTTPMethod = @"PROPFIND";
+                [pfReq setValue:[NSString stringWithFormat:@"Bearer %@", accessToken]
+                     forHTTPHeaderField:@"Authorization"];
+                [pfReq setValue:@"0" forHTTPHeaderField:@"Depth"];
+                [pfReq setValue:@"application/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+                pfReq.HTTPBody = [@"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                    "<d:propfind xmlns:d=\"DAV:\" xmlns:oc=\"http://owncloud.org/ns\">"
+                    "<d:prop><oc:id/><d:getetag/><d:getlastmodified/></d:prop>"
+                    "</d:propfind>" dataUsingEncoding:NSUTF8StringEncoding];
 
-                // Persist the new item in the shared plist so subsequent
-                // enumerations include it. Without this, the enumerator
-                // would not report the item, and fileproviderd would
-                // eventually remove it from Finder.
-                [self _appendItemToPlist:itemDict];
+                NSURLSession *pfSession = [NSURLSession sessionWithConfiguration:
+                    [NSURLSessionConfiguration defaultSessionConfiguration]];
+                [[pfSession dataTaskWithRequest:pfReq
+                             completionHandler:^(NSData *pfData, NSURLResponse *pfResp, NSError *pfErr) {
+                    NSString *canonicalId = nil;
+                    NSString *etag        = nil;
+                    int64_t  modtime      = (int64_t)[[NSDate date] timeIntervalSince1970];
 
-                progress.completedUnitCount = 100;
-                completionHandler(createdItem, NSFileProviderItemFields(0), NO, nil);
+                    if (!pfErr && pfData) {
+                        NSString *xml = [[NSString alloc] initWithData:pfData encoding:NSUTF8StringEncoding];
+                        NSRegularExpression *idRe = [NSRegularExpression
+                            regularExpressionWithPattern:@"<[^:>]+:id[^>]*>([^<]+)</[^:>]+:id>"
+                                                 options:0 error:nil];
+                        NSTextCheckingResult *m = [idRe firstMatchInString:xml options:0
+                                                                      range:NSMakeRange(0, xml.length)];
+                        if (m && m.numberOfRanges > 1) {
+                            canonicalId = [xml substringWithRange:[m rangeAtIndex:1]];
+                        }
+                        NSRegularExpression *etagRe = [NSRegularExpression
+                            regularExpressionWithPattern:@"<[^:>]+:getetag[^>]*>\"?([^<\"]+)\"?</[^:>]+:getetag>"
+                                                 options:0 error:nil];
+                        NSTextCheckingResult *em = [etagRe firstMatchInString:xml options:0
+                                                                         range:NSMakeRange(0, xml.length)];
+                        if (em && em.numberOfRanges > 1) {
+                            etag = [xml substringWithRange:[em rangeAtIndex:1]];
+                        }
+                    }
+
+                    if (!canonicalId || canonicalId.length == 0) {
+                        canonicalId = [http.allHeaderFields[@"OC-FileId"] copy]
+                            ?: [NSString stringWithFormat:@"ext!%@", [[NSUUID UUID] UUIDString]];
+                        os_log_info(extensionLog(),
+                            "createItem: PUT PROPFIND id not found, using fallback: %{public}@", canonicalId);
+                        appendTrace([NSString stringWithFormat:
+                            @"[%@] createItem PUT-PROPFIND-FALLBACK name=%@ id=%@ pfErr=%@ pfStatus=%ld\n",
+                            [NSDate date], filename, canonicalId,
+                            pfErr.localizedDescription ?: @"nil",
+                            (long)((NSHTTPURLResponse *)pfResp).statusCode]);
+                    } else {
+                        os_log_info(extensionLog(),
+                            "createItem: PUT PROPFIND canonical id=%{public}@", canonicalId);
+                        appendTrace([NSString stringWithFormat:
+                            @"[%@] createItem PUT-PROPFIND-OK name=%@ id=%@\n",
+                            [NSDate date], filename, canonicalId]);
+                    }
+
+                    finishFile(canonicalId, etag ?: putEtag, modtime);
+                }] resume];
             }] resume];
         }
 
@@ -892,6 +1055,9 @@ API_AVAILABLE(macos(12.0))
                                      NSError * _Nullable))completionHandler {
     os_log_info(extensionLog(), "modifyItem: %{public}@ changedFields=0x%lx",
                 item.filename, (unsigned long)changedFields);
+    appendTrace([NSString stringWithFormat:@"[%@] modifyItem: name=%@ id=%@ changedFields=0x%lx contents=%@\n",
+        [NSDate date], item.filename, item.itemIdentifier,
+        (unsigned long)changedFields, newContents.path ?: @"(nil)"]);
 
     NSProgress *progress = [NSProgress discreteProgressWithTotalUnitCount:100];
 
@@ -997,36 +1163,124 @@ API_AVAILABLE(macos(12.0))
         return progress;
     }
 
-    // For remaining operations (rename, content update), check XPC availability.
-    id<OpenCloudXPCServiceProtocol> proxy = _xpcService.remoteObjectProxy;
-
-    // Handle rename via XPC.
+    // Handle rename via direct WebDAV MOVE (same parent, new filename) — no XPC needed.
+    // NsfpXpcDelegate does not implement renameItem:newName:completionHandler:, so
+    // going through XPC would silently drop the operation and leave the server copy
+    // with the original name ("Neuer Ordner"), causing the sync engine to re-create
+    // the old name in Finder and producing a duplicate folder.
     if (changedFields & NSFileProviderItemFilename) {
-        if (!proxy) {
-            os_log_error(extensionLog(), "modifyItem: no XPC proxy for rename of %{public}@", fileId);
-            completionHandler(nil, 0, NO, xpcUnavailableError());
-            return progress;
-        }
         NSString *newName = [item.filename copy];
         os_log_info(extensionLog(), "modifyItem: renaming %{public}@ to '%{public}@'", fileId, newName);
 
-        [proxy renameItem:fileId newName:newName completionHandler:^(NSDictionary *itemDict, NSError *error) {
+        NSURL *containerURL = [[NSFileManager defaultManager]
+            containerURLForSecurityApplicationGroupIdentifier:kOpenCloudAppGroupIdentifier];
+        if (!containerURL) {
+            completionHandler(nil, 0, NO, configUnavailableError(@"App-Container nicht verfügbar"));
+            return progress;
+        }
+
+        NSURL *cfgURL = [containerURL URLByAppendingPathComponent:configPlistName(self->_domain, containerURL)];
+        NSData *cfgData = [NSData dataWithContentsOfURL:cfgURL];
+        NSDictionary *cfg = cfgData
+            ? [NSPropertyListSerialization propertyListWithData:cfgData options:NSPropertyListImmutable format:nil error:nil]
+            : nil;
+        NSString *renAccessToken = cfg[@"accessToken"];
+        NSString *renDavUrl = cfg[@"davUrl"];
+
+        // Look up current path, parent path, isDirectory, and per-item davUrl from plist.
+        NSString *srcPath = nil;
+        NSString *parentPath = @"";
+        NSString *currentParentId = [item.parentItemIdentifier copy];
+        BOOL isDirectory = NO;
+        NSURL *metURL = [containerURL URLByAppendingPathComponent:itemsPlistName(self->_domain, containerURL)];
+        NSData *metData = [NSData dataWithContentsOfURL:metURL];
+        if (metData) {
+            NSArray *allItems = [NSPropertyListSerialization propertyListWithData:metData
+                                    options:NSPropertyListImmutable format:nil error:nil];
+            for (NSDictionary *it in allItems) {
+                if ([it[@"fileId"] isEqualToString:fileId]) {
+                    srcPath = it[@"path"];
+                    parentPath = it[@"parentPath"] ?: @"";
+                    isDirectory = [it[@"isDirectory"] boolValue];
+                    if (it[@"davUrl"]) renDavUrl = it[@"davUrl"];
+                    break;
+                }
+            }
+        }
+
+        if (!srcPath || !renDavUrl || !renAccessToken) {
+            completionHandler(nil, 0, NO, configUnavailableError(@"Umbenennen nicht möglich — Konfiguration fehlt"));
+            return progress;
+        }
+
+        // Destination: same parent directory, new filename.
+        NSString *destPath = parentPath.length > 0
+            ? [NSString stringWithFormat:@"%@/%@", parentPath, newName] : newName;
+        NSString *renDavBase = [renDavUrl hasSuffix:@"/"]
+            ? [renDavUrl substringToIndex:renDavUrl.length - 1] : renDavUrl;
+        NSString *srcEncoded  = [srcPath   stringByAddingPercentEncodingWithAllowedCharacters:
+                                 [NSCharacterSet URLPathAllowedCharacterSet]];
+        NSString *destEncoded = [destPath  stringByAddingPercentEncodingWithAllowedCharacters:
+                                 [NSCharacterSet URLPathAllowedCharacterSet]];
+        NSString *srcURLString  = [NSString stringWithFormat:@"%@/%@", renDavBase, srcEncoded];
+        NSString *destURLString = [NSString stringWithFormat:@"%@/%@", renDavBase, destEncoded];
+
+        os_log_info(extensionLog(), "modifyItem: MOVE (rename) %{public}@ -> %{public}@",
+                    srcURLString, destURLString);
+
+        NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:srcURLString]];
+        req.HTTPMethod = @"MOVE";
+        [req setValue:[NSString stringWithFormat:@"Bearer %@", renAccessToken] forHTTPHeaderField:@"Authorization"];
+        [req setValue:destURLString forHTTPHeaderField:@"Destination"];
+        [req setValue:@"F" forHTTPHeaderField:@"Overwrite"];
+
+        NSURLSession *session = [NSURLSession sessionWithConfiguration:
+                                 [NSURLSessionConfiguration defaultSessionConfiguration]];
+        BOOL capturedIsDirectory = isDirectory;
+        [[session dataTaskWithRequest:req completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
             if (error) {
-                os_log_error(extensionLog(), "modifyItem: rename failed: %{public}@",
+                os_log_error(extensionLog(), "modifyItem: rename MOVE failed: %{public}@",
                              error.localizedDescription);
                 completionHandler(nil, 0, NO, error);
                 return;
             }
+            NSHTTPURLResponse *http = (NSHTTPURLResponse *)response;
+            if (http.statusCode < 200 || http.statusCode >= 300) {
+                os_log_error(extensionLog(), "modifyItem: rename MOVE HTTP %ld", (long)http.statusCode);
+                completionHandler(nil, 0, NO, [NSError errorWithDomain:NSFileProviderErrorDomain
+                    code:NSFileProviderErrorServerUnreachable
+                    userInfo:@{NSLocalizedDescriptionKey:
+                        [NSString stringWithFormat:@"Umbenennen fehlgeschlagen (HTTP %ld)",
+                         (long)http.statusCode]}]);
+                return;
+            }
 
-            FileProviderItem *updatedItem = [[FileProviderItem alloc] initWithDictionary:itemDict];
-            os_log_info(extensionLog(), "modifyItem: rename succeeded for %{public}@", fileId);
+            // Update the plist entry with the new name/path so the enumerator
+            // immediately reflects the rename and the sync engine does not
+            // re-create the old name as a duplicate in Finder.
+            [self _updateItemPathInPlist:fileId
+                                newPath:destPath
+                            newParentId:currentParentId
+                          newParentPath:parentPath
+                                 davUrl:renDavUrl];
+
+            FileProviderItem *renamedItem = [[FileProviderItem alloc]
+                initWithIdentifier:fileId
+                          filename:newName
+                  parentIdentifier:currentParentId
+                       isDirectory:capturedIsDirectory
+                              size:[item.documentSize longLongValue]
+                           modDate:item.contentModificationDate];
+            os_log_info(extensionLog(), "modifyItem: rename succeeded for %{public}@ -> '%{public}@'",
+                        fileId, newName);
             progress.completedUnitCount = 100;
-            completionHandler(updatedItem, NSFileProviderItemFields(0), NO, nil);
-        }];
+            completionHandler(renamedItem, NSFileProviderItemFields(0), NO, nil);
+        }] resume];
         return progress;
     }
 
     // Handle content update (re-upload via XPC).
+    id<OpenCloudXPCServiceProtocol> proxy = _xpcService.remoteObjectProxy;
     if (changedFields & NSFileProviderItemContents) {
         if (!proxy) {
             os_log_error(extensionLog(), "modifyItem: no XPC proxy for content update of %{public}@", fileId);
@@ -1218,8 +1472,8 @@ API_AVAILABLE(macos(12.0))
 
         FileProviderEnumerator *enumerator =
             [[FileProviderEnumerator alloc] initWithContainerIdentifier:containerItemIdentifier
-                                                            xpcService:_xpcService
-                                                                domain:_domain];
+                                                                domain:_domain
+                                                                 cache:_itemCache];
         return enumerator;
     }
 
