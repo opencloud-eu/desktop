@@ -986,12 +986,35 @@ void VfsNSFP::startImpl(const VfsSetupParams &params)
         }
     });
 
-    _domainManager->addDomain(_domainId, displayName, [self](const QString &errorMessage) {
+    // One-time corruption recovery: clear a possibly-corrupted fileproviderd replica
+    // (FPCK failures, stuck pending import operations that jam new Finder ops) by
+    // force-recreating the domain ONCE after this update. Gated by a per-domain marker
+    // in the App Group container so it happens at most once.
+    BOOL forceRecreate = NO;
+    NSURL *resetMarker = nil;
+    {
+        NSURL *grp = [[NSFileManager defaultManager]
+            containerURLForSecurityApplicationGroupIdentifier:kOpenCloudAppGroupIdentifier];
+        if (grp) {
+            resetMarker = [grp URLByAppendingPathComponent:
+                [NSString stringWithFormat:@"fp_reset_v3_%@", _domainId.toNSString()]];
+            forceRecreate = ![[NSFileManager defaultManager] fileExistsAtPath:resetMarker.path];
+            if (forceRecreate) {
+                qCWarning(lcVfsNSFP) << "One-time domain reset (clearing corrupted state) for:" << _domainId;
+            }
+        }
+    }
+
+    _domainManager->addDomain(_domainId, displayName, [self, resetMarker](const QString &errorMessage) {
         if (!self) {
             return;
         }
 
         if (errorMessage.isEmpty()) {
+            // Mark the one-time reset as done so it never repeats.
+            if (resetMarker) {
+                [@"done" writeToURL:resetMarker atomically:YES encoding:NSUTF8StringEncoding error:nil];
+            }
             QMetaObject::invokeMethod(self, [self]() {
                 if (self) {
                     qCInfo(lcVfsNSFP) << "NSFileProvider domain registered successfully";
@@ -1088,7 +1111,7 @@ void VfsNSFP::startImpl(const VfsSetupParams &params)
                 }
             }, Qt::QueuedConnection);
         }
-    });
+    }, forceRecreate);
 }
 
 Result<void, QString> NsfpVfsPluginFactory::prepare(const QString &path, const QUuid &accountUuid) const

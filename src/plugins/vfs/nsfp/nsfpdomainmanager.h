@@ -41,7 +41,11 @@ public:
     /// The identifier must be stable across restarts (account UUID + space ID).
     /// The displayName is shown in Finder sidebar.
     /// Idempotent: if the domain already exists, reconnects without creating a duplicate.
-    void addDomain(const QString &identifier, const QString &displayName, NsfpDomainCompletionHandler completionHandler);
+    /// @param forceRecreate  If true and the domain already exists, it is REMOVED and
+    ///        re-created from scratch. Use this once (gated by a marker) to clear a
+    ///        corrupted fileproviderd replica/FPFS state (FPCK failures, stuck pending
+    ///        import operations) that jams new Finder operations.
+    void addDomain(const QString &identifier, const QString &displayName, NsfpDomainCompletionHandler completionHandler, bool forceRecreate = false);
 
     /// Fully remove an NSFileProviderDomain and delete its replica store.
     void removeDomain(const QString &identifier, NsfpDomainCompletionHandler completionHandler);
@@ -83,7 +87,12 @@ public:
 
 private:
     struct Private;
-    std::unique_ptr<Private> _p;
+    // shared_ptr (not unique_ptr): async NSFileProviderManager completion handlers
+    // capture a copy so that Private (its caches/mutex/queue) stays alive even if
+    // this manager is destroyed while a completion is still in flight (e.g. when a
+    // space is removed). Capturing raw `this`/`_p` there caused a use-after-free
+    // crash on the FileProvider XPC queue.
+    std::shared_ptr<Private> _p;
 };
 
 } // namespace OCC

@@ -25,15 +25,16 @@ struct NsfpDomainManager::Private
 };
 
 NsfpDomainManager::NsfpDomainManager()
-    : _p(std::make_unique<Private>())
+    : _p(std::make_shared<Private>())
 {
 }
 
 NsfpDomainManager::~NsfpDomainManager()
 {
-    // Drain the serial queue so all pending blocks finish before _p is freed.
-    // Without this, in-flight dispatch_async blocks (e.g. from invalidateManager)
-    // can access _p->cacheMutex after it has been destroyed → use-after-free.
+    // Drain the serial queue so all pending blocks finish before this object is
+    // freed. In-flight NSFileProviderManager completion handlers capture their
+    // own shared_ptr<Private> copy (see below), so they remain safe even after
+    // the manager is destroyed.
     dispatch_sync(_p->dispatchQueue, ^{});
 
     QMutexLocker lock(&_p->cacheMutex);
@@ -42,7 +43,7 @@ NsfpDomainManager::~NsfpDomainManager()
 }
 
 void NsfpDomainManager::addDomain(const QString &identifier, const QString &displayName,
-                                  NsfpDomainCompletionHandler completionHandler)
+                                  NsfpDomainCompletionHandler completionHandler, bool forceRecreate)
 {
     qCInfo(lcNsfpDomainManager) << "addDomain requested:" << identifier << "displayName:" << displayName;
 
@@ -52,10 +53,14 @@ void NsfpDomainManager::addDomain(const QString &identifier, const QString &disp
     NSString *nsIdentifier = identifier.toNSString();
     NSString *nsDisplayName = displayName.toNSString();
 
+    // Capture a shared_ptr copy so Private survives async completions that may
+    // fire after this manager is destroyed.
+    auto p = _p;
+
     // Capture completion handler by value for the block
     auto handler = std::move(completionHandler);
 
-    dispatch_async(_p->dispatchQueue, ^{
+    dispatch_async(p->dispatchQueue, ^{
         // First, check if our domain already exists and is enabled
         dispatch_semaphore_t listSemaphore = dispatch_semaphore_create(0);
         __block NSError *listError = nil;
@@ -69,10 +74,13 @@ void NsfpDomainManager::addDomain(const QString &identifier, const QString &disp
                 for (NSFileProviderDomain *domain in domains) {
                     if ([domain.identifier isEqualToString:nsIdentifier]) {
                         existingDomain = domain;
-                    } else if ([domain.identifier hasPrefix:@"opencloud"]) {
-                        // Remove stale opencloud domains with different identifiers
-                        [staleDomainsToRemove addObject:domain];
                     }
+                    // NOTE: Do NOT remove other "opencloud*" domains here. Every space
+                    // is its own domain sharing the "opencloud-<account>-<space>" prefix,
+                    // so treating siblings as "stale" deletes all previously-registered
+                    // spaces whenever a new space is added (only the last one survives).
+                    // Orphaned-domain cleanup happens explicitly via removeDomain() when a
+                    // space is unsynced, not as a side effect of adding a different space.
                 }
             }
             dispatch_semaphore_signal(listSemaphore);
@@ -83,26 +91,73 @@ void NsfpDomainManager::addDomain(const QString &identifier, const QString &disp
             qCWarning(lcNsfpDomainManager) << "Failed to list existing domains:" << QString::fromNSString(listError.localizedDescription);
         }
 
-        // If the domain already exists, force-remove it so fileproviderd re-resolves
-        // the extension UUID from pluginkit on the subsequent addDomain call.
-        // Reusing the existing domain would leave fileproviderd bound to the old
-        // extension UUID (e.g. after re-signing the appex), causing ETIMEDOUT on fetch.
+        // One-time corruption recovery: if asked to force-recreate and the domain
+        // exists, remove it (discarding the corrupted replica/FPFS) so the create
+        // path below registers it fresh. Gated by a per-domain marker in the caller
+        // so this happens at most once per update.
+        if (existingDomain && forceRecreate) {
+            qCWarning(lcNsfpDomainManager) << "forceRecreate: removing existing domain to clear corrupted state:" << identifierCopy;
+            dispatch_semaphore_t recreateSem = dispatch_semaphore_create(0);
+            [NSFileProviderManager removeDomain:existingDomain completionHandler:^(NSError *rmErr) {
+                if (rmErr) {
+                    qCWarning(lcNsfpDomainManager) << "forceRecreate remove failed:"
+                                                   << QString::fromNSString(rmErr.localizedDescription);
+                } else {
+                    qCInfo(lcNsfpDomainManager) << "forceRecreate: domain removed, will re-create fresh:" << identifierCopy;
+                }
+                dispatch_semaphore_signal(recreateSem);
+            }];
+            dispatch_semaphore_wait(recreateSem, DISPATCH_TIME_FOREVER);
+            existingDomain = nil; // fall through to the create path below
+        }
+
+        // If the domain already exists, reuse it rather than removing and re-adding.
+        // Unconditional remove-then-readd on every launch causes Finder to briefly drop
+        // the Locations entry; if addDomain then fails for any transient reason the
+        // entry is gone permanently until the next launch.
         if (existingDomain) {
-            qCInfo(lcNsfpDomainManager) << "Domain already exists, removing for clean re-add:" << identifierCopy
+            qCInfo(lcNsfpDomainManager) << "Domain already registered, attempting reuse:" << identifierCopy
                                         << "userEnabled:" << existingDomain.userEnabled;
+
+            NSFileProviderManager *existingManager = [NSFileProviderManager managerForDomain:existingDomain];
+            if (existingManager) {
+                // Domain is healthy — wake the extension by forcing a full re-enumeration.
+                [existingManager reimportItemsBelowItemWithIdentifier:NSFileProviderRootContainerItemIdentifier
+                                                   completionHandler:^(NSError *reimportErr) {
+                    if (reimportErr) {
+                        qCWarning(lcNsfpDomainManager) << "Reimport (domain reuse) failed:"
+                                                       << QString::fromNSString(reimportErr.localizedDescription);
+                    } else {
+                        qCInfo(lcNsfpDomainManager) << "Reimport (domain reuse) succeeded";
+                    }
+                }];
+
+                {
+                    QMutexLocker lock(&p->cacheMutex);
+                    p->domainCache[identifierCopy] = existingDomain;
+                    p->managerCache[identifierCopy] = existingManager;
+                }
+                if (handler) {
+                    handler(QString()); // success — domain reused
+                }
+                return;
+            }
+
+            // No manager available — domain is in a broken state. Remove and re-add
+            // as recovery so fileproviderd picks up a fresh extension registration.
+            qCWarning(lcNsfpDomainManager) << "Domain exists but manager unavailable, removing for re-add:" << identifierCopy;
             dispatch_semaphore_t removeSem = dispatch_semaphore_create(0);
             [NSFileProviderManager removeDomain:existingDomain completionHandler:^(NSError *removeErr) {
                 if (removeErr) {
-                    qCWarning(lcNsfpDomainManager) << "Failed to remove existing domain for re-add:"
+                    qCWarning(lcNsfpDomainManager) << "Failed to remove broken domain for re-add:"
                                                    << QString::fromNSString(removeErr.localizedDescription);
                 } else {
-                    qCInfo(lcNsfpDomainManager) << "Existing domain removed — will re-add fresh:" << identifierCopy;
+                    qCInfo(lcNsfpDomainManager) << "Broken domain removed — will re-add fresh:" << identifierCopy;
                 }
                 dispatch_semaphore_signal(removeSem);
             }];
             dispatch_semaphore_wait(removeSem, DISPATCH_TIME_FOREVER);
-            // Fall through to the addDomain path below so fileproviderd picks up the
-            // current pluginkit extension UUID.
+            // Fall through to the addDomain path below.
         }
 
         // Remove stale domains before creating a new one
@@ -152,9 +207,9 @@ void NsfpDomainManager::addDomain(const QString &identifier, const QString &disp
                         }
                     }];
                     {
-                        QMutexLocker lock(&_p->cacheMutex);
-                        _p->domainCache[identifierCopy] = domain;
-                        _p->managerCache[identifierCopy] = fallbackManager;
+                        QMutexLocker lock(&p->cacheMutex);
+                        p->domainCache[identifierCopy] = domain;
+                        p->managerCache[identifierCopy] = fallbackManager;
                     }
                     if (handler) {
                         handler(QString()); // treat as success — we have a live manager
@@ -200,9 +255,9 @@ void NsfpDomainManager::addDomain(const QString &identifier, const QString &disp
             }
 
             {
-                QMutexLocker lock(&_p->cacheMutex);
-                _p->domainCache[identifierCopy] = domain;
-                _p->managerCache[identifierCopy] = manager;
+                QMutexLocker lock(&p->cacheMutex);
+                p->domainCache[identifierCopy] = domain;
+                p->managerCache[identifierCopy] = manager;
             }
 
             if (handler) {
@@ -218,13 +273,14 @@ void NsfpDomainManager::removeDomain(const QString &identifier,
     qCInfo(lcNsfpDomainManager) << "removeDomain requested:" << identifier;
 
     QString identifierCopy = identifier;
+    auto p = _p;
     auto handler = std::move(completionHandler);
 
-    dispatch_async(_p->dispatchQueue, ^{
+    dispatch_async(p->dispatchQueue, ^{
         NSFileProviderDomain *domain = nil;
         {
-            QMutexLocker lock(&_p->cacheMutex);
-            domain = _p->domainCache.value(identifierCopy, nil);
+            QMutexLocker lock(&p->cacheMutex);
+            domain = p->domainCache.value(identifierCopy, nil);
         }
 
         if (!domain) {
@@ -249,9 +305,9 @@ void NsfpDomainManager::removeDomain(const QString &identifier,
             qCInfo(lcNsfpDomainManager) << "Domain removed successfully:" << identifierCopy;
 
             {
-                QMutexLocker lock(&_p->cacheMutex);
-                _p->domainCache.remove(identifierCopy);
-                _p->managerCache.remove(identifierCopy);
+                QMutexLocker lock(&p->cacheMutex);
+                p->domainCache.remove(identifierCopy);
+                p->managerCache.remove(identifierCopy);
             }
 
             if (handler) {
@@ -266,12 +322,13 @@ void NsfpDomainManager::invalidateManager(const QString &identifier)
     qCInfo(lcNsfpDomainManager) << "invalidateManager requested:" << identifier;
 
     QString identifierCopy = identifier;
+    auto p = _p;
 
-    dispatch_async(_p->dispatchQueue, ^{
+    dispatch_async(p->dispatchQueue, ^{
         NSFileProviderManager *manager = nil;
         {
-            QMutexLocker lock(&_p->cacheMutex);
-            manager = _p->managerCache.value(identifierCopy, nil);
+            QMutexLocker lock(&p->cacheMutex);
+            manager = p->managerCache.value(identifierCopy, nil);
         }
 
         if (manager) {
@@ -282,8 +339,8 @@ void NsfpDomainManager::invalidateManager(const QString &identifier)
         }
 
         {
-            QMutexLocker lock(&_p->cacheMutex);
-            _p->managerCache.remove(identifierCopy);
+            QMutexLocker lock(&p->cacheMutex);
+            p->managerCache.remove(identifierCopy);
             // Keep the domain in cache so it can be reconnected later
         }
     });
@@ -321,12 +378,13 @@ void NsfpDomainManager::signalEnumerator(const QString &identifier, const QStrin
     QString identifierCopy = identifier;
     QString containerIdCopy = containerId;
     NSString *nsContainerId = containerId.toNSString();
+    auto p = _p;
 
-    dispatch_async(_p->dispatchQueue, ^{
+    dispatch_async(p->dispatchQueue, ^{
         NSFileProviderManager *manager = nil;
         {
-            QMutexLocker lock(&_p->cacheMutex);
-            manager = _p->managerCache.value(identifierCopy, nil);
+            QMutexLocker lock(&p->cacheMutex);
+            manager = p->managerCache.value(identifierCopy, nil);
         }
 
         if (!manager) {
@@ -356,11 +414,12 @@ void NsfpDomainManager::signalWorkingSet(const QString &identifier)
     qCInfo(lcNsfpDomainManager) << "signalWorkingSet requested for domain:" << identifier;
 
     QString identifierCopy = identifier;
-    dispatch_async(_p->dispatchQueue, ^{
+    auto p = _p;
+    dispatch_async(p->dispatchQueue, ^{
         NSFileProviderManager *manager = nil;
         {
-            QMutexLocker lock(&_p->cacheMutex);
-            manager = _p->managerCache.value(identifierCopy, nil);
+            QMutexLocker lock(&p->cacheMutex);
+            manager = p->managerCache.value(identifierCopy, nil);
         }
 
         if (!manager) {
@@ -389,13 +448,14 @@ void NsfpDomainManager::evictItem(const QString &identifier, const QString &file
     QString identifierCopy = identifier;
     QString fileIdCopy = fileId;
     NSString *nsFileId = fileId.toNSString();
+    auto p = _p;
     auto handler = std::move(completionHandler);
 
-    dispatch_async(_p->dispatchQueue, ^{
+    dispatch_async(p->dispatchQueue, ^{
         NSFileProviderManager *manager = nil;
         {
-            QMutexLocker lock(&_p->cacheMutex);
-            manager = _p->managerCache.value(identifierCopy, nil);
+            QMutexLocker lock(&p->cacheMutex);
+            manager = p->managerCache.value(identifierCopy, nil);
         }
 
         if (!manager) {
@@ -430,12 +490,13 @@ void NsfpDomainManager::requestSystemEviction(const QString &identifier)
     qCInfo(lcNsfpDomainManager) << "requestSystemEviction for domain:" << identifier;
 
     QString identifierCopy = identifier;
+    auto p = _p;
 
-    dispatch_async(_p->dispatchQueue, ^{
+    dispatch_async(p->dispatchQueue, ^{
         NSFileProviderManager *manager = nil;
         {
-            QMutexLocker lock(&_p->cacheMutex);
-            manager = _p->managerCache.value(identifierCopy, nil);
+            QMutexLocker lock(&p->cacheMutex);
+            manager = p->managerCache.value(identifierCopy, nil);
         }
 
         if (!manager) {
