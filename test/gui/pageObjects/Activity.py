@@ -68,7 +68,7 @@ class Activity:
     def is_resource_blacklisted(filename):
         result = wait_for(
             lambda: Activity.has_sync_status(filename, "Blacklisted"),
-            get_config("maxSyncTimeout"),
+            get_config("sync_timeout"),
         )
         return result
 
@@ -76,7 +76,7 @@ class Activity:
     def is_resource_ignored(filename):
         result = squish.waitFor(
             lambda: Activity.has_sync_status(filename, "File Ignored"),
-            get_config("maxSyncTimeout"),
+            get_config("sync_timeout"),
         )
         return result
 
@@ -84,7 +84,7 @@ class Activity:
     def is_resource_excluded(filename):
         result = wait_for(
             lambda: Activity.has_sync_status(filename, "Excluded"),
-            get_config("maxSyncTimeout"),
+            get_config("sync_timeout"),
         )
         return result
 
@@ -196,7 +196,7 @@ class Activity:
         try:
             file_row = squish.waitForObject(
                 Activity.get_not_synced_file_selector(resource),
-                get_config("lowestSyncTimeout"),
+                get_config("lowest_timeout"),
             )["row"]
             squish.waitForObjectExists(
                 {

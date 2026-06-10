@@ -63,9 +63,7 @@ def get_app_env():
 CONFIG_ENV_MAP = {
     'app_path': 'APP_PATH',
     'localBackendUrl': 'BACKEND_HOST',
-    'maxSyncTimeout': 'MAX_SYNC_TIMEOUT',
-    'minSyncTimeout': 'MIN_SYNC_TIMEOUT',
-    'lowestSyncTimeout': 'LOWEST_SYNC_TIMEOUT',
+    'sync_timeout': 'SYNC_TIMEOUT',
     'clientRootSyncPath': 'CLIENT_ROOT_SYNC_PATH',
     'tempFolderPath': 'TEMP_FOLDER_PATH',
     'guiTestReportDir': 'GUI_TEST_REPORT_DIR',
@@ -85,9 +83,10 @@ DEFAULT_PATH_CONFIG = {
 # default config values
 CONFIG = {
     'localBackendUrl': 'https://localhost:9200/',
-    'maxSyncTimeout': 60,
-    'minSyncTimeout': 5,
-    'lowestSyncTimeout': 1,
+    'sync_timeout': 60,
+    'max_timeout': 60,
+    'min_timeout': 5,
+    'lowest_timeout': 1,
     'clientRootSyncPath': get_client_root_path(),
     'clientConfigFile': os.path.join(get_config_home(), "OpenCloud", APP_CONFIG_FILE),
     'guiTestReportDir': os.path.join(CURRENT_DIR.parent, 'reports'),
@@ -138,7 +137,7 @@ def init_config():
 
     # Set the default values if empty
     for key, value in CONFIG.items():
-        if key in ('maxSyncTimeout', 'minSyncTimeout'):
+        if key in ('sync_timeout', 'max_timeout', 'min_timeout', 'lowest_timeout'):
             CONFIG[key] = builtins.int(value)
         elif key == 'localBackendUrl':
             # make sure there is always one trailing slash

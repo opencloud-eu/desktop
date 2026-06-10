@@ -13,7 +13,7 @@ from helpers.SyncHelper import (
     listen_sync_status_for_item,
 )
 from helpers.Utils import wait_for
-from helpers.ConfigHelper import get_config, is_windows
+from helpers.ConfigHelper import get_config
 from helpers.FilesHelper import (
     build_conflicted_regex,
     sanitize_path,
@@ -28,14 +28,14 @@ from helpers.FilesHelper import (
 )
 
 
-def folder_exists(folder_path, timeout=1):
+def folder_exists(folder_path, timeout=get_config('min_timeout')):
     return wait_for(
         lambda: isdir(sanitize_path(folder_path)),
         timeout,
     )
 
 
-def file_exists(file_path, timeout=1):
+def file_exists(file_path, timeout=get_config('min_timeout')):
     return wait_for(
         lambda: isfile(sanitize_path(file_path)),
         timeout,
@@ -212,7 +212,7 @@ def step(context, file_path):
 def step(context, resource_type, resource):
     resource_path = get_resource_path(resource)
     resource_exists = False
-    timeout = get_config('maxSyncTimeout')
+    timeout = get_config('max_timeout')
     if resource_type == 'file':
         resource_exists = file_exists(resource_path, timeout)
     else:
