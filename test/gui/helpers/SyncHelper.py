@@ -247,13 +247,13 @@ def wait_for_resource_to_sync(
     listen_sync_status_for_item(resource, resource_type)
 
     initial_timeout = 0
-    timeout = get_config('maxSyncTimeout')
+    timeout = get_config('sync_timeout')
 
     if patterns is None:
         patterns = get_synced_pattern(resource)
 
     if force_sync:
-        initial_timeout = 5
+        initial_timeout = get_config('min_timeout')
         # first try with 5 seconds timeout
         synced = wait_for(
             lambda: has_sync_pattern(patterns, resource),
@@ -349,7 +349,7 @@ def wait_for_resource_to_have_sync_status(
     listen_sync_status_for_item(resource, resource_type)
 
     if not timeout:
-        timeout = get_config('maxSyncTimeout')
+        timeout = get_config('sync_timeout')
 
     result = wait_for(
         lambda: has_sync_status(resource, status),
@@ -378,7 +378,7 @@ def wait_for_resource_to_have_sync_error(resource, resource_type):
 def wait_for_client_to_be_ready():
     global WAITED_AFTER_SYNC
     if not WAITED_AFTER_SYNC:
-        time.sleep(get_config('minSyncTimeout'))
+        time.sleep(get_config('min_timeout'))
         WAITED_AFTER_SYNC = True
 
 

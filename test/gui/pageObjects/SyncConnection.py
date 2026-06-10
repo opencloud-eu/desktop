@@ -118,7 +118,7 @@ class SyncConnection:
         """Wait for permission error label to appear or disappear"""
         status = squish.waitFor(
             lambda: object.exists(SyncConnection.PERMISSION_ERROR_LABEL) == to_exist,
-            get_config("maxSyncTimeout"),
+            get_config("max_timeout"),
         )
         if not status:
             action = "appear" if to_exist else "disappear"
