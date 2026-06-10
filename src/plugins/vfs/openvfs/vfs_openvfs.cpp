@@ -193,7 +193,7 @@ void OpenVFS::startImpl(const VfsSetupParams &params)
     // Lets claim the sync root directory for us
     // set the owner to opencloud to claim it
     const auto owner = xattrOwnerString(params.account->uuid()).toStdString();
-    if (const auto info = ::OpenVFS::RegistrationInfo::registerFilesystem(params.root(), owner); !info) {
+    if (const auto info = ::OpenVFS::Registration::registerFilesystem(params.root(), owner); !info) {
         if (info.owner() != owner) {
             Q_EMIT error(tr("Unable to claim the sync root for files on demand, the folder is already claimed by %1").arg(info.owner()));
             return;
@@ -233,7 +233,7 @@ void OpenVFS::stop()
 
 void OpenVFS::unregisterFolder()
 {
-    ::OpenVFS::RegistrationInfo::unregisterFilesystem({params().root(), xattrOwnerString(params().account->uuid()).toStdString()});
+    ::OpenVFS::Registration::unregisterFilesystem({params().root(), xattrOwnerString(params().account->uuid()).toStdString()});
 }
 
 bool OpenVFS::socketApiPinStateActionsShown() const
@@ -299,7 +299,7 @@ Result<void, QString> OpenVfsPluginFactory::prepare(const QString &path, const Q
         qCDebug(lcOpenVFS) << path << "does not support xattributes";
         return tr("The filesystem for %1 does not support xattributes.").arg(path);
     }
-    if (const auto info = ::OpenVFS::RegistrationInfo::fromAttributes(fsPath); info && info.owner() != xattrOwnerString(accountUuid).toStdString()) {
+    if (const auto info = ::OpenVFS::Registration::fromAttributes(fsPath); info && info.owner() != xattrOwnerString(accountUuid).toStdString()) {
         return tr("The sync path is already claimed by %1").arg(info.owner());
     }
     if (!openVFSExePath().exists()) {

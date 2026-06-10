@@ -2,16 +2,18 @@
 
 touch .woodpecker.env
 
-# get playwright version from package.json
+PY_REQUIREMENTS_PATH="test/gui/requirements.txt"
+
+# get playwright version from requirements.txt
 get_playwright_version() {
-    PACKAGE_JSON_PATH="test/gui/webUI/package.json"
-    if [[ ! -f "$PACKAGE_JSON_PATH" ]]; then
-        echo "Error: package.json file not found."
+    if [[ ! -f "$PY_REQUIREMENTS_PATH" ]]; then
+        echo "Error: file not found: $PY_REQUIREMENTS_PATH"
     fi
 
-    playwright_version=$(grep '"@playwright/test":' "$PACKAGE_JSON_PATH" | cut -d':' -f2 | tr -d '", ')
+    playwright_version=$(grep 'playwright==' "$PY_REQUIREMENTS_PATH" | cut -d'=' -f3 | cut -d'.' -f1-2)
+    playwright_version=${playwright_version//[^0-9.]/}
     if [[ -z "$playwright_version" ]]; then
-        echo "Error: Playwright package not found in package.json." >&2
+        echo "Error: Playwright package not found in requirements.txt" >&2
         exit 78
     fi
 
@@ -20,30 +22,35 @@ get_playwright_version() {
 
 # Function to check if the cache exists for the given commit ID
 check_browsers_cache() {
-    get_playwright_version
+    playwright_version=$(get_playwright_version)
 
-    playwright_cache=$(mc find s3/$CACHE_BUCKET/web/browsers-cache/$playwright_version/playwright-browsers.tar.gz 2>&1 | grep 'Object does not exist')
+    playwright_cache=$(mc find s3/$CACHE_BUCKET/desktop/browsers-cache/$playwright_version/playwright-browsers.tar.gz 2>&1 | grep 'Object does not exist')
 
     if [[ "$playwright_cache" != "" ]]
     then
-        echo "Playwright v$playwright_version supported browsers doesn't exist in cache."
+        echo "Browsers cache for playwright v$playwright_version not found in cache."
         ENV="BROWSER_CACHE_FOUND=false\n"
     else
-      echo "Playwright v$playwright_version supported browsers found in cache."
+      echo "Browsers cache for playwright v$playwright_version found in cache."
       ENV="BROWSER_CACHE_FOUND=true\n"
     fi
 }
 
+get_requirementstxt_hash() {
+    requirements_sha=$(sha1sum $PY_REQUIREMENTS_PATH | cut -d" " -f1)
+    echo "$requirements_sha"
+}
+
 check_python_cache() {
-    requirements_sha=$(sha1sum test/gui/requirements.txt | cut -d" " -f1)
-    python_cache=$(mc find s3/$CACHE_BUCKET/desktop/python-cache/python-cache-$requirements_sha.tar.gz 2>&1 | grep 'Object does not exist')
+    requirements_sha=$(get_requirementstxt_hash)
+    python_cache=$(mc find s3/$CACHE_BUCKET/desktop/python-cache/$requirements_sha/python-cache.tar.gz 2>&1 | grep 'Object does not exist')
 
     if [[ "$python_cache" != "" ]]
     then
-        echo "Python cache of requirements with hash $requirements_sha doesn't exist in cache."
+        echo "Python cache for '$requirements_sha' hash not found in cache."
         ENV="PYTHON_CACHE_FOUND=false\n"
     else
-      echo "Python cache of requirements with hash $requirements_sha found in cache."
+      echo "Python cache for '$requirements_sha' hash found in cache."
       ENV="PYTHON_CACHE_FOUND=true\n"
     fi
 }
@@ -51,7 +58,8 @@ check_python_cache() {
 if [[ "$1" == "" ]]; then
     echo "Usage: $0 [COMMAND]"
     echo "Commands:"
-    echo -e "  get_playwright_version \t get the playwright version from package.json"
+    echo -e "  get_playwright_version \t get the playwright version from requirements.txt"
+    echo -e "  get_requirementstxt_hash \t get the hash of the current requirements.txt"
     echo -e "  check_browsers_cache \t check if the browsers cache exists for the given playwright version"
     echo -e "  check_python_cache \t check if a cache for the current requirements.txt exists"
     exit 1

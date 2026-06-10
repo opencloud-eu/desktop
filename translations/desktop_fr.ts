@@ -262,7 +262,7 @@ Utilitaire de bureau pour la synchronisation de fichiers.</translation>
     <message>
         <location filename="../src/gui/qml/FolderDelegate.qml" line="99"/>
         <source>Account options Menu</source>
-        <translation>Options du compte Menu</translation>
+        <translation>Menu des options de compte</translation>
     </message>
     <message>
         <location filename="../src/gui/qml/FolderDelegate.qml" line="332"/>
@@ -414,17 +414,17 @@ Utilitaire de bureau pour la synchronisation de fichiers.</translation>
     <message>
         <location filename="../src/gui/folderwizard/folderwizardsourcepage.ui" line="32"/>
         <source>Enter the path to the Spaces root folder. This folder will contain all your synchronized Spaces.</source>
-        <translation>Saisissez le chemin d&apos;accès au dossier racine de Spaces. Ce dossier contiendra tous les espaces synchronisés.</translation>
+        <translation>Saisissez le chemin d&apos;accès au dossier racine des Espaces. Ce dossier contiendra tous les Espaces synchronisés.</translation>
     </message>
     <message>
         <location filename="../src/gui/folderwizard/folderwizardsourcepage.ui" line="39"/>
         <source>Click to select the Spaces root folder.</source>
-        <translation>Cliquez pour sélectionner le dossier racine des espaces.</translation>
+        <translation>Cliquez pour sélectionner le dossier racine des Espaces.</translation>
     </message>
     <message>
         <location filename="../src/gui/folderwizard/folderwizardsourcepage.ui" line="42"/>
         <source>&amp;Choose...</source>
-        <translation>&amp;Choose...</translation>
+        <translation>&amp;Choisir...</translation>
     </message>
 </context>
 <context>
@@ -511,12 +511,12 @@ Utilitaire de bureau pour la synchronisation de fichiers.</translation>
     <message>
         <location filename="../src/gui/aboutdialog.ui" line="108"/>
         <source>&amp;Update Channel</source>
-        <translation>&amp;Update Channel</translation>
+        <translation>&amp;Canal de mise à jour</translation>
     </message>
     <message>
         <location filename="../src/gui/aboutdialog.ui" line="137"/>
         <source>&amp;Restart &amp;&amp; Update</source>
-        <translation>&amp;Restart &amp;&amp; Update</translation>
+        <translation>&amp;Redémarrer &amp;&amp; Mettre à jour</translation>
     </message>
     <message>
         <location filename="../src/gui/aboutdialog.ui" line="148"/>
@@ -536,7 +536,7 @@ Utilitaire de bureau pour la synchronisation de fichiers.</translation>
     <message>
         <location filename="../src/gui/aboutdialog.cpp" line="159"/>
         <source>&lt;html&gt;The update channel determines which client updates will be offered for installation.&lt;ul&gt;&lt;li&gt;&quot;stable&quot; contains only upgrades that are considered reliable&lt;/li&gt;%1&lt;/ul&gt;&lt;br&gt;⚠️Downgrades are not supported. If you switch to a stable channel this change will only be applied with the next major release.&lt;/html&gt;</source>
-        <translation>&lt;html&gt;Le canal de mise à jour détermine les mises à jour du client qui seront proposées à l&apos;installation.&lt;ul&gt;&lt;li&gt;« stable » ne contient que des mises à jour considérées comme fiables&lt;/li&gt;%1&lt;/ul&gt;&lt;br&gt;⚠️Downgrades ne sont pas prises en charge. Si vous passez à un canal stable, ce changement ne sera appliqué qu&apos;avec la prochaine version majeure.&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;Le canal de mise à jour détermine les mises à jour du client qui seront proposées à l&apos;installation.&lt;ul&gt;&lt;li&gt;« stable » ne contient que des mises à jour considérées comme fiables&lt;/li&gt;%1&lt;/ul&gt;&lt;br&gt;⚠️ Les retours en arrière ne sont pas pris en charge. Si vous passez à un canal stable, ce changement ne sera appliqué qu&apos;avec la prochaine version majeure.&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../src/gui/aboutdialog.cpp" line="165"/>
@@ -792,17 +792,17 @@ La mise à jour sera effectuée en arrière-plan et écrasera le fichier AppImag
     <message>
         <location filename="../src/plugins/vfs/cfapi/vfs_cfapi.cpp" line="140"/>
         <source>The Virtual filesystem feature does not support a drive as sync root</source>
-        <translation type="unfinished"/>
+        <translation>La fonction de système de fichiers virtuel ne prend pas en charge un lecteur en tant que racine de synchronisation.</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/cfapi/vfs_cfapi.cpp" line="144"/>
         <source>The Virtual filesystem feature requires a NTFS file system, %1 is using %2</source>
-        <translation type="unfinished"/>
+        <translation>La fonctionnalité « système de fichiers virtuel » requiert un système de fichiers NTFS, %1 utilise %2</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/cfapi/vfs_cfapi.cpp" line="148"/>
         <source>The Virtual filesystem feature is not supported on network drives</source>
-        <translation type="unfinished"/>
+        <translation>La fonctionnalité « système de fichiers virtuel » n&apos;est pas prise en charge sur les disques en réseau</translation>
     </message>
 </context>
 <context>
@@ -1770,17 +1770,17 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
     <message>
         <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="198"/>
         <source>Unable to claim the sync root for files on demand, the folder is already claimed by %1</source>
-        <translation type="unfinished"/>
+        <translation>Impossible de revendiquer la racine de synchronisation pour les fichiers à la demande, le dossier est déjà revendiqué par %1</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="201"/>
         <source>Unable to retrieve registration info. Error: %1</source>
-        <translation type="unfinished"/>
+        <translation>Impossible de récupérer les informations d&apos;enregistrement. Erreur : %1</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="426"/>
         <source>Cannot dehydrate a placeholder because the file changed</source>
-        <translation type="unfinished"/>
+        <translation>Impossible de déshydrater un espace réservé car le fichier a été modifié</translation>
     </message>
 </context>
 <context>
@@ -1788,32 +1788,32 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
     <message>
         <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="278"/>
         <source>Failed to read /proc/self/mountinfo</source>
-        <translation type="unfinished"/>
+        <translation>Impossible de lire /proc/self/mountinfo</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="291"/>
         <source>Failed to unmount the OpenVFS mount %1 Error:%2</source>
-        <translation type="unfinished"/>
+        <translation>Échec du démontage du montage OpenVFS %1 Erreur : %2</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="300"/>
         <source>The filesystem for %1 does not support xattributes.</source>
-        <translation type="unfinished"/>
+        <translation>Le système de fichiers pour %1 ne prend pas en charge les xattributes</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="303"/>
         <source>The sync path is already claimed by %1</source>
-        <translation type="unfinished"/>
+        <translation>Le chemin de synchronisation est déjà revendiqué par %1</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="307"/>
         <source>OpenVFS executable not found, please install it</source>
-        <translation type="unfinished"/>
+        <translation>L&apos;exécutable OpenVFS est introuvable, merci de l&apos;installer</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="313"/>
         <source>Failed to find the OpenVFS config file, please check your installation.</source>
-        <translation type="unfinished"/>
+        <translation>Impossible de trouver le fichier de configuration d&apos;OpenVFS, merci de vérifier l&apos;installation.</translation>
     </message>
 </context>
 <context>
@@ -1919,7 +1919,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
     <message>
         <location filename="../src/libsync/discovery.cpp" line="1067"/>
         <source>Not allowed to upload this file because it is read-only on the server, restoring</source>
-        <translation>Impossible de télécharger ce fichier parce qu&apos;il est en lecture seule sur le serveur.</translation>
+        <translation>Pas autorisé à téléverser ce fichier car il est en lecture seule sur le serveur, restauration</translation>
     </message>
     <message>
         <location filename="../src/libsync/discovery.cpp" line="1213"/>
@@ -2491,7 +2491,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
     <message>
         <location filename="../src/gui/socketapi/socketapi.cpp" line="910"/>
         <source>Rename and upload...</source>
-        <translation>Renommer et télécharger…</translation>
+        <translation>Renommer et téléverser…</translation>
     </message>
     <message>
         <location filename="../src/gui/socketapi/socketapi.cpp" line="915"/>
@@ -2502,7 +2502,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
     <message>
         <location filename="../src/gui/socketapi/socketapi.cpp" line="922"/>
         <source>Move, rename and upload...</source>
-        <translation>Déplacer, renommer et télécharger…</translation>
+        <translation>Déplacer, renommer et téléverser…</translation>
     </message>
     <message>
         <location filename="../src/gui/socketapi/socketapi.cpp" line="925"/>
@@ -2512,7 +2512,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
     <message>
         <location filename="../src/gui/socketapi/socketapi.cpp" line="930"/>
         <source>Move and upload...</source>
-        <translation>Déplacer et télécharger...</translation>
+        <translation>Déplacer et téléverser...</translation>
     </message>
     <message>
         <location filename="../src/gui/socketapi/socketapi.cpp" line="931"/>
@@ -2546,7 +2546,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
     <message>
         <location filename="../src/libsync/syncengine.cpp" line="777"/>
         <source>Space quota exceeded. Please contact the Administrator of this space.</source>
-        <translation>Le quota d&apos;Espace est dépassé. Veuillez contacter l&apos;administrateur de cet Espace.</translation>
+        <translation>Le quota de l&apos;Espace est dépassé. Veuillez contacter l&apos;Administrateur de cet Espace.</translation>
     </message>
     <message>
         <location filename="../src/libsync/syncengine.cpp" line="266"/>
@@ -3269,12 +3269,12 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
     <message>
         <location filename="../src/libsync/vfs/vfs.cpp" line="247"/>
         <source>ReFS is currently not supported.</source>
-        <translation type="unfinished"/>
+        <translation>ReFS n&apos;est pas pris en charge pour le moment.</translation>
     </message>
     <message>
         <location filename="../src/libsync/vfs/vfs.cpp" line="255"/>
         <source>The Virtual filesystem %1 is not supported on this platform</source>
-        <translation type="unfinished"/>
+        <translation>Le système de fichier virtuel %1 n&apos;est pas pris en charge sur cette plateforme</translation>
     </message>
 </context>
 <context>
@@ -3341,7 +3341,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="40"/>
         <source>Uploaded</source>
-        <translation>Téléversé</translation>
+        <translation>Téléchargé</translation>
     </message>
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="45"/>
@@ -3387,7 +3387,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="70"/>
         <source>uploading</source>
-        <translation>téléversement</translation>
+        <translation>téléchargement</translation>
     </message>
     <message>
         <location filename="../src/libsync/progressdispatcher.cpp" line="72"/>

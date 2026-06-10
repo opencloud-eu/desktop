@@ -1343,7 +1343,7 @@ Please consider removing this folder from the account and adding it again.</sour
     <message>
         <location filename="../src/libsync/graphapi/space.cpp" line="115"/>
         <source>Shares</source>
-        <translation>Ресурсы совместного доступа</translation>
+        <translation>Общие ресурсы</translation>
     </message>
 </context>
 <context>
