@@ -6,7 +6,7 @@ from helpers.UserHelper import get_displayname_for_user
 from helpers.SetupClientHelper import substitute_inline_codes
 from helpers.UserHelper import get_displayname_for_user
 from helpers.AppHelper import app
-from helpers.SyncHelper import wait_for
+from helpers.Utils import wait_for
 
 
 class AccountSetting:
@@ -86,7 +86,7 @@ class AccountSetting:
         return "Connected" in AccountSetting.get_account_connection_label()
 
     @staticmethod
-    def wait_until_connection_is_configured(timeout=5000):
+    def wait_until_connection_is_configured(timeout=5):
         result = squish.waitFor(
             AccountSetting.is_connecting,
             timeout,
@@ -96,11 +96,11 @@ class AccountSetting:
             raise TimeoutError(
                 "Timeout waiting for connection to be configured for "
                 + str(timeout)
-                + " milliseconds"
+                + " seconds"
             )
 
     @staticmethod
-    def wait_until_account_is_connected(timeout=5000):
+    def wait_until_account_is_connected(timeout=5):
         result = wait_for(
             AccountSetting.is_user_signed_in,
             timeout,
@@ -110,12 +110,12 @@ class AccountSetting:
             raise TimeoutError(
                 "Timeout waiting for the account to be connected for "
                 + str(timeout)
-                + " milliseconds"
+                + " seconds"
             )
         return result
 
     @staticmethod
-    def wait_until_sync_folder_is_configured(timeout=5000):
+    def wait_until_sync_folder_is_configured(timeout=5):
         result = squish.waitFor(
             lambda: not squish.waitForObjectExists(
                 AccountSetting.ACCOUNT_LOADING
@@ -127,7 +127,7 @@ class AccountSetting:
             raise TimeoutError(
                 "Timeout waiting for sync folder to be connected for "
                 + str(timeout)
-                + " milliseconds"
+                + " seconds"
             )
         return result
 
@@ -154,7 +154,7 @@ class AccountSetting:
         AccountSetting.remove_account_connection()
 
     @staticmethod
-    def wait_until_account_is_removed(username, timeout=10000):
+    def wait_until_account_is_removed(username, timeout=10):
         displayname = get_displayname_for_user(username)
         displayname = substitute_inline_codes(displayname)
 
@@ -168,5 +168,5 @@ class AccountSetting:
             raise TimeoutError(
                 "Timeout waiting for account to be removed for "
                 + str(timeout)
-                + " milliseconds"
+                + " seconds"
             )
