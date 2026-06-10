@@ -11,8 +11,8 @@ from helpers.SetupClientHelper import get_resource_path, get_temp_resource_path
 from helpers.SyncHelper import (
     wait_for_client_to_be_ready,
     listen_sync_status_for_item,
-    wait_for,
 )
+from helpers.Utils import wait_for
 from helpers.ConfigHelper import get_config, is_windows
 from helpers.FilesHelper import (
     build_conflicted_regex,
@@ -28,14 +28,14 @@ from helpers.FilesHelper import (
 )
 
 
-def folder_exists(folder_path, timeout=1000):
+def folder_exists(folder_path, timeout=1):
     return wait_for(
         lambda: isdir(sanitize_path(folder_path)),
         timeout,
     )
 
 
-def file_exists(file_path, timeout=1000):
+def file_exists(file_path, timeout=1):
     return wait_for(
         lambda: isfile(sanitize_path(file_path)),
         timeout,
@@ -212,7 +212,7 @@ def step(context, file_path):
 def step(context, resource_type, resource):
     resource_path = get_resource_path(resource)
     resource_exists = False
-    timeout = get_config('maxSyncTimeout') * 1000
+    timeout = get_config('maxSyncTimeout')
     if resource_type == 'file':
         resource_exists = file_exists(resource_path, timeout)
     else:
@@ -452,6 +452,8 @@ def step(context):
         deleteResource(filename, 'file')
 
 
-@Given('the user has created a file "{filename}" with size "{filesize}" in the sync folder')
+@Given(
+    'the user has created a file "{filename}" with size "{filesize}" in the sync folder'
+)
 def step(context, filename, filesize):
     create_file_with_size(filename, filesize)

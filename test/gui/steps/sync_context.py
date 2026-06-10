@@ -115,10 +115,8 @@ def step(context, filename):
 
 @Then('the file "{filename}" should be blacklisted')
 def step(context, filename):
-   with ensure(
-       'File is Blacklisted'
-   ):
-    Activity.is_resource_blacklisted(filename).should.be.true
+    with ensure('File is Blacklisted'):
+        Activity.is_resource_blacklisted(filename).should.be.true
 
 
 @Then('the file "|any|" should be ignored')
@@ -128,9 +126,7 @@ def step(context, filename):
 
 @Then('the file "{filename}" should be excluded')
 def step(context, filename):
-    with ensure(
-       'File is Excluded'
-   ):
+    with ensure('File is Excluded'):
         Activity.is_resource_excluded(filename).should.be.true
 
 
@@ -319,7 +315,7 @@ def step(context):
 @Then('the following activities should be displayed in not synced table')
 def step(context):
     _check_activities(context, not_synced=True)
-    
+
 
 @Then('the following activities should not be displayed in synced table')
 def step(context):
@@ -329,7 +325,6 @@ def step(context):
 @Then('the following activities should not be displayed in not synced table')
 def step(context):
     _check_activities(context, not_synced=True, should_exist=False)
-
 
 
 @When('the user unchecks the "{filter_option}" filter')
