@@ -290,9 +290,9 @@ def step(context, resource_type, resource_name):
     deleteResource(resource_name, resource_type)
 
 
-@When('user "|any|" creates the following files inside the sync folder:')
+@When('user "{username}" creates the following files inside the sync folder:')
 def step(context, username):
-    for row in context.table[1:]:
+    for row in context.table:
         file = get_resource_path(row[0], username)
         wait_and_write_file(file, '')
 
@@ -447,8 +447,7 @@ def step(context, resource_name, destination):
 @When('the user deletes the following files')
 def step(context):
     wait_for_client_to_be_ready()
-
-    for row in context.table[1:]:
+    for row in context.table:
         filename = row[0]
         deleteResource(filename, 'file')
 
