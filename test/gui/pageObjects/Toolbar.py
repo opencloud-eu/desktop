@@ -33,7 +33,7 @@ class Toolbar:
         toolbar = app().find_element(
             Toolbar.NAVIGATION_BAR.by, Toolbar.NAVIGATION_BAR.selector
         )
-        timeout = get_config('maxSyncTimeout')
+        timeout = get_config('max_timeout')
         enabled = wait_for(
             toolbar.is_enabled,
             timeout,
