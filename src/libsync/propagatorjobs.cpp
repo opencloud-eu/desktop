@@ -148,6 +148,25 @@ void PropagateLocalMkdir::start()
     if (propagator()->_abortRequested)
         return;
 
+    // NSFileProvider mode: do NOT create a local directory skeleton on disk. The
+    // CloudStorage mount (served live by the extension) is the only user-facing
+    // representation; physical local dirs would just be confusing empty folders.
+    // Record the directory in the journal directly (the shared plist is built from
+    // it, driving the extension's change detection and browsing identity). We must
+    // bypass OwncloudPropagator::updateMetadata here because it skips writing the
+    // record when the local path does not exist.
+    if (const auto vfs = propagator()->syncOptions()._vfs; vfs && vfs->mode() == Vfs::Mode::MacOSNSFileProvider) {
+        auto record = SyncJournalFileRecord::fromSyncFileItem(*_item);
+        const auto dbResult = propagator()->_journal->setFileRecord(record);
+        if (!dbResult) {
+            done(SyncFileItem::FatalError, tr("Error updating metadata: %1").arg(dbResult.error()));
+            return;
+        }
+        propagator()->_journal->commit(QStringLiteral("localMkdir (nsfp, journal-only)"));
+        done(_item->instruction() == CSYNC_INSTRUCTION_CONFLICT ? SyncFileItem::Conflict : SyncFileItem::Success);
+        return;
+    }
+
     QDir newDir(propagator()->fullLocalPath(_item->localName()));
     QString newDirStr = QDir::toNativeSeparators(newDir.path());
 
