@@ -2,12 +2,11 @@ import os
 import re
 import time
 import urllib.request
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.common.exceptions import TimeoutException
 
 from pageObjects.SyncConnection import SyncConnection
 from helpers.ConfigHelper import get_config, is_linux, is_windows
 from helpers.FilesHelper import sanitize_path
+from helpers.Utils import wait_for
 
 if is_windows():
     from helpers.WinPipeHelper import WinPipeConnect as SocketConnect
@@ -248,13 +247,13 @@ def wait_for_resource_to_sync(
     listen_sync_status_for_item(resource, resource_type)
 
     initial_timeout = 0
-    timeout = get_config('maxSyncTimeout') * 1000
+    timeout = get_config('sync_timeout')
 
     if patterns is None:
         patterns = get_synced_pattern(resource)
 
     if force_sync:
-        initial_timeout = 5000
+        initial_timeout = get_config('min_timeout')
         # first try with 5 seconds timeout
         synced = wait_for(
             lambda: has_sync_pattern(patterns, resource),
@@ -293,9 +292,7 @@ def wait_for_resource_to_sync(
             )
             return
     raise TimeoutError(
-        'Timeout while waiting for sync to complete for '
-        + str(timeout)
-        + ' milliseconds'
+        'Timeout while waiting for sync to complete for ' + str(timeout) + ' seconds'
     )
 
 
@@ -352,7 +349,7 @@ def wait_for_resource_to_have_sync_status(
     listen_sync_status_for_item(resource, resource_type)
 
     if not timeout:
-        timeout = get_config('maxSyncTimeout') * 1000
+        timeout = get_config('sync_timeout')
 
     result = wait_for(
         lambda: has_sync_status(resource, status),
@@ -381,7 +378,7 @@ def wait_for_resource_to_have_sync_error(resource, resource_type):
 def wait_for_client_to_be_ready():
     global WAITED_AFTER_SYNC
     if not WAITED_AFTER_SYNC:
-        time.sleep(get_config('minSyncTimeout'))
+        time.sleep(get_config('min_timeout'))
         WAITED_AFTER_SYNC = True
 
 
@@ -409,14 +406,3 @@ def make_available_locally(resource_path):
     socket_connect = get_socket_connection()
     resource_path = resource_path.rstrip('\\').rstrip('/')
     socket_connect.sendCommand(f'MAKE_AVAILABLE_LOCALLY:{resource_path}\n')
-
-
-def wait_for(condition, timeout, interval=0.5):
-    from helpers.AppHelper import app
-
-    wait = WebDriverWait(app(), timeout / 1000, poll_frequency=interval)
-    try:
-        wait.until(lambda _: condition())
-        return True
-    except TimeoutException:
-        return False
