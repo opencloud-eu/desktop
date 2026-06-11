@@ -1,28 +1,15 @@
 import os
-import re
 import threading
 import time
 import mss
 import numpy as np
 import imageio_ffmpeg
-from datetime import datetime
 
-from helpers.ConfigHelper import get_config
-
+from helpers.ReportHelper import get_screenrecord_file_path
 
 _recording_thread = None
 _stop_event = threading.Event()
 _video_path = None
-
-
-def _build_video_path(scenario):
-    safe_name = re.sub(r"[^a-zA-Z0-9_]", "_", scenario.name)
-    timestamp = datetime.now().strftime("%d-%b-%Y_%H-%M-%S")
-
-    recordings_dir = os.path.join(get_config("guiTestReportDir"), "recordings")
-    os.makedirs(recordings_dir, exist_ok=True)
-
-    return os.path.join(recordings_dir, f"{safe_name}_{timestamp}.mp4")
 
 
 def _record_loop(video_path):
@@ -39,7 +26,8 @@ def _record_loop(video_path):
         )
         writer.send(None)
 
-        interval = 1.0 / 24 # 1/24 seconds between each frame so we get 24 frames per second
+        # 1/24 seconds between each frame so we get 24 frames per second
+        interval = 1.0 / 24
         next_frame_at = time.monotonic()
 
         while not _stop_event.is_set():
@@ -56,13 +44,15 @@ def _record_loop(video_path):
         writer.close()
 
 
-def start_recording(scenario):
+def start_recording(filename):
     global _recording_thread, _video_path
 
-    _video_path = _build_video_path(scenario)
+    _video_path = get_screenrecord_file_path(filename)
     _stop_event.clear()
 
-    _recording_thread = threading.Thread(target=_record_loop, args=(_video_path,), daemon=True)
+    _recording_thread = threading.Thread(
+        target=_record_loop, args=(_video_path,), daemon=True
+    )
     _recording_thread.start()
 
 

@@ -1,9 +1,6 @@
 import shutil
 import os
-import re
-import pyautogui
 from behave.model_core import Status
-from datetime import datetime
 
 from helpers import ScreenRecorder
 from helpers.ConfigHelper import init_config
@@ -13,32 +10,15 @@ from helpers.ConfigHelper import get_config
 from helpers.FilesHelper import prefix_path_namespace, cleanup_created_paths
 from helpers.AppHelper import close_and_kill_app
 from helpers.SyncHelper import clear_socket_messages
+from helpers.ReportHelper import (
+    normalize_scenario_title,
+    hit_screenrecord_limit,
+    take_screenshot,
+    append_scenario_to_app_log,
+    store_app_log,
+    cleanup_current_app_log,
+)
 from step_types.types import *  # register all step types
-
-
-def append_scenario_to_app_log(scenario):
-    with open(get_config('appLogFile'), 'a') as log_file:
-        logs = ["=" * 80]
-        logs.append(
-            f"Scenario: {scenario.name}\nLocation: {scenario.filename}:{scenario.line}"
-        )
-        logs.append("-" * 80)
-        logs.append("")  # extra line break
-        log_file.write("\n".join(logs))
-
-
-def store_app_log():
-    with open(get_config('appLogFile'), 'a') as log_file:
-        # client log is stored in utf-16.
-        with open(
-            get_config('currentAppLogFile'), 'r', encoding='utf-16'
-        ) as current_log:
-            log_file.write(f"{current_log.read()}\n\n")
-
-
-def cleanup_app_log():
-    if os.path.exists(get_config('currentAppLogFile')):
-        os.remove(get_config('currentAppLogFile'))
 
 
 def before_feature(context, feature):
@@ -46,27 +26,25 @@ def before_feature(context, feature):
 
 
 def before_scenario(context, scenario):
-    if os.getenv("CI"):
-        ScreenRecorder.start_recording(scenario)
+    if (
+        os.getenv("CI")
+        and get_config("record_video_on_failure")
+        and not hit_screenrecord_limit()
+    ):
+        ScreenRecorder.start_recording(normalize_scenario_title(scenario.name))
 
 
 def after_step(context, step):
     if step.status in [Status.failed, Status.error] and os.getenv("CI"):
-        scenario = context.scenario.name.lower()
-        scenario = re.sub(r'[^a-zA-Z0-9_]', '_', scenario)
-        timestamp = datetime.now().strftime("%d-%b-%Y_%H-%M-%S")
-        screenshots_dir = os.path.join(get_config("guiTestReportDir"), "screenshots")
-        os.makedirs(screenshots_dir, exist_ok=True)
-
-        file_path = os.path.join(screenshots_dir, f"{scenario}_{timestamp}.png")
-        pyautogui.screenshot(file_path)
+        take_screenshot(normalize_scenario_title(context.scenario.name))
 
 
 def after_scenario(context, scenario):
-
     # stop screen recording
-    if os.getenv("CI"):
+    if os.getenv("CI") and get_config("record_video_on_failure"):
         ScreenRecorder.stop_recording(passed=scenario.status == Status.passed)
+    if hit_screenrecord_limit():
+        print("[INFO] Screen recording limit reached.")
 
     # clean up sync dir
     if os.path.exists(get_config("clientRootSyncPath")):
@@ -93,5 +71,5 @@ def after_scenario(context, scenario):
     ):
         append_scenario_to_app_log(scenario)
         store_app_log()
-    cleanup_app_log()
+    cleanup_current_app_log()
     clear_socket_messages()
