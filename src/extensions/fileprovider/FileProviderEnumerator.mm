@@ -85,33 +85,27 @@ static BOOL isHiddenOcEntry(NSString *name) {
 
 /// Content signature of the shared metadata, used as the working-set sync anchor
 /// so fileproviderd re-checks when the main app's sync changes the plist.
+/// Uses FPItemSetSignature (hash of every item's fileId|path|etag) rather than
+/// count+max(modtime): a server-side rename keeps both count and modtime, so the
+/// old signature collided and renames never re-enumerated.
 static NSString *workingSetSignature(NSArray<NSDictionary *> *allItems) {
-    int64_t latest = 0;
-    for (NSDictionary *d in allItems) {
-        int64_t mt = [d[@"modtime"] longLongValue];
-        if (mt > latest) latest = mt;
-    }
-    return [NSString stringWithFormat:@"%lu-%lld", (unsigned long)allItems.count, latest];
+    return FPItemSetSignature(allItems);
 }
 
 /// Content signature of a single folder's direct children FROM THE SHARED PLIST
 /// (refreshed by the main app's sync). Used as the per-folder sync anchor so the
-/// anchor CHANGES when the server adds/removes a child — which is what makes
-/// fileproviderd call enumerateChanges for that folder. (A cached PROPFIND etag
-/// would never change on its own, so folders were never re-enumerated.)
+/// anchor CHANGES when the server adds/removes/renames a child — which is what
+/// makes fileproviderd call enumerateChanges for that folder. (A cached PROPFIND
+/// etag would never change on its own, so folders were never re-enumerated.)
 static NSString *folderChildrenSignature(NSFileProviderDomain *domain, NSString *relPath) {
     NSArray<NSDictionary *> *all = readSharedMetadata(domain) ?: @[];
-    int64_t latest = 0;
-    NSUInteger count = 0;
     NSString *target = relPath ?: @"";
+    NSMutableArray<NSDictionary *> *children = [NSMutableArray array];
     for (NSDictionary *d in all) {
         NSString *pp = d[@"parentPath"] ?: @"";
-        if (![pp isEqualToString:target]) continue;
-        count++;
-        int64_t mt = [d[@"modtime"] longLongValue];
-        if (mt > latest) latest = mt;
+        if ([pp isEqualToString:target]) [children addObject:d];
     }
-    return [NSString stringWithFormat:@"%lu-%lld", (unsigned long)count, latest];
+    return FPItemSetSignature(children);
 }
 
 typedef NS_ENUM(NSInteger, FPContainerKind) {
@@ -418,14 +412,14 @@ static NSDictionary *itemDictFromEntry(FileProviderWebDAVEntry *e,
         // re-index the whole tree every ~30s (huge CPU + constant Finder view
         // churn). Build the previous etag map from the cache BEFORE overwriting.
         NSArray<NSString *> *prevIds = [_cache childFileIdsForContainerPath:kWorkingSetCacheKey] ?: @[];
-        NSMutableDictionary<NSString *, NSString *> *prevEtags =
-            [NSMutableDictionary dictionaryWithCapacity:prevIds.count];
+        NSMutableArray<NSDictionary *> *previousItems =
+            [NSMutableArray arrayWithCapacity:prevIds.count];
         for (NSString *fid in prevIds) {
             NSDictionary *md = [_cache metadataForFileId:fid];
-            if (md) prevEtags[fid] = md[@"etag"] ?: @"";
+            if (md) [previousItems addObject:md];
         }
 
-        FPWorkingSetDelta *delta = FPComputeWorkingSetDelta(allItems, prevEtags, prevIds);
+        FPWorkingSetDelta *delta = FPComputeWorkingSetDelta(allItems, previousItems);
 
         // Refresh the cache for all current items (path/parent lookups stay current).
         for (NSDictionary *dict in allItems) {

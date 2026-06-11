@@ -79,18 +79,22 @@ API_AVAILABLE(macos(12.0))
         _isUploading = NO;
         _childItemCount = nil;
 
-        // Build itemVersion from modification date (or a static seed if no date).
-        // NSFileProviderItemVersion is required for replicated extensions.
-        NSData *versionData;
-        if (date) {
-            int64_t epoch = (int64_t)[date timeIntervalSince1970];
-            versionData = [NSData dataWithBytes:&epoch length:sizeof(epoch)];
-        } else {
-            uint64_t seed = 1;
-            versionData = [NSData dataWithBytes:&seed length:sizeof(seed)];
-        }
-        _itemVersion = [[NSFileProviderItemVersion alloc] initWithContentVersion:versionData
-                                                                 metadataVersion:versionData];
+        // NSFileProviderItemVersion is required for replicated extensions, and
+        // fileproviderd IGNORES a didUpdateItems whose version is unchanged. The
+        // metadataVersion therefore MUST change on any metadata change — crucially
+        // a RENAME or MOVE, which on OCIS keeps the modtime. A modtime-only version
+        // made Finder silently drop server-side renames. So derive:
+        //   contentVersion  := modtime (content changes bump modtime)
+        //   metadataVersion := hash(filename | parentId | size | modtime)
+        int64_t epoch = date ? (int64_t)[date timeIntervalSince1970] : 0;
+        NSData *contentVersion = [NSData dataWithBytes:&epoch length:sizeof(epoch)];
+
+        NSString *metaString = [NSString stringWithFormat:@"%@|%@|%@|%lld",
+            _filename ?: @"", _parentItemIdentifier ?: @"", _documentSize ?: @0, epoch];
+        NSData *metadataVersion = [metaString dataUsingEncoding:NSUTF8StringEncoding];
+
+        _itemVersion = [[NSFileProviderItemVersion alloc] initWithContentVersion:contentVersion
+                                                                 metadataVersion:metadataVersion];
 
         os_log_debug(itemLog(), "Created FileProviderItem id=%{public}@ name=%{public}@ dir=%d",
                      fileId, name, isDir);

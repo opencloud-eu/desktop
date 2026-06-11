@@ -21,11 +21,25 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSArray<NSString *> *currentFileIds;
 @end
 
-/// Diffs `currentItems` (each dict carries "fileId" and "etag") against the
-/// previous snapshot (`previousEtagByFileId`: fileId -> etag, and
-/// `previousFileIds`: the ids known last time). An item counts as changed when
-/// it is new (no previous etag) or its etag differs from the previous one.
-FPWorkingSetDelta *FPComputeWorkingSetDelta(
-    NSArray<NSDictionary *> *currentItems, NSDictionary<NSString *, NSString *> *previousEtagByFileId, NSArray<NSString *> *previousFileIds);
+/// Diffs `currentItems` against `previousItems` (each dict carries "fileId",
+/// "etag" and "path"/"filename"). An item counts as changed when it is new OR its
+/// fingerprint differs, where the fingerprint is etag+path — so a server-side
+/// RENAME (same fileId and etag, different name) is reported as changed. The
+/// previous etag-only comparison missed renames entirely.
+FPWorkingSetDelta *FPComputeWorkingSetDelta(NSArray<NSDictionary *> *currentItems, NSArray<NSDictionary *> *previousItems);
+
+/// Identity fingerprint of an item: changes on content (etag) OR name/path change.
+NSString *FPItemFingerprint(NSDictionary *item);
+
+/// Deterministic content signature of an item set, used as the FileProvider sync
+/// anchor. It MUST change whenever any item is added, removed, renamed, moved or
+/// its content changes — otherwise fileproviderd, which re-enumerates only when
+/// the anchor changes, never picks the change up. The previous implementation used
+/// `count + max(modtime)`, which is invariant under a rename (count and modtime are
+/// both unchanged), so server-side renames never propagated to Finder. This hashes
+/// the sorted `fileId|path|etag` of every item, so a rename (path change and/or new
+/// fileId) always moves the anchor. Foundation-only and order-independent so it is
+/// unit-testable and stable across process launches.
+NSString *FPItemSetSignature(NSArray<NSDictionary *> *items);
 
 NS_ASSUME_NONNULL_END
