@@ -46,7 +46,7 @@ def take_screenshot(filename):
         print(f"[WARN] Failed to save screenshot: {e}")
 
 
-def append_scenario_to_app_log(scenario):
+def save_app_log(scenario):
     with open(get_config('appLogFile'), 'a') as log_file:
         logs = ["=" * 80]
         logs.append(
@@ -55,10 +55,6 @@ def append_scenario_to_app_log(scenario):
         logs.append("-" * 80)
         logs.append("")  # extra line break
         log_file.write("\n".join(logs))
-
-
-def store_app_log():
-    with open(get_config('appLogFile'), 'a') as log_file:
         # client log is stored in utf-16.
         with open(
             get_config('currentAppLogFile'), 'r', encoding='utf-16'

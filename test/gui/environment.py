@@ -14,8 +14,7 @@ from helpers.ReportHelper import (
     normalize_scenario_title,
     hit_screenrecord_limit,
     take_screenshot,
-    append_scenario_to_app_log,
-    store_app_log,
+    save_app_log,
     cleanup_current_app_log,
 )
 from step_types.types import *  # register all step types
@@ -32,6 +31,8 @@ def before_scenario(context, scenario):
         and not hit_screenrecord_limit()
     ):
         ScreenRecorder.start_recording(normalize_scenario_title(scenario.name))
+    elif hit_screenrecord_limit():
+        print("[INFO] Screen recording limit reached.")
 
 
 def after_step(context, step):
@@ -43,8 +44,15 @@ def after_scenario(context, scenario):
     # stop screen recording
     if os.getenv("CI") and get_config("record_video_on_failure"):
         ScreenRecorder.stop_recording(passed=scenario.status == Status.passed)
-    if hit_screenrecord_limit():
-        print("[INFO] Screen recording limit reached.")
+
+    # quit the application
+    close_and_kill_app()
+
+    # store app log on scenario failure
+    if scenario.status in [Status.failed, Status.error] and os.path.exists(
+        get_config('currentAppLogFile')
+    ):
+        save_app_log(scenario)
 
     # clean up sync dir
     if os.path.exists(get_config("clientRootSyncPath")):
@@ -62,14 +70,6 @@ def after_scenario(context, scenario):
     cleanup_created_paths()
     delete_project_spaces()
     delete_created_users()
-    # quit the application
-    close_and_kill_app()
 
-    # store app log on scenario failure
-    if scenario.status in [Status.failed, Status.error] and os.path.exists(
-        get_config('currentAppLogFile')
-    ):
-        append_scenario_to_app_log(scenario)
-        store_app_log()
     cleanup_current_app_log()
     clear_socket_messages()
