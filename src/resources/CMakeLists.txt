@@ -36,10 +36,29 @@ generate_export_header(OpenCloudResources
 # Handle Translations, pick all desktop_*.ts files from translations directory.
 file(GLOB desktop_translations ${CMAKE_SOURCE_DIR}/translations/desktop_*.ts)
 qt_add_lrelease(OpenCloudResources TS_FILES ${desktop_translations} QM_FILES_OUTPUT_VARIABLE desktop_compiled_translations)
+get_target_property(_oc_qmake Qt6::qmake IMPORTED_LOCATION)
+execute_process(
+    COMMAND "${_oc_qmake}" -query QT_INSTALL_TRANSLATIONS
+    OUTPUT_VARIABLE _oc_qt_translations_dir
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+set(qt_bundled_translations "")
+foreach(_ts ${desktop_translations})
+    get_filename_component(_ts_name "${_ts}" NAME_WE)
+    string(REPLACE "desktop_" "" _lang "${_ts_name}")
+    foreach(_catalog qtbase qt)
+        set(_qm "${_oc_qt_translations_dir}/${_catalog}_${_lang}.qm")
+        if(EXISTS "${_qm}")
+            list(APPEND qt_bundled_translations "${_qm}")
+        endif()
+    endforeach()
+endforeach()
+
 add_resources_to_target(
     TARGET OpenCloudResources
     PREFIX translations
-    FILES "${desktop_compiled_translations}"
+    FILES ${desktop_compiled_translations} ${qt_bundled_translations}
 )
 
 ecm_add_qml_module(OpenCloudResources
