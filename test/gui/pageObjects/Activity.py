@@ -7,7 +7,7 @@ from selenium.common.exceptions import NoSuchElementException
 from helpers.FilesHelper import build_conflicted_regex
 from helpers.ConfigHelper import get_config
 from helpers.AppHelper import app
-from helpers.SyncHelper import wait_for
+from helpers.Utils import wait_for
 
 
 class Activity:
@@ -22,8 +22,9 @@ class Activity:
     FILTER_BUTTON_SELECTED_STATE = SimpleNamespace(
         by=By.XPATH, selector="//*[contains(@name, '1 Filter')]"
     )
-    NOT_SYNCED_FILTER_BUTTON = SimpleNamespace(by=By.ACCESSIBILITY_ID,
-         selector="QApplication.Settings.centralwidget.dialogStack.page.stack.OCC::ActivitySettings.QTabWidget.qt_tabwidget_stackedwidget.OCC__IssuesWidget._filterButton"
+    NOT_SYNCED_FILTER_BUTTON = SimpleNamespace(
+        by=By.ACCESSIBILITY_ID,
+        selector="QApplication.Settings.centralwidget.dialogStack.page.stack.OCC::ActivitySettings.QTabWidget.qt_tabwidget_stackedwidget.OCC__IssuesWidget._filterButton",
     )
     NOT_SYNCED_FILTER_OPTION_SELECTOR = SimpleNamespace(by=None, selector=None)
     SYNCED_ACTIVITY_TABLE_HEADER_SELECTOR = SimpleNamespace(by=None, selector=None)
@@ -67,7 +68,7 @@ class Activity:
     def is_resource_blacklisted(filename):
         result = wait_for(
             lambda: Activity.has_sync_status(filename, "Blacklisted"),
-            get_config("maxSyncTimeout") * 1000,
+            get_config("sync_timeout"),
         )
         return result
 
@@ -75,7 +76,7 @@ class Activity:
     def is_resource_ignored(filename):
         result = squish.waitFor(
             lambda: Activity.has_sync_status(filename, "File Ignored"),
-            get_config("maxSyncTimeout") * 1000,
+            get_config("sync_timeout"),
         )
         return result
 
@@ -83,7 +84,7 @@ class Activity:
     def is_resource_excluded(filename):
         result = wait_for(
             lambda: Activity.has_sync_status(filename, "Excluded"),
-            get_config("maxSyncTimeout") * 1000,
+            get_config("sync_timeout"),
         )
         return result
 
@@ -169,7 +170,8 @@ class Activity:
     def select_not_synced_filter(filter_option):
         menu = app().find_element(
             Activity.NOT_SYNCED_FILTER_BUTTON.by,
-            Activity.NOT_SYNCED_FILTER_BUTTON.selector)
+            Activity.NOT_SYNCED_FILTER_BUTTON.selector,
+        )
         menu.click()
         # NOTE: Filter options are not visible in the accessibility tree.
         # As a workaround, select the 6th filter option (which is an Excluded filter).
@@ -194,7 +196,7 @@ class Activity:
         try:
             file_row = squish.waitForObject(
                 Activity.get_not_synced_file_selector(resource),
-                get_config("lowestSyncTimeout") * 1000,
+                get_config("lowest_timeout"),
             )["row"]
             squish.waitForObjectExists(
                 {

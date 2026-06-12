@@ -6,7 +6,7 @@ from selenium.common.exceptions import NoSuchElementException
 from helpers.AppHelper import app
 from helpers.ConfigHelper import get_config
 from helpers.UserHelper import get_displayname_for_user
-from helpers.SyncHelper import wait_for
+from helpers.Utils import wait_for
 
 
 class Toolbar:
@@ -33,9 +33,9 @@ class Toolbar:
         toolbar = app().find_element(
             Toolbar.NAVIGATION_BAR.by, Toolbar.NAVIGATION_BAR.selector
         )
-        timeout = get_config('maxSyncTimeout') * 1000
+        timeout = get_config('max_timeout')
         enabled = wait_for(
-            lambda: toolbar.is_enabled(),
+            toolbar.is_enabled,
             timeout,
         )
         if not enabled:

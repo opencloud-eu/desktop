@@ -11,9 +11,9 @@ from helpers.SetupClientHelper import get_resource_path, get_temp_resource_path
 from helpers.SyncHelper import (
     wait_for_client_to_be_ready,
     listen_sync_status_for_item,
-    wait_for,
 )
-from helpers.ConfigHelper import get_config, is_windows
+from helpers.Utils import wait_for
+from helpers.ConfigHelper import get_config
 from helpers.FilesHelper import (
     build_conflicted_regex,
     sanitize_path,
@@ -28,14 +28,14 @@ from helpers.FilesHelper import (
 )
 
 
-def folder_exists(folder_path, timeout=1000):
+def folder_exists(folder_path, timeout=get_config('min_timeout')):
     return wait_for(
         lambda: isdir(sanitize_path(folder_path)),
         timeout,
     )
 
 
-def file_exists(file_path, timeout=1000):
+def file_exists(file_path, timeout=get_config('min_timeout')):
     return wait_for(
         lambda: isfile(sanitize_path(file_path)),
         timeout,
@@ -212,7 +212,7 @@ def step(context, file_path):
 def step(context, resource_type, resource):
     resource_path = get_resource_path(resource)
     resource_exists = False
-    timeout = get_config('maxSyncTimeout') * 1000
+    timeout = get_config('max_timeout')
     if resource_type == 'file':
         resource_exists = file_exists(resource_path, timeout)
     else:
@@ -429,7 +429,7 @@ def step(context, folder_name):
 
 
 @Given(
-    r'the user has copied file "([^"]*)" from outside the sync folder to "([^"]*)" in the sync folder',
+    'the user has copied file "{resource_name}" from outside the sync folder to "{destination}" in the sync folder',
     regexp=True,
 )
 def step(context, resource_name, destination):
@@ -437,7 +437,7 @@ def step(context, resource_name, destination):
 
 
 @When(
-    r'the user copies file "([^"]*)" from outside the sync folder to "([^"]*)" in the sync folder',
+    'the user copies file "{resource_name}" from outside the sync folder to "{destination}" in the sync folder',
     regexp=True,
 )
 def step(context, resource_name, destination):
@@ -452,6 +452,8 @@ def step(context):
         deleteResource(filename, 'file')
 
 
-@Given('the user has created a file "{filename}" with size "{filesize}" in the sync folder')
+@Given(
+    'the user has created a file "{filename}" with size "{filesize}" in the sync folder'
+)
 def step(context, filename, filesize):
     create_file_with_size(filename, filesize)
