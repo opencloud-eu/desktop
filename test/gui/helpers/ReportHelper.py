@@ -12,7 +12,7 @@ def normalize_scenario_title(title):
 
 
 def get_screenrecords_path():
-    return os.path.join(get_config("guiTestReportDir"), "screenrecords")
+    return os.path.join(get_config("guiTestReportDir"), "recordings")
 
 
 def get_screenshots_path():
