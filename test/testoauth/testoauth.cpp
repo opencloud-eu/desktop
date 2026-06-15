@@ -362,8 +362,23 @@ class TestOAuth : public QObject
 private Q_SLOTS:
     void testBasic()
     {
-        OAuthTestCase test;
+        // Initial-auth success path: only result(LoggedIn) fires.
+        struct Test : OAuthTestCase
+        {
+            std::unique_ptr<QSignalSpy> refreshErrorSpy;
+            std::unique_ptr<QSignalSpy> refreshFinishedSpy;
+
+            std::unique_ptr<AccountBasedOAuth> prepareOauth() override
+            {
+                auto out = OAuthTestCase::prepareOauth();
+                refreshErrorSpy = std::make_unique<QSignalSpy>(out.get(), &OCC::AccountBasedOAuth::refreshError);
+                refreshFinishedSpy = std::make_unique<QSignalSpy>(out.get(), &OCC::AccountBasedOAuth::refreshFinished);
+                return out;
+            }
+        } test;
         test.test();
+        QCOMPARE(test.refreshErrorSpy->count(), 0);
+        QCOMPARE(test.refreshFinishedSpy->count(), 0);
     }
 
 
@@ -480,13 +495,25 @@ private Q_SLOTS:
 
     void testTimeout()
     {
+        // Inverse of testRefreshWebFingerError: an error on the initial-auth
+        // flow must emit result(Error) only, never refreshError or refreshFinished.
         struct Test : OAuthTestCase
         {
             QScopedValueRollback<decltype(AbstractNetworkJob::httpTimeout)> rollback;
+            std::unique_ptr<QSignalSpy> refreshErrorSpy;
+            std::unique_ptr<QSignalSpy> refreshFinishedSpy;
 
             Test()
                 : rollback(AbstractNetworkJob::httpTimeout, 50ms)
             {
+            }
+
+            std::unique_ptr<AccountBasedOAuth> prepareOauth() override
+            {
+                auto out = OAuthTestCase::prepareOauth();
+                refreshErrorSpy = std::make_unique<QSignalSpy>(out.get(), &OCC::AccountBasedOAuth::refreshError);
+                refreshFinishedSpy = std::make_unique<QSignalSpy>(out.get(), &OCC::AccountBasedOAuth::refreshFinished);
+                return out;
             }
 
             QNetworkReply *statusPhpReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req) override
@@ -507,6 +534,8 @@ private Q_SLOTS:
             }
         } test;
         test.test();
+        QCOMPARE(test.refreshErrorSpy->count(), 0);
+        QCOMPARE(test.refreshFinishedSpy->count(), 0);
     }
 
     void testDynamicRegistrationFailFallback()
@@ -735,10 +764,15 @@ private Q_SLOTS:
             {
                 oauth = prepareOauth();
                 QSignalSpy spy(oauth.get(), &OCC::AccountBasedOAuth::refreshFinished);
+                // Refresh success path: only refreshFinished fires, never result or refreshError.
+                QSignalSpy refreshErrorSpy(oauth.get(), &OCC::AccountBasedOAuth::refreshError);
+                QSignalSpy resultSpy(oauth.get(), &OCC::OAuth::result);
                 oauth->refreshAuthentication(QStringLiteral("foo"));
                 QVERIFY(spy.wait());
                 QCOMPARE(oauth->clientId(), QStringLiteral("d8a5d1f4-dabc-4e6a-a9a9-da729cff8ab0"));
                 QCOMPARE(oauth->clientSecret(), QString());
+                QCOMPARE(refreshErrorSpy.count(), 0);
+                QCOMPARE(resultSpy.count(), 0);
             }
 
         } test;
@@ -803,6 +837,85 @@ private Q_SLOTS:
 
         } test;
         test.test();
+    }
+
+    void testRefreshWebFingerError()
+    {
+        // A failing WebFinger reply during refresh must emit refreshError
+        // (and only refreshError), otherwise HttpCredentials hangs.
+        struct Test : OAuthTestCase
+        {
+            Test() { }
+
+            QNetworkReply *wellKnownWebfingerReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req) override
+            {
+                return new FakeErrorReply(op, req, fakeAm, 500, {});
+            }
+
+            void openBrowserHook(const QUrl &) override { Q_UNREACHABLE(); }
+
+            QNetworkReply *tokenReply(QNetworkAccessManager::Operation, const QNetworkRequest &, QIODevice *) override { Q_UNREACHABLE(); }
+
+            void oauthResult(OAuth::Result, const QString &, const QString &) override { Q_UNREACHABLE(); }
+
+            virtual void test() override
+            {
+                oauth = prepareOauth();
+                QSignalSpy refreshErrorSpy(oauth.get(), &OCC::AccountBasedOAuth::refreshError);
+                QSignalSpy refreshFinishedSpy(oauth.get(), &OCC::AccountBasedOAuth::refreshFinished);
+                QSignalSpy resultSpy(oauth.get(), &OCC::OAuth::result);
+                oauth->refreshAuthentication(QStringLiteral("foo"));
+                QVERIFY(refreshErrorSpy.wait());
+                QCOMPARE(refreshErrorSpy.count(), 1);
+                QCOMPARE(refreshFinishedSpy.count(), 0);
+                QCOMPARE(resultSpy.count(), 0);
+            }
+        } test;
+        test.test();
+    }
+
+    void testInitialAuthWebFingerError()
+    {
+        // True mirror of testRefreshWebFingerError on the initial-auth flow:
+        // a failing WebFinger reply during startAuthentication must emit
+        // result(Error) and never refreshError or refreshFinished. Exercises
+        // the same gated branches in OAuth::fetchWellKnown with _isRefreshingToken
+        // false.
+        struct Test : OAuthTestCase
+        {
+            std::unique_ptr<QSignalSpy> refreshErrorSpy;
+            std::unique_ptr<QSignalSpy> refreshFinishedSpy;
+
+            Test() { }
+
+            std::unique_ptr<AccountBasedOAuth> prepareOauth() override
+            {
+                auto out = OAuthTestCase::prepareOauth();
+                refreshErrorSpy = std::make_unique<QSignalSpy>(out.get(), &OCC::AccountBasedOAuth::refreshError);
+                refreshFinishedSpy = std::make_unique<QSignalSpy>(out.get(), &OCC::AccountBasedOAuth::refreshFinished);
+                return out;
+            }
+
+            QNetworkReply *wellKnownWebfingerReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req) override
+            {
+                return new FakeErrorReply(op, req, fakeAm, 500, {});
+            }
+
+            void openBrowserHook(const QUrl &) override { Q_UNREACHABLE(); }
+
+            QNetworkReply *tokenReply(QNetworkAccessManager::Operation, const QNetworkRequest &, QIODevice *) override { Q_UNREACHABLE(); }
+
+            void oauthResult(OAuth::Result result, const QString &, const QString &) override
+            {
+                QCOMPARE(state, StatusPhpState);
+                QCOMPARE(result, OAuth::Error);
+                gotAuthOk = true;
+                replyToBrowserOk = true;
+            }
+        } test;
+        test.test();
+        QCOMPARE(test.refreshErrorSpy->count(), 0);
+        QCOMPARE(test.refreshFinishedSpy->count(), 0);
     }
 
     void testTransientRefreshDoesNotEmitAuthFailed()
