@@ -553,14 +553,22 @@ void OAuth::fetchWellKnown()
 
         connect(webfingerReply, &QNetworkReply::finished, this, [webfingerReply, this] {
             if (webfingerReply->error() != QNetworkReply::NoError) {
-                Q_EMIT result(Error);
+                if (_isRefreshingToken) {
+                    Q_EMIT refreshError(webfingerReply->error(), webfingerReply->errorString());
+                } else {
+                    Q_EMIT result(Error);
+                }
                 return;
             }
 
             const QString contentTypeHeader = webfingerReply->header(QNetworkRequest::ContentTypeHeader).toString();
             if (!contentTypeHeader.contains(QStringLiteral("application/json"), Qt::CaseInsensitive)) {
                 qCWarning(lcOauth) << u"server sent invalid content type:" << contentTypeHeader;
-                Q_EMIT result(Error);
+                if (_isRefreshingToken) {
+                    Q_EMIT refreshError(QNetworkReply::NoError, QStringLiteral("WebFinger response had unexpected content type: %1").arg(contentTypeHeader));
+                } else {
+                    Q_EMIT result(Error);
+                }
                 return;
             }
 
@@ -570,7 +578,11 @@ void OAuth::fetchWellKnown()
             // empty or invalid response
             if (error.error != QJsonParseError::NoError || doc.isNull()) {
                 qCWarning(lcOauth) << u"could not parse JSON response from server";
-                Q_EMIT result(Error);
+                if (_isRefreshingToken) {
+                    Q_EMIT refreshError(QNetworkReply::NoError, QStringLiteral("Could not parse WebFinger response: %1").arg(error.errorString()));
+                } else {
+                    Q_EMIT result(Error);
+                }
                 return;
             }
 
@@ -578,7 +590,11 @@ void OAuth::fetchWellKnown()
             const auto subject = doc.object().value(QStringLiteral("subject"));
             if (subject != _serverUrl.toString()) {
                 qCWarning(lcOauth) << u"reply sent for different subject (server):" << subject;
-                Q_EMIT result(Error);
+                if (_isRefreshingToken) {
+                    Q_EMIT refreshError(QNetworkReply::NoError, QStringLiteral("WebFinger response subject did not match the requested resource"));
+                } else {
+                    Q_EMIT result(Error);
+                }
                 return;
             }
 
@@ -590,14 +606,22 @@ void OAuth::fetchWellKnown()
             });
             if (link == objects.end()) {
                 qCWarning(lcOauth) << u"could not find suitable relation in WebFinger response";
-                Q_EMIT result(Error);
+                if (_isRefreshingToken) {
+                    Q_EMIT refreshError(QNetworkReply::NoError, QStringLiteral("WebFinger response did not contain an OpenID Connect issuer"));
+                } else {
+                    Q_EMIT result(Error);
+                }
                 return;
             }
 
             auto const issuerUrl = (*link).value(QStringLiteral("href")).toString();
             if (issuerUrl.isNull()) {
                 qCWarning(lcOauth) << u"could not find href in WebFinger response";
-                Q_EMIT result(Error);
+                if (_isRefreshingToken) {
+                    Q_EMIT refreshError(QNetworkReply::NoError, QStringLiteral("WebFinger issuer link had no href"));
+                } else {
+                    Q_EMIT result(Error);
+                }
                 return;
             }
 
@@ -689,7 +713,11 @@ void OAuth::fetchWellKnown()
                     qCDebug(lcOauth) << u"failed to parse .well-known reply as JSON, server might not support OIDC";
                 } else {
                     qCDebug(lcOauth) << u"failed to parse .well-known reply, error:" << err.error;
-                    Q_EMIT result(Error);
+                    if (_isRefreshingToken) {
+                        Q_EMIT refreshError(QNetworkReply::NoError, QStringLiteral("Could not parse OIDC discovery response: %1").arg(err.errorString()));
+                    } else {
+                        Q_EMIT result(Error);
+                    }
                 }
                 Q_EMIT fetchWellKnownFinished();
             });
