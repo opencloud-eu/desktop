@@ -1,3 +1,7 @@
+# enable handling of exit codes in powershell
+$PSNativeCommandUseErrorActionPreference=$true
+
+# define which python to use
 if ($IsWindows) {
     $python = (Get-Command py).Source
     $python=(py -c "import sys; print(sys.executable)")
