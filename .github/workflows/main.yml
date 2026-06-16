@@ -47,7 +47,7 @@ jobs:
               container:
             - target: linux-gcc-x86_64
               os: ubuntu-latest
-              container: invent-registry.kde.org/sysadmin/ci-images/craft-appimage:latest
+              container: invent-registry.kde.org/sysadmin/ci-images/craft-appimage-alma9:latest
 
     name: ${{ matrix.target }}
 
