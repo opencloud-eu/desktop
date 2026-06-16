@@ -25,11 +25,7 @@ def before_feature(context, feature):
 
 
 def before_scenario(context, scenario):
-    if (
-        os.getenv("CI")
-        and get_config("record_video_on_failure")
-        and not hit_screenrecord_limit()
-    ):
+    if get_config("record_video_on_failure") and not hit_screenrecord_limit():
         ScreenRecorder.start_recording(normalize_scenario_title(scenario.name))
     elif hit_screenrecord_limit():
         print("[INFO] Screen recording limit reached.")
@@ -42,7 +38,7 @@ def after_step(context, step):
 
 def after_scenario(context, scenario):
     # stop screen recording
-    if os.getenv("CI") and get_config("record_video_on_failure"):
+    if get_config("record_video_on_failure"):
         ScreenRecorder.stop_recording(passed=scenario.status == Status.passed)
 
     # quit the application
