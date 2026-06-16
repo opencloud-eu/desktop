@@ -40,7 +40,7 @@ jobs:
         matrix:
             include:
             - target: windows-cl-msvc2022-x86_64
-              os: windows-latest
+              os: windows-2022
               container:
             - target: macos-clang-arm64
               os: macos-latest
