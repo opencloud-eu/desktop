@@ -165,7 +165,7 @@ Feature: Syncing files
             | "myFolder"                                                               |
             | "really long folder name with some spaces and special char such as $%ñ&" |
 
-    @skipOnWindows @skip
+    @skipOnWindows
     Scenario Outline: Syncing a folder having space at the end (Linux only)
         Given user "Alice" has set up a client with default settings
         When user "Alice" creates a folder <foldername> inside the sync folder
@@ -266,7 +266,7 @@ Feature: Syncing files
         And as "Alice" folder "Folder1/subFolder1" should exist in the server
         And as "Alice" folder "Folder1/subFolder1/subFolder2" should exist in the server
 
-    @skipOnWindows @skip
+    @skipOnWindows
     Scenario: Filenames that are rejected by the server are reported (Linux only)
         Given user "Alice" has created folder "Folder1" in the server
         And user "Alice" has set up a client with default settings
@@ -279,7 +279,7 @@ Feature: Syncing files
         Then the file "Folder1/a\\a.txt" should exist on the file system
         And the file "Folder1/a\\a.txt" should be blacklisted
 
-    @skip
+
     Scenario Outline: Sync long nested folder
         Given user "Alice" has created folder "<foldername>" in the server
         And user "Alice" has set up a client with default settings
@@ -348,7 +348,7 @@ Feature: Syncing files
         And the file "simple-folder/simple.pptx" should exist on the file system
         And the file "simple-folder/simple.xlsx" should exist on the file system
 
-    @skip
+
     Scenario: various types of files can be synced from client to server
         Given user "Alice" has set up a client with default settings
         When user "Alice" creates the following files inside the sync folder:
@@ -487,14 +487,14 @@ Feature: Syncing files
         And the folder "test-folder/sub-folder2" should exist on the file system
         And the folder "test-folder/sub-folder1" should not exist on the file system
 
-    @skip
+
     Scenario: Syncing a local folder having special characters to the server
         Given user "Alice" has set up a client with default settings
         When user "Alice" creates a folder "~`!@#$^&()-_=+{[}];',)💥🫨❤️‍🔥" inside the sync folder
         And the user waits for folder "~`!@#$^&()-_=+{[}];',)💥🫨❤️‍🔥" to be synced
         Then as "Alice" folder "~`!@#$^&()-_=+{[}];',)💥🫨❤️‍🔥" should exist in the server
 
-    @issue-11814 @skip
+    @issue-11814
     Scenario: Remove folder sync connection (Personal Space)
         Given user "Alice" has created folder "simple-folder" in the server
         And user "Alice" has set up a client with default settings
@@ -534,7 +534,7 @@ Feature: Syncing files
             | simple-folder/sub-folder | Blacklisted | Brian Murphy@%local_server_hostname% |
             | simple-folder/simple.pdf | Blacklisted | Brian Murphy@%local_server_hostname% |
 
-    @skip
+
     Scenario Outline: File with long multi-byte characters name can be synced (76 characters, 255 bytes including extension)
         Given user "Alice" has set up a client with default settings
         When user "Alice" creates a file "<filename>" with the following content inside the sync folder
@@ -585,7 +585,7 @@ Feature: Syncing files
         And the user waits for the files to sync
         Then the file "test-folder/sub-folder2/lorem.txt" should not exist on the file system
 
-    @skipOnWindows @skip
+    @skipOnWindows
     Scenario: Only root level files sync when all folders are unselected
         Given user "Alice" has created folder "test-folder" in the server
         And user "Alice" has created folder "test-folder/sub-folder1" in the server
