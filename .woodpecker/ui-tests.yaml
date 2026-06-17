@@ -126,6 +126,7 @@ steps:
       BACKEND_HOST: https://opencloud:9200
       GUI_TEST_REPORT_DIR: /woodpecker/desktop/test/gui/reports
       BEHAVE_TEST_DIR: /woodpecker/desktop/test/gui
+      RECORD_VIDEO_ON_FAILURE: 'true'
       # Cannot handle this tags format inside a container: --tags='@smoke and not @skip'
       BEHAVE_PARAMETERS: '--tags=~@skip ${SUITES}'
 
