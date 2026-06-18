@@ -114,6 +114,7 @@ def step(context, filename):
 
 
 @Then('the file "{filename}" should be blacklisted')
+@Then('the folder "{filename}" should be blacklisted')
 def step(context, filename):
     with ensure('File is Blacklisted'):
         Activity.is_resource_blacklisted(filename).should.be.true
@@ -341,7 +342,9 @@ def step(context):
     # wait for error message to disappear
     SyncConnection.wait_for_error_label(False)
 
-    with ensure(f'Expected error message: "{expected_error_message}" but got: "{actual_error_message}"'):
+    with ensure(
+        f'Expected error message: "{expected_error_message}" but got: "{actual_error_message}"'
+    ):
         expected_error_message.should.equal(actual_error_message)
 
 
