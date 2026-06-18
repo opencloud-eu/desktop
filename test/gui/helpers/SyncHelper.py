@@ -252,6 +252,7 @@ def wait_for_resource_to_sync(
     if patterns is None:
         patterns = get_synced_pattern(resource)
 
+    sync_info = []
     synced = False
     if force_sync:
         initial_timeout = get_config('min_sync_timeout')
@@ -267,6 +268,7 @@ def wait_for_resource_to_sync(
             ):
                 print('[INFO] Sync is in progress. Waiting...')
             else:
+                sync_info.append('Force synced: True')
                 # trigger force sync if the current status is OK
                 status = get_current_sync_status(resource, resource_type)
                 if status.startswith(SYNC_STATUS['OK']):
@@ -280,6 +282,7 @@ def wait_for_resource_to_sync(
         )
     # clear stored socket messages
     clear_socket_messages(resource)
+    sync_info.append('Sync complete (socket): %s' % synced)
     if synced:
         if check_queued:
             loaded = wait_for(
@@ -288,9 +291,11 @@ def wait_for_resource_to_sync(
                 ),
                 get_config('sync_timeout'),
             )
+            sync_info.append('Sync complete (UI): %s' % loaded)
             if not loaded:
                 raise TimeoutError(
                     '[ERROR] Sync is still in progress after matching the sync pattern.'
+                    + '\n'.join(sync_info)
                 )
         return
     elif not force_sync:
@@ -306,7 +311,8 @@ def wait_for_resource_to_sync(
             )
             return
     raise TimeoutError(
-        'Timeout while waiting for sync to complete for ' + str(timeout) + ' seconds'
+        'Timeout while waiting for sync to complete for %s seconds.\n' % timeout
+        + '\n'.join(sync_info)
     )
 
 
