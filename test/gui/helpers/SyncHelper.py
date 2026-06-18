@@ -252,33 +252,43 @@ def wait_for_resource_to_sync(
     if patterns is None:
         patterns = get_synced_pattern(resource)
 
+    synced = False
     if force_sync:
-        initial_timeout = get_config('min_timeout')
+        initial_timeout = get_config('min_sync_timeout')
         # first try with 5 seconds timeout
         synced = wait_for(
             lambda: has_sync_pattern(patterns, resource),
             initial_timeout,
         )
         if not synced:
-            # trigger force sync if the current status is OK
-            status = get_current_sync_status(resource, resource_type)
-            if status.startswith(SYNC_STATUS['OK']):
-                print('[WARN] Retrying sync pattern check with force sync')
-                SyncConnection.force_sync()
-        else:
+            # do not trigger force sync if the sync is still in progress
+            if SyncConnection.is_sync_in_progress(get_config('syncConnectionName')):
+                print('[INFO] Sync is in progress. Waiting...')
+            else:
+                # trigger force sync if the current status is OK
+                status = get_current_sync_status(resource, resource_type)
+                if status.startswith(SYNC_STATUS['OK']):
+                    print('[INFO] Retrying sync pattern check with force sync')
+                    SyncConnection.force_sync()
+
+    if not synced:
+        synced = wait_for(
+            lambda: has_sync_pattern(patterns, resource),
+            timeout - initial_timeout,
+        )
+
+    if synced:
+        loaded = wait_for(
+            lambda: not SyncConnection.is_sync_in_progress(
+                get_config('syncConnectionName')
+            ),
+            get_config('sync_timeout'),
+        )
+        if loaded:
             clear_socket_messages(resource)
             return
-
-    synced = wait_for(
-        lambda: has_sync_pattern(patterns, resource),
-        timeout - initial_timeout,
-    )
-
-    messages = read_and_update_socket_messages()
-    messages = filter_messages_for_item(messages, resource)
-    clear_socket_messages(resource)
-    if synced:
-        return
+        else:
+            print('[ERROR] Sync is still in progress after matching the sync pattern.')
     elif not force_sync:
         # if the sync pattern doesn't match then check the last sync status
         # and pass the step if the last sync status is STATUS:OK
