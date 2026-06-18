@@ -198,6 +198,13 @@ class SyncConnectionWizard:
         ).enabled
 
     @staticmethod
+    def get_relative_folder_element(target_folder, parent_row):
+        possible_els = app().find_elements(By.NAME, target_folder)
+        for folder in possible_els:
+            if folder.rect["x"] > parent_row:
+                return folder
+
+    @staticmethod
     def toggle_folder_selection(folders, select=True):
         expected_state = "true" if select else "false"
 
@@ -223,12 +230,9 @@ class SyncConnectionWizard:
                         break
 
                 parent_element.native_double_click()  # expand the folder
-
-                next_targets = app().find_elements(By.NAME, next_item)
-                for n_target in next_targets:
-                    if n_target.rect["x"] > parent_position:
-                        target_element = n_target
-                        break
+                target_element = SyncConnectionWizard.get_relative_folder_element(
+                    next_item, parent_position
+                )
 
                 # retry once if the folder is not expanded
                 if not target_element or not target_element.is_displayed():
@@ -237,14 +241,16 @@ class SyncConnectionWizard:
                     parent_element.native_click()
                     parent_element.native_send_keys(Keys.SPACE)
                     # try to get the next target again
-                    next_targets = app().find_elements(By.NAME, next_item)
-                    for n_target in next_targets:
-                        if n_target.rect["x"] > parent_position:
-                            target_element = n_target
-                            break
+                    target_element = SyncConnectionWizard.get_relative_folder_element(
+                        next_item, parent_position
+                    )
                 if not target_element or not target_element.is_displayed():
                     raise AssertionError(f'Failed to expand folder: {parent}')
 
+            if not target_element:
+                target_element = SyncConnectionWizard.get_relative_folder_element(
+                    target_folder, parent_position
+                )
             is_checked = target_element.get_attribute("checked")
             # return early if the folder is already in the expected state.
             if is_checked == expected_state:

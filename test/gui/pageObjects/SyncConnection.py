@@ -1,6 +1,6 @@
 from types import SimpleNamespace
 from appium.webdriver.common.appiumby import AppiumBy as By
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, WebDriverException
 
 from helpers.ConfigHelper import get_config
 from helpers.AppHelper import app
@@ -113,6 +113,9 @@ class SyncConnection:
             return True
         except NoSuchElementException:
             return False
+        except WebDriverException as e:
+            if "NoneType" in str(e):
+                return False
 
     @staticmethod
     def remove_folder_sync_connection():

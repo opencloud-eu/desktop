@@ -242,7 +242,7 @@ def get_current_sync_status(resource, resource_type):
 
 
 def wait_for_resource_to_sync(
-    resource, resource_type='FOLDER', patterns=None, force_sync=False
+    resource, resource_type='FOLDER', patterns=None, force_sync=False, check_queued=True
 ):
     listen_sync_status_for_item(resource, resource_type)
 
@@ -262,7 +262,9 @@ def wait_for_resource_to_sync(
         )
         if not synced:
             # do not trigger force sync if the sync is still in progress
-            if SyncConnection.is_sync_in_progress(get_config('syncConnectionName')):
+            if check_queued and SyncConnection.is_sync_in_progress(
+                get_config('syncConnectionName')
+            ):
                 print('[INFO] Sync is in progress. Waiting...')
             else:
                 # trigger force sync if the current status is OK
@@ -276,19 +278,21 @@ def wait_for_resource_to_sync(
             lambda: has_sync_pattern(patterns, resource),
             timeout - initial_timeout,
         )
-
+    # clear stored socket messages
+    clear_socket_messages(resource)
     if synced:
-        loaded = wait_for(
-            lambda: not SyncConnection.is_sync_in_progress(
-                get_config('syncConnectionName')
-            ),
-            get_config('sync_timeout'),
-        )
-        if loaded:
-            clear_socket_messages(resource)
-            return
-        else:
-            print('[ERROR] Sync is still in progress after matching the sync pattern.')
+        if check_queued:
+            loaded = wait_for(
+                lambda: not SyncConnection.is_sync_in_progress(
+                    get_config('syncConnectionName')
+                ),
+                get_config('sync_timeout'),
+            )
+            if not loaded:
+                raise TimeoutError(
+                    '[ERROR] Sync is still in progress after matching the sync pattern.'
+                )
+        return
     elif not force_sync:
         # if the sync pattern doesn't match then check the last sync status
         # and pass the step if the last sync status is STATUS:OK
@@ -306,12 +310,13 @@ def wait_for_resource_to_sync(
     )
 
 
-def wait_for_initial_sync_to_complete(path):
+def wait_for_initial_sync_to_complete(path, check_queued=True):
     wait_for_resource_to_sync(
         path,
         'FOLDER',
         get_initial_sync_patterns(),
         True,
+        check_queued,
     )
 
 
