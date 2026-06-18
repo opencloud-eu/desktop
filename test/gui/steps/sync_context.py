@@ -145,11 +145,12 @@ def step(context):
             Toolbar.has_tab(tab_name).should.be.true
 
 
-@When('the user selects the following folders to sync:')
+@When('the user selects only the following folders to sync:')
 def step(context):
     folders = []
     for row in context.table:
         folders.append(row[0])
+    SyncConnectionWizard.deselect_all_remote_folders()
     SyncConnectionWizard.select_folders_to_sync(
         folders, new_sync_connection_wizard=True
     )
