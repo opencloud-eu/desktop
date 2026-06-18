@@ -269,11 +269,8 @@ def wait_for_resource_to_sync(
                 print('[INFO] Sync is in progress. Waiting...')
             else:
                 sync_info.append('Force synced: True')
-                # trigger force sync if the current status is OK
-                status = get_current_sync_status(resource, resource_type)
-                if status.startswith(SYNC_STATUS['OK']):
-                    print('[INFO] Retrying sync pattern check with force sync')
-                    SyncConnection.force_sync()
+                print('[INFO] Retrying sync pattern check with force sync')
+                SyncConnection.force_sync()
 
     if not synced:
         synced = wait_for(
@@ -310,6 +307,8 @@ def wait_for_resource_to_sync(
                 + '. So passing the step.'
             )
             return
+    print('[ERROR] Sync patterns: %s' % patterns)
+    print('[ERROR] Sync messages: %s' % read_socket_messages())
     raise TimeoutError(
         'Timeout while waiting for sync to complete for %s seconds.\n' % timeout
         + '\n'.join(sync_info)

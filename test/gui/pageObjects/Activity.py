@@ -2,7 +2,7 @@
 from types import SimpleNamespace
 from appium.webdriver.common.appiumby import AppiumBy as By
 from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, WebDriverException
 
 from helpers.FilesHelper import build_conflicted_regex
 from helpers.ConfigHelper import get_config
@@ -102,6 +102,9 @@ class Activity:
             return False
         except NoSuchElementException:
             return False
+        except WebDriverException as e:
+            if "NoneType" in str(e):
+                return False
 
     @staticmethod
     def select_synced_filter(sync_filter):
