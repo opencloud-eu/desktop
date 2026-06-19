@@ -113,11 +113,10 @@ def step(context, filename):
     Activity.check_file_exist(filename)
 
 
-@Then('the file "{filename}" should be blacklisted')
-@Then('the folder "{filename}" should be blacklisted')
-def step(context, filename):
-    with ensure('File is Blacklisted'):
-        Activity.is_resource_blacklisted(filename).should.be.true
+@Then('the {resource_type:ResourceType} "{resourceName}" should be blacklisted')
+def step(context, resource_type, resourceName):
+    with ensure(f'{resource_type.capitalize()} is blacklisted'):
+        Activity.is_resource_blacklisted(resourceName).should.be.true
 
 
 @Then('the file "|any|" should be ignored')
