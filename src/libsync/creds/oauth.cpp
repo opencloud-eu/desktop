@@ -552,23 +552,23 @@ void OAuth::fetchWellKnown()
         auto webfingerReply = _networkAccessManager->get(webfingerReq);
 
         connect(webfingerReply, &QNetworkReply::finished, this, [webfingerReply, this] {
-            if (webfingerReply->error() != QNetworkReply::NoError) {
+            auto handleError = [this](QNetworkReply::NetworkError error, QString errorString) {
                 if (_isRefreshingToken) {
-                    Q_EMIT refreshError(webfingerReply->error(), webfingerReply->errorString());
+                    Q_EMIT refreshError(error, errorString);
                 } else {
                     Q_EMIT result(Error);
                 }
+            };
+
+            if (webfingerReply->error() != QNetworkReply::NoError) {
+                handleError(webfingerReply->error(), webfingerReply->errorString());
                 return;
             }
 
             const QString contentTypeHeader = webfingerReply->header(QNetworkRequest::ContentTypeHeader).toString();
             if (!contentTypeHeader.contains(QStringLiteral("application/json"), Qt::CaseInsensitive)) {
                 qCWarning(lcOauth) << u"server sent invalid content type:" << contentTypeHeader;
-                if (_isRefreshingToken) {
-                    Q_EMIT refreshError(QNetworkReply::NoError, QStringLiteral("WebFinger response had unexpected content type: %1").arg(contentTypeHeader));
-                } else {
-                    Q_EMIT result(Error);
-                }
+                handleError(QNetworkReply::NoError, QStringLiteral("WebFinger response had unexpected content type: %1").arg(contentTypeHeader) );
                 return;
             }
 
@@ -578,11 +578,7 @@ void OAuth::fetchWellKnown()
             // empty or invalid response
             if (error.error != QJsonParseError::NoError || doc.isNull()) {
                 qCWarning(lcOauth) << u"could not parse JSON response from server";
-                if (_isRefreshingToken) {
-                    Q_EMIT refreshError(QNetworkReply::NoError, QStringLiteral("Could not parse WebFinger response: %1").arg(error.errorString()));
-                } else {
-                    Q_EMIT result(Error);
-                }
+                handleError(QNetworkReply::NoError, QStringLiteral("Could not parse WebFinger response: %1").arg(error.errorString()));
                 return;
             }
 
@@ -590,11 +586,7 @@ void OAuth::fetchWellKnown()
             const auto subject = doc.object().value(QStringLiteral("subject"));
             if (subject != _serverUrl.toString()) {
                 qCWarning(lcOauth) << u"reply sent for different subject (server):" << subject;
-                if (_isRefreshingToken) {
-                    Q_EMIT refreshError(QNetworkReply::NoError, QStringLiteral("WebFinger response subject did not match the requested resource"));
-                } else {
-                    Q_EMIT result(Error);
-                }
+                handleError(QNetworkReply::NoError, QStringLiteral("WebFinger response subject did not match the requested resource"));
                 return;
             }
 
@@ -606,22 +598,14 @@ void OAuth::fetchWellKnown()
             });
             if (link == objects.end()) {
                 qCWarning(lcOauth) << u"could not find suitable relation in WebFinger response";
-                if (_isRefreshingToken) {
-                    Q_EMIT refreshError(QNetworkReply::NoError, QStringLiteral("WebFinger response did not contain an OpenID Connect issuer"));
-                } else {
-                    Q_EMIT result(Error);
-                }
+                handleError(QNetworkReply::NoError, QStringLiteral("WebFinger response did not contain an OpenID Connect issuer"));
                 return;
             }
 
             auto const issuerUrl = (*link).value(QStringLiteral("href")).toString();
             if (issuerUrl.isNull()) {
                 qCWarning(lcOauth) << u"could not find href in WebFinger response";
-                if (_isRefreshingToken) {
-                    Q_EMIT refreshError(QNetworkReply::NoError, QStringLiteral("WebFinger issuer link had no href"));
-                } else {
-                    Q_EMIT result(Error);
-                }
+                handleError(QNetworkReply::NoError, QStringLiteral("WebFinger issuer link had no href"));
                 return;
             }
 
@@ -663,15 +647,11 @@ void OAuth::fetchWellKnown()
 
             auto reply = _networkAccessManager->get(req);
 
-            connect(reply, &QNetworkReply::finished, this, [reply, this] {
+            connect(reply, &QNetworkReply::finished, this, [reply, this, handleError] {
                 _wellKnownFinished = true;
                 if (reply->error() != QNetworkReply::NoError) {
                     qCDebug(lcOauth) << u"failed to fetch .well-known reply, error:" << reply->error();
-                    if (_isRefreshingToken) {
-                        Q_EMIT refreshError(reply->error(), reply->errorString());
-                    } else {
-                        Q_EMIT result(Error);
-                    }
+                    handleError(reply->error(), reply->errorString());
                     return;
                 }
                 QJsonParseError err = {};
@@ -709,15 +689,10 @@ void OAuth::fetchWellKnown()
 
                     qCDebug(lcOauth) << u"parsing .well-known reply successful, auth endpoint" << _authEndpoint << u"and token endpoint" << _tokenEndpoint
                                      << u"and registration endpoint" << _registrationEndpoint;
-                } else if (err.error == QJsonParseError::IllegalValue) {
-                    qCDebug(lcOauth) << u"failed to parse .well-known reply as JSON, server might not support OIDC";
                 } else {
                     qCDebug(lcOauth) << u"failed to parse .well-known reply, error:" << err.error;
-                    if (_isRefreshingToken) {
-                        Q_EMIT refreshError(QNetworkReply::NoError, QStringLiteral("Could not parse OIDC discovery response: %1").arg(err.errorString()));
-                    } else {
-                        Q_EMIT result(Error);
-                    }
+                    handleError(QNetworkReply::NoError, QStringLiteral("Could not parse OIDC discovery response: %1").arg(err.errorString()));
+                    return;
                 }
                 Q_EMIT fetchWellKnownFinished();
             });
