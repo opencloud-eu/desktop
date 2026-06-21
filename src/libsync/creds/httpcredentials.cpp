@@ -233,14 +233,17 @@ bool HttpCredentials::refreshAccessTokenInternal(int tokenRefreshRetriesCount)
         if (nextTry >= TokenRefreshMaxRetries) {
             qCWarning(lcHttpCredentials) << u"Too many failed refreshes" << nextTry << u"-> log out";
             forgetSensitiveData();
+            // terminal failure: clears the job queue (see Account) and logs out
             Q_EMIT authenticationFailed();
             Q_EMIT fetched();
-            return;
+        } else {
+            // Transient failure: retry. Do NOT emit authenticationFailed() here -- it
+            // would clear the job queue and abort in-flight uploads, silently dropping
+            // files when the run then finalizes as complete (opencloud-eu/desktop#900, #948).
+            QTimer::singleShot(timeout, this, [nextTry, this] {
+                refreshAccessTokenInternal(nextTry);
+            });
         }
-        QTimer::singleShot(timeout, this, [nextTry, this] {
-            refreshAccessTokenInternal(nextTry);
-        });
-        Q_EMIT authenticationFailed();
     });
 
     connect(_oAuthJob, &AccountBasedOAuth::refreshFinished, this, [this](const QString &accessToken, const QString &refreshToken) {
