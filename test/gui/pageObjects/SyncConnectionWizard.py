@@ -236,10 +236,10 @@ class SyncConnectionWizard:
 
                 # retry once if the folder is not expanded
                 if not target_element or not target_element.is_displayed():
-                    print('[WARN] Folder was not expanded, retrying with space key')
-                    # expand using space key
+                    print('[WARN] Folder was not expanded, retrying with arrow key')
+                    # expand using arrow key
                     parent_element.native_click()
-                    parent_element.native_send_keys(Keys.SPACE)
+                    parent_element.native_send_keys(Keys.ARROW_RIGHT)
                     # try to get the next target again
                     target_element = SyncConnectionWizard.get_relative_folder_element(
                         next_item, parent_position

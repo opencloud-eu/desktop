@@ -82,7 +82,7 @@ DEFAULT_PATH_CONFIG = {
     'max_timeout': 60,
     'min_timeout': 5,
     'lowest_timeout': 1,
-    'min_sync_timeout': 10,
+    'min_sync_timeout': 5,
     'files_for_upload': os.path.join(CURRENT_DIR.parent, 'files-for-upload'),
 }
 

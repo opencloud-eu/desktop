@@ -87,6 +87,10 @@ SYNC_PATTERNS = {
     ],
     'root_synced': [
         [
+            SYNC_STATUS['NOP'],
+            SYNC_STATUS['UPDATE'],
+        ],
+        [
             SYNC_STATUS['OK'],
             SYNC_STATUS['OK'],
             SYNC_STATUS['UPDATE'],
@@ -267,7 +271,9 @@ def wait_for_resource_to_sync(
                 get_config('syncConnectionName')
             ):
                 print('[INFO] Sync is in progress. Waiting...')
-            else:
+            elif has_sync_status(resource, SYNC_STATUS['OK']) or has_sync_status(
+                resource, SYNC_STATUS['UPDATE']
+            ):
                 sync_info.append('Force synced: True')
                 print('[INFO] Retrying sync pattern check with force sync')
                 SyncConnection.force_sync()
@@ -275,8 +281,9 @@ def wait_for_resource_to_sync(
     if not synced:
         synced = wait_for(
             lambda: has_sync_pattern(patterns, resource),
-            timeout - initial_timeout,
+            timeout,
         )
+    sync_messages = read_and_update_socket_messages()
     # clear stored socket messages
     clear_socket_messages(resource)
     sync_info.append('Sync complete (socket): %s' % synced)
@@ -308,7 +315,7 @@ def wait_for_resource_to_sync(
             )
             return
     print('[ERROR] Sync patterns: %s' % patterns)
-    print('[ERROR] Sync messages: %s' % read_socket_messages())
+    print('[ERROR] Sync messages: %s' % sync_messages)
     raise TimeoutError(
         'Timeout while waiting for sync to complete for %s seconds.\n' % timeout
         + '\n'.join(sync_info)

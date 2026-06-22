@@ -138,16 +138,18 @@ class SyncConnection:
     def wait_for_error_label(to_exist=True):
         """Wait for permission error label to appear or disappear"""
 
-        status = wait_for(
-            lambda: (
-                bool(
-                    app().find_elements(
-                        SyncConnection.PERMISSION_ERROR_LABEL.by,
-                        SyncConnection.PERMISSION_ERROR_LABEL.selector,
-                    )
+        def check_label():
+            try:
+                app().find_element(
+                    SyncConnection.PERMISSION_ERROR_LABEL.by,
+                    SyncConnection.PERMISSION_ERROR_LABEL.selector,
                 )
-            )
-            == to_exist,
+                return True
+            except NoSuchElementException:
+                return False
+
+        status = wait_for(
+            lambda: check_label() == to_exist,
             get_config("max_timeout"),
         )
         if not status:
