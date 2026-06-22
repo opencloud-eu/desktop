@@ -464,7 +464,8 @@ void ProcessDirectoryJob::processFileAnalyzeRemoteInfo(
             }
             // NOTE: This prohibits some VFS renames from being detected since
             // suffix-file size is different from the db size. That's ok, they'll DELETE+NEW.
-            if (FileSystem::fileTimeToTime_t(info.last_write_time()) != base.modtime() || info.file_size() != base.size() || info.is_directory()) {
+            if (!FileSystem::modTimeEquals(FileSystem::fileTimeToTime_t(info.last_write_time()), base.modtime())
+                || info.file_size() != static_cast<uintmax_t>(base.size()) || info.is_directory()) {
                 qCInfo(lcDisco) << u"The file has changed locally, not a rename." << originalPath;
                 return;
             }
@@ -632,7 +633,7 @@ void ProcessDirectoryJob::processFileAnalyzeLocalInfo(
                 item->setInstruction(CSYNC_INSTRUCTION_REMOVE);
                 item->_direction = SyncFileItem::Down;
             }
-        } else if (!typeChange && ((dbEntry.modtime() == localEntry.modtime() && dbEntry.size() == localEntry.size()) || localEntry.isDirectory())) {
+        } else if (!typeChange && ((FileSystem::modTimeEquals(dbEntry.modtime(), localEntry.modtime()) && dbEntry.size() == localEntry.size()) || localEntry.isDirectory())) {
             // Local file unchanged.
             if (noServerEntry) {
                 item->setInstruction(CSYNC_INSTRUCTION_REMOVE);
@@ -745,9 +746,9 @@ void ProcessDirectoryJob::processFileAnalyzeLocalInfo(
             return false;
         }
         // Directories and virtual files don't need size/mtime equality
-        if (!localEntry.isDirectory() && !base.isVirtualFile() && (base.modtime() != localEntry.modtime() || base.size() != localEntry.size())) {
+        if (!localEntry.isDirectory() && !base.isVirtualFile() && (!FileSystem::modTimeEquals(base.modtime(), localEntry.modtime()) || base.size() != localEntry.size())) {
             qCInfo(lcDisco) << u"Not a move, mtime or size differs, " << u"modtime:" << base.modtime() << localEntry.modtime() << u", " << u"size:"
-                            << base.size() << localEntry.size();
+                             << base.size() << localEntry.size();
             return false;
         }
 
@@ -900,7 +901,7 @@ void ProcessDirectoryJob::processFileConflict(const SyncFileItemPtr &item, const
     if (serverEntry.checksumHeader().isEmpty()) {
         // If the size or mtime is different, it's definitely a conflict.
         bool sizeDiffers = serverEntry.size() != localEntry.size();
-        bool modTimeDiffers = serverEntry.modtime() != localEntry.modtime();
+        bool modTimeDiffers = !FileSystem::modTimeEquals(serverEntry.modtime(), localEntry.modtime());
         bool isConflict = sizeDiffers || modTimeDiffers;
         if (isConflict) {
             qCDebug(lcDisco) << serverEntry.name() << u": detected conflict: size difference: " << sizeDiffers << u"mtime difference: " << modTimeDiffers;
@@ -931,14 +932,14 @@ void ProcessDirectoryJob::processFileConflict(const SyncFileItemPtr &item, const
     auto up = _discoveryData->_statedb->getUploadInfo(path._original);
     if (up._valid && up._contentChecksum == serverEntry.checksumHeader()) {
         // Solve the conflict into an upload, or update meta data
-        item->setInstruction(up._modtime == localEntry.modtime() && up._size == localEntry.size() ? CSYNC_INSTRUCTION_UPDATE_METADATA : CSYNC_INSTRUCTION_SYNC);
+        item->setInstruction(FileSystem::modTimeEquals(up._modtime, localEntry.modtime()) && up._size == localEntry.size() ? CSYNC_INSTRUCTION_UPDATE_METADATA : CSYNC_INSTRUCTION_SYNC);
         item->_direction = SyncFileItem::Up;
 
         if (item->instruction() == CSYNC_INSTRUCTION_UPDATE_METADATA) {
             // Update the etag and other server metadata in the journal already
             Q_ASSERT(item->localName() == path._original);
             Q_ASSERT(item->_size == serverEntry.size());
-            Q_ASSERT(item->_modtime == serverEntry.modtime());
+            Q_ASSERT(FileSystem::modTimeEquals(item->_modtime, serverEntry.modtime()));
             Q_ASSERT(!serverEntry.etag().isEmpty());
             item->_etag = serverEntry.etag();
             item->_fileId = serverEntry.fileId();
@@ -1008,7 +1009,8 @@ void ProcessDirectoryJob::processBlacklisted(const PathTuple &path, const OCC::L
     item->_inode = localEntry.inode();
     item->_isSelectiveSync = true;
     if (dbEntry.isValid()
-        && ((dbEntry.modtime() == localEntry.modtime() && dbEntry.size() == localEntry.size()) || (localEntry.isDirectory() && dbEntry.isDirectory()))) {
+        && ((FileSystem::modTimeEquals(dbEntry.modtime(), localEntry.modtime()) && dbEntry.size() == localEntry.size())
+            || (localEntry.isDirectory() && dbEntry.isDirectory()))) {
         item->setInstruction(CSYNC_INSTRUCTION_REMOVE);
         item->_direction = SyncFileItem::Down;
     } else {

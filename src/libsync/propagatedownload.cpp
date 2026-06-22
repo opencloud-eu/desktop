@@ -152,6 +152,11 @@ QString OPENCLOUD_SYNC_EXPORT createDownloadTmpFileName(const QString &previous)
     }
 }
 
+PropagateDownloadFile::~PropagateDownloadFile()
+{
+    removeAutoMergedFile();
+}
+
 void PropagateDownloadFile::start()
 {
     if (propagator()->_abortRequested)

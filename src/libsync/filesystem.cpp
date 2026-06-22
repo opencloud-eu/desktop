@@ -27,6 +27,8 @@
 #include "csync.h"
 #include "syncfileitem.h"
 
+#include <chrono>
+#include <cstdlib>
 #include <sys/stat.h>
 
 #ifdef Q_OS_WIN32
@@ -73,6 +75,9 @@ time_t FileSystem::fileTimeToTime_t(std::filesystem::file_time_type fileTime)
 {
 #ifdef HAS_CLOCK_CAST
     return std::chrono::system_clock::to_time_t(std::chrono::clock_cast<std::chrono::system_clock>(fileTime));
+#elif defined(_MSC_VER)
+    const auto systemTime = std::chrono::utc_clock::to_sys(std::chrono::file_clock::to_utc(fileTime));
+    return std::chrono::system_clock::to_time_t(systemTime);
 #else
     const auto systemTime = std::chrono::time_point_cast<std::chrono::system_clock::duration>(std::chrono::file_clock::to_sys(fileTime));
     return std::chrono::system_clock::to_time_t(systemTime);
@@ -82,9 +87,16 @@ std::filesystem::file_time_type FileSystem::time_tToFileTime(time_t fileTime)
 {
 #ifdef HAS_CLOCK_CAST
     return std::chrono::clock_cast<std::chrono::file_clock>(std::chrono::system_clock::from_time_t(fileTime));
+#elif defined(_MSC_VER)
+    return std::chrono::file_clock::from_utc(std::chrono::utc_clock::from_sys(std::chrono::system_clock::from_time_t(fileTime)));
 #else
     return std::chrono::file_clock::from_sys(std::chrono::system_clock::from_time_t(fileTime));
 #endif
+}
+
+bool FileSystem::modTimeEquals(time_t lhs, time_t rhs)
+{
+    return std::llabs(static_cast<long long>(lhs) - static_cast<long long>(rhs)) <= 1;
 }
 
 time_t FileSystem::getModTime(const std::filesystem::path &filename)
@@ -169,7 +181,7 @@ bool FileSystem::fileChanged(const std::filesystem::path &path, const FileChange
         qCDebug(lcFileSystem) << u"File" << path.native() << u"has changed: size: " << previousInfo.size << u"<->" << info.size();
         return true;
     }
-    if (info.modtime() != previousInfo.mtime) {
+    if (!previousInfo.mtime.has_value() || !modTimeEquals(info.modtime(), previousInfo.mtime.value())) {
         qCDebug(lcFileSystem) << u"File" << path.native() << u"has changed: mtime: " << previousInfo.mtime << u"<->" << info.modtime();
         return true;
     }

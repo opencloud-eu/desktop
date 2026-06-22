@@ -44,6 +44,7 @@ namespace FileSystem {
 
     OPENCLOUD_SYNC_EXPORT time_t fileTimeToTime_t(std::filesystem::file_time_type fileTime);
     OPENCLOUD_SYNC_EXPORT std::filesystem::file_time_type time_tToFileTime(time_t fileTime);
+    OPENCLOUD_SYNC_EXPORT bool modTimeEquals(time_t lhs, time_t rhs);
     /**
      * @brief Get the mtime for a filepath
      *

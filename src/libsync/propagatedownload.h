@@ -80,6 +80,7 @@ public:
         , _deleteExisting(false)
     {
     }
+    ~PropagateDownloadFile() override;
     void start() override;
     qint64 committedDiskSpace() const override;
 
