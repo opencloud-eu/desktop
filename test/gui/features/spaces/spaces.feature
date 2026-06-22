@@ -79,7 +79,8 @@ Feature: Project spaces
             """
         When the user opens the activity tab
         And the user selects "Not Synced" tab in the activity
-        Then the following activities should be displayed in not synced table
+        Then the folder "simple-folder" should be blacklisted
+        And the following activities should be displayed in not synced table
             | resource      | status      | account                              |
             | simple-folder | Blacklisted | Alice Hansen@%local_server_hostname% |
 

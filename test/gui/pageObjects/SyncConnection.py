@@ -1,6 +1,6 @@
 from types import SimpleNamespace
 from appium.webdriver.common.appiumby import AppiumBy as By
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, WebDriverException
 
 from helpers.ConfigHelper import get_config
 from helpers.AppHelper import app
@@ -22,8 +22,7 @@ class SyncConnection:
         by=By.NAME, selector="Remove Space"
     )
     PERMISSION_ERROR_LABEL = SimpleNamespace(
-        by=By.XPATH,
-        selector="//label[contains(@name, 'permission')]"
+        by=By.XPATH, selector="//label[contains(@name, 'permission')]"
     )
 
     @staticmethod
@@ -101,6 +100,24 @@ class SyncConnection:
             return False
 
     @staticmethod
+    def is_sync_in_progress(sync_folder):
+        connection = SyncConnection.get_current_account_connection()
+        try:
+            connection.find_element(
+                By.NAME,
+                "{sync_folder},Queued,Local folder: {sync_path}{sync_folder}".format(
+                    sync_folder=sync_folder,
+                    sync_path=get_config('currentUserSyncPath'),
+                ),
+            )
+            return True
+        except NoSuchElementException:
+            return False
+        except WebDriverException as e:
+            if "NoneType" in str(e):
+                return False
+
+    @staticmethod
     def remove_folder_sync_connection():
         SyncConnection.perform_action("Remove Space")
 
@@ -121,11 +138,18 @@ class SyncConnection:
     def wait_for_error_label(to_exist=True):
         """Wait for permission error label to appear or disappear"""
 
+        def check_label():
+            try:
+                app().find_element(
+                    SyncConnection.PERMISSION_ERROR_LABEL.by,
+                    SyncConnection.PERMISSION_ERROR_LABEL.selector,
+                )
+                return True
+            except NoSuchElementException:
+                return False
+
         status = wait_for(
-            lambda: (bool(app().find_elements(
-                SyncConnection.PERMISSION_ERROR_LABEL.by,
-                SyncConnection.PERMISSION_ERROR_LABEL.selector
-            ))) == to_exist,
+            lambda: check_label() == to_exist,
             get_config("max_timeout"),
         )
         if not status:
@@ -138,7 +162,6 @@ class SyncConnection:
         SyncConnection.wait_for_error_label(True)  # Wait for label to appear
         element = app().find_element(
             SyncConnection.PERMISSION_ERROR_LABEL.by,
-            SyncConnection.PERMISSION_ERROR_LABEL.selector
+            SyncConnection.PERMISSION_ERROR_LABEL.selector,
         )
         return str(element.text)
-

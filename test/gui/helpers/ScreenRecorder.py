@@ -22,7 +22,8 @@ def _record_loop(video_path):
             size=(width, height),
             fps=24,
             codec="libx264",
-            output_params=["-crf", "23", "-pix_fmt", "yuv420p"],
+            pix_fmt_out="yuv420p",
+            output_params=["-crf", "23"],
         )
         writer.send(None)
 

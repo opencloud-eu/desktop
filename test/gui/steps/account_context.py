@@ -74,11 +74,11 @@ def step(context):
     sync_paths = generate_account_config(users)
     start_client()
     # accept certificate for each user
-    for idx, _ in enumerate(users):
+    for _ in users:
         enter_password = EnterPassword()
         enter_password.accept_certificate()
 
-    for idx, _ in enumerate(sync_paths.values()):
+    for _ in sync_paths.values():
         # login from last dialog
         enter_password = EnterPassword()
         username = enter_password.get_username()
@@ -86,7 +86,7 @@ def step(context):
         listen_sync_status_for_item(sync_paths[username])
         enter_password.login_after_setup(username, password)
         # wait for files to sync
-        wait_for_initial_sync_to_complete(sync_paths[username])
+        wait_for_initial_sync_to_complete(sync_paths[username], False)
     Toolbar.wait_toolbar_enabled()
 
 
@@ -193,10 +193,9 @@ def step(context):
 
 @Then('credentials wizard should be visible')
 def step(context):
-    with ensure(
-        'Credentials wizard is not be visible'
-    ):
+    with ensure('Credentials wizard is not be visible'):
         AccountConnectionWizard.is_credential_window_visible().should.be.true
+
 
 @When('the user selects download everything option in advanced section')
 def step(context):

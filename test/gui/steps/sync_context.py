@@ -113,10 +113,10 @@ def step(context, filename):
     Activity.check_file_exist(filename)
 
 
-@Then('the file "{filename}" should be blacklisted')
-def step(context, filename):
-    with ensure('File is Blacklisted'):
-        Activity.is_resource_blacklisted(filename).should.be.true
+@Then('the {resource_type:ResourceType} "{resourceName}" should be blacklisted')
+def step(context, resource_type, resourceName):
+    with ensure(f'{resource_type.capitalize()} is blacklisted'):
+        Activity.is_resource_blacklisted(resourceName).should.be.true
 
 
 @Then('the file "|any|" should be ignored')
@@ -144,11 +144,12 @@ def step(context):
             Toolbar.has_tab(tab_name).should.be.true
 
 
-@When('the user selects the following folders to sync:')
+@When('the user selects only the following folders to sync:')
 def step(context):
     folders = []
     for row in context.table:
         folders.append(row[0])
+    SyncConnectionWizard.deselect_all_remote_folders()
     SyncConnectionWizard.select_folders_to_sync(
         folders, new_sync_connection_wizard=True
     )
@@ -341,7 +342,9 @@ def step(context):
     # wait for error message to disappear
     SyncConnection.wait_for_error_label(False)
 
-    with ensure(f'Expected error message: "{expected_error_message}" but got: "{actual_error_message}"'):
+    with ensure(
+        f'Expected error message: "{expected_error_message}" but got: "{actual_error_message}"'
+    ):
         expected_error_message.should.equal(actual_error_message)
 
 
