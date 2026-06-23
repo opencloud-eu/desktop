@@ -29,7 +29,7 @@ class SyncConnectionWizard:
     CREATE_REMOTE_FOLDER_CONFIRM_BUTTON = SimpleNamespace(by=None, selector=None)
     REFRESH_BUTTON = SimpleNamespace(by=None, selector=None)
     REMOTE_FOLDER_SELECTION_INPUT = SimpleNamespace(by=None, selector=None)
-    ADD_FOLDER_SYNC_BUTTON = SimpleNamespace(by=None, selector=None)
+    ADD_SPACE_BUTTON = SimpleNamespace(by=By.NAME, selector='Add Space')
     WARN_LABEL = SimpleNamespace(by=None, selector=None)
     CHOOSE_WHAT_TO_SYNC_FOLDER_TREE = SimpleNamespace(by=None, selector=None)
 
@@ -181,21 +181,23 @@ class SyncConnectionWizard:
 
     @staticmethod
     def get_local_sync_path():
-        return str(
-            squish.waitForObjectExists(
-                SyncConnectionWizard.CHOOSE_LOCAL_SYNC_FOLDER
-            ).displayText
+        element = app().find_element(
+            SyncConnectionWizard.CHOOSE_LOCAL_SYNC_FOLDER.by,
+            SyncConnectionWizard.CHOOSE_LOCAL_SYNC_FOLDER.selector
         )
+        return str(element.text)
 
     @staticmethod
     def get_warn_label():
         return str(squish.waitForObjectExists(SyncConnectionWizard.WARN_LABEL).text)
 
     @staticmethod
-    def is_add_sync_folder_button_enabled():
-        return squish.waitForObjectExists(
-            SyncConnectionWizard.ADD_FOLDER_SYNC_BUTTON
-        ).enabled
+    def is_add_space_button_enabled():
+        element = app().find_element(
+            SyncConnectionWizard.ADD_SPACE_BUTTON.by,
+            SyncConnectionWizard.ADD_SPACE_BUTTON.selector
+        )
+        return element.is_enabled()
 
     @staticmethod
     def get_relative_folder_element(target_folder, parent_row):

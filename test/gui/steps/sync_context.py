@@ -294,13 +294,10 @@ def step(context):
     SyncConnectionWizard.open_sync_connection_wizard()
 
 
-@Then('the button to open sync connection wizard should be disabled')
+@Then('the add space button should be disabled')
 def step(context):
-    test.compare(
-        False,
-        SyncConnectionWizard.is_add_sync_folder_button_enabled(),
-        'Button to open sync connection wizard should be disabled',
-    )
+    with ensure('Add space Button to open sync connection wizard should be disabled'):
+        SyncConnectionWizard.is_add_space_button_enabled().should.be.false
 
 
 @When('the user checks the activities of account "{account}"')

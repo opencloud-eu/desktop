@@ -10,6 +10,7 @@ CURRENT_DIR = Path(__file__).resolve().parent
 APP_CONFIG_FILE = "opencloud.cfg"
 CUMULATIVE_APP_LOG_FILE = "opencloud.log"
 CURRENT_APP_LOG_FILE = "app.log"
+DEFAULT_SYNC_CONNECTION_NAME = "Personal"
 
 
 def is_windows():
@@ -95,7 +96,7 @@ CONFIG = {
     'tempFolderPath': os.path.join(get_client_root_path(), 'temp'),
     'guiTestReportDir': os.path.join(CURRENT_DIR.parent, 'reports'),
     'record_video_on_failure': False,
-    'syncConnectionName': 'Personal',
+    'syncConnectionName': DEFAULT_SYNC_CONNECTION_NAME,
     ###############################
     # dynamic configs             #
     ###############################
@@ -189,3 +190,6 @@ def set_config(key, value):
     if key in READONLY_CONFIG:
         raise KeyError(f'Cannot set read-only config: {key}')
     CONFIG[key] = value
+
+def reset_sync_connection_name():
+    set_config("syncConnectionName", DEFAULT_SYNC_CONNECTION_NAME)

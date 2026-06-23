@@ -20,10 +20,11 @@ from helpers.SyncHelper import (
     wait_for_initial_sync_to_complete,
     listen_sync_status_for_item,
 )
-from helpers.UserHelper import get_displayname_for_user, get_password_for_user
+from helpers.UserHelper import get_password_for_user
 from helpers.ConfigHelper import get_config
 from helpers.TableParser import table_rows_hash
 from helpers.AppHelper import close_and_kill_app
+from helpers.FilesHelper import convert_path_separators_for_os
 
 
 @Given('the user has started the client')
@@ -33,8 +34,7 @@ def step(context):
 
 @When('the user adds the following user credentials:')
 def step(context):
-    account_details = get_client_details(context)
-    set_config('syncConnectionName', get_displayname_for_user(account_details['user']))
+    account_details = get_client_details(table_rows_hash(context.table))
     AccountConnectionWizard.add_user_credentials(
         account_details['user'], account_details['password']
     )
@@ -210,17 +210,14 @@ def step(context):
 
 @Then('the user should be able to choose the local download directory')
 def step(context):
-    test.compare(True, AccountConnectionWizard.can_change_local_sync_dir())
+    with ensure('User can not choose the local download directory'):
+        AccountConnectionWizard.can_change_local_sync_dir().should.be.true
 
 
 @Then('the download everything option should be selected by default for Linux')
 def step(context):
-    if is_linux():
-        test.compare(
-            True,
-            AccountConnectionWizard.is_sync_everything_option_checked(),
-            'Sync everything option is checked',
-        )
+    with ensure('Sync everything option is not checked'):
+        AccountConnectionWizard.is_sync_everything_option_checked().should.be.true
 
 
 @When(r'^the user presses the "([^"]*)" key(?:s)?', regexp=True)
@@ -250,10 +247,7 @@ def step(context, username):
     expect(Toolbar.account_has_focus(username)).to.be.true
 
 
-@Then(
-    r'the default local sync path should contain "([^"]*)" in the (configuration|sync connection) wizard',
-    regexp=True,
-)
+@Then('the default local sync path should contain "{sync_path}" in the {wizard} wizard')
 def step(context, sync_path, wizard):
     sync_path = substitute_inline_codes(sync_path)
 
@@ -263,13 +257,10 @@ def step(context, sync_path, wizard):
         actual_sync_path = AccountConnectionWizard.get_local_sync_path()
     else:
         actual_sync_path = SyncConnectionWizard.get_local_sync_path()
-
-    test.compare(
-        actual_sync_path,
-        convert_path_separators_for_os(sync_path),
-        'Compare sync path contains the expected path',
-    )
-
+        
+    with ensure('The actual sync path does not match the expected sync path' ):
+        actual_sync_path.should.equal(convert_path_separators_for_os(sync_path))
+    
 
 @Then('the warning "|any|" should appear in the sync connection wizard')
 def step(context, warn_message):
