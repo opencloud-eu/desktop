@@ -94,7 +94,7 @@ Feature: Syncing files
         When the user selects manual sync folder option in advanced section
         And the user sets the sync path in sync connection wizard
         And the user selects "Personal" space in sync connection wizard
-        And the user selects the following folders to sync:
+        And the user selects only the following folders to sync:
             | folder        |
             | simple-folder |
         Then the folder "simple-folder" should exist on the file system
@@ -473,7 +473,7 @@ Feature: Syncing files
         When the user selects manual sync folder option in advanced section
         And the user sets the temp folder "~`!@#$^&()-_=+{[}];',)PRN%" as local sync path in sync connection wizard
         And the user selects "Personal" space in sync connection wizard
-        And the user selects the following folders to sync:
+        And the user selects only the following folders to sync:
             | folder                  |
             | ~`!@#$^&()-_=+{[}];',)  |
             | simple-folder           |

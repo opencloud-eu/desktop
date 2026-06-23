@@ -239,17 +239,17 @@ def step(context, resource_type, resource):
         exists(resource_path).should.be.false
 
 
-@Given('the user has changed the content of local file "|any|" to:')
+@Given('the user has changed the content of local file "{filename}" to:')
 def step(context, filename):
-    file_content = '\n'.join(context.multiLineText)
+    file_content = context.text
     wait_and_write_file(get_resource_path(filename), file_content)
 
 
 @Then(
-    'a conflict file for "|any|" should exist on the file system with the following content'
+    'a conflict file for "{filename}" should exist on the file system with the following content'
 )
 def step(context, filename):
-    expected = '\n'.join(context.multiLineText)
+    expected = context.text
 
     onlyfiles = [
         f for f in os.listdir(get_resource_path()) if isfile(get_resource_path(f))
