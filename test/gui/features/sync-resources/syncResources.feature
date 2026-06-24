@@ -57,7 +57,7 @@ Feature: Syncing files
             client content
             """
 
-    @skipOnWindows @skip
+    @skipOnWindows
     Scenario: Sync all is selected by default
         Given user "Alice" has created folder "simple-folder" in the server
         And user "Alice" has created folder "large-folder" in the server
@@ -110,7 +110,7 @@ Feature: Syncing files
         And the file "large-folder/lorem.txt" should not exist on the file system
         And as "Alice" file "simple-folder/localFile.txt" should exist in the server
 
-    @issue-9733 @skipOnWindows @skip
+    @issue-9733 @skipOnWindows
     Scenario: sort folders list by name and size
         Given user "Alice" has created folder "123Folder" in the server
         And user "Alice" has uploaded file with content "small" to "123Folder/lorem.txt" in the server
@@ -152,7 +152,6 @@ Feature: Syncing files
             | aFolder   |
             | 123Folder |
             | bFolder   |
-        And the user cancels the sync connection wizard
 
     @smoke
     Scenario Outline: Syncing a folder to the server

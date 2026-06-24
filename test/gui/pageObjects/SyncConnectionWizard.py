@@ -13,12 +13,19 @@ class SyncConnectionWizard:
     )
     BACK_BUTTON = SimpleNamespace(by=By.NAME, selector="< Back")
     NEXT_BUTTON = SimpleNamespace(by=By.NAME, selector="Next >")
-    SELECTIVE_SYNC_ROOT_FOLDER = SimpleNamespace(by=By.NAME, selector=None)
+    SELECTIVE_SYNC_ROOT_FOLDER = SimpleNamespace(
+        by=By.NAME,
+        selector=None
+    )
+    SELECTIVE_SYNC_TREE_FOLDER = SimpleNamespace(
+        by=By.XPATH,
+        selector="//table_cell[@name and contains(@states, 'checkable') and @name!='{space}']"
+    )
     ADD_SYNC_CONNECTION_BUTTON = SimpleNamespace(
         by=By.XPATH, selector="//dialog[@name='Add Space']//*[@name='Add Space']"
     )
     REMOTE_FOLDER_TREE = SimpleNamespace(by=None, selector=None)
-    SELECTIVE_SYNC_TREE_HEADER = SimpleNamespace(by=None, selector=None)
+    SELECTIVE_SYNC_TREE_HEADER = SimpleNamespace(by=By.NAME, selector='{header}')
     CANCEL_FOLDER_SYNC_CONNECTION_WIZARD = SimpleNamespace(
         by=By.NAME, selector="Cancel"
     )
@@ -29,7 +36,7 @@ class SyncConnectionWizard:
     CREATE_REMOTE_FOLDER_CONFIRM_BUTTON = SimpleNamespace(by=None, selector=None)
     REFRESH_BUTTON = SimpleNamespace(by=None, selector=None)
     REMOTE_FOLDER_SELECTION_INPUT = SimpleNamespace(by=None, selector=None)
-    ADD_FOLDER_SYNC_BUTTON = SimpleNamespace(by=None, selector=None)
+    ADD_SPACE_BUTTON = SimpleNamespace(by=By.NAME, selector='Add Space')
     WARN_LABEL = SimpleNamespace(by=None, selector=None)
     CHOOSE_WHAT_TO_SYNC_FOLDER_TREE = SimpleNamespace(by=None, selector=None)
 
@@ -61,7 +68,10 @@ class SyncConnectionWizard:
 
     @staticmethod
     def back():
-        squish.clickButton(squish.waitForObject(SyncConnectionWizard.BACK_BUTTON))
+        app().find_element(
+            SyncConnectionWizard.BACK_BUTTON.by,
+            SyncConnectionWizard.BACK_BUTTON.selector
+        ).click()
 
     @staticmethod
     def select_remote_destination_folder(folder):
@@ -81,16 +91,16 @@ class SyncConnectionWizard:
 
     @staticmethod
     def sort_by(header_text):
-        squish.mouseClick(
-            squish.waitForObject(
-                {
-                    "container": SyncConnectionWizard.SELECTIVE_SYNC_TREE_HEADER,
-                    "text": header_text,
-                    "type": "HeaderViewItem",
-                    "visible": True,
-                }
-            )
+        element = app().find_element(
+            SyncConnectionWizard.SELECTIVE_SYNC_TREE_HEADER.by,
+            SyncConnectionWizard.SELECTIVE_SYNC_TREE_HEADER.selector.format(header=header_text)
         )
+        # ISSUE: https://github.com/opencloud-eu/desktop/pull/879
+        # Cannot select table header element by click event
+        # Select the table header element using keyboard events as a workaround
+        # TODO: Remove the workaround and uncomment 'click' action
+        # element.click()
+        element.native_click()
 
     @staticmethod
     def add_sync_connection():
@@ -101,20 +111,21 @@ class SyncConnectionWizard:
 
     @staticmethod
     def get_item_name_from_row(row_index):
-        folder_row = {
-            "row": row_index,
-            "container": SyncConnectionWizard.SELECTIVE_SYNC_ROOT_FOLDER,
-            "type": "QModelIndex",
-        }
-        return str(squish.waitForObjectExists(folder_row).displayText)
+        elements = app().find_elements(
+            SyncConnectionWizard.SELECTIVE_SYNC_TREE_FOLDER.by,
+            SyncConnectionWizard.SELECTIVE_SYNC_TREE_FOLDER.selector.format(space=get_config("syncConnectionName"))
+        )
+        return str(elements[row_index].text)
+
 
     @staticmethod
     def is_root_folder_checked():
-        state = squish.waitForObject(SyncConnectionWizard.SELECTIVE_SYNC_ROOT_FOLDER)[
-            "checkState"
-        ]
-        return state == "checked"
-
+        element = app().find_element(
+            SyncConnectionWizard.SELECTIVE_SYNC_ROOT_FOLDER.by,
+            get_config("syncConnectionName")
+        )
+        return element.get_attribute("checked") == "true"
+        
     @staticmethod
     def cancel_folder_sync_connection_wizard():
         app().find_element(
@@ -181,21 +192,23 @@ class SyncConnectionWizard:
 
     @staticmethod
     def get_local_sync_path():
-        return str(
-            squish.waitForObjectExists(
-                SyncConnectionWizard.CHOOSE_LOCAL_SYNC_FOLDER
-            ).displayText
+        element = app().find_element(
+            SyncConnectionWizard.CHOOSE_LOCAL_SYNC_FOLDER.by,
+            SyncConnectionWizard.CHOOSE_LOCAL_SYNC_FOLDER.selector
         )
+        return str(element.text)
 
     @staticmethod
     def get_warn_label():
         return str(squish.waitForObjectExists(SyncConnectionWizard.WARN_LABEL).text)
 
     @staticmethod
-    def is_add_sync_folder_button_enabled():
-        return squish.waitForObjectExists(
-            SyncConnectionWizard.ADD_FOLDER_SYNC_BUTTON
-        ).enabled
+    def is_add_space_button_enabled():
+        element = app().find_element(
+            SyncConnectionWizard.ADD_SPACE_BUTTON.by,
+            SyncConnectionWizard.ADD_SPACE_BUTTON.selector
+        )
+        return element.is_enabled()
 
     @staticmethod
     def get_relative_folder_element(target_folder, parent_row):

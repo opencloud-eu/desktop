@@ -3,7 +3,7 @@ import os
 from behave.model_core import Status
 
 from helpers import ScreenRecorder
-from helpers.ConfigHelper import init_config
+from helpers.ConfigHelper import init_config, reset_sync_connection_name
 from helpers.api.provisioning import delete_created_users
 from helpers.SpaceHelper import delete_project_spaces
 from helpers.ConfigHelper import get_config
@@ -69,3 +69,5 @@ def after_scenario(context, scenario):
 
     cleanup_current_app_log()
     clear_socket_messages()
+
+    reset_sync_connection_name()
