@@ -85,7 +85,8 @@ DEFAULT_PATH_CONFIG = {
     'lowest_timeout': 1,
     'min_sync_timeout': 5,
     'files_for_upload': os.path.join(CURRENT_DIR.parent, 'files-for-upload'),
-    'crash_file': os.path.join(gettempdir(), CRASH_LOG_FILE),
+    # actual file path where the client stores the crash log.
+    'crash_log_file': os.path.join(gettempdir(), CRASH_LOG_FILE),
 }
 
 # mutable configs

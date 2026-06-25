@@ -76,5 +76,5 @@ def save_crash_log(scenario):
         logs.append("-" * 80)
         logs.append("")  # extra line break
         log_file.write("\n".join(logs))
-        with open(get_config('crash_file'), 'r') as current_log:
+        with open(get_config('crash_log_file'), 'r') as current_log:
             log_file.write(f"{current_log.read()}\n\n")

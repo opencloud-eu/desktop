@@ -51,7 +51,7 @@ def after_scenario(context, scenario):
     ):
         save_app_log(scenario)
 
-    if os.path.exists(get_config('crash_file')):
+    if os.path.exists(get_config('crash_log_file')):
         save_crash_log(scenario)
 
     # clean up sync dir
