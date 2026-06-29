@@ -3,6 +3,10 @@ cmake_minimum_required(VERSION 3.18)
 include(VERSION.cmake)
 project(OpenCloudDesktop LANGUAGES CXX VERSION ${MIRALL_VERSION_MAJOR}.${MIRALL_VERSION_MINOR}.${MIRALL_VERSION_PATCH})
 
+if(APPLE)
+    enable_language(OBJCXX)
+endif()
+
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -104,8 +108,14 @@ option(WITH_EXTERNAL_BRANDING "A URL to an external branding repo" "")
 # specify additional vfs plugins
 set(VIRTUAL_FILE_SYSTEM_PLUGINS off cfapi openvfs CACHE STRING "Name of internal plugin in src/libsync/vfs or the locations of virtual file plugins")
 
+# On macOS 12+ (Darwin 21+), add the NSFileProvider-based VFS plugin
+if(APPLE AND CMAKE_SYSTEM_VERSION VERSION_GREATER_EQUAL "21.0")
+    list(APPEND VIRTUAL_FILE_SYSTEM_PLUGINS nsfp)
+endif()
+
 if(APPLE)
   set( SOCKETAPI_TEAM_IDENTIFIER_PREFIX "" CACHE STRING "SocketApi prefix (including a following dot) that must match the codesign key's TeamIdentifier/Organizational Unit" )
+  set( APPLE_DEVELOPMENT_TEAM "" CACHE STRING "Apple Development Team ID used for code signing and App Group identifiers" )
 endif()
 
 
