@@ -46,7 +46,7 @@ steps:
     environment:
       <<: *minio_environment
     commands:
-      - requirements_sha=$(sha1sum test/gui/requirements.txt | cut -d" " -f1)
+      - requirements_sha=$(cat test/gui/pyproject.toml test/gui/uv.lock | sha1sum | cut -d" " -f1)
       - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
       - mc cp -a s3/$CACHE_BUCKET/desktop/python-cache/$requirements_sha/python-cache.tar.gz $CI_WORKSPACE
 
@@ -70,12 +70,11 @@ steps:
     environment:
       PLAYWRIGHT_BROWSERS_PATH: /woodpecker/desktop/test/gui/.playwright
     commands:
+      - curl -LsSf https://astral.sh/uv/install.sh | sh
+      - export PATH="$HOME/.local/bin:$PATH"
       - cd test/gui
       - tar -xf $CI_WORKSPACE/python-cache.tar.gz -C ./
-      - python3 -m venv .venv --system-site-packages
-      - . .venv/bin/activate
-      - make install
-      - python3 -m pip list -v
+      - make uv-install
 
   - name: opencloud
     image: *opencloud_image
