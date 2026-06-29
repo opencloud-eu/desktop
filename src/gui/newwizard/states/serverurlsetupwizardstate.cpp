@@ -81,7 +81,13 @@ void ServerUrlSetupWizardState::evaluatePage()
                 if (!checkWebFingerAuthJob->success()) {
                     Q_EMIT evaluationSuccessful();
                 } else {
-                    _context->accountBuilder().setWebFingerAuthenticationServerUrl(checkWebFingerAuthJob->result().toUrl());
+                    // Result is now a QVariantMap with "issuer" and "clientId" keys
+                    const auto resultMap = checkWebFingerAuthJob->result().toMap();
+                    _context->accountBuilder().setWebFingerAuthenticationServerUrl(resultMap.value(QStringLiteral("issuer")).toUrl());
+                    const QString clientId = resultMap.value(QStringLiteral("clientId")).toString();
+                    if (!clientId.isEmpty()) {
+                        _context->accountBuilder().setWebFingerDesktopClientId(clientId);
+                    }
                     Q_EMIT evaluationSuccessful();
                 }
             });
