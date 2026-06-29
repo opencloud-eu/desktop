@@ -36,7 +36,7 @@ jobs:
       # actions/upload-artifact doesn't need contents: write
       contents: read
     strategy:
-        fail-fast: true
+        fail-fast: false
         matrix:
             include:
             - target: windows-cl-msvc2022-x86_64
@@ -56,8 +56,7 @@ jobs:
     env:
       CRAFT_TARGET: ${{ matrix.target }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      CRAFT_PACKAGE_SYMBOLS: ${{  github.event_name != 'pull_request' }}
-
+      CRAFT_PACKAGE_SYMBOLS: false
     container: ${{ matrix.container }}
 
     steps:
