@@ -24,21 +24,13 @@ class SyncConnectionWizard:
     ADD_SYNC_CONNECTION_BUTTON = SimpleNamespace(
         by=By.XPATH, selector="//dialog[@name='Add Space']//*[@name='Add Space']"
     )
-    REMOTE_FOLDER_TREE = SimpleNamespace(by=None, selector=None)
     SELECTIVE_SYNC_TREE_HEADER = SimpleNamespace(by=By.NAME, selector='{header}')
     CANCEL_FOLDER_SYNC_CONNECTION_WIZARD = SimpleNamespace(
         by=By.NAME, selector="Cancel"
     )
     SPACES_LIST = SimpleNamespace(by=By.NAME, selector="Spaces list")
     SPACE_NAME_SELECTOR = SimpleNamespace(by=By.NAME, selector="{space_name},")
-    CREATE_REMOTE_FOLDER_BUTTON = SimpleNamespace(by=None, selector=None)
-    CREATE_REMOTE_FOLDER_INPUT = SimpleNamespace(by=None, selector=None)
-    CREATE_REMOTE_FOLDER_CONFIRM_BUTTON = SimpleNamespace(by=None, selector=None)
-    REFRESH_BUTTON = SimpleNamespace(by=None, selector=None)
-    REMOTE_FOLDER_SELECTION_INPUT = SimpleNamespace(by=None, selector=None)
     ADD_SPACE_BUTTON = SimpleNamespace(by=By.NAME, selector='Add Space')
-    WARN_LABEL = SimpleNamespace(by=None, selector=None)
-    CHOOSE_WHAT_TO_SYNC_FOLDER_TREE = SimpleNamespace(by=None, selector=None)
 
     @staticmethod
     def set_sync_path_oc(sync_path):
@@ -72,13 +64,6 @@ class SyncConnectionWizard:
             SyncConnectionWizard.BACK_BUTTON.by,
             SyncConnectionWizard.BACK_BUTTON.selector
         ).click()
-
-    @staticmethod
-    def select_remote_destination_folder(folder):
-        squish.mouseClick(
-            squish.waitForObjectItem(SyncConnectionWizard.REMOTE_FOLDER_TREE, folder)
-        )
-        SyncConnectionWizard.next_step()
 
     @staticmethod
     def deselect_all_remote_folders():
@@ -162,45 +147,12 @@ class SyncConnectionWizard:
         SyncConnectionWizard.add_sync_connection()
 
     @staticmethod
-    def create_folder_in_remote_destination(folder_name):
-        squish.clickButton(
-            squish.waitForObject(SyncConnectionWizard.CREATE_REMOTE_FOLDER_BUTTON)
-        )
-        squish.type(
-            squish.waitForObject(SyncConnectionWizard.CREATE_REMOTE_FOLDER_INPUT),
-            folder_name,
-        )
-        squish.clickButton(
-            squish.waitForObject(
-                SyncConnectionWizard.CREATE_REMOTE_FOLDER_CONFIRM_BUTTON
-            )
-        )
-
-    @staticmethod
-    def refresh_remote():
-        squish.clickButton(squish.waitForObject(SyncConnectionWizard.REFRESH_BUTTON))
-
-    @staticmethod
-    def is_remote_folder_selected(folder_selector):
-        return squish.waitForObjectExists(folder_selector).selected
-
-    @staticmethod
-    def open_sync_connection_wizard():
-        squish.mouseClick(
-            squish.waitForObject(SyncConnectionWizard.ADD_FOLDER_SYNC_BUTTON)
-        )
-
-    @staticmethod
     def get_local_sync_path():
         element = app().find_element(
             SyncConnectionWizard.CHOOSE_LOCAL_SYNC_FOLDER.by,
             SyncConnectionWizard.CHOOSE_LOCAL_SYNC_FOLDER.selector
         )
         return str(element.text)
-
-    @staticmethod
-    def get_warn_label():
-        return str(squish.waitForObjectExists(SyncConnectionWizard.WARN_LABEL).text)
 
     @staticmethod
     def is_add_space_button_enabled():

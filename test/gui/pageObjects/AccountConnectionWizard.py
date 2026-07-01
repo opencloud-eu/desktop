@@ -110,7 +110,6 @@ class AccountConnectionWizard:
         # create sync folder for user
         sync_path = create_user_sync_path(user)
 
-        AccountConnectionWizard.select_advanced_config()
         app().find_element(
             AccountConnectionWizard.DIRECTORY_NAME_BOX.by,
             AccountConnectionWizard.DIRECTORY_NAME_BOX.selector,
@@ -132,16 +131,20 @@ class AccountConnectionWizard:
         sync_path = get_temp_resource_path(folder_name)
 
         # clear the current path
-        squish.mouseClick(
-            squish.waitForObject(AccountConnectionWizard.SELECT_LOCAL_FOLDER)
+        app().find_element(
+            AccountConnectionWizard.DIRECTORY_NAME_BOX.by,
+            AccountConnectionWizard.DIRECTORY_NAME_BOX.selector,
+        ).click()
+        dir_location_input = app().find_element(
+            AccountConnectionWizard.DIRECTORY_NAME_EDIT_BOX.by,
+            AccountConnectionWizard.DIRECTORY_NAME_EDIT_BOX.selector,
         )
-
-        squish.waitForObject(AccountConnectionWizard.SELECT_LOCAL_FOLDER).setText("")
-
-        squish.type(
-            squish.waitForObject(AccountConnectionWizard.SELECT_LOCAL_FOLDER),
-            sync_path,
-        )
+        dir_location_input.clear()
+        dir_location_input.send_keys(sync_path)
+        app().find_element(
+            AccountConnectionWizard.CHOOSE_FOLDER_BUTTON.by,
+            AccountConnectionWizard.CHOOSE_FOLDER_BUTTON.selector,
+        ).click()
         set_current_user_sync_path(sync_path)
         return sync_path
 
@@ -167,6 +170,7 @@ class AccountConnectionWizard:
                 account_details["sync_folder"]
             )
         elif account_details["user"]:
+            AccountConnectionWizard.select_advanced_config()
             sync_path = AccountConnectionWizard.select_sync_folder(
                 account_details["user"]
             )
@@ -187,17 +191,6 @@ class AccountConnectionWizard:
             AccountConnectionWizard.SYNC_EVERYTHING_RADIO_BUTTON.by,
             AccountConnectionWizard.SYNC_EVERYTHING_RADIO_BUTTON.selector
         ).click()
-
-
-    @staticmethod
-    def is_new_connection_window_visible():
-        visible = False
-        try:
-            squish.waitForObject(AccountConnectionWizard.SERVER_ADDRESS_BOX)
-            visible = True
-        except:
-            pass
-        return visible
 
     @staticmethod
     def is_credential_window_visible():
