@@ -188,17 +188,6 @@ class AccountConnectionWizard:
             AccountConnectionWizard.SYNC_EVERYTHING_RADIO_BUTTON.selector
         ).click()
 
-
-    @staticmethod
-    def is_new_connection_window_visible():
-        visible = False
-        try:
-            squish.waitForObject(AccountConnectionWizard.SERVER_ADDRESS_BOX)
-            visible = True
-        except:
-            pass
-        return visible
-
     @staticmethod
     def is_credential_window_visible():
         visible = app().find_element(

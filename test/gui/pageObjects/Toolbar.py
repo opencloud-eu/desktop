@@ -42,15 +42,6 @@ class Toolbar:
             raise AssertionError(f"Toolbar is not enabled within {timeout} ms")
 
     @staticmethod
-    def get_item_selector(item_name):
-        return {
-            "container": names.dialogStack_quickWidget_QQuickWidget,
-            "text": item_name,
-            "type": "Label",
-            "visible": True,
-        }
-
-    @staticmethod
     def has_tab(tab_name):
         if tab_name.lower() == "add account":
             tab = Toolbar.ADD_ACCOUNT_BUTTON
@@ -97,14 +88,6 @@ class Toolbar:
             raise AssertionError(f"Account is not active: {username}")
 
     @staticmethod
-    def get_displayed_account_text(displayname, host):
-        return str(
-            squish.waitForObjectExists(
-                Toolbar.get_item_selector(displayname + "\n" + host)
-            ).text
-        )
-
-    @staticmethod
     def open_settings_tab():
         tab = app().find_element(Toolbar.SETTINGS_TAB.by, Toolbar.SETTINGS_TAB.selector)
         # ISSUE: https://github.com/opencloud-eu/desktop/pull/879
@@ -124,30 +107,6 @@ class Toolbar:
         ).click()
 
     @staticmethod
-    def get_accounts():
-        accounts = {}
-        selectors = {}
-        children_obj = object.children(squish.waitForObjectExists(Toolbar.TOOLBAR_ROW))
-        account_idx = 1
-        for obj in children_obj:
-            if hasattr(obj, "accountState"):
-                account_info = {
-                    "displayname": str(obj.accountState.account.davDisplayName),
-                    "hostname": str(obj.accountState.account.hostName),
-                    "initials": str(obj.accountState.account.initials),
-                    "current": obj.checked,
-                }
-                account_locator = Toolbar.ACCOUNT_TAB.copy()
-                if account_idx > 1:
-                    account_locator.update({"occurrence": account_idx})
-                account_locator.update({"text": account_info["hostname"]})
-
-                accounts[account_info["displayname"]] = account_info
-                selectors[account_info["displayname"]] = obj
-                account_idx += 1
-        return accounts, selectors
-
-    @staticmethod
     def get_account(username):
         display_name = get_displayname_for_user(username)
         server_host = urlparse(get_config('localBackendUrl')).netloc
@@ -161,14 +120,6 @@ class Toolbar:
         except NoSuchElementException:
             pass
         return account
-
-    @staticmethod
-    def get_active_account():
-        accounts, selectors = Toolbar.get_accounts()
-        for account, info in accounts.items():
-            if info["current"]:
-                return info, selectors[account]
-        return None, None
 
     @staticmethod
     def account_has_focus(username):

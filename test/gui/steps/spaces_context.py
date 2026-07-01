@@ -14,7 +14,7 @@ from helpers.SpaceHelper import (
     get_file_content,
     resource_exists,
 )
-from helpers.ConfigHelper import get_config, set_config
+from helpers.ConfigHelper import set_config
 
 
 @Given('the administrator has created a space "{space_name}"')
