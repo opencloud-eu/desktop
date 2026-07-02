@@ -134,7 +134,9 @@ public:
         account->setCredentials(new FakeCredentials{fakeAm});
         fakeAm->setOverride([this](QNetworkAccessManager::Operation op, const QNetworkRequest &req, QIODevice *device) {
             if (req.url().path().endsWith(QLatin1String(".well-known/openid-configuration"))) {
-                return this->wellKnownReply(op, req);
+                return this->wellKnownOpenidConfigurationReply(op, req);
+            } else if (req.url().path().endsWith(QLatin1String(".well-known/webfinger"))) {
+                return this->wellKnownWebfingerReply(op, req);
             } else if (req.url().path().endsWith(QLatin1String("status.php"))) {
                 return this->statusPhpReply(op, req);
             } else if (req.url().path().endsWith(QLatin1String("clients-registrations"))) {
@@ -224,7 +226,7 @@ public:
         return new FakePostReply(op, req, std::move(payload), fakeAm);
     }
 
-    virtual QNetworkReply *wellKnownReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req)
+    virtual QNetworkReply *wellKnownOpenidConfigurationReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req)
     {
         OC_ASSERT(op == QNetworkAccessManager::GetOperation);
         QJsonDocument jsondata(QJsonObject{
@@ -233,7 +235,25 @@ public:
             {QStringLiteral("token_endpoint"), Utility::concatUrlPath(sOAuthTestServer, QStringLiteral("token_endpoint")).toString()},
             {QStringLiteral("token_endpoint_auth_methods_supported"), QJsonArray{QStringLiteral("client_secret_post")}},
         });
-        return new FakePayloadReply(op, req, jsondata.toJson(), fakeAm);
+        return new FakePayloadReply(op, req, jsondata.toJson(), {}, fakeAm);
+    }
+
+    virtual QNetworkReply *wellKnownWebfingerReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req)
+    {
+        OC_ASSERT(op == QNetworkAccessManager::GetOperation);
+        QJsonDocument jsondata(QJsonObject{
+            {QStringLiteral("subject"), sOAuthTestServer.toString() },
+            {QStringLiteral("links"), QJsonArray{
+                QJsonObject{
+                    {QStringLiteral("rel"), QStringLiteral("http://openid.net/specs/connect/1.0/issuer") },
+                    {QStringLiteral("href"), QStringLiteral("oauthtest://openidserver") },
+                }
+            }},
+        });
+        QHttpHeaders headers;
+        headers.append(QHttpHeaders::WellKnownHeader::ContentType, QStringLiteral("application/json"));
+
+        return new FakePayloadReply(op, req, jsondata.toJson(), headers, fakeAm);
     }
 
     virtual QNetworkReply *clientRegistrationReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req)
@@ -315,8 +335,23 @@ class TestOAuth : public QObject
 private Q_SLOTS:
     void testBasic()
     {
-        OAuthTestCase test;
+        // Initial-auth success path: only result(LoggedIn) fires.
+        struct Test : OAuthTestCase
+        {
+            std::unique_ptr<QSignalSpy> refreshErrorSpy;
+            std::unique_ptr<QSignalSpy> refreshFinishedSpy;
+
+            std::unique_ptr<AccountBasedOAuth> prepareOauth() override
+            {
+                auto out = OAuthTestCase::prepareOauth();
+                refreshErrorSpy = std::make_unique<QSignalSpy>(out.get(), &OCC::AccountBasedOAuth::refreshError);
+                refreshFinishedSpy = std::make_unique<QSignalSpy>(out.get(), &OCC::AccountBasedOAuth::refreshFinished);
+                return out;
+            }
+        } test;
         test.test();
+        QCOMPARE(test.refreshErrorSpy->count(), 0);
+        QCOMPARE(test.refreshFinishedSpy->count(), 0);
     }
 
 
@@ -433,13 +468,25 @@ private Q_SLOTS:
 
     void testTimeout()
     {
+        // Inverse of testRefreshWebFingerError: an error on the initial-auth
+        // flow must emit result(Error) only, never refreshError or refreshFinished.
         struct Test : OAuthTestCase
         {
             QScopedValueRollback<decltype(AbstractNetworkJob::httpTimeout)> rollback;
+            std::unique_ptr<QSignalSpy> refreshErrorSpy;
+            std::unique_ptr<QSignalSpy> refreshFinishedSpy;
 
             Test()
                 : rollback(AbstractNetworkJob::httpTimeout, 50ms)
             {
+            }
+
+            std::unique_ptr<AccountBasedOAuth> prepareOauth() override
+            {
+                auto out = OAuthTestCase::prepareOauth();
+                refreshErrorSpy = std::make_unique<QSignalSpy>(out.get(), &OCC::AccountBasedOAuth::refreshError);
+                refreshFinishedSpy = std::make_unique<QSignalSpy>(out.get(), &OCC::AccountBasedOAuth::refreshFinished);
+                return out;
             }
 
             QNetworkReply *statusPhpReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req) override
@@ -460,6 +507,8 @@ private Q_SLOTS:
             }
         } test;
         test.test();
+        QCOMPARE(test.refreshErrorSpy->count(), 0);
+        QCOMPARE(test.refreshFinishedSpy->count(), 0);
     }
 
     void testDynamicRegistrationFailFallback()
@@ -470,7 +519,7 @@ private Q_SLOTS:
         {
             Test() { }
 
-            QNetworkReply *wellKnownReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req) override
+            QNetworkReply *wellKnownOpenidConfigurationReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req) override
             {
                 OC_ASSERT(op == QNetworkAccessManager::GetOperation);
                 const QJsonDocument jsondata(QJsonObject{
@@ -480,7 +529,7 @@ private Q_SLOTS:
                     {QStringLiteral("registration_endpoint"), QStringLiteral("%1/clients-registrations").arg(localHost)},
                     {QStringLiteral("token_endpoint_auth_methods_supported"), QJsonArray{QStringLiteral("client_secret_basic")}},
                 });
-                return new FakePayloadReply(op, req, jsondata.toJson(), fakeAm);
+                return new FakePayloadReply(op, req, jsondata.toJson(), {}, fakeAm);
             }
 
             void openBrowserHook(const QUrl &url) override
@@ -513,7 +562,7 @@ private Q_SLOTS:
         {
             Test() { }
 
-            QNetworkReply *wellKnownReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req) override
+            QNetworkReply *wellKnownOpenidConfigurationReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req) override
             {
                 OC_ASSERT(op == QNetworkAccessManager::GetOperation);
                 const QJsonDocument jsondata(QJsonObject{
@@ -524,7 +573,7 @@ private Q_SLOTS:
                     {QStringLiteral("token_endpoint_auth_methods_supported"),
                         QJsonArray{QStringLiteral("client_secret_basic"), QStringLiteral("client_secret_post")}},
                 });
-                return new FakePayloadReply(op, req, jsondata.toJson(), fakeAm);
+                return new FakePayloadReply(op, req, jsondata.toJson(), {}, fakeAm);
             }
 
             void openBrowserHook(const QUrl &url) override
@@ -548,7 +597,7 @@ private Q_SLOTS:
 
             QNetworkReply *clientRegistrationReply(QNetworkAccessManager::Operation op, const QNetworkRequest &request) override
             {
-                return new FakePayloadReply(op, request, {}, fakeAm);
+                return new FakePayloadReply(op, request, {}, {}, fakeAm);
             }
 
         } test;
@@ -563,7 +612,7 @@ private Q_SLOTS:
         {
             Test() { _expectedClientId = QStringLiteral("3e4ea0f3-59ea-434a-92f2-b0d3b54443e9"); }
 
-            QNetworkReply *wellKnownReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req) override
+            QNetworkReply *wellKnownOpenidConfigurationReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req) override
             {
                 OC_ASSERT(op == QNetworkAccessManager::GetOperation);
                 const QJsonDocument jsondata(QJsonObject{
@@ -574,7 +623,7 @@ private Q_SLOTS:
                     {QStringLiteral("token_endpoint_auth_methods_supported"), QJsonArray{QStringLiteral("client_secret_basic")}},
 
                 });
-                return new FakePayloadReply(op, req, jsondata.toJson(), fakeAm);
+                return new FakePayloadReply(op, req, jsondata.toJson(), {}, fakeAm);
             }
 
             void openBrowserHook(const QUrl &url) override
@@ -614,7 +663,7 @@ private Q_SLOTS:
                     "v1giSvpnKw1hTtBYZaqdp3JqnZ5mvCKYhQDKkT7x8Us\",\"backchannel_logout_session_required\":false,\"require_pushed_authorization_requests\":"
                     "false}"));
 
-                auto *out = new FakePayloadReply(op, request, payload, fakeAm);
+                auto *out = new FakePayloadReply(op, request, payload, {}, fakeAm);
                 out->setAttribute(QNetworkRequest::HttpStatusCodeAttribute, 201);
                 return out;
             }
@@ -644,7 +693,7 @@ private Q_SLOTS:
             QString _expectedClientSecret = QStringLiteral("rmoEXFc1Z5tGTApxanBW7STlWODqRTYx");
             Test() { _expectedClientId = QStringLiteral("3e4ea0f3-59ea-434a-92f2-b0d3b54443e9"); }
 
-            QNetworkReply *wellKnownReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req) override
+            QNetworkReply *wellKnownOpenidConfigurationReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req) override
             {
                 OC_ASSERT(op == QNetworkAccessManager::GetOperation);
                 const QJsonDocument jsondata(QJsonObject{
@@ -655,7 +704,7 @@ private Q_SLOTS:
                     // this test explicitly check for the client secret in the post body
                     {QStringLiteral("token_endpoint_auth_methods_supported"), QJsonArray{QStringLiteral("client_secret_post")}},
                 });
-                return new FakePayloadReply(op, req, jsondata.toJson(), fakeAm);
+                return new FakePayloadReply(op, req, jsondata.toJson(), {}, fakeAm);
             }
 
             void openBrowserHook(const QUrl &) override { Q_UNREACHABLE(); }
@@ -679,7 +728,7 @@ private Q_SLOTS:
 
             QNetworkReply *clientRegistrationReply(QNetworkAccessManager::Operation op, const QNetworkRequest &request) override
             {
-                auto *out = new FakePayloadReply(op, request, TestUtils::getPayload("testDynamicTokenRefresh/clientRegistrationReply.json"), fakeAm);
+                auto *out = new FakePayloadReply(op, request, TestUtils::getPayload("testDynamicTokenRefresh/clientRegistrationReply.json"), {}, fakeAm);
                 out->setAttribute(QNetworkRequest::HttpStatusCodeAttribute, 201);
                 return out;
             }
@@ -688,10 +737,15 @@ private Q_SLOTS:
             {
                 oauth = prepareOauth();
                 QSignalSpy spy(oauth.get(), &OCC::AccountBasedOAuth::refreshFinished);
+                // Refresh success path: only refreshFinished fires, never result or refreshError.
+                QSignalSpy refreshErrorSpy(oauth.get(), &OCC::AccountBasedOAuth::refreshError);
+                QSignalSpy resultSpy(oauth.get(), &OCC::OAuth::result);
                 oauth->refreshAuthentication(QStringLiteral("foo"));
                 QVERIFY(spy.wait());
                 QCOMPARE(oauth->clientId(), QStringLiteral("d8a5d1f4-dabc-4e6a-a9a9-da729cff8ab0"));
                 QCOMPARE(oauth->clientSecret(), QString());
+                QCOMPARE(refreshErrorSpy.count(), 0);
+                QCOMPARE(resultSpy.count(), 0);
             }
 
         } test;
@@ -707,7 +761,7 @@ private Q_SLOTS:
         {
             Test() { }
 
-            QNetworkReply *wellKnownReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req) override
+            QNetworkReply *wellKnownOpenidConfigurationReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req) override
             {
                 OC_ASSERT(op == QNetworkAccessManager::GetOperation);
                 const QJsonDocument jsondata(QJsonObject{
@@ -718,7 +772,7 @@ private Q_SLOTS:
                     // this test explicitly check for the client secret in the post body
                     {QStringLiteral("token_endpoint_auth_methods_supported"), QJsonArray{QStringLiteral("client_secret_post")}},
                 });
-                return new FakePayloadReply(op, req, jsondata.toJson(), fakeAm);
+                return new FakePayloadReply(op, req, jsondata.toJson(), {}, fakeAm);
             }
 
             void openBrowserHook(const QUrl &) override { Q_UNREACHABLE(); }
@@ -742,7 +796,7 @@ private Q_SLOTS:
 
             QNetworkReply *clientRegistrationReply(QNetworkAccessManager::Operation op, const QNetworkRequest &request) override
             {
-                return new FakePayloadReply(op, request, {}, fakeAm);
+                return new FakePayloadReply(op, request, {}, {}, fakeAm);
             }
 
             virtual void test() override
@@ -756,6 +810,85 @@ private Q_SLOTS:
 
         } test;
         test.test();
+    }
+
+    void testRefreshWebFingerError()
+    {
+        // A failing WebFinger reply during refresh must emit refreshError
+        // (and only refreshError), otherwise HttpCredentials hangs.
+        struct Test : OAuthTestCase
+        {
+            Test() { }
+
+            QNetworkReply *wellKnownWebfingerReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req) override
+            {
+                return new FakeErrorReply(op, req, fakeAm, 500, {});
+            }
+
+            void openBrowserHook(const QUrl &) override { Q_UNREACHABLE(); }
+
+            QNetworkReply *tokenReply(QNetworkAccessManager::Operation, const QNetworkRequest &, QIODevice *) override { Q_UNREACHABLE(); }
+
+            void oauthResult(OAuth::Result, const QString &, const QString &) override { Q_UNREACHABLE(); }
+
+            virtual void test() override
+            {
+                oauth = prepareOauth();
+                QSignalSpy refreshErrorSpy(oauth.get(), &OCC::AccountBasedOAuth::refreshError);
+                QSignalSpy refreshFinishedSpy(oauth.get(), &OCC::AccountBasedOAuth::refreshFinished);
+                QSignalSpy resultSpy(oauth.get(), &OCC::OAuth::result);
+                oauth->refreshAuthentication(QStringLiteral("foo"));
+                QVERIFY(refreshErrorSpy.wait());
+                QCOMPARE(refreshErrorSpy.count(), 1);
+                QCOMPARE(refreshFinishedSpy.count(), 0);
+                QCOMPARE(resultSpy.count(), 0);
+            }
+        } test;
+        test.test();
+    }
+
+    void testInitialAuthWebFingerError()
+    {
+        // True mirror of testRefreshWebFingerError on the initial-auth flow:
+        // a failing WebFinger reply during startAuthentication must emit
+        // result(Error) and never refreshError or refreshFinished. Exercises
+        // the same gated branches in OAuth::fetchWellKnown with _isRefreshingToken
+        // false.
+        struct Test : OAuthTestCase
+        {
+            std::unique_ptr<QSignalSpy> refreshErrorSpy;
+            std::unique_ptr<QSignalSpy> refreshFinishedSpy;
+
+            Test() { }
+
+            std::unique_ptr<AccountBasedOAuth> prepareOauth() override
+            {
+                auto out = OAuthTestCase::prepareOauth();
+                refreshErrorSpy = std::make_unique<QSignalSpy>(out.get(), &OCC::AccountBasedOAuth::refreshError);
+                refreshFinishedSpy = std::make_unique<QSignalSpy>(out.get(), &OCC::AccountBasedOAuth::refreshFinished);
+                return out;
+            }
+
+            QNetworkReply *wellKnownWebfingerReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req) override
+            {
+                return new FakeErrorReply(op, req, fakeAm, 500, {});
+            }
+
+            void openBrowserHook(const QUrl &) override { Q_UNREACHABLE(); }
+
+            QNetworkReply *tokenReply(QNetworkAccessManager::Operation, const QNetworkRequest &, QIODevice *) override { Q_UNREACHABLE(); }
+
+            void oauthResult(OAuth::Result result, const QString &, const QString &) override
+            {
+                QCOMPARE(state, StatusPhpState);
+                QCOMPARE(result, OAuth::Error);
+                gotAuthOk = true;
+                replyToBrowserOk = true;
+            }
+        } test;
+        test.test();
+        QCOMPARE(test.refreshErrorSpy->count(), 0);
+        QCOMPARE(test.refreshFinishedSpy->count(), 0);
     }
 };
 
