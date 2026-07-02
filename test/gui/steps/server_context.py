@@ -32,7 +32,6 @@ def step(context, user_name, resource_type, resource_name):
 )
 def step(context, user_name, resource_type, resource_name):
     resource_exists = webdav.resource_exists(user_name, resource_name)
-
     with ensure(
         '{0} "{1}" should exist, but it does not',
         resource_type.capitalize(),
@@ -55,15 +54,11 @@ def step(context, user_name, file_name, content):
         text_content.should.equal(content)
 
 
-@Then(
-    r'as user "([^"].*)" folder "([^"].*)" should contain "([^"].*)" items in the server',
-    regexp=True,
-)
+@Then(r'as user "{user_name}" folder "{folder_name}" should contain "{items_number}" items in the server')
 def step(context, user_name, folder_name, items_number):
     total_items = webdav.get_folder_items_count(user_name, folder_name)
-    test.compare(
-        total_items, items_number, f'Folder should contain {items_number} items'
-    )
+    with ensure(f'Folder should contain {items_number} items'):
+        total_items.should.equal(items_number)
 
 
 @Given('user "{user}" has created folder "{folder_name}" in the server')

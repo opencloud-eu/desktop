@@ -56,7 +56,7 @@ class SyncConnection:
             SyncConnection.FOLDER_SYNC_CONNECTION_MENU_BUTTON.by,
             SyncConnection.FOLDER_SYNC_CONNECTION_MENU_BUTTON.selector.format(
                 sync_folder=sync_folder,
-                sync_path=get_config("currentUserSyncPath"),
+                sync_path=get_config("currentUserSyncPath").rstrip("/") + "/",
                 status=status,
             ),
         )

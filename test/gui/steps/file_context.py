@@ -89,10 +89,14 @@ def wait_and_try_to_write_file(resource, content):
 
 
 def create_zip(resources, zip_file_name, cwd=''):
+    original_cwd = os.getcwd()
     os.chdir(cwd)
-    with zipfile.ZipFile(zip_file_name, 'w') as zipped_file:
-        for resource in resources:
-            zipped_file.write(resource)
+    try:
+        with zipfile.ZipFile(zip_file_name, 'w') as zipped_file:
+            for resource in resources:
+                zipped_file.write(resource)
+    finally:
+        os.chdir(original_cwd)
 
 
 def extract_zip(zip_file_path, destination_dir):
@@ -297,13 +301,13 @@ def step(context, username):
         wait_and_write_file(file, '')
 
 
-@Given('the user has created a folder "|any|" in temp folder')
+@Given('the user has created a folder "{folder_name}" in temp folder')
 def step(context, folder_name):
     create_folder(folder_name, is_temp_folder=True)
 
 
 @Given(
-    'the user has created "|any|" files each of size "|any|" bytes inside folder "|any|" in temp folder'
+    'the user has created "{file_number}" files each of size "{file_size}" bytes inside folder "{folder_name}" in temp folder'
 )
 def step(context, file_number, file_size, folder_name):
     current_sync_path = get_temp_resource_path(folder_name)
@@ -328,10 +332,7 @@ def step(context, username, file):
         f.read()
 
 
-@When(
-    r'user "([^"]*)" moves (folder|file) "([^"]*)" from the temp folder into the sync folder',
-    regexp=True,
-)
+@When(r'user "{username}" moves {resource_type} "{resource_name}" from the temp folder into the sync folder')
 def step(context, username, resource_type, resource_name):
     source_dir = join(get_config('tempFolderPath'), resource_name)
     move_resource(username, resource_type, source_dir, '/', True)
@@ -387,12 +388,12 @@ def step(context, user, file_name):
 
 
 @Given(
-    'the user has created a zip file "|any|" with the following resources in the temp folder'
+    'the user has created a zip file "{zip_file_name}" with the following resources in the temp folder'
 )
 def step(context, zip_file_name):
     resource_list = []
 
-    for row in context.table[1:]:
+    for row in context.table:
         resource_list.append(row[0])
         resource = join(get_config('tempFolderPath'), row[0])
         if row[1] == 'folder':
@@ -405,7 +406,7 @@ def step(context, zip_file_name):
     create_zip(resource_list, zip_file_name, get_config('tempFolderPath'))
 
 
-@When('user "|any|" unzips the zip file "|any|" inside the sync root')
+@When('user "{username}" unzips the zip file "{zip_file_name}" inside the sync root')
 def step(context, username, zip_file_name):
     destination_dir = get_resource_path('/', username)
     zip_file_path = join(destination_dir, zip_file_name)
