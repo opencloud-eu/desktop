@@ -234,9 +234,8 @@ class SyncConnectionWizard:
 
                 # select nested folders based on the position of the parent folder
                 for p_element in p_elements:
-                    if (
-                        p_element.get_attribute("checked") == 'true'
-                        and p_element.rect["x"] > parent_position
+                    if p_element.rect["x"] >= parent_position and (
+                        select or p_element.get_attribute("checked") == 'true'
                     ):
                         parent_element = p_element
                         parent_position = p_element.rect["x"]
