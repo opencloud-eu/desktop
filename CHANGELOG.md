@@ -1,5 +1,46 @@
 # Changelog
 
+## [4.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v4.0.0) - 2026-07-02
+
+### ❤️ Thanks to all contributors! ❤️
+
+@Asmitapaudel, @TheOneRing, @anon-pradip, @db-ot, @dragotin, @guruz, @individual-it, @prashant-gurung899, @saw-jan, @tbsbdr
+
+### 💥 Breaking changes
+
+- Update Qt to 6.10.2, this removes support for MacOS 12 [[#762](https://github.com/opencloud-eu/desktop/pull/762)]
+
+### 📈 Enhancement
+
+- Refactor plugin loading [[#839](https://github.com/opencloud-eu/desktop/pull/839)]
+- Update SVG logo with new design [[#711](https://github.com/opencloud-eu/desktop/pull/711)]
+
+### 🐛 Bug Fixes
+
+- FetchServerSettingsJob always emit finished [[#824](https://github.com/opencloud-eu/desktop/pull/824)]
+- Fix path passed to pinstate [[#810](https://github.com/opencloud-eu/desktop/pull/810)]
+- Fix canonicalPath for drives (c:) [[#701](https://github.com/opencloud-eu/desktop/pull/701)]
+
+### 📦️ Dependencies
+
+- build(deps): bump actions/cache from 5 to 6 [[#958](https://github.com/opencloud-eu/desktop/pull/958)]
+- build(deps): bump actions/checkout from 6 to 7 [[#956](https://github.com/opencloud-eu/desktop/pull/956)]
+- Bump actions/upload-artifact from 6 to 7 [[#831](https://github.com/opencloud-eu/desktop/pull/831)]
+- Bump actions/cache from 4 to 5 [[#758](https://github.com/opencloud-eu/desktop/pull/758)]
+- Bump actions/upload-artifact from 5 to 6 [[#757](https://github.com/opencloud-eu/desktop/pull/757)]
+
+## [3.0.3](https://github.com/opencloud-eu/desktop/releases/tag/v3.0.3) - 2025-12-08
+
+### ❤️ Thanks to all contributors! ❤️
+
+@TheOneRing, @anon-pradip, @individual-it
+
+## [3.0.2](https://github.com/opencloud-eu/desktop/releases/tag/v3.0.2) - 2025-11-27
+
+### ❤️ Thanks to all contributors! ❤️
+
+@individual-it
+
 ## [3.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v3.0.0) - 2025-11-25
 
 ### ❤️ Thanks to all contributors! ❤️
