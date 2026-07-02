@@ -32,6 +32,14 @@ if [ -z "$WEBDRIVER_PORT" ]; then
     WEBDRIVER_PORT="4723"
 fi
 
+
+# cd "$TEST_DIR"
+# curl -LsSf https://astral.sh/uv/install.sh | sh
+# export PATH="$HOME/.local/bin:$PATH"
+uv venv --python /usr/bin/python3 --system-site-packages --clear
+source .venv/bin/activate
+uv sync --frozen
+
 # run webdriver server
 export FLASK_ENV=production
 export FLASK_APP="$WEBDRIVER_DIR/$DRIVER_FILE"
