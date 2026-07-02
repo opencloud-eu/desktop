@@ -1,7 +1,6 @@
 import os
 import platform
 import builtins
-import tempfile
 from tempfile import gettempdir
 from configparser import ConfigParser
 from pathlib import Path
@@ -11,6 +10,7 @@ APP_CONFIG_FILE = "opencloud.cfg"
 CUMULATIVE_APP_LOG_FILE = "opencloud.log"
 CURRENT_APP_LOG_FILE = "app.log"
 DEFAULT_SYNC_CONNECTION_NAME = "Personal"
+CRASH_LOG_FILE = "OpenCloud-crash.log"
 
 
 def is_windows():
@@ -32,7 +32,7 @@ def get_client_root_path():
 
 
 def get_config_home_linux():
-    return os.path.join(tempfile.gettempdir(), 'opencloudtest', '.config')
+    return os.path.join(gettempdir(), 'opencloudtest', '.config')
 
 
 def get_config_home_win():
@@ -66,7 +66,7 @@ CONFIG_ENV_MAP = {
     'localBackendUrl': 'BACKEND_HOST',
     'sync_timeout': 'SYNC_TIMEOUT',
     'clientRootSyncPath': 'CLIENT_ROOT_SYNC_PATH',
-    'tempFolderPath': 'TEMP_FOLDER_PATH',
+    'test_temp_dir': 'TEST_TEMP_DIR',
     'guiTestReportDir': 'GUI_TEST_REPORT_DIR',
     'record_video_on_failure': 'RECORD_VIDEO_ON_FAILURE',
 }
@@ -85,6 +85,8 @@ DEFAULT_PATH_CONFIG = {
     'lowest_timeout': 1,
     'min_sync_timeout': 5,
     'files_for_upload': os.path.join(CURRENT_DIR.parent, 'files-for-upload'),
+    # actual file path where the client stores the crash log.
+    'crash_log_file': os.path.join(gettempdir(), CRASH_LOG_FILE),
 }
 
 # mutable configs
@@ -93,8 +95,8 @@ CONFIG = {
     'localBackendUrl': 'https://localhost:9200/',
     'sync_timeout': 60,
     'clientRootSyncPath': get_client_root_path(),
-    'tempFolderPath': os.path.join(get_client_root_path(), 'temp'),
     'guiTestReportDir': os.path.join(CURRENT_DIR.parent, 'reports'),
+    'test_temp_dir': os.path.join(get_client_root_path(), 'temp'),
     'record_video_on_failure': False,
     'syncConnectionName': DEFAULT_SYNC_CONNECTION_NAME,
     ###############################
@@ -143,7 +145,7 @@ def normalize_configs():
         elif key in (
             'localBackendUrl',
             'clientRootSyncPath',
-            'tempFolderPath',
+            'test_temp_dir',
             'guiTestReportDir',
         ):
             # make sure there is always one trailing slash
@@ -176,6 +178,8 @@ def init_config():
     CONFIG['appLogFile'] = os.path.join(
         CONFIG["guiTestReportDir"], CUMULATIVE_APP_LOG_FILE
     )
+    # file to store cumulative app logs for the entire test run
+    CONFIG['crash_report_file'] = os.path.join(CONFIG["guiTestReportDir"], 'crash.log')
     # create report dir if it not exist
     if not os.path.exists(CONFIG['guiTestReportDir']):
         os.makedirs(CONFIG['guiTestReportDir'])
@@ -190,6 +194,7 @@ def set_config(key, value):
     if key in READONLY_CONFIG:
         raise KeyError(f'Cannot set read-only config: {key}')
     CONFIG[key] = value
+
 
 def reset_sync_connection_name():
     set_config("syncConnectionName", DEFAULT_SYNC_CONNECTION_NAME)

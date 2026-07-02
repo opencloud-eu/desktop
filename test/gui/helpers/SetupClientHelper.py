@@ -90,7 +90,7 @@ def parse_username_from_sync_path(sync_path):
 
 
 def get_temp_resource_path(resource_name):
-    return join(get_config('tempFolderPath'), resource_name)
+    return join(get_config('test_temp_dir'), resource_name)
 
 
 def get_current_user_sync_path():
