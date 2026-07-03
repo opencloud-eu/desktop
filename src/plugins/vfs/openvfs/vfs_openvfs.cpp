@@ -210,7 +210,8 @@ void OpenVFS::startImpl(const VfsSetupParams &params)
     connect(_openVfsProcess, &QProcess::finished, this, [logPrefix, this] { qCFatal(lcOpenVFS) << logPrefix() << "finished" << _openVfsProcess->exitCode(); });
     connect(_openVfsProcess, &QProcess::started, this, [logPrefix, this] {
         qCInfo(lcOpenVFS) << logPrefix() << u"started";
-
+        // TODO:
+        // give it time to mount
         QTimer::singleShot(1s, this, &Vfs::started);
     });
     connect(_openVfsProcess, &QProcess::errorOccurred, this, [logPrefix, this] { qCWarning(lcOpenVFS) << logPrefix() << _openVfsProcess->errorString(); });
