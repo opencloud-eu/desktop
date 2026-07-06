@@ -65,3 +65,16 @@ def save_app_log(scenario):
 def cleanup_current_app_log():
     if os.path.exists(get_config('currentAppLogFile')):
         os.remove(get_config('currentAppLogFile'))
+
+
+def save_crash_log(scenario):
+    with open(get_config('crash_report_file'), 'a') as log_file:
+        logs = ["=" * 80]
+        logs.append(
+            f"Scenario: {scenario.name}\nLocation: {scenario.filename}:{scenario.line}"
+        )
+        logs.append("-" * 80)
+        logs.append("")  # extra line break
+        log_file.write("\n".join(logs))
+        with open(get_config('crash_log_file'), 'r') as current_log:
+            log_file.write(f"{current_log.read()}\n\n")
