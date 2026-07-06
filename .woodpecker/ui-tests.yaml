@@ -130,15 +130,6 @@ steps:
       # Cannot handle this tags format inside a container: --tags='@smoke and not @skip'
       BEHAVE_PARAMETERS: '--tags=~@skip ${SUITES}'
 
-  # - name: crash-log
-  #   image: *alpine_image
-  #   when:
-  #     - status:
-  #         - success
-  #         - failure
-  #   commands:
-  #     - cat test/gui/tmp/OpenCloud-crash.log 2>/dev/null || exit 0
-
   - name: upload-test-reports
     image: *minio_image
     when:

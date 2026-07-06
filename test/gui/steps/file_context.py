@@ -42,11 +42,10 @@ def file_exists(file_path, timeout=get_config('min_timeout')):
     )
 
 
-# To create folders in a temporary directory, we set is_temp_folder True
-# And if is_temp_folder is True, the create_folder function create folders in tempFolderPath
+# To create folders in a temporary directory, set is_temp_folder True
 def create_folder(foldername, username=None, is_temp_folder=False):
     if is_temp_folder:
-        folder_path = join(get_config('tempFolderPath'), foldername)
+        folder_path = join(get_config('test_temp_dir'), foldername)
     else:
         folder_path = get_resource_path(foldername, username)
     os.makedirs(prefix_path_namespace(convert_path_separators_for_os(folder_path)))
@@ -60,7 +59,7 @@ def rename_file_folder(source, destination):
 
 def create_file_with_size(filename, filesize, is_temp_folder=False):
     if is_temp_folder:
-        file = join(get_config('tempFolderPath'), filename)
+        file = join(get_config('test_temp_dir'), filename)
     else:
         file = get_resource_path(filename)
     with open(prefix_path_namespace(file), 'wb') as f:
@@ -334,7 +333,7 @@ def step(context, username, file):
 
 @When(r'user "{username}" moves {resource_type} "{resource_name}" from the temp folder into the sync folder')
 def step(context, username, resource_type, resource_name):
-    source_dir = join(get_config('tempFolderPath'), resource_name)
+    source_dir = join(get_config('test_temp_dir'), resource_name)
     move_resource(username, resource_type, source_dir, '/', True)
 
 
@@ -343,7 +342,7 @@ def step(context, username, resource_type, resource_name):
     regexp=True,
 )
 def step(context, username, resource_type, resource_name):
-    destination = join(get_config('tempFolderPath'), resource_name)
+    destination = join(get_config('test_temp_dir'), resource_name)
     move_resource(username, resource_type, resource_name, destination)
 
 
@@ -395,7 +394,7 @@ def step(context, zip_file_name):
 
     for row in context.table:
         resource_list.append(row[0])
-        resource = join(get_config('tempFolderPath'), row[0])
+        resource = join(get_config('test_temp_dir'), row[0])
         if row[1] == 'folder':
             os.makedirs(resource)
         elif row[1] == 'file':
@@ -403,7 +402,7 @@ def step(context, zip_file_name):
             if len(row) > 2 and row[2]:
                 content = row[2]
             write_file(resource, content)
-    create_zip(resource_list, zip_file_name, get_config('tempFolderPath'))
+    create_zip(resource_list, zip_file_name, get_config('test_temp_dir'))
 
 
 @When('user "{username}" unzips the zip file "{zip_file_name}" inside the sync root')

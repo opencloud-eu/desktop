@@ -16,6 +16,7 @@ from helpers.ReportHelper import (
     take_screenshot,
     save_app_log,
     cleanup_current_app_log,
+    save_crash_log,
 )
 from step_types.types import *  # register all step types
 
@@ -49,6 +50,9 @@ def after_scenario(context, scenario):
         get_config('currentAppLogFile')
     ):
         save_app_log(scenario)
+
+    if os.path.exists(get_config('crash_log_file')):
+        save_crash_log(scenario)
 
     # clean up sync dir
     if os.path.exists(get_config("clientRootSyncPath")):
