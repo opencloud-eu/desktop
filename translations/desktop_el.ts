@@ -1776,7 +1776,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="201"/>
         <source>Unable to retrieve registration info. Error: %1</source>
-        <translation type="unfinished"/>
+        <translation>Αδυναμία ανάκτησης πληροφοριών εγγραφής. Σφάλμα: %1</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="426"/>
