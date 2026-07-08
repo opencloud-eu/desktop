@@ -95,7 +95,7 @@ def create_app_session():
         f'{get_config("app_path")} -s {command_args} --logdebug',
     )
     options.set_capability('appium:environ', get_app_env())
-    options.set_capability('timeouts', { 'implicit': get_config('min_timeout') * 1000 })
+    options.set_capability('timeouts', {'implicit': get_config('min_timeout') * 1000})
     app_driver = Remote(command_executor=get_config('webdriver_url'), options=options)
     # NOTE: these methods to set implicit wait are not working:
     # app_driver.implicitly_wait(5)

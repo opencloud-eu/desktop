@@ -290,8 +290,10 @@ def wait_for_resource_to_sync(
     if synced:
         if check_queued:
             loaded = wait_for(
-                lambda: not SyncConnection.is_sync_in_progress(
-                    get_config('syncConnectionName')
+                lambda: (
+                    not SyncConnection.is_sync_in_progress(
+                        get_config('syncConnectionName')
+                    )
                 ),
                 get_config('sync_timeout'),
             )

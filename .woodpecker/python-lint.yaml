@@ -1,0 +1,22 @@
+variables:
+  - &astral_uv_image 'astral/uv:python3.12-trixie'
+when:
+  - branch:
+      - main
+      - stable-*
+    event:
+      - push
+      - manual
+  - event: pull_request
+
+workspace:
+  base: /woodpecker
+  path: desktop
+
+steps:
+  - name: lint-test-code
+    image: *astral_uv_image
+    commands:
+      - cd test/gui
+      - uv sync --only-group lint 
+      - make python-lint
