@@ -29,7 +29,11 @@ else:
         content = content.replace('socketConnect = SocketConnect()', '')
         content = content.replace(
             'from gi.repository import GObject, Nautilus',
-            'import gi\n\ngi.require_version(\'Nautilus\', \'4.0\')\nfrom gi.repository import GObject, Nautilus',
+            (
+                "import gi\n\n"
+                "gi.require_version('Nautilus', '4.0')\n"
+                "from gi.repository import GObject, Nautilus"
+            ),
         )
 
         with open(syncstate_lib_file, 'w') as f:
@@ -65,7 +69,8 @@ SYNC_STATUS = {
 
 SYNC_PATTERNS = {
     # default sync patterns for the initial sync (after adding account)
-    # the pattern can be of TWO types depending on the available resources (files/folders)
+    # the pattern can be of TWO types depending on the
+    # available resources (files/folders)
     'initial': [
         # when adding account via New Account wizard
         [
@@ -157,9 +162,7 @@ def clear_socket_messages(resource=''):
     global socket_messages
     if resource:
         resource_messages = set(filter_messages_for_item(socket_messages, resource))
-        socket_messages = [
-            msg for msg in socket_messages if msg not in resource_messages
-        ]
+        socket_messages = [msg for msg in socket_messages if msg not in resource_messages]
     else:
         socket_messages.clear()
 
@@ -290,11 +293,7 @@ def wait_for_resource_to_sync(
     if synced:
         if check_queued:
             loaded = wait_for(
-                lambda: (
-                    not SyncConnection.is_sync_in_progress(
-                        get_config('syncConnectionName')
-                    )
-                ),
+                lambda: not SyncConnection.is_sync_in_progress(get_config('syncConnectionName')),
                 get_config('sync_timeout'),
             )
             sync_info.append(f'Sync complete (UI): {loaded}')
@@ -304,7 +303,7 @@ def wait_for_resource_to_sync(
                     + '\n'.join(sync_info)
                 )
         return
-    elif not force_sync:
+    if not force_sync:
         # if the sync pattern doesn't match then check the last sync status
         # and pass the step if the last sync status is STATUS:OK
         status = get_current_sync_status(resource, resource_type)
@@ -343,9 +342,7 @@ def has_sync_pattern(patterns, resource=None):
     for pattern in patterns:
         pattern_len = len(pattern)
         for idx, _ in enumerate(messages):
-            actual_pattern = generate_sync_pattern_from_messages(
-                messages[idx : idx + pattern_len]
-            )
+            actual_pattern = generate_sync_pattern_from_messages(messages[idx : idx + pattern_len])
             if len(actual_pattern) < pattern_len:
                 break
             if pattern_len == len(actual_pattern) and pattern == actual_pattern:
@@ -392,9 +389,7 @@ def wait_for_resource_to_have_sync_status(
             expected = 'be sync ignored'
         else:
             expected = 'be synced'
-        raise ValueError(
-            f'Expected {resource_type} "{resource}" to {expected}, but not.'
-        )
+        raise ValueError(f'Expected {resource_type} "{resource}" to {expected}, but not.')
 
 
 def wait_for_resource_to_have_sync_error(resource, resource_type):
