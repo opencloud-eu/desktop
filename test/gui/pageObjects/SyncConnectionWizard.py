@@ -4,6 +4,7 @@ from selenium.webdriver.common.keys import Keys
 
 from helpers.SetupClientHelper import get_current_user_sync_path
 from helpers.AppHelper import app
+from helpers.ConfigHelper import get_config
 
 
 class SyncConnectionWizard:
@@ -12,12 +13,19 @@ class SyncConnectionWizard:
     )
     BACK_BUTTON = SimpleNamespace(by=By.NAME, selector="< Back")
     NEXT_BUTTON = SimpleNamespace(by=By.NAME, selector="Next >")
-    SELECTIVE_SYNC_ROOT_FOLDER = SimpleNamespace(by=None, selector=None)
+    SELECTIVE_SYNC_ROOT_FOLDER = SimpleNamespace(
+        by=By.NAME,
+        selector=None
+    )
+    SELECTIVE_SYNC_TREE_FOLDER = SimpleNamespace(
+        by=By.XPATH,
+        selector="//table_cell[@name and contains(@states, 'checkable') and @name!='{space}']"
+    )
     ADD_SYNC_CONNECTION_BUTTON = SimpleNamespace(
         by=By.XPATH, selector="//dialog[@name='Add Space']//*[@name='Add Space']"
     )
     REMOTE_FOLDER_TREE = SimpleNamespace(by=None, selector=None)
-    SELECTIVE_SYNC_TREE_HEADER = SimpleNamespace(by=None, selector=None)
+    SELECTIVE_SYNC_TREE_HEADER = SimpleNamespace(by=By.NAME, selector='{header}')
     CANCEL_FOLDER_SYNC_CONNECTION_WIZARD = SimpleNamespace(
         by=By.NAME, selector="Cancel"
     )
@@ -28,7 +36,7 @@ class SyncConnectionWizard:
     CREATE_REMOTE_FOLDER_CONFIRM_BUTTON = SimpleNamespace(by=None, selector=None)
     REFRESH_BUTTON = SimpleNamespace(by=None, selector=None)
     REMOTE_FOLDER_SELECTION_INPUT = SimpleNamespace(by=None, selector=None)
-    ADD_FOLDER_SYNC_BUTTON = SimpleNamespace(by=None, selector=None)
+    ADD_SPACE_BUTTON = SimpleNamespace(by=By.NAME, selector='Add Space')
     WARN_LABEL = SimpleNamespace(by=None, selector=None)
     CHOOSE_WHAT_TO_SYNC_FOLDER_TREE = SimpleNamespace(by=None, selector=None)
 
@@ -60,7 +68,10 @@ class SyncConnectionWizard:
 
     @staticmethod
     def back():
-        squish.clickButton(squish.waitForObject(SyncConnectionWizard.BACK_BUTTON))
+        app().find_element(
+            SyncConnectionWizard.BACK_BUTTON.by,
+            SyncConnectionWizard.BACK_BUTTON.selector
+        ).click()
 
     @staticmethod
     def select_remote_destination_folder(folder):
@@ -71,25 +82,25 @@ class SyncConnectionWizard:
 
     @staticmethod
     def deselect_all_remote_folders():
-        element = app().find_element(
-            SyncConnectionWizard.ADD_SYNC_CONNECTION_BUTTON.by,
-            SyncConnectionWizard.ADD_SYNC_CONNECTION_BUTTON.selector,
+        root = app().find_element(
+            SyncConnectionWizard.SELECTIVE_SYNC_ROOT_FOLDER.by,
+            get_config('syncConnectionName'),
         )
-        element.send_keys(Keys.ARROW_DOWN)
-        element.native_send_keys(Keys.SPACE)  # uncheck the root folder
+        root.native_click()
+        root.native_send_keys(Keys.SPACE)  # uncheck the root folder
 
     @staticmethod
     def sort_by(header_text):
-        squish.mouseClick(
-            squish.waitForObject(
-                {
-                    "container": SyncConnectionWizard.SELECTIVE_SYNC_TREE_HEADER,
-                    "text": header_text,
-                    "type": "HeaderViewItem",
-                    "visible": True,
-                }
-            )
+        element = app().find_element(
+            SyncConnectionWizard.SELECTIVE_SYNC_TREE_HEADER.by,
+            SyncConnectionWizard.SELECTIVE_SYNC_TREE_HEADER.selector.format(header=header_text)
         )
+        # ISSUE: https://github.com/opencloud-eu/desktop/pull/879
+        # Cannot select table header element by click event
+        # Select the table header element using keyboard events as a workaround
+        # TODO: Remove the workaround and uncomment 'click' action
+        # element.click()
+        element.native_click()
 
     @staticmethod
     def add_sync_connection():
@@ -100,20 +111,21 @@ class SyncConnectionWizard:
 
     @staticmethod
     def get_item_name_from_row(row_index):
-        folder_row = {
-            "row": row_index,
-            "container": SyncConnectionWizard.SELECTIVE_SYNC_ROOT_FOLDER,
-            "type": "QModelIndex",
-        }
-        return str(squish.waitForObjectExists(folder_row).displayText)
+        elements = app().find_elements(
+            SyncConnectionWizard.SELECTIVE_SYNC_TREE_FOLDER.by,
+            SyncConnectionWizard.SELECTIVE_SYNC_TREE_FOLDER.selector.format(space=get_config("syncConnectionName"))
+        )
+        return str(elements[row_index].text)
+
 
     @staticmethod
     def is_root_folder_checked():
-        state = squish.waitForObject(SyncConnectionWizard.SELECTIVE_SYNC_ROOT_FOLDER)[
-            "checkState"
-        ]
-        return state == "checked"
-
+        element = app().find_element(
+            SyncConnectionWizard.SELECTIVE_SYNC_ROOT_FOLDER.by,
+            get_config("syncConnectionName")
+        )
+        return element.get_attribute("checked") == "true"
+        
     @staticmethod
     def cancel_folder_sync_connection_wizard():
         app().find_element(
@@ -180,28 +192,34 @@ class SyncConnectionWizard:
 
     @staticmethod
     def get_local_sync_path():
-        return str(
-            squish.waitForObjectExists(
-                SyncConnectionWizard.CHOOSE_LOCAL_SYNC_FOLDER
-            ).displayText
+        element = app().find_element(
+            SyncConnectionWizard.CHOOSE_LOCAL_SYNC_FOLDER.by,
+            SyncConnectionWizard.CHOOSE_LOCAL_SYNC_FOLDER.selector
         )
+        return str(element.text)
 
     @staticmethod
     def get_warn_label():
         return str(squish.waitForObjectExists(SyncConnectionWizard.WARN_LABEL).text)
 
     @staticmethod
-    def is_add_sync_folder_button_enabled():
-        return squish.waitForObjectExists(
-            SyncConnectionWizard.ADD_FOLDER_SYNC_BUTTON
-        ).enabled
+    def is_add_space_button_enabled():
+        element = app().find_element(
+            SyncConnectionWizard.ADD_SPACE_BUTTON.by,
+            SyncConnectionWizard.ADD_SPACE_BUTTON.selector
+        )
+        return element.is_enabled()
 
     @staticmethod
-    def select_or_unselect_folders_to_sync(folders, select=True):
-        expected_state = "true" if select else "false"
+    def get_relative_folder_element(target_folder, parent_row):
+        possible_els = app().find_elements(By.NAME, target_folder)
+        for folder in possible_els:
+            if folder.rect["x"] > parent_row:
+                return folder
 
-        if select:
-            SyncConnectionWizard.deselect_all_remote_folders()
+    @staticmethod
+    def toggle_folder_selection(folders, select=True):
+        expected_state = "true" if select else "false"
 
         for folder_path in folders:
             parents = folder_path.strip("/").split("/")
@@ -209,45 +227,53 @@ class SyncConnectionWizard:
 
             parent_element = None
             parent_position = 0
-            for parent in parents:
+            target_element = None
+            for idx, parent in enumerate(parents):
                 p_elements = app().find_elements(By.NAME, parent)
+                next_item = idx + 1 < len(parents) and parents[idx + 1] or target_folder
+
                 # select nested folders based on the position of the parent folder
                 for p_element in p_elements:
-                    if (
-                        p_element.get_attribute("checked") == 'true'
-                        and p_element.rect["x"] > parent_position
+                    if p_element.rect["x"] >= parent_position and (
+                        select or p_element.get_attribute("checked") == 'true'
                     ):
                         parent_element = p_element
                         parent_position = p_element.rect["x"]
                         break
+
                 parent_element.native_double_click()  # expand the folder
+                target_element = SyncConnectionWizard.get_relative_folder_element(
+                    next_item, parent_position
+                )
+
                 # retry once if the folder is not expanded
-                if parent_element.is_selected():
-                    print('[WARN] Folder was not expanded, retrying with space key')
-                    # expand using space key
+                if not target_element or not target_element.is_displayed():
+                    print('[WARN] Folder was not expanded, retrying with arrow key')
+                    # expand using arrow key
                     parent_element.native_click()
-                    parent_element.native_send_keys(Keys.SPACE)
-                if parent_element.is_selected():
+                    parent_element.native_send_keys(Keys.ARROW_RIGHT)
+                    # try to get the next target again
+                    target_element = SyncConnectionWizard.get_relative_folder_element(
+                        next_item, parent_position
+                    )
+                if not target_element or not target_element.is_displayed():
                     raise AssertionError(f'Failed to expand folder: {parent}')
 
-            folder_element = None
-            target_folders = app().find_elements(By.NAME, target_folder)
-            # select the folder that is inside the current parent position
-            for folder in target_folders:
-                if folder.rect["x"] > parent_position:
-                    folder_element = folder
-                    break
-            is_checked = folder_element.get_attribute("checked")
+            if not target_element:
+                target_element = SyncConnectionWizard.get_relative_folder_element(
+                    target_folder, parent_position
+                )
+            is_checked = target_element.get_attribute("checked")
             # return early if the folder is already in the expected state.
             if is_checked == expected_state:
                 return
 
-            folder_element.native_click()
-            if not folder_element.is_selected():
+            target_element.native_click()
+            if not target_element.is_selected():
                 raise AssertionError(f"Failed to focus folder: {target_folder}")
-            folder_element.native_send_keys(Keys.SPACE)  # toggle the folder selection
+            target_element.native_send_keys(Keys.SPACE)  # toggle the folder selection
 
-            is_checked = folder_element.get_attribute("checked")
+            is_checked = target_element.get_attribute("checked")
             if is_checked != expected_state:
                 raise AssertionError(
                     f"Failed to {'select' if select else 'unselect'} folder: {folder_path}"
@@ -259,7 +285,7 @@ class SyncConnectionWizard:
 
     @staticmethod
     def __handle_folder_selection(folders, should_select, new_sync_connection_wizard):
-        SyncConnectionWizard.select_or_unselect_folders_to_sync(folders, should_select)
+        SyncConnectionWizard.toggle_folder_selection(folders, should_select)
 
         if new_sync_connection_wizard:
             SyncConnectionWizard.add_sync_connection()

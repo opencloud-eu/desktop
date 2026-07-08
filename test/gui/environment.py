@@ -3,7 +3,7 @@ import os
 from behave.model_core import Status
 
 from helpers import ScreenRecorder
-from helpers.ConfigHelper import init_config
+from helpers.ConfigHelper import init_config, reset_sync_connection_name
 from helpers.api.provisioning import delete_created_users
 from helpers.SpaceHelper import delete_project_spaces
 from helpers.ConfigHelper import get_config
@@ -16,6 +16,7 @@ from helpers.ReportHelper import (
     take_screenshot,
     save_app_log,
     cleanup_current_app_log,
+    save_crash_log,
 )
 from step_types.types import *  # register all step types
 
@@ -50,6 +51,9 @@ def after_scenario(context, scenario):
     ):
         save_app_log(scenario)
 
+    if os.path.exists(get_config('crash_log_file')):
+        save_crash_log(scenario)
+
     # clean up sync dir
     if os.path.exists(get_config("clientRootSyncPath")):
         for entry in os.scandir(get_config("clientRootSyncPath")):
@@ -69,3 +73,5 @@ def after_scenario(context, scenario):
 
     cleanup_current_app_log()
     clear_socket_messages()
+
+    reset_sync_connection_name()

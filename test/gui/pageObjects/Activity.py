@@ -2,7 +2,7 @@
 from types import SimpleNamespace
 from appium.webdriver.common.appiumby import AppiumBy as By
 from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, WebDriverException
 
 from helpers.FilesHelper import build_conflicted_regex
 from helpers.ConfigHelper import get_config
@@ -13,8 +13,7 @@ from helpers.Utils import wait_for
 class Activity:
     TAB_CONTAINER = SimpleNamespace(by=None, selector=None)
     SUBTAB_CONTAINER = SimpleNamespace(
-        by=By.XPATH,
-        selector="//page_tab[starts-with(@name, '{tab_name}')]"
+        by=By.XPATH, selector="//page_tab[starts-with(@name, '{tab_name}')]"
     )
     NOT_SYNCED_TABLE = SimpleNamespace(by=None, selector=None)
     LOCAL_ACTIVITY_FILTER_BUTTON = SimpleNamespace(by=By.NAME, selector="Filter")
@@ -30,8 +29,8 @@ class Activity:
     NOT_SYNCED_FILTER_OPTION_SELECTOR = SimpleNamespace(by=None, selector=None)
     SYNCED_ACTIVITY_TABLE_HEADER_SELECTOR = SimpleNamespace(by=None, selector=None)
     NOT_SYNCED_ACTIVITY_TABLE_HEADER_SELECTOR = SimpleNamespace(by=None, selector=None)
+    NOT_SYNCED_ACTIVITY_CONFLICT_FILE = SimpleNamespace(by=By.XPATH, selector="//*[starts-with(@name, '{filename} (conflicted copy')]")
     SYNCED_ACTIVITY_STATUS = SimpleNamespace(by=By.NAME, selector=None)
-
 
     @staticmethod
     def get_not_synced_file_selector(resource):
@@ -59,12 +58,17 @@ class Activity:
         app().find_element(Activity.SUBTAB_CONTAINER.by, selector).click()
 
     @staticmethod
-    def check_file_exist(filename):
-        squish.waitForObjectExists(
-            Activity.get_not_synced_file_selector(
-                RegularExpression(build_conflicted_regex(filename))
-            )
+    def has_conflict_file(filename):
+        filename = filename.rsplit(".", 1)[0]
+        has_activity = wait_for(
+            lambda: app().find_element(
+                Activity.NOT_SYNCED_ACTIVITY_CONFLICT_FILE.by,
+                Activity.NOT_SYNCED_ACTIVITY_CONFLICT_FILE.selector.format(filename=filename)
+            ).is_displayed(),
+            get_config('max_timeout')
         )
+        if not has_activity:
+            raise AssertionError(f"File conflict activity not found")
 
     @staticmethod
     def is_resource_blacklisted(filename):
@@ -93,10 +97,20 @@ class Activity:
     @staticmethod
     def has_sync_status(filename, status):
         try:
-            app().find_element(Activity.SYNCED_ACTIVITY_STATUS.by, status)
-            return True
+            row = app().find_element(By.NAME, filename)
+            row_y = row.rect['y']
+            status_cells = app().find_elements(
+                Activity.SYNCED_ACTIVITY_STATUS.by, status
+            )
+            for status_el in status_cells:
+                if status_el.rect['y'] == row_y:
+                    return True
+            return False
         except NoSuchElementException:
             return False
+        except WebDriverException as e:
+            if "NoneType" in str(e):
+                return False
 
     @staticmethod
     def select_synced_filter(sync_filter):

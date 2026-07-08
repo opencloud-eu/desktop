@@ -1,15 +1,16 @@
 PYTHON_LINT_PATHS:="./**/*.py"
 
 .PHONY: install
-install: pip-install install-chromium
+install: uv-install install-chromium
 
+.PHONY: uv-install
+uv-install:
+	uv venv --system-site-packages --allow-existing
+	uv sync --frozen	
+	
 .PHONY: install-chromium
 install-chromium:
-	playwright install chromium
-
-.PHONY: pip-install
-pip-install:
-	python3 -m pip install -r requirements.txt
+	uv run playwright install chromium
 
 .PHONY: python-lint
 python-lint:

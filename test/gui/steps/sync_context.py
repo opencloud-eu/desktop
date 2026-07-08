@@ -1,4 +1,5 @@
-from behave import when as When, then as Then
+import time
+from behave import when as When, then as Then, given as Given
 from sure import ensure
 
 from pageObjects.SyncConnectionWizard import SyncConnectionWizard
@@ -108,15 +109,15 @@ def step(context):
     Toolbar.open_settings_tab()
 
 
-@Then('the table of conflict warnings should include file "|any|"')
+@Then('the table of conflict warnings should include file "{filename}"')
 def step(context, filename):
-    Activity.check_file_exist(filename)
+    Activity.has_conflict_file(filename)
 
 
-@Then('the file "{filename}" should be blacklisted')
-def step(context, filename):
-    with ensure('File is Blacklisted'):
-        Activity.is_resource_blacklisted(filename).should.be.true
+@Then('the {resource_type:ResourceType} "{resourceName}" should be blacklisted')
+def step(context, resource_type, resourceName):
+    with ensure(f'{resource_type.capitalize()} is blacklisted'):
+        Activity.is_resource_blacklisted(resourceName).should.be.true
 
 
 @Then('the file "|any|" should be ignored')
@@ -144,17 +145,18 @@ def step(context):
             Toolbar.has_tab(tab_name).should.be.true
 
 
-@When('the user selects the following folders to sync:')
+@When('the user selects only the following folders to sync:')
 def step(context):
     folders = []
     for row in context.table:
         folders.append(row[0])
+    SyncConnectionWizard.deselect_all_remote_folders()
     SyncConnectionWizard.select_folders_to_sync(
         folders, new_sync_connection_wizard=True
     )
 
 
-@When('the user sorts the folder list by "|any|"')
+@When('the user sorts the folder list by "{header_text}"')
 def step(context, header_text):
     if (header_text := header_text.capitalize()) in ['Size', 'Name']:
         SyncConnectionWizard.sort_by(header_text)
@@ -164,20 +166,20 @@ def step(context, header_text):
 
 @Then('the sync all checkbox should be checked')
 def step(context):
-    test.compare(
-        SyncConnectionWizard.is_root_folder_checked(),
-        True,
+    with ensure(
         'Sync all checkbox is checked',
-    )
+    ):
+        SyncConnectionWizard.is_root_folder_checked().should.be.true
 
 
 @Then('the folders should be in the following order:')
 def step(context):
     row_index = 0
-    for row in context.table[1:]:
+    for row in context.table:
         expected_folder = row[0]
         actual_folder = SyncConnectionWizard.get_item_name_from_row(row_index)
-        test.compare(actual_folder, expected_folder)
+        with ensure(f"Expected '{expected_folder}', got '{actual_folder}'"):
+            actual_folder.should.be.equal(expected_folder)
 
         row_index += 1
 
@@ -195,7 +197,7 @@ def step(context):
 
 
 @When(
-    'the user sets the temp folder "|any|" as local sync path in sync connection wizard'
+    'the user sets the temp folder "{folder_name}" as local sync path in sync connection wizard'
 )
 def step(context, folder_name):
     sync_path = get_temp_resource_path(folder_name)
@@ -292,13 +294,10 @@ def step(context):
     SyncConnectionWizard.open_sync_connection_wizard()
 
 
-@Then('the button to open sync connection wizard should be disabled')
+@Then('the add space button should be disabled')
 def step(context):
-    test.compare(
-        False,
-        SyncConnectionWizard.is_add_sync_folder_button_enabled(),
-        'Button to open sync connection wizard should be disabled',
-    )
+    with ensure('Add space Button to open sync connection wizard should be disabled'):
+        SyncConnectionWizard.is_add_space_button_enabled().should.be.false
 
 
 @When('the user checks the activities of account "{account}"')
@@ -341,13 +340,15 @@ def step(context):
     # wait for error message to disappear
     SyncConnection.wait_for_error_label(False)
 
-    with ensure(f'Expected error message: "{expected_error_message}" but got: "{actual_error_message}"'):
+    with ensure(
+        f'Expected error message: "{expected_error_message}" but got: "{actual_error_message}"'
+    ):
         expected_error_message.should.equal(actual_error_message)
 
 
-@Given('the user has waited for "|any|" seconds')
+@Given('the user has waited for "{wait_for}" seconds')
 def step(context, wait_for):
-    squish.snooze(float(wait_for))
+    time.sleep(float(wait_for))
 
 
 @When(

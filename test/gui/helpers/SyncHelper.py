@@ -87,6 +87,10 @@ SYNC_PATTERNS = {
     ],
     'root_synced': [
         [
+            SYNC_STATUS['NOP'],
+            SYNC_STATUS['UPDATE'],
+        ],
+        [
             SYNC_STATUS['OK'],
             SYNC_STATUS['OK'],
             SYNC_STATUS['UPDATE'],
@@ -242,7 +246,7 @@ def get_current_sync_status(resource, resource_type):
 
 
 def wait_for_resource_to_sync(
-    resource, resource_type='FOLDER', patterns=None, force_sync=False
+    resource, resource_type='FOLDER', patterns=None, force_sync=False, check_queued=True
 ):
     listen_sync_status_for_item(resource, resource_type)
 
@@ -252,32 +256,51 @@ def wait_for_resource_to_sync(
     if patterns is None:
         patterns = get_synced_pattern(resource)
 
+    sync_info = []
+    synced = False
     if force_sync:
-        initial_timeout = get_config('min_timeout')
+        initial_timeout = get_config('min_sync_timeout')
         # first try with 5 seconds timeout
         synced = wait_for(
             lambda: has_sync_pattern(patterns, resource),
             initial_timeout,
         )
         if not synced:
-            # trigger force sync if the current status is OK
-            status = get_current_sync_status(resource, resource_type)
-            if status.startswith(SYNC_STATUS['OK']):
-                print('[WARN] Retrying sync pattern check with force sync')
+            # do not trigger force sync if the sync is still in progress
+            if check_queued and SyncConnection.is_sync_in_progress(
+                get_config('syncConnectionName')
+            ):
+                print('[INFO] Sync is in progress. Waiting...')
+            elif has_sync_status(resource, SYNC_STATUS['OK']) or has_sync_status(
+                resource, SYNC_STATUS['UPDATE']
+            ):
+                sync_info.append('Force synced: True')
+                print('[INFO] Retrying sync pattern check with force sync')
                 SyncConnection.force_sync()
-        else:
-            clear_socket_messages(resource)
-            return
 
-    synced = wait_for(
-        lambda: has_sync_pattern(patterns, resource),
-        timeout - initial_timeout,
-    )
-
-    messages = read_and_update_socket_messages()
-    messages = filter_messages_for_item(messages, resource)
+    if not synced:
+        synced = wait_for(
+            lambda: has_sync_pattern(patterns, resource),
+            timeout,
+        )
+    sync_messages = read_and_update_socket_messages()
+    # clear stored socket messages
     clear_socket_messages(resource)
+    sync_info.append('Sync complete (socket): %s' % synced)
     if synced:
+        if check_queued:
+            loaded = wait_for(
+                lambda: not SyncConnection.is_sync_in_progress(
+                    get_config('syncConnectionName')
+                ),
+                get_config('sync_timeout'),
+            )
+            sync_info.append('Sync complete (UI): %s' % loaded)
+            if not loaded:
+                raise TimeoutError(
+                    '[ERROR] Sync is still in progress after matching the sync pattern.'
+                    + '\n'.join(sync_info)
+                )
         return
     elif not force_sync:
         # if the sync pattern doesn't match then check the last sync status
@@ -291,17 +314,21 @@ def wait_for_resource_to_sync(
                 + '. So passing the step.'
             )
             return
+    print('[ERROR] Sync patterns: %s' % patterns)
+    print('[ERROR] Sync messages: %s' % sync_messages)
     raise TimeoutError(
-        'Timeout while waiting for sync to complete for ' + str(timeout) + ' seconds'
+        'Timeout while waiting for sync to complete for %s seconds.\n' % timeout
+        + '\n'.join(sync_info)
     )
 
 
-def wait_for_initial_sync_to_complete(path):
+def wait_for_initial_sync_to_complete(path, check_queued=True):
     wait_for_resource_to_sync(
         path,
         'FOLDER',
         get_initial_sync_patterns(),
         True,
+        check_queued,
     )
 
 

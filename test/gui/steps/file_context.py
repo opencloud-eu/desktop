@@ -42,11 +42,10 @@ def file_exists(file_path, timeout=get_config('min_timeout')):
     )
 
 
-# To create folders in a temporary directory, we set is_temp_folder True
-# And if is_temp_folder is True, the create_folder function create folders in tempFolderPath
+# To create folders in a temporary directory, set is_temp_folder True
 def create_folder(foldername, username=None, is_temp_folder=False):
     if is_temp_folder:
-        folder_path = join(get_config('tempFolderPath'), foldername)
+        folder_path = join(get_config('test_temp_dir'), foldername)
     else:
         folder_path = get_resource_path(foldername, username)
     os.makedirs(prefix_path_namespace(convert_path_separators_for_os(folder_path)))
@@ -60,7 +59,7 @@ def rename_file_folder(source, destination):
 
 def create_file_with_size(filename, filesize, is_temp_folder=False):
     if is_temp_folder:
-        file = join(get_config('tempFolderPath'), filename)
+        file = join(get_config('test_temp_dir'), filename)
     else:
         file = get_resource_path(filename)
     with open(prefix_path_namespace(file), 'wb') as f:
@@ -89,10 +88,14 @@ def wait_and_try_to_write_file(resource, content):
 
 
 def create_zip(resources, zip_file_name, cwd=''):
+    original_cwd = os.getcwd()
     os.chdir(cwd)
-    with zipfile.ZipFile(zip_file_name, 'w') as zipped_file:
-        for resource in resources:
-            zipped_file.write(resource)
+    try:
+        with zipfile.ZipFile(zip_file_name, 'w') as zipped_file:
+            for resource in resources:
+                zipped_file.write(resource)
+    finally:
+        os.chdir(original_cwd)
 
 
 def extract_zip(zip_file_path, destination_dir):
@@ -239,17 +242,17 @@ def step(context, resource_type, resource):
         exists(resource_path).should.be.false
 
 
-@Given('the user has changed the content of local file "|any|" to:')
+@Given('the user has changed the content of local file "{filename}" to:')
 def step(context, filename):
-    file_content = '\n'.join(context.multiLineText)
+    file_content = context.text
     wait_and_write_file(get_resource_path(filename), file_content)
 
 
 @Then(
-    'a conflict file for "|any|" should exist on the file system with the following content'
+    'a conflict file for "{filename}" should exist on the file system with the following content'
 )
 def step(context, filename):
-    expected = '\n'.join(context.multiLineText)
+    expected = context.text
 
     onlyfiles = [
         f for f in os.listdir(get_resource_path()) if isfile(get_resource_path(f))
@@ -297,13 +300,13 @@ def step(context, username):
         wait_and_write_file(file, '')
 
 
-@Given('the user has created a folder "|any|" in temp folder')
+@Given('the user has created a folder "{folder_name}" in temp folder')
 def step(context, folder_name):
     create_folder(folder_name, is_temp_folder=True)
 
 
 @Given(
-    'the user has created "|any|" files each of size "|any|" bytes inside folder "|any|" in temp folder'
+    'the user has created "{file_number}" files each of size "{file_size}" bytes inside folder "{folder_name}" in temp folder'
 )
 def step(context, file_number, file_size, folder_name):
     current_sync_path = get_temp_resource_path(folder_name)
@@ -328,12 +331,9 @@ def step(context, username, file):
         f.read()
 
 
-@When(
-    r'user "([^"]*)" moves (folder|file) "([^"]*)" from the temp folder into the sync folder',
-    regexp=True,
-)
+@When(r'user "{username}" moves {resource_type} "{resource_name}" from the temp folder into the sync folder')
 def step(context, username, resource_type, resource_name):
-    source_dir = join(get_config('tempFolderPath'), resource_name)
+    source_dir = join(get_config('test_temp_dir'), resource_name)
     move_resource(username, resource_type, source_dir, '/', True)
 
 
@@ -342,7 +342,7 @@ def step(context, username, resource_type, resource_name):
     regexp=True,
 )
 def step(context, username, resource_type, resource_name):
-    destination = join(get_config('tempFolderPath'), resource_name)
+    destination = join(get_config('test_temp_dir'), resource_name)
     move_resource(username, resource_type, resource_name, destination)
 
 
@@ -387,14 +387,14 @@ def step(context, user, file_name):
 
 
 @Given(
-    'the user has created a zip file "|any|" with the following resources in the temp folder'
+    'the user has created a zip file "{zip_file_name}" with the following resources in the temp folder'
 )
 def step(context, zip_file_name):
     resource_list = []
 
-    for row in context.table[1:]:
+    for row in context.table:
         resource_list.append(row[0])
-        resource = join(get_config('tempFolderPath'), row[0])
+        resource = join(get_config('test_temp_dir'), row[0])
         if row[1] == 'folder':
             os.makedirs(resource)
         elif row[1] == 'file':
@@ -402,10 +402,10 @@ def step(context, zip_file_name):
             if len(row) > 2 and row[2]:
                 content = row[2]
             write_file(resource, content)
-    create_zip(resource_list, zip_file_name, get_config('tempFolderPath'))
+    create_zip(resource_list, zip_file_name, get_config('test_temp_dir'))
 
 
-@When('user "|any|" unzips the zip file "|any|" inside the sync root')
+@When('user "{username}" unzips the zip file "{zip_file_name}" inside the sync root')
 def step(context, username, zip_file_name):
     destination_dir = get_resource_path('/', username)
     zip_file_path = join(destination_dir, zip_file_name)
@@ -420,7 +420,7 @@ def step(context, username, source):
     shutil.copy2(source_dir, destination_dir)
 
 
-@Given('the user has created folder "|any|" in the default home path')
+@Given('the user has created folder "{folder_name}" in the default home path')
 def step(context, folder_name):
     folder_path = join(get_config('home_dir'), folder_name)
     os.makedirs(prefix_path_namespace(folder_path))

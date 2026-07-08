@@ -9,6 +9,11 @@ echo "Test Report: $REPORT_URL/report.html"
 echo "Client Log: $REPORT_URL/opencloud.log"
 echo "AT_SPI Driver Log: $REPORT_URL/atspi_webdriver.log"
 
+has_crash_log=$(mc find s3/$REPORT_PATH/crash.log 2>/dev/null || true)
+if [[ -n "$has_crash_log" ]]; then
+  echo "Crash Log: $REPORT_URL/crash.log"
+fi
+
 screenshots=$(mc find s3/$REPORT_PATH/screenshots/ 2>/dev/null || true)
 if [[ -n "$screenshots" ]]; then
   echo "Screenshots:"

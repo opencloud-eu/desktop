@@ -57,7 +57,7 @@ Feature: Syncing files
             client content
             """
 
-    @skipOnWindows @skip
+    @skipOnWindows
     Scenario: Sync all is selected by default
         Given user "Alice" has created folder "simple-folder" in the server
         And user "Alice" has created folder "large-folder" in the server
@@ -94,7 +94,7 @@ Feature: Syncing files
         When the user selects manual sync folder option in advanced section
         And the user sets the sync path in sync connection wizard
         And the user selects "Personal" space in sync connection wizard
-        And the user selects the following folders to sync:
+        And the user selects only the following folders to sync:
             | folder        |
             | simple-folder |
         Then the folder "simple-folder" should exist on the file system
@@ -110,7 +110,7 @@ Feature: Syncing files
         And the file "large-folder/lorem.txt" should not exist on the file system
         And as "Alice" file "simple-folder/localFile.txt" should exist in the server
 
-    @issue-9733 @skipOnWindows @skip
+    @issue-9733 @skipOnWindows
     Scenario: sort folders list by name and size
         Given user "Alice" has created folder "123Folder" in the server
         And user "Alice" has uploaded file with content "small" to "123Folder/lorem.txt" in the server
@@ -152,7 +152,6 @@ Feature: Syncing files
             | aFolder   |
             | 123Folder |
             | bFolder   |
-        And the user cancels the sync connection wizard
 
     @smoke
     Scenario Outline: Syncing a folder to the server
@@ -393,7 +392,7 @@ Feature: Syncing files
         And the user waits for file "newfile.txt" to be synced
         Then as "Alice" file "newfile.txt" should exist in the server
 
-    @skip
+
     Scenario: File with spaces in the name can sync
         Given user "Alice" has set up a client with default settings
         When user "Alice" creates a file "file with space.txt" with the following content inside the sync folder
@@ -403,7 +402,7 @@ Feature: Syncing files
         And the user waits for file "file with space.txt" to be synced
         Then as "Alice" file "file with space.txt" should exist in the server
 
-    @skip
+
     Scenario: Syncing folders each having large number of files
         Given the user has created a folder "folder1" in temp folder
         And the user has created "500" files each of size "1048576" bytes inside folder "folder1" in temp folder
@@ -438,7 +437,7 @@ Feature: Syncing files
         And for user "Alice" sync folder "Personal" should not be displayed
         And for user "Alice" sync folder "Shares" should not be displayed
 
-    @skip
+
     Scenario: extract a zip file in the sync folder
         Given the user has created a zip file "archive.zip" with the following resources in the temp folder
             | resource  | type   | content    |
@@ -455,8 +454,7 @@ Feature: Syncing files
         And as "Alice" the file "file1.txt" should have the content "Test file1" in the server
         And as "Alice" the file "file2.txt" should have the content "Test file2" in the server
 
-
-    @skipOnWindows @skip
+    @skipOnWindows
     Scenario: sync remote folder to a local sync folder having special characters
         Given user "Alice" has created folder "~`!@#$^&()-_=+{[}];',)" in the server
         And user "Alice" has created folder "simple-folder" in the server
@@ -473,7 +471,7 @@ Feature: Syncing files
         When the user selects manual sync folder option in advanced section
         And the user sets the temp folder "~`!@#$^&()-_=+{[}];',)PRN%" as local sync path in sync connection wizard
         And the user selects "Personal" space in sync connection wizard
-        And the user selects the following folders to sync:
+        And the user selects only the following folders to sync:
             | folder                  |
             | ~`!@#$^&()-_=+{[}];',)  |
             | simple-folder           |
@@ -503,7 +501,7 @@ Feature: Syncing files
         And the folder "simple-folder" should exist on the file system
         And as "Alice" folder "simple-folder" should exist in the server
 
-    @skip
+
     Scenario: Sync a received shared folder with Viewer permission role
         Given user "Brian" has been created in the server with default attributes
         And user "Alice" has created folder "simple-folder" in the server
@@ -547,7 +545,7 @@ Feature: Syncing files
             | filename                                                                    |
             | 𒁰𒁱𒁲𒁳𒁴𒁵𒁶𒁷𒁸𒁹𒁺𒁻𒁼𒁾𒁿𒁰𒁱𒁲𒁳𒁴𒁵𒁶𒁷𒁸𒁹𒁺𒁻𒁼𒁾𒁿𒁰𒁱𒁲𒁳𒁴𒁵𒁶𒁷𒁸𒁹𒁺abôǣฎพฒฆ๘ตกกผพฒณญไใๅำ๊๒๔๗๘รศฬอฮ.txt |
 
-    @skip
+
 	Scenario: Sync a received shared folder with Editor permission role
         Given user "Brian" has been created in the server with default attributes
         And user "Alice" has created folder "simple-folder" in the server
