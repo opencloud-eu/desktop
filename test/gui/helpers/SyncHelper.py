@@ -24,7 +24,7 @@ else:
             syncstate_lib_file,
         )
         # do not instantiate SocketConnect in the script.
-        with open(syncstate_lib_file, 'r') as f:
+        with open(syncstate_lib_file) as f:
             content = f.read()
         content = content.replace('socketConnect = SocketConnect()', '')
         content = content.replace(
@@ -223,9 +223,9 @@ def filter_sync_messages(messages):
 def filter_messages_for_item(messages, item):
     filtered_messages = []
     for msg in messages:
-        msg = msg.rstrip('/').rstrip('\\')
+        normalized_msg = msg.rstrip('/').rstrip('\\')
         item = item.rstrip('/').rstrip('\\')
-        if msg.endswith(item):
+        if normalized_msg.endswith(item):
             filtered_messages.append(msg)
     return filtered_messages
 
@@ -286,7 +286,7 @@ def wait_for_resource_to_sync(
     sync_messages = read_and_update_socket_messages()
     # clear stored socket messages
     clear_socket_messages(resource)
-    sync_info.append('Sync complete (socket): %s' % synced)
+    sync_info.append(f'Sync complete (socket): {synced}')
     if synced:
         if check_queued:
             loaded = wait_for(
@@ -297,7 +297,7 @@ def wait_for_resource_to_sync(
                 ),
                 get_config('sync_timeout'),
             )
-            sync_info.append('Sync complete (UI): %s' % loaded)
+            sync_info.append(f'Sync complete (UI): {loaded}')
             if not loaded:
                 raise TimeoutError(
                     '[ERROR] Sync is still in progress after matching the sync pattern.'
@@ -316,10 +316,10 @@ def wait_for_resource_to_sync(
                 + '. So passing the step.'
             )
             return
-    print('[ERROR] Sync patterns: %s' % patterns)
-    print('[ERROR] Sync messages: %s' % sync_messages)
+    print(f'[ERROR] Sync patterns: {patterns}')
+    print(f'[ERROR] Sync messages: {sync_messages}')
     raise TimeoutError(
-        'Timeout while waiting for sync to complete for %s seconds.\n' % timeout
+        f'Timeout while waiting for sync to complete for {timeout} seconds.\n'
         + '\n'.join(sync_info)
     )
 
@@ -361,9 +361,9 @@ def has_sync_status(item_name, status):
     sync_messages = read_and_update_socket_messages()
     sync_messages = filter_messages_for_item(sync_messages, item_name)
     for line in sync_messages:
-        line = line.rstrip('/').rstrip('\\')
+        normalized_line = line.rstrip('/').rstrip('\\')
         item_name = item_name.rstrip('/').rstrip('\\')
-        if line.startswith(status) and line.endswith(item_name):
+        if normalized_line.startswith(status) and normalized_line.endswith(item_name):
             return True
     return False
 

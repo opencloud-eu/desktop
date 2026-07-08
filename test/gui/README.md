@@ -9,6 +9,8 @@
     - [Build Desktop Client](#build-desktop-client)
     - [Run GUI Tests](#run-gui-tests)
     - [Test Reports](#test-reports)
+- [Writing GUI Test](#writing-gui-test)
+  - [Code Formatting and Linting](#code-formatting-and-linting)
 
 # Desktop Client GUI Testing
 
@@ -186,3 +188,30 @@ CI=true \
 RECORD_VIDEO_ON_FAILURE=true \
 uv run behave features/add-account/account.feature
 ```
+
+# Writing GUI Test
+
+## Code Formatting and Linting
+
+The GUI tests use [Ruff](https://docs.astral.sh/ruff) for code formatting and linting.
+
+1. Check Formatting and Linting
+
+```bash
+make python-lint
+```
+
+2. Apply Formatting and Fix Supported Issues
+
+```bash
+make python-lint-fix
+```
+
+> [!NOTE]
+> Run the following command to check specific rule violation:
+>
+> ```bash
+> uv run ruff check --select <RULE>
+> ```
+>
+> See the [available Ruff rules](https://docs.astral.sh/ruff/rules/).

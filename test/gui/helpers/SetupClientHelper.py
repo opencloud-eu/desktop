@@ -32,15 +32,15 @@ def get_client_details(table):
         'sync_folder': '',
     }
     for key, value in table.items():
-        value = substitute_inline_codes(value)
+        actual_value = substitute_inline_codes(value)
         if key == 'server':
-            client_details.update({'server': value})
+            client_details.update({'server': actual_value})
         elif key == 'user':
-            client_details.update({'user': value})
+            client_details.update({'user': actual_value})
         elif key == 'password':
-            client_details.update({'password': value})
+            client_details.update({'password': actual_value})
         elif key == 'sync_folder':
-            client_details.update({'sync_folder': value})
+            client_details.update({'sync_folder': actual_value})
     return client_details
 
 
