@@ -4,7 +4,7 @@
 
 ### ❤️ Thanks to all contributors! ❤️
 
-@Asmitapaudel, @TheOneRing, @anon-pradip, @bernardgut, @db-ot, @dragotin, @guruz, @individual-it, @prashant-gurung899, @saw-jan, @tbsbdr
+@Asmitapaudel, @TheOneRing, @anon-pradip, @bernardgut, @db-ot, @dragotin, @guruz, @individual-it, @paolostivanin, @prashant-gurung899, @saw-jan, @tbsbdr
 
 ### 💥 Breaking changes
 
@@ -12,6 +12,7 @@
 
 ### 🐛 Bug Fixes
 
+- Fix account stuck in "Connecting" state after network switch [[#969](https://github.com/opencloud-eu/desktop/pull/969)]
 - fix(creds): keep the job queue alive across transient token refreshes [[#955](https://github.com/opencloud-eu/desktop/pull/955)]
 - FetchServerSettingsJob always emit finished [[#824](https://github.com/opencloud-eu/desktop/pull/824)]
 - Fix path passed to pinstate [[#810](https://github.com/opencloud-eu/desktop/pull/810)]
