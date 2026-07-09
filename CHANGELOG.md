@@ -4,22 +4,23 @@
 
 ### ❤️ Thanks to all contributors! ❤️
 
-@Asmitapaudel, @TheOneRing, @anon-pradip, @db-ot, @dragotin, @guruz, @individual-it, @prashant-gurung899, @saw-jan, @tbsbdr
+@Asmitapaudel, @TheOneRing, @anon-pradip, @bernardgut, @db-ot, @dragotin, @guruz, @individual-it, @prashant-gurung899, @saw-jan, @tbsbdr
 
 ### 💥 Breaking changes
 
 - Update Qt to 6.10.2, this removes support for MacOS 12 [[#762](https://github.com/opencloud-eu/desktop/pull/762)]
 
+### 🐛 Bug Fixes
+
+- fix(creds): keep the job queue alive across transient token refreshes [[#955](https://github.com/opencloud-eu/desktop/pull/955)]
+- FetchServerSettingsJob always emit finished [[#824](https://github.com/opencloud-eu/desktop/pull/824)]
+- Fix path passed to pinstate [[#810](https://github.com/opencloud-eu/desktop/pull/810)]
+- Fix canonicalPath for drives (c:) [[#701](https://github.com/opencloud-eu/desktop/pull/701)]
+
 ### 📈 Enhancement
 
 - Refactor plugin loading [[#839](https://github.com/opencloud-eu/desktop/pull/839)]
 - Update SVG logo with new design [[#711](https://github.com/opencloud-eu/desktop/pull/711)]
-
-### 🐛 Bug Fixes
-
-- FetchServerSettingsJob always emit finished [[#824](https://github.com/opencloud-eu/desktop/pull/824)]
-- Fix path passed to pinstate [[#810](https://github.com/opencloud-eu/desktop/pull/810)]
-- Fix canonicalPath for drives (c:) [[#701](https://github.com/opencloud-eu/desktop/pull/701)]
 
 ### 📦️ Dependencies
 
