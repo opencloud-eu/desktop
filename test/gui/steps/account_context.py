@@ -165,15 +165,6 @@ def step(context, username):
     AccountSetting.remove_connection_for_user(username)
 
 
-@Then('connection wizard should be visible')
-def step(context):
-    test.compare(
-        AccountConnectionWizard.is_new_connection_window_visible(),
-        True,
-        'Connection window is visible',
-    )
-
-
 @When('the user accepts the certificate')
 def step(context):
     AccountConnectionWizard.accept_certificate()
@@ -220,16 +211,6 @@ def step(context):
         AccountConnectionWizard.is_sync_everything_option_checked().should.be.true
 
 
-@When(r'^the user presses the "([^"]*)" key(?:s)?', regexp=True)
-def step(context, key):
-    AccountSetting.press_key(key)
-
-
-@Then('the log dialog should be opened')
-def step(context):
-    test.compare(True, AccountSetting.is_log_dialog_visible(), 'Log dialog is opened')
-
-
 @When('the user cancels the sync connection wizard')
 def step(context):
     SyncConnectionWizard.cancel_folder_sync_connection_wizard()
@@ -260,16 +241,6 @@ def step(context, sync_path, wizard):
         
     with ensure('The actual sync path does not match the expected sync path' ):
         actual_sync_path.should.equal(convert_path_separators_for_os(sync_path))
-    
-
-@Then('the warning "|any|" should appear in the sync connection wizard')
-def step(context, warn_message):
-    actual_message = SyncConnectionWizard.get_warn_label()
-    test.compare(
-        True,
-        warn_message in actual_message,
-        'Contains warning message',
-    )
 
 
 @Given('the user has removed the connection for user "{username}"')

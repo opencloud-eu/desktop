@@ -83,12 +83,6 @@ def step(context, username, resource_type, resource):
     wait_for_resource_to_have_sync_error(resource, resource_type)
 
 
-@Then('the "|any|" button should be available')
-def step(context, item):
-    SyncConnection.open_menu()
-    SyncConnection.has_menu_item(item)
-
-
 @Then('the "|any|" button should not be available')
 def step(context, item):
     SyncConnection.open_menu()
@@ -287,11 +281,6 @@ def step(context):
 @Then('the file "{file_name}" should have status "{status}" in the activity tab')
 def step(context, file_name, status):
     Activity.has_sync_status(file_name, status)
-
-
-@When('the user opens the sync connection wizard')
-def step(context):
-    SyncConnectionWizard.open_sync_connection_wizard()
 
 
 @Then('the add space button should be disabled')
