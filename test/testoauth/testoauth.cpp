@@ -9,6 +9,7 @@
 #include <QtTest/QtTest>
 
 #include "common/asserts.h"
+#include "libsync/creds/httpcredentials.h"
 #include "libsync/creds/oauth.h"
 #include "testutils/syncenginetestutils.h"
 #include "theme.h"
@@ -307,6 +308,32 @@ public:
         gotAuthOk = true;
     }
 };
+
+class TestHttpCredentials : public HttpCredentials
+{
+public:
+    TestHttpCredentials(FakeAM::Override override, const QString &refreshToken)
+        : HttpCredentials(QStringLiteral("initial-access-token"))
+        , _override(std::move(override))
+    {
+        _refreshToken = refreshToken;
+    }
+
+    OCC::AccessManager *createAM() const override
+    {
+        auto *am = new FakeAM({}, nullptr);
+        am->setOverride(_override);
+        return am;
+    }
+
+    void restartOauth() override { }
+    void fetchFromKeychain() override { }
+    void persist() override { }
+
+private:
+    FakeAM::Override _override;
+};
+
 
 class TestOAuth : public QObject
 {
@@ -756,6 +783,103 @@ private Q_SLOTS:
 
         } test;
         test.test();
+    }
+
+    void testTransientRefreshDoesNotEmitAuthFailed()
+    {
+        QObject replyParent;
+        int tokenRequestCount = 0;
+
+        // Use TimeoutError: resets nextTry to 0, so it never reaches TokenRefreshMaxRetries,
+        // and has TokenRefreshDefaultTimeout (30s) so no retry fires during our test window.
+        auto override = [&replyParent, &tokenRequestCount](QNetworkAccessManager::Operation op, const QNetworkRequest &req, QIODevice *) -> QNetworkReply * {
+            if (req.url().path().endsWith(QLatin1String("status.php"))) {
+                const QJsonDocument json(QJsonObject{
+                    {QStringLiteral("installed"), true},
+                    {QStringLiteral("maintenance"), false},
+                    {QStringLiteral("version"), QStringLiteral("10.0.0")},
+                });
+                return new FakePayloadReply(op, req, json.toJson(), &replyParent);
+            }
+            if (req.url().path().endsWith(QLatin1String(".well-known/openid-configuration"))) {
+                const QJsonDocument json(QJsonObject{
+                    {QStringLiteral("authorization_endpoint"), QStringLiteral("oauthtest://openidserver/authorize")},
+                    {QStringLiteral("token_endpoint"), QStringLiteral("oauthtest://openidserver/token_endpoint")},
+                });
+                return new FakePayloadReply(op, req, json.toJson(), &replyParent);
+            }
+            if (req.url().toString().contains(QLatin1String("token_endpoint"))) {
+                ++tokenRequestCount;
+                auto *reply = new FakeErrorReply(op, req, &replyParent, 408);
+                reply->setError(QNetworkReply::TimeoutError, QStringLiteral("Request timed out"));
+                return reply;
+            }
+            return new FakePayloadReply(op, req, {}, &replyParent);
+        };
+
+        auto account = Account::create(QUuid::createUuid());
+        account->setUrl(sOAuthTestServer);
+        auto *creds = new TestHttpCredentials(override, QStringLiteral("fake-refresh-token"));
+        account->setCredentials(creds);
+
+        QSignalSpy authFailedSpy(creds, &AbstractCredentials::authenticationFailed);
+        QSignalSpy authStartedSpy(creds, &AbstractCredentials::authenticationStarted);
+
+        QVERIFY(creds->refreshAccessToken());
+
+        // Wait for the first token request to complete (queued connections fire).
+        // TimeoutError → nextTry resets to 0, retry scheduled in 30s — no retry in this window.
+        QTRY_VERIFY_WITH_TIMEOUT(tokenRequestCount >= 1, 5000);
+        QCOMPARE(authStartedSpy.count(), 1);
+        // The fix: transient errors must NOT emit authenticationFailed
+        QCOMPARE(authFailedSpy.count(), 0);
+    }
+
+    void testTerminalRefreshEmitsAuthFailed()
+    {
+        QObject replyParent;
+        int tokenRequestCount = 0;
+
+        auto override = [&replyParent, &tokenRequestCount](QNetworkAccessManager::Operation op, const QNetworkRequest &req, QIODevice *) -> QNetworkReply * {
+            if (req.url().path().endsWith(QLatin1String("status.php"))) {
+                const QJsonDocument json(QJsonObject{
+                    {QStringLiteral("installed"), true},
+                    {QStringLiteral("maintenance"), false},
+                    {QStringLiteral("version"), QStringLiteral("10.0.0")},
+                });
+                return new FakePayloadReply(op, req, json.toJson(), &replyParent);
+            }
+            if (req.url().path().endsWith(QLatin1String(".well-known/openid-configuration"))) {
+                const QJsonDocument json(QJsonObject{
+                    {QStringLiteral("authorization_endpoint"), QStringLiteral("oauthtest://openidserver/authorize")},
+                    {QStringLiteral("token_endpoint"), QStringLiteral("oauthtest://openidserver/token_endpoint")},
+                });
+                return new FakePayloadReply(op, req, json.toJson(), &replyParent);
+            }
+            if (req.url().toString().contains(QLatin1String("token_endpoint"))) {
+                ++tokenRequestCount;
+                auto *reply = new FakeErrorReply(op, req, &replyParent, 404);
+                reply->setError(QNetworkReply::ContentNotFoundError, QStringLiteral("Not found"));
+                return reply;
+            }
+            return new FakePayloadReply(op, req, {}, &replyParent);
+        };
+
+        auto account = Account::create(QUuid::createUuid());
+        account->setUrl(sOAuthTestServer);
+        auto *creds = new TestHttpCredentials(override, QStringLiteral("fake-refresh-token"));
+        account->setCredentials(creds);
+
+        QSignalSpy authFailedSpy(creds, &AbstractCredentials::authenticationFailed);
+        QSignalSpy fetchedSpy(creds, &AbstractCredentials::fetched);
+
+        QVERIFY(creds->refreshAccessToken());
+
+        // ContentNotFoundError → timeout=0s, nextTry increments each time.
+        // After TokenRefreshMaxRetries (3) errors, terminal branch emits authenticationFailed.
+        QTRY_VERIFY_WITH_TIMEOUT(authFailedSpy.count() == 1, 10000);
+        QCOMPARE(fetchedSpy.count(), 1);
+        QVERIFY(tokenRequestCount >= 3);
     }
 };
 

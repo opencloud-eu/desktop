@@ -60,6 +60,7 @@ struct OPENCLOUD_SYNC_EXPORT VfsSetupParams
     QString providerDisplayName;
     QString providerName;
     QVersionNumber providerVersion;
+    QString socketPath;
 
     const QUrl &baseUrl() const { return _baseUrl; }
     const QString &spaceId() const { return _spaceId; }
