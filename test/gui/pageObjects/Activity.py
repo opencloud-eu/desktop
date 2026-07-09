@@ -4,18 +4,15 @@ from appium.webdriver.common.appiumby import AppiumBy as By
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException, WebDriverException
 
-from helpers.FilesHelper import build_conflicted_regex
 from helpers.ConfigHelper import get_config
 from helpers.AppHelper import app
 from helpers.Utils import wait_for
 
 
 class Activity:
-    TAB_CONTAINER = SimpleNamespace(by=None, selector=None)
     SUBTAB_CONTAINER = SimpleNamespace(
         by=By.XPATH, selector="//page_tab[starts-with(@name, '{tab_name}')]"
     )
-    NOT_SYNCED_TABLE = SimpleNamespace(by=None, selector=None)
     LOCAL_ACTIVITY_FILTER_BUTTON = SimpleNamespace(by=By.NAME, selector="Filter")
     LOCAL_ACTIVITY_FILTER_OPTION_SELECTOR = SimpleNamespace(by=By.NAME, selector=None)
     LOCAL_ACTIVITY_TABLE = SimpleNamespace(by=By.NAME, selector="Local activity table")
@@ -26,31 +23,8 @@ class Activity:
         by=By.ACCESSIBILITY_ID,
         selector="QApplication.Settings.centralwidget.dialogStack.page.stack.OCC::ActivitySettings.QTabWidget.qt_tabwidget_stackedwidget.OCC__IssuesWidget._filterButton",
     )
-    NOT_SYNCED_FILTER_OPTION_SELECTOR = SimpleNamespace(by=None, selector=None)
-    SYNCED_ACTIVITY_TABLE_HEADER_SELECTOR = SimpleNamespace(by=None, selector=None)
-    NOT_SYNCED_ACTIVITY_TABLE_HEADER_SELECTOR = SimpleNamespace(by=None, selector=None)
     NOT_SYNCED_ACTIVITY_CONFLICT_FILE = SimpleNamespace(by=By.XPATH, selector="//*[starts-with(@name, '{filename} (conflicted copy')]")
     SYNCED_ACTIVITY_STATUS = SimpleNamespace(by=By.NAME, selector=None)
-
-    @staticmethod
-    def get_not_synced_file_selector(resource):
-        return {
-            "column": 1,
-            "container": Activity.NOT_SYNCED_TABLE,
-            "text": resource,
-            "type": "QModelIndex",
-        }
-
-    @staticmethod
-    def get_not_synced_status(row):
-        return squish.waitForObjectExists(
-            {
-                "column": 6,
-                "row": row,
-                "container": Activity.NOT_SYNCED_TABLE,
-                "type": "QModelIndex",
-            }
-        ).text
 
     @staticmethod
     def open_tab(tab_name):
@@ -80,7 +54,7 @@ class Activity:
 
     @staticmethod
     def is_resource_ignored(filename):
-        result = squish.waitFor(
+        result = wait_for(
             lambda: Activity.has_sync_status(filename, "File Ignored"),
             get_config("sync_timeout"),
         )
@@ -133,26 +107,6 @@ class Activity:
         )
 
     @staticmethod
-    def get_synced_file_selector(resource):
-        return {
-            "column": Activity.get_synced_table_column_number_by_name("File"),
-            "container": Activity.LOCAL_ACTIVITY_TABLE,
-            "text": resource,
-            "type": "QModelIndex",
-        }
-
-    @staticmethod
-    def get_synced_table_column_number_by_name(column_name):
-        return squish.waitForObject(
-            {
-                "container": Activity.SYNCED_ACTIVITY_TABLE_HEADER_SELECTOR,
-                "text": column_name,
-                "type": "HeaderViewItem",
-                "visible": True,
-            }
-        )["section"]
-
-    @staticmethod
     def has_activity(resource, action, account):
         try:
             row = app().find_element(By.NAME, resource)
@@ -195,47 +149,3 @@ class Activity:
         for _ in range(6):
             menu.send_keys(Keys.ARROW_DOWN)
         menu.send_keys(Keys.ENTER)
-
-    @staticmethod
-    def get_not_synced_table_column_number_by_name(column_name):
-        return squish.waitForObject(
-            {
-                "container": Activity.NOT_SYNCED_ACTIVITY_TABLE_HEADER_SELECTOR,
-                "text": column_name,
-                "type": "HeaderViewItem",
-                "visible": True,
-            }
-        )["section"]
-
-    @staticmethod
-    def check_not_synced_table(resource, status, account):
-        try:
-            file_row = squish.waitForObject(
-                Activity.get_not_synced_file_selector(resource),
-                get_config("lowest_timeout"),
-            )["row"]
-            squish.waitForObjectExists(
-                {
-                    "column": Activity.get_not_synced_table_column_number_by_name(
-                        "Status"
-                    ),
-                    "row": file_row,
-                    "container": Activity.NOT_SYNCED_TABLE,
-                    "text": status,
-                    "type": "QModelIndex",
-                }
-            )
-            squish.waitForObjectExists(
-                {
-                    "column": Activity.get_not_synced_table_column_number_by_name(
-                        "Account"
-                    ),
-                    "row": file_row,
-                    "container": Activity.NOT_SYNCED_TABLE,
-                    "text": account,
-                    "type": "QModelIndex",
-                }
-            )
-            return True
-        except:
-            return False

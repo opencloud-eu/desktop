@@ -5,8 +5,6 @@ from helpers.AppHelper import app
 
 
 class Settings:
-    CHECKBOX_OPTION_ITEM = SimpleNamespace(by=None, selector=None)
-    NETWORK_OPTION_ITEM = SimpleNamespace(by=None, selector=None)
     ABOUT_BUTTON = SimpleNamespace(by=By.NAME, selector="About")
     ABOUT_DIALOG = SimpleNamespace(by=By.CLASS_NAME, selector="[page tab | About]")
     ABOUT_DIALOG_OK_BUTTON = SimpleNamespace(by=By.NAME, selector="OK")
@@ -31,22 +29,6 @@ class Settings:
     NETWORK_SETTING_UPLOAD_BANDWIDTH = SimpleNamespace(
         by=By.XPATH, selector="//panel[@name='Upload Bandwidth']"
     )
-
-    @staticmethod
-    def get_checkbox_option_selector(name):
-        selector = Settings.CHECKBOX_OPTION_ITEM.copy()
-        selector.update({"name": name})
-        if name == "languageDropdown":
-            selector.update({"type": "QComboBox"})
-        elif name in ("ignoredFilesButton", "logSettingsButton"):
-            selector.update({"type": "QPushButton"})
-        return selector
-
-    @staticmethod
-    def get_network_option_selector(name):
-        selector = Settings.NETWORK_OPTION_ITEM.copy()
-        selector.update({"name": name})
-        return selector
 
     @staticmethod
     def has_general_setting(setting):

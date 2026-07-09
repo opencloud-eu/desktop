@@ -4,7 +4,6 @@ from appium.webdriver.common.appiumby import AppiumBy as By
 from pageObjects.Toolbar import Toolbar
 from helpers.UserHelper import get_displayname_for_user
 from helpers.SetupClientHelper import substitute_inline_codes
-from helpers.UserHelper import get_displayname_for_user
 from helpers.AppHelper import app
 from helpers.Utils import wait_for
 from helpers.ConfigHelper import get_config
@@ -23,10 +22,6 @@ class AccountSetting:
         by=By.XPATH,
         selector="//list[@name='Folder Sync']//label",
     )
-    LOG_BROWSER_WINDOW = SimpleNamespace(by=None, selector=None)
-    ACCOUNT_LOADING = SimpleNamespace(by=None, selector=None)
-    DIALOG_STACK = SimpleNamespace(by=None, selector=None)
-    CONFIRMATION_YES_BUTTON = SimpleNamespace(by=None, selector=None)
 
     @staticmethod
     def account_action(action):
@@ -75,30 +70,12 @@ class AccountSetting:
         return labels[0].text
 
     @staticmethod
-    def is_connecting():
-        return "Connecting to" in AccountSetting.get_account_connection_label()
-
-    @staticmethod
     def is_user_signed_out():
         return "Signed out" in AccountSetting.get_account_connection_label()
 
     @staticmethod
     def is_user_signed_in():
         return "Connected" in AccountSetting.get_account_connection_label()
-
-    @staticmethod
-    def wait_until_connection_is_configured(timeout=get_config('min_timeout')):
-        result = squish.waitFor(
-            AccountSetting.is_connecting,
-            timeout,
-        )
-
-        if not result:
-            raise TimeoutError(
-                "Timeout waiting for connection to be configured for "
-                + str(timeout)
-                + " seconds"
-            )
 
     @staticmethod
     def wait_until_account_is_connected(timeout=get_config('min_timeout')):
@@ -114,40 +91,6 @@ class AccountSetting:
                 + " seconds"
             )
         return result
-
-    @staticmethod
-    def wait_until_sync_folder_is_configured(timeout=get_config('min_timeout')):
-        result = squish.waitFor(
-            lambda: not squish.waitForObjectExists(
-                AccountSetting.ACCOUNT_LOADING
-            ).visible,
-            timeout,
-        )
-
-        if not result:
-            raise TimeoutError(
-                "Timeout waiting for sync folder to be connected for "
-                + str(timeout)
-                + " seconds"
-            )
-        return result
-
-    @staticmethod
-    def press_key(key):
-        key = key.replace('"', "")
-        key = f"<{key}>"
-        squish.nativeType(key)
-
-    @staticmethod
-    def is_log_dialog_visible():
-        visible = False
-        try:
-            visible = squish.waitForObjectExists(
-                AccountSetting.LOG_BROWSER_WINDOW
-            ).visible
-        except:
-            pass
-        return visible
 
     @staticmethod
     def remove_connection_for_user(username):

@@ -147,7 +147,7 @@ jobs:
         }
 
     - name: clang-format format lint
-      if: matrix.target  == 'linux-gcc-x86_64'
+      if: matrix.target  == 'linux-gcc-x86_64' && github.event_name == 'pull_request'
       run: |
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c libs/llvm
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --run git clang-format --force  ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}

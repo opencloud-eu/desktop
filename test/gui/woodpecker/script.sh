@@ -2,12 +2,13 @@
 
 touch .woodpecker.env
 
-PY_REQUIREMENTS_PATH="test/gui/requirements.txt"
+PY_REQUIREMENTS_PATH="test/gui/pyproject.toml"
 
-# get playwright version from requirements.txt
+# get playwright version from pyproject.toml
 get_playwright_version() {
     if [[ ! -f "$PY_REQUIREMENTS_PATH" ]]; then
         echo "Error: file not found: $PY_REQUIREMENTS_PATH"
+        exit 1
     fi
 
     playwright_version=$(grep 'playwright==' "$PY_REQUIREMENTS_PATH" | cut -d'=' -f3 | cut -d'.' -f1-2)
@@ -37,7 +38,8 @@ check_browsers_cache() {
 }
 
 get_requirementstxt_hash() {
-    requirements_sha=$(sha1sum $PY_REQUIREMENTS_PATH | cut -d" " -f1)
+    # Hash both pyproject.toml and uv.lock for more accurate cache key
+    requirements_sha=$(cat test/gui/pyproject.toml test/gui/uv.lock | sha1sum | cut -d" " -f1)
     echo "$requirements_sha"
 }
 
@@ -58,10 +60,10 @@ check_python_cache() {
 if [[ "$1" == "" ]]; then
     echo "Usage: $0 [COMMAND]"
     echo "Commands:"
-    echo -e "  get_playwright_version \t get the playwright version from requirements.txt"
-    echo -e "  get_requirementstxt_hash \t get the hash of the current requirements.txt"
+    echo -e "  get_playwright_version \t get the playwright version from pyproject.toml"
+    echo -e "  get_requirementstxt_hash \t get the hash of the current pyproject.toml and uv.lock"
     echo -e "  check_browsers_cache \t check if the browsers cache exists for the given playwright version"
-    echo -e "  check_python_cache \t check if a cache for the current requirements.txt exists"
+    echo -e "  check_python_cache \t check if a cache for the current dependencies exists"
     exit 1
 fi
 
