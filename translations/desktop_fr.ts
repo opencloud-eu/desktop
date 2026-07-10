@@ -841,7 +841,8 @@ La mise à jour sera effectuée en arrière-plan et écrasera le fichier AppImag
 <context>
     <name>OCC::ConnectionValidator</name>
     <message>
-        <location filename="../src/gui/connectionvalidator.cpp" line="90"/>
+        <location filename="../src/gui/connectionvalidator.cpp" line="58"/>
+        <location filename="../src/gui/connectionvalidator.cpp" line="96"/>
         <source>timeout</source>
         <translation>pause</translation>
     </message>
@@ -1001,32 +1002,32 @@ La mise à jour sera effectuée en arrière-plan et écrasera le fichier AppImag
         <translation>Activité de synchronisation</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="714"/>
+        <location filename="../src/gui/folder.cpp" line="715"/>
         <source>Switching VFS mode on folder »%1«</source>
         <translation>Changement de mode VFS sur le dossier « %1 »</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1054"/>
+        <location filename="../src/gui/folder.cpp" line="1055"/>
         <source>The folder »%1« was created but was excluded from synchronization previously. Data inside it will not be synchronized.</source>
         <translation>Le dossier « %1 » a été créé mais a été exclu de la synchronisation précédemment. Les données qu&apos;il contient ne seront pas synchronisées.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1057"/>
+        <location filename="../src/gui/folder.cpp" line="1058"/>
         <source>The file »%1« was created but was excluded from synchronization previously. It will not be synchronized.</source>
         <translation>Le fichier « %1 » a été créé mais a été exclu de la synchronisation précédemment. Il ne sera pas synchronisé.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1061"/>
+        <location filename="../src/gui/folder.cpp" line="1062"/>
         <source>»%1« is not synchronized</source>
         <translation>« %1 » n&apos;est pas synchronisé</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="850"/>
+        <location filename="../src/gui/folder.cpp" line="851"/>
         <source>Could not read system exclude file</source>
         <translation>Impossible de lire le fichier d&apos;exclusion système</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1069"/>
+        <location filename="../src/gui/folder.cpp" line="1070"/>
         <source>Changes in synchronized folders could not be tracked reliably.
 
 This means that the synchronization client might not upload local changes immediately and will instead only scan for local changes and upload them occasionally (every two hours by default).
@@ -1778,7 +1779,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
         <translation>Impossible de récupérer les informations d&apos;enregistrement. Erreur : %1</translation>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="426"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="428"/>
         <source>Cannot dehydrate a placeholder because the file changed</source>
         <translation>Impossible de déshydrater un espace réservé car le fichier a été modifié</translation>
     </message>
@@ -1786,32 +1787,32 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
 <context>
     <name>OCC::OpenVfsPluginFactory</name>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="278"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="280"/>
         <source>Failed to read /proc/self/mountinfo</source>
         <translation>Impossible de lire /proc/self/mountinfo</translation>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="291"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="293"/>
         <source>Failed to unmount the OpenVFS mount %1 Error:%2</source>
         <translation>Échec du démontage du montage OpenVFS %1 Erreur : %2</translation>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="300"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="302"/>
         <source>The filesystem for %1 does not support xattributes.</source>
         <translation>Le système de fichiers pour %1 ne prend pas en charge les xattributes</translation>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="303"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="305"/>
         <source>The sync path is already claimed by %1</source>
         <translation>Le chemin de synchronisation est déjà revendiqué par %1</translation>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="307"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="309"/>
         <source>OpenVFS executable not found, please install it</source>
         <translation>L&apos;exécutable OpenVFS est introuvable, merci de l&apos;installer</translation>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="313"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="315"/>
         <source>Failed to find the OpenVFS config file, please check your installation.</source>
         <translation>Impossible de trouver le fichier de configuration d&apos;OpenVFS, merci de vérifier l&apos;installation.</translation>
     </message>
