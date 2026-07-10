@@ -47,8 +47,29 @@ inline SyncFileItem::Status classifyError(
     }
 
     if (nerror > QNetworkReply::NoError && nerror <= QNetworkReply::UnknownProxyError) {
-        // network error or proxy error -> fatal
-        return SyncFileItem::FatalError;
+        // A *transient* connectivity error on a single file must NOT abort the whole sync
+        // run. The blanket FatalError below returns up to propagator()->abort(), which wedges
+        // a large multi-day sync on one network blip. Treat the recoverable connectivity
+        // errors as a per-file NormalError and request another pass so the file is
+        // re-discovered and retried; keep FatalError only for genuinely fatal cases
+        // (TLS handshake, proxy auth, redirect loops, ...).
+        switch (nerror) {
+        case QNetworkReply::ConnectionRefusedError:
+        case QNetworkReply::HostNotFoundError:
+        case QNetworkReply::TimeoutError:
+        case QNetworkReply::TemporaryNetworkFailureError:
+        case QNetworkReply::NetworkSessionFailedError:
+        case QNetworkReply::ProxyConnectionRefusedError:
+        case QNetworkReply::ProxyConnectionClosedError:
+        case QNetworkReply::ProxyTimeoutError:
+            if (anotherSyncNeeded != nullptr) {
+                *anotherSyncNeeded = true;
+            }
+            return SyncFileItem::NormalError;
+        default:
+            // network error or proxy error -> fatal
+            return SyncFileItem::FatalError;
+        }
     }
 
     switch (httpCode) {
