@@ -1,5 +1,5 @@
 custom_lib/
 reports
-venv/
+.venv/
 __webdriver/
 reports/
