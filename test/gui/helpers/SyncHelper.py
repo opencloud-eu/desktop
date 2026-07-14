@@ -4,7 +4,7 @@ import time
 import urllib.request
 
 from pageObjects.SyncConnection import SyncConnection
-from helpers.ConfigHelper import get_config, is_linux, is_windows
+from helpers.ConfigHelper import get_config, is_windows
 from helpers.FilesHelper import sanitize_path
 from helpers.Utils import wait_for
 
@@ -49,9 +49,6 @@ else:
 # socket messages
 socket_messages = []
 SOCKET_CONNECT = None
-# Whether wait has been made or not after account is set up
-# This is useful for waiting only for the first time
-WAITED_AFTER_SYNC = False
 
 # File syncing in client has the following status
 SYNC_STATUS = {
@@ -165,16 +162,6 @@ def clear_socket_messages(resource=''):
         socket_messages = [msg for msg in socket_messages if msg not in resource_messages]
     else:
         socket_messages.clear()
-
-
-def close_socket_connection():
-    socket_messages.clear()
-    if SOCKET_CONNECT:
-        SOCKET_CONNECT.connected = False
-        if is_windows():
-            SOCKET_CONNECT.close_conn()
-        elif is_linux():
-            SOCKET_CONNECT._sock.close()
 
 
 def get_initial_sync_patterns():

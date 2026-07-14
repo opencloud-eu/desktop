@@ -31,3 +31,10 @@ steps:
       - cd test/gui
       - uv sync --only-group lint
       - make python-lint
+
+  - name: check-dead-code
+    image: *astral_uv_image
+    commands:
+      - cd test/gui
+      - uv sync --only-group lint
+      - make check-dead-code

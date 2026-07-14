@@ -54,6 +54,10 @@ python-lint-fix: check-uv
 	uv run --no-sync ruff format .
 	uv run --no-sync ruff check . --fix
 
+.PHONY: check-dead-code
+check-dead-code: check-uv
+	uv run --no-sync vulture .
+
 .PHONY: gherkin-lint
 gherkin-lint:
 	gherlint -c ./config/.gherlintrc.json .

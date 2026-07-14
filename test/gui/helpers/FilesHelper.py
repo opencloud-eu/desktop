@@ -63,15 +63,6 @@ def read_file_content(file):
         return f.read()
 
 
-def is_empty_sync_folder(folder):
-    ignore_files = ["Desktop.ini"]
-    for item in os.listdir(folder):
-        # do not count the hidden files as they are ignored by the client
-        if not item.startswith(".") and item not in ignore_files:
-            return False
-    return True
-
-
 def get_size_in_bytes(size):
     match = re.match(r"(\d+)((?: )?[KkMmGgBb]{0,2})?", str(size))
     units = ["b", "kb", "mb", "gb"]
@@ -93,10 +84,6 @@ def get_size_in_bytes(size):
                 return size_num * (multiplier**3)
 
     raise ValueError("Invalid size: " + size)
-
-
-def get_file_size(resource_path):
-    return os.stat(resource_path).st_size
 
 
 # temp paths created outside the temporary directory during the test
