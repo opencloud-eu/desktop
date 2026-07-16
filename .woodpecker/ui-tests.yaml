@@ -70,8 +70,6 @@ steps:
     environment:
       PLAYWRIGHT_BROWSERS_PATH: /woodpecker/desktop/test/gui/.playwright
     commands:
-      - curl -LsSf https://astral.sh/uv/install.sh | sh
-      - export PATH="$HOME/.local/bin:$PATH"
       - cd test/gui
       - tar -xf $CI_WORKSPACE/python-cache.tar.gz -C ./
       - make uv-install
