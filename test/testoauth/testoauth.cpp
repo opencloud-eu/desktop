@@ -409,6 +409,44 @@ private Q_SLOTS:
         test.test();
     }
 
+    void testUnparseableIdToken()
+    {
+        struct Test : OAuthTestCase
+        {
+            int corruptSegment = 0;
+
+            QString idToken() const override
+            {
+                // corrupt one segment with a character that is not valid base64url
+                QStringList parts = OAuthTestCase::idToken().split(QLatin1Char('.'));
+                parts[corruptSegment].insert(4, QLatin1Char('!'));
+                return parts.join(QLatin1Char('.'));
+            }
+
+            void browserReplyFinished() override
+            {
+                QCOMPARE(sender(), browserReply.data());
+                QCOMPARE(state, TokenAsked);
+                QCOMPARE(browserReply->error(), QNetworkReply::InternalServerError);
+                QVERIFY(QString::fromUtf8(browserReply->readAll()).contains(QStringLiteral("could not be parsed")));
+                browserReply->deleteLater();
+                replyToBrowserOk = true;
+            }
+
+            void oauthResult(OAuth::Result result, const QString &, const QString &) override
+            {
+                QCOMPARE(result, OAuth::Error);
+                gotAuthOk = true;
+            }
+        };
+        // a corrupted header (segment 0) and a corrupted payload (segment 1) must both be rejected
+        for (int segment : {0, 1}) {
+            Test test;
+            test.corruptSegment = segment;
+            test.test();
+        }
+    }
+
     // Test for https://github.com/owncloud/client/pull/6057
     void testCloseBrowserDontCrash()
     {
