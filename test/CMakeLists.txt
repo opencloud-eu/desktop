@@ -4,6 +4,7 @@ add_subdirectory(manual/icon_viewer)
 add_subdirectory(testutils)
 
 opencloud_add_test(JHash)
+opencloud_add_test(Jwt)
 
 opencloud_add_test(OwncloudPropagator)
 opencloud_add_test(OwnSql)
