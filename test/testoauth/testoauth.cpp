@@ -6,7 +6,6 @@
  */
 
 #include <QDesktopServices>
-#include <QtTest/QtTest>
 
 #include "common/asserts.h"
 #include "libsync/creds/httpcredentials.h"

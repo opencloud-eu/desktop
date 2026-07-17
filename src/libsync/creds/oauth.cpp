@@ -789,7 +789,7 @@ void AccountBasedOAuth::restore()
     auto idTokenJob = _account->credentialManager()->get(idTokenC());
     connect(idTokenJob, &CredentialJob::finished, this, [idTokenJob, this] {
         if (idTokenJob->error() == QKeychain::EntryNotFound) {
-            qCWarning(lcOauth) << u"idToken token token credential not found";
+            qCWarning(lcOauth) << u"idToken token credential not found";
         } else if (idTokenJob->error() != QKeychain::NoError) {
             Q_EMIT result(Error);
             return;
