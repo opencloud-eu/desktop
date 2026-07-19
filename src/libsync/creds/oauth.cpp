@@ -671,10 +671,10 @@ void OAuth::fetchWellKnown()
                                 false, qPrintable(QStringLiteral("Unsupported token_endpoint_auth_methods_supported: %1").arg(QDebug::toString(authMethods))));
                         }
                     }
-                    const auto promtValuesSupported = data.value(QStringLiteral("prompt_values_supported")).toArray();
-                    if (!promtValuesSupported.isEmpty()) {
+                    const auto promptValuesSupported = data.value(QStringLiteral("prompt_values_supported")).toArray();
+                    if (!promptValuesSupported.isEmpty()) {
                         _supportedPromtValues = PromptValuesSupported::none;
-                        for (const auto &x : promtValuesSupported) {
+                        for (const auto &x : promptValuesSupported) {
                             const auto flag = Utility::stringToEnum<PromptValuesSupported>(x.toString());
                             // only use flags present in Theme::instance()->openIdConnectPrompt()
                             if (flag & defaultOauthPromtValue())
