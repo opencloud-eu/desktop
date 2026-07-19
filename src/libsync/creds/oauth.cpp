@@ -552,7 +552,7 @@ void OAuth::fetchWellKnown()
         auto webfingerReply = _networkAccessManager->get(webfingerReq);
 
         connect(webfingerReply, &QNetworkReply::finished, this, [webfingerReply, this] {
-            auto handleError = [this](QNetworkReply::NetworkError error, QString errorString) {
+            auto handleError = [this](const QNetworkReply::NetworkError error, const QString& errorString) {
                 if (_isRefreshingToken) {
                     Q_EMIT refreshError(error, errorString);
                 } else {
