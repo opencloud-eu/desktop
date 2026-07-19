@@ -614,7 +614,7 @@ void OAuth::fetchWellKnown()
                 this->_clientId = clientId;
             }
             if (const auto scopes = properties.value(QStringLiteral("http://opencloud.eu/ns/oidc/scopes")); scopes.isArray()) {
-                QString scopesJoined;
+                QStringList scopeList;
                 for (auto element : scopes.toArray()) {
                     auto scope = element.toString();
 
@@ -627,14 +627,9 @@ void OAuth::fetchWellKnown()
                         continue;
                     }
 
-                    if (scopesJoined.isEmpty()) {
-                        scopesJoined = scope;
-                    } else {
-                        scopesJoined.append(QStringLiteral(" "));
-                        scopesJoined.append(scope);
-                    }
+                    scopeList.append(scope);
                 }
-                this->_scopes = scopesJoined;
+                this->_scopes = scopeList.join(QStringLiteral(" "));
             }
 
             auto const oidcWellKnownUrl = Utility::concatUrlPath(QUrl(issuerUrl), wellKnownPathC);
