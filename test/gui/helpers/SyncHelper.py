@@ -399,21 +399,6 @@ def wait_for_resource_to_have_sync_error(resource, resource_type):
     wait_for_resource_to_have_sync_status(resource, resource_type, SYNC_STATUS['ERROR'])
 
 
-# performing actions immediately after completing the sync from the server does not work
-# The test should wait for a while before performing the action
-# issue: https://github.com/owncloud/client/issues/8832
-def wait_for_client_to_be_ready():
-    global WAITED_AFTER_SYNC
-    if not WAITED_AFTER_SYNC:
-        time.sleep(get_config('min_timeout'))
-        WAITED_AFTER_SYNC = True
-
-
-def clear_waited_after_sync():
-    global WAITED_AFTER_SYNC
-    WAITED_AFTER_SYNC = False
-
-
 def perform_file_explorer_vfs_action(resource_path, action):
     if action == 'Free up space':
         make_online_only(resource_path)
