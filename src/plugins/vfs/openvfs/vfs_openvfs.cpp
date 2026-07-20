@@ -271,7 +271,7 @@ Result<void, QString> OpenVfsPluginFactory::prepare(const QString &path, const Q
             file.close();
             for (auto &line : lines) {
                 auto fields = line.split(' ');
-                if (fields.size() >= 9 && fields[8] == "fuse.openvfsfuse") {
+                if (fields.size() >= 9 && fields[8] == "fuse.openvfs") {
                     _fuseMountCache << QString::fromUtf8(parseMangledPath(fields[4]));
                 }
             }
