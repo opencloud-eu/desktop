@@ -1,7 +1,7 @@
 import pyautogui
 import psutil
 import threading
-import requests
+import json
 from appium.webdriver import Remote, WebElement
 from appium.options.common.base import AppiumOptions
 from appium.webdriver.common.appiumby import AppiumBy as By
@@ -139,10 +139,8 @@ def set_implicit_wait(timeout):
     """
     session_id = app().session_id
     body = {'ms': timeout * 1000}
-    response = requests.request(
-        'POST',
+    response = request.post(
         f'{get_config("webdriver_url")}/session/{session_id}/timeouts/implicit_wait',
-        json=body,
-        timeout=get_config('max_timeout'),
+        json.dumps(body),
     )
     request.assert_http_status(response, 200, 'Failed to set implicit timeout')
