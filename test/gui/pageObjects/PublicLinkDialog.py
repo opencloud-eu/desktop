@@ -284,7 +284,7 @@ class PublicLinkDialog:
             squish.waitForObject(PublicLinkDialog.CONFIRM_LINK_DELETE_BUTTON)
         )
         squish.waitFor(
-            lambda: (not object.exists(PublicLinkDialog.DELETE_LINK_BUTTON)),
+            lambda: not object.exists(PublicLinkDialog.DELETE_LINK_BUTTON),
         )
 
     @staticmethod

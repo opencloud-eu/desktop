@@ -323,7 +323,9 @@ def step(context, username, file):
         f.read()
 
 
-@When(r'user "{username}" moves {resource_type} "{resource_name}" from the temp folder into the sync folder')
+@When(
+    r'user "{username}" moves {resource_type} "{resource_name}" from the temp folder into the sync folder'
+)
 def step(context, username, resource_type, resource_name):
     source_dir = join(get_config('test_temp_dir'), resource_name)
     move_resource(username, resource_type, source_dir, '/', True)
@@ -371,7 +373,9 @@ def step(context, user, file_name, content):
         content.should.equal(file_content)
 
 
-@Then('user "{user}" should not be able to edit the file "{file_name}" on the file system')
+@Then(
+    'user "{user}" should not be able to edit the file "{file_name}" on the file system'
+)
 def step(context, user, file_name):
     file_path = get_resource_path(file_name, user)
     with ensure('File should not be writable, but it is'):

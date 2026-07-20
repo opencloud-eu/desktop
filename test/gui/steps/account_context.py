@@ -238,8 +238,8 @@ def step(context, sync_path, wizard):
         actual_sync_path = AccountConnectionWizard.get_local_sync_path()
     else:
         actual_sync_path = SyncConnectionWizard.get_local_sync_path()
-        
-    with ensure('The actual sync path does not match the expected sync path' ):
+
+    with ensure('The actual sync path does not match the expected sync path'):
         actual_sync_path.should.equal(convert_path_separators_for_os(sync_path))
 
 
