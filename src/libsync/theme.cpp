@@ -320,7 +320,7 @@ QIcon Theme::wizardHeaderLogo() const
 
 QString Theme::oauthClientId() const
 {
-    return QStringLiteral("OpenCloudDesktop");
+    return QStringLiteral("openclouddesktop");
 }
 
 QString Theme::oauthClientSecret() const

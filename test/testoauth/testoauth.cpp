@@ -274,11 +274,11 @@ public:
           ],
           "at_hash": "jEL4ptHeYx4eQa847tOVoQ",
           "aud": [
-            "OpenCloudDesktop"
+            "openclouddesktop"
           ],
           "auth_time": 1737560752,
-          "azp": "OpenCloudDesktop",
-          "client_id": "OpenCloudDesktop",
+          "azp": "openclouddesktop",
+          "client_id": "openclouddesktop",
           "email": "admin@admin.admin",
           "email_verified": true,
           "exp": 1739884152,
@@ -292,8 +292,8 @@ public:
          */
         return QStringLiteral(
             "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9."
-            "eyJhbXIiOlsicHdkIiwicG9wIiwiaHdrIiwidXNlciIsInBpbiIsIm1mYSJdLCJhdF9oYXNoIjoiakVMNHB0SGVZeDRlUWE4NDd0T1ZvUSIsImF1ZCI6WyJPcGVuQ2xvdWREZXNrdG9wIl0sIm"
-            "F1dGhfdGltZSI6MTczNzU2MDc1MiwiYXpwIjoiT3BlbkNsb3VkRGVza3RvcCIsImNsaWVudF9pZCI6Ik9wZW5DbG91ZERlc2t0b3AiLCJlbWFpbCI6ImFkbWluQGFkbWluLmFkbWluIiwiZW1h"
+            "eyJhbXIiOlsicHdkIiwicG9wIiwiaHdrIiwidXNlciIsInBpbiIsIm1mYSJdLCJhdF9oYXNoIjoiakVMNHB0SGVZeDRlUWE4NDd0T1ZvUSIsImF1ZCI6WyJvcGVuY2xvdWRkZXNrdG9wIl0sIm"
+            "F1dGhfdGltZSI6MTczNzU2MDc1MiwiYXpwIjoib3BlbmNsb3VkZGVza3RvcCIsImNsaWVudF9pZCI6Im9wZW5jbG91ZGRlc2t0b3AiLCJlbWFpbCI6ImFkbWluQGFkbWluLmFkbWluIiwiZW1h"
             "aWxfdmVyaWZpZWQiOnRydWUsImV4cCI6MTczOTg4NDE1MiwiaWF0IjoxNzM5ODgwNTUyLCJpc3MiOiJvYXV0aHRlc3Q6Ly9zb21lc2VydmVyL29wZW5jbG91ZCIsImp0aSI6ImUyZGI1ZjJkLT"
             "ZiY2MtNDJkNy1hMjBmLTQ2OTU1ZDdhYjZiNCIsIm5hbWUiOiJBZG1pbiIsInByZWZlcnJlZF91c2VybmFtZSI6ImFkbWluIiwic3ViIjoiZjRhMDRiNjItZTE3YS00YTk4LWJjYzYtNjMzNDVk"
             "ZWQ1YTI1In0.wj3NyKWaDhWWwui6lxGdmJEGUyqCsNYCRJFTbgIUeC4");
