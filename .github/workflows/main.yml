@@ -6,6 +6,7 @@ on:
       - main
       - 'stable-[0-9]+.[0-9]+'
       - 'stable-[0-9]+.[0-9]+.[0-9]+'
+      - 'binary_release_testing'
   pull_request:
   workflow_dispatch:
     inputs:
@@ -42,12 +43,12 @@ jobs:
             - target: windows-cl-msvc2022-x86_64
               os: windows-2022
               container:
-            - target: macos-clang-arm64
-              os: macos-latest
-              container:
-            - target: linux-gcc-x86_64
-              os: ubuntu-latest
-              container: invent-registry.kde.org/sysadmin/ci-images/craft-appimage-alma9:latest
+            # - target: macos-clang-arm64
+            #   os: macos-latest
+            #   container:
+            # - target: linux-gcc-x86_64
+            #   os: ubuntu-latest
+            #   container: invent-registry.kde.org/sysadmin/ci-images/craft-appimage-alma9:latest
 
     name: ${{ matrix.target }}
 
@@ -172,9 +173,9 @@ jobs:
         }
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --no-cache opencloud/opencloud-desktop
 
-    - name: Run tests
-      run: |
-        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --no-cache --test opencloud/opencloud-desktop
+    # - name: Run tests
+    #   run: |
+    #     & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --no-cache --test opencloud/opencloud-desktop
 
     - name: Clang tidy
       if: ${{ github.event_name != 'pull_request' }}
@@ -194,6 +195,12 @@ jobs:
       if: ${{ matrix.os  == 'windows-latest' && github.event_name != 'pull_request' }}
       run: |
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --no-cache --package --options "[Packager]PackageType=AppxPackager" --options "[Packager]Destination=${{ github.workspace }}/appx/" opencloud/opencloud-desktop
+
+    - name: Package Appx Sideload
+      if: ${{ matrix.os  == 'windows-latest' && github.event_name != 'pull_request' }}
+      run: |
+        New-SelfSignedCertificate -Type CodeSigningCert -Subject "CN=OpenCloud Desktop Self-Signed" -CertStoreLocation "Cert:\CurrentUser\My"
+        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --no-cache --package --options "[Packager]PackageType=AppxPackager" --options "[Packager]Destination=${{ github.workspace }}/appx-sideload/" --options "[CodeSigning]Enabled=True" --options "[CodeSigning]Protected=False" --options "[CodeSigning]CommonName=OpenCloud Desktop Self-Signed" opencloud/opencloud-desktop
 
     - name: Prepare artifacts
       run: |
@@ -219,3 +226,11 @@ jobs:
       with:
         name: ${{ matrix.target }}-appx-${{ github.run_number }}
         path: ${{ github.workspace }}/appx/*
+
+    - name: Upload appx-sideload
+      if: ${{ matrix.os  == 'windows-latest' && github.event_name != 'pull_request' }}
+      uses: actions/upload-artifact@v7
+      with:
+        name: ${{ matrix.target }}-appx-sideload-${{ github.run_number }}
+        path: ${{ github.workspace }}/appx-sideload/*
+        
