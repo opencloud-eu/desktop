@@ -55,6 +55,7 @@ steps:
 
   - name: build-client-for-ui-tests
     image: *build_image
+    pull: true # remove this once the nightlies run with the new build image
     commands:
       - mkdir -p build
       - cd build
