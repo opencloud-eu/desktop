@@ -18,7 +18,6 @@ on:
           - stable
           - beta
 
-
 concurrency: 
   group: ${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
@@ -35,6 +34,7 @@ jobs:
     permissions:
       # actions/upload-artifact doesn't need contents: write
       contents: read
+      actions: read
     strategy:
         fail-fast: true
         matrix:
@@ -186,14 +186,9 @@ jobs:
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --run python3 -m clang_html "$([System.IO.Path]::GetTempPath())/clang-tidy.log" -o "${env:GITHUB_WORKSPACE}/binaries/clang-tidy.html"
 
     - name: Package
-      if: matrix.target  != 'macos-clang-arm64'
+      if: matrix.target == 'linux-gcc-x86_64'
       run: |
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --no-cache --package opencloud/opencloud-desktop
-
-    - name: Package Appx
-      if: ${{ matrix.os  == 'windows-latest' && github.event_name != 'pull_request' }}
-      run: |
-        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --no-cache --package --options "[Packager]PackageType=AppxPackager" --options "[Packager]Destination=${{ github.workspace }}/appx/" opencloud/opencloud-desktop
 
     - name: Prepare artifacts
       run: |
@@ -207,15 +202,54 @@ jobs:
           }
         }
 
-    - name: Upload artifacts
+    - name: Package msix
+      if: ${{ startsWith(matrix.os, 'windows-') && github.event_name != 'pull_request' }}
+      run: |
+        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --no-cache --package --options "[Packager]PackageType=AppxPackager" --options "[Packager]Destination=${{ github.workspace }}/msix/" opencloud/opencloud-desktop
+        Move-Item -Path "${{ github.workspace }}/msix/*.msix" -Destination "${{ github.workspace }}/msix/OpenCloud_Desktop-${{ github.run_number }}.msix" -Force
+
+    - name: Upload binary artifacts
       uses: actions/upload-artifact@v7
       with:
         name: ${{ matrix.target }}-${{ github.run_number }}
         path: ${{ github.workspace }}/binaries/*
 
-    - name: Upload appx
-      if: ${{ matrix.os  == 'windows-latest' && github.event_name != 'pull_request' }}
+    - name: Upload store msix
+      if: ${{ startsWith(matrix.os, 'windows-') && github.event_name != 'pull_request' }}
       uses: actions/upload-artifact@v7
       with:
-        name: ${{ matrix.target }}-appx-${{ github.run_number }}
-        path: ${{ github.workspace }}/appx/*
+        name: ${{ matrix.target }}-store-msix-${{ github.run_number }}
+        path: ${{ github.workspace }}/msix/*.msixupload
+        archive: false
+
+    - name: Upload unsigned msix
+      id: upload-unsigned-artifact
+      if: ${{ startsWith(matrix.os, 'windows-') && github.event_name != 'pull_request' }}
+      uses: actions/upload-artifact@v7
+      with:
+        name: ${{ matrix.target }}-msix-unsigned-temp-${{ github.run_number }}
+        path: ${{ github.workspace }}/msix/*.msix
+
+    - name: submit msix for signing
+      uses: signpath/github-action-submit-signing-request@v2
+      if: ${{ startsWith(matrix.os, 'windows-') && github.event_name != 'pull_request' }}
+      with:
+        api-token: '${{ secrets.SIGNPATH_API_TOKEN }}'
+        organization-id: '${{ secrets.SIGNPATH_ORGANIZATION_ID }}'
+        github-token: '${{ secrets.GITHUB_TOKEN }}'
+        project-slug: 'desktop'
+        signing-policy-slug: 'test-signing'
+        artifact-configuration-slug: 'deep_sign_msix_zip'
+        output-artifact-directory: '${{ github.workspace }}/msix/'
+        skip-decompress: false
+        github-artifact-id: '${{ steps.upload-unsigned-artifact.outputs.artifact-id }}'
+        wait-for-completion: true
+
+    - name: Upload signed msix
+      id: upload-signed-artifact
+      if: ${{ startsWith(matrix.os, 'windows-') && github.event_name != 'pull_request' }}
+      uses: actions/upload-artifact@v7
+      with:
+        name: ${{ matrix.target }}-msix-${{ github.run_number }}
+        path: ${{ github.workspace }}/msix/*.msix
+        archive: false
