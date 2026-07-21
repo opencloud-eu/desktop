@@ -23,7 +23,7 @@ from helpers.SyncHelper import (
 from helpers.UserHelper import get_password_for_user
 from helpers.ConfigHelper import get_config
 from helpers.TableParser import table_rows_hash
-from helpers.AppHelper import close_and_kill_app
+from helpers.AppHelper import close_and_kill_app, wait_until_app_terminated
 from helpers.FilesHelper import convert_path_separators_for_os
 
 
@@ -219,6 +219,7 @@ def step(context):
 @When('the user quits the client')
 def step(context):
     Toolbar.quit_opencloud()
+    wait_until_app_terminated()
     close_and_kill_app()
 
 

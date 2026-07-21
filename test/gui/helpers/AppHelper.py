@@ -11,6 +11,7 @@ import helpers.api.http_helper as request
 from helpers.ConfigHelper import get_config, get_app_env
 from helpers.ElementHelper import get_element_center_xy
 from helpers.keys.keys_map import get_key
+from helpers.Utils import wait_for
 
 
 def native_click(self, **kwargs):
@@ -122,6 +123,21 @@ def close_and_kill_app():
 
     # Reset driver for reuse
     app_driver = None
+
+
+def wait_until_app_terminated():
+    def check_app():
+        for process in psutil.process_iter(['exe']):
+            if process.info['exe'] == get_config("app_path"):
+                return False
+        return True
+
+    terminated = wait_for(
+        lambda: check_app(),
+        get_config('max_timeout'),
+    )
+    if not terminated:
+        raise ValueError("Desktop client did not terminate within the timeout period.")
 
 
 def get_window_location():
