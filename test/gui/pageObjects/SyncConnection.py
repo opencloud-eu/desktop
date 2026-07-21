@@ -147,7 +147,7 @@ class SyncConnection:
                     timeout=get_config("lowest_timeout"),
                 )
                 return True
-            except NoSuchElementException:
+            except (NoSuchElementException, WebDriverException):
                 return False
 
         status = wait_for(
