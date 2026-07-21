@@ -97,8 +97,9 @@ class SyncConnection:
                 SyncConnection.FOLDER_SYNC_CONNECTION_MENU_BUTTON.selector.format(
                     sync_folder=sync_folder,
                     sync_path=get_config('currentUserSyncPath'),
-                    status="success"
+                    status="success",
                 ),
+                timeout=get_config("lowest_timeout"),
             )
             return True
         except NoSuchElementException:
@@ -114,6 +115,7 @@ class SyncConnection:
                     sync_folder=sync_folder,
                     sync_path=get_config('currentUserSyncPath'),
                 ),
+                timeout=get_config("lowest_timeout"),
             )
             return True
         except NoSuchElementException:
@@ -142,6 +144,7 @@ class SyncConnection:
                 app().find_element(
                     SyncConnection.PERMISSION_ERROR_LABEL.by,
                     SyncConnection.PERMISSION_ERROR_LABEL.selector,
+                    timeout=get_config("lowest_timeout"),
                 )
                 return True
             except NoSuchElementException:

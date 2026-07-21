@@ -48,7 +48,9 @@ def get_folder_items(user, resource):
     xml_response = request.propfind(path, user=user)
 
     if xml_response.status_code != 207:
-        raise AssertionError(f'Failed to get resource properties: {xml_response.status_code}')
+        raise AssertionError(
+            f'Failed to get resource properties: {xml_response.status_code}'
+        )
 
     return ET.fromstring(xml_response.content)
 
@@ -70,9 +72,9 @@ def get_folder_items_count(user, folder_name):
 def create_folder(user, folder_name):
     url = get_resource_path(user, folder_name)
     response = request.mkcol(url, user=user)
-    assert (
-        response.status_code == 201
-    ), f'Could not create the folder: {folder_name} for user {user}'
+    assert response.status_code == 201, (
+        f'Could not create the folder: {folder_name} for user {user}'
+    )
 
 
 def create_file(user, file_name, contents):
@@ -122,7 +124,9 @@ def get_user_id(username):
     if username in provisioning.created_users:
         return provisioning.created_users[username]['id']
 
-    raise AssertionError(f'User {username} not found in created users. Make sure the user is created first.')
+    raise AssertionError(
+        f'User {username} not found in created users. Make sure the user is created first.'
+    )
 
 
 def send_resource_share_invitation(user, resource, sharee, permission_role):
@@ -131,17 +135,18 @@ def send_resource_share_invitation(user, resource, sharee, permission_role):
     recipient_user_id = get_user_id(sharee)
     role_id = get_permission_role_id(permission_role)
 
-    url = url_join(get_beta_graph_url(), "drives", space_id, "items", resource_id, "invite")
+    url = url_join(
+        get_beta_graph_url(), "drives", space_id, "items", resource_id, "invite"
+    )
 
     body = {
         "roles": [role_id],
         "recipients": [
-            {
-                "objectId": recipient_user_id,
-                "@libre.graph.recipient.type": "user"
-            }
-        ]
+            {"objectId": recipient_user_id, "@libre.graph.recipient.type": "user"}
+        ],
     }
 
     response = request.post(url, body=json.dumps(body), user=user)
-    assert response.status_code in [200, 201], f"Failed to send share invitation: {response.status_code}"
+    assert response.status_code in [200, 201], (
+        f"Failed to send share invitation: {response.status_code}"
+    )

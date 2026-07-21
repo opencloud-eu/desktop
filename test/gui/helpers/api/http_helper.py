@@ -55,6 +55,6 @@ def assert_http_status(response, expected_code, message=""):
     if response.text:
         response_body = response.text
 
-    assert (
-        response.status_code == expected_code
-    ), f"{message}\nRequest failed with status code '{response.status_code}'\n{response_body}"
+    assert response.status_code == expected_code, (
+        f"{message}\nRequest failed with status code '{response.status_code}'\n{response_body}"
+    )
