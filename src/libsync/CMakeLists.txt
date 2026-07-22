@@ -51,7 +51,6 @@ add_library(libsync SHARED
     creds/httpcredentials.cpp
     creds/oauth.cpp
     creds/jwt.cpp
-    creds/webfinger.cpp
     creds/idtoken.cpp
 
     networkjobs/getfilejob.cpp

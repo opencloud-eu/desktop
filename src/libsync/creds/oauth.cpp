@@ -341,7 +341,8 @@ void OAuth::startAuthentication()
                     const QString refreshToken = getRequiredField(data, QStringLiteral("refresh_token"), &fieldsError).toString();
                     const QString tokenType = getRequiredField(data, QStringLiteral("token_type"), &fieldsError).toString().toLower();
                     const QUrl messageUrl = QUrl::fromEncoded(data[QStringLiteral("message_url")].toByteArray());
-                    auto idToken = IdToken(JWT(getRequiredField(data, QStringLiteral("id_token"), &fieldsError).toByteArray()).payload());
+                    const JWT jwt(getRequiredField(data, QStringLiteral("id_token"), &fieldsError).toByteArray());
+                    auto idToken = IdToken(jwt.payload());
 
 
                     auto reportError = [socket, this](const QString &errorReason) {
@@ -372,6 +373,8 @@ void OAuth::startAuthentication()
                         } else {
                             reportError(tr("Unknown Error"));
                         }
+                    } else if (!jwt.isValid()) {
+                        reportError(tr("The id_token could not be parsed"));
                     } else if (!idToken.aud().contains(_clientId)) {
                         reportError(tr("The audience of the id_token did not contain \"%1\"").arg(_clientId));
                     } else if (_idToken.isValid() && _idToken.sub() != idToken.sub()) {
@@ -786,7 +789,7 @@ void AccountBasedOAuth::restore()
     auto idTokenJob = _account->credentialManager()->get(idTokenC());
     connect(idTokenJob, &CredentialJob::finished, this, [idTokenJob, this] {
         if (idTokenJob->error() == QKeychain::EntryNotFound) {
-            qCWarning(lcOauth) << u"idToken token token credential not found";
+            qCWarning(lcOauth) << u"idToken token credential not found";
         } else if (idTokenJob->error() != QKeychain::NoError) {
             Q_EMIT result(Error);
             return;
