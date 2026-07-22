@@ -16,6 +16,7 @@
 
 ### 🐛 Bug Fixes
 
+- fix(libsync): treat transient network errors as per-file retries, not whole-run aborts [[#970](https://github.com/opencloud-eu/desktop/pull/970)]
 - fix(libsync): resume a TUS upload from the server's offset on a 409 mismatch [[#971](https://github.com/opencloud-eu/desktop/pull/971)]
 - fix: decode JWT segments as Base64url (RFC 7515) [[#978](https://github.com/opencloud-eu/desktop/pull/978)]
 - Fix account stuck in "Connecting" state after network switch [[#969](https://github.com/opencloud-eu/desktop/pull/969)]
