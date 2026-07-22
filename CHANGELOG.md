@@ -4,11 +4,15 @@
 
 ### ❤️ Thanks to all contributors! ❤️
 
-@Asmitapaudel, @TheOneRing, @anon-pradip, @bernardgut, @db-ot, @dragotin, @guruz, @individual-it, @paolostivanin, @prashant-gurung899, @saw-jan, @tbsbdr
+@Asmitapaudel, @TheOneRing, @anon-pradip, @bernardgut, @db-ot, @dragotin, @guruz, @individual-it, @kaivol, @paolostivanin, @prashant-gurung899, @saw-jan, @tbsbdr
 
 ### 💥 Breaking changes
 
 - Update Qt to 6.10.2, this removes support for MacOS 12 [[#762](https://github.com/opencloud-eu/desktop/pull/762)]
+
+### ✨ Features
+
+- Use webfinger for OIDC parameter discovery [[#847](https://github.com/opencloud-eu/desktop/pull/847)]
 
 ### 🐛 Bug Fixes
 
