@@ -4,7 +4,7 @@
 
 ### ❤️ Thanks to all contributors! ❤️
 
-@Asmitapaudel, @TheOneRing, @anon-pradip, @bernardgut, @db-ot, @dragotin, @guruz, @individual-it, @kaivol, @paolostivanin, @prashant-gurung899, @saw-jan, @tbsbdr
+@Asmitapaudel, @TheOneRing, @anon-pradip, @bernardgut, @db-ot, @dragotin, @guruz, @individual-it, @kaivol, @paolostivanin, @prashant-gurung899, @saw-jan, @tbsbdr, @willyp713
 
 ### 💥 Breaking changes
 
@@ -16,6 +16,7 @@
 
 ### 🐛 Bug Fixes
 
+- fix: decode JWT segments as Base64url (RFC 7515) [[#978](https://github.com/opencloud-eu/desktop/pull/978)]
 - Fix account stuck in "Connecting" state after network switch [[#969](https://github.com/opencloud-eu/desktop/pull/969)]
 - fix(creds): keep the job queue alive across transient token refreshes [[#955](https://github.com/opencloud-eu/desktop/pull/955)]
 - FetchServerSettingsJob always emit finished [[#824](https://github.com/opencloud-eu/desktop/pull/824)]
