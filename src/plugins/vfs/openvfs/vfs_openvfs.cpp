@@ -27,7 +27,7 @@
 using namespace std::chrono_literals;
 using namespace Qt::StringLiterals;
 
-Q_LOGGING_CATEGORY(lcOpenVFS, "sync.vfs.xattr", QtInfoMsg)
+Q_LOGGING_CATEGORY(lcOpenVFS, "sync.vfs.openvfs", QtInfoMsg)
 
 
 namespace {
@@ -216,9 +216,15 @@ void OpenVFS::startImpl(const VfsSetupParams &params)
     });
     connect(_openVfsProcess, &QProcess::errorOccurred, this, [logPrefix, this] { qCWarning(lcOpenVFS) << logPrefix() << _openVfsProcess->errorString(); });
 
-    const QStringList pparams{u"-d"_s, u"-i"_s, openVFSConfigFilePath().toString(), u"-o"_s, xattrOwnerString(params.account->uuid()),
-                u"-s"_s, params.socketPath, params.root().toString()};
-    qCDebug(lcOpenVFS) << "Starting openvfs" << pparams;
+    QStringList pparams{u"-f"_s, u"-i"_s, openVFSConfigFilePath().toString(), u"-o"_s, xattrOwnerString(params.account->uuid()), u"-s"_s, params.socketPath,
+        params.root().toString()};
+
+    // Enable _lots_ of logging for fuse layer
+    if (qEnvironmentVariableIntValue("OPENCLOUD_OPENVFS_LOG_FUSE") == 1) {
+        pparams.prepend(u"-d"_s);
+    }
+
+    qCDebug(lcOpenVFS) << "Starting openvfs" << openVFSExePath().toString() << pparams;
     _openVfsProcess->start(openVFSExePath().toString(), pparams, QIODevice::ReadOnly);
 }
 
