@@ -1,7 +1,3 @@
-﻿import uuid
-import os
-import subprocess
-import test
 from urllib.parse import urlparse
 from os import makedirs
 from os.path import exists, join
@@ -85,10 +81,6 @@ def get_resource_path(resource='', user='', space=''):
     )
 
 
-def parse_username_from_sync_path(sync_path):
-    return sync_path.split('/').pop()
-
-
 def get_temp_resource_path(resource_name):
     return join(get_config('test_temp_dir'), resource_name)
 
@@ -99,16 +91,6 @@ def get_current_user_sync_path():
 
 def start_client():
     create_app_session()
-
-
-def get_polling_interval():
-    polling_interval = '''
-[OpenCloud]
-remotePollInterval={polling_interval}
-'''
-    args = {'polling_interval': 5000}
-    polling_interval = polling_interval.format(**args)
-    return polling_interval
 
 
 def generate_account_config(users, space='Personal'):
@@ -175,53 +157,3 @@ def setup_client(username, space='Personal'):
     start_client()
     for _, sync_path in sync_paths.items():
         listen_sync_status_for_item(sync_path)
-
-
-def generate_uuidv4():
-    return str(uuid.uuid4())
-
-
-# sometimes the keyring is locked during the test execution, and we need to unlock it
-def unlock_keyring():
-    if is_windows():
-        return
-
-    stdout, stderr, _ = run_sys_command(
-        [
-            'busctl',
-            '--user',
-            'get-property',
-            'org.freedesktop.secrets',
-            '/org/freedesktop/secrets/collection/login',
-            'org.freedesktop.Secret.Collection',
-            'Locked',
-        ]
-    )
-    output = ''
-    if stdout:
-        output = stdout.decode('utf-8')
-    if stderr:
-        output = stderr.decode('utf-8')
-
-    if not output.strip().endswith('false'):
-        test.log('Unlocking keyring...')
-        password = os.getenv('VNC_PW')
-        command = f'echo -n "{password}" | gnome-keyring-daemon -r -d --unlock'
-        stdout, stderr, returncode = run_sys_command(command, True)
-        if stdout:
-            output = stdout.decode('utf-8')
-        if stderr:
-            output = stderr.decode('utf-8')
-        if returncode:
-            test.log(f'Failed to unlock keyring:\n{output}')
-
-
-def run_sys_command(command=None, shell=False):
-    cmd = subprocess.run(
-        command,
-        shell=shell,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        check=False,
-    )
-    return cmd.stdout, cmd.stderr, cmd.returncode

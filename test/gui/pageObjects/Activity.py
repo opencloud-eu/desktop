@@ -23,7 +23,9 @@ class Activity:
         by=By.ACCESSIBILITY_ID,
         selector="QApplication.Settings.centralwidget.dialogStack.page.stack.OCC::ActivitySettings.QTabWidget.qt_tabwidget_stackedwidget.OCC__IssuesWidget._filterButton",
     )
-    NOT_SYNCED_ACTIVITY_CONFLICT_FILE = SimpleNamespace(by=By.XPATH, selector="//*[starts-with(@name, '{filename} (conflicted copy')]")
+    NOT_SYNCED_ACTIVITY_CONFLICT_FILE = SimpleNamespace(
+        by=By.XPATH, selector="//*[starts-with(@name, '{filename} (conflicted copy')]"
+    )
     SYNCED_ACTIVITY_STATUS = SimpleNamespace(by=By.NAME, selector=None)
 
     @staticmethod
@@ -35,11 +37,17 @@ class Activity:
     def has_conflict_file(filename):
         filename = filename.rsplit(".", 1)[0]
         has_activity = wait_for(
-            lambda: app().find_element(
-                Activity.NOT_SYNCED_ACTIVITY_CONFLICT_FILE.by,
-                Activity.NOT_SYNCED_ACTIVITY_CONFLICT_FILE.selector.format(filename=filename)
-            ).is_displayed(),
-            get_config('max_timeout')
+            lambda: (
+                app()
+                .find_element(
+                    Activity.NOT_SYNCED_ACTIVITY_CONFLICT_FILE.by,
+                    Activity.NOT_SYNCED_ACTIVITY_CONFLICT_FILE.selector.format(
+                        filename=filename
+                    ),
+                )
+                .is_displayed()
+            ),
+            get_config('max_timeout'),
         )
         if not has_activity:
             raise AssertionError(f"File conflict activity not found")

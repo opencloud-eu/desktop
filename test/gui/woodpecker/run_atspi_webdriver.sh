@@ -35,4 +35,4 @@ fi
 # run webdriver server
 export FLASK_ENV=production
 export FLASK_APP="$WEBDRIVER_DIR/$DRIVER_FILE"
-flask run --host="$WEBDRIVER_HOST" --port="$WEBDRIVER_PORT" --no-reload
+uv run flask run --host="$WEBDRIVER_HOST" --port="$WEBDRIVER_PORT" --no-reload

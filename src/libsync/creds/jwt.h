@@ -15,9 +15,10 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QString>
+#include "opencloudsynclib.h"
 
 namespace OCC {
-class JWT
+class OPENCLOUD_SYNC_EXPORT JWT
 {
 public:
     /*

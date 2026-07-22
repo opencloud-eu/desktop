@@ -13,13 +13,10 @@ class SyncConnectionWizard:
     )
     BACK_BUTTON = SimpleNamespace(by=By.NAME, selector="< Back")
     NEXT_BUTTON = SimpleNamespace(by=By.NAME, selector="Next >")
-    SELECTIVE_SYNC_ROOT_FOLDER = SimpleNamespace(
-        by=By.NAME,
-        selector=None
-    )
+    SELECTIVE_SYNC_ROOT_FOLDER = SimpleNamespace(by=By.NAME, selector=None)
     SELECTIVE_SYNC_TREE_FOLDER = SimpleNamespace(
         by=By.XPATH,
-        selector="//table_cell[@name and contains(@states, 'checkable') and @name!='{space}']"
+        selector="//table_cell[@name and contains(@states, 'checkable') and @name!='{space}']",
     )
     ADD_SYNC_CONNECTION_BUTTON = SimpleNamespace(
         by=By.XPATH, selector="//dialog[@name='Add Space']//*[@name='Add Space']"
@@ -62,7 +59,7 @@ class SyncConnectionWizard:
     def back():
         app().find_element(
             SyncConnectionWizard.BACK_BUTTON.by,
-            SyncConnectionWizard.BACK_BUTTON.selector
+            SyncConnectionWizard.BACK_BUTTON.selector,
         ).click()
 
     @staticmethod
@@ -78,7 +75,9 @@ class SyncConnectionWizard:
     def sort_by(header_text):
         element = app().find_element(
             SyncConnectionWizard.SELECTIVE_SYNC_TREE_HEADER.by,
-            SyncConnectionWizard.SELECTIVE_SYNC_TREE_HEADER.selector.format(header=header_text)
+            SyncConnectionWizard.SELECTIVE_SYNC_TREE_HEADER.selector.format(
+                header=header_text
+            ),
         )
         # ISSUE: https://github.com/opencloud-eu/desktop/pull/879
         # Cannot select table header element by click event
@@ -98,19 +97,20 @@ class SyncConnectionWizard:
     def get_item_name_from_row(row_index):
         elements = app().find_elements(
             SyncConnectionWizard.SELECTIVE_SYNC_TREE_FOLDER.by,
-            SyncConnectionWizard.SELECTIVE_SYNC_TREE_FOLDER.selector.format(space=get_config("syncConnectionName"))
+            SyncConnectionWizard.SELECTIVE_SYNC_TREE_FOLDER.selector.format(
+                space=get_config("syncConnectionName")
+            ),
         )
         return str(elements[row_index].text)
-
 
     @staticmethod
     def is_root_folder_checked():
         element = app().find_element(
             SyncConnectionWizard.SELECTIVE_SYNC_ROOT_FOLDER.by,
-            get_config("syncConnectionName")
+            get_config("syncConnectionName"),
         )
         return element.get_attribute("checked") == "true"
-        
+
     @staticmethod
     def cancel_folder_sync_connection_wizard():
         app().find_element(
@@ -150,7 +150,7 @@ class SyncConnectionWizard:
     def get_local_sync_path():
         element = app().find_element(
             SyncConnectionWizard.CHOOSE_LOCAL_SYNC_FOLDER.by,
-            SyncConnectionWizard.CHOOSE_LOCAL_SYNC_FOLDER.selector
+            SyncConnectionWizard.CHOOSE_LOCAL_SYNC_FOLDER.selector,
         )
         return str(element.text)
 
@@ -158,7 +158,7 @@ class SyncConnectionWizard:
     def is_add_space_button_enabled():
         element = app().find_element(
             SyncConnectionWizard.ADD_SPACE_BUTTON.by,
-            SyncConnectionWizard.ADD_SPACE_BUTTON.selector
+            SyncConnectionWizard.ADD_SPACE_BUTTON.selector,
         )
         return element.is_enabled()
 

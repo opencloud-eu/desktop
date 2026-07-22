@@ -87,6 +87,7 @@ DEFAULT_PATH_CONFIG = {
     'files_for_upload': os.path.join(CURRENT_DIR.parent, 'files-for-upload'),
     # actual file path where the client stores the crash log.
     'crash_log_file': os.path.join(gettempdir(), CRASH_LOG_FILE),
+    'webdriver_url': 'http://localhost:4723',
 }
 
 # mutable configs
