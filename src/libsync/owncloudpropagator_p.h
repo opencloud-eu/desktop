@@ -52,6 +52,14 @@ inline SyncFileItem::Status classifyError(
     }
 
     switch (httpCode) {
+    case 409:
+        // "Conflict" -- e.g. a TUS Upload-Offset mismatch on resume (opencloud-eu/desktop#898).
+        // Recoverable: the TUS path resumes from the server's offset; here we ensure the file
+        // is retried and the run re-discovered, never finalized with a silent gap.
+        if (anotherSyncNeeded != nullptr) {
+            *anotherSyncNeeded = true;
+        }
+        return SyncFileItem::SoftError;
     case 423:
         // "Locked"
         // Should be temporary.
