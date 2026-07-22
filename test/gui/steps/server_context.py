@@ -54,7 +54,9 @@ def step(context, user_name, file_name, content):
         text_content.should.equal(content)
 
 
-@Then(r'as user "{user_name}" folder "{folder_name}" should contain "{items_number}" items in the server')
+@Then(
+    r'as user "{user_name}" folder "{folder_name}" should contain "{items_number}" items in the server'
+)
 def step(context, user_name, folder_name, items_number):
     total_items = webdav.get_folder_items_count(user_name, folder_name)
     with ensure(f'Folder should contain {items_number} items'):
@@ -78,7 +80,9 @@ def step(context):
     Toolbar.open_settings_tab()
 
 
-@When('user "{user}" uploads file with content "{file_content}" to "{file_name}" in the server')
+@When(
+    'user "{user}" uploads file with content "{file_content}" to "{file_name}" in the server'
+)
 def step(context, user, file_content, file_name):
     webdav.create_file(user, file_name, file_content)
 
@@ -107,21 +111,22 @@ def step(context, user_name, server_file_name, local_file_name):
     local_content = get_document_content(get_file_for_upload(local_file_name))
 
     with ensure(
-            f"Server file '{server_file_name}' differs from local file '{local_file_name}'",
+        f"Server file '{server_file_name}' differs from local file '{local_file_name}'",
     ):
         server_content.should.equal(local_content)
 
 
-@Then('as "{user_name}" following files should not exist in the server',)
+@Then(
+    'as "{user_name}" following files should not exist in the server',
+)
 def step(context, user_name):
     for row in context.table:
         resource_name = row[0]
         resource_exists = webdav.resource_exists(user_name, resource_name)
         with ensure(
-             f"Resource '{resource_name}' should not exist, but it does",
+            f"Resource '{resource_name}' should not exist, but it does",
         ):
             resource_exists.should.be.false
-
 
 
 @Given('user "{user}" has uploaded the following files to the server')

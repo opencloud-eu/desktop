@@ -58,24 +58,22 @@ steps:
 
   - name: install-python-modules
     image: *build_image
+    pull: true # remove this once the nightlies run with the new build image
     commands:
       - . ./.woodpecker.env
       - if $PYTHON_CACHE_FOUND; then exit 0; fi
-      - curl -LsSf https://astral.sh/uv/install.sh | sh
-      - export PATH="$HOME/.local/bin:$PATH"
       - cd test/gui
       - make uv-install
       - tar -czf python-cache.tar.gz .venv
 
   - name: install-browsers
     image: *build_image
+    pull: true # remove this once the nightlies run with the new build image
     environment:
       PLAYWRIGHT_BROWSERS_PATH: /woodpecker/desktop/test/gui/.playwright
     commands:
       - . ./.woodpecker.env
       - if $BROWSER_CACHE_FOUND; then exit 0; fi
-      - curl -LsSf https://astral.sh/uv/install.sh | sh
-      - export PATH="$HOME/.local/bin:$PATH"
       - cd test/gui/
       - make install
       - tar -czf playwright-browsers.tar.gz .playwright

@@ -16,8 +16,6 @@ class SyncConnection:
         selector="{sync_folder},{status},Local folder: {sync_path}{sync_folder}",
     )
     MENU_ITEM = SimpleNamespace(by=By.NAME, selector=None)
-    SELECTIVE_SYNC_APPLY_BUTTON = SimpleNamespace(by=None, selector=None)
-    CANCEL_FOLDER_SYNC_CONNECTION_DIALOG = SimpleNamespace(by=None, selector=None)
     CONFIRM_FOLDER_SYNC_CONNECTION_REMOVE = SimpleNamespace(
         by=By.NAME, selector="Remove Space"
     )
@@ -80,10 +78,6 @@ class SyncConnection:
         SyncConnection.perform_action("Resume sync", "paused")
 
     @staticmethod
-    def has_menu_item(item):
-        return squish.waitForObjectItem(SyncConnection.MENU_ITEM, item)
-
-    @staticmethod
     def menu_item_exists(menu_item):
         obj = SyncConnection.MENU_ITEM.copy()
         obj.update({"type": "QAction", "text": menu_item})
@@ -103,8 +97,9 @@ class SyncConnection:
                 SyncConnection.FOLDER_SYNC_CONNECTION_MENU_BUTTON.selector.format(
                     sync_folder=sync_folder,
                     sync_path=get_config('currentUserSyncPath'),
-                    status="success"
+                    status="success",
                 ),
+                timeout=get_config("lowest_timeout"),
             )
             return True
         except NoSuchElementException:
@@ -120,6 +115,7 @@ class SyncConnection:
                     sync_folder=sync_folder,
                     sync_path=get_config('currentUserSyncPath'),
                 ),
+                timeout=get_config("lowest_timeout"),
             )
             return True
         except NoSuchElementException:
@@ -131,12 +127,6 @@ class SyncConnection:
     @staticmethod
     def remove_folder_sync_connection():
         SyncConnection.perform_action("Remove Space")
-
-    @staticmethod
-    def cancel_folder_sync_connection_removal():
-        squish.clickButton(
-            squish.waitForObject(SyncConnection.CANCEL_FOLDER_SYNC_CONNECTION_DIALOG)
-        )
 
     @staticmethod
     def confirm_folder_sync_connection_removal():
@@ -154,9 +144,10 @@ class SyncConnection:
                 app().find_element(
                     SyncConnection.PERMISSION_ERROR_LABEL.by,
                     SyncConnection.PERMISSION_ERROR_LABEL.selector,
+                    timeout=get_config("lowest_timeout"),
                 )
                 return True
-            except NoSuchElementException:
+            except (NoSuchElementException, WebDriverException):
                 return False
 
         status = wait_for(

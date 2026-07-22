@@ -841,7 +841,8 @@ L&apos;actualització es realitzarà en segon pla i substituirà el fitxer AppIm
 <context>
     <name>OCC::ConnectionValidator</name>
     <message>
-        <location filename="../src/gui/connectionvalidator.cpp" line="90"/>
+        <location filename="../src/gui/connectionvalidator.cpp" line="58"/>
+        <location filename="../src/gui/connectionvalidator.cpp" line="96"/>
         <source>timeout</source>
         <translation>temps d’espera</translation>
     </message>
@@ -1001,32 +1002,32 @@ L&apos;actualització es realitzarà en segon pla i substituirà el fitxer AppIm
         <translation>Activitat de sincronització</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="714"/>
+        <location filename="../src/gui/folder.cpp" line="715"/>
         <source>Switching VFS mode on folder »%1«</source>
         <translation>Canviant el mode VFS a la carpeta »%1«.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1054"/>
+        <location filename="../src/gui/folder.cpp" line="1055"/>
         <source>The folder »%1« was created but was excluded from synchronization previously. Data inside it will not be synchronized.</source>
         <translation>La carpeta »%1« es va crear, però anteriorment s’excloïa de la sincronització. Les dades que contingui no se sincronitzaran.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1057"/>
+        <location filename="../src/gui/folder.cpp" line="1058"/>
         <source>The file »%1« was created but was excluded from synchronization previously. It will not be synchronized.</source>
         <translation>El fitxer »%1« es va crear, però anteriorment s’excloïa de la sincronització. No se sincronitzarà.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1061"/>
+        <location filename="../src/gui/folder.cpp" line="1062"/>
         <source>»%1« is not synchronized</source>
         <translation>»%1« no està sincronitzat.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="850"/>
+        <location filename="../src/gui/folder.cpp" line="851"/>
         <source>Could not read system exclude file</source>
         <translation>No s&apos;ha pogut llegir el fitxer d&apos;exclusió del sistema.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1069"/>
+        <location filename="../src/gui/folder.cpp" line="1070"/>
         <source>Changes in synchronized folders could not be tracked reliably.
 
 This means that the synchronization client might not upload local changes immediately and will instead only scan for local changes and upload them occasionally (every two hours by default).
@@ -1779,7 +1780,7 @@ Tingues en compte que l’ús de qualsevol opció de línia d’ordres per a reg
         <translation>No s&apos;ha pogut recuperar la informació de registre. Error: %1</translation>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="426"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="428"/>
         <source>Cannot dehydrate a placeholder because the file changed</source>
         <translation>No es pot deshidratar un marcador de posició perquè el fitxer ha canviat.</translation>
     </message>
@@ -1787,32 +1788,32 @@ Tingues en compte que l’ús de qualsevol opció de línia d’ordres per a reg
 <context>
     <name>OCC::OpenVfsPluginFactory</name>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="278"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="280"/>
         <source>Failed to read /proc/self/mountinfo</source>
         <translation>No s&apos;ha pogut llegir /proc/self/mountinfo</translation>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="291"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="293"/>
         <source>Failed to unmount the OpenVFS mount %1 Error:%2</source>
         <translation>No s&apos;ha pogut desmuntar el muntatge OpenVFS %1 Error:%2</translation>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="300"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="302"/>
         <source>The filesystem for %1 does not support xattributes.</source>
         <translation>El sistema de fitxers per a %1 no admet els atributs x.</translation>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="303"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="305"/>
         <source>The sync path is already claimed by %1</source>
         <translation>La ruta de sincronització ja ha estat reclamada per %1</translation>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="307"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="309"/>
         <source>OpenVFS executable not found, please install it</source>
         <translation>No s&apos;ha trobat l&apos;executable d&apos;OpenVFS, instal·leu-lo.</translation>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="313"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="315"/>
         <source>Failed to find the OpenVFS config file, please check your installation.</source>
         <translation>No s&apos;ha pogut trobar el fitxer de configuració d&apos;OpenVFS. Si us plau, comproveu la instal·lació.</translation>
     </message>

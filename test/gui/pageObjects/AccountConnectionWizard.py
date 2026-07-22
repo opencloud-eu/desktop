@@ -28,11 +28,11 @@ class AccountConnectionWizard:
     )
     SELECT_LOCAL_FOLDER_BUTTON = SimpleNamespace(
         by=By.ACCESSIBILITY_ID,
-        selector="QApplication.Settings.centralwidget.dialogStack.SetupWizardWidget.contentWidget.AccountConfiguredWizardPage.advancedConfigGroupBox.advancedConfigGroupBoxContentWidget.localDirectoryGroupBox.chooseLocalDirectoryButton"
+        selector="QApplication.Settings.centralwidget.dialogStack.SetupWizardWidget.contentWidget.AccountConfiguredWizardPage.advancedConfigGroupBox.advancedConfigGroupBoxContentWidget.localDirectoryGroupBox.chooseLocalDirectoryButton",
     )
     LOCAL_DOWNLOAD_DIRECTORY_INPUT = SimpleNamespace(
         by=By.ACCESSIBILITY_ID,
-        selector="QApplication.Settings.centralwidget.dialogStack.SetupWizardWidget.contentWidget.AccountConfiguredWizardPage.advancedConfigGroupBox.advancedConfigGroupBoxContentWidget.localDirectoryGroupBox.localDirectoryLineEdit"
+        selector="QApplication.Settings.centralwidget.dialogStack.SetupWizardWidget.contentWidget.AccountConfiguredWizardPage.advancedConfigGroupBox.advancedConfigGroupBoxContentWidget.localDirectoryGroupBox.localDirectoryLineEdit",
     )
     DIRECTORY_NAME_BOX = SimpleNamespace(
         by=By.ACCESSIBILITY_ID,
@@ -55,7 +55,9 @@ class AccountConnectionWizard:
         by=By.ACCESSIBILITY_ID,
         selector="QApplication.QFileDialog.fileNameEdit",
     )
-    SYNC_EVERYTHING_RADIO_BUTTON = SimpleNamespace(by=By.NAME, selector="Synchronize all existing spaces")
+    SYNC_EVERYTHING_RADIO_BUTTON = SimpleNamespace(
+        by=By.NAME, selector="Synchronize all existing spaces"
+    )
 
     @staticmethod
     def add_server(server_url):
@@ -110,7 +112,6 @@ class AccountConnectionWizard:
         # create sync folder for user
         sync_path = create_user_sync_path(user)
 
-        AccountConnectionWizard.select_advanced_config()
         app().find_element(
             AccountConnectionWizard.DIRECTORY_NAME_BOX.by,
             AccountConnectionWizard.DIRECTORY_NAME_BOX.selector,
@@ -132,16 +133,20 @@ class AccountConnectionWizard:
         sync_path = get_temp_resource_path(folder_name)
 
         # clear the current path
-        squish.mouseClick(
-            squish.waitForObject(AccountConnectionWizard.SELECT_LOCAL_FOLDER)
+        app().find_element(
+            AccountConnectionWizard.DIRECTORY_NAME_BOX.by,
+            AccountConnectionWizard.DIRECTORY_NAME_BOX.selector,
+        ).click()
+        dir_location_input = app().find_element(
+            AccountConnectionWizard.DIRECTORY_NAME_EDIT_BOX.by,
+            AccountConnectionWizard.DIRECTORY_NAME_EDIT_BOX.selector,
         )
-
-        squish.waitForObject(AccountConnectionWizard.SELECT_LOCAL_FOLDER).setText("")
-
-        squish.type(
-            squish.waitForObject(AccountConnectionWizard.SELECT_LOCAL_FOLDER),
-            sync_path,
-        )
+        dir_location_input.clear()
+        dir_location_input.send_keys(sync_path)
+        app().find_element(
+            AccountConnectionWizard.CHOOSE_FOLDER_BUTTON.by,
+            AccountConnectionWizard.CHOOSE_FOLDER_BUTTON.selector,
+        ).click()
         set_current_user_sync_path(sync_path)
         return sync_path
 
@@ -167,6 +172,7 @@ class AccountConnectionWizard:
                 account_details["sync_folder"]
             )
         elif account_details["user"]:
+            AccountConnectionWizard.select_advanced_config()
             sync_path = AccountConnectionWizard.select_sync_folder(
                 account_details["user"]
             )
@@ -185,26 +191,19 @@ class AccountConnectionWizard:
     def select_download_everything_option():
         app().find_element(
             AccountConnectionWizard.SYNC_EVERYTHING_RADIO_BUTTON.by,
-            AccountConnectionWizard.SYNC_EVERYTHING_RADIO_BUTTON.selector
+            AccountConnectionWizard.SYNC_EVERYTHING_RADIO_BUTTON.selector,
         ).click()
-
-
-    @staticmethod
-    def is_new_connection_window_visible():
-        visible = False
-        try:
-            squish.waitForObject(AccountConnectionWizard.SERVER_ADDRESS_BOX)
-            visible = True
-        except:
-            pass
-        return visible
 
     @staticmethod
     def is_credential_window_visible():
-        visible = app().find_element(
-            AccountConnectionWizard.LOGIN_DIALOG.by,
-            AccountConnectionWizard.LOGIN_DIALOG.selector
-        ).is_displayed()
+        visible = (
+            app()
+            .find_element(
+                AccountConnectionWizard.LOGIN_DIALOG.by,
+                AccountConnectionWizard.LOGIN_DIALOG.selector,
+            )
+            .is_displayed()
+        )
         return visible
 
     @staticmethod
@@ -219,8 +218,8 @@ class AccountConnectionWizard:
         can_change = False
         try:
             app().find_element(
-            AccountConnectionWizard.SELECT_LOCAL_FOLDER_BUTTON.by,
-            AccountConnectionWizard.SELECT_LOCAL_FOLDER_BUTTON.selector
+                AccountConnectionWizard.SELECT_LOCAL_FOLDER_BUTTON.by,
+                AccountConnectionWizard.SELECT_LOCAL_FOLDER_BUTTON.selector,
             ).click()
             app().find_element(
                 AccountConnectionWizard.DIRECTORY_NAME_BOX.by,
@@ -228,7 +227,7 @@ class AccountConnectionWizard:
             )
             app().find_element(
                 AccountConnectionWizard.CHOOSE_FOLDER_BUTTON.by,
-                AccountConnectionWizard.CHOOSE_FOLDER_BUTTON.selector
+                AccountConnectionWizard.CHOOSE_FOLDER_BUTTON.selector,
             )
             can_change = True
         except:
@@ -239,7 +238,7 @@ class AccountConnectionWizard:
     def is_sync_everything_option_checked():
         element = app().find_element(
             AccountConnectionWizard.SYNC_EVERYTHING_RADIO_BUTTON.by,
-            AccountConnectionWizard.SYNC_EVERYTHING_RADIO_BUTTON.selector
+            AccountConnectionWizard.SYNC_EVERYTHING_RADIO_BUTTON.selector,
         )
         return element.get_attribute("checked") == "true"
 
@@ -247,6 +246,6 @@ class AccountConnectionWizard:
     def get_local_sync_path():
         element = app().find_element(
             AccountConnectionWizard.LOCAL_DOWNLOAD_DIRECTORY_INPUT.by,
-            AccountConnectionWizard.LOCAL_DOWNLOAD_DIRECTORY_INPUT.selector
+            AccountConnectionWizard.LOCAL_DOWNLOAD_DIRECTORY_INPUT.selector,
         )
         return str(element.text)

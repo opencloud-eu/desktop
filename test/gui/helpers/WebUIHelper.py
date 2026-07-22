@@ -1,9 +1,9 @@
-import pyperclip
 from playwright.sync_api import sync_playwright
+from helpers.AppHelper import app
 
 
 def authorize_via_webui(username, password):
-    url = pyperclip.paste()
+    url = app().get_clipboard_text()
     with sync_playwright() as pw:
         browser = pw.chromium.launch(headless=True)
         context = browser.new_context(ignore_https_errors=True)

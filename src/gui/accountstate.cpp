@@ -91,6 +91,18 @@ AccountState::AccountState(AccountPtr account)
         case NetworkInformation::Reachability::Site:
             [[fallthrough]];
         case NetworkInformation::Reachability::Unknown:
+            // Abort any running validator — its results are stale since the network changed.
+            // Without this, the guard in checkConnectivity() would skip the new attempt
+            // and leave the account stuck in "Connecting" state indefinitely.
+            if (_connectionValidator) {
+                _connectionValidator->disconnect(this);
+                _connectionValidator->deleteLater();
+                _connectionValidator.clear();
+            }
+            // Drop stale TCP connections from the old network interface so the
+            // upcoming connectivity check (and all subsequent requests) open
+            // fresh sockets on the new interface.
+            _account->accessManager()->clearConnectionCache();
             // the connection might not yet be established
             QTimer::singleShot(0, this, [this] { checkConnectivity(false); });
             break;
@@ -130,6 +142,13 @@ AccountState::AccountState(AccountPtr account)
             // will be rescheduled by a directory scan.
             _account->jobQueue()->clear();
             _queueGuard.unblock();
+        }
+
+        // Abort any running validator — captive portal state changed, so its results are stale.
+        if (_connectionValidator) {
+            _connectionValidator->disconnect(this);
+            _connectionValidator->deleteLater();
+            _connectionValidator.clear();
         }
 
         // A direct connect is not possible, because then the state parameter of `isBehindCaptivePortalChanged`

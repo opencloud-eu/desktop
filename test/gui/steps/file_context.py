@@ -9,7 +9,6 @@ from sure import ensure
 
 from helpers.SetupClientHelper import get_resource_path, get_temp_resource_path
 from helpers.SyncHelper import (
-    wait_for_client_to_be_ready,
     listen_sync_status_for_item,
 )
 from helpers.Utils import wait_for
@@ -72,14 +71,12 @@ def write_file(resource, content):
         f.write(content)
 
 
-def wait_and_write_file(path, content):
-    wait_for_client_to_be_ready()
+def write_file_to_sync_path(path, content):
     listen_sync_status_for_item(get_resource_path(path), 'FILE')
     write_file(path, content)
 
 
-def wait_and_try_to_write_file(resource, content):
-    wait_for_client_to_be_ready()
+def try_to_write_file(resource, content):
     listen_sync_status_for_item(get_resource_path(resource), 'FILE')
     try:
         write_file(resource, content)
@@ -120,7 +117,6 @@ def copy_resource(resource_type, source, destination, from_files_for_upload=Fals
     if source == destination and destination != '/':
         destination = add_copy_suffix(source, resource_type)
 
-    wait_for_client_to_be_ready()
     listen_sync_status_for_item(destination, resource_type)
     if resource_type == 'folder':
         return shutil.copytree(source, destination)
@@ -134,13 +130,11 @@ def move_resource(username, resource_type, source, destination, is_temp_folder=F
         destination = ''
     destination = get_resource_path(destination, username)
 
-    wait_for_client_to_be_ready()
     listen_sync_status_for_item(destination, resource_type)
     shutil.move(source, destination)
 
 
 def deleteResource(resource, resource_type):
-    wait_for_client_to_be_ready()
     listen_sync_status_for_item(resource, resource_type)
     resource_path = sanitize_path(get_resource_path(resource))
     if resource_type == 'file':
@@ -154,12 +148,11 @@ def deleteResource(resource, resource_type):
 )
 def step(context, username, filename):
     file = get_resource_path(filename, username)
-    wait_and_write_file(convert_path_separators_for_os(file), context.text)
+    write_file_to_sync_path(convert_path_separators_for_os(file), context.text)
 
 
 @When('user "{username}" creates a folder "{foldername}" inside the sync folder')
 def step(context, username, foldername):
-    wait_for_client_to_be_ready()
     create_folder(foldername, username)
 
 
@@ -190,7 +183,6 @@ def step(context, resource_type, resource_name):
 @When('the user renames a file "{source}" to "{destination}"')
 @When('the user renames a folder "{source}" to "{destination}"')
 def step(context, source, destination):
-    wait_for_client_to_be_ready()
     rename_file_folder(source, destination)
 
 
@@ -245,7 +237,7 @@ def step(context, resource_type, resource):
 @Given('the user has changed the content of local file "{filename}" to:')
 def step(context, filename):
     file_content = context.text
-    wait_and_write_file(get_resource_path(filename), file_content)
+    write_file_to_sync_path(get_resource_path(filename), file_content)
 
 
 @Then(
@@ -273,19 +265,19 @@ def step(context, filename):
 @When('the user overwrites the file "{resource}" with content "{content}"')
 def step(context, resource, content):
     resource = get_resource_path(resource)
-    wait_and_write_file(resource, content)
+    write_file_to_sync_path(resource, content)
 
 
 @When('the user tries to overwrite the file "|any|" with content "|any|"')
 def step(context, resource, content):
     resource = get_resource_path(resource)
-    wait_and_try_to_write_file(resource, content)
+    try_to_write_file(resource, content)
 
 
 @When('user "|any|" tries to overwrite the file "|any|" with content "|any|"')
 def step(context, user, resource, content):
     resource = get_resource_path(resource, user)
-    wait_and_try_to_write_file(resource, content)
+    try_to_write_file(resource, content)
 
 
 @When('the user deletes the {resource_type:ResourceType} "{resource_name}"')
@@ -297,7 +289,7 @@ def step(context, resource_type, resource_name):
 def step(context, username):
     for row in context.table:
         file = get_resource_path(row[0], username)
-        wait_and_write_file(file, '')
+        write_file_to_sync_path(file, '')
 
 
 @Given('the user has created a folder "{folder_name}" in temp folder')
@@ -331,7 +323,9 @@ def step(context, username, file):
         f.read()
 
 
-@When(r'user "{username}" moves {resource_type} "{resource_name}" from the temp folder into the sync folder')
+@When(
+    r'user "{username}" moves {resource_type} "{resource_name}" from the temp folder into the sync folder'
+)
 def step(context, username, resource_type, resource_name):
     source_dir = join(get_config('test_temp_dir'), resource_name)
     move_resource(username, resource_type, source_dir, '/', True)
@@ -379,7 +373,9 @@ def step(context, user, file_name, content):
         content.should.equal(file_content)
 
 
-@Then('user "{user}" should not be able to edit the file "{file_name}" on the file system')
+@Then(
+    'user "{user}" should not be able to edit the file "{file_name}" on the file system'
+)
 def step(context, user, file_name):
     file_path = get_resource_path(file_name, user)
     with ensure('File should not be writable, but it is'):
@@ -414,7 +410,6 @@ def step(context, username, zip_file_name):
 
 @When('user "|any|" copies file "|any|" to temp folder')
 def step(context, username, source):
-    wait_for_client_to_be_ready()
     source_dir = get_resource_path(source, username)
     destination_dir = get_temp_resource_path(source)
     shutil.copy2(source_dir, destination_dir)
@@ -447,7 +442,6 @@ def step(context, resource_name, destination):
 
 @When('the user deletes the following files')
 def step(context):
-    wait_for_client_to_be_ready()
     for row in context.table:
         filename = row[0]
         deleteResource(filename, 'file')
