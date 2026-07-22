@@ -86,7 +86,9 @@ def step(context):
         listen_sync_status_for_item(sync_paths[username])
         enter_password.login_after_setup(username, password)
         # wait for files to sync
-        wait_for_initial_sync_to_complete(sync_paths[username], force_sync=False, check_queued=False)
+        wait_for_initial_sync_to_complete(
+            sync_paths[username], force_sync=False, check_queued=False
+        )
     Toolbar.wait_toolbar_enabled()
 
 
