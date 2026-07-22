@@ -471,6 +471,10 @@ int main(int argc, char **argv)
             return -1;
         }
 
+        // Early enough so all GUI elements pick it up
+        ConfigFile configFile;
+        qApp->setProperty("textIconColor", configFile.textIconColor());
+
         // Setup the folders. This includes a downgrade-detection, in which case the return value
         // is empty. Note that the value 0 (zero) is a valid return value (non-empty), in which case
         // the dialog is not shown.
