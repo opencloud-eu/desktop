@@ -116,6 +116,7 @@ class Toolbar:
             account = app().find_element(
                 Toolbar.ACCOUNT_TAB.by,
                 Toolbar.ACCOUNT_TAB.selector.format(text=account_label),
+                timeout=get_config("lowest_timeout"),
             )
         except NoSuchElementException:
             pass

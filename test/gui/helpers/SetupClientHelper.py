@@ -1,4 +1,4 @@
-﻿from urllib.parse import urlparse
+from urllib.parse import urlparse
 from os import makedirs
 from os.path import exists, join
 from PySide6.QtCore import QSettings, QUuid, QUrl, QJsonValue
