@@ -220,7 +220,7 @@ void OpenVFS::startImpl(const VfsSetupParams &params)
         params.root().toString()};
 
     // Enable _lots_ of logging for fuse layer
-    if (qgetenv("OPENVFS_FUSE_LOG").length()) {
+    if (qEnvironmentVariableIntValue("OPENCLOUD_OPENVFS_LOG_FUSE") == 1) {
         pparams.prepend(u"-d"_s);
     }
 
