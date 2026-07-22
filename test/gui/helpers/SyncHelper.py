@@ -324,12 +324,12 @@ def wait_for_resource_to_sync(
     )
 
 
-def wait_for_initial_sync_to_complete(path, check_queued=True):
+def wait_for_initial_sync_to_complete(path, force_sync=True, check_queued=True):
     wait_for_resource_to_sync(
         path,
         'FOLDER',
         get_initial_sync_patterns(),
-        True,
+        force_sync,
         check_queued,
     )
 
