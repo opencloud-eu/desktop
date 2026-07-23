@@ -10,7 +10,6 @@ from helpers.Utils import wait_for
 
 
 class Toolbar:
-    TOOLBAR_ROW = SimpleNamespace(by=None, selector=None)
     NAVIGATION_BAR = SimpleNamespace(
         by=By.XPATH, selector="//*[@name='Navigation bar']/.."
     )
@@ -25,8 +24,6 @@ class Toolbar:
         by=By.NAME,
         selector="Yes",
     )
-
-    TOOLBAR_ITEMS = ["Add Account", "Activity", "Settings", "Quit"]
 
     @staticmethod
     def wait_toolbar_enabled():

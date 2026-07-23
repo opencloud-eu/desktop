@@ -412,6 +412,7 @@ dependencies = [
 [package.dev-dependencies]
 lint = [
     { name = "ruff" },
+    { name = "vulture" },
 ]
 
 [package.metadata]
@@ -438,7 +439,10 @@ requires-dist = [
 ]
 
 [package.metadata.requires-dev]
-lint = [{ name = "ruff", specifier = ">=0.15.20" }]
+lint = [
+    { name = "ruff", specifier = ">=0.15.20" },
+    { name = "vulture", specifier = ">=2.16" },
+]
 
 [[package]]
 name = "h11"
@@ -1393,6 +1397,18 @@ wheels = [
 [package.optional-dependencies]
 socks = [
     { name = "pysocks" },
+]
+
+[[package]]
+name = "vulture"
+version = "2.16"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "tomli", marker = "python_full_version < '3.11'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/66/3e/4d08c5903b2c0c70cad583c170cc4a663fc6a61e2ad00b711fcda61358cd/vulture-2.16.tar.gz", hash = "sha256:f8d9f6e2af03011664a3c6c240c9765b3f392917d3135fddca6d6a68d359f717", size = 52680, upload-time = "2026-03-25T14:41:27.141Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/f5/be/f935130312330614811dae2ea9df3f395f6d63889eb6c2e68c14507152ee/vulture-2.16-py3-none-any.whl", hash = "sha256:6e0f1c312cef1c87856957e5c2ca9608834a7c794c2180477f30bf0e4cc58eee", size = 26993, upload-time = "2026-03-25T14:41:26.21Z" },
 ]
 
 [[package]]

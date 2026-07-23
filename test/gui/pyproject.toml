@@ -28,7 +28,13 @@ dependencies = [
 [dependency-groups]
 lint = [
     "ruff>=0.15.20",
+    "vulture>=2.16",
 ]
 
 [tool.ruff.format]
 quote-style = "preserve"
+
+[tool.vulture]
+min_confidence = 80 # report code that is 80%+ likely unused
+ignore_names = ["feature", "sync_filter"]
+exclude = [".venv", "__webdriver"]
