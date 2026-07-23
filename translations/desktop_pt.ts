@@ -196,14 +196,6 @@ Utilitário de sincronização de ficheiros para ambiente de trabalho.</translat
     </message>
 </context>
 <context>
-    <name>DiscoverWebFingerServiceJobFactory</name>
-    <message>
-        <location filename="../src/gui/newwizard/jobs/discoverwebfingerservicejobfactory.cpp" line="39"/>
-        <source>Invalid reply received from server</source>
-        <translation>Resposta inválida recebida do servidor</translation>
-    </message>
-</context>
-<context>
     <name>FetchUserInfoJobFactory</name>
     <message>
         <location filename="../src/libsync/networkjobs/fetchuserinfojobfactory.cpp" line="67"/>
@@ -491,12 +483,12 @@ Utilitário de sincronização de ficheiros para ambiente de trabalho.</translat
 <context>
     <name>OAuthCredentialsSetupWizardState</name>
     <message>
-        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="52"/>
+        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="45"/>
         <source>Error while trying to log in to OAuth2-enabled server.</source>
         <translation>Erro ao tentar iniciar sessão num servidor com OAuth2.</translation>
     </message>
     <message>
-        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="56"/>
+        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="49"/>
         <source>Oauth2 authentication requires a secured connection.</source>
         <translation>A autenticação OAuth2 requer uma ligação segura.</translation>
     </message>
@@ -1642,74 +1634,109 @@ Note que usar opções de registo na linha de comandos substituirá estas defini
 <context>
     <name>OCC::OAuth</name>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="361"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="364"/>
         <source>Error returned from the server: &lt;em&gt;%1&lt;/em&gt;</source>
         <translation>Erro devolvido pelo servidor: &lt;em&gt;%1&lt;/em&gt;</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="363"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="366"/>
         <source>There was an error accessing the &apos;token&apos; endpoint: &lt;br&gt;&lt;em&gt;%1&lt;/em&gt;</source>
         <translation>Ocorreu um erro ao aceder ao endpoint &apos;token&apos;: &lt;br&gt;&lt;em&gt;%1&lt;/em&gt;</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="365"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="368"/>
         <source>Could not parse the JSON returned from the server: &lt;br&gt;&lt;em&gt;%1&lt;/em&gt;</source>
         <translation>Não foi possível analisar o JSON devolvido pelo servidor: &lt;br&gt;&lt;em&gt;%1&lt;/em&gt;</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="367"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="370"/>
         <source>Unsupported token type: %1</source>
         <translation>Tipo de token não suportado: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="369"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="372"/>
         <source>The reply from the server did not contain all expected fields
 :%1</source>
         <translation>A resposta do servidor não continha todos os campos esperados
 :%1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="371"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="374"/>
         <source>Unknown Error</source>
         <translation>Erro desconhecido</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="382"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="377"/>
+        <source>The id_token could not be parsed</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/libsync/creds/oauth.cpp" line="387"/>
         <source>&lt;h1&gt;Incorrect user&lt;/h1&gt;&lt;p&gt;You logged-in as user &lt;em&gt;%1&lt;/em&gt;, but must login with user &lt;em&gt;%2&lt;/em&gt;.&lt;br&gt;Please return to the %3 and restart the authentication.&lt;/p&gt;</source>
         <translation>&lt;h1&gt;Utilizador incorreto&lt;/h1&gt;&lt;p&gt;Iniciou sessão como utilizador &lt;em&gt;%1&lt;/em&gt;, mas tem de iniciar sessão como &lt;em&gt;%2&lt;/em&gt;.&lt;br&gt;Volte ao %3 e reinicie a autenticação.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="387"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="392"/>
         <source>&lt;h1&gt;Incorrect user&lt;/h1&gt;&lt;p&gt;You logged-in as a different user than is associated with this account.&lt;br&gt;Please return to the %1 and restart the authentication.&lt;/p&gt;</source>
         <translation>&lt;h1&gt;Utilizador incorreto&lt;/h1&gt;&lt;p&gt;Iniciou sessão como um utilizador diferente do associado a esta conta.&lt;br&gt;Volte ao %1 e reinicie a autenticação.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="392"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="397"/>
         <source>Incorrect user</source>
         <translation>Utilizador incorreto</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="406"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="411"/>
         <source>&lt;h1&gt;Login successful&lt;/h1&gt;&lt;p&gt;You can close this window.&lt;/p&gt;</source>
         <translation>&lt;h1&gt;Início de sessão bem-sucedido&lt;/h1&gt;&lt;p&gt;Pode fechar esta janela.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="407"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="412"/>
         <source>Login successful</source>
         <translation>Início de sessão bem-sucedido</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="348"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="574"/>
+        <source>WebFinger response had unexpected content type: %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/libsync/creds/oauth.cpp" line="584"/>
+        <source>Could not parse WebFinger response: %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/libsync/creds/oauth.cpp" line="592"/>
+        <source>WebFinger response subject did not match the requested resource</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/libsync/creds/oauth.cpp" line="604"/>
+        <source>WebFinger response did not contain an OpenID Connect issuer</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/libsync/creds/oauth.cpp" line="611"/>
+        <source>WebFinger issuer link had no href</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/libsync/creds/oauth.cpp" line="692"/>
+        <source>Could not parse OIDC discovery response: %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/libsync/creds/oauth.cpp" line="351"/>
         <source>Login Error</source>
         <translation>Erro de início de sessão</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="374"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="379"/>
         <source>The audience of the id_token did not contain &quot;%1&quot;</source>
         <translation>O público do id_token não continha «%1»</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="348"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="351"/>
         <source>&lt;h1&gt;Login Error&lt;/h1&gt;&lt;p&gt;%1&lt;/p&gt;</source>
         <translation>&lt;h1&gt;Erro de início de sessão&lt;/h1&gt;&lt;p&gt;%1&lt;/p&gt;</translation>
     </message>
@@ -1780,7 +1807,7 @@ Note que usar opções de registo na linha de comandos substituirá estas defini
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="428"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="434"/>
         <source>Cannot dehydrate a placeholder because the file changed</source>
         <translation type="unfinished"/>
     </message>
@@ -1788,32 +1815,32 @@ Note que usar opções de registo na linha de comandos substituirá estas defini
 <context>
     <name>OCC::OpenVfsPluginFactory</name>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="280"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="286"/>
         <source>Failed to read /proc/self/mountinfo</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="293"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="299"/>
         <source>Failed to unmount the OpenVFS mount %1 Error:%2</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="302"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="308"/>
         <source>The filesystem for %1 does not support xattributes.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="305"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="311"/>
         <source>The sync path is already claimed by %1</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="309"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="315"/>
         <source>OpenVFS executable not found, please install it</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="315"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="321"/>
         <source>Failed to find the OpenVFS config file, please check your installation.</source>
         <translation type="unfinished"/>
     </message>
@@ -2218,13 +2245,13 @@ Note que usar opções de registo na linha de comandos substituirá estas defini
         <translation>Falha no cálculo da soma de verificação</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateuploadtus.cpp" line="218"/>
+        <location filename="../src/libsync/propagateuploadtus.cpp" line="222"/>
         <source>Upload did not receive a Content-Location.</source>
         <extracomment>Content-Location is a technical term, don't translate.</extracomment>
         <translation>O upload não recebeu o cabeçalho Content-Location.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateuploadtus.cpp" line="226"/>
+        <location filename="../src/libsync/propagateuploadtus.cpp" line="230"/>
         <source>The local file was removed during sync.</source>
         <translation>O ficheiro local foi removido durante a sincronização.</translation>
     </message>
@@ -3005,7 +3032,7 @@ Note que usar opções de registo na linha de comandos substituirá estas defini
 <context>
     <name>ServerUrlSetupWizardState</name>
     <message>
-        <location filename="../src/gui/newwizard/states/serverurlsetupwizardstate.cpp" line="53"/>
+        <location filename="../src/gui/newwizard/states/serverurlsetupwizardstate.cpp" line="52"/>
         <source>Invalid server URL</source>
         <translation>URL do servidor inválido</translation>
     </message>
@@ -3282,7 +3309,7 @@ Note que usar opções de registo na linha de comandos substituirá estas defini
 <context>
     <name>WebFingerUserInfoJobFactory</name>
     <message>
-        <location filename="../src/gui/newwizard/jobs/webfingeruserinfojobfactory.cpp" line="60"/>
+        <location filename="../src/gui/newwizard/jobs/webfingeruserinfojobfactory.cpp" line="61"/>
         <source>Failed to retrieve user info</source>
         <translation>Falha ao obter informações do utilizador</translation>
     </message>

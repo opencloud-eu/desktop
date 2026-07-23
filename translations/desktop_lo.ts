@@ -196,14 +196,6 @@ File synchronization desktop utility.</source>
     </message>
 </context>
 <context>
-    <name>DiscoverWebFingerServiceJobFactory</name>
-    <message>
-        <location filename="../src/gui/newwizard/jobs/discoverwebfingerservicejobfactory.cpp" line="39"/>
-        <source>Invalid reply received from server</source>
-        <translation>ໄດ້ຮັບການຕອບກັບທີ່ບໍ່ຖືກຕ້ອງຈາກເຊີບເວີ</translation>
-    </message>
-</context>
-<context>
     <name>FetchUserInfoJobFactory</name>
     <message>
         <location filename="../src/libsync/networkjobs/fetchuserinfojobfactory.cpp" line="67"/>
@@ -491,12 +483,12 @@ File synchronization desktop utility.</source>
 <context>
     <name>OAuthCredentialsSetupWizardState</name>
     <message>
-        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="52"/>
+        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="45"/>
         <source>Error while trying to log in to OAuth2-enabled server.</source>
         <translation>ເກີດຂໍ້ຜິດພາດຂະນະພະຍາຍາມເຂົ້າສູ່ລະບົບເຊີບເວີທີ່ຮອງຮັບ OAuth2.</translation>
     </message>
     <message>
-        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="56"/>
+        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="49"/>
         <source>Oauth2 authentication requires a secured connection.</source>
         <translation>ການຢືນຢັນຕົວຕົນ OAuth2 ຕ້ອງການການເຊື່ອມຕໍ່ທີ່ປອດໄພ.</translation>
     </message>
@@ -1642,74 +1634,109 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::OAuth</name>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="361"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="364"/>
         <source>Error returned from the server: &lt;em&gt;%1&lt;/em&gt;</source>
         <translation>ຂໍ້ຜິດພາດຈາກເຊີບເວີ: &lt;em&gt;%1&lt;/em&gt;</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="363"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="366"/>
         <source>There was an error accessing the &apos;token&apos; endpoint: &lt;br&gt;&lt;em&gt;%1&lt;/em&gt;</source>
         <translation>ເກີດຂໍ້ຜິດພາດໃນການເຂົ້າເຖິງ &apos;token&apos; endpoint: &lt;br&gt;&lt;em&gt;%1&lt;/em&gt;</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="365"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="368"/>
         <source>Could not parse the JSON returned from the server: &lt;br&gt;&lt;em&gt;%1&lt;/em&gt;</source>
         <translation>ບໍ່ສາມາດອ່ານ JSON ທີ່ຕອບກັບມາຈາກເຊີບເວີໄດ້: &lt;br&gt;&lt;em&gt;%1&lt;/em&gt;</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="367"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="370"/>
         <source>Unsupported token type: %1</source>
         <translation>ປະເພດ token ບໍ່ຮອງຮັບ: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="369"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="372"/>
         <source>The reply from the server did not contain all expected fields
 :%1</source>
         <translation>ການຕອບກັບຈາກເຊີບເວີມີຂໍ້ມູນບໍ່ຄົບຖ້ວນຕາມທີ່ຄາດໄວ້
 :%1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="371"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="374"/>
         <source>Unknown Error</source>
         <translation>ຂໍ້ຜິດພາດທີ່ບໍ່ຮູ້ຈັກ</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="382"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="377"/>
+        <source>The id_token could not be parsed</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/libsync/creds/oauth.cpp" line="387"/>
         <source>&lt;h1&gt;Incorrect user&lt;/h1&gt;&lt;p&gt;You logged-in as user &lt;em&gt;%1&lt;/em&gt;, but must login with user &lt;em&gt;%2&lt;/em&gt;.&lt;br&gt;Please return to the %3 and restart the authentication.&lt;/p&gt;</source>
         <translation>&lt;h1&gt;ຜູ້ໃຊ້ບໍ່ຖືກຕ້ອງ&lt;/h1&gt;&lt;p&gt;ທ່ານເຂົ້າສູ່ລະບົບດ້ວຍຊື່ &lt;em&gt;%1&lt;/em&gt;, ແຕ່ຕ້ອງເຂົ້າສູ່ລະບົບດ້ວຍຊື່ &lt;em&gt;%2&lt;/em&gt;.&lt;br&gt;ກະລຸນາກັບໄປທີ່ %3 ແລະ ເລີ່ມການຢືນຢັນຕົວຕົນໃໝ່.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="387"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="392"/>
         <source>&lt;h1&gt;Incorrect user&lt;/h1&gt;&lt;p&gt;You logged-in as a different user than is associated with this account.&lt;br&gt;Please return to the %1 and restart the authentication.&lt;/p&gt;</source>
         <translation>&lt;h1&gt;ຜູ້ໃຊ້ບໍ່ຖືກຕ້ອງ&lt;/h1&gt;&lt;p&gt;ທ່ານເຂົ້າສູ່ລະບົບດ້ວຍຊື່ຜູ້ໃຊ້ອື່ນທີ່ບໍ່ກົງກັບບັນຊີນີ້.&lt;br&gt;ກະລຸນາກັບໄປທີ່ %1 ແລະ ເລີ່ມການຢືນຢັນຕົວຕົນໃໝ່.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="392"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="397"/>
         <source>Incorrect user</source>
         <translation>ຜູ້ໃຊ້ບໍ່ຖືກຕ້ອງ</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="406"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="411"/>
         <source>&lt;h1&gt;Login successful&lt;/h1&gt;&lt;p&gt;You can close this window.&lt;/p&gt;</source>
         <translation>&lt;h1&gt;ເຂົ້າສູ່ລະບົບສຳເລັດແລ້ວ&lt;/h1&gt;&lt;p&gt;ທ່ານສາມາດປິດໜ້າຕ່າງນີ້ໄດ້ເລີຍ.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="407"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="412"/>
         <source>Login successful</source>
         <translation>ເຂົ້າສູ່ລະບົບສຳເລັດແລ້ວ</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="348"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="574"/>
+        <source>WebFinger response had unexpected content type: %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/libsync/creds/oauth.cpp" line="584"/>
+        <source>Could not parse WebFinger response: %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/libsync/creds/oauth.cpp" line="592"/>
+        <source>WebFinger response subject did not match the requested resource</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/libsync/creds/oauth.cpp" line="604"/>
+        <source>WebFinger response did not contain an OpenID Connect issuer</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/libsync/creds/oauth.cpp" line="611"/>
+        <source>WebFinger issuer link had no href</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/libsync/creds/oauth.cpp" line="692"/>
+        <source>Could not parse OIDC discovery response: %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/libsync/creds/oauth.cpp" line="351"/>
         <source>Login Error</source>
         <translation>ຂໍ້ຜິດພາດໃນການເຂົ້າສູ່ລະບົບ</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="374"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="379"/>
         <source>The audience of the id_token did not contain &quot;%1&quot;</source>
         <translation>Audience ຂອງ id_token ບໍ່ມີ &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="348"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="351"/>
         <source>&lt;h1&gt;Login Error&lt;/h1&gt;&lt;p&gt;%1&lt;/p&gt;</source>
         <translation>&lt;h1&gt;ຂໍ້ຜິດພາດໃນການເຂົ້າສູ່ລະບົບ&lt;/h1&gt;&lt;p&gt;%1&lt;/p&gt;</translation>
     </message>
@@ -1780,7 +1807,7 @@ Note that using any logging command line options will override the settings.</so
         <translation>ບໍ່ສາມາດດຶງຂໍ້ມູນການລົງທະບຽນໄດ້. ຂໍ້ຜິດພາດ: %1</translation>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="428"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="434"/>
         <source>Cannot dehydrate a placeholder because the file changed</source>
         <translation>ບໍ່ສາມາດປ່ຽນໄຟລ໌ໃຫ້ເປັນແບບ online-only ໄດ້ ເພາະໄຟລ໌ມີການປ່ຽນແປງ</translation>
     </message>
@@ -1788,32 +1815,32 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::OpenVfsPluginFactory</name>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="280"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="286"/>
         <source>Failed to read /proc/self/mountinfo</source>
         <translation>ບໍ່ສາມາດອ່ານ /proc/self/mountinfo ໄດ້</translation>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="293"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="299"/>
         <source>Failed to unmount the OpenVFS mount %1 Error:%2</source>
         <translation>ບໍ່ສາມາດຍົກເລີກການ mount ຂອງ OpenVFS %1 ໄດ້. ຂໍ້ຜິດພາດ: %2</translation>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="302"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="308"/>
         <source>The filesystem for %1 does not support xattributes.</source>
         <translation>ລະບົບໄຟລ໌ສຳລັບ %1 ບໍ່ຮອງຮັບ xattributes.</translation>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="305"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="311"/>
         <source>The sync path is already claimed by %1</source>
         <translation>ເສັ້ນທາງການຊິງໂຄຣໄນນີ້ຖືກໃຊ້ໂດຍ %1 ຢູ່ແລ້ວ</translation>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="309"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="315"/>
         <source>OpenVFS executable not found, please install it</source>
         <translation>ບໍ່ພົບໄຟລ໌ໂປຣແກຣມ OpenVFS, ກະລຸນາຕິດຕັ້ງມັນກ່ອນ</translation>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="315"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="321"/>
         <source>Failed to find the OpenVFS config file, please check your installation.</source>
         <translation>ບໍ່ພົບໄຟລ໌ກຳນົດຄ່າຂອງ OpenVFS, ກະລຸນາກວດສອບການຕິດຕັ້ງຂອງທ່ານ.</translation>
     </message>
@@ -2218,13 +2245,13 @@ Note that using any logging command line options will override the settings.</so
         <translation>ການຄຳນວນ Checksum ບໍ່ສຳເລັດ</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateuploadtus.cpp" line="218"/>
+        <location filename="../src/libsync/propagateuploadtus.cpp" line="222"/>
         <source>Upload did not receive a Content-Location.</source>
         <extracomment>Content-Location is a technical term, don't translate.</extracomment>
         <translation>ການອັບໂຫລດບໍ່ໄດ້ຮັບ Content-Location.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateuploadtus.cpp" line="226"/>
+        <location filename="../src/libsync/propagateuploadtus.cpp" line="230"/>
         <source>The local file was removed during sync.</source>
         <translation>ໄຟລ໌ໃນເຄື່ອງຖືກລຶບອອກຂະນະກຳລັງຊິງໂຄຣໄນ.</translation>
     </message>
@@ -3005,7 +3032,7 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>ServerUrlSetupWizardState</name>
     <message>
-        <location filename="../src/gui/newwizard/states/serverurlsetupwizardstate.cpp" line="53"/>
+        <location filename="../src/gui/newwizard/states/serverurlsetupwizardstate.cpp" line="52"/>
         <source>Invalid server URL</source>
         <translation>URL ເຊີບເວີບໍ່ຖືກຕ້ອງ</translation>
     </message>
@@ -3282,7 +3309,7 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>WebFingerUserInfoJobFactory</name>
     <message>
-        <location filename="../src/gui/newwizard/jobs/webfingeruserinfojobfactory.cpp" line="60"/>
+        <location filename="../src/gui/newwizard/jobs/webfingeruserinfojobfactory.cpp" line="61"/>
         <source>Failed to retrieve user info</source>
         <translation>ບໍ່ສາມາດດຶງຂໍ້ມູນຜູ້ໃຊ້ໄດ້</translation>
     </message>
