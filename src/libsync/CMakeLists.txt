@@ -22,6 +22,7 @@ add_library(libsync SHARED
     jobqueue.cpp
     logger.cpp
     accessmanager.cpp
+    clientcertificateutils.cpp
     configfile.cpp
     globalconfig.cpp
     abstractnetworkjob.cpp

@@ -99,6 +99,10 @@ QNetworkReply *AccessManager::createRequest(QNetworkAccessManager::Operation op,
         // this behavior does not match the documentation
         sslConfiguration.addCaCertificates({ _customTrustedCaCertificates.begin(), _customTrustedCaCertificates.end() });
     }
+    if (!_clientCertificate.isNull()) {
+        sslConfiguration.setLocalCertificate(_clientCertificate);
+        sslConfiguration.setPrivateKey(_clientPrivateKey);
+    }
     newRequest.setSslConfiguration(sslConfiguration);
 
     const auto reply = QNetworkAccessManager::createRequest(op, newRequest, outgoingData);
@@ -123,6 +127,13 @@ void AccessManager::addCustomTrustedCaCertificates(const QList<QSslCertificate> 
     _customTrustedCaCertificates.unite({ certificates.begin(), certificates.end() });
 
     // we have to terminate the existing (cached) connection to make the access manager re-evaluate the certificate sent by the server
+    clearConnectionCache();
+}
+
+void AccessManager::setClientCertificate(const QSslCertificate &cert, const QSslKey &key)
+{
+    _clientCertificate = cert;
+    _clientPrivateKey = key;
     clearConnectionCache();
 }
 
