@@ -438,7 +438,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				OC_APPLICATION_NAME = OpenCloud;
-				OC_APPLICATION_REV_DOMAIN = eu.opencloud.desktop;
+				OC_APPLICATION_REV_DOMAIN = eu.opencloud.OpenCloudDesktop;
 				OC_OEM_SHARE_ICNS = "";
 				OC_SOCKETAPI_TEAM_IDENTIFIER_PREFIX = "";
 				ONLY_ACTIVE_ARCH = YES;
@@ -486,8 +486,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				OC_APPLICATION_NAME = OpenClud;
-				OC_APPLICATION_REV_DOMAIN = eu.opencloud.desktop;
+				OC_APPLICATION_NAME = OpenCloud;
+				OC_APPLICATION_REV_DOMAIN = eu.opencloud.OpenCloudDesktop;
 				OC_OEM_SHARE_ICNS = "";
 				OC_SOCKETAPI_TEAM_IDENTIFIER_PREFIX = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
