@@ -1,7 +1,6 @@
 import os
 import time
 
-# pylint: disable=import-error
 import win32pipe
 import win32file
 import winerror
@@ -59,11 +58,11 @@ class WinPipeConnect:
 
             self.connected = True
 
-        except Exception as e:  # pylint: disable=broad-except
+        except Exception as e:
             print(f'Could not connect to named pipe {pipename}\n' + str(e))
             win32file.CloseHandle(self._pipe)
 
-    def sendCommand(self, cmd):  # pylint: disable=invalid-name
+    def sendCommand(self, cmd):  # noqa: N802
         if self.connected:
             w_res, _ = win32file.WriteFile(
                 self._pipe, cmd.encode('utf-8'), self._overlapped

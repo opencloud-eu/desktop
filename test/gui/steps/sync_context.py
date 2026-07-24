@@ -83,16 +83,6 @@ def step(context, username, resource_type, resource):
     wait_for_resource_to_have_sync_error(resource, resource_type)
 
 
-@Then('the "|any|" button should not be available')
-def step(context, item):
-    SyncConnection.open_menu()
-    test.compare(
-        SyncConnection.menu_item_exists(item),
-        False,
-        f'Menu item "{item}" does not exist.',
-    )
-
-
 @When('the user opens the activity tab')
 def step(context):
     Toolbar.open_activity()
@@ -108,15 +98,16 @@ def step(context, filename):
     Activity.has_conflict_file(filename)
 
 
-@Then('the {resource_type:ResourceType} "{resourceName}" should be blacklisted')
-def step(context, resource_type, resourceName):
+@Then('the {resource_type:ResourceType} "{resource_name}" should be blacklisted')
+def step(context, resource_type, resource_name):
     with ensure(f'{resource_type.capitalize()} is blacklisted'):
-        Activity.is_resource_blacklisted(resourceName).should.be.true
+        Activity.is_resource_blacklisted(resource_name).should.be.true
 
 
 @Then('the file "|any|" should be ignored')
 def step(context, filename):
-    test.compare(True, Activity.is_resource_ignored(filename), 'File is Ignored')
+    with ensure("File is not ignored"):
+        Activity.is_resource_ignored(filename).should.be.true
 
 
 @Then('the file "{filename}" should be excluded')
@@ -133,8 +124,8 @@ def step(context, tab_name):
 @Then('the toolbar should have the following tabs:')
 def step(context):
     tabs = table_raw(context.table)
-    for tab_name in tabs:
-        tab_name = tab_name[0]
+    for row in tabs:
+        tab_name = row[0]
         with ensure('Tab not found: {0}', tab_name):
             Toolbar.has_tab(tab_name).should.be.true
 
@@ -207,8 +198,8 @@ def step(context, space_name):
 @Then('the settings tab should have the following options in the general section:')
 def step(context):
     settings = table_raw(context.table)
-    for setting in settings:
-        setting = setting[0]
+    for row in settings:
+        setting = row[0]
         with ensure('General setting not found: {0}', setting):
             Settings.has_general_setting(setting).should.be.true
 
@@ -216,8 +207,8 @@ def step(context):
 @Then('the settings tab should have the following options in the advanced section:')
 def step(context):
     settings = table_raw(context.table)
-    for setting in settings:
-        setting = setting[0]
+    for row in settings:
+        setting = row[0]
         with ensure('Advanced setting not found: {0}', setting):
             Settings.has_advanced_setting(setting).should.be.true
 
@@ -225,8 +216,8 @@ def step(context):
 @Then('the settings tab should have the following options in the network section:')
 def step(context):
     settings = table_raw(context.table)
-    for setting in settings:
-        setting = setting[0]
+    for row in settings:
+        setting = row[0]
         with ensure('Network setting not found: {0}', setting):
             Settings.has_network_setting(setting).should.be.true
 

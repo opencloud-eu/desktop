@@ -134,7 +134,7 @@ def move_resource(username, resource_type, source, destination, is_temp_folder=F
     shutil.move(source, destination)
 
 
-def deleteResource(resource, resource_type):
+def delete_resource(resource, resource_type):
     listen_sync_status_for_item(resource, resource_type)
     resource_path = sanitize_path(get_resource_path(resource))
     if resource_type == 'file':
@@ -192,7 +192,7 @@ def step(context, source, destination):
 def step(context, file_path):
     expected = context.text
     file_path = get_resource_path(file_path)
-    with open(file_path, 'r', encoding='utf-8') as f:
+    with open(file_path, encoding='utf-8') as f:
         contents = f.read()
     with ensure(
         '{0} expected to exist with content "{1}" but has content "{2}"',
@@ -253,7 +253,7 @@ def step(context, filename):
     pattern = re.compile(build_conflicted_regex(filename))
     for file in onlyfiles:
         if pattern.match(file):
-            with open(get_resource_path(file), 'r', encoding='utf-8') as f:
+            with open(get_resource_path(file), encoding='utf-8') as f:
                 if f.read() == expected:
                     found = True
                     break
@@ -282,7 +282,7 @@ def step(context, user, resource, content):
 
 @When('the user deletes the {resource_type:ResourceType} "{resource_name}"')
 def step(context, resource_type, resource_name):
-    deleteResource(resource_name, resource_type)
+    delete_resource(resource_name, resource_type)
 
 
 @When('user "{username}" creates the following files inside the sync folder:')
@@ -304,7 +304,7 @@ def step(context, file_number, file_size, folder_name):
     current_sync_path = get_temp_resource_path(folder_name)
     if folder_exists(current_sync_path):
         file_size = builtins.int(file_size)
-        for i in range(0, builtins.int(file_number)):
+        for i in range(builtins.int(file_number)):
             file_name = f'file{i}.txt'
             create_file_with_size(join(current_sync_path, file_name), file_size, True)
     else:
@@ -319,7 +319,7 @@ def step(context, file_number, file_size, folder_name):
 )
 def step(context, username, file):
     file_path = get_resource_path(file, username)
-    with open(file_path, 'r') as f:
+    with open(file_path) as f:
         f.read()
 
 
@@ -444,7 +444,7 @@ def step(context, resource_name, destination):
 def step(context):
     for row in context.table:
         filename = row[0]
-        deleteResource(filename, 'file')
+        delete_resource(filename, 'file')
 
 
 @Given(
