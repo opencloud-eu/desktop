@@ -1646,7 +1646,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="368"/>
         <source>Could not parse the JSON returned from the server: &lt;br&gt;&lt;em&gt;%1&lt;/em&gt;</source>
-        <translation>Das vom Server zurückgegebene JSON konnte nicht geparst werden: &lt;br&gt;&lt;em&gt;%1&lt;/em&gt;</translation>
+        <translation>Das vom Server zurückgegebene JSON konnte nicht verarbeitet werden: &lt;br&gt;&lt;em&gt;%1&lt;/em&gt;</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="370"/>
@@ -1668,7 +1668,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="377"/>
         <source>The id_token could not be parsed</source>
-        <translation type="unfinished"/>
+        <translation>Der id_token konnte nicht verarbeitet werden.</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="387"/>
@@ -1698,32 +1698,32 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="574"/>
         <source>WebFinger response had unexpected content type: %1</source>
-        <translation type="unfinished"/>
+        <translation>Die WebFinger-Antwort enthielt einen unerwarteten Inhaltstyp: %1</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="584"/>
         <source>Could not parse WebFinger response: %1</source>
-        <translation type="unfinished"/>
+        <translation>Die WebFinger-Antwort konnte nicht verarbeitet werden: %1</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="592"/>
         <source>WebFinger response subject did not match the requested resource</source>
-        <translation type="unfinished"/>
+        <translation>Der Betreff der WebFinger-Antwort stimmte nicht mit der angeforderten Ressource überein.</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="604"/>
         <source>WebFinger response did not contain an OpenID Connect issuer</source>
-        <translation type="unfinished"/>
+        <translation>Die WebFinger-Antwort enthielt keinen OpenID-Connect-Aussteller.</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="611"/>
         <source>WebFinger issuer link had no href</source>
-        <translation type="unfinished"/>
+        <translation>Der WebFinger-Ausstellerlink hatte keinen href-Wert.</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="692"/>
         <source>Could not parse OIDC discovery response: %1</source>
-        <translation type="unfinished"/>
+        <translation>Die OIDC-Erkennungsantwort konnte nicht verarbeitet werden: %1</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="351"/>

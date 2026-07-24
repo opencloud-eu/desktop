@@ -1667,7 +1667,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="377"/>
         <source>The id_token could not be parsed</source>
-        <translation type="unfinished"/>
+        <translation>Het id_token kan niet worden verwerkt</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="387"/>
@@ -1697,32 +1697,32 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="574"/>
         <source>WebFinger response had unexpected content type: %1</source>
-        <translation type="unfinished"/>
+        <translation>WebFinger-reactie heeft onverwacht inhoudstype: %1</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="584"/>
         <source>Could not parse WebFinger response: %1</source>
-        <translation type="unfinished"/>
+        <translation>Kan WebFinger-antwoord niet verwerken: %1</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="592"/>
         <source>WebFinger response subject did not match the requested resource</source>
-        <translation type="unfinished"/>
+        <translation>WebFinger-antwoord komt niet overeen met de gevraagde hulpbron</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="604"/>
         <source>WebFinger response did not contain an OpenID Connect issuer</source>
-        <translation type="unfinished"/>
+        <translation>WebFinger-antwoord bevat geen OpenID Connect-issuer</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="611"/>
         <source>WebFinger issuer link had no href</source>
-        <translation type="unfinished"/>
+        <translation>WebFinger-issuerlink bevat geen href</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="692"/>
         <source>Could not parse OIDC discovery response: %1</source>
-        <translation type="unfinished"/>
+        <translation>Kan OIDC-detectieantwoord niet verwerken: %1</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="351"/>
