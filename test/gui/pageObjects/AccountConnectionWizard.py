@@ -99,6 +99,7 @@ class AccountConnectionWizard:
 
     @staticmethod
     def get_login_url():
+        login_url = ""
         try:
             AccountConnectionWizard.copy_login_url()
             login_url = app().get_clipboard_text()
