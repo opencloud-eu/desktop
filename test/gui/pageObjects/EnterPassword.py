@@ -29,8 +29,8 @@ class EnterPassword:
         return username.capitalize()
 
     def oidc_relogin(self, username, password):
-        AccountConnectionWizard.copy_login_url()
-        authorize_via_webui(username, password)
+        login_url = AccountConnectionWizard.get_login_url()
+        authorize_via_webui(username, password, login_url)
 
     def relogin(self, username, password, oauth=False):
         self.oidc_relogin(username, password)
