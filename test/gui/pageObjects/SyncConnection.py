@@ -8,17 +8,13 @@ from helpers.Utils import wait_for
 
 
 class SyncConnection:
-    ACCOUNT_CONNECTION_CONTAINER = SimpleNamespace(
-        by=By.NAME, selector="Sync connections"
-    )
+    ACCOUNT_CONNECTION_CONTAINER = SimpleNamespace(by=By.NAME, selector="Sync connections")
     FOLDER_SYNC_CONNECTION_MENU_BUTTON = SimpleNamespace(
         by=By.NAME,
         selector="{sync_folder},{status},Local folder: {sync_path}{sync_folder}",
     )
     MENU_ITEM = SimpleNamespace(by=By.NAME, selector=None)
-    CONFIRM_FOLDER_SYNC_CONNECTION_REMOVE = SimpleNamespace(
-        by=By.NAME, selector="Remove Space"
-    )
+    CONFIRM_FOLDER_SYNC_CONNECTION_REMOVE = SimpleNamespace(by=By.NAME, selector="Remove Space")
     PERMISSION_ERROR_LABEL = SimpleNamespace(
         by=By.XPATH, selector="//label[contains(@name, 'permission')]"
     )

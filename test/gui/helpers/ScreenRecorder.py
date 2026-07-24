@@ -51,9 +51,7 @@ def start_recording(filename):
     _video_path = get_screenrecord_file_path(filename)
     _stop_event.clear()
 
-    _recording_thread = threading.Thread(
-        target=_record_loop, args=(_video_path,), daemon=True
-    )
+    _recording_thread = threading.Thread(target=_record_loop, args=(_video_path,), daemon=True)
     _recording_thread.start()
 
 

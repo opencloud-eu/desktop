@@ -66,5 +66,4 @@ def get_capabilities():
     response_str = response.text
     response_doc = QJsonDocument.fromJson(response_str.encode("utf-8"))
     response_obj = response_doc.object()
-    capabilities = response_obj.get('ocs').get('data').get('capabilities')
-    return capabilities
+    return response_obj.get('ocs').get('data').get('capabilities')

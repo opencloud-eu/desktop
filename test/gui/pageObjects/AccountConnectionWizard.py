@@ -173,9 +173,7 @@ class AccountConnectionWizard:
             )
         elif account_details["user"]:
             AccountConnectionWizard.select_advanced_config()
-            sync_path = AccountConnectionWizard.select_sync_folder(
-                account_details["user"]
-            )
+            sync_path = AccountConnectionWizard.select_sync_folder(account_details["user"])
         if sync_path:
             # listen for sync status
             listen_sync_status_for_item(sync_path)
@@ -196,7 +194,7 @@ class AccountConnectionWizard:
 
     @staticmethod
     def is_credential_window_visible():
-        visible = (
+        return (
             app()
             .find_element(
                 AccountConnectionWizard.LOGIN_DIALOG.by,
@@ -204,7 +202,6 @@ class AccountConnectionWizard:
             )
             .is_displayed()
         )
-        return visible
 
     @staticmethod
     def select_advanced_config():

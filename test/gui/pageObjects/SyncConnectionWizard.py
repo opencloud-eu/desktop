@@ -22,9 +22,7 @@ class SyncConnectionWizard:
         by=By.XPATH, selector="//dialog[@name='Add Space']//*[@name='Add Space']"
     )
     SELECTIVE_SYNC_TREE_HEADER = SimpleNamespace(by=By.NAME, selector='{header}')
-    CANCEL_FOLDER_SYNC_CONNECTION_WIZARD = SimpleNamespace(
-        by=By.NAME, selector="Cancel"
-    )
+    CANCEL_FOLDER_SYNC_CONNECTION_WIZARD = SimpleNamespace(by=By.NAME, selector="Cancel")
     SPACES_LIST = SimpleNamespace(by=By.NAME, selector="Spaces list")
     SPACE_NAME_SELECTOR = SimpleNamespace(by=By.NAME, selector="{space_name},")
     ADD_SPACE_BUTTON = SimpleNamespace(by=By.NAME, selector='Add Space')
@@ -75,9 +73,7 @@ class SyncConnectionWizard:
     def sort_by(header_text):
         element = app().find_element(
             SyncConnectionWizard.SELECTIVE_SYNC_TREE_HEADER.by,
-            SyncConnectionWizard.SELECTIVE_SYNC_TREE_HEADER.selector.format(
-                header=header_text
-            ),
+            SyncConnectionWizard.SELECTIVE_SYNC_TREE_HEADER.selector.format(header=header_text),
         )
         # ISSUE: https://github.com/opencloud-eu/desktop/pull/879
         # Cannot select table header element by click event
@@ -126,9 +122,7 @@ class SyncConnectionWizard:
         )
         space_item = spaces_list.find_element(
             SyncConnectionWizard.SPACE_NAME_SELECTOR.by,
-            SyncConnectionWizard.SPACE_NAME_SELECTOR.selector.format(
-                space_name=space_name
-            ),
+            SyncConnectionWizard.SPACE_NAME_SELECTOR.selector.format(space_name=space_name),
         )
         # ISSUE: https://github.com/opencloud-eu/desktop/pull/879
         # Cannot select space by click event
@@ -168,6 +162,7 @@ class SyncConnectionWizard:
         for folder in possible_els:
             if folder.rect["x"] > parent_row:
                 return folder
+        return None
 
     @staticmethod
     def toggle_folder_selection(folders, select=True):
@@ -182,9 +177,7 @@ class SyncConnectionWizard:
             target_element = None
             for idx, parent in enumerate(parents):
                 p_elements = app().find_elements(By.NAME, parent)
-                next_item = (
-                    parents[idx + 1] if idx + 1 < len(parents) else target_folder
-                )
+                next_item = parents[idx + 1] if idx + 1 < len(parents) else target_folder
                 # select nested folders based on the position of the parent folder
                 for p_element in p_elements:
                     if p_element.rect["x"] >= parent_position and (

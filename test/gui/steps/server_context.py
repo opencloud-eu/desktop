@@ -27,9 +27,7 @@ def step(context, user_name, resource_type, resource_name):
         resource_exists.should.be.false
 
 
-@Then(
-    'as "{user_name}" {resource_type:ResourceType} "{resource_name}" should exist in the server'
-)
+@Then('as "{user_name}" {resource_type:ResourceType} "{resource_name}" should exist in the server')
 def step(context, user_name, resource_type, resource_name):
     resource_exists = webdav.resource_exists(user_name, resource_name)
     with ensure(
@@ -40,9 +38,7 @@ def step(context, user_name, resource_type, resource_name):
         resource_exists.should.be.true
 
 
-@Then(
-    'as "{user_name}" the file "{file_name}" should have the content "{content}" in the server'
-)
+@Then('as "{user_name}" the file "{file_name}" should have the content "{content}" in the server')
 def step(context, user_name, file_name, content):
     text_content = webdav.get_file_content(user_name, file_name)
     with ensure(
@@ -75,9 +71,7 @@ def step(context, user, file_content, file_name):
     webdav.create_file(user, file_name, file_content)
 
 
-@When(
-    'user "{user}" uploads file with content "{file_content}" to "{file_name}" in the server'
-)
+@When('user "{user}" uploads file with content "{file_content}" to "{file_name}" in the server')
 def step(context, user, file_content, file_name):
     webdav.create_file(user, file_name, file_content)
 

@@ -94,8 +94,7 @@ def get_compressed_file_size(path):
 def resource_archived(resource_path):
     if is_windows():
         return bool(
-            get_file_attributes(resource_path)
-            & FileAttributeConstants.FILE_ATTRIBUTE_ARCHIVE
+            get_file_attributes(resource_path) & FileAttributeConstants.FILE_ATTRIBUTE_ARCHIVE
         )
     raise OSError(error_message % inspect.currentframe().f_back.f_code.co_name)
 
@@ -103,8 +102,7 @@ def resource_archived(resource_path):
 def resource_pinned(resource_path):
     if is_windows():
         return bool(
-            get_file_attributes(resource_path)
-            & FileAttributeConstants.FILE_ATTRIBUTE_PINNED
+            get_file_attributes(resource_path) & FileAttributeConstants.FILE_ATTRIBUTE_PINNED
         )
     raise OSError(error_message % inspect.currentframe().f_back.f_code.co_name)
 
@@ -112,8 +110,7 @@ def resource_pinned(resource_path):
 def resource_unpinned(resource_path):
     if is_windows():
         return bool(
-            get_file_attributes(resource_path)
-            & FileAttributeConstants.FILE_ATTRIBUTE_UNPINNED
+            get_file_attributes(resource_path) & FileAttributeConstants.FILE_ATTRIBUTE_UNPINNED
         )
     raise OSError(error_message % inspect.currentframe().f_back.f_code.co_name)
 
