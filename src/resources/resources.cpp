@@ -23,6 +23,7 @@
 
 #include <QDebug>
 #include <QFileInfo>
+#include <QGuiApplication>
 #include <QImageReader>
 #include <QJsonDocument>
 #include <QLoggingCategory>
@@ -115,6 +116,10 @@ QIcon OCC::Resources::loadIcon(const QString &flavor, const QString &name, IconT
 
 QColor Resources::tint()
 {
+    if (qApp->property("textIconColor").toBool()) {
+        return QGuiApplication::palette().color(QPalette::Text);
+    }
+
     static QColor lilac{"#E2BAFF"};
     static QColor petrol{"#20434F"};
     return isUsingDarkTheme() ? lilac : petrol;

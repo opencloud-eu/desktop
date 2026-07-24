@@ -78,6 +78,11 @@ GeneralSettings::GeneralSettings(QWidget *parent)
     });
 
     connect(_ui->about_pushButton, &QPushButton::clicked, ocApp(), &Application::showAbout);
+
+    connect(_ui->textIconColorCheckBox, &QCheckBox::toggled, this, [this](bool checked) {
+        ConfigFile().setTextIconColor(checked);
+        QMessageBox::warning(this, tr("Warning"), tr("Changing this setting requires a restart of this application to take effect."), QMessageBox::Ok);
+    });
 }
 
 GeneralSettings::~GeneralSettings()
@@ -134,6 +139,7 @@ void GeneralSettings::slotIgnoreFilesEditor()
 
 void GeneralSettings::reloadConfig()
 {
+    _ui->textIconColorCheckBox->setChecked(ConfigFile().textIconColor());
     _ui->syncHiddenFilesCheckBox->setChecked(!FolderMan::instance()->ignoreHiddenFiles());
     _ui->moveToTrashCheckBox->setChecked(ConfigFile().moveToTrash());
     if (Utility::isWindows() && Utility::isInstalledByStore()) {

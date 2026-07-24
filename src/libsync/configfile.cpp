@@ -97,6 +97,10 @@ QString excludeFileNameC()
 {
     return QStringLiteral("sync-exclude.lst");
 }
+const QString textIconColorC()
+{
+    return QStringLiteral("textIconColor");
+}
 
 } // anonymous namespace
 
@@ -516,5 +520,17 @@ void ConfigFile::setupDefaultExcludeFilePaths(ExcludedFiles &excludedFiles)
         qCInfo(lcConfigFile) << u"Adding user defined ignore list to csync:" << userList;
         excludedFiles.addExcludeFilePath(userList);
     }
+}
+
+bool ConfigFile::textIconColor() const
+{
+    auto settings = makeQSettings();
+    return settings.value(textIconColorC(), false).toBool();
+}
+
+void ConfigFile::setTextIconColor(bool enabled)
+{
+    auto settings = makeQSettings();
+    settings.setValue(textIconColorC(), enabled);
 }
 }

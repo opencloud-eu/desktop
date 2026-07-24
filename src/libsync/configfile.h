@@ -149,6 +149,9 @@ public:
     /// Add the system and user exclude file path to the ExcludedFiles instance.
     static void setupDefaultExcludeFilePaths(ExcludedFiles &excludedFiles);
 
+    bool textIconColor() const;
+    void setTextIconColor(bool enabled);
+
 private:
     QVariant getValue(const QString &param, const QVariant &defaultValue = QVariant()) const;
     void setValue(const QString &key, const QVariant &value);
