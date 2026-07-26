@@ -32,3 +32,31 @@ lint = [
 
 [tool.ruff.format]
 quote-style = "preserve"
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "F",
+    "UP",
+    "SIM",
+    "N",
+    "RUF",
+    "PIE",
+    "PLW2901",
+]
+
+ignore = [
+    "E501",     # Line too long
+    "F403",     # Wildcard import (`from x import *`)
+    "E722",     # Bare `except`
+    "SIM105",   # Use `contextlib.suppress`
+    "SIM110",   # Use `any()` instead of loop
+    "UP012",    # Remove unnecessary UTF-8 encoding
+    "SIM113",   # Use enumerate() instead of a manual loop counter
+    "N812",     # Lowercase imported as non-lowercase
+    "N801",     # Allow non-CapWords class names
+]
+
+[tool.ruff.lint.per-file-ignores]
+"steps/*.py" = ["F811"]
+"steps/vfs_context.py" = ["F821"]

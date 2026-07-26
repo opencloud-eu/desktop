@@ -50,7 +50,7 @@ class Activity:
             get_config('max_timeout'),
         )
         if not has_activity:
-            raise AssertionError(f"File conflict activity not found")
+            raise AssertionError("File conflict activity not found")
 
     @staticmethod
     def is_resource_blacklisted(filename):

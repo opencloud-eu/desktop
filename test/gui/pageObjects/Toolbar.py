@@ -26,8 +26,6 @@ class Toolbar:
         selector="Yes",
     )
 
-    TOOLBAR_ITEMS = ["Add Account", "Activity", "Settings", "Quit"]
-
     @staticmethod
     def wait_toolbar_enabled():
         toolbar = app().find_element(

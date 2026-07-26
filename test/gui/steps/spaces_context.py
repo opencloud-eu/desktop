@@ -1,5 +1,5 @@
 from sure import ensure
-from behave import given as Given
+from behave import given as Given, then as Then
 
 from pageObjects.EnterPassword import EnterPassword
 from pageObjects.Toolbar import Toolbar

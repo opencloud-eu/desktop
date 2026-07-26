@@ -1,6 +1,6 @@
 import tempfile
 from pathlib import Path
-from behave import given as Given, then as Then
+from behave import given as Given, then as Then, when as When
 from sure import ensure
 
 from helpers.api import provisioning, webdav_helper as webdav
@@ -73,11 +73,6 @@ def step(context, user, folder_name):
 )
 def step(context, user, file_content, file_name):
     webdav.create_file(user, file_name, file_content)
-
-
-@When('the user clicks on the settings tab')
-def step(context):
-    Toolbar.open_settings_tab()
 
 
 @When(

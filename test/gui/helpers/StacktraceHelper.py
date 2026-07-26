@@ -12,7 +12,7 @@ def get_core_dumps():
     if is_windows():
         return False
     # read coredump location
-    with open('/proc/sys/kernel/core_pattern', 'r', encoding='utf-8') as f:
+    with open('/proc/sys/kernel/core_pattern', encoding='utf-8') as f:
         coredump_path = f.read().strip('\n')
 
     # yields something like: /tmp/core-*-*-*-*
@@ -56,7 +56,7 @@ def parse_stacktrace(coredump_file):
         )
         message.append('-------------------------------------------')
         message.append(f'Executable: {app_binary}')
-        message.append(f'Timestamp: {str(timestamp)}')
+        message.append(f'Timestamp: {timestamp!s}')
         message.append(f'Process ID: {patterns[2]}')
         message.append(f'Signal Number: {patterns[3]}')
         message.append('-------------------------------------------')

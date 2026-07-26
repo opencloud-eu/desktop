@@ -57,7 +57,7 @@ def get_personal_space_id(user):
 
 def get_space_id(space_name, user=None):
     spaces = {**created_spaces, **user_spaces}
-    if not space_name in spaces.keys():
+    if space_name not in spaces:
         return fetch_space_id(space_name, user)
     return spaces.get(space_name)
 
@@ -118,7 +118,7 @@ def create_space_file(space_name, file_name, content):
 
 def add_user_to_space(user, space_name, role):
     role = role.lower()
-    if not role in space_role:
+    if role not in space_role:
         raise ValueError(f"Cannot set the role '{role}' to a space")
 
     space_id = get_space_id(space_name)
@@ -150,6 +150,4 @@ def resource_exists(space_name, resource, user=None):
     space_id = get_space_id(space_name, user)
     url = url_join(get_dav_endpint(), space_id, resource)
     response = request.get(url=url, user=user)
-    if response.status_code == 200:
-        return True
-    return False
+    return response.status_code == 200

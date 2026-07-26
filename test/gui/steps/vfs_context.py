@@ -6,13 +6,13 @@ from helpers.VFSFileHelper import is_placeholder_resource, is_file_downloaded
 @Then('the placeholder file "|any|" should exist on the file system')
 def step(context, file_name):
     resource_path = get_resource_path(file_name)
-    test.compare(is_placeholder_resource(resource_path), True, f"File is a placeholder")
+    test.compare(is_placeholder_resource(resource_path), True, "File is a placeholder")
 
 
 @Then('the file "|any|" should be downloaded')
 def step(context, file_name):
     resource_path = get_resource_path(file_name)
-    test.compare(is_file_downloaded(resource_path), True, f"File is downloaded")
+    test.compare(is_file_downloaded(resource_path), True, "File is downloaded")
 
 
 @When(

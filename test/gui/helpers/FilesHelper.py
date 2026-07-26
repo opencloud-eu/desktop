@@ -38,7 +38,7 @@ def prefix_path_namespace(path):
 def can_read(resource):
     read = False
     try:
-        with open(resource, encoding="utf-8") as f:
+        with open(resource, encoding="utf-8"):
             read = True
     except:
         pass
@@ -48,7 +48,7 @@ def can_read(resource):
 def can_write(resource):
     write = False
     try:
-        with open(resource, "w", encoding="utf-8") as f:
+        with open(resource, "w", encoding="utf-8"):
             write = True
     except:
         pass
@@ -56,7 +56,7 @@ def can_write(resource):
 
 
 def read_file_content(file):
-    with open(file, "r", encoding="utf-8") as f:
+    with open(file, encoding="utf-8") as f:
         content = f.read()
     return content
 
@@ -65,7 +65,7 @@ def is_empty_sync_folder(folder):
     ignore_files = ["Desktop.ini"]
     for item in os.listdir(folder):
         # do not count the hidden files as they are ignored by the client
-        if not item.startswith(".") and not item in ignore_files:
+        if not item.startswith(".") and item not in ignore_files:
             return False
     return True
 
@@ -181,7 +181,7 @@ def get_document_content(document):
     elif doc_ext == "xlsx":
         content = get_excel_content(document)
     elif doc_ext in ["txt", "md"]:
-        with open(document, "r", encoding="utf-8") as f:
+        with open(document, encoding="utf-8") as f:
             content = f.read()
     else:
         raise ValueError(f"Unsupported document format: {doc_ext}")

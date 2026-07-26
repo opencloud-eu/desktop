@@ -182,8 +182,9 @@ class SyncConnectionWizard:
             target_element = None
             for idx, parent in enumerate(parents):
                 p_elements = app().find_elements(By.NAME, parent)
-                next_item = idx + 1 < len(parents) and parents[idx + 1] or target_folder
-
+                next_item = (
+                    parents[idx + 1] if idx + 1 < len(parents) else target_folder
+                )
                 # select nested folders based on the position of the parent folder
                 for p_element in p_elements:
                     if p_element.rect["x"] >= parent_position and (
