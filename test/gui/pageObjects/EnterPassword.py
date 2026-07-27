@@ -32,7 +32,7 @@ class EnterPassword:
         login_url = AccountConnectionWizard.get_login_url()
         authorize_via_webui(username, password, login_url)
 
-    def relogin(self, username, password, oauth=False):
+    def relogin(self, username, password):
         self.oidc_relogin(username, password)
 
     def login_after_setup(self, username, password):

@@ -48,7 +48,11 @@ select = [
     "PLW2901",
     "DTZ",
     "RET",
+    "ARG",
 ]
+
+# Treat the following variable pattern as intentionally unused.
+dummy-variable-rgx = "^(_.*|context|feature|self)$"
 
 # See the available rules: https://docs.astral.sh/ruff/rules/
 ignore = [

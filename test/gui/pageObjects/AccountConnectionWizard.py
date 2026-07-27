@@ -4,7 +4,6 @@ from types import SimpleNamespace
 from appium.webdriver.common.appiumby import AppiumBy as By
 from selenium.common.exceptions import WebDriverException
 
-
 from helpers.WebUIHelper import authorize_via_webui
 from helpers.ConfigHelper import get_config
 from helpers.SetupClientHelper import (
@@ -69,7 +68,7 @@ class AccountConnectionWizard:
             AccountConnectionWizard.SERVER_ADDRESS_BOX.selector,
         )
         url_input.clear()
-        url_input.send_keys(get_config("localBackendUrl"))
+        url_input.send_keys(server_url)
 
         AccountConnectionWizard.next_step()
 

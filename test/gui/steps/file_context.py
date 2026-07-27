@@ -158,8 +158,8 @@ def step(context, username, foldername):
     create_folder(foldername, username)
 
 
-@When('user "{user}" creates a file "{filename}" with size "{filesize}" inside the sync folder')
-def step(context, user, filename, filesize):
+@When('user "{_user}" creates a file "{filename}" with size "{filesize}" inside the sync folder')
+def step(context, _user, filename, filesize):
     create_file_with_size(filename, filesize)
 
 
