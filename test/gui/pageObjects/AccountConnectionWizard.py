@@ -1,6 +1,8 @@
 import os
+from time import time
 from types import SimpleNamespace
 from appium.webdriver.common.appiumby import AppiumBy as By
+from selenium.common.exceptions import WebDriverException
 
 from helpers.WebUIHelper import authorize_via_webui
 from helpers.ConfigHelper import get_config
@@ -96,9 +98,25 @@ class AccountConnectionWizard:
         ).click()
 
     @staticmethod
+    def get_login_url():
+        login_url = ""
+        try:
+            AccountConnectionWizard.copy_login_url()
+            login_url = app().get_clipboard_text()
+        except WebDriverException:
+            # retry once upon failure
+            time.sleep(0.5)
+            AccountConnectionWizard.copy_login_url()
+            login_url = app().get_clipboard_text()
+        except Exception as e:
+            print(f"[Error] Failed to get login URL. Clipboard value: {login_url}")
+            raise e
+        return login_url
+
+    @staticmethod
     def browser_login(username, password):
-        AccountConnectionWizard.copy_login_url()
-        authorize_via_webui(username, password)
+        login_url = AccountConnectionWizard.get_login_url()
+        authorize_via_webui(username, password, login_url)
 
     @staticmethod
     def next_step():
