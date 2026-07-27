@@ -109,10 +109,7 @@ def add_copy_suffix(resource_path, resource_type):
 
 
 def copy_resource(resource_type, source, destination, from_files_for_upload=False):
-    if from_files_for_upload:
-        source = get_file_for_upload(source)
-    else:
-        source = get_resource_path(source)
+    source = get_file_for_upload(source) if from_files_for_upload else get_resource_path(source)
     destination = get_resource_path(destination)
     if source == destination and destination != '/':
         destination = add_copy_suffix(source, resource_type)
@@ -161,9 +158,7 @@ def step(context, username, foldername):
     create_folder(foldername, username)
 
 
-@When(
-    'user "{user}" creates a file "{filename}" with size "{filesize}" inside the sync folder'
-)
+@When('user "{user}" creates a file "{filename}" with size "{filesize}" inside the sync folder')
 def step(context, user, filename, filesize):
     create_file_with_size(filename, filesize)
 
@@ -173,9 +168,7 @@ def step(context, resource_type, resource_name, destination_dir):
     copy_resource(resource_type, resource_name, destination_dir, False)
 
 
-@When(
-    'the user copies {resource_type:ResourceType} "{resource_name}" into the same directory'
-)
+@When('the user copies {resource_type:ResourceType} "{resource_name}" into the same directory')
 def step(context, resource_type, resource_name):
     copy_resource(resource_type, resource_name, resource_name, False)
 
@@ -186,9 +179,7 @@ def step(context, source, destination):
     rename_file_folder(source, destination)
 
 
-@Then(
-    'the file "{file_path}" should exist on the file system with the following content'
-)
+@Then('the file "{file_path}" should exist on the file system with the following content')
 def step(context, file_path):
     expected = context.text
     file_path = get_resource_path(file_path)
@@ -221,9 +212,7 @@ def step(context, resource_type, resource):
         resource_exists.should.be.true
 
 
-@Then(
-    'the {resource_type:ResourceType} "{resource}" should not exist on the file system'
-)
+@Then('the {resource_type:ResourceType} "{resource}" should not exist on the file system')
 def step(context, resource_type, resource):
     resource_path = get_resource_path(resource)
     with ensure(
@@ -240,15 +229,11 @@ def step(context, filename):
     write_file_to_sync_path(get_resource_path(filename), file_content)
 
 
-@Then(
-    'a conflict file for "{filename}" should exist on the file system with the following content'
-)
+@Then('a conflict file for "{filename}" should exist on the file system with the following content')
 def step(context, filename):
     expected = context.text
 
-    onlyfiles = [
-        f for f in os.listdir(get_resource_path()) if isfile(get_resource_path(f))
-    ]
+    onlyfiles = [f for f in os.listdir(get_resource_path()) if isfile(get_resource_path(f))]
     found = False
     pattern = re.compile(build_conflicted_regex(filename))
     for file in onlyfiles:
@@ -308,9 +293,7 @@ def step(context, file_number, file_size, folder_name):
             file_name = f'file{i}.txt'
             create_file_with_size(join(current_sync_path, file_name), file_size, True)
     else:
-        raise FileNotFoundError(
-            f"Folder '{folder_name}' does not exist in the temp folder"
-        )
+        raise FileNotFoundError(f"Folder '{folder_name}' does not exist in the temp folder")
 
 
 @When(
@@ -358,9 +341,7 @@ def step(context, user, file_name):
         can_read(file_path).should.be.true
 
 
-@Then(
-    'as "{user}" the file "{file_name}" should have content "{content}" on the file system'
-)
+@Then('as "{user}" the file "{file_name}" should have content "{content}" on the file system')
 def step(context, user, file_name, content):
     file_path = get_resource_path(file_name, user)
     file_content = read_file_content(file_path)
@@ -373,9 +354,7 @@ def step(context, user, file_name, content):
         content.should.equal(file_content)
 
 
-@Then(
-    'user "{user}" should not be able to edit the file "{file_name}" on the file system'
-)
+@Then('user "{user}" should not be able to edit the file "{file_name}" on the file system')
 def step(context, user, file_name):
     file_path = get_resource_path(file_name, user)
     with ensure('File should not be writable, but it is'):
@@ -447,8 +426,6 @@ def step(context):
         delete_resource(filename, 'file')
 
 
-@Given(
-    'the user has created a file "{filename}" with size "{filesize}" in the sync folder'
-)
+@Given('the user has created a file "{filename}" with size "{filesize}" in the sync folder')
 def step(context, filename, filesize):
     create_file_with_size(filename, filesize)

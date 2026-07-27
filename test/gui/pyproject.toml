@@ -30,6 +30,9 @@ lint = [
     "ruff>=0.15.20",
 ]
 
+[tool.ruff]
+line-length = 100
+
 [tool.ruff.format]
 quote-style = "preserve"
 
@@ -43,10 +46,12 @@ select = [
     "RUF",
     "PIE",
     "PLW2901",
+    "DTZ",
+    "RET",
 ]
 
+# See the available rules: https://docs.astral.sh/ruff/rules/
 ignore = [
-    "E501",     # Line too long
     "F403",     # Wildcard import (`from x import *`)
     "E722",     # Bare `except`
     "SIM105",   # Use `contextlib.suppress`
@@ -58,5 +63,5 @@ ignore = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"steps/*.py" = ["F811"]
+"steps/*.py" = ["F811", "E501"]
 "steps/vfs_context.py" = ["F821"]

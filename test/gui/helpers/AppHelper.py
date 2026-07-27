@@ -54,9 +54,7 @@ def find_element(self, by, selector, timeout=None):
             visible_elements = [el for el in elements if el.is_displayed()]
             if len(visible_elements) == 1:
                 return visible_elements.pop()
-            raise WebDriverException(
-                f'Found {elements_count} elements using "{by}={selector}"'
-            )
+            raise WebDriverException(f'Found {elements_count} elements using "{by}={selector}"')
         if elements_count == 0:
             raise NoSuchElementException(f'No element found for "{by}={selector}"')
         return elements[0]
@@ -141,11 +139,7 @@ def wait_until_app_terminated():
 
 
 def get_window_location():
-    window = (
-        app()
-        .find_element(By.XPATH, "//*[contains(@name,'OpenCloud Desktop')]")
-        .location
-    )
+    window = app().find_element(By.XPATH, "//*[contains(@name,'OpenCloud Desktop')]").location
     return window['x'], window['y']
 
 

@@ -25,9 +25,7 @@ def send_request(url, method, body=None, headers=None, user=None, password=None)
 
 
 def get(url, headers=None, user=None, password=None):
-    return send_request(
-        url=url, method="GET", headers=headers, user=user, password=password
-    )
+    return send_request(url=url, method="GET", headers=headers, user=user, password=password)
 
 
 def post(url, body=None, headers=None, user=None):

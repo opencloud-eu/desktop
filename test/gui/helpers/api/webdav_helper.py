@@ -22,8 +22,7 @@ def get_resource_path(user, resource):
     resource = resource.strip('/').replace('\\', '/')
     encoded_resource_path = [quote(path, safe='') for path in resource.split('/')]
     encoded_resource_path = '/'.join(encoded_resource_path)
-    url = url_join(get_webdav_url(), user, encoded_resource_path)
-    return url
+    return url_join(get_webdav_url(), user, encoded_resource_path)
 
 
 def resource_exists(user, resource):
@@ -48,9 +47,7 @@ def get_folder_items(user, resource):
     xml_response = request.propfind(path, user=user)
 
     if xml_response.status_code != 207:
-        raise AssertionError(
-            f'Failed to get resource properties: {xml_response.status_code}'
-        )
+        raise AssertionError(f'Failed to get resource properties: {xml_response.status_code}')
 
     return ET.fromstring(xml_response.content)
 
@@ -135,15 +132,11 @@ def send_resource_share_invitation(user, resource, sharee, permission_role):
     recipient_user_id = get_user_id(sharee)
     role_id = get_permission_role_id(permission_role)
 
-    url = url_join(
-        get_beta_graph_url(), "drives", space_id, "items", resource_id, "invite"
-    )
+    url = url_join(get_beta_graph_url(), "drives", space_id, "items", resource_id, "invite")
 
     body = {
         "roles": [role_id],
-        "recipients": [
-            {"objectId": recipient_user_id, "@libre.graph.recipient.type": "user"}
-        ],
+        "recipients": [{"objectId": recipient_user_id, "@libre.graph.recipient.type": "user"}],
     }
 
     response = request.post(url, body=json.dumps(body), user=user)

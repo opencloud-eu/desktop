@@ -111,8 +111,9 @@ def create_space_file(space_name, file_name, content):
     response = request.put(url, content)
     if response.status_code not in (201, 204):
         raise AssertionError(
-            f"Creating file '{file_name}' in space '{space_name}' failed with {response.status_code}\n"
-            + response.text
+            f"Creating file '{file_name}' in space "
+            f"'{space_name}' failed with "
+            f"{response.status_code}\n"
         )
 
 

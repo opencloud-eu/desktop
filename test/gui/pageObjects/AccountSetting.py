@@ -10,14 +10,10 @@ from helpers.ConfigHelper import get_config
 
 
 class AccountSetting:
-    ACCOUNT_CONNECTION_CONTAINER = SimpleNamespace(
-        by=By.NAME, selector="Sync connections"
-    )
+    ACCOUNT_CONNECTION_CONTAINER = SimpleNamespace(by=By.NAME, selector="Sync connections")
     MANAGE_ACCOUNT_BUTTON = SimpleNamespace(by=By.NAME, selector="Manage Account")
     ACCOUNT_MENU = SimpleNamespace(by=By.NAME, selector="{menu_item}")
-    CONFIRM_REMOVE_CONNECTION_BUTTON = SimpleNamespace(
-        by=By.NAME, selector="Remove connection"
-    )
+    CONFIRM_REMOVE_CONNECTION_BUTTON = SimpleNamespace(by=By.NAME, selector="Remove connection")
     ACCOUNT_CONNECTION_LABEL = SimpleNamespace(
         by=By.XPATH,
         selector="//list[@name='Folder Sync']//label",
@@ -86,9 +82,7 @@ class AccountSetting:
 
         if not result:
             raise TimeoutError(
-                "Timeout waiting for the account to be connected for "
-                + str(timeout)
-                + " seconds"
+                "Timeout waiting for the account to be connected for " + str(timeout) + " seconds"
             )
         return result
 
@@ -110,7 +104,5 @@ class AccountSetting:
 
         if not result:
             raise TimeoutError(
-                "Timeout waiting for account to be removed for "
-                + str(timeout)
-                + " seconds"
+                "Timeout waiting for account to be removed for " + str(timeout) + " seconds"
             )

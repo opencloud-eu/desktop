@@ -7,8 +7,7 @@ from helpers.ConfigHelper import get_config
 
 def normalize_scenario_title(title):
     scenario_title = title.lower().strip()
-    scenario_title = re.sub(r'\W', '_', scenario_title)
-    return scenario_title
+    return re.sub(r'\W', '_', scenario_title)
 
 
 def get_screenrecords_path():
@@ -49,9 +48,7 @@ def take_screenshot(filename):
 def save_app_log(scenario):
     with open(get_config('appLogFile'), 'a') as log_file:
         logs = ["=" * 80]
-        logs.append(
-            f"Scenario: {scenario.name}\nLocation: {scenario.filename}:{scenario.line}"
-        )
+        logs.append(f"Scenario: {scenario.name}\nLocation: {scenario.filename}:{scenario.line}")
         logs.append("-" * 80)
         logs.append("")  # extra line break
         log_file.write("\n".join(logs))
@@ -68,9 +65,7 @@ def cleanup_current_app_log():
 def save_crash_log(scenario):
     with open(get_config('crash_report_file'), 'a') as log_file:
         logs = ["=" * 80]
-        logs.append(
-            f"Scenario: {scenario.name}\nLocation: {scenario.filename}:{scenario.line}"
-        )
+        logs.append(f"Scenario: {scenario.name}\nLocation: {scenario.filename}:{scenario.line}")
         logs.append("-" * 80)
         logs.append("")  # extra line break
         log_file.write("\n".join(logs))

@@ -16,12 +16,8 @@ def substitute_inline_codes(value):
     value = value.replace('%local_server%', get_config('localBackendUrl'))
     value = value.replace('%client_root_sync_path%', get_config('clientRootSyncPath'))
     value = value.replace('%current_user_sync_path%', get_config('currentUserSyncPath'))
-    value = value.replace(
-        '%local_server_hostname%', urlparse(get_config('localBackendUrl')).netloc
-    )
-    value = value.replace('%home%', get_config('home_dir'))
-
-    return value
+    value = value.replace('%local_server_hostname%', urlparse(get_config('localBackendUrl')).netloc)
+    return value.replace('%home%', get_config('home_dir'))
 
 
 def get_client_details(table):

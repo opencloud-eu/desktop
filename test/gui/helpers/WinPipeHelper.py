@@ -25,8 +25,7 @@ CLIENT_MESSAGES = [
 
 def get_pipe_path():
     pipename = r'\\.\\pipe\\'
-    pipename = os.path.join(pipename, 'openCloud-' + os.getenv('USERNAME'))
-    return pipename
+    return os.path.join(pipename, 'openCloud-' + os.getenv('USERNAME'))
 
 
 class WinPipeConnect:
@@ -64,17 +63,13 @@ class WinPipeConnect:
 
     def sendCommand(self, cmd):  # noqa: N802
         if self.connected:
-            w_res, _ = win32file.WriteFile(
-                self._pipe, cmd.encode('utf-8'), self._overlapped
-            )
+            w_res, _ = win32file.WriteFile(self._pipe, cmd.encode('utf-8'), self._overlapped)
             if w_res == winerror.ERROR_IO_PENDING:
                 res = win32event.WaitForSingleObject(self._overlapped.hEvent, TIMEOUT)
                 if res != win32event.WAIT_OBJECT_0:
                     print('Sending timed out!')
                     return False
-                if not win32file.GetOverlappedResult(
-                    self._pipe, self._overlapped, False
-                ):
+                if not win32file.GetOverlappedResult(self._pipe, self._overlapped, False):
                     print('GetOverlappedResult failed')
                     return False
         else:
@@ -94,9 +89,7 @@ class WinPipeConnect:
 
             peek_bytes = win32pipe.PeekNamedPipe(self._pipe, DEFAULT_BUFLEN)[1]
             if isinstance(peek_bytes, int) and peek_bytes > 0:
-                _, message_mem = win32file.ReadFile(
-                    self._pipe, DEFAULT_BUFLEN, self._overlapped
-                )
+                _, message_mem = win32file.ReadFile(self._pipe, DEFAULT_BUFLEN, self._overlapped)
                 if message_mem:
                     m_bytes = bytes(message_mem)
                     if b'\n' in m_bytes:
@@ -111,15 +104,11 @@ class WinPipeConnect:
                                 pass
 
             else:
-                res = win32event.WaitForSingleObject(
-                    self._overlapped.hEvent, int(timeout * 1000)
-                )
+                res = win32event.WaitForSingleObject(self._overlapped.hEvent, int(timeout * 1000))
                 if res != win32event.WAIT_OBJECT_0:
                     print('Reading timed out!')
                     return False
-                if not win32file.GetOverlappedResult(
-                    self._pipe, self._overlapped, False
-                ):
+                if not win32file.GetOverlappedResult(self._pipe, self._overlapped, False):
                     return False
         return True
 

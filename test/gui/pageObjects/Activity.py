@@ -41,9 +41,7 @@ class Activity:
                 app()
                 .find_element(
                     Activity.NOT_SYNCED_ACTIVITY_CONFLICT_FILE.by,
-                    Activity.NOT_SYNCED_ACTIVITY_CONFLICT_FILE.selector.format(
-                        filename=filename
-                    ),
+                    Activity.NOT_SYNCED_ACTIVITY_CONFLICT_FILE.selector.format(filename=filename),
                 )
                 .is_displayed()
             ),
@@ -54,36 +52,31 @@ class Activity:
 
     @staticmethod
     def is_resource_blacklisted(filename):
-        result = wait_for(
+        return wait_for(
             lambda: Activity.has_sync_status(filename, "Blacklisted"),
             get_config("sync_timeout"),
         )
-        return result
 
     @staticmethod
     def is_resource_ignored(filename):
-        result = wait_for(
+        return wait_for(
             lambda: Activity.has_sync_status(filename, "File Ignored"),
             get_config("sync_timeout"),
         )
-        return result
 
     @staticmethod
     def is_resource_excluded(filename):
-        result = wait_for(
+        return wait_for(
             lambda: Activity.has_sync_status(filename, "Excluded"),
             get_config("sync_timeout"),
         )
-        return result
 
     @staticmethod
     def has_sync_status(filename, status):
         try:
             row = app().find_element(By.NAME, filename)
             row_y = row.rect['y']
-            status_cells = app().find_elements(
-                Activity.SYNCED_ACTIVITY_STATUS.by, status
-            )
+            status_cells = app().find_elements(Activity.SYNCED_ACTIVITY_STATUS.by, status)
             for status_el in status_cells:
                 if status_el.rect['y'] == row_y:
                     return True

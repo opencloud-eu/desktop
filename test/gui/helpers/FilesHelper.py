@@ -15,9 +15,12 @@ def build_conflicted_regex(filename):
         # TODO: improve this for complex filenames
         namepart = filename.split(".")[0]
         extpart = filename.split(".")[1]
-        # pylint: disable=anomalous-backslash-in-string
-        return rf"{namepart} \(conflicted copy \d{{4}}-\d{{2}}-\d{{2}} \d{{6}}\)\.{extpart}"
-    # pylint: disable=anomalous-backslash-in-string
+        return (
+            rf"{namepart} \(conflicted copy "
+            r"\d{4}-\d{2}-\d{2} "
+            r"\d{6}\)"
+            rf"\.{extpart}"
+        )
     return rf"{filename} \(conflicted copy \d{{4}}-\d{{2}}-\d{{2}} \d{{6}}\)"
 
 
@@ -57,8 +60,7 @@ def can_write(resource):
 
 def read_file_content(file):
     with open(file, encoding="utf-8") as f:
-        content = f.read()
-    return content
+        return f.read()
 
 
 def is_empty_sync_folder(folder):
@@ -143,8 +145,7 @@ def get_pdf_content(pdf_file):
 
 def get_docs_content(docs_file):
     doc = Document(docs_file)
-    content = "\n".join(p.text for p in doc.paragraphs)
-    return content
+    return "\n".join(p.text for p in doc.paragraphs)
 
 
 def get_presentation_content(ppt_file):
