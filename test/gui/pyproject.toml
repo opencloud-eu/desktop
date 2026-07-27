@@ -52,14 +52,9 @@ select = [
 
 # See the available rules: https://docs.astral.sh/ruff/rules/
 ignore = [
-    "F403",     # Wildcard import (`from x import *`)
-    "E722",     # Bare `except`
     "SIM105",   # Use `contextlib.suppress`
     "SIM110",   # Use `any()` instead of loop
-    "UP012",    # Remove unnecessary UTF-8 encoding
-    "SIM113",   # Use enumerate() instead of a manual loop counter
     "N812",     # Lowercase imported as non-lowercase
-    "N801",     # Allow non-CapWords class names
 ]
 
 [tool.ruff.lint.per-file-ignores]

@@ -32,7 +32,7 @@ class WinPipeConnect:
     def __init__(self):
         self.connected = False
         self._pipe = None
-        self._remainder = ''.encode('utf-8')
+        self._remainder = b''
         self._overlapped = pywintypes.OVERLAPPED()
         self._overlapped.hEvent = win32event.CreateEvent(None, 1, 0, None)
         self.connect_to_pipe_server()
@@ -82,7 +82,7 @@ class WinPipeConnect:
     def read_socket_data_with_timeout(self, timeout):
         messages = b''
         start_time = time.time()
-        while True:  # pylint: disable=too-many-nested-blocks
+        while True:
             if (time.time() - start_time) >= timeout:
                 self._remainder += messages
                 break
@@ -100,7 +100,7 @@ class WinPipeConnect:
                                 start = m.split(b':', 1)[0]
                                 if start.decode('utf-8') in CLIENT_MESSAGES:
                                     messages += m + b'\n'
-                            except:
+                            except Exception:
                                 pass
 
             else:

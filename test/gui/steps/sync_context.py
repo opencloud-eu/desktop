@@ -156,13 +156,11 @@ def step(context):
 @Then('the folders should be in the following order:')
 def step(context):
     row_index = 0
-    for row in context.table:
+    for row_index, row in enumerate(context.table):
         expected_folder = row[0]
         actual_folder = SyncConnectionWizard.get_item_name_from_row(row_index)
         with ensure(f"Expected '{expected_folder}', got '{actual_folder}'"):
             actual_folder.should.be.equal(expected_folder)
-
-        row_index += 1
 
 
 @When('the user selects "{space_name}" space in sync connection wizard')

@@ -19,7 +19,7 @@ class FILETIME(ctypes.Structure):
     ]
 
 
-class WIN32_FILE_ATTRIBUTE_DATA(ctypes.Structure):
+class WIN32_FILE_ATTRIBUTE_DATA(ctypes.Structure):  # noqa: N801
     _fields_ = [
         ("dwFileAttributes", wintypes.DWORD),
         ("ftCreationTime", FILETIME),

@@ -174,7 +174,7 @@ def close_socket_connection():
         if is_windows():
             SOCKET_CONNECT.close_conn()
         elif is_linux():
-            SOCKET_CONNECT._sock.close()  # pylint: disable=protected-access
+            SOCKET_CONNECT._sock.close()
 
 
 def get_initial_sync_patterns():
