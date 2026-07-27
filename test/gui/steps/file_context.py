@@ -80,7 +80,7 @@ def try_to_write_file(resource, content):
     listen_sync_status_for_item(get_resource_path(resource), 'FILE')
     try:
         write_file(resource, content)
-    except:
+    except Exception:
         pass
 
 

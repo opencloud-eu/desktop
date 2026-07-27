@@ -134,7 +134,7 @@ class Activity:
                     f'Activity for "{resource}" does not have "{account}" account label'
                 )
             return True
-        except:
+        except Exception:
             return False
 
     @staticmethod

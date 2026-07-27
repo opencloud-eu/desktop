@@ -43,7 +43,7 @@ def can_read(resource):
     try:
         with open(resource, encoding="utf-8"):
             read = True
-    except:
+    except Exception:
         pass
     return read and os.access(resource, os.R_OK)
 
@@ -53,7 +53,7 @@ def can_write(resource):
     try:
         with open(resource, "w", encoding="utf-8"):
             write = True
-    except:
+    except Exception:
         pass
     return write and os.access(resource, os.W_OK)
 

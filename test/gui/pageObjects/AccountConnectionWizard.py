@@ -1,8 +1,9 @@
 import os
-from time import time
+import time
 from types import SimpleNamespace
 from appium.webdriver.common.appiumby import AppiumBy as By
 from selenium.common.exceptions import WebDriverException
+
 
 from helpers.WebUIHelper import authorize_via_webui
 from helpers.ConfigHelper import get_config
@@ -245,7 +246,7 @@ class AccountConnectionWizard:
                 AccountConnectionWizard.CHOOSE_FOLDER_BUTTON.selector,
             )
             can_change = True
-        except:
+        except Exception:
             pass
         return can_change
 
