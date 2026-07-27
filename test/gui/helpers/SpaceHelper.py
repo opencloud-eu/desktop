@@ -113,7 +113,7 @@ def create_space_file(space_name, file_name, content):
         raise AssertionError(
             f"Creating file '{file_name}' in space "
             f"'{space_name}' failed with "
-            f"{response.status_code}\n"
+            f"{response.status_code}\n{response.text}"
         )
 
 
