@@ -1,15 +1,13 @@
 from playwright.sync_api import sync_playwright
-from helpers.AppHelper import app
 
 
-def authorize_via_webui(username, password):
-    url = app().get_clipboard_text()
+def authorize_via_webui(username, password, login_url):
     with sync_playwright() as pw:
         browser = pw.chromium.launch(headless=True)
         context = browser.new_context(ignore_https_errors=True)
         page = context.new_page()
 
-        page.goto(url)
+        page.goto(login_url)
         page.fill('#oc-login-username', username)
         page.fill('#oc-login-password', password)
         page.click('button :text("Log in")')
