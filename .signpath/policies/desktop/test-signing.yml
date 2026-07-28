@@ -1,0 +1,10 @@
+github-policies:
+  runners:
+    require_github_hosted: true
+  build:
+    disallow_reruns: true
+  branch_rulesets:
+    - condition:
+        rules:
+        - require_pull_request:                  # code reviews are required
+            min_required_approvals: 0
