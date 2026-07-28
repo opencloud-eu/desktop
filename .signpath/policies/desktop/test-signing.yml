@@ -7,4 +7,4 @@ github-policies:
     - condition:
         rules:
         - require_pull_request:                  # code reviews are required
-            min_required_approvals: 0
+            min_required_approvals: 1
