@@ -36,9 +36,7 @@ def get_config_home_linux():
 
 
 def get_config_home_win():
-    return os.path.join(
-        get_win_user_home(), 'AppData', 'Local', 'Temp', 'opencloudtest', '.config'
-    )
+    return os.path.join(get_win_user_home(), 'AppData', 'Local', 'Temp', 'opencloudtest', '.config')
 
 
 def get_config_home():
@@ -73,9 +71,7 @@ CONFIG_ENV_MAP = {
 
 # immutable configs
 DEFAULT_PATH_CONFIG = {
-    'custom_lib': os.path.abspath(
-        os.path.join(os.path.dirname(__file__), 'custom_lib')
-    ),
+    'custom_lib': os.path.abspath(os.path.join(os.path.dirname(__file__), 'custom_lib')),
     'home_dir': get_default_home_dir(),
     'clientConfigFile': os.path.join(get_config_home(), "OpenCloud", APP_CONFIG_FILE),
     # allow to record first 5 videos
@@ -103,9 +99,15 @@ CONFIG = {
     ###############################
     # dynamic configs             #
     ###############################
-    # currentAppLogFile: file path to store app logs for the current scenario run, initialized in init_config()
-    # appLogFile: file path to store cumulative app logs for the entire test run, initialized in init_config()
-    # currentUserSyncPath: path to store the current user's sync data, initialized in init_config()
+    # currentAppLogFile:
+    #       file path to store app logs for the current scenario run,
+    #       initialized in init_config()
+    # appLogFile:
+    #       file path to store cumulative app logs for the entire test run,
+    #       initialized in init_config()
+    # currentUserSyncPath:
+    #       path to store the current user's sync data,
+    #       initialized in init_config()
 }
 
 # space membership permission roles mapping
@@ -172,13 +174,9 @@ def init_config():
 
     ### initialize dynamic config values
     # file to store app logs for the current scenario run
-    CONFIG['currentAppLogFile'] = os.path.join(
-        CONFIG["guiTestReportDir"], CURRENT_APP_LOG_FILE
-    )
+    CONFIG['currentAppLogFile'] = os.path.join(CONFIG["guiTestReportDir"], CURRENT_APP_LOG_FILE)
     # file to store cumulative app logs for the entire test run
-    CONFIG['appLogFile'] = os.path.join(
-        CONFIG["guiTestReportDir"], CUMULATIVE_APP_LOG_FILE
-    )
+    CONFIG['appLogFile'] = os.path.join(CONFIG["guiTestReportDir"], CUMULATIVE_APP_LOG_FILE)
     # file to store cumulative app logs for the entire test run
     CONFIG['crash_report_file'] = os.path.join(CONFIG["guiTestReportDir"], 'crash.log')
     # create report dir if it not exist

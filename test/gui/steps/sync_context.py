@@ -75,9 +75,7 @@ def step(context, resource_type, resource):
     wait_for_resource_to_have_sync_error(resource, resource_type)
 
 
-@When(
-    r'user "([^"]*)" waits for (file|folder) "([^"]*)" to have sync error', regexp=True
-)
+@When(r'user "([^"]*)" waits for (file|folder) "([^"]*)" to have sync error', regexp=True)
 def step(context, username, resource_type, resource):
     resource = get_resource_path(resource, username)
     wait_for_resource_to_have_sync_error(resource, resource_type)
@@ -136,9 +134,7 @@ def step(context):
     for row in context.table:
         folders.append(row[0])
     SyncConnectionWizard.deselect_all_remote_folders()
-    SyncConnectionWizard.select_folders_to_sync(
-        folders, new_sync_connection_wizard=True
-    )
+    SyncConnectionWizard.select_folders_to_sync(folders, new_sync_connection_wizard=True)
 
 
 @When('the user sorts the folder list by "{header_text}"')
@@ -160,13 +156,11 @@ def step(context):
 @Then('the folders should be in the following order:')
 def step(context):
     row_index = 0
-    for row in context.table:
+    for row_index, row in enumerate(context.table):
         expected_folder = row[0]
         actual_folder = SyncConnectionWizard.get_item_name_from_row(row_index)
         with ensure(f"Expected '{expected_folder}', got '{actual_folder}'"):
             actual_folder.should.be.equal(expected_folder)
-
-        row_index += 1
 
 
 @When('the user selects "{space_name}" space in sync connection wizard')
@@ -181,9 +175,7 @@ def step(context):
     SyncConnectionWizard.set_sync_path()
 
 
-@When(
-    'the user sets the temp folder "{folder_name}" as local sync path in sync connection wizard'
-)
+@When('the user sets the temp folder "{folder_name}" as local sync path in sync connection wizard')
 def step(context, folder_name):
     sync_path = get_temp_resource_path(folder_name)
     SyncConnectionWizard.set_sync_path(sync_path)
@@ -252,9 +244,7 @@ def step(context):
 def step(context, user, sync_folder):
     Toolbar.open_account(user)
     has_sync_connection = SyncConnection.has_sync_connection(sync_folder)
-    with ensure(
-        'There should not be "{0}" folder sync connection, but found.', sync_folder
-    ):
+    with ensure('There should not be "{0}" folder sync connection, but found.', sync_folder):
         has_sync_connection.should.be.false
 
 
@@ -331,14 +321,10 @@ def step(context, wait_for):
     time.sleep(float(wait_for))
 
 
-@When(
-    'the user unselects the following folders to sync in "Choose what to sync" window:'
-)
+@When('the user unselects the following folders to sync in "Choose what to sync" window:')
 def step(context):
     SyncConnection.choose_what_to_sync()
     folders = []
     for row in context.table:
         folders.append(row[0])
-    SyncConnectionWizard.unselect_folders_to_sync(
-        folders, new_sync_connection_wizard=False
-    )
+    SyncConnectionWizard.unselect_folders_to_sync(folders, new_sync_connection_wizard=False)

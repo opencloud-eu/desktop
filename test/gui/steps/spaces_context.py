@@ -34,9 +34,7 @@ def step(context, file_name, content, space_name):
     create_space_file(space_name, file_name, content)
 
 
-@Given(
-    'the administrator has added user "{user}" to space "{space_name}" with role "{role}"'
-)
+@Given('the administrator has added user "{user}" to space "{space_name}" with role "{role}"')
 def step(context, user, space_name, role):
     add_user_to_space(user, space_name, role)
 
@@ -69,12 +67,8 @@ def step(context, user, file_name, space_name, content):
         content.should.equal(downloaded_content)
 
 
-@Then(
-    'as "{user}" the space "{space_name}" should have file "{resource_name}" in the server'
-)
-@Then(
-    'as "{user}" the space "{space_name}" should have folder "{resource_name}" in the server'
-)
+@Then('as "{user}" the space "{space_name}" should have file "{resource_name}" in the server')
+@Then('as "{user}" the space "{space_name}" should have folder "{resource_name}" in the server')
 def step(context, user, space_name, resource_name):
     exists = resource_exists(space_name, resource_name, user)
     with ensure('Resource "{0}" should exist but it does not', resource_name):

@@ -1,8 +1,9 @@
 import os
-from time import time
+import time
 from types import SimpleNamespace
 from appium.webdriver.common.appiumby import AppiumBy as By
 from selenium.common.exceptions import WebDriverException
+
 
 from helpers.WebUIHelper import authorize_via_webui
 from helpers.ConfigHelper import get_config
@@ -191,9 +192,7 @@ class AccountConnectionWizard:
             )
         elif account_details["user"]:
             AccountConnectionWizard.select_advanced_config()
-            sync_path = AccountConnectionWizard.select_sync_folder(
-                account_details["user"]
-            )
+            sync_path = AccountConnectionWizard.select_sync_folder(account_details["user"])
         if sync_path:
             # listen for sync status
             listen_sync_status_for_item(sync_path)
@@ -214,7 +213,7 @@ class AccountConnectionWizard:
 
     @staticmethod
     def is_credential_window_visible():
-        visible = (
+        return (
             app()
             .find_element(
                 AccountConnectionWizard.LOGIN_DIALOG.by,
@@ -222,7 +221,6 @@ class AccountConnectionWizard:
             )
             .is_displayed()
         )
-        return visible
 
     @staticmethod
     def select_advanced_config():
@@ -248,7 +246,7 @@ class AccountConnectionWizard:
                 AccountConnectionWizard.CHOOSE_FOLDER_BUTTON.selector,
             )
             can_change = True
-        except:
+        except Exception:
             pass
         return can_change
 
