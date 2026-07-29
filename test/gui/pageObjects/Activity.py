@@ -88,7 +88,7 @@ class Activity:
                 return False
 
     @staticmethod
-    def select_synced_filter(sync_filter):
+    def select_synced_filter(_sync_filter):
         menu = app().find_element(
             Activity.LOCAL_ACTIVITY_FILTER_BUTTON.by,
             Activity.LOCAL_ACTIVITY_FILTER_BUTTON.selector,
@@ -138,7 +138,7 @@ class Activity:
             return False
 
     @staticmethod
-    def select_not_synced_filter(filter_option):
+    def select_not_synced_filter(_filter_option):
         menu = app().find_element(
             Activity.NOT_SYNCED_FILTER_BUTTON.by,
             Activity.NOT_SYNCED_FILTER_BUTTON.selector,

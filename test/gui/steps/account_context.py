@@ -121,6 +121,7 @@ def step(context):
 
 @When('the user "{username}" logs out using the client-UI')
 def step(context, username):
+    Toolbar.open_account(username)
     AccountSetting.logout()
 
 
@@ -158,6 +159,7 @@ def step(context, _):
 
 @Then('user "{username}" should be connected to the server')
 def step(context, username):
+    Toolbar.open_account(username)
     AccountSetting.wait_until_account_is_connected()
 
 

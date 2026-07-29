@@ -47,7 +47,7 @@ run-atpsi-webdriver: check-uv
 .PHONY: python-lint
 python-lint: check-uv
 	uv run --no-sync ruff format . --diff
-	uv run --no-sync ruff check . --diff
+	uv run --no-sync ruff check .
 
 .PHONY: python-lint-fix
 python-lint-fix: check-uv
