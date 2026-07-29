@@ -8,7 +8,7 @@
 
 ### 💥 Breaking changes
 
-- Update Qt to 6.10.2, this removes support for MacOS 12 [[#762](https://github.com/opencloud-eu/desktop/pull/762)]
+- Update Qt to 6.11, this removes support for MacOS 12 [[#762](https://github.com/opencloud-eu/desktop/pull/762)]
 
 ### ✨ Features
 
