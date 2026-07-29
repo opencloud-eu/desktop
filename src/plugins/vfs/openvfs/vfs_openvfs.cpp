@@ -103,7 +103,7 @@ OpenVFS::Constants::PinStates convertPinState(OCC::PinState pState)
     case OCC::PinState::OnlineOnly:
         return OpenVFS::Constants::PinStates::OnlineOnly;
     case OCC::PinState::Excluded:
-        return OpenVFS::Constants::PinStates::OnlineOnly;
+        return OpenVFS::Constants::PinStates::Excluded;
     case OCC::PinState::Unspecified:
         return OpenVFS::Constants::PinStates::Unspecified;
     };
