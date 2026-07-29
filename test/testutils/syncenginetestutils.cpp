@@ -1179,7 +1179,11 @@ void FakeReply::checkedFinished()
     // this is the case.
     if (!isFinished()) {
         setFinished(true);
-        Q_EMIT finished();
+        if (manager()) {
+            Q_EMIT finished();
+        } else {
+            qDebug() << u"FakeReply::finished() called without manager";
+        }
     }
 }
 
