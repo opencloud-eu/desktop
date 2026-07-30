@@ -99,8 +99,6 @@ option(FORCE_ASSERTS "FORCE_ASSERTS" OFF)
 option(WITH_APPIMAGEUPDATER OFF "Enable built-in libappimageupdate based updater on Linux")
 add_feature_info(AppImageUpdate WITH_APPIMAGEUPDATER "Built-in libappimageupdate based updater")
 
-option(WITH_EXTERNAL_BRANDING "A URL to an external branding repo" "")
-
 # specify additional vfs plugins
 ## Available values: off cfapi openvfs
 ## off: No virtual files are used
