@@ -88,7 +88,6 @@ jobs:
           ~/ccache
         key: ${{ runner.os }}-${{ matrix.target }}
 
-
     - name: Clone CraftMaster
       run: |
         git clone --depth=1 https://invent.kde.org/kde/craftmaster.git "${home}/craft/CraftMaster/CraftMaster"
@@ -205,7 +204,7 @@ jobs:
     - name: Package msix
       if: ${{ startsWith(matrix.os, 'windows-') && github.event_name != 'pull_request' }}
       run: |
-        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --no-cache --package --options "[Packager]PackageType=AppxPackager" --options "[Packager]Destination=${{ github.workspace }}/msix/" opencloud/opencloud-desktop
+        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --no-cache --package --options "[Packager]PackageDebugSymbols=False" --options "[Packager]PackageType=AppxPackager" --options "[Packager]Destination=${{ github.workspace }}/msix/" opencloud/opencloud-desktop
         Move-Item -Path "${{ github.workspace }}/msix/*.msix" -Destination "${{ github.workspace }}/msix/OpenCloud_Desktop-${{ github.run_number }}.msix" -Force
 
     - name: Upload binary artifacts
