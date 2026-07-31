@@ -10,7 +10,6 @@ from helpers.Utils import wait_for
 
 
 class Toolbar:
-    TOOLBAR_ROW = SimpleNamespace(by=None, selector=None)
     NAVIGATION_BAR = SimpleNamespace(by=By.XPATH, selector="//*[@name='Navigation bar']/..")
     ACCOUNT_TAB = SimpleNamespace(by=By.CLASS_NAME, selector="[page tab | {text}]")
     ADD_ACCOUNT_BUTTON = SimpleNamespace(by=By.CLASS_NAME, selector="[push button | Add Account]")

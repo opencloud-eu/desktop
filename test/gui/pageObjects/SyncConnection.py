@@ -74,12 +74,6 @@ class SyncConnection:
         SyncConnection.perform_action("Resume sync", "paused")
 
     @staticmethod
-    def menu_item_exists(menu_item):
-        obj = SyncConnection.MENU_ITEM.copy()
-        obj.update({"type": "QAction", "text": menu_item})
-        return object.exists(obj)
-
-    @staticmethod
     def choose_what_to_sync():
         SyncConnection.open_menu()
         SyncConnection.perform_action("Choose what to sync")

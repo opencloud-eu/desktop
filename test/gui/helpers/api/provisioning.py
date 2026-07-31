@@ -7,7 +7,6 @@ from helpers import UserHelper
 from helpers.api.utils import url_join
 
 
-created_groups = {}
 created_users = {}
 
 
