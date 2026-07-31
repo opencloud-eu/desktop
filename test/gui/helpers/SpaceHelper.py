@@ -44,11 +44,6 @@ def fetch_spaces(user=None, query=''):
     return response.json()['value']
 
 
-def get_project_spaces(user=None):
-    search_query = '$filter=driveType eq \'project\''
-    return fetch_spaces(query=search_query, user=user)
-
-
 def get_personal_space_id(user):
     search_query = '$filter=driveType eq \'personal\''
     space = fetch_spaces(query=search_query, user=user)

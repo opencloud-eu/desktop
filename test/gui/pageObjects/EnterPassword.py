@@ -7,13 +7,10 @@ from helpers.AppHelper import app
 
 
 class EnterPassword:
-    LOGIN_CONTAINER = SimpleNamespace(by=None, selector=None)
     LOGIN_USER_LABEL = SimpleNamespace(
         by=By.XPATH,
         selector="//filler[@name='Login required']//label[contains(@name, 'Connecting')]",
     )
-    USERNAME_BOX = SimpleNamespace(by=None, selector=None)
-    LOGOUT_BUTTON = SimpleNamespace(by=None, selector=None)
 
     def get_username(self):
         # Parse username from the login label:
