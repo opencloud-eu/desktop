@@ -1,6 +1,6 @@
 # Changelog
 
-## [4.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v4.0.0) - 2026-08-03
+## [4.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v4.0.0) - 2026-08-04
 
 ### ❤️ Thanks to all contributors! ❤️
 
@@ -32,6 +32,7 @@
 
 ### 📦️ Dependencies
 
+- build(deps): bump actions/stale from 10 to 11 [[#1003](https://github.com/opencloud-eu/desktop/pull/1003)]
 - build(deps): bump actions/cache from 5 to 6 [[#958](https://github.com/opencloud-eu/desktop/pull/958)]
 - build(deps): bump actions/checkout from 6 to 7 [[#956](https://github.com/opencloud-eu/desktop/pull/956)]
 - Bump actions/upload-artifact from 6 to 7 [[#831](https://github.com/opencloud-eu/desktop/pull/831)]
