@@ -1,0 +1,49 @@
+name: Publish to Flathub
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  FLATPAK_ID: eu.opencloud.OpenCloudDesktop
+
+jobs:
+  publish:
+    name: "Update Flathub"
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Get version from metainfo
+        id: version
+        run: |
+          VERSION=$(grep -oP '<release version="\K[^"]+' ${{ env.FLATPAK_ID }}.metainfo.xml)
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout Flathub repo
+        uses: actions/checkout@v6
+        with:
+          repository: flathub/${{ env.FLATPAK_ID }}
+          token: ${{ secrets.FLATHUB_TOKEN }}
+          path: flathub
+
+      - name: Copy updated files
+        run: |
+          cp ${{ env.FLATPAK_ID }}.metainfo.xml flathub/
+          cp ${{ env.FLATPAK_ID }}.yml flathub/
+
+      - name: Create Pull Request to Flathub
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.FLATHUB_TOKEN }}
+          path: flathub
+          title: "Update to ${{ steps.version.outputs.version }}"
+          body: |
+            Automated update to [v${{ steps.version.outputs.version }}](https://github.com/opencloud-eu/desktop/releases/tag/v${{ steps.version.outputs.version }}).
+          branch: update-${{ steps.version.outputs.version }}
+          commit-message: "Update to ${{ steps.version.outputs.version }}"
+          delete-branch: true

@@ -1,0 +1,73 @@
+name: Update Flatpak
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - VERSION.cmake
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  FLATPAK_ID: eu.opencloud.OpenCloudDesktop
+
+jobs:
+  update:
+    name: "Update Flatpak files"
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Read version from VERSION.cmake
+        id: release
+        run: |
+          MAJOR=$(grep 'MIRALL_VERSION_MAJOR' VERSION.cmake | grep -oP '\d+')
+          MINOR=$(grep 'MIRALL_VERSION_MINOR' VERSION.cmake | grep -oP '\d+')
+          PATCH=$(grep 'MIRALL_VERSION_PATCH' VERSION.cmake | grep -oP '\d+')
+
+          VERSION="${MAJOR}.${MINOR}.${PATCH}"
+          TAG="v${VERSION}"
+          DATE=$(date +%Y-%m-%d)
+          COMMIT="${{ github.sha }}"
+
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "date=$DATE" >> "$GITHUB_OUTPUT"
+          echo "commit=$COMMIT" >> "$GITHUB_OUTPUT"
+
+          echo "## Release info" >> "$GITHUB_STEP_SUMMARY"
+          echo "Tag: \`$TAG\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "Version: \`$VERSION\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "Date: \`$DATE\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "Commit: \`$COMMIT\`" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Update metainfo.xml
+        run: |
+          sed -i \
+            -e 's|<release version="[^"]*" date="[^"]*">|<release version="${{ steps.release.outputs.version }}" date="${{ steps.release.outputs.date }}">|' \
+            ${{ env.FLATPAK_ID }}.metainfo.xml
+
+          echo "Updated ${{ env.FLATPAK_ID }}.metainfo.xml:"
+          grep '<release version=' ${{ env.FLATPAK_ID }}.metainfo.xml
+
+      - name: Update Desktop.yml
+        run: |
+          # Update the tag and commit for the opencloud-desktop module source
+          sed -i \
+            -e '/name: opencloud-desktop/,/^  - name:/{ s|tag: v.*|tag: ${{ steps.release.outputs.tag }}|; s|commit: [a-f0-9]\{40\}|commit: ${{ steps.release.outputs.commit }}|; }' \
+            ${{ env.FLATPAK_ID }}.yml
+
+          echo "Updated ${{ env.FLATPAK_ID }}.yml:"
+          grep -A2 'name: opencloud-desktop' ${{ env.FLATPAK_ID }}.yml | head -1
+          grep -E '^\s+tag:|^\s+commit:' ${{ env.FLATPAK_ID }}.yml | tail -2
+
+      - name: Commit and push to main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add ${{ env.FLATPAK_ID }}.metainfo.xml ${{ env.FLATPAK_ID }}.yml
+          git commit -m "chore: update flatpak to ${{ steps.release.outputs.version }}"
+          git push origin HEAD:main

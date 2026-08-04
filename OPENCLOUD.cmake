@@ -3,7 +3,7 @@ set( APPLICATION_SHORTNAME  "OpenCloud" )
 set( APPLICATION_EXECUTABLE "opencloud" )
 set( APPLICATION_VENDOR     "OpenCloud" )
 set( APPLICATION_ICON_NAME  "opencloud" )
-set( APPLICATION_REV_DOMAIN "eu.opencloud.desktop" )
+set( APPLICATION_REV_DOMAIN "eu.opencloud.OpenCloudDesktop" )
 
 if(BETA_CHANNEL_BUILD)
     set( APPLICATION_NAME       "${APPLICATION_NAME} Beta")

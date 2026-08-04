@@ -1,0 +1,130 @@
+app-id: eu.opencloud.OpenCloudDesktop
+
+runtime: org.kde.Platform
+runtime-version: "6.9"
+sdk: org.kde.Sdk
+
+base: io.qt.qtwebengine.BaseApp
+base-version: "6.9"
+
+command: opencloud
+
+finish-args:
+  - --device=dri
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --share=network
+  - --share=ipc
+  - --filesystem=home:rw
+  - --filesystem=xdg-run/opencloud:create
+  - --talk-name=org.freedesktop.Notifications
+  - --talk-name=org.freedesktop.secrets
+  - --talk-name=org.kde.StatusNotifierWatcher
+  - --own-name=eu.opencloud.OpenCloudDesktop
+  - --talk-name=org.kde.kwalletd5
+  - --talk-name=org.kde.kwalletd6
+  - --env=TMPDIR=/var/tmp
+
+cleanup:
+  - /lib/*.a
+  - /lib/*.la
+  - /lib/x86_64-linux-gnu/pkgconfig
+  - /share/doc
+  - /share/icons/hicolor/1024x1024
+cleanup-commands:
+  - /app/cleanup-BaseApp.sh
+
+modules:
+  - shared-modules/libsecret/libsecret.json
+
+  - name: qtkeychain
+    buildsystem: cmake-ninja
+    config-opts:
+      - -DCMAKE_INSTALL_LIBDIR=lib
+      - -DBUILD_TRANSLATIONS=NO
+      - -DBUILD_WITH_QT6=1
+    cleanup:
+      - /include
+      - /mkspecs
+      - /lib/cmake
+    sources:
+      - type: archive
+        url: https://github.com/frankosterfeld/qtkeychain/archive/0.15.0.tar.gz
+        sha256: f4254dc8f0933b06d90672d683eab08ef770acd8336e44dfa030ce041dc2ca22
+        x-checker-data:
+          type: anitya
+          url-template: https://github.com/frankosterfeld/qtkeychain/archive/$version.tar.gz
+          stable-only: true
+          project-id: 4138
+
+  - name: rsvg-convert-shim
+    buildsystem: simple
+    build-commands:
+      - ln -s /usr/bin/rsvg-convert /app/bin/inkscape
+    cleanup:
+      - "*"
+
+  - name: libp11
+    config-opts:
+      - --with-enginesdir=${FLATPAK_DEST}/lib/engines-3/
+      - --with-modulesdir=${FLATPAK_DEST}/lib/ossl-modules/
+    cleanup:
+      - /include
+    sources:
+      - type: archive
+        url: https://github.com/OpenSC/libp11/releases/download/libp11-0.4.16/libp11-0.4.16.tar.gz
+        sha256: 97777640492fa9e5831497e5892e291dfbf39a7b119d9cb6abb3ec8c56d17553
+
+  - name: libre-graph-api
+    buildsystem: cmake
+    subdir: client
+    config-opts:
+      - -DCMAKE_INSTALL_LIBDIR=lib
+      - -DBUILD_SHARED_LIBS=ON
+    sources:
+      - type: git
+        url: https://github.com/opencloud-eu/libre-graph-api-cpp-qt-client.git
+        tag: v1.0.7
+        commit: 72b89ddd9a5dab2a837d1ab078d6088fa0727695
+
+  - name: kdsingleapplication
+    buildsystem: cmake
+    config-opts:
+      - -DCMAKE_INSTALL_LIBDIR=lib
+      - -DBUILD_TRANSLATIONS=NO
+      - -DBUILD_WITH_QT6=1
+    sources:
+      - type: git
+        url: https://github.com/KDAB/KDSingleApplication.git
+        tag: v1.2.0
+        commit: 3186a158f8e6565e89f5983b4028c892737844ff
+
+  - name: opencloud-desktop
+    buildsystem: cmake-ninja
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=Release
+      - -DCMAKE_INSTALL_LIBDIR=lib
+      - -DNO_SHIBBOLETH=1
+      - -DBUILD_SHELL_INTEGRATION_DOLPHIN=0
+      - -DBUILD_SHELL_INTEGRATION_NAUTILUS=0
+      - -DBUILD_UPDATER=OFF
+      - -DPLUGIN_INSTALL_DIR=/app/lib/plugins
+      - -DPLUGINDIR=/app/lib/plugins
+      - -DQT_MAJOR_VERSION=6
+    cleanup:
+      - /include
+    post-install:
+      - install -Dm644 -t /app/share/metainfo eu.opencloud.OpenCloudDesktop.metainfo.xml
+    sources:
+      - type: git
+        url: https://github.com/opencloud-eu/desktop
+        tag: v3.0.3
+        commit: 72fe8fb78e3e8b7dc9d2e54dfb497660e729cec3
+        x-checker-data:
+          type: json
+          url: https://api.github.com/repos/opencloud-eu/desktop/releases/latest
+          tag-query: .tag_name
+          version-query: $tag | sub("^[vV]"; "")
+          timestamp-query: .published_at
+      - type: file
+        path: eu.opencloud.OpenCloudDesktop.metainfo.xml
