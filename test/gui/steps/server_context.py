@@ -135,3 +135,15 @@ def step(context, user):
         resource_details['sharee'],
         resource_details['permissionsRole'],
     )
+
+
+@Then('as "{user}" only one folder named "{folder_name}" should exist on the server')
+def step(context, user, folder_name):
+    count = webdav.get_matching_folder_count(user, folder_name)
+
+    with ensure(
+        'Expected exactly one folder named "{0}", but found {1}',
+        folder_name,
+        count,
+    ):
+        count.should.equal(1)
