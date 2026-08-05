@@ -215,7 +215,15 @@ ecm_finalize_qml_module(OpenCloudGui DESTINATION ${KDE_INSTALL_QMLDIR})
 
 if(UNIX AND NOT APPLE)
     configure_file(${CMAKE_SOURCE_DIR}/opencloud.desktop.in
-                   ${CMAKE_CURRENT_BINARY_DIR}/${APPLICATION_EXECUTABLE}.desktop)
-    install(FILES  ${CMAKE_CURRENT_BINARY_DIR}/${APPLICATION_EXECUTABLE}.desktop DESTINATION ${KDE_INSTALL_DATADIR}/applications )
-    install(FILES ${CMAKE_SOURCE_DIR}/eu.opencloud.OpenCloudDesktop.metainfo.xml DESTINATION ${KDE_INSTALL_METAINFODIR})
+                   ${CMAKE_CURRENT_BINARY_DIR}/${APPLICATION_EXECUTABLE}.desktop
+                   @ONLY
+    )
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${APPLICATION_EXECUTABLE}.desktop DESTINATION ${KDE_INSTALL_DATADIR}/applications)
+
+    configure_file(${CMAKE_SOURCE_DIR}/eu.opencloud.OpenCloudDesktop.metainfo.xml.in
+            ${CMAKE_CURRENT_BINARY_DIR}/${APPLICATION_REV_DOMAIN}.${APPLICATION_EXECUTABLE}.metainfo.xml
+            @ONLY
+    )
+
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${APPLICATION_REV_DOMAIN}.${APPLICATION_EXECUTABLE}.metainfo.xml DESTINATION ${KDE_INSTALL_METAINFODIR})
 endif()
