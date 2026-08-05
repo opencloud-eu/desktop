@@ -102,6 +102,15 @@ option(BETA_CHANNEL_BUILD "Use a standalone profile for a beta release" OFF)
 ## -DFORCE_ASSERTS=ON
 option(FORCE_ASSERTS "FORCE_ASSERTS" OFF)
 
+## -DWITH_HTTP2=ON
+## For testing purposes the client behavior can also be modified with an environment variable OPENCLOUD_USE_HTTP2=[0|1]
+## Relevant bugs:
+## https://qt-project.atlassian.net/browse/QTBUG-147237
+## https://github.com/opencloud-eu/desktop/issues/940
+## https://github.com/opencloud-eu/desktop/issues/734
+option(WITH_HTTP2 "Enable the use of http2" OFF)
+add_feature_info(HTTP2Support WITH_HTTP2 "Support for http2, this is currently disabled due to known Qt bugs")
+
 ## -DWITH_APPIMAGEUPDATER=ON
 option(WITH_APPIMAGEUPDATER OFF "Enable built-in libappimageupdate based updater on Linux")
 add_feature_info(AppImageUpdate WITH_APPIMAGEUPDATER "Built-in libappimageupdate based updater")
