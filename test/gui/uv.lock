@@ -355,7 +355,7 @@ requires-dist = [
     { name = "playwright", specifier = "==1.62.*" },
     { name = "psutil", specifier = "==7.2.*" },
     { name = "pyautogui", specifier = "==0.9.*" },
-    { name = "pygobject", marker = "sys_platform == 'linux'", specifier = "==3.56.*" },
+    { name = "pygobject", marker = "sys_platform == 'linux'", specifier = "==3.48.*" },
     { name = "pypdf", specifier = "==6.14.*" },
     { name = "pyside6", specifier = "==6.11.*" },
     { name = "python-docx", specifier = "==1.2.*" },
@@ -822,12 +822,12 @@ sdist = { url = "https://files.pythonhosted.org/packages/e1/70/c7a4f46dbf06048c6
 
 [[package]]
 name = "pygobject"
-version = "3.56.3"
+version = "3.48.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pycairo" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/da/61/978c5fbca34f10a90df362502fbb5a005637909e7b5a0e9212349ea9d010/pygobject-3.56.3.tar.gz", hash = "sha256:12760e4a0e3d04b6eb95e06f7a27e362c826d567ea613373a92c003b6c70d2d6", size = 1411853, upload-time = "2026-05-08T20:46:39.904Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/f9/9e/6bab1ed3bd878f0912d9a0600c21f3d88bab0e8a8d4c3ce50f5cf336faaf/pygobject-3.48.2.tar.gz", hash = "sha256:c3c0a7afbe5b2c1c64dc0530109b4dd571085153dbedfbccb8ec7c5ad233f977", size = 715243, upload-time = "2024-04-06T07:20:44.474Z" }
 
 [[package]]
 name = "pymsgbox"
