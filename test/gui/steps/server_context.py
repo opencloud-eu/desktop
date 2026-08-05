@@ -51,11 +51,11 @@ def step(context, user_name, file_name, content):
 
 
 @Then(
-    r'as user "{user_name}" folder "{folder_name}" should contain "{items_number}" items in the server'
+    'as user "{user_name}" folder "{folder_name}" should contain "{items_number}" items in the server'
 )
 def step(context, user_name, folder_name, items_number):
     total_items = webdav.get_folder_items_count(user_name, folder_name)
-    with ensure(f'Folder should contain {items_number} items'):
+    with ensure(f'Folder should contain {items_number} items, but found {total_items}'):
         total_items.should.equal(items_number)
 
 
