@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
-  <id>eu.opencloud.desktop.OpenCloud</id>
+  <id>eu.opencloud.OpenCloudDesktop</id>
   
   <name>OpenCloud Desktop</name>
   <summary>Desktop client for OpenCloud file synchronization</summary>
