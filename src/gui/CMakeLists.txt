@@ -217,4 +217,5 @@ if(UNIX AND NOT APPLE)
     configure_file(${CMAKE_SOURCE_DIR}/opencloud.desktop.in
                    ${CMAKE_CURRENT_BINARY_DIR}/${APPLICATION_EXECUTABLE}.desktop)
     install(FILES  ${CMAKE_CURRENT_BINARY_DIR}/${APPLICATION_EXECUTABLE}.desktop DESTINATION ${KDE_INSTALL_DATADIR}/applications )
+    install(FILES ${CMAKE_SOURCE_DIR}/eu.opencloud.OpenCloudDesktop.metainfo.xml DESTINATION ${KDE_INSTALL_METAINFODIR})
 endif()
