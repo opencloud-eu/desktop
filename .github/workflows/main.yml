@@ -6,6 +6,7 @@ on:
       - main
       - 'stable-[0-9]+.[0-9]+'
       - 'stable-[0-9]+.[0-9]+.[0-9]+'
+      - 'mac_signing_workflow'
   pull_request:
   workflow_dispatch:
     inputs:
@@ -53,6 +54,9 @@ jobs:
 
     runs-on: ${{ matrix.os }}
 
+    environment: ${{ github.event_name != 'pull_request' && 'flimmy-test' || '' }}
+    # environment: ${{ github.event_name != 'pull_request' && 'main' || '' }}
+
     env:
       CRAFT_TARGET: ${{ matrix.target }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -61,6 +65,45 @@ jobs:
     container: ${{ matrix.container }}
 
     steps:
+    - name: get signing_secrets
+      if: github.event_name != 'pull_request'
+      id: signing-secrets
+      uses: hashicorp/vault-action@v4
+      with:
+        url: https://bao.opencloud.rocks
+        method: userpass
+        username: ${{ secrets.BAO_USERNAME }}
+        password: ${{ secrets.BAO_PASSWORD }}
+        exportEnv: false
+        secrets: |
+          kv/data/signing/test-key blub64 | test_key ;
+          kv/data/signing/zwei b64 | test_key2
+
+    - name: Write Signing Keys
+      if: steps.signing-secrets.conclusion == 'success'
+      env:
+        SIGNING_KEY: ${{ steps.signing-secrets.outputs.test_key }}
+        SIGNING_KEY2: ${{ steps.signing-secrets.outputs.test_key2 }}
+      run: |
+        $secretFile = Join-Path -Path $env:RUNNER_TEMP -ChildPath "secret-file.txt";
+        $encodedBytes = [System.Convert]::FromBase64String($env:SIGNING_KEY);
+        Set-Content $secretFile -Value $encodedBytes -AsByteStream;
+        $encodedBytes2 = [System.Convert]::FromBase64String($env:SIGNING_KEY2);
+        $secretFile2 = Join-Path -Path $env:RUNNER_TEMP -ChildPath "secret-file2.txt";
+        Set-Content $secretFile2 -Value $encodedBytes2 -AsByteStream;
+
+    - name: debug
+      run: |
+        get-content "$env:RUNNER_TEMP\secret-file.txt"
+        get-content "$env:RUNNER_TEMP\secret-file2.txt"
+        exit 1
+
+    - name: debug
+      if: steps.signing-secrets.conclusion == 'success' && always()
+      run: |
+        rm -f "$env:RUNNER_TEMP\secret-file.txt"
+        rm -f "$env:RUNNER_TEMP\secret-file2.txt"
+
     - name: Check out full source code for tooling
       if: ${{ matrix.target  == 'linux-gcc-x86_64' }}
       uses: actions/checkout@v7
