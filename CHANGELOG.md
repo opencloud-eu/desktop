@@ -1,6 +1,6 @@
 # Changelog
 
-## [4.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v4.0.0) - 2026-08-05
+## [4.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v4.0.0) - 2026-08-06
 
 ### ❤️ Thanks to all contributors! ❤️
 
@@ -16,6 +16,7 @@
 
 ### 🐛 Bug Fixes
 
+- Disable HTTP/2 support again [[#1010](https://github.com/opencloud-eu/desktop/pull/1010)]
 - fix(libsync): treat transient network errors as per-file retries, not whole-run aborts [[#970](https://github.com/opencloud-eu/desktop/pull/970)]
 - fix(libsync): resume a TUS upload from the server's offset on a 409 mismatch [[#971](https://github.com/opencloud-eu/desktop/pull/971)]
 - fix: decode JWT segments as Base64url (RFC 7515) [[#978](https://github.com/opencloud-eu/desktop/pull/978)]
