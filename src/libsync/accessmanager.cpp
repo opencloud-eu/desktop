@@ -81,9 +81,18 @@ QNetworkReply *AccessManager::createRequest(QNetworkAccessManager::Operation op,
     }
 
 
-    static const bool http2DisabledEnv = qEnvironmentVariableIntValue("OPENCLOUD_HTTP2_DISABLED") == 1;
-    if (http2DisabledEnv) {
-        newRequest.setAttribute(QNetworkRequest::Http2AllowedAttribute, false);
+    // Whether or not to use HTTP/2, the build time option WITH_HTTP2 is used as a default. See https://github.com/opencloud-eu/desktop/blob/main/CMakeLists.txt
+    static const bool useHttp2 = [] {
+        if (!qEnvironmentVariableIsSet("OPENCLOUD_USE_HTTP2")) {
+            // return build time default value
+            return static_cast<bool>(WITH_HTTP2);
+        }
+        return qEnvironmentVariableIntValue("OPENCLOUD_USE_HTTP2") == 1;
+    }();
+
+    // Qt's default value is true, if we explicitly set it to false, we don't want to use HTTP/2
+    if (newRequest.attribute(QNetworkRequest::Http2AllowedAttribute).toBool()) {
+        newRequest.setAttribute(QNetworkRequest::Http2AllowedAttribute, useHttp2);
     }
 
     // allow http pipelining
