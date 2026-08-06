@@ -11,6 +11,8 @@
 
 using namespace OCC::Resources;
 
+Q_LOGGING_CATEGORY(lcFontIcon, "sync.resources.fonticon", QtInfoMsg)
+
 namespace {
 
 class FontIconEngine : public QIconEngine
@@ -63,6 +65,9 @@ public:
         }
 
         painter->setFont(font);
+        if (painter->fontInfo().family() != font.family()) {
+            qCWarning(lcFontIcon) << "Font family mismatch: " << painter->fontInfo().family() << " != " << font.family();
+        }
         painter->drawText(rect, flags, _glyph);
         painter->restore();
     }
