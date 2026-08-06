@@ -67,14 +67,14 @@ bool Utility::hasLaunchOnStartup(const QString &appName)
 
 void Utility::setLaunchOnStartup(const QString &appName, const QString &guiName, bool enable)
 {
-    QString userAutoStartPath = getUserAutostartDir();
-    QString desktopFileLocation = userAutoStartPath + appName + QLatin1String(".desktop");
+    const QString userAutoStartPath = getUserAutostartDir();
+    const QFileInfo desktopFileLocation(userAutoStartPath + appName + QLatin1String(".desktop"));
     if (enable) {
         if (!QDir().exists(userAutoStartPath) && !QDir().mkpath(userAutoStartPath)) {
             qCWarning(lcUtility) << u"Could not create autostart folder" << userAutoStartPath;
             return;
         }
-        QFile iniFile(desktopFileLocation);
+        QFile iniFile(desktopFileLocation.filePath());
         if (!iniFile.open(QIODevice::WriteOnly)) {
             qCWarning(lcUtility) << u"Could not write auto start entry" << desktopFileLocation;
             return;
@@ -122,7 +122,7 @@ void Utility::setLaunchOnStartup(const QString &appName, const QString &guiName,
                              "X-GNOME-Autostart-Delay=10")
                   .arg(guiName, autostartApplicationPath, appName.toLower());
     } else {
-        if (!QFile::remove(desktopFileLocation)) {
+        if (desktopFileLocation.exists() && !QFile::remove(desktopFileLocation.filePath())) {
             qCWarning(lcUtility) << u"Could not remove autostart desktop file";
         }
     }
