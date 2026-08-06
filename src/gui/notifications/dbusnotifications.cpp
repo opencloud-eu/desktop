@@ -105,7 +105,7 @@ void DBusNotifications::notify(const SystemNotificationRequest &notificationRequ
 {
     Q_D(DBusNotifications);
     QVariantMap hints{{QStringLiteral("image-path"), Resources::iconToFileSystemUrl(notificationRequest.icon()).toString()}};
-    const QString desktopFileName = QGuiApplication::desktopFileName();
+    const QString desktopFileName = ocApp()->desktopFileName();
     if (!desktopFileName.isEmpty()) {
         hints[QStringLiteral("desktop-entry")] = desktopFileName;
     }

@@ -61,6 +61,11 @@ public:
 
     UpdateNotifier *updateNotifier() const;
 
+    // Due to limitations of the Qt api we have to override the desktopFileName() of QApplication when using AppImage
+    // This function returns the original desktopFileName() of QApplication
+    void setDesktopFileName(const QString &desktopFileName);
+    QString desktopFileName() const;
+
 protected Q_SLOTS:
     void slotCleanup();
     void slotAccountStateAdded(AccountStatePtr accountState) const;
@@ -72,6 +77,7 @@ private:
     SettingsDialog *_settingsDialog = nullptr;
 
     QString _displayLanguage;
+    QString _desktopFileName;
     Systray *_systray;
 
     UpdateNotifier *_updateNotifier;

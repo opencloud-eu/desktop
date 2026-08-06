@@ -394,6 +394,17 @@ UpdateNotifier *Application::updateNotifier() const
     return _updateNotifier;
 }
 
+void Application::setDesktopFileName(const QString &desktopFileName)
+{
+    qCInfo(lcApplication) << u"Setting original desktop file name to" << desktopFileName << u" qApp desktop file name:" << qApp->desktopFileName();
+    _desktopFileName = desktopFileName;
+}
+
+QString Application::desktopFileName() const
+{
+    return _desktopFileName;
+}
+
 bool Application::debugMode()
 {
     return _debugMode;
