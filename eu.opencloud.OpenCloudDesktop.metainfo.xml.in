@@ -2,7 +2,7 @@
 <component type="desktop-application">
   <id>@APPLICATION_REV_DOMAIN@.@APPLICATION_EXECUTABLE@</id>
   
-  <name>OpenCloud Desktop</name>
+  <name>@APPLICATION_NAME@</name>
   <summary>Desktop client for OpenCloud file synchronization</summary>
   
   <metadata_license>CC0-1.0</metadata_license>
