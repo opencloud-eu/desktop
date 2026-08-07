@@ -55,6 +55,16 @@ auto caCertsKeyC()
     return QStringLiteral("CaCertificates");
 }
 
+auto clientCertKeyC()
+{
+    return QStringLiteral("ClientCertificate");
+}
+
+auto clientKeyKeyC()
+{
+    return QStringLiteral("ClientPrivateKey");
+}
+
 auto accountsC()
 {
     return QStringLiteral("Accounts");
@@ -121,6 +131,23 @@ bool AccountManager::restore()
         qCInfo(lcAccountManager) << u"Restored: " << certs.count() << u" unknown certs.";
         acc->setApprovedCerts(certs);
 
+        // restore client certificate for mTLS
+        const auto clientCertData = settings.value(clientCertKeyC()).toByteArray();
+        const auto clientKeyData = settings.value(clientKeyKeyC()).toByteArray();
+        if (!clientCertData.isEmpty() && !clientKeyData.isEmpty()) {
+            const auto clientCerts = QSslCertificate::fromData(clientCertData, QSsl::Pem);
+            if (!clientCerts.isEmpty()) {
+                QSslKey clientKey(clientKeyData, QSsl::Rsa, QSsl::Pem);
+                if (clientKey.isNull()) {
+                    clientKey = QSslKey(clientKeyData, QSsl::Ec, QSsl::Pem);
+                }
+                if (!clientKey.isNull()) {
+                    acc->setClientCertificate(clientCerts.first(), clientKey);
+                    qCInfo(lcAccountManager) << u"Restored client certificate for mTLS:" << clientCerts.first().subjectDisplayName();
+                }
+            }
+        }
+
         if (auto accState = AccountState::loadFromSettings(acc, settings)) {
             addAccountState(std::move(accState));
         }
@@ -160,6 +187,15 @@ void AccountManager::save()
         }
         if (!certs.isEmpty()) {
             settings.setValue(caCertsKeyC(), certs);
+        }
+
+        // save client certificate for mTLS
+        if (account->hasClientCertificate()) {
+            settings.setValue(clientCertKeyC(), account->clientCertificate().toPem());
+            settings.setValue(clientKeyKeyC(), account->clientPrivateKey().toPem());
+        } else {
+            settings.remove(clientCertKeyC());
+            settings.remove(clientKeyKeyC());
         }
 
         // save the account state
