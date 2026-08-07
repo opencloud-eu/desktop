@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
-  <id>eu.opencloud.desktop.OpenCloud</id>
+  <id>@APPLICATION_REV_DOMAIN@.@APPLICATION_EXECUTABLE@</id>
   
-  <name>OpenCloud Desktop</name>
+  <name>@APPLICATION_NAME@</name>
   <summary>Desktop client for OpenCloud file synchronization</summary>
   
   <metadata_license>CC0-1.0</metadata_license>
@@ -14,7 +14,7 @@
     </p>
   </description>
   
-  <launchable type="desktop-id">opencloud.desktop</launchable>
+  <launchable type="desktop-id">@APPLICATION_EXECUTABLE@.desktop</launchable>
   <screenshots>
     <screenshot type="default">
       <image>https://docs.opencloud.eu/assets/images/settings-overview-561af2cba465818c58a388c454830451.png</image>
