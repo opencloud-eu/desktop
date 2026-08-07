@@ -1,4 +1,5 @@
-from urllib.parse import quote
+import unicodedata
+from urllib.parse import quote, unquote
 import xml.etree.ElementTree as ET
 import json
 
@@ -143,3 +144,17 @@ def send_resource_share_invitation(user, resource, sharee, permission_role):
     assert response.status_code in [200, 201], (
         f"Failed to send share invitation: {response.status_code}"
     )
+
+
+def get_matching_folder_count(user, folder_name):
+    root = get_folder_items(user, "")
+    normalized_name = unicodedata.normalize("NFC", folder_name)
+    count = 0
+    for response in root:
+        href = response.find("{DAV:}href")
+        if href is None:
+            continue
+        name = unquote(href.text.rstrip("/").split("/")[-1])
+        if unicodedata.normalize("NFC", name) == normalized_name:
+            count += 1
+    return count

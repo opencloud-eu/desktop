@@ -51,7 +51,6 @@ def step(context):
 def step(context):
     SyncConnection.resume_sync()
 
-
 @When('the user force syncs the files')
 def step(context):
     SyncConnection.force_sync()
