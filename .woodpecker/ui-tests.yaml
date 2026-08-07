@@ -69,7 +69,6 @@ steps:
 
   - name: install-python-modules
     image: *build_image
-    pull: true # remove this once the nightlies run with the new build image
     environment:
       PLAYWRIGHT_BROWSERS_PATH: /woodpecker/desktop/test/gui/.playwright
     commands:
@@ -113,7 +112,6 @@ steps:
 
   - name: gui-tests
     image: *build_image
-    pull: true # remove this once the nightlies run with the new build image
     environment:
       # system cache environment variables
       PYTHONUSERBASE: /woodpecker/desktop/test/gui/.venv
