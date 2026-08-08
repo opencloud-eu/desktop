@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Entitlements template for the OpenCloud File Provider App Extension.
+  Grants app group access, file provider capability, and shared keychain.
+  The App Group identifier is filled in by CMake at configure time.
+-->
+<plist version="1.0">
+<dict>
+    <key>com.apple.security.application-groups</key>
+    <array>
+        <string>${APPLE_DEVELOPMENT_TEAM}.${APPLICATION_REV_DOMAIN}</string>
+    </array>
+    <key>com.apple.developer.fileprovider.server-capability</key>
+    <true/>
+    <key>keychain-access-groups</key>
+    <array>
+        <string>$(AppIdentifierPrefix)${APPLICATION_REV_DOMAIN}</string>
+    </array>
+</dict>
+</plist>

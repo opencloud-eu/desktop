@@ -62,4 +62,10 @@ configure_file(test_journal.db "${PROJECT_BINARY_DIR}/bin/test_journal.db" COPYO
 
 opencloud_add_test(JobQueue)
 
+# macOS NSFileProvider VFS tests — require macOS 12+ (Darwin 21.x)
+if(APPLE AND CMAKE_SYSTEM_VERSION VERSION_GREATER_EQUAL "21.0")
+    opencloud_add_test(VfsNSFP)
+    opencloud_add_test(VfsNSFP_Integration)
+endif()
+
 add_subdirectory(modeltests)
