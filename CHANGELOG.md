@@ -16,6 +16,7 @@
 
 ### 🐛 Bug Fixes
 
+- Fix fallback to wrong icon font [[#1018](https://github.com/opencloud-eu/desktop/pull/1018)]
 - Disable HTTP/2 support again [[#1010](https://github.com/opencloud-eu/desktop/pull/1010)]
 - fix(libsync): treat transient network errors as per-file retries, not whole-run aborts [[#970](https://github.com/opencloud-eu/desktop/pull/970)]
 - fix(libsync): resume a TUS upload from the server's offset on a 409 mismatch [[#971](https://github.com/opencloud-eu/desktop/pull/971)]
