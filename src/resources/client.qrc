@@ -2,7 +2,7 @@
     <qresource prefix="/client">
         <file alias="resources/wizard/style.qss">wizard/style.qss</file>
         <file alias="resources/oauth/oauth.html.in">oauth/oauth.html.in</file>
-        <file>font-awesome/Font Awesome 6 Free-Solid-900.otf</file>
+        <file>font-awesome/Font Awesome 7 Free-Solid-900.otf</file>
         <file>remixicon/remixicon.ttf</file>
     </qresource>
 </RCC>
