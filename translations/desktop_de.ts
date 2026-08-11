@@ -817,7 +817,7 @@ Das Update wird im Hintergrund durchgeführt und überschreibt die aktuelle AppI
     <message>
         <location filename="../src/gui/commonstrings.cpp" line="41"/>
         <source>Show in web browser</source>
-        <translation>Im Webbrowser anzeigen</translation>
+        <translation>In Webbrowser anzeigen</translation>
     </message>
     <message>
         <location filename="../src/gui/commonstrings.cpp" line="46"/>
@@ -1532,7 +1532,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/gui/models/models.cpp" line="89"/>
         <source>%1 Filter:</source>
-        <translation>%1 Filter:</translation>
+        <translation>%1filter:</translation>
     </message>
     <message>
         <location filename="../src/gui/models/models.cpp" line="108"/>
