@@ -154,7 +154,7 @@ jobs:
             & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c dev-utils/linuxdeploy
             # ensure we have fuse3-devel installed
             dnf install -y fuse3-devel file
-        } elseif($IsMacOS) {
+        } elseif($IsMacOS -and ${env:SIGN_PACKAGE} -ieq "true") {
             brew install packages
         }
 
@@ -250,7 +250,8 @@ jobs:
           ${{ matrix.signing.passwords[1].secret_name }} ${{ matrix.signing.passwords[1].secret_field }} | ${{ matrix.signing.passwords[1].env_name }}
 
     - name: Package
-      if: ${{ ! startsWith(matrix.os, 'windows-') }}
+      # Package for linux. Package for mac only if signed
+      if: ${{ startsWith(matrix.target, 'linux') || (startsWith(matrix.target, 'macos') && steps.signing-secrets.conclusion == 'success') }}
       run: |
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --no-cache --package opencloud/opencloud-desktop
 
