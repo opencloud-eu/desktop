@@ -81,7 +81,6 @@ jobs:
       CRAFT_TARGET: ${{ matrix.target }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       CRAFT_PACKAGE_SYMBOLS: ${{  github.event_name != 'pull_request' }}
-      # set the signing key file path if signing is enabled, otherwise set it to an empty string
       SIGNING_KEY_FILE_PATH: ${{ format('{0}/{1}', matrix.signing.keyfile_file_path, matrix.signing.keyfile_file_name) }}
 
     container: ${{ matrix.container }}
