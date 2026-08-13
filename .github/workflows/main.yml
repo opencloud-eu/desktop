@@ -82,10 +82,7 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       CRAFT_PACKAGE_SYMBOLS: ${{  github.event_name != 'pull_request' }}
       # set the signing key file path if signing is enabled, otherwise set it to an empty string
-      SIGNING_KEY_FILE_PATH: ${{ case(
-        matrix.signing.keyfile_file_path != '' && matrix.signing.keyfile_file_name != '',
-        format('{0}/{1}', matrix.signing.keyfile_file_path, matrix.signing.keyfile_file_name),
-        '') }}
+      SIGNING_KEY_FILE_PATH: ${{ format('{0}/{1}', matrix.signing.keyfile_file_path, matrix.signing.keyfile_file_name) }}
 
     container: ${{ matrix.container }}
 
@@ -281,7 +278,7 @@ jobs:
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --no-cache --package --options "[Packager]PackageType=AppxPackager" --options "[Packager]Destination=${{ github.workspace }}/msix/" opencloud/opencloud-desktop
         Move-Item -Path "${{ github.workspace }}/msix/*.msix" -Destination "${{ github.workspace }}/msix/OpenCloud_Desktop-${{ github.run_number }}.msix" -Force
 
-    - name: Upload binary binary artifacts
+    - name: Upload binary artifacts
       uses: actions/upload-artifact@v7
       with:
         name: ${{ matrix.target }}-${{ github.run_number }}
