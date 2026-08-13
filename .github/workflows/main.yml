@@ -68,10 +68,12 @@ jobs:
 
     environment:
       # set the environment name to main for pushes against main or stable-branches else empty string
+      # the environment contains the env var SIGN_PACKAGE=true
+      # and the required secrets for signing the packages
       name: ${{
         case(
-          github.event_name != 'pull_request' && github.ref == 'refs/heads/main', 'main',
-          github.event_name != 'pull_request' && startswith(github.ref, 'refs/heads/stable-'), 'main',
+          (github.event_name == 'workflow_dispatch' || startswith(github.ref, 'refs/tags/')) && github.ref == 'refs/heads/main', 'main',
+          (github.event_name == 'workflow_dispatch' || startswith(github.ref, 'refs/tags/')) && startswith(github.ref, 'refs/heads/stable-'), 'main',
           ''
           )
         }}
