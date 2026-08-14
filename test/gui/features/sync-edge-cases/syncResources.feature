@@ -219,3 +219,22 @@ Feature: Syncing files
         And as "Brian" folder "Shares/simple-folder/sub-folder" should exist in the server
         And as "Brian" file "Shares/simple-folder/simple.pdf" should exist in the server
         And as "Brian" the file "Shares/simple-folder/uploaded-lorem.txt" should have the content "overwrite openCloud test text file" in the server
+
+
+    Scenario:  Sync same unicode folder from server and client at the same time
+        Given user "Alice" has set up a client with default settings
+        And the user has paused the file sync
+        And user "Alice" has created folder "Öü" in the server
+        And user "Alice" has uploaded file with content "openCloud test" to "Öü/testFile.txt" in the server
+        When user "Alice" creates a folder "Öü" inside the sync folder
+        When user "Alice" creates a file "Öü/newfile.txt" with the following content inside the sync folder
+            """
+            test content
+            """
+        And the user waits for "1" seconds
+        And the user resumes the file sync on the client
+        And the user waits for the files to sync
+        Then the file "Öü/newfile.txt" should exist on the file system
+        And as user "Alice" folder "/" should contain "1" items in the server
+        And as "Alice" file "Öü/testFile.txt" should exist in the server
+        And as "Alice" file "Öü/newfile.txt" should exist in the server

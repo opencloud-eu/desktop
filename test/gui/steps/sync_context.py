@@ -316,6 +316,7 @@ def step(context):
         expected_error_message.should.equal(actual_error_message)
 
 
+@When('the user waits for "{wait_for}" seconds')
 @Given('the user has waited for "{wait_for}" seconds')
 def step(context, wait_for):
     time.sleep(float(wait_for))

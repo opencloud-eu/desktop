@@ -1,3 +1,4 @@
+import re
 from urllib.parse import quote
 import xml.etree.ElementTree as ET
 import json
@@ -54,14 +55,18 @@ def get_folder_items(user, resource):
 
 def get_folder_items_count(user, folder_name):
     folder_name = folder_name.strip('/')
+    if folder_name != '':
+        folder_name += '/'
     root_element = get_folder_items(user, folder_name)
     total_items = 0
+
     for response_element in root_element:
         for href_element in response_element:
-            # The first item is folder itself so excluding it
-            if href_element.tag == '{DAV:}href' and not href_element.text.endswith(
-                f'{user}/{folder_name}/'
-            ):
+            if not href_element.text:
+                continue
+            is_folder_item = re.search(f'/{user}/{folder_name}.+', href_element.text)
+            shares_folder = href_element.text.endswith(f'/{user}/Shares/')
+            if href_element.tag == '{DAV:}href' and is_folder_item and not shares_folder:
                 total_items += 1
     return str(total_items)
 
