@@ -37,9 +37,11 @@
   <launchable type="desktop-id">@APPLICATION_EXECUTABLE@.desktop</launchable>
   <screenshots>
     <screenshot type="default">
+      <caption>Main screen of the application</caption>
       <image>https://docs.opencloud.eu/assets/images/settings-overview-561af2cba465818c58a388c454830451.png</image>
     </screenshot>
     <screenshot>
+      <caption>Login screen on first startup</caption>
       <image>https://docs.opencloud.eu/assets/images/set-up-enter-url-57bd85c39ceb0145112bf9d34d72d508.png</image>
     </screenshot>
   </screenshots>
