@@ -129,6 +129,16 @@ bool AbstractNetworkJob::needsRetry() const
             }
             [[fallthrough]];
         default:
+            // A reply with no HTTP status at all (HttpStatusCodeAttribute unset, so
+            // httpStatusCode() reads back as 0) never reached the application layer - the
+            // connection was torn down before any response line was parsed, e.g. a
+            // client-side HTTP/2 GOAWAY racing an in-flight stream (see #1026). The server
+            // never confirmed it saw the request, so blindly retrying is only safe for
+            // read-only, idempotent verbs.
+            if (httpStatusCode() == 0
+                && (_verb == QByteArrayLiteral("GET") || _verb == QByteArrayLiteral("HEAD") || _verb == QByteArrayLiteral("PROPFIND"))) {
+                return true;
+            }
             break;
         }
     }

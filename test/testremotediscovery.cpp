@@ -178,6 +178,38 @@ private Q_SLOTS:
         QCOMPARE(errorSpy[0][0].toString(), formatAbortError(syncRootError.isEmpty() ? QString(fatalErrorPrefix + expectedErrorString) : syncRootError));
     }
 
+    // Regression test for #1026: a PROPFIND reply with HTTP status 0 and no error text
+    // (e.g. a client-side HTTP/2 GOAWAY racing an in-flight stream) is a transport
+    // failure, not a server error, and must be retried at the request level instead of
+    // aborting the whole sync run.
+    void testRemoteDiscoveryRetriesTransportFailure()
+    {
+        QFETCH_GLOBAL(Vfs::Mode, vfsMode);
+        QFETCH_GLOBAL(bool, filesAreDehydrated);
+
+        FakeFolder fakeFolder(FileInfo::A12_B12_C12_S12(), vfsMode, filesAreDehydrated);
+        fakeFolder.remoteModifier().insert(QStringLiteral("B/z2"));
+
+        QString errorFolder = Utility::concatUrlPath(OCC::TestUtils::dummyDavUrl(), QStringLiteral("B")).path();
+        bool firstAttempt = true;
+        fakeFolder.setServerOverride([&](QNetworkAccessManager::Operation op, const QNetworkRequest &req, QIODevice *) -> QNetworkReply * {
+            if (req.attribute(QNetworkRequest::CustomVerbAttribute).toByteArray() == "PROPFIND" && req.url().path().endsWith(errorFolder)) {
+                if (firstAttempt) {
+                    firstAttempt = false;
+                    // status 0, no error text: exactly what a client-side HTTP/2 GOAWAY produces
+                    return new FakeErrorReply(op, req, this, 0);
+                }
+            }
+            return nullptr;
+        });
+
+        QSignalSpy errorSpy(&fakeFolder.syncEngine(), &SyncEngine::syncError);
+        QVERIFY(fakeFolder.applyLocalModificationsAndSync());
+        QCOMPARE(errorSpy.size(), 0);
+        QVERIFY(!firstAttempt); // the transient reply was actually hit, not skipped
+        QCOMPARE(fakeFolder.currentRemoteState().children[QStringLiteral("B")], fakeFolder.currentLocalState().children[QStringLiteral("B")]);
+    }
+
     void testMissingData()
     {
         QFETCH_GLOBAL(Vfs::Mode, vfsMode);
