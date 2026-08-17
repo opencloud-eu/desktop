@@ -329,7 +329,35 @@ bool Folder::ignoreHiddenFiles()
 
 void Folder::setIgnoreHiddenFiles(bool ignore)
 {
+    if (_definition.ignoreHiddenFiles == ignore) {
+        return;
+    }
     _definition.ignoreHiddenFiles = ignore;
+
+    if (!_engine) {
+        // the folder failed to set up, there is no state to invalidate
+        return;
+    }
+
+    // The engine caches the flag and is otherwise only updated when a sync starts. The folder
+    // watcher asks the engine whether a path is excluded, so without updating it right here
+    // changes to hidden files would keep being discarded.
+    _engine->setIgnoreHiddenFiles(ignore);
+
+    if (!ignore) {
+        // The hidden items were skipped by the previous runs, so they are neither in the local
+        // database nor did the remote etags change: nothing would make us look at them again.
+        // Invalidate both, the same way a change of the ignore list does.
+        _journal.forceRemoteDiscoveryNextSync();
+        slotNextSyncFullLocalDiscovery();
+
+        // On Linux the watcher registers one watch per directory and skipped the hidden ones,
+        // so it has to scan the tree again. Changes that happen while the watcher is set up
+        // again are covered by the full local discovery requested above.
+        if (_folderWatcher) {
+            _folderWatcher->init(path());
+        }
+    }
 }
 
 QString Folder::cleanPath() const
