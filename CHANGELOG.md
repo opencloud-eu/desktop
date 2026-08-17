@@ -1,6 +1,6 @@
 # Changelog
 
-## [4.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v4.0.0) - 2026-08-14
+## [4.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v4.0.0) - 2026-08-17
 
 ### ❤️ Thanks to all contributors! ❤️
 
@@ -16,6 +16,7 @@
 
 ### 🐛 Bug Fixes
 
+- Fix issue with unicode paths in qml [[#1027](https://github.com/opencloud-eu/desktop/pull/1027)]
 - Fix fallback to wrong icon font [[#1018](https://github.com/opencloud-eu/desktop/pull/1018)]
 - Disable HTTP/2 support again [[#1010](https://github.com/opencloud-eu/desktop/pull/1010)]
 - fix(libsync): treat transient network errors as per-file retries, not whole-run aborts [[#970](https://github.com/opencloud-eu/desktop/pull/970)]
