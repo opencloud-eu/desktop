@@ -15,6 +15,7 @@
 #include "gui/qmlutils.h"
 
 #include "gui/fonticonmessagebox.h"
+#include "gui/openfilemanager.h"
 #include "resources/resources.h"
 
 #include <QMessageBox>
@@ -105,6 +106,11 @@ QUrl OCC::QmlUtils::OCUtils::resourcePath2(const QString &provider, const QStrin
 QUrl OCC::QmlUtils::OCUtils::avatarPath(const QString &accountID, bool enabled, int size)
 {
     return resourcePath2(u"avatar"_s, {}, accountID, enabled, size, {});
+}
+
+void OCC::QmlUtils::OCUtils::showInFileManager(const QString &path)
+{
+    OCC::showInFileManager(path);
 }
 
 int OCC::QmlUtils::OCUtils::compareQVersion(int major, int minor, int patch) const
