@@ -42,11 +42,21 @@ jobs:
             - target: windows-cl-msvc2022-x86_64
               os: windows-2022
               container:
+              signing:
+                # set the yaml anchor signing_enabled to true if the workflow was triggered by
+                # a workflow_dispatch against main, stable-*, or tags
+                enabled: &signing_enabled ${{
+                    github.event_name == 'workflow_dispatch'
+                      && (            github.ref == 'refs/heads/main'
+                        || startswith(github.ref,   'refs/heads/stable-')
+                        || startswith(github.ref,   'refs/tags/')
+                      )
+                  }}
             - target: macos-clang-arm64
               os: macos-latest
               container:
               signing:
-                enabled: true
+                enabled: *signing_enabled
                 keyfile_secret_name: kv/data/signing/mac-keychain
                 keyfile_secret_field: b64
                 keyfile_file_path: /Users/runner
@@ -67,23 +77,22 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     environment:
-      # set the environment name to main for pushes against main or stable-branches else empty string
-      # the environment contains the env var SIGN_PACKAGE=true
-      # and the required secrets for signing the packages
-      name: ${{
-        case(
-          (github.event_name == 'workflow_dispatch' || startswith(github.ref, 'refs/tags/')) && github.ref == 'refs/heads/main', 'main',
-          (github.event_name == 'workflow_dispatch' || startswith(github.ref, 'refs/tags/')) && startswith(github.ref, 'refs/heads/stable-'), 'main',
-          ''
-          )
-        }}
+      # set the environment name to main if signing has been enabled
+      # the environment contains the required secrets for signing the packages
+      name: ${{ matrix.signing.enabled && 'main' || '' }}
       deployment: false
 
     env:
       CRAFT_TARGET: ${{ matrix.target }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       CRAFT_PACKAGE_SYMBOLS: ${{  github.event_name != 'pull_request' }}
-      SIGNING_KEY_FILE_PATH: ${{ format('{0}/{1}', matrix.signing.keyfile_file_path, matrix.signing.keyfile_file_name) }}
+      SIGN_PACKAGE: ${{ matrix.signing.enabled }}
+      # set the signing key file path if signing is enabled and the keyfile is provided
+      SIGNING_KEY_FILE_PATH: ${{
+          matrix.signing.keyfile_file_path && matrix.signing.keyfile_file_name
+          && format('{0}/{1}', matrix.signing.keyfile_file_path, matrix.signing.keyfile_file_name)
+          || ''
+        }}
 
     container: ${{ matrix.container }}
 
@@ -215,11 +224,11 @@ jobs:
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --run python3 -m clang_html "$([System.IO.Path]::GetTempPath())/clang-tidy.log" -o "${env:GITHUB_WORKSPACE}/binaries/clang-tidy.html"
 
     - name: get signing key
-      if: matrix.signing.enabled && github.event_name != 'pull_request'
+      if: ${{ matrix.signing.enabled && matrix.signing.keyfile_secret_name != null }}
       id: signing-secrets
       uses: hashicorp/vault-action@v4
       with:
-        url: https://bao.opencloud.rocks
+        url: ${{ secrets.BAO_URL }}
         method: userpass
         username: ${{ secrets.BAO_USERNAME }}
         password: ${{ secrets.BAO_PASSWORD }}
@@ -239,10 +248,10 @@ jobs:
 
       # FixMe: add some sort of iteration to the secrets list
     - name: get signing key passwords
-      if: matrix.signing.enabled && github.event_name != 'pull_request' && matrix.signing.passwords != null
+      if: matrix.signing.enabled && matrix.signing.passwords != null
       uses: hashicorp/vault-action@v4
       with:
-        url: https://bao.opencloud.rocks
+        url: ${{ secrets.BAO_URL }}
         method: userpass
         username: ${{ secrets.BAO_USERNAME }}
         password: ${{ secrets.BAO_PASSWORD }}
@@ -303,8 +312,9 @@ jobs:
         path: ${{ github.workspace }}/msix/*.msix
 
     - name: submit msix for signing
+      id: submit-signing-request
       uses: signpath/github-action-submit-signing-request@v2
-      if: ${{ startsWith(matrix.os, 'windows-') && github.event_name != 'pull_request' }}
+      if: ${{ matrix.signing.enabled && steps.upload-unsigned-artifact.conclusion == 'success' }}
       with:
         api-token: '${{ secrets.SIGNPATH_API_TOKEN }}'
         organization-id: '${{ secrets.SIGNPATH_ORGANIZATION_ID }}'
@@ -319,7 +329,7 @@ jobs:
 
     - name: Upload signed msix
       id: upload-signed-artifact
-      if: ${{ startsWith(matrix.os, 'windows-') && github.event_name != 'pull_request' }}
+      if: ${{ steps.submit-signing-request.conclusion == 'success' }}
       uses: actions/upload-artifact@v7
       with:
         name: ${{ matrix.target }}-msix-${{ github.run_number }}
