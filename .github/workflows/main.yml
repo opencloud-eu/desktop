@@ -42,9 +42,32 @@ jobs:
             - target: windows-cl-msvc2022-x86_64
               os: windows-2022
               container:
+              signing:
+                # set the yaml anchor signing_enabled to true if the workflow was triggered by
+                # a workflow_dispatch against main, stable-*, or tags
+                enabled: &signing_enabled ${{
+                    github.event_name == 'workflow_dispatch'
+                      && (            github.ref == 'refs/heads/main'
+                        || startswith(github.ref,   'refs/heads/stable-')
+                        || startswith(github.ref,   'refs/tags/')
+                      )
+                  }}
             - target: macos-clang-arm64
               os: macos-latest
               container:
+              signing:
+                enabled: *signing_enabled
+                keyfile_secret_name: kv/data/signing/mac-keychain
+                keyfile_secret_field: b64
+                keyfile_file_path: /Users/runner
+                keyfile_file_name: ci-signing.keychain-db
+                passwords:
+                  - secret_name: kv/data/signing/mac-keychain
+                    secret_field: pw
+                    env_name: CRAFT_SECRET_MAC_KEYCHAIN_PASSWORD
+                  - secret_name: kv/data/signing/mac-keychain
+                    secret_field: notarization_pw
+                    env_name: CRAFT_SECRET_MAC_APP_PASSWORD
             - target: linux-gcc-x86_64
               os: ubuntu-latest
               container: invent-registry.kde.org/sysadmin/ci-images/craft-appimage-alma9:latest
@@ -53,10 +76,23 @@ jobs:
 
     runs-on: ${{ matrix.os }}
 
+    environment:
+      # set the environment name to main if signing has been enabled
+      # the environment contains the required secrets for signing the packages
+      name: ${{ matrix.signing.enabled && 'main' || '' }}
+      deployment: false
+
     env:
       CRAFT_TARGET: ${{ matrix.target }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       CRAFT_PACKAGE_SYMBOLS: ${{  github.event_name != 'pull_request' }}
+      SIGN_PACKAGE: ${{ matrix.signing.enabled }}
+      # set the signing key file path if signing is enabled and the keyfile is provided
+      SIGNING_KEY_FILE_PATH: ${{
+          matrix.signing.keyfile_file_path && matrix.signing.keyfile_file_name
+          && format('{0}/{1}', matrix.signing.keyfile_file_path, matrix.signing.keyfile_file_name)
+          || ''
+        }}
 
     container: ${{ matrix.container }}
 
@@ -129,6 +165,8 @@ jobs:
             & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c dev-utils/linuxdeploy
             # ensure we have fuse3-devel installed
             dnf install -y fuse3-devel file
+        } elseif($IsMacOS -and ${env:SIGN_PACKAGE} -ieq "true") {
+            brew install packages
         }
 
     - name: Install dependencies
@@ -185,8 +223,46 @@ jobs:
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --run pwsh "${env:GITHUB_WORKSPACE}/.github/workflows/.run-clang-tidy.ps1"
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --run python3 -m clang_html "$([System.IO.Path]::GetTempPath())/clang-tidy.log" -o "${env:GITHUB_WORKSPACE}/binaries/clang-tidy.html"
 
+    - name: get signing key
+      if: ${{ matrix.signing.enabled && matrix.signing.keyfile_secret_name != null }}
+      id: signing-secrets
+      uses: hashicorp/vault-action@v4
+      with:
+        url: ${{ secrets.BAO_URL }}
+        method: userpass
+        username: ${{ secrets.BAO_USERNAME }}
+        password: ${{ secrets.BAO_PASSWORD }}
+        exportEnv: false
+        secrets: |
+          ${{ matrix.signing.keyfile_secret_name }} ${{ matrix.signing.keyfile_secret_field }} | key_b64
+
+    - name: Write signing keys to disk
+      if: steps.signing-secrets.conclusion == 'success'
+      env:
+        SIGNING_KEY: ${{ steps.signing-secrets.outputs.key_b64 }}
+      run: |
+        $secretFile = Join-Path -Path "${{ matrix.signing.keyfile_file_path }}" -ChildPath "${{ matrix.signing.keyfile_file_name }}";
+        $encodedBytes = [System.Convert]::FromBase64String($env:SIGNING_KEY);
+        Set-Content $secretFile -Value $encodedBytes -AsByteStream;
+        Get-FileHash $secretFile | Format-List
+
+      # FixMe: add some sort of iteration to the secrets list
+    - name: get signing key passwords
+      if: matrix.signing.enabled && matrix.signing.passwords != null
+      uses: hashicorp/vault-action@v4
+      with:
+        url: ${{ secrets.BAO_URL }}
+        method: userpass
+        username: ${{ secrets.BAO_USERNAME }}
+        password: ${{ secrets.BAO_PASSWORD }}
+        exportEnv: true
+        secrets: |
+          ${{ matrix.signing.passwords[0].secret_name }} ${{ matrix.signing.passwords[0].secret_field }} | ${{ matrix.signing.passwords[0].env_name }} ;
+          ${{ matrix.signing.passwords[1].secret_name }} ${{ matrix.signing.passwords[1].secret_field }} | ${{ matrix.signing.passwords[1].env_name }}
+
     - name: Package
-      if: matrix.target == 'linux-gcc-x86_64'
+      # Package for linux. Package for mac only if signed
+      if: ${{ startsWith(matrix.target, 'linux') || (startsWith(matrix.target, 'macos') && steps.signing-secrets.conclusion == 'success') }}
       run: |
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --no-cache --package opencloud/opencloud-desktop
 
@@ -201,6 +277,11 @@ jobs:
             }
           }
         }
+
+    - name: remove signing keys from disk
+      if: steps.signing-secrets.conclusion == 'success' && always()
+      run: |
+        Remove-Item -force "${{ matrix.signing.keyfile_file_path }}\${{ matrix.signing.keyfile_file_name }}"
 
     - name: Package msix
       if: ${{ startsWith(matrix.os, 'windows-') && github.event_name != 'pull_request' }}
@@ -231,8 +312,9 @@ jobs:
         path: ${{ github.workspace }}/msix/*.msix
 
     - name: submit msix for signing
+      id: submit-signing-request
       uses: signpath/github-action-submit-signing-request@v2
-      if: ${{ startsWith(matrix.os, 'windows-') && github.event_name != 'pull_request' }}
+      if: ${{ matrix.signing.enabled && steps.upload-unsigned-artifact.conclusion == 'success' }}
       with:
         api-token: '${{ secrets.SIGNPATH_API_TOKEN }}'
         organization-id: '${{ secrets.SIGNPATH_ORGANIZATION_ID }}'
@@ -247,7 +329,7 @@ jobs:
 
     - name: Upload signed msix
       id: upload-signed-artifact
-      if: ${{ startsWith(matrix.os, 'windows-') && github.event_name != 'pull_request' }}
+      if: ${{ steps.submit-signing-request.conclusion == 'success' }}
       uses: actions/upload-artifact@v7
       with:
         name: ${{ matrix.target }}-msix-${{ github.run_number }}
