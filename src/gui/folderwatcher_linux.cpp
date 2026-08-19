@@ -26,21 +26,32 @@
 namespace OCC {
 
 FolderWatcherPrivate::FolderWatcherPrivate(FolderWatcher *p, const QString &path)
-    : QObject()
-    , _parent(p)
+    : _parent(p)
     , _folder(path)
 {
-    _fd = inotify_init();
+    _fd = inotify_init1(IN_CLOEXEC);
     if (_fd != -1) {
-        _socket.reset(new QSocketNotifier(_fd, QSocketNotifier::Read));
-        connect(_socket.data(), &QSocketNotifier::activated, this, &FolderWatcherPrivate::slotReceivedNotification);
+        _socket = new QSocketNotifier(_fd, QSocketNotifier::Read);
+        connect(_socket, &QSocketNotifier::activated, this, &FolderWatcherPrivate::slotReceivedNotification);
     } else {
-        qCWarning(lcFolderWatcher) << u"notify_init() failed: " << strerror(errno);
+        qCWarning(lcFolderWatcher) << u"inotify_init1() failed: " << strerror(errno);
     }
 
     QMetaObject::invokeMethod(this, [path, this] { slotAddFolderRecursive(path); });
 }
 
+FolderWatcherPrivate::~FolderWatcherPrivate()
+{
+    if (_socket) {
+        _socket->setEnabled(false);
+        _socket->deleteLater();
+    }
+    removeFoldersBelow(_folder);
+    if (_fd != -1) {
+        close(_fd);
+        _fd = -1;
+    }
+}
 // attention: result list passed by reference!
 bool FolderWatcherPrivate::findFoldersBelow(const QDir &dir, QStringList &fullList)
 {
