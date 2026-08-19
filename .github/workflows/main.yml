@@ -17,6 +17,9 @@ on:
         options:
           - stable
           - beta
+  schedule:
+    - cron: '11 3 * * 1-5'
+      timezone: "Europe/Berlin"
 
 concurrency: 
   group: ${{ github.head_ref || github.run_id }}
@@ -46,7 +49,7 @@ jobs:
                 # set the yaml anchor signing_enabled to true if the workflow was triggered by
                 # a workflow_dispatch against main, stable-*, or tags
                 enabled: &signing_enabled ${{
-                    github.event_name == 'workflow_dispatch'
+                    (github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' )
                       && (            github.ref == 'refs/heads/main'
                         || startswith(github.ref,   'refs/heads/stable-')
                         || startswith(github.ref,   'refs/tags/')
