@@ -339,9 +339,12 @@ void Folder::setIgnoreHiddenFiles(bool ignore)
         return;
     }
 
-    // The engine caches the flag and is otherwise only updated when a sync starts. The folder
-    // watcher asks the engine whether a path is excluded, so without updating it right here
-    // changes to hidden files would keep being discarded.
+    // The engine holds the flag the folder watcher and the status tracker read, and they read it
+    // outside of a sync: FolderWatcher::addChanges() drops ignored paths the moment the OS reports
+    // them, before they ever reach the change set startSync() pops, and on Linux
+    // FolderWatcherPrivate::slotReceivedNotification() decides right there whether a newly created
+    // directory is given a watch at all. Refreshing the engine only in startSync() would discard
+    // every hidden-file change until then, without even scheduling the sync that would fix it.
     _engine->setIgnoreHiddenFiles(ignore);
 
     if (!ignore) {
@@ -351,14 +354,12 @@ void Folder::setIgnoreHiddenFiles(bool ignore)
         _journal.forceRemoteDiscoveryNextSync();
         slotNextSyncFullLocalDiscovery();
 
-        // On Linux the watcher registers one watch per directory and skipped the hidden ones,
-        // so directories that already existed while hidden files were ignored stay unwatched
-        // until the app restarts or something else re-creates the watcher. That gap is real
-        // but is not fixed here: FolderWatcherPrivate has no destructor on Linux, so calling
-        // init() again on an existing instance leaks the old inotify fd and every watch on it.
-        // The full local discovery above still catches up on existing hidden content; only
-        // live changes inside previously-unwatched hidden directories need the app restart in
-        // the meantime.
+        // On Linux only: directories that were already hidden when the watcher was set up have no
+        // inotify watch, because slotAddFolderRecursive() skipped them and it runs again only from
+        // FolderWatcher::init(). The full local discovery above picks up their content; live
+        // changes below them stay invisible until the client is restarted. Re-creating the watcher
+        // here would leak the old inotify fd and every watch on it, as FolderWatcherPrivate has no
+        // destructor on Linux.
     }
 }
 
