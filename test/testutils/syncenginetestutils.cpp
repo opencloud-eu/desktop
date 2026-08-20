@@ -853,12 +853,13 @@ FakeFolder::FakeFolder(const FileInfo &fileTemplate, OCC::Vfs::Mode vfsMode, boo
     _accountState = OCC::TestUtils::createDummyAccount();
     account()->setCredentials(new FakeCredentials{_fakeAm});
 
-    _journalDb.reset(new OCC::SyncJournalDb(localPath() + QStringLiteral(".sync_test.db")));
+    _journalDb.reset(new OCC::SyncJournalDb(localPath() + QStringLiteral(".sync_journal.db")));
 
     _syncEngine.reset(new OCC::SyncEngine(account(), OCC::TestUtils::dummyDavUrl(), localPath(), QString(), _journalDb.get()));
     _syncEngine->setSyncOptions(OCC::SyncOptions { QSharedPointer<OCC::Vfs>(OCC::VfsPluginManager::instance().createVfsFromPlugin(vfsMode).release()) });
 
     // Ignore temporary files from the download. (This is in the default exclude list, but we don't load it)
+    _syncEngine->addManualExclude(QStringLiteral("].sync_journal.db*"));
     _syncEngine->addManualExclude(QStringLiteral("]*.~*"));
 
     auto vfs = _syncEngine->syncOptions()._vfs;
