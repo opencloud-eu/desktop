@@ -64,6 +64,8 @@ public:
      */
     bool refreshAccessToken();
 
+    /// Returns the current Bearer access token (empty if not authenticated).
+    QString accessToken() const { return _accessToken; }
 
 protected:
     HttpCredentials() = default;

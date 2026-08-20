@@ -593,9 +593,25 @@ void ProcessDirectoryJob::processFileAnalyzeLocalInfo(
     };
 
     if (!localEntry.isValid()) {
+        const bool isNsfpMode = _discoveryData->_syncOptions._vfs->mode() == Vfs::Mode::MacOSNSFileProvider;
+        const bool isNsfpFile = isNsfpMode && dbEntry.isValid();
+
+        // NSFP mode: all files (virtual or hydrated) are managed by NSFileProvider,
+        // not the local filesystem. When the server deletes a file, remove the
+        // journal record directly — there is no local file for the sync engine
+        // to delete. The next metadata refresh will update Finder.
+        if (noServerEntry && isNsfpFile) {
+            qCInfo(lcDisco) << u"NSFP: server deleted file — removing journal record" << path._original;
+            _discoveryData->_statedb->deleteFileRecord(path._original, true);
+            return;
+        }
+
+        if (isNsfpFile) {
+            qCInfo(lcDisco) << u"NSFP: preserving file record (no local entry expected)" << path._original;
+        }
         if (_queryLocal == ParentNotChanged && dbEntry.isValid()) {
             // Not modified locally (ParentNotChanged)
-            if (noServerEntry) {
+            if (noServerEntry && !isNsfpFile) {
                 // not on the server: Removed on the server, delete locally
                 item->setInstruction(CSYNC_INSTRUCTION_REMOVE);
                 item->_direction = SyncFileItem::Down;
@@ -610,8 +626,9 @@ void ProcessDirectoryJob::processFileAnalyzeLocalInfo(
             qCInfo(lcDisco) << u"Stale DB entry";
             _discoveryData->_statedb->deleteFileRecord(path._original, true);
             return;
-        } else if (!serverModified) {
+        } else if (!serverModified && !isNsfpFile) {
             // Removed locally: also remove on the server.
+            // In NSFP mode, files are not on the local FS by design — do not treat as removed.
             if (!dbEntry.serverHasIgnoredFiles()) {
                 item->setInstruction(CSYNC_INSTRUCTION_REMOVE);
                 item->_direction = SyncFileItem::Up;
