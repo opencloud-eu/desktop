@@ -666,7 +666,7 @@ void ExcludedFiles::prepare()
         if (matchDirOnly)
             exclude = exclude.left(exclude.size() - 1);
 
-        bool removeExcluded = (exclude[0] == QLatin1Char(']'));
+        const bool removeExcluded = (exclude[0] == QLatin1Char(']'));
         if (removeExcluded)
             exclude = exclude.mid(1);
 
