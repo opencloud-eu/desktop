@@ -580,6 +580,14 @@ void OpenVFS::fileStatusChanged(const QString &systemFileName, SyncFileStatus fi
         setPinState(rel.toString(), PinState::Excluded);
         return;
     }
+    if (fileStatus.tag() == SyncFileStatus::StatusUpToDate) {
+        const auto attribs = placeHolderAttributes(systemFileName);
+        if (attribs && attribs.pinState == convertPinState(PinState::Excluded)) {
+            const FileSystem::Path rel = FileSystem::Path(systemFileName)->lexically_relative(params().root());
+            setPinState(rel.toString(), PinState::Inherited);
+        }
+        return;
+    }
     qCDebug(lcOpenVFS) << systemFileName << fileStatus;
 }
 
