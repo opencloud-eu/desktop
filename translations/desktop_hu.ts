@@ -1175,7 +1175,7 @@ Kérjük vegye fontolóra a mappa eltávolítását a fiókból és újbóli hoz
 <context>
     <name>OCC::FolderWatcher</name>
     <message>
-        <location filename="../src/gui/folderwatcher.cpp" line="143"/>
+        <location filename="../src/gui/folderwatcher.cpp" line="144"/>
         <source>The watcher did not receive a test notification.</source>
         <translation>A figyelő nem kapott tesztelési értesítést.</translation>
     </message>

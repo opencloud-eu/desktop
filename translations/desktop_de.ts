@@ -1175,7 +1175,7 @@ Bitte entfernen Sie diesen Ordner aus dem Konto und legen Sie ihn erneut an.</tr
 <context>
     <name>OCC::FolderWatcher</name>
     <message>
-        <location filename="../src/gui/folderwatcher.cpp" line="143"/>
+        <location filename="../src/gui/folderwatcher.cpp" line="144"/>
         <source>The watcher did not receive a test notification.</source>
         <translation>Der Watcher hat keine Test-Benachrichtigung erhalten.</translation>
     </message>
