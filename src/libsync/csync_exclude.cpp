@@ -157,26 +157,11 @@ static CSYNC_EXCLUDE_TYPE _csync_excluded_common(QStringView path, bool excludeC
 {
     /* split up the path */
     QStringView bname(path);
-    int lastSlash = path.lastIndexOf(QLatin1Char('/'));
-    if (lastSlash >= 0) {
+    if (auto lastSlash = path.lastIndexOf(QLatin1Char('/')); lastSlash >= 0) {
         bname = path.mid(lastSlash + 1);
     }
 
-    qsizetype blen = bname.size();
-    // 9 = strlen(".sync_.db")
-    if (blen >= 9 && bname.at(0) == QLatin1Char('.')) {
-        if (bname.contains(QLatin1String(".db"))) {
-            if (bname.startsWith(QLatin1String("._sync_"), Qt::CaseInsensitive) // "._sync_*.db*"
-                || bname.startsWith(QLatin1String(".sync_"), Qt::CaseInsensitive) // ".sync_*.db*"
-                || bname.startsWith(QLatin1String(".csync_journal.db"), Qt::CaseInsensitive)) { // ".csync_journal.db*"
-                return CSYNC_FILE_SILENTLY_EXCLUDED;
-            }
-        }
-        if (bname.startsWith(QLatin1String(".OpenCloudSync.log"), Qt::CaseInsensitive)) { // ".OpenCloudSync.log*"
-            return CSYNC_FILE_SILENTLY_EXCLUDED;
-        }
-    }
-
+    const qsizetype blen = bname.size();
     // check the strlen and ignore the file if its name is longer than 254 chars.
     // whenever changing this also check createDownloadTmpFileName
     if (blen > 254) {

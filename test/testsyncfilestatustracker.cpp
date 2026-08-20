@@ -9,6 +9,8 @@
 #include "testutils/syncenginetestutils.h"
 #include <QtTest>
 
+using namespace Qt::Literals::StringLiterals;
+
 using namespace OCC;
 
 class StatusPushSpy : public QSignalSpy
@@ -260,6 +262,7 @@ private Q_SLOTS:
 
         // Clears the exclude expr above
         fakeFolder.syncEngine().clearManualExcludes();
+        fakeFolder.syncEngine().addManualExclude(u".sync_journal.db*"_s);
         fakeFolder.scheduleSync();
         fakeFolder.execUntilBeforePropagation();
         QCOMPARE(statusSpy.statusOf(QString()), SyncFileStatus(SyncFileStatus::StatusSync));
