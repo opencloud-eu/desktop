@@ -329,7 +329,38 @@ bool Folder::ignoreHiddenFiles()
 
 void Folder::setIgnoreHiddenFiles(bool ignore)
 {
+    if (_definition.ignoreHiddenFiles == ignore) {
+        return;
+    }
     _definition.ignoreHiddenFiles = ignore;
+
+    if (!_engine) {
+        // the folder failed to set up, there is no state to invalidate
+        return;
+    }
+
+    // The engine holds the flag the folder watcher and the status tracker read, and they read it
+    // outside of a sync: FolderWatcher::addChanges() drops ignored paths the moment the OS reports
+    // them, before they ever reach the change set startSync() pops, and on Linux
+    // FolderWatcherPrivate::slotReceivedNotification() decides right there whether a newly created
+    // directory is given a watch at all. Refreshing the engine only in startSync() would discard
+    // every hidden-file change until then, without even scheduling the sync that would fix it.
+    _engine->setIgnoreHiddenFiles(ignore);
+
+    if (!ignore) {
+        // The hidden items were skipped by the previous runs, so they are neither in the local
+        // database nor did the remote etags change: nothing would make us look at them again.
+        // Invalidate both, the same way a change of the ignore list does.
+        _journal.forceRemoteDiscoveryNextSync();
+        slotNextSyncFullLocalDiscovery();
+
+        // On Linux only: directories that were already hidden when the watcher was set up have no
+        // inotify watch, because slotAddFolderRecursive() skipped them and it runs again only from
+        // FolderWatcher::init(). The full local discovery above picks up their content; live
+        // changes below them stay invisible until the client is restarted. Re-creating the watcher
+        // here would leak the old inotify fd and every watch on it, as FolderWatcherPrivate has no
+        // destructor on Linux.
+    }
 }
 
 QString Folder::cleanPath() const
