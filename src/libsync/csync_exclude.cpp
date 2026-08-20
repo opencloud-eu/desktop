@@ -214,12 +214,6 @@ static CSYNC_EXCLUDE_TYPE _csync_excluded_common(QStringView path, bool excludeC
     }
 #endif
 
-    /* Do not sync desktop.ini files anywhere in the tree. */
-    if (bname.compare("desktop.ini"_L1, Qt::CaseInsensitive) == 0) {
-        return CSYNC_FILE_SILENTLY_EXCLUDED;
-    }
-
-
     if (excludeConflictFiles && OCC::Utility::isConflictFile(path)) {
         return CSYNC_FILE_EXCLUDE_CONFLICT;
     }
