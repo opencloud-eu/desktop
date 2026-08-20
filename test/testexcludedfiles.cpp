@@ -166,8 +166,8 @@ private Q_SLOTS:
 
 
         /* pattern ]*.directory - ignore and remove */
-        QCOMPARE(check_file_full(QStringLiteral("my.~directory")), CSYNC_FILE_EXCLUDE_AND_REMOVE);
-        QCOMPARE(check_file_full(QStringLiteral("/a_folder/my.~directory")), CSYNC_FILE_EXCLUDE_AND_REMOVE);
+        QCOMPARE(check_file_full(QStringLiteral("my.~directory")), CSYNC_FILE_SILENTLY_EXCLUDED);
+        QCOMPARE(check_file_full(QStringLiteral("/a_folder/my.~directory")), CSYNC_FILE_SILENTLY_EXCLUDED);
 
         /* Not excluded because the pattern .netscape/cache requires directory. */
         QCOMPARE(check_file_full(QStringLiteral(".netscape/cache")), CSYNC_NOT_EXCLUDED);
@@ -273,8 +273,8 @@ private Q_SLOTS:
         QCOMPARE(check_file_traversal(QStringLiteral("Desktop.ini")), CSYNC_FILE_SILENTLY_EXCLUDED);
 
         /* pattern ]*.directory - ignore and remove */
-        QCOMPARE(check_file_traversal(QStringLiteral("my.~directory")), CSYNC_FILE_EXCLUDE_AND_REMOVE);
-        QCOMPARE(check_file_traversal(QStringLiteral("/a_folder/my.~directory")), CSYNC_FILE_EXCLUDE_AND_REMOVE);
+        QCOMPARE(check_file_traversal(QStringLiteral("my.~directory")), CSYNC_FILE_SILENTLY_EXCLUDED);
+        QCOMPARE(check_file_traversal(QStringLiteral("/a_folder/my.~directory")), CSYNC_FILE_SILENTLY_EXCLUDED);
 
         /* Not excluded because the pattern .netscape/cache requires directory. */
         QCOMPARE(check_file_traversal(QStringLiteral(".netscape/cache")), CSYNC_NOT_EXCLUDED);
