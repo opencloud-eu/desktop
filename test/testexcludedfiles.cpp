@@ -95,6 +95,12 @@ private Q_SLOTS:
         QVERIFY(check_isExcluded(QStringLiteral("/a/b~"), keepHidden));
         QVERIFY(!check_isExcluded(QStringLiteral("/a/.b"), keepHidden));
         QVERIFY(check_isExcluded(QStringLiteral("/a/.Trashes"), keepHidden));
+
+        QVERIFY(check_isExcluded(QStringLiteral("/a/.Trash"), keepHidden));
+        QVERIFY(check_isExcluded(QStringLiteral("/a/.Trash-100"), keepHidden));
+        // what ever .Trash- is, it doesn't follow https://specifications.freedesktop.org/trash/1.0/
+        QVERIFY(!check_isExcluded(QStringLiteral("/a/.Trash-"), keepHidden));
+
         QVERIFY(check_isExcluded(QStringLiteral("/a/foo_conflict-bar"), keepHidden));
         QVERIFY(check_isExcluded(QStringLiteral("/a/foo (conflicted copy bar)"), keepHidden));
         QVERIFY(check_isExcluded(QStringLiteral("/a/.b"), excludeHidden));
