@@ -44,10 +44,6 @@ Platform::Platform(Type t)
 
 void Platform::setApplication([[maybe_unused]] QCoreApplication *application)
 {
-    if (qobject_cast<QApplication *>(application)) {
-        QFontDatabase::addApplicationFont(QStringLiteral(":/client/font-awesome/Font Awesome 6 Free-Solid-900.otf"));
-        QFontDatabase::addApplicationFont(QStringLiteral(":/client/remixicon/remixicon.ttf"));
-    }
 #ifdef CRASHREPORTER_EXECUTABLE
     if (ConfigFile().crashReporter()) {
         auto *crashHandler =

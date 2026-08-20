@@ -75,22 +75,10 @@ def step(context, resource_type, resource):
     wait_for_resource_to_have_sync_error(resource, resource_type)
 
 
-@When(
-    r'user "([^"]*)" waits for (file|folder) "([^"]*)" to have sync error', regexp=True
-)
+@When(r'user "([^"]*)" waits for (file|folder) "([^"]*)" to have sync error', regexp=True)
 def step(context, username, resource_type, resource):
     resource = get_resource_path(resource, username)
     wait_for_resource_to_have_sync_error(resource, resource_type)
-
-
-@Then('the "|any|" button should not be available')
-def step(context, item):
-    SyncConnection.open_menu()
-    test.compare(
-        SyncConnection.menu_item_exists(item),
-        False,
-        f'Menu item "{item}" does not exist.',
-    )
 
 
 @When('the user opens the activity tab')
@@ -108,15 +96,16 @@ def step(context, filename):
     Activity.has_conflict_file(filename)
 
 
-@Then('the {resource_type:ResourceType} "{resourceName}" should be blacklisted')
-def step(context, resource_type, resourceName):
+@Then('the {resource_type:ResourceType} "{resource_name}" should be blacklisted')
+def step(context, resource_type, resource_name):
     with ensure(f'{resource_type.capitalize()} is blacklisted'):
-        Activity.is_resource_blacklisted(resourceName).should.be.true
+        Activity.is_resource_blacklisted(resource_name).should.be.true
 
 
 @Then('the file "|any|" should be ignored')
 def step(context, filename):
-    test.compare(True, Activity.is_resource_ignored(filename), 'File is Ignored')
+    with ensure("File is not ignored"):
+        Activity.is_resource_ignored(filename).should.be.true
 
 
 @Then('the file "{filename}" should be excluded')
@@ -133,8 +122,8 @@ def step(context, tab_name):
 @Then('the toolbar should have the following tabs:')
 def step(context):
     tabs = table_raw(context.table)
-    for tab_name in tabs:
-        tab_name = tab_name[0]
+    for row in tabs:
+        tab_name = row[0]
         with ensure('Tab not found: {0}', tab_name):
             Toolbar.has_tab(tab_name).should.be.true
 
@@ -145,9 +134,7 @@ def step(context):
     for row in context.table:
         folders.append(row[0])
     SyncConnectionWizard.deselect_all_remote_folders()
-    SyncConnectionWizard.select_folders_to_sync(
-        folders, new_sync_connection_wizard=True
-    )
+    SyncConnectionWizard.select_folders_to_sync(folders, new_sync_connection_wizard=True)
 
 
 @When('the user sorts the folder list by "{header_text}"')
@@ -169,13 +156,11 @@ def step(context):
 @Then('the folders should be in the following order:')
 def step(context):
     row_index = 0
-    for row in context.table:
+    for row_index, row in enumerate(context.table):
         expected_folder = row[0]
         actual_folder = SyncConnectionWizard.get_item_name_from_row(row_index)
         with ensure(f"Expected '{expected_folder}', got '{actual_folder}'"):
             actual_folder.should.be.equal(expected_folder)
-
-        row_index += 1
 
 
 @When('the user selects "{space_name}" space in sync connection wizard')
@@ -190,9 +175,7 @@ def step(context):
     SyncConnectionWizard.set_sync_path()
 
 
-@When(
-    'the user sets the temp folder "{folder_name}" as local sync path in sync connection wizard'
-)
+@When('the user sets the temp folder "{folder_name}" as local sync path in sync connection wizard')
 def step(context, folder_name):
     sync_path = get_temp_resource_path(folder_name)
     SyncConnectionWizard.set_sync_path(sync_path)
@@ -207,8 +190,8 @@ def step(context, space_name):
 @Then('the settings tab should have the following options in the general section:')
 def step(context):
     settings = table_raw(context.table)
-    for setting in settings:
-        setting = setting[0]
+    for row in settings:
+        setting = row[0]
         with ensure('General setting not found: {0}', setting):
             Settings.has_general_setting(setting).should.be.true
 
@@ -216,8 +199,8 @@ def step(context):
 @Then('the settings tab should have the following options in the advanced section:')
 def step(context):
     settings = table_raw(context.table)
-    for setting in settings:
-        setting = setting[0]
+    for row in settings:
+        setting = row[0]
         with ensure('Advanced setting not found: {0}', setting):
             Settings.has_advanced_setting(setting).should.be.true
 
@@ -225,8 +208,8 @@ def step(context):
 @Then('the settings tab should have the following options in the network section:')
 def step(context):
     settings = table_raw(context.table)
-    for setting in settings:
-        setting = setting[0]
+    for row in settings:
+        setting = row[0]
         with ensure('Network setting not found: {0}', setting):
             Settings.has_network_setting(setting).should.be.true
 
@@ -261,9 +244,7 @@ def step(context):
 def step(context, user, sync_folder):
     Toolbar.open_account(user)
     has_sync_connection = SyncConnection.has_sync_connection(sync_folder)
-    with ensure(
-        'There should not be "{0}" folder sync connection, but found.', sync_folder
-    ):
+    with ensure('There should not be "{0}" folder sync connection, but found.', sync_folder):
         has_sync_connection.should.be.false
 
 
@@ -335,19 +316,16 @@ def step(context):
         expected_error_message.should.equal(actual_error_message)
 
 
+@When('the user waits for "{wait_for}" seconds')
 @Given('the user has waited for "{wait_for}" seconds')
 def step(context, wait_for):
     time.sleep(float(wait_for))
 
 
-@When(
-    'the user unselects the following folders to sync in "Choose what to sync" window:'
-)
+@When('the user unselects the following folders to sync in "Choose what to sync" window:')
 def step(context):
     SyncConnection.choose_what_to_sync()
     folders = []
     for row in context.table:
         folders.append(row[0])
-    SyncConnectionWizard.unselect_folders_to_sync(
-        folders, new_sync_connection_wizard=False
-    )
+    SyncConnectionWizard.unselect_folders_to_sync(folders, new_sync_connection_wizard=False)

@@ -4,7 +4,7 @@ import time
 import urllib.request
 
 from pageObjects.SyncConnection import SyncConnection
-from helpers.ConfigHelper import get_config, is_linux, is_windows
+from helpers.ConfigHelper import get_config, is_windows
 from helpers.FilesHelper import sanitize_path
 from helpers.Utils import wait_for
 
@@ -24,12 +24,16 @@ else:
             syncstate_lib_file,
         )
         # do not instantiate SocketConnect in the script.
-        with open(syncstate_lib_file, 'r') as f:
+        with open(syncstate_lib_file) as f:
             content = f.read()
         content = content.replace('socketConnect = SocketConnect()', '')
         content = content.replace(
             'from gi.repository import GObject, Nautilus',
-            'import gi\n\ngi.require_version(\'Nautilus\', \'4.0\')\nfrom gi.repository import GObject, Nautilus',
+            (
+                "import gi\n\n"
+                "gi.require_version('Nautilus', '4.0')\n"
+                "from gi.repository import GObject, Nautilus"
+            ),
         )
 
         with open(syncstate_lib_file, 'w') as f:
@@ -45,9 +49,6 @@ else:
 # socket messages
 socket_messages = []
 SOCKET_CONNECT = None
-# Whether wait has been made or not after account is set up
-# This is useful for waiting only for the first time
-WAITED_AFTER_SYNC = False
 
 # File syncing in client has the following status
 SYNC_STATUS = {
@@ -65,7 +66,8 @@ SYNC_STATUS = {
 
 SYNC_PATTERNS = {
     # default sync patterns for the initial sync (after adding account)
-    # the pattern can be of TWO types depending on the available resources (files/folders)
+    # the pattern can be of TWO types depending on the
+    # available resources (files/folders)
     'initial': [
         # when adding account via New Account wizard
         [
@@ -157,21 +159,9 @@ def clear_socket_messages(resource=''):
     global socket_messages
     if resource:
         resource_messages = set(filter_messages_for_item(socket_messages, resource))
-        socket_messages = [
-            msg for msg in socket_messages if msg not in resource_messages
-        ]
+        socket_messages = [msg for msg in socket_messages if msg not in resource_messages]
     else:
         socket_messages.clear()
-
-
-def close_socket_connection():
-    socket_messages.clear()
-    if SOCKET_CONNECT:
-        SOCKET_CONNECT.connected = False
-        if is_windows():
-            SOCKET_CONNECT.close_conn()
-        elif is_linux():
-            SOCKET_CONNECT._sock.close()  # pylint: disable=protected-access
 
 
 def get_initial_sync_patterns():
@@ -223,9 +213,9 @@ def filter_sync_messages(messages):
 def filter_messages_for_item(messages, item):
     filtered_messages = []
     for msg in messages:
-        msg = msg.rstrip('/').rstrip('\\')
+        normalized_msg = msg.rstrip('/').rstrip('\\')
         item = item.rstrip('/').rstrip('\\')
-        if msg.endswith(item):
+        if normalized_msg.endswith(item):
             filtered_messages.append(msg)
     return filtered_messages
 
@@ -286,23 +276,21 @@ def wait_for_resource_to_sync(
     sync_messages = read_and_update_socket_messages()
     # clear stored socket messages
     clear_socket_messages(resource)
-    sync_info.append('Sync complete (socket): %s' % synced)
+    sync_info.append(f'Sync complete (socket): {synced}')
     if synced:
         if check_queued:
             loaded = wait_for(
-                lambda: not SyncConnection.is_sync_in_progress(
-                    get_config('syncConnectionName')
-                ),
+                lambda: not SyncConnection.is_sync_in_progress(get_config('syncConnectionName')),
                 get_config('sync_timeout'),
             )
-            sync_info.append('Sync complete (UI): %s' % loaded)
+            sync_info.append(f'Sync complete (UI): {loaded}')
             if not loaded:
                 raise TimeoutError(
                     '[ERROR] Sync is still in progress after matching the sync pattern.'
                     + '\n'.join(sync_info)
                 )
         return
-    elif not force_sync:
+    if not force_sync:
         # if the sync pattern doesn't match then check the last sync status
         # and pass the step if the last sync status is STATUS:OK
         status = get_current_sync_status(resource, resource_type)
@@ -314,20 +302,20 @@ def wait_for_resource_to_sync(
                 + '. So passing the step.'
             )
             return
-    print('[ERROR] Sync patterns: %s' % patterns)
-    print('[ERROR] Sync messages: %s' % sync_messages)
+    print(f'[ERROR] Sync patterns: {patterns}')
+    print(f'[ERROR] Sync messages: {sync_messages}')
     raise TimeoutError(
-        'Timeout while waiting for sync to complete for %s seconds.\n' % timeout
+        f'Timeout while waiting for sync to complete for {timeout} seconds.\n'
         + '\n'.join(sync_info)
     )
 
 
-def wait_for_initial_sync_to_complete(path, check_queued=True):
+def wait_for_initial_sync_to_complete(path, force_sync=True, check_queued=True):
     wait_for_resource_to_sync(
         path,
         'FOLDER',
         get_initial_sync_patterns(),
-        True,
+        force_sync,
         check_queued,
     )
 
@@ -341,9 +329,7 @@ def has_sync_pattern(patterns, resource=None):
     for pattern in patterns:
         pattern_len = len(pattern)
         for idx, _ in enumerate(messages):
-            actual_pattern = generate_sync_pattern_from_messages(
-                messages[idx : idx + pattern_len]
-            )
+            actual_pattern = generate_sync_pattern_from_messages(messages[idx : idx + pattern_len])
             if len(actual_pattern) < pattern_len:
                 break
             if pattern_len == len(actual_pattern) and pattern == actual_pattern:
@@ -359,9 +345,9 @@ def has_sync_status(item_name, status):
     sync_messages = read_and_update_socket_messages()
     sync_messages = filter_messages_for_item(sync_messages, item_name)
     for line in sync_messages:
-        line = line.rstrip('/').rstrip('\\')
+        normalized_line = line.rstrip('/').rstrip('\\')
         item_name = item_name.rstrip('/').rstrip('\\')
-        if line.startswith(status) and line.endswith(item_name):
+        if normalized_line.startswith(status) and normalized_line.endswith(item_name):
             return True
     return False
 
@@ -390,28 +376,11 @@ def wait_for_resource_to_have_sync_status(
             expected = 'be sync ignored'
         else:
             expected = 'be synced'
-        raise ValueError(
-            f'Expected {resource_type} "{resource}" to {expected}, but not.'
-        )
+        raise ValueError(f'Expected {resource_type} "{resource}" to {expected}, but not.')
 
 
 def wait_for_resource_to_have_sync_error(resource, resource_type):
     wait_for_resource_to_have_sync_status(resource, resource_type, SYNC_STATUS['ERROR'])
-
-
-# performing actions immediately after completing the sync from the server does not work
-# The test should wait for a while before performing the action
-# issue: https://github.com/owncloud/client/issues/8832
-def wait_for_client_to_be_ready():
-    global WAITED_AFTER_SYNC
-    if not WAITED_AFTER_SYNC:
-        time.sleep(get_config('min_timeout'))
-        WAITED_AFTER_SYNC = True
-
-
-def clear_waited_after_sync():
-    global WAITED_AFTER_SYNC
-    WAITED_AFTER_SYNC = False
 
 
 def perform_file_explorer_vfs_action(resource_path, action):

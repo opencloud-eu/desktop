@@ -81,5 +81,7 @@ public:
         const QString &provider, const QString &theme, const QString &icon, bool enabled = true, int size = 0, const QColor &color = {});
 
     Q_INVOKABLE QUrl avatarPath(const QString &accountID, bool enabled = true, int size = 0);
+
+    Q_INVOKABLE void showInFileManager(const QString &path);
 };
 }

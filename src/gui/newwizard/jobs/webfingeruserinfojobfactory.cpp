@@ -15,7 +15,6 @@
 #include "webfingeruserinfojobfactory.h"
 #include "common/utility.h"
 #include "creds/httpcredentials.h"
-#include "creds/webfinger.h"
 
 #include <QApplication>
 #include <QJsonArray>
@@ -24,6 +23,8 @@
 #include <QStringLiteral>
 
 Q_LOGGING_CATEGORY(lcWebFingerUserInfoJob, "sync.networkjob.webfingeruserinfojob", QtInfoMsg);
+
+using namespace Qt::Literals::StringLiterals;
 
 namespace OCC::Wizard::Jobs {
 
@@ -84,7 +85,7 @@ CoreJob *WebFingerInstanceLookupJobFactory::startJob(const QUrl &url, QObject *p
             const QString rel = linkObject.value(QStringLiteral("rel")).toString();
             const QString href = linkObject.value(QStringLiteral("href")).toString();
 
-            if (rel != WebFinger::relId()) {
+            if (rel != "http://webfinger.opencloud/rel/server-instance"_L1) {
                 qCDebug(lcWebFingerUserInfoJob) << u"skipping invalid link" << href << u"with rel" << rel;
                 continue;
             }

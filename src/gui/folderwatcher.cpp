@@ -63,6 +63,7 @@ FolderWatcher::~FolderWatcher()
 
 void FolderWatcher::init(const QString &root)
 {
+    Q_ASSERT(!_d);
     _d.reset(new FolderWatcherPrivate(this, root));
 }
 

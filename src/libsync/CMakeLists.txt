@@ -51,7 +51,6 @@ add_library(libsync SHARED
     creds/httpcredentials.cpp
     creds/oauth.cpp
     creds/jwt.cpp
-    creds/webfinger.cpp
     creds/idtoken.cpp
 
     networkjobs/getfilejob.cpp
@@ -67,6 +66,9 @@ add_library(libsync SHARED
 
     path.cpp
 )
+
+
+set_source_files_properties(accessmanager.cpp PROPERTIES COMPILE_DEFINITIONS WITH_HTTP2=$<BOOL:${WITH_HTTP2}>)
 
 if(WIN32)
     target_sources(libsync PRIVATE platform_win.cpp)

@@ -9,7 +9,6 @@ from sure import ensure
 
 from helpers.SetupClientHelper import get_resource_path, get_temp_resource_path
 from helpers.SyncHelper import (
-    wait_for_client_to_be_ready,
     listen_sync_status_for_item,
 )
 from helpers.Utils import wait_for
@@ -72,18 +71,16 @@ def write_file(resource, content):
         f.write(content)
 
 
-def wait_and_write_file(path, content):
-    wait_for_client_to_be_ready()
+def write_file_to_sync_path(path, content):
     listen_sync_status_for_item(get_resource_path(path), 'FILE')
     write_file(path, content)
 
 
-def wait_and_try_to_write_file(resource, content):
-    wait_for_client_to_be_ready()
+def try_to_write_file(resource, content):
     listen_sync_status_for_item(get_resource_path(resource), 'FILE')
     try:
         write_file(resource, content)
-    except:
+    except Exception:
         pass
 
 
@@ -112,15 +109,11 @@ def add_copy_suffix(resource_path, resource_type):
 
 
 def copy_resource(resource_type, source, destination, from_files_for_upload=False):
-    if from_files_for_upload:
-        source = get_file_for_upload(source)
-    else:
-        source = get_resource_path(source)
+    source = get_file_for_upload(source) if from_files_for_upload else get_resource_path(source)
     destination = get_resource_path(destination)
     if source == destination and destination != '/':
         destination = add_copy_suffix(source, resource_type)
 
-    wait_for_client_to_be_ready()
     listen_sync_status_for_item(destination, resource_type)
     if resource_type == 'folder':
         return shutil.copytree(source, destination)
@@ -134,13 +127,11 @@ def move_resource(username, resource_type, source, destination, is_temp_folder=F
         destination = ''
     destination = get_resource_path(destination, username)
 
-    wait_for_client_to_be_ready()
     listen_sync_status_for_item(destination, resource_type)
     shutil.move(source, destination)
 
 
-def deleteResource(resource, resource_type):
-    wait_for_client_to_be_ready()
+def delete_resource(resource, resource_type):
     listen_sync_status_for_item(resource, resource_type)
     resource_path = sanitize_path(get_resource_path(resource))
     if resource_type == 'file':
@@ -154,12 +145,11 @@ def deleteResource(resource, resource_type):
 )
 def step(context, username, filename):
     file = get_resource_path(filename, username)
-    wait_and_write_file(convert_path_separators_for_os(file), context.text)
+    write_file_to_sync_path(convert_path_separators_for_os(file), context.text)
 
 
 @When('user "{username}" creates a folder "{foldername}" inside the sync folder')
 def step(context, username, foldername):
-    wait_for_client_to_be_ready()
     create_folder(foldername, username)
 
 
@@ -168,10 +158,8 @@ def step(context, username, foldername):
     create_folder(foldername, username)
 
 
-@When(
-    'user "{user}" creates a file "{filename}" with size "{filesize}" inside the sync folder'
-)
-def step(context, user, filename, filesize):
+@When('user "{_user}" creates a file "{filename}" with size "{filesize}" inside the sync folder')
+def step(context, _user, filename, filesize):
     create_file_with_size(filename, filesize)
 
 
@@ -180,9 +168,7 @@ def step(context, resource_type, resource_name, destination_dir):
     copy_resource(resource_type, resource_name, destination_dir, False)
 
 
-@When(
-    'the user copies {resource_type:ResourceType} "{resource_name}" into the same directory'
-)
+@When('the user copies {resource_type:ResourceType} "{resource_name}" into the same directory')
 def step(context, resource_type, resource_name):
     copy_resource(resource_type, resource_name, resource_name, False)
 
@@ -190,17 +176,14 @@ def step(context, resource_type, resource_name):
 @When('the user renames a file "{source}" to "{destination}"')
 @When('the user renames a folder "{source}" to "{destination}"')
 def step(context, source, destination):
-    wait_for_client_to_be_ready()
     rename_file_folder(source, destination)
 
 
-@Then(
-    'the file "{file_path}" should exist on the file system with the following content'
-)
+@Then('the file "{file_path}" should exist on the file system with the following content')
 def step(context, file_path):
     expected = context.text
     file_path = get_resource_path(file_path)
-    with open(file_path, 'r', encoding='utf-8') as f:
+    with open(file_path, encoding='utf-8') as f:
         contents = f.read()
     with ensure(
         '{0} expected to exist with content "{1}" but has content "{2}"',
@@ -229,9 +212,7 @@ def step(context, resource_type, resource):
         resource_exists.should.be.true
 
 
-@Then(
-    'the {resource_type:ResourceType} "{resource}" should not exist on the file system'
-)
+@Then('the {resource_type:ResourceType} "{resource}" should not exist on the file system')
 def step(context, resource_type, resource):
     resource_path = get_resource_path(resource)
     with ensure(
@@ -245,23 +226,19 @@ def step(context, resource_type, resource):
 @Given('the user has changed the content of local file "{filename}" to:')
 def step(context, filename):
     file_content = context.text
-    wait_and_write_file(get_resource_path(filename), file_content)
+    write_file_to_sync_path(get_resource_path(filename), file_content)
 
 
-@Then(
-    'a conflict file for "{filename}" should exist on the file system with the following content'
-)
+@Then('a conflict file for "{filename}" should exist on the file system with the following content')
 def step(context, filename):
     expected = context.text
 
-    onlyfiles = [
-        f for f in os.listdir(get_resource_path()) if isfile(get_resource_path(f))
-    ]
+    onlyfiles = [f for f in os.listdir(get_resource_path()) if isfile(get_resource_path(f))]
     found = False
     pattern = re.compile(build_conflicted_regex(filename))
     for file in onlyfiles:
         if pattern.match(file):
-            with open(get_resource_path(file), 'r', encoding='utf-8') as f:
+            with open(get_resource_path(file), encoding='utf-8') as f:
                 if f.read() == expected:
                     found = True
                     break
@@ -273,31 +250,31 @@ def step(context, filename):
 @When('the user overwrites the file "{resource}" with content "{content}"')
 def step(context, resource, content):
     resource = get_resource_path(resource)
-    wait_and_write_file(resource, content)
+    write_file_to_sync_path(resource, content)
 
 
 @When('the user tries to overwrite the file "|any|" with content "|any|"')
 def step(context, resource, content):
     resource = get_resource_path(resource)
-    wait_and_try_to_write_file(resource, content)
+    try_to_write_file(resource, content)
 
 
 @When('user "|any|" tries to overwrite the file "|any|" with content "|any|"')
 def step(context, user, resource, content):
     resource = get_resource_path(resource, user)
-    wait_and_try_to_write_file(resource, content)
+    try_to_write_file(resource, content)
 
 
 @When('the user deletes the {resource_type:ResourceType} "{resource_name}"')
 def step(context, resource_type, resource_name):
-    deleteResource(resource_name, resource_type)
+    delete_resource(resource_name, resource_type)
 
 
 @When('user "{username}" creates the following files inside the sync folder:')
 def step(context, username):
     for row in context.table:
         file = get_resource_path(row[0], username)
-        wait_and_write_file(file, '')
+        write_file_to_sync_path(file, '')
 
 
 @Given('the user has created a folder "{folder_name}" in temp folder')
@@ -312,13 +289,11 @@ def step(context, file_number, file_size, folder_name):
     current_sync_path = get_temp_resource_path(folder_name)
     if folder_exists(current_sync_path):
         file_size = builtins.int(file_size)
-        for i in range(0, builtins.int(file_number)):
+        for i in range(builtins.int(file_number)):
             file_name = f'file{i}.txt'
             create_file_with_size(join(current_sync_path, file_name), file_size, True)
     else:
-        raise FileNotFoundError(
-            f"Folder '{folder_name}' does not exist in the temp folder"
-        )
+        raise FileNotFoundError(f"Folder '{folder_name}' does not exist in the temp folder")
 
 
 @When(
@@ -327,11 +302,13 @@ def step(context, file_number, file_size, folder_name):
 )
 def step(context, username, file):
     file_path = get_resource_path(file, username)
-    with open(file_path, 'r') as f:
+    with open(file_path) as f:
         f.read()
 
 
-@When(r'user "{username}" moves {resource_type} "{resource_name}" from the temp folder into the sync folder')
+@When(
+    r'user "{username}" moves {resource_type} "{resource_name}" from the temp folder into the sync folder'
+)
 def step(context, username, resource_type, resource_name):
     source_dir = join(get_config('test_temp_dir'), resource_name)
     move_resource(username, resource_type, source_dir, '/', True)
@@ -364,9 +341,7 @@ def step(context, user, file_name):
         can_read(file_path).should.be.true
 
 
-@Then(
-    'as "{user}" the file "{file_name}" should have content "{content}" on the file system'
-)
+@Then('as "{user}" the file "{file_name}" should have content "{content}" on the file system')
 def step(context, user, file_name, content):
     file_path = get_resource_path(file_name, user)
     file_content = read_file_content(file_path)
@@ -414,7 +389,6 @@ def step(context, username, zip_file_name):
 
 @When('user "|any|" copies file "|any|" to temp folder')
 def step(context, username, source):
-    wait_for_client_to_be_ready()
     source_dir = get_resource_path(source, username)
     destination_dir = get_temp_resource_path(source)
     shutil.copy2(source_dir, destination_dir)
@@ -447,14 +421,11 @@ def step(context, resource_name, destination):
 
 @When('the user deletes the following files')
 def step(context):
-    wait_for_client_to_be_ready()
     for row in context.table:
         filename = row[0]
-        deleteResource(filename, 'file')
+        delete_resource(filename, 'file')
 
 
-@Given(
-    'the user has created a file "{filename}" with size "{filesize}" in the sync folder'
-)
+@Given('the user has created a file "{filename}" with size "{filesize}" in the sync folder')
 def step(context, filename, filesize):
     create_file_with_size(filename, filesize)

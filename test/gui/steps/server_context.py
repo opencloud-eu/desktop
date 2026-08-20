@@ -1,6 +1,6 @@
 import tempfile
 from pathlib import Path
-from behave import given as Given, then as Then
+from behave import given as Given, then as Then, when as When
 from sure import ensure
 
 from helpers.api import provisioning, webdav_helper as webdav
@@ -27,9 +27,7 @@ def step(context, user_name, resource_type, resource_name):
         resource_exists.should.be.false
 
 
-@Then(
-    'as "{user_name}" {resource_type:ResourceType} "{resource_name}" should exist in the server'
-)
+@Then('as "{user_name}" {resource_type:ResourceType} "{resource_name}" should exist in the server')
 def step(context, user_name, resource_type, resource_name):
     resource_exists = webdav.resource_exists(user_name, resource_name)
     with ensure(
@@ -40,9 +38,7 @@ def step(context, user_name, resource_type, resource_name):
         resource_exists.should.be.true
 
 
-@Then(
-    'as "{user_name}" the file "{file_name}" should have the content "{content}" in the server'
-)
+@Then('as "{user_name}" the file "{file_name}" should have the content "{content}" in the server')
 def step(context, user_name, file_name, content):
     text_content = webdav.get_file_content(user_name, file_name)
     with ensure(
@@ -54,10 +50,12 @@ def step(context, user_name, file_name, content):
         text_content.should.equal(content)
 
 
-@Then(r'as user "{user_name}" folder "{folder_name}" should contain "{items_number}" items in the server')
+@Then(
+    'as user "{user_name}" folder "{folder_name}" should contain "{items_number}" items in the server'
+)
 def step(context, user_name, folder_name, items_number):
     total_items = webdav.get_folder_items_count(user_name, folder_name)
-    with ensure(f'Folder should contain {items_number} items'):
+    with ensure(f'Folder should contain {items_number} items, but found {total_items}'):
         total_items.should.equal(items_number)
 
 
@@ -71,11 +69,6 @@ def step(context, user, folder_name):
 )
 def step(context, user, file_content, file_name):
     webdav.create_file(user, file_name, file_content)
-
-
-@When('the user clicks on the settings tab')
-def step(context):
-    Toolbar.open_settings_tab()
 
 
 @When('user "{user}" uploads file with content "{file_content}" to "{file_name}" in the server')
@@ -107,21 +100,22 @@ def step(context, user_name, server_file_name, local_file_name):
     local_content = get_document_content(get_file_for_upload(local_file_name))
 
     with ensure(
-            f"Server file '{server_file_name}' differs from local file '{local_file_name}'",
+        f"Server file '{server_file_name}' differs from local file '{local_file_name}'",
     ):
         server_content.should.equal(local_content)
 
 
-@Then('as "{user_name}" following files should not exist in the server',)
+@Then(
+    'as "{user_name}" following files should not exist in the server',
+)
 def step(context, user_name):
     for row in context.table:
         resource_name = row[0]
         resource_exists = webdav.resource_exists(user_name, resource_name)
         with ensure(
-             f"Resource '{resource_name}' should not exist, but it does",
+            f"Resource '{resource_name}' should not exist, but it does",
         ):
             resource_exists.should.be.false
-
 
 
 @Given('user "{user}" has uploaded the following files to the server')

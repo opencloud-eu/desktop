@@ -34,7 +34,7 @@ check-uv:
 .PHONY: uv-install
 uv-install: check-uv
 	uv venv --system-site-packages --allow-existing
-	uv sync --frozen
+	uv sync --frozen --all-groups
 
 .PHONY: install-chromium
 install-chromium: check-uv
@@ -45,14 +45,18 @@ run-atpsi-webdriver: check-uv
 	bash woodpecker/run_atspi_webdriver.sh
 
 .PHONY: python-lint
-python-lint:
-	black --check --diff .
-	python3 -m pylint --rcfile ./.pylintrc $(PYTHON_LINT_PATHS)
+python-lint: check-uv
+	uv run --no-sync ruff format . --diff
+	uv run --no-sync ruff check .
 
 .PHONY: python-lint-fix
-python-lint-fix:
-	black .
-	python3 -m pylint --rcfile ./.pylintrc $(PYTHON_LINT_PATHS)
+python-lint-fix: check-uv
+	uv run --no-sync ruff format .
+	uv run --no-sync ruff check . --fix
+
+.PHONY: check-dead-code
+check-dead-code: check-uv
+	uv run --no-sync vulture .
 
 .PHONY: gherkin-lint
 gherkin-lint:

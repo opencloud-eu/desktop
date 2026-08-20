@@ -85,6 +85,9 @@ Q_SIGNALS:
     /**
      * The state has changed.
      * when logged in, token has the value of the token.
+     *
+     * Terminal signal for startAuthentication. The refresh flow uses
+     * refreshFinished() / refreshError() instead.
      */
     void result(OAuth::Result result, const QString &token = QString(), const QString &refreshToken = QString());
 
@@ -97,6 +100,10 @@ Q_SIGNALS:
 
     void dynamicRegistrationDataReceived();
 
+    /**
+     * Terminal failure signal for refreshAuthentication. The initial
+     * authentication flow uses result(Error) instead.
+     */
     void refreshError(QNetworkReply::NetworkError error, const QString &errorString);
 
 
@@ -110,6 +117,7 @@ protected:
 
     QString _clientId;
     QString _clientSecret;
+    QString _scopes;
 
     QUrl _registrationEndpoint;
 

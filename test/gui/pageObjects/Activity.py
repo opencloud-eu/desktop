@@ -14,8 +14,6 @@ class Activity:
         by=By.XPATH, selector="//page_tab[starts-with(@name, '{tab_name}')]"
     )
     LOCAL_ACTIVITY_FILTER_BUTTON = SimpleNamespace(by=By.NAME, selector="Filter")
-    LOCAL_ACTIVITY_FILTER_OPTION_SELECTOR = SimpleNamespace(by=By.NAME, selector=None)
-    LOCAL_ACTIVITY_TABLE = SimpleNamespace(by=By.NAME, selector="Local activity table")
     FILTER_BUTTON_SELECTED_STATE = SimpleNamespace(
         by=By.XPATH, selector="//*[contains(@name, '1 Filter')]"
     )
@@ -23,7 +21,9 @@ class Activity:
         by=By.ACCESSIBILITY_ID,
         selector="QApplication.Settings.centralwidget.dialogStack.page.stack.OCC::ActivitySettings.QTabWidget.qt_tabwidget_stackedwidget.OCC__IssuesWidget._filterButton",
     )
-    NOT_SYNCED_ACTIVITY_CONFLICT_FILE = SimpleNamespace(by=By.XPATH, selector="//*[starts-with(@name, '{filename} (conflicted copy')]")
+    NOT_SYNCED_ACTIVITY_CONFLICT_FILE = SimpleNamespace(
+        by=By.XPATH, selector="//*[starts-with(@name, '{filename} (conflicted copy')]"
+    )
     SYNCED_ACTIVITY_STATUS = SimpleNamespace(by=By.NAME, selector=None)
 
     @staticmethod
@@ -35,47 +35,46 @@ class Activity:
     def has_conflict_file(filename):
         filename = filename.rsplit(".", 1)[0]
         has_activity = wait_for(
-            lambda: app().find_element(
-                Activity.NOT_SYNCED_ACTIVITY_CONFLICT_FILE.by,
-                Activity.NOT_SYNCED_ACTIVITY_CONFLICT_FILE.selector.format(filename=filename)
-            ).is_displayed(),
-            get_config('max_timeout')
+            lambda: (
+                app()
+                .find_element(
+                    Activity.NOT_SYNCED_ACTIVITY_CONFLICT_FILE.by,
+                    Activity.NOT_SYNCED_ACTIVITY_CONFLICT_FILE.selector.format(filename=filename),
+                )
+                .is_displayed()
+            ),
+            get_config('max_timeout'),
         )
         if not has_activity:
-            raise AssertionError(f"File conflict activity not found")
+            raise AssertionError("File conflict activity not found")
 
     @staticmethod
     def is_resource_blacklisted(filename):
-        result = wait_for(
+        return wait_for(
             lambda: Activity.has_sync_status(filename, "Blacklisted"),
             get_config("sync_timeout"),
         )
-        return result
 
     @staticmethod
     def is_resource_ignored(filename):
-        result = wait_for(
+        return wait_for(
             lambda: Activity.has_sync_status(filename, "File Ignored"),
             get_config("sync_timeout"),
         )
-        return result
 
     @staticmethod
     def is_resource_excluded(filename):
-        result = wait_for(
+        return wait_for(
             lambda: Activity.has_sync_status(filename, "Excluded"),
             get_config("sync_timeout"),
         )
-        return result
 
     @staticmethod
     def has_sync_status(filename, status):
         try:
             row = app().find_element(By.NAME, filename)
             row_y = row.rect['y']
-            status_cells = app().find_elements(
-                Activity.SYNCED_ACTIVITY_STATUS.by, status
-            )
+            status_cells = app().find_elements(Activity.SYNCED_ACTIVITY_STATUS.by, status)
             for status_el in status_cells:
                 if status_el.rect['y'] == row_y:
                     return True
@@ -87,7 +86,7 @@ class Activity:
                 return False
 
     @staticmethod
-    def select_synced_filter(sync_filter):
+    def select_synced_filter(_sync_filter):
         menu = app().find_element(
             Activity.LOCAL_ACTIVITY_FILTER_BUTTON.by,
             Activity.LOCAL_ACTIVITY_FILTER_BUTTON.selector,
@@ -133,11 +132,11 @@ class Activity:
                     f'Activity for "{resource}" does not have "{account}" account label'
                 )
             return True
-        except:
+        except Exception:
             return False
 
     @staticmethod
-    def select_not_synced_filter(filter_option):
+    def select_not_synced_filter(_filter_option):
         menu = app().find_element(
             Activity.NOT_SYNCED_FILTER_BUTTON.by,
             Activity.NOT_SYNCED_FILTER_BUTTON.selector,

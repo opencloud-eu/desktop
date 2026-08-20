@@ -156,16 +156,6 @@ QString SetupWizardAccountBuilder::syncTargetDir() const
     return _defaultSyncTargetDir;
 }
 
-void SetupWizardAccountBuilder::setWebFingerAuthenticationServerUrl(const QUrl &url)
-{
-    _webFingerAuthenticationServerUrl = url;
-}
-
-QUrl SetupWizardAccountBuilder::webFingerAuthenticationServerUrl() const
-{
-    return _webFingerAuthenticationServerUrl;
-}
-
 void SetupWizardAccountBuilder::setWebFingerInstances(const QVector<QUrl> &instancesList)
 {
     _webFingerInstances = instancesList;

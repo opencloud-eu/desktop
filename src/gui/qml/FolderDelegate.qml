@@ -318,7 +318,7 @@ Pane {
 
                             MenuItem {
                                 text: CommonStrings.showInFileBrowser()
-                                onTriggered: Qt.openUrlExternally("file:///" + folderDelegate.folder.path)
+                                onTriggered: OCUtils.showInFileManager(folderDelegate.folder.path)
                             }
 
                             MenuItem {

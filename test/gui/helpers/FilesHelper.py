@@ -15,9 +15,12 @@ def build_conflicted_regex(filename):
         # TODO: improve this for complex filenames
         namepart = filename.split(".")[0]
         extpart = filename.split(".")[1]
-        # pylint: disable=anomalous-backslash-in-string
-        return rf"{namepart} \(conflicted copy \d{{4}}-\d{{2}}-\d{{2}} \d{{6}}\)\.{extpart}"
-    # pylint: disable=anomalous-backslash-in-string
+        return (
+            rf"{namepart} \(conflicted copy "
+            r"\d{4}-\d{2}-\d{2} "
+            r"\d{6}\)"
+            rf"\.{extpart}"
+        )
     return rf"{filename} \(conflicted copy \d{{4}}-\d{{2}}-\d{{2}} \d{{6}}\)"
 
 
@@ -38,9 +41,9 @@ def prefix_path_namespace(path):
 def can_read(resource):
     read = False
     try:
-        with open(resource, encoding="utf-8") as f:
+        with open(resource, encoding="utf-8"):
             read = True
-    except:
+    except Exception:
         pass
     return read and os.access(resource, os.R_OK)
 
@@ -48,26 +51,16 @@ def can_read(resource):
 def can_write(resource):
     write = False
     try:
-        with open(resource, "w", encoding="utf-8") as f:
+        with open(resource, "w", encoding="utf-8"):
             write = True
-    except:
+    except Exception:
         pass
     return write and os.access(resource, os.W_OK)
 
 
 def read_file_content(file):
-    with open(file, "r", encoding="utf-8") as f:
-        content = f.read()
-    return content
-
-
-def is_empty_sync_folder(folder):
-    ignore_files = ["Desktop.ini"]
-    for item in os.listdir(folder):
-        # do not count the hidden files as they are ignored by the client
-        if not item.startswith(".") and not item in ignore_files:
-            return False
-    return True
+    with open(file, encoding="utf-8") as f:
+        return f.read()
 
 
 def get_size_in_bytes(size):
@@ -91,10 +84,6 @@ def get_size_in_bytes(size):
                 return size_num * (multiplier**3)
 
     raise ValueError("Invalid size: " + size)
-
-
-def get_file_size(resource_path):
-    return os.stat(resource_path).st_size
 
 
 # temp paths created outside the temporary directory during the test
@@ -143,8 +132,7 @@ def get_pdf_content(pdf_file):
 
 def get_docs_content(docs_file):
     doc = Document(docs_file)
-    content = "\n".join(p.text for p in doc.paragraphs)
-    return content
+    return "\n".join(p.text for p in doc.paragraphs)
 
 
 def get_presentation_content(ppt_file):
@@ -181,7 +169,7 @@ def get_document_content(document):
     elif doc_ext == "xlsx":
         content = get_excel_content(document)
     elif doc_ext in ["txt", "md"]:
-        with open(document, "r", encoding="utf-8") as f:
+        with open(document, encoding="utf-8") as f:
             content = f.read()
     else:
         raise ValueError(f"Unsupported document format: {doc_ext}")

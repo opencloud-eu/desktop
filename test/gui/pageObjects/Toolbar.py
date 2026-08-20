@@ -10,14 +10,9 @@ from helpers.Utils import wait_for
 
 
 class Toolbar:
-    TOOLBAR_ROW = SimpleNamespace(by=None, selector=None)
-    NAVIGATION_BAR = SimpleNamespace(
-        by=By.XPATH, selector="//*[@name='Navigation bar']/.."
-    )
+    NAVIGATION_BAR = SimpleNamespace(by=By.XPATH, selector="//*[@name='Navigation bar']/..")
     ACCOUNT_TAB = SimpleNamespace(by=By.CLASS_NAME, selector="[page tab | {text}]")
-    ADD_ACCOUNT_BUTTON = SimpleNamespace(
-        by=By.CLASS_NAME, selector="[push button | Add Account]"
-    )
+    ADD_ACCOUNT_BUTTON = SimpleNamespace(by=By.CLASS_NAME, selector="[push button | Add Account]")
     ACTIVITY_TAB = SimpleNamespace(by=By.CLASS_NAME, selector="[page tab | Activity]")
     SETTINGS_TAB = SimpleNamespace(by=By.CLASS_NAME, selector="[page tab | Settings]")
     QUIT_BUTTON = SimpleNamespace(by=By.CLASS_NAME, selector="[push button | Quit]")
@@ -26,13 +21,9 @@ class Toolbar:
         selector="Yes",
     )
 
-    TOOLBAR_ITEMS = ["Add Account", "Activity", "Settings", "Quit"]
-
     @staticmethod
     def wait_toolbar_enabled():
-        toolbar = app().find_element(
-            Toolbar.NAVIGATION_BAR.by, Toolbar.NAVIGATION_BAR.selector
-        )
+        toolbar = app().find_element(Toolbar.NAVIGATION_BAR.by, Toolbar.NAVIGATION_BAR.selector)
         timeout = get_config('max_timeout')
         enabled = wait_for(
             toolbar.is_enabled,
@@ -116,6 +107,7 @@ class Toolbar:
             account = app().find_element(
                 Toolbar.ACCOUNT_TAB.by,
                 Toolbar.ACCOUNT_TAB.selector.format(text=account_label),
+                timeout=get_config("lowest_timeout"),
             )
         except NoSuchElementException:
             pass

@@ -187,8 +187,12 @@ void PropagateUploadFileTUS::slotChunkFinished()
 
     QNetworkReply::NetworkError err = job->reply()->error();
     if (err != QNetworkReply::NoError) {
-        // try to get the offset if possible, only try once
-        if (err == QNetworkReply::TimeoutError && !_location.isEmpty() && HttpLogger::requestVerb(*job->reply())  != "HEAD")
+        // try to get the offset if possible, only try once.
+        // Also resume on a 409: a TUS Upload-Offset mismatch on a stale/diverged resume
+        // (opencloud-eu/desktop#898). Re-query the server's current offset with a HEAD and
+        // continue from there, instead of letting the upload wedge in commonErrorHandling.
+        if ((err == QNetworkReply::TimeoutError || _item->_httpErrorCode == 409)
+            && !_location.isEmpty() && HttpLogger::requestVerb(*job->reply()) != "HEAD")
         {
             qCWarning(lcPropagateUploadTUS) << propagator()->fullRemotePath(_item->localName()) << u"Encountered a timeout -> get progress for" << _location;
             QNetworkRequest req;

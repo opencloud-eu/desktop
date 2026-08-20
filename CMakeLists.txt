@@ -79,32 +79,52 @@ if ("${GIT_SHA1}" STREQUAL "GITDIR-NOTFOUND")
 endif()
 message(STATUS "GIT_SHA1 ${GIT_SHA1}")
 
+## -DNO_MSG_HANDLER=ON
 option(NO_MSG_HANDLER "Don't redirect QDebug outputs to the log window/file" OFF)
 
 if (APPLE)
     # this option builds the shell integration, currently only available on MacOS
+    ## -DBUILD_SHELL_INTEGRATION=OFF
     option(BUILD_SHELL_INTEGRATION "BUILD_SHELL_INTEGRATION" ON)
 endif()
 
 # build the auto updater component
+## -DWITH_AUTO_UPDATER=ON
 option(WITH_AUTO_UPDATER "WITH_AUTO_UPDATER" OFF)
+## -DWITH_UPDATE_NOTIFICATION=OFF
 option(WITH_UPDATE_NOTIFICATION "Whether to check for new releases" ON)
 
 # create a co-installable client, that uses a separate profile
+## -DBETA_CHANNEL_BUILD=ON
 option(BETA_CHANNEL_BUILD "Use a standalone profile for a beta release" OFF)
 
 # build with -DQT_FORCE_ASSERTS
+## -DFORCE_ASSERTS=ON
 option(FORCE_ASSERTS "FORCE_ASSERTS" OFF)
 
+## -DWITH_HTTP2=ON
+## For testing purposes the client behavior can also be modified with an environment variable OPENCLOUD_USE_HTTP2=[0|1]
+## Relevant bugs:
+## https://qt-project.atlassian.net/browse/QTBUG-147237
+## https://github.com/opencloud-eu/desktop/issues/940
+## https://github.com/opencloud-eu/desktop/issues/734
+option(WITH_HTTP2 "Enable the use of http2" OFF)
+add_feature_info(HTTP2Support WITH_HTTP2 "Support for http2, this is currently disabled due to known Qt bugs")
+
+## -DWITH_APPIMAGEUPDATER=ON
 option(WITH_APPIMAGEUPDATER OFF "Enable built-in libappimageupdate based updater on Linux")
 add_feature_info(AppImageUpdate WITH_APPIMAGEUPDATER "Built-in libappimageupdate based updater")
 
-option(WITH_EXTERNAL_BRANDING "A URL to an external branding repo" "")
-
 # specify additional vfs plugins
-set(VIRTUAL_FILE_SYSTEM_PLUGINS off cfapi openvfs CACHE STRING "Name of internal plugin in src/libsync/vfs or the locations of virtual file plugins")
+## Available values: off cfapi openvfs
+## off: No virtual files are used
+## cfapi: Virtual files for Windows
+## openvfs: Virtual files for Linux, currently in an experimental state
+## -DVIRTUAL_FILE_SYSTEM_PLUGINS="off;cfapi;openvfs"
+set(VIRTUAL_FILE_SYSTEM_PLUGINS off cfapi CACHE STRING "Name of internal plugin in src/plugins/vfs or the locations of virtual file plugins")
 
 if(APPLE)
+  ## -DSOCKETAPI_TEAM_IDENTIFIER_PREFIX="com.example."
   set( SOCKETAPI_TEAM_IDENTIFIER_PREFIX "" CACHE STRING "SocketApi prefix (including a following dot) that must match the codesign key's TeamIdentifier/Organizational Unit" )
 endif()
 

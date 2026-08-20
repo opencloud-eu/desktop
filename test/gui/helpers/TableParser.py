@@ -65,7 +65,8 @@ def table_rows_hash(table: Table):
     """
     if len(table.headings) != 2:
         raise ValueError(
-            "table_rows_hash() can only be called on a data table where all rows have exactly two columns."
+            "table_rows_hash() can only be called on a data table "
+            "where all rows have exactly two columns."
         )
 
     data_table = {
@@ -81,7 +82,8 @@ def table_hashes(table: Table):
     Args:
         table (Table): Behave Table object.
     Returns:
-        list: List of dictionaries, where each dictionary represents a row with keys from the header and values from the corresponding cells.
+        list: List of dictionaries, where each dictionary represents a row
+        with keys from the header and values from the corresponding cells.
 
     Example:
         | key1    | key2    | key3   |

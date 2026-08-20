@@ -13,6 +13,9 @@
  */
 #include "jwt.h"
 
+#include <QLoggingCategory>
+
+Q_LOGGING_CATEGORY(lcJwt, "sync.credentials.jwt", QtInfoMsg)
 
 OCC::JWT::JWT(const QByteArray &jwt)
 {
@@ -20,7 +23,15 @@ OCC::JWT::JWT(const QByteArray &jwt)
     if (parts.size() != 3) {
         return;
     }
-    auto parse = [](const QByteArray &part) { return QJsonDocument::fromJson(QByteArray::fromBase64(part)).object(); };
+    // JWT segments are Base64url encoded (RFC 7515 section 2), not standard Base64
+    auto parse = [](const QByteArray &part) {
+        const auto decoded = QByteArray::fromBase64Encoding(part, QByteArray::Base64UrlEncoding | QByteArray::AbortOnBase64DecodingErrors);
+        if (!decoded) {
+            qCWarning(lcJwt) << "Failed to Base64url-decode JWT segment, status:" << static_cast<int>(decoded.decodingStatus);
+            return QJsonObject{};
+        }
+        return QJsonDocument::fromJson(*decoded).object();
+    };
     _header = parse(parts[0]);
     _payload = parse(parts[1]);
     _signauture = parts[2];

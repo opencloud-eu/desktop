@@ -21,14 +21,7 @@ namespace OCC::Wizard {
 OAuthCredentialsSetupWizardState::OAuthCredentialsSetupWizardState(SetupWizardContext *context)
     : AbstractSetupWizardState(context)
 {
-    const auto authServerUrl = [this]() {
-        auto authServerUrl = _context->accountBuilder().webFingerAuthenticationServerUrl();
-        if (!authServerUrl.isEmpty()) {
-            return authServerUrl;
-        }
-        return _context->accountBuilder().serverUrl();
-    }();
-
+    const auto authServerUrl = _context->accountBuilder().serverUrl();
     auto oAuth = new OAuth(authServerUrl, _context->accessManager(), {}, this);
     _page = new OAuthCredentialsSetupWizardPage(oAuth, authServerUrl);
 
@@ -59,33 +52,27 @@ OAuthCredentialsSetupWizardState::OAuthCredentialsSetupWizardState(SetupWizardCo
             }
         };
 
-        // SECOND WEBFINGER CALL (authenticated):
         // This discovers which OpenCloud instance(s) the authenticated user has access to.
         // Uses the OAuth bearer token and resource="acct:me@{host}".
         // Looking for: rel="http://webfinger.opencloud/rel/server-instance"
-        // See issue #271 for why we perform WebFinger twice.
         // Backend WebFinger docs: https://github.com/opencloud-eu/opencloud/blob/main/services/webfinger/README.md
-        if (!_context->accountBuilder().webFingerAuthenticationServerUrl().isEmpty()) {
-            auto *job = Jobs::WebFingerInstanceLookupJobFactory(_context->accessManager(), token).startJob(_context->accountBuilder().serverUrl(), this);
+        auto *job = Jobs::WebFingerInstanceLookupJobFactory(_context->accessManager(), token).startJob(_context->accountBuilder().serverUrl(), this);
 
-            connect(job, &CoreJob::finished, this, [finish, job, this]() {
-                if (!job->success()) {
-                    Q_EMIT evaluationFailed(QStringLiteral("Failed to look up instances: %1").arg(job->errorMessage()));
+        connect(job, &CoreJob::finished, this, [finish, job, this]() {
+            if (!job->success()) {
+                Q_EMIT evaluationFailed(QStringLiteral("Failed to look up instances: %1").arg(job->errorMessage()));
+            } else {
+                const auto instanceUrls = qvariant_cast<QVector<QUrl>>(job->result());
+
+                if (instanceUrls.isEmpty()) {
+                    Q_EMIT evaluationFailed(QStringLiteral("Server returned empty list of instances"));
                 } else {
-                    const auto instanceUrls = qvariant_cast<QVector<QUrl>>(job->result());
-
-                    if (instanceUrls.isEmpty()) {
-                        Q_EMIT evaluationFailed(QStringLiteral("Server returned empty list of instances"));
-                    } else {
-                        _context->accountBuilder().setWebFingerInstances(instanceUrls);
-                    }
+                    _context->accountBuilder().setWebFingerInstances(instanceUrls);
                 }
+            }
 
-                finish();
-            });
-        } else {
             finish();
-        }
+        });
     });
 
     // the implementation moves to the next state automatically once ready, no user interaction needed

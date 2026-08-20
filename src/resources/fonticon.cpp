@@ -5,13 +5,49 @@
 
 #include "resources.h"
 
+#include <QFontDatabase>
 #include <QIconEngine>
 #include <QPainter>
 #include <QPixmapCache>
 
+using namespace Qt::Literals::StringLiterals;
+
 using namespace OCC::Resources;
 
+Q_LOGGING_CATEGORY(lcFontIcon, "sync.resources.fonticon", QtInfoMsg)
+
 namespace {
+
+
+QString loadFont(const QString &path)
+{
+    QFileInfo info(u":/client/%1"_s.arg(path));
+    if (!info.exists()) {
+        qCFatal(lcFontIcon) << u"Font file does not exist:" << path;
+        return {};
+    }
+    if (int id = QFontDatabase::addApplicationFont(info.filePath()); id == -1) {
+        qCWarning(lcFontIcon) << u"Failed to load font:" << info.fileName();
+    } else {
+        qCDebug(lcFontIcon) << u"Loaded font:" << info.fileName() << QFontDatabase::applicationFontFamilies(id);
+        // the list might contain multiple entries, so we take the last one, which is the most exact match
+        return QFontDatabase::applicationFontFamilies(id).last();
+    }
+    return {};
+};
+
+
+QString fontAwesomeFamily()
+{
+    static QString fontAwesomeFamily = loadFont(u"font-awesome/Font Awesome 7 Free-Solid-900.otf"_s);
+    return fontAwesomeFamily;
+}
+
+QString remixFontFamily()
+{
+    static QString remixFontFamily = loadFont(u"remixicon/remixicon.ttf"_s);
+    return remixFontFamily;
+}
 
 class FontIconEngine : public QIconEngine
 {
@@ -36,13 +72,15 @@ public:
         auto font = painter->font();
         switch (_family) {
         case FontIcon::FontFamily::FontAwesome:
-            font.setFamily(QStringLiteral("Font Awesome 6 Free"));
+            font.setFamily(fontAwesomeFamily());
             break;
         case FontIcon::FontFamily::RemixIcon:
-            font.setFamily(QStringLiteral("remixicon"));
+            font.setFamily(remixFontFamily());
             break;
         }
-
+        if (!font.exactMatch()) {
+            qCWarning(lcFontIcon) << u"Font family not found: " << font.family();
+        }
         switch (_size) {
         case FontIcon::Size::Normal:
             font.setPixelSize(rect.height());

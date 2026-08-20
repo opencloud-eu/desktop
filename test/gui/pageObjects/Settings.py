@@ -64,9 +64,7 @@ class Settings:
 
     @staticmethod
     def open_about_dialog():
-        app().find_element(
-            Settings.ABOUT_BUTTON.by, Settings.ABOUT_BUTTON.selector
-        ).click()
+        app().find_element(Settings.ABOUT_BUTTON.by, Settings.ABOUT_BUTTON.selector).click()
 
     @staticmethod
     def has_about_dialog():

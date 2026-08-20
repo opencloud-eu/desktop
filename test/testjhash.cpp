@@ -14,7 +14,7 @@
 #define MAXPAIR 80
 #define MAXLEN 70
 
-inline std::uint8_t operator"" _u8(unsigned long long value)
+inline std::uint8_t operator""_u8(unsigned long long value)
 {
     return static_cast<std::uint8_t>(value);
 }

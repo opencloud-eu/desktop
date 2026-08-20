@@ -23,7 +23,7 @@ from helpers.SyncHelper import (
 from helpers.UserHelper import get_password_for_user
 from helpers.ConfigHelper import get_config
 from helpers.TableParser import table_rows_hash
-from helpers.AppHelper import close_and_kill_app
+from helpers.AppHelper import close_and_kill_app, wait_until_app_terminated
 from helpers.FilesHelper import convert_path_separators_for_os
 
 
@@ -86,7 +86,9 @@ def step(context):
         listen_sync_status_for_item(sync_paths[username])
         enter_password.login_after_setup(username, password)
         # wait for files to sync
-        wait_for_initial_sync_to_complete(sync_paths[username], False)
+        wait_for_initial_sync_to_complete(
+            sync_paths[username], force_sync=False, check_queued=False
+        )
     Toolbar.wait_toolbar_enabled()
 
 
@@ -119,6 +121,7 @@ def step(context):
 
 @When('the user "{username}" logs out using the client-UI')
 def step(context, username):
+    Toolbar.open_account(username)
     AccountSetting.logout()
 
 
@@ -156,6 +159,7 @@ def step(context, _):
 
 @Then('user "{username}" should be connected to the server')
 def step(context, username):
+    Toolbar.open_account(username)
     AccountSetting.wait_until_account_is_connected()
 
 
@@ -219,6 +223,7 @@ def step(context):
 @When('the user quits the client')
 def step(context):
     Toolbar.quit_opencloud()
+    wait_until_app_terminated()
     close_and_kill_app()
 
 
@@ -238,8 +243,8 @@ def step(context, sync_path, wizard):
         actual_sync_path = AccountConnectionWizard.get_local_sync_path()
     else:
         actual_sync_path = SyncConnectionWizard.get_local_sync_path()
-        
-    with ensure('The actual sync path does not match the expected sync path' ):
+
+    with ensure('The actual sync path does not match the expected sync path'):
         actual_sync_path.should.equal(convert_path_separators_for_os(sync_path))
 
 

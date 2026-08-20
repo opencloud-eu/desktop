@@ -1,6 +1,8 @@
 import os
+import time
 from types import SimpleNamespace
 from appium.webdriver.common.appiumby import AppiumBy as By
+from selenium.common.exceptions import WebDriverException
 
 from helpers.WebUIHelper import authorize_via_webui
 from helpers.ConfigHelper import get_config
@@ -28,11 +30,11 @@ class AccountConnectionWizard:
     )
     SELECT_LOCAL_FOLDER_BUTTON = SimpleNamespace(
         by=By.ACCESSIBILITY_ID,
-        selector="QApplication.Settings.centralwidget.dialogStack.SetupWizardWidget.contentWidget.AccountConfiguredWizardPage.advancedConfigGroupBox.advancedConfigGroupBoxContentWidget.localDirectoryGroupBox.chooseLocalDirectoryButton"
+        selector="QApplication.Settings.centralwidget.dialogStack.SetupWizardWidget.contentWidget.AccountConfiguredWizardPage.advancedConfigGroupBox.advancedConfigGroupBoxContentWidget.localDirectoryGroupBox.chooseLocalDirectoryButton",
     )
     LOCAL_DOWNLOAD_DIRECTORY_INPUT = SimpleNamespace(
         by=By.ACCESSIBILITY_ID,
-        selector="QApplication.Settings.centralwidget.dialogStack.SetupWizardWidget.contentWidget.AccountConfiguredWizardPage.advancedConfigGroupBox.advancedConfigGroupBoxContentWidget.localDirectoryGroupBox.localDirectoryLineEdit"
+        selector="QApplication.Settings.centralwidget.dialogStack.SetupWizardWidget.contentWidget.AccountConfiguredWizardPage.advancedConfigGroupBox.advancedConfigGroupBoxContentWidget.localDirectoryGroupBox.localDirectoryLineEdit",
     )
     DIRECTORY_NAME_BOX = SimpleNamespace(
         by=By.ACCESSIBILITY_ID,
@@ -55,7 +57,9 @@ class AccountConnectionWizard:
         by=By.ACCESSIBILITY_ID,
         selector="QApplication.QFileDialog.fileNameEdit",
     )
-    SYNC_EVERYTHING_RADIO_BUTTON = SimpleNamespace(by=By.NAME, selector="Synchronize all existing spaces")
+    SYNC_EVERYTHING_RADIO_BUTTON = SimpleNamespace(
+        by=By.NAME, selector="Synchronize all existing spaces"
+    )
 
     @staticmethod
     def add_server(server_url):
@@ -64,7 +68,7 @@ class AccountConnectionWizard:
             AccountConnectionWizard.SERVER_ADDRESS_BOX.selector,
         )
         url_input.clear()
-        url_input.send_keys(get_config("localBackendUrl"))
+        url_input.send_keys(server_url)
 
         AccountConnectionWizard.next_step()
 
@@ -94,9 +98,25 @@ class AccountConnectionWizard:
         ).click()
 
     @staticmethod
+    def get_login_url():
+        login_url = ""
+        try:
+            AccountConnectionWizard.copy_login_url()
+            login_url = app().get_clipboard_text()
+        except WebDriverException:
+            # retry once upon failure
+            time.sleep(0.5)
+            AccountConnectionWizard.copy_login_url()
+            login_url = app().get_clipboard_text()
+        except Exception as e:
+            print(f"[Error] Failed to get login URL. Clipboard value: {login_url}")
+            raise e
+        return login_url
+
+    @staticmethod
     def browser_login(username, password):
-        AccountConnectionWizard.copy_login_url()
-        authorize_via_webui(username, password)
+        login_url = AccountConnectionWizard.get_login_url()
+        authorize_via_webui(username, password, login_url)
 
     @staticmethod
     def next_step():
@@ -171,9 +191,7 @@ class AccountConnectionWizard:
             )
         elif account_details["user"]:
             AccountConnectionWizard.select_advanced_config()
-            sync_path = AccountConnectionWizard.select_sync_folder(
-                account_details["user"]
-            )
+            sync_path = AccountConnectionWizard.select_sync_folder(account_details["user"])
         if sync_path:
             # listen for sync status
             listen_sync_status_for_item(sync_path)
@@ -189,16 +207,19 @@ class AccountConnectionWizard:
     def select_download_everything_option():
         app().find_element(
             AccountConnectionWizard.SYNC_EVERYTHING_RADIO_BUTTON.by,
-            AccountConnectionWizard.SYNC_EVERYTHING_RADIO_BUTTON.selector
+            AccountConnectionWizard.SYNC_EVERYTHING_RADIO_BUTTON.selector,
         ).click()
 
     @staticmethod
     def is_credential_window_visible():
-        visible = app().find_element(
-            AccountConnectionWizard.LOGIN_DIALOG.by,
-            AccountConnectionWizard.LOGIN_DIALOG.selector
-        ).is_displayed()
-        return visible
+        return (
+            app()
+            .find_element(
+                AccountConnectionWizard.LOGIN_DIALOG.by,
+                AccountConnectionWizard.LOGIN_DIALOG.selector,
+            )
+            .is_displayed()
+        )
 
     @staticmethod
     def select_advanced_config():
@@ -212,8 +233,8 @@ class AccountConnectionWizard:
         can_change = False
         try:
             app().find_element(
-            AccountConnectionWizard.SELECT_LOCAL_FOLDER_BUTTON.by,
-            AccountConnectionWizard.SELECT_LOCAL_FOLDER_BUTTON.selector
+                AccountConnectionWizard.SELECT_LOCAL_FOLDER_BUTTON.by,
+                AccountConnectionWizard.SELECT_LOCAL_FOLDER_BUTTON.selector,
             ).click()
             app().find_element(
                 AccountConnectionWizard.DIRECTORY_NAME_BOX.by,
@@ -221,10 +242,10 @@ class AccountConnectionWizard:
             )
             app().find_element(
                 AccountConnectionWizard.CHOOSE_FOLDER_BUTTON.by,
-                AccountConnectionWizard.CHOOSE_FOLDER_BUTTON.selector
+                AccountConnectionWizard.CHOOSE_FOLDER_BUTTON.selector,
             )
             can_change = True
-        except:
+        except Exception:
             pass
         return can_change
 
@@ -232,7 +253,7 @@ class AccountConnectionWizard:
     def is_sync_everything_option_checked():
         element = app().find_element(
             AccountConnectionWizard.SYNC_EVERYTHING_RADIO_BUTTON.by,
-            AccountConnectionWizard.SYNC_EVERYTHING_RADIO_BUTTON.selector
+            AccountConnectionWizard.SYNC_EVERYTHING_RADIO_BUTTON.selector,
         )
         return element.get_attribute("checked") == "true"
 
@@ -240,6 +261,6 @@ class AccountConnectionWizard:
     def get_local_sync_path():
         element = app().find_element(
             AccountConnectionWizard.LOCAL_DOWNLOAD_DIRECTORY_INPUT.by,
-            AccountConnectionWizard.LOCAL_DOWNLOAD_DIRECTORY_INPUT.selector
+            AccountConnectionWizard.LOCAL_DOWNLOAD_DIRECTORY_INPUT.selector,
         )
         return str(element.text)

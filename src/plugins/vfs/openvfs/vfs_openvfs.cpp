@@ -27,7 +27,7 @@
 using namespace std::chrono_literals;
 using namespace Qt::StringLiterals;
 
-Q_LOGGING_CATEGORY(lcOpenVFS, "sync.vfs.xattr", QtInfoMsg)
+Q_LOGGING_CATEGORY(lcOpenVFS, "sync.vfs.openvfs", QtInfoMsg)
 
 
 namespace {
@@ -103,7 +103,7 @@ OpenVFS::Constants::PinStates convertPinState(OCC::PinState pState)
     case OCC::PinState::OnlineOnly:
         return OpenVFS::Constants::PinStates::OnlineOnly;
     case OCC::PinState::Excluded:
-        return OpenVFS::Constants::PinStates::OnlineOnly;
+        return OpenVFS::Constants::PinStates::Excluded;
     case OCC::PinState::Unspecified:
         return OpenVFS::Constants::PinStates::Unspecified;
     };
@@ -216,9 +216,15 @@ void OpenVFS::startImpl(const VfsSetupParams &params)
     });
     connect(_openVfsProcess, &QProcess::errorOccurred, this, [logPrefix, this] { qCWarning(lcOpenVFS) << logPrefix() << _openVfsProcess->errorString(); });
 
-    const QStringList pparams{u"-d"_s, u"-i"_s, openVFSConfigFilePath().toString(), u"-o"_s, xattrOwnerString(params.account->uuid()),
-                u"-s"_s, params.socketPath, params.root().toString()};
-    qCDebug(lcOpenVFS) << "Starting openvfs" << pparams;
+    QStringList pparams{u"-f"_s, u"-i"_s, openVFSConfigFilePath().toString(), u"-o"_s, xattrOwnerString(params.account->uuid()), u"-s"_s, params.socketPath,
+        params.root().toString()};
+
+    // Enable _lots_ of logging for fuse layer
+    if (qEnvironmentVariableIntValue("OPENCLOUD_OPENVFS_LOG_FUSE") == 1) {
+        pparams.prepend(u"-d"_s);
+    }
+
+    qCDebug(lcOpenVFS) << "Starting openvfs" << openVFSExePath().toString() << pparams;
     _openVfsProcess->start(openVFSExePath().toString(), pparams, QIODevice::ReadOnly);
 }
 
@@ -271,7 +277,7 @@ Result<void, QString> OpenVfsPluginFactory::prepare(const QString &path, const Q
             file.close();
             for (auto &line : lines) {
                 auto fields = line.split(' ');
-                if (fields.size() >= 9 && fields[8] == "fuse.openvfsfuse") {
+                if (fields.size() >= 9 && fields[8] == "fuse.openvfs") {
                     _fuseMountCache << QString::fromUtf8(parseMangledPath(fields[4]));
                 }
             }
@@ -572,6 +578,14 @@ void OpenVFS::fileStatusChanged(const QString &systemFileName, SyncFileStatus fi
     if (fileStatus.tag() == SyncFileStatus::StatusExcluded) {
         const FileSystem::Path rel = FileSystem::Path(systemFileName)->lexically_relative(params().root());
         setPinState(rel.toString(), PinState::Excluded);
+        return;
+    }
+    if (fileStatus.tag() == SyncFileStatus::StatusUpToDate) {
+        const auto attribs = placeHolderAttributes(systemFileName);
+        if (attribs && attribs.pinState == convertPinState(PinState::Excluded)) {
+            const FileSystem::Path rel = FileSystem::Path(systemFileName)->lexically_relative(params().root());
+            setPinState(rel.toString(), PinState::Inherited);
+        }
         return;
     }
     qCDebug(lcOpenVFS) << systemFileName << fileStatus;

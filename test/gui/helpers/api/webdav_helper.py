@@ -1,3 +1,4 @@
+import re
 from urllib.parse import quote
 import xml.etree.ElementTree as ET
 import json
@@ -22,8 +23,7 @@ def get_resource_path(user, resource):
     resource = resource.strip('/').replace('\\', '/')
     encoded_resource_path = [quote(path, safe='') for path in resource.split('/')]
     encoded_resource_path = '/'.join(encoded_resource_path)
-    url = url_join(get_webdav_url(), user, encoded_resource_path)
-    return url
+    return url_join(get_webdav_url(), user, encoded_resource_path)
 
 
 def resource_exists(user, resource):
@@ -55,14 +55,18 @@ def get_folder_items(user, resource):
 
 def get_folder_items_count(user, folder_name):
     folder_name = folder_name.strip('/')
+    if folder_name != '':
+        folder_name += '/'
     root_element = get_folder_items(user, folder_name)
     total_items = 0
+
     for response_element in root_element:
         for href_element in response_element:
-            # The first item is folder itself so excluding it
-            if href_element.tag == '{DAV:}href' and not href_element.text.endswith(
-                f'{user}/{folder_name}/'
-            ):
+            if not href_element.text:
+                continue
+            is_folder_item = re.search(f'/{user}/{folder_name}.+', href_element.text)
+            shares_folder = href_element.text.endswith(f'/{user}/Shares/')
+            if href_element.tag == '{DAV:}href' and is_folder_item and not shares_folder:
                 total_items += 1
     return str(total_items)
 
@@ -70,9 +74,9 @@ def get_folder_items_count(user, folder_name):
 def create_folder(user, folder_name):
     url = get_resource_path(user, folder_name)
     response = request.mkcol(url, user=user)
-    assert (
-        response.status_code == 201
-    ), f'Could not create the folder: {folder_name} for user {user}'
+    assert response.status_code == 201, (
+        f'Could not create the folder: {folder_name} for user {user}'
+    )
 
 
 def create_file(user, file_name, contents):
@@ -122,7 +126,9 @@ def get_user_id(username):
     if username in provisioning.created_users:
         return provisioning.created_users[username]['id']
 
-    raise AssertionError(f'User {username} not found in created users. Make sure the user is created first.')
+    raise AssertionError(
+        f'User {username} not found in created users. Make sure the user is created first.'
+    )
 
 
 def send_resource_share_invitation(user, resource, sharee, permission_role):
@@ -135,13 +141,10 @@ def send_resource_share_invitation(user, resource, sharee, permission_role):
 
     body = {
         "roles": [role_id],
-        "recipients": [
-            {
-                "objectId": recipient_user_id,
-                "@libre.graph.recipient.type": "user"
-            }
-        ]
+        "recipients": [{"objectId": recipient_user_id, "@libre.graph.recipient.type": "user"}],
     }
 
     response = request.post(url, body=json.dumps(body), user=user)
-    assert response.status_code in [200, 201], f"Failed to send share invitation: {response.status_code}"
+    assert response.status_code in [200, 201], (
+        f"Failed to send share invitation: {response.status_code}"
+    )

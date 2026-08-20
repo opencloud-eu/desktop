@@ -8,17 +8,13 @@ from helpers.Utils import wait_for
 
 
 class SyncConnection:
-    ACCOUNT_CONNECTION_CONTAINER = SimpleNamespace(
-        by=By.NAME, selector="Sync connections"
-    )
+    ACCOUNT_CONNECTION_CONTAINER = SimpleNamespace(by=By.NAME, selector="Sync connections")
     FOLDER_SYNC_CONNECTION_MENU_BUTTON = SimpleNamespace(
         by=By.NAME,
         selector="{sync_folder},{status},Local folder: {sync_path}{sync_folder}",
     )
     MENU_ITEM = SimpleNamespace(by=By.NAME, selector=None)
-    CONFIRM_FOLDER_SYNC_CONNECTION_REMOVE = SimpleNamespace(
-        by=By.NAME, selector="Remove Space"
-    )
+    CONFIRM_FOLDER_SYNC_CONNECTION_REMOVE = SimpleNamespace(by=By.NAME, selector="Remove Space")
     PERMISSION_ERROR_LABEL = SimpleNamespace(
         by=By.XPATH, selector="//label[contains(@name, 'permission')]"
     )
@@ -78,12 +74,6 @@ class SyncConnection:
         SyncConnection.perform_action("Resume sync", "paused")
 
     @staticmethod
-    def menu_item_exists(menu_item):
-        obj = SyncConnection.MENU_ITEM.copy()
-        obj.update({"type": "QAction", "text": menu_item})
-        return object.exists(obj)
-
-    @staticmethod
     def choose_what_to_sync():
         SyncConnection.open_menu()
         SyncConnection.perform_action("Choose what to sync")
@@ -97,8 +87,9 @@ class SyncConnection:
                 SyncConnection.FOLDER_SYNC_CONNECTION_MENU_BUTTON.selector.format(
                     sync_folder=sync_folder,
                     sync_path=get_config('currentUserSyncPath'),
-                    status="success"
+                    status="success",
                 ),
+                timeout=get_config("lowest_timeout"),
             )
             return True
         except NoSuchElementException:
@@ -114,6 +105,7 @@ class SyncConnection:
                     sync_folder=sync_folder,
                     sync_path=get_config('currentUserSyncPath'),
                 ),
+                timeout=get_config("lowest_timeout"),
             )
             return True
         except NoSuchElementException:
@@ -142,9 +134,10 @@ class SyncConnection:
                 app().find_element(
                     SyncConnection.PERMISSION_ERROR_LABEL.by,
                     SyncConnection.PERMISSION_ERROR_LABEL.selector,
+                    timeout=get_config("lowest_timeout"),
                 )
                 return True
-            except NoSuchElementException:
+            except (NoSuchElementException, WebDriverException):
                 return False
 
         status = wait_for(

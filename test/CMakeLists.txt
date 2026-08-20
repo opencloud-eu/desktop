@@ -4,8 +4,10 @@ add_subdirectory(manual/icon_viewer)
 add_subdirectory(testutils)
 
 opencloud_add_test(JHash)
+opencloud_add_test(Jwt)
 
 opencloud_add_test(OwncloudPropagator)
+opencloud_add_test(ClassifyError)
 opencloud_add_test(OwnSql)
 opencloud_add_test(SyncJournalDB)
 opencloud_add_test(SyncFileItem)
@@ -26,11 +28,14 @@ opencloud_add_test(Utility)
 
 opencloud_add_test(SyncEngine)
 
+opencloud_add_test(SelfHeal)
+
 opencloud_add_test(SyncMove)
 add_dependencies(testsyncmove test_helper)
 opencloud_add_test(SyncDelete)
 opencloud_add_test(SyncConflict)
 opencloud_add_test(SyncFileStatusTracker)
+opencloud_add_test(TusResume)
 opencloud_add_test(Download)
 opencloud_add_test(Blacklist)
 opencloud_add_test(LocalDiscovery)

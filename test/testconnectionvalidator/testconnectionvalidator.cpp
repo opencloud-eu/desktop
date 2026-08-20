@@ -75,7 +75,7 @@ private Q_SLOTS:
                             return new FakeErrorReply(op, request, this, 500);
                         }
                     }
-                    return new FakePayloadReply(op, request, TestUtils::getPayloadTemplated(QStringLiteral("status.php.json.in"), values), this);
+                    return new FakePayloadReply(op, request, TestUtils::getPayloadTemplated(QStringLiteral("status.php.json.in"), values), {}, this);
                 } else if (path.endsWith(QLatin1String("capabilities"))) {
                     reachedStage = FailStage::Capabilities;
                     if (failStage == FailStage::Capabilities) {
@@ -87,7 +87,7 @@ private Q_SLOTS:
                             return new FakeHangingReply(op, request, this);
                         }
                     }
-                    return new FakePayloadReply(op, request, TestUtils::getPayloadTemplated(QStringLiteral("capabilities.json.in"), values), this);
+                    return new FakePayloadReply(op, request, TestUtils::getPayloadTemplated(QStringLiteral("capabilities.json.in"), values), {}, this);
                 } else if (path.endsWith("graph/v1.0/me"_L1)) {
                     reachedStage = FailStage::UserInfo;
                     if (failStage == FailStage::UserInfo) {
@@ -97,7 +97,7 @@ private Q_SLOTS:
                             return new FakeHangingReply(op, request, this);
                         }
                     }
-                    return new FakePayloadReply(op, request, TestUtils::getPayload(QStringLiteral("user.json")), this);
+                    return new FakePayloadReply(op, request, TestUtils::getPayload(QStringLiteral("user.json")), {}, this);
                 }
             }
             return nullptr;

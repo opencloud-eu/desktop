@@ -18,7 +18,7 @@ from helpers.ReportHelper import (
     cleanup_current_app_log,
     save_crash_log,
 )
-from step_types.types import *  # register all step types
+from step_types.types import *  # noqa: F403 # register all step types
 
 
 def before_feature(context, feature):

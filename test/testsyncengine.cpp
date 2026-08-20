@@ -700,6 +700,30 @@ private Q_SLOTS:
         QVERIFY(fakeFolder.currentRemoteState().find(QStringLiteral("B/.hidden")));
     }
 
+    void testRenameExcludedFile()
+    {
+        if (!VfsPluginManager::instance().isVfsPluginAvailable(Vfs::Mode::OpenVFS)) {
+            QSKIP("Pin states require the OpenVFS plugin");
+        }
+
+        FakeFolder fakeFolder(FileInfo::A12_B12_C12_S12(), Vfs::Mode::OpenVFS, false);
+        fakeFolder.syncEngine().setIgnoreHiddenFiles(true);
+
+        fakeFolder.localModifier().rename(QStringLiteral("A/a1"), QStringLiteral("A/.a1"));
+        QVERIFY(fakeFolder.applyLocalModificationsAndSync());
+        QVERIFY(!fakeFolder.currentRemoteState().find(QStringLiteral("A/a1")));
+        const auto excludedPin = fakeFolder.vfs()->pinState(QStringLiteral("A/.a1"));
+        QVERIFY(excludedPin);
+        QCOMPARE(*excludedPin, PinState::Excluded);
+
+        fakeFolder.localModifier().rename(QStringLiteral("A/.a1"), QStringLiteral("A/a1renamed"));
+        QVERIFY(fakeFolder.applyLocalModificationsAndSync());
+        QVERIFY(fakeFolder.currentRemoteState().find(QStringLiteral("A/a1renamed")));
+        const auto pin = fakeFolder.vfs()->pinState(QStringLiteral("A/a1renamed"));
+        QVERIFY(pin);
+        QVERIFY(*pin != PinState::Excluded);
+    }
+
 #ifndef Q_OS_WIN
     void testPropagatePermissions()
     {

@@ -95,9 +95,6 @@ public:
      */
     AccountPtr build() const;
 
-    void setWebFingerAuthenticationServerUrl(const QUrl &url);
-    QUrl webFingerAuthenticationServerUrl() const;
-
     void setWebFingerInstances(const QVector<QUrl> &instancesList);
     QVector<QUrl> webFingerInstances() const;
 
@@ -107,7 +104,6 @@ public:
 private:
     QUrl _serverUrl;
 
-    QUrl _webFingerAuthenticationServerUrl;
     QVector<QUrl> _webFingerInstances;
     QUrl _webFingerSelectedInstance;
 

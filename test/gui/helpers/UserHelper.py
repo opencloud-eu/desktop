@@ -51,7 +51,7 @@ def basic_auth_header(user=None, password=None):
     if not user and not password:
         user = "admin"
         password = "admin"
-    elif not user == "public" and not password:
+    elif user != "public" and not password:
         password = get_password_for_user(user)
 
     token = b64encode((f"{user}:{password}").encode()).decode()

@@ -413,13 +413,14 @@ class FakePayloadReply : public FakeReply
     Q_OBJECT
 public:
     FakePayloadReply(QNetworkAccessManager::Operation op, const QNetworkRequest &request,
-        const QByteArray &body, QObject *parent);
+        const QByteArray &body, const QHttpHeaders &headers, QObject *parent);
 
     virtual void respond();
 
     qint64 readData(char *buf, qint64 max) override;
     qint64 bytesAvailable() const override;
     QByteArray _body;
+    QHttpHeaders _headers;
 };
 
 
