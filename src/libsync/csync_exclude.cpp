@@ -437,7 +437,7 @@ CSYNC_EXCLUDE_TYPE ExcludedFiles::traversalPatternMatch(QStringView path, ItemTy
     if (m.capturedStart(QStringLiteral("exclude")) != -1) {
         return CSYNC_FILE_EXCLUDE_LIST;
     } else if (m.capturedStart(QStringLiteral("excluderemove")) != -1) {
-        return CSYNC_FILE_EXCLUDE_AND_REMOVE;
+        return CSYNC_FILE_SILENTLY_EXCLUDED;
     }
 
     // third capture: full path matching is triggered
@@ -452,7 +452,7 @@ CSYNC_EXCLUDE_TYPE ExcludedFiles::traversalPatternMatch(QStringView path, ItemTy
         if (m.capturedStart(QStringLiteral("exclude")) != -1) {
             return CSYNC_FILE_EXCLUDE_LIST;
         } else if (m.capturedStart(QStringLiteral("excluderemove")) != -1) {
-            return CSYNC_FILE_EXCLUDE_AND_REMOVE;
+            return CSYNC_FILE_SILENTLY_EXCLUDED;
         }
     }
     return CSYNC_NOT_EXCLUDED;
@@ -476,7 +476,7 @@ CSYNC_EXCLUDE_TYPE ExcludedFiles::fullPatternMatch(QStringView p, ItemType filet
         if (m.capturedStart(QStringLiteral("exclude")) != -1) {
             return CSYNC_FILE_EXCLUDE_LIST;
         } else if (m.capturedStart(QStringLiteral("excluderemove")) != -1) {
-            return CSYNC_FILE_EXCLUDE_AND_REMOVE;
+            return CSYNC_FILE_SILENTLY_EXCLUDED;
         }
     }
     return CSYNC_NOT_EXCLUDED;
