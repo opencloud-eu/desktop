@@ -75,11 +75,6 @@ class SyncConnectionWizard:
             SyncConnectionWizard.SELECTIVE_SYNC_TREE_HEADER.by,
             SyncConnectionWizard.SELECTIVE_SYNC_TREE_HEADER.selector.format(header=header_text),
         )
-        # ISSUE: https://github.com/opencloud-eu/desktop/pull/879
-        # Cannot select table header element by click event
-        # Select the table header element using keyboard events as a workaround
-        # TODO: Remove the workaround and uncomment 'click' action
-        # element.click()
         element.native_click()
 
     @staticmethod
@@ -124,12 +119,7 @@ class SyncConnectionWizard:
             SyncConnectionWizard.SPACE_NAME_SELECTOR.by,
             SyncConnectionWizard.SPACE_NAME_SELECTOR.selector.format(space_name=space_name),
         )
-        # ISSUE: https://github.com/opencloud-eu/desktop/pull/879
-        # Cannot select space by click event
-        # Select space using keyboard events as a workaround
-        # TODO: Remove 'send_keys' and uncomment 'click' action
-        space_item.send_keys(Keys.ARROW_DOWN)
-        # space_item.click()
+        space_item.click()
         if space_item.get_attribute("selected") != "true":
             raise AssertionError("Failed to select the space: " + space_name)
 
