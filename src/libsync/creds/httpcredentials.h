@@ -48,6 +48,8 @@ class OPENCLOUD_SYNC_EXPORT HttpCredentials : public AbstractCredentials
 public:
     /// Don't add credentials if this is set on a QNetworkRequest
     static constexpr QNetworkRequest::Attribute DontAddCredentialsAttribute = QNetworkRequest::User;
+    // Only exposed for testing
+    static std::chrono::seconds TokenRefreshDefaultTimeoutOneError;
 
     explicit HttpCredentials(const QString &accessToken);
 
