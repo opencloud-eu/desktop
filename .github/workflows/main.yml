@@ -264,7 +264,8 @@ jobs:
           ${{ matrix.signing.passwords[1].secret_name }} ${{ matrix.signing.passwords[1].secret_field }} | ${{ matrix.signing.passwords[1].env_name }}
 
     - name: Package
-      if: ${{ (startsWith(matrix.target, 'linux') || startsWith(matrix.target, 'macos')) && steps.signing-secrets.conclusion == 'success' }}
+      # Package for linux. Package for mac only if signed
+      if: ${{ startsWith(matrix.target, 'linux') || (startsWith(matrix.target, 'macos') && steps.signing-secrets.conclusion == 'success') }}
       run: |
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --no-cache --package opencloud/opencloud-desktop
 
