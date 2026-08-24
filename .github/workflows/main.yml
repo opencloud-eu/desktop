@@ -265,9 +265,19 @@ jobs:
 
     - name: Package
       # Package for linux. Package for mac only if signed
-      if: ${{ startsWith(matrix.target, 'linux') || (startsWith(matrix.target, 'macos') && steps.signing-secrets.conclusion == 'success') }}
+      if: ${{ github.event_name != 'pull_request' && (startsWith(matrix.target, 'linux') || (startsWith(matrix.target, 'macos') && steps.signing-secrets.conclusion == 'success')) }}
       run: |
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --no-cache --package opencloud/opencloud-desktop
+
+    - name: Package for testing
+      if: ${{ github.event_name == 'pull_request' }}
+      run: |
+        if ($isLinux) {
+          # its always an appimage on linux
+          & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --no-cache --package opencloud/opencloud-desktop
+        } else {
+          & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --no-cache --package --options "[Packager]PackageType=PortablePackager" opencloud/opencloud-desktop
+        }
 
     - name: Prepare artifacts
       run: |
