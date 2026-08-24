@@ -21,7 +21,7 @@
 
   <icon>@APPLICATION_ICON_NAME@</icon>
   <branding>
-    <color type="primary" scheme_preference="light">#20434F</color>
+    <color type="primary" scheme_preference="light">#E2BAFF</color>
     <color type="primary" scheme_preference="dark">#20434F</color>
   </branding>
 
