@@ -15,10 +15,12 @@
 #include "spacesmanager.h"
 
 #include "libsync/account.h"
+#include "libsync/configfile.h"
 #include "libsync/creds/abstractcredentials.h"
 #include "libsync/graphapi/jobs/drives.h"
 
 
+#include <QLoggingCategory>
 #include <QTimer>
 
 #include <chrono>
@@ -31,6 +33,8 @@ using namespace GraphApi;
 namespace {
 constexpr auto refreshTimeoutC = 30s;
 }
+
+Q_LOGGING_CATEGORY(lcSpacesManager, "sync.graphapi.spacesmanager", QtInfoMsg)
 
 SpacesManager::SpacesManager(Account *parent)
     : QObject(parent)
@@ -83,6 +87,12 @@ void SpacesManager::refresh()
             }
         }
         Q_EMIT updated();
+        // the same setting and server capability that govern the connection check govern how often the spaces are refreshed
+        const auto interval = ConfigFile().remotePollInterval(_account->capabilities().remotePollInterval());
+        if (interval != _refreshTimer->intervalAsDuration()) {
+            qCInfo(lcSpacesManager) << "Refreshing the spaces of" << _account->displayNameWithHost() << "every" << interval.count() << "ms";
+            _refreshTimer->setInterval(interval);
+        }
         _refreshTimer->start();
     });
     _refreshTimer->stop();
