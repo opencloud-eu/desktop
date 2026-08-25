@@ -36,6 +36,7 @@ class OPENCLOUD_GUI_EXPORT FolderWatcherPrivate : public QObject
 public:
     FolderWatcherPrivate() {}
     FolderWatcherPrivate(FolderWatcher *p, const QString &path);
+    ~FolderWatcherPrivate() override;
 
     int testWatchCount() const { return _pathToWatch.size(); }
 
@@ -57,7 +58,7 @@ private:
     QString _folder;
     QHash<int, QString> _watchToPath;
     QMap<QString, int> _pathToWatch;
-    QScopedPointer<QSocketNotifier> _socket;
-    int _fd;
+    QSocketNotifier *_socket = nullptr;
+    int _fd = -1;
 };
 }
