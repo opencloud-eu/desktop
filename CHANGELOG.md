@@ -16,6 +16,7 @@
 
 ### 🐛 Bug Fixes
 
+- Remove special handling of 404 during oauth refresh [[#1046](https://github.com/opencloud-eu/desktop/pull/1046)]
 - Extend ignore file with .Trash to follow https://specifications.freed… [[#1038](https://github.com/opencloud-eu/desktop/pull/1038)]
 - Fix issue with unicode paths in qml [[#1027](https://github.com/opencloud-eu/desktop/pull/1027)]
 - Fix fallback to wrong icon font [[#1018](https://github.com/opencloud-eu/desktop/pull/1018)]
