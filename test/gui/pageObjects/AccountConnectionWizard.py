@@ -103,6 +103,8 @@ class AccountConnectionWizard:
         try:
             AccountConnectionWizard.copy_login_url()
             login_url = app().get_clipboard_text()
+            if not login_url.startswith("https://"):
+                raise WebDriverException(f"Invalid clipboard text: {login_url}")
         except WebDriverException:
             # retry once upon failure
             time.sleep(0.5)

@@ -79,6 +79,9 @@ Pane {
                 ToolTip.delay: 500
 
                 Accessible.name: accountState.account.displayNameWithHost
+                Accessible.onPressAction: {
+                    clicked();
+                }
 
                 Connections {
                     target: accountState.account
@@ -134,6 +137,9 @@ Pane {
             Layout.fillHeight: true
             Layout.maximumWidth: widthHint
             Accessible.role: Accessible.PageTab
+            Accessible.onPressAction: {
+                clicked();
+            }
             checked: settingsDialog.currentPage === SettingsDialog.Activity
             icon.source: OCUtils.resourcePath("fontawesome", "", enabled)
             text: qsTr("Activity")
@@ -148,6 +154,9 @@ Pane {
             Layout.fillHeight: true
             Layout.maximumWidth: widthHint
             Accessible.role: Accessible.PageTab
+            Accessible.onPressAction: {
+                clicked();
+            }
             checked: settingsDialog.currentPage === SettingsDialog.Settings
             icon.source: OCUtils.resourcePath("fontawesome", "", enabled)
             text: qsTr("Settings")

@@ -49,12 +49,7 @@ class Toolbar:
     @staticmethod
     def open_activity():
         tab = app().find_element(Toolbar.ACTIVITY_TAB.by, Toolbar.ACTIVITY_TAB.selector)
-        # ISSUE: https://github.com/opencloud-eu/desktop/pull/879
-        # Cannot select navigation tab by click event
-        # Select the navigation tab using keyboard events as a workaround
-        # TODO: Remove the workaround and uncomment 'click' action
-        # tab.click()
-        tab.native_click()
+        tab.click()
         if tab.get_attribute("checked") != "true":
             raise AssertionError("Activity tab is not active")
 
@@ -68,12 +63,7 @@ class Toolbar:
     @staticmethod
     def open_account(username):
         account_tab = Toolbar.get_account(username)
-        # ISSUE: https://github.com/opencloud-eu/desktop/pull/879
-        # Cannot activate account tab by click event
-        # Select the account tab using keyboard events as a workaround
-        # TODO: Remove the workaround and uncomment 'click' action
-        # account_tab.click()
-        account_tab.native_click()
+        account_tab.click()
         # confirm account is active
         if account_tab.get_attribute("checked") != "true":
             raise AssertionError(f"Account is not active: {username}")
@@ -81,12 +71,7 @@ class Toolbar:
     @staticmethod
     def open_settings_tab():
         tab = app().find_element(Toolbar.SETTINGS_TAB.by, Toolbar.SETTINGS_TAB.selector)
-        # ISSUE: https://github.com/opencloud-eu/desktop/pull/879
-        # Cannot select navigation tab by click event
-        # Select the navigation tab using keyboard events as a workaround
-        # TODO: Remove the workaround and uncomment 'click' action
-        # tab.click()
-        tab.native_click()
+        tab.click()
         if tab.get_attribute("checked") != "true":
             raise AssertionError("Settings tab is not active")
 
