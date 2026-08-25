@@ -19,7 +19,7 @@
     </p>
   </description>
 
-  <icon type="local">@APPLICATION_ICON_NAME@</icon>
+  <icon type="remote">https://raw.githubusercontent.com/opencloud-eu/desktop/bb4ac2e5495cbcf8f6455f91d9de8448962e4334/src/resources/theme/universal/opencloud-icon.svg</icon>
   <branding>
     <color type="primary" scheme_preference="light">#E2BAFF</color>
     <color type="primary" scheme_preference="dark">#20434F</color>
