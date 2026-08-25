@@ -34,7 +34,6 @@ Q_LOGGING_CATEGORY(lcHttpCredentials, "sync.credentials.http", QtInfoMsg)
 
 namespace {
 constexpr int TokenRefreshMaxRetries = 3;
-const char authenticationFailedC[] = "opencloud-authentication-failed";
 
 auto refreshTokenKeyC()
 {
@@ -163,7 +162,6 @@ void HttpCredentials::slotAuthentication(QNetworkReply *reply, QAuthenticator *a
     // Because of issue #4326, we need to set the login and password manually at every requests
     // Thus, if we reach this signal, those credentials were invalid and we terminate.
     qCWarning(lcHttpCredentials) << u"Stop request: Authentication failed for " << reply->url().toString() << reply->request().rawHeader("Original-Request-ID");
-    reply->setProperty(authenticationFailedC, true);
 
     if (!_oAuthJob) {
         qCInfo(lcHttpCredentials) << u"Refreshing token";
