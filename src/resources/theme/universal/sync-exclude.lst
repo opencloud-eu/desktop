@@ -1,5 +1,9 @@
 # This file contains fixed global exclude patterns
 
+# Internal files
+].OpenCloudSync.log
+].sync_journal.db*
+
 *~
 ~$*
 .~lock.*
@@ -10,6 +14,8 @@
 ].ds_store
 ._*
 ]Thumbs.db
+# Windows desktop ini
+]Desktop.ini
 
 .*.sw?
 .*.*sw?

@@ -109,8 +109,8 @@ SyncFileStatus SyncFileStatusTracker::fileStatus(const QString &relativePath)
         return SyncFileStatus(SyncFileStatus::StatusNone);
     }
 
-    // The SyncEngine won't notify us at all for CSYNC_FILE_SILENTLY_EXCLUDED
-    // and CSYNC_FILE_EXCLUDE_AND_REMOVE excludes. Even though it's possible
+    // The SyncEngine won't notify us at all for CSYNC_FILE_SILENTLY_EXCLUDED.
+    // Even though it's possible
     // that the status of CSYNC_FILE_EXCLUDE_LIST excludes will change if the user
     // update the exclude list at runtime and doing it statically here removes
     // our ability to notify changes through the fileStatusChanged signal,
