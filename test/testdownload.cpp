@@ -16,6 +16,7 @@
 #include <unistd.h>
 #endif
 
+using namespace Qt::Literals::StringLiterals;
 using namespace std::chrono_literals;
 using namespace OCC;
 
@@ -306,6 +307,24 @@ private Q_SLOTS:
             QCOMPARE(getItem(completeSpy, QStringLiteral("A/resendme"))->_status, SyncFileItem::NormalError);
             QVERIFY(getItem(completeSpy, QStringLiteral("A/resendme"))->_errorString.contains(serverMessage));
         }
+    }
+
+    void testFileName()
+    {
+        QFETCH_GLOBAL(Vfs::Mode, vfsMode);
+        QFETCH_GLOBAL(bool, filesAreDehydrated);
+
+        FakeFolder fakeFolder(FileInfo::A12_B12_C12_S12(), vfsMode, filesAreDehydrated);
+        fakeFolder.syncEngine().setIgnoreHiddenFiles(true);
+        const auto size = 1_MiB;
+        fakeFolder.remoteModifier().insert(u"A/a0"_s, size);
+
+        // https://github.com/nextcloud/desktop/pull/6456 claimed paths starting with # are not supported
+        fakeFolder.remoteModifier().insert(u"A/#a0"_s, size);
+        fakeFolder.remoteModifier().mkdir(u"#A"_s);
+        fakeFolder.remoteModifier().insert(u"#A/#a0"_s, size);
+
+        QVERIFY(fakeFolder.applyLocalModificationsAndSync());
     }
 };
 
