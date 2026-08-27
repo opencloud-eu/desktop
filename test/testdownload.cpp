@@ -324,6 +324,19 @@ private Q_SLOTS:
         fakeFolder.remoteModifier().mkdir(u"#A"_s);
         fakeFolder.remoteModifier().insert(u"#A/#a0"_s, size);
 
+        // Test various problematic unicode characters
+        fakeFolder.remoteModifier().insert(u"A/file_with_emoji_😀.txt"_s, size);
+        fakeFolder.remoteModifier().insert(u"A/café_file.txt"_s, size);
+        fakeFolder.remoteModifier().insert(u"A/файл.txt"_s, size); // Cyrillic
+        fakeFolder.remoteModifier().insert(u"A/文件.txt"_s, size); // Chinese
+        fakeFolder.remoteModifier().insert(u"A/ファイル.txt"_s, size); // Japanese
+        fakeFolder.remoteModifier().insert(u"A/مستند.txt"_s, size); // Arabic (RTL)
+        fakeFolder.remoteModifier().insert(u"A/file\u200Bwith\u200Bzero\u200Bwidth.txt"_s, size); // Zero-width spaces
+        fakeFolder.remoteModifier().insert(u"A/combined_ü_character.txt"_s, size); // Combining diacritics
+        fakeFolder.remoteModifier().insert(u"A/file\u202Ewith\u202CRTL.txt"_s, size); // RTL override marks
+        fakeFolder.remoteModifier().insert(u"A/🎉🎊celebration🎈.txt"_s, size); // Multiple emojis
+
+
         QVERIFY(fakeFolder.applyLocalModificationsAndSync());
     }
 };
