@@ -31,8 +31,7 @@ CfApiHydrationJob *CfApiWrapper::HydrationDevice::requestHydration(const CfApiWr
         return it->context().path == context.path;
     }) == context.vfs->_hydrationJobs.cend());
 
-    auto *hydration =
-        new CfApiHydrationJob(context.vfs, context.fileId, std::make_unique<OCC::CfApiWrapper::HydrationDevice>(context, totalSize, parent), parent);
+    auto *hydration = new CfApiHydrationJob(context.vfs, context.fileId, std::make_unique<OCC::CfApiWrapper::HydrationDevice>(context, totalSize), parent);
     hydration->setContext(context);
     context.vfs->_hydrationJobs.insert(context.transferKey, hydration);
     connect(hydration, &HydrationJob::finished, context.vfs, [hydration] {
