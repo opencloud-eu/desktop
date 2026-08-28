@@ -91,59 +91,67 @@ def start_client():
 
 def generate_account_config(users, space='Personal'):
     sync_paths = {}
-    settings = QSettings(get_config('clientConfigFile'), QSettings.Format.IniFormat)
     users_uuids = {}
     server_url = get_config('localBackendUrl')
     capabilities = provisioning.get_capabilities()
-    capabilities_variant = QJsonValue(capabilities).toVariant()
 
-    for idx, username in enumerate(users):
-        users_uuids[username] = QUuid.createUuid()
-        settings.beginGroup("Accounts")
-        settings.beginWriteArray(str(idx + 1), len(users))
+    try:
+        settings = QSettings(get_config('clientConfigFile'), QSettings.Format.IniFormat)
+        capabilities_variant = QJsonValue(capabilities).toVariant()
 
-        settings.setValue("capabilities", capabilities_variant)
-        settings.setValue("default_sync_root", create_user_sync_path(username))
-        settings.setValue("uuid", users_uuids[username])
-        settings.setValue("display-name", get_displayname_for_user(username))
-        settings.setValue("url", server_url)
-        settings.setValue("userExplicitlySignedOut", 'false')
+        for idx, username in enumerate(users):
+            users_uuids[username] = QUuid.createUuid()
+            settings.beginGroup("Accounts")
+            settings.beginWriteArray(str(idx + 1), len(users))
 
-        settings.endArray()
-        settings.setValue("size", len(users))
+            settings.setValue("capabilities", capabilities_variant)
+            settings.setValue("default_sync_root", create_user_sync_path(username))
+            settings.setValue("uuid", users_uuids[username])
+            settings.setValue("display-name", get_displayname_for_user(username))
+            settings.setValue("url", server_url)
+            settings.setValue("userExplicitlySignedOut", 'false')
+
+            settings.endArray()
+            settings.setValue("size", len(users))
+            settings.endGroup()
+
+        settings.beginGroup("Folders")
+        for idx, username in enumerate(users):
+            sync_path = create_space_path(username, space)
+            settings.beginWriteArray(str(idx + 1), len(users))
+
+            if space == 'Personal':
+                space_id = get_personal_space_id(username)
+            else:
+                space_id = get_space_id(space, username)
+            dav_endpoint = QUrl(url_join(server_url, '/dav/spaces/', space_id))
+            settings.setValue("spaceId", space_id)
+            settings.setValue("accountUUID", users_uuids[username])
+            settings.setValue("davUrl", dav_endpoint)
+            settings.setValue("deployed", 'false')
+            settings.setValue("displayString", get_config('syncConnectionName'))
+            settings.setValue("ignoreHiddenFiles", 'true')
+            settings.setValue("localPath", sync_path)
+            settings.setValue("paused", 'false')
+            settings.setValue("priority", '50')
+            if is_windows():
+                settings.setValue("virtualFilesMode", 'cfapi')
+            else:
+                settings.setValue("virtualFilesMode", 'off')
+            settings.setValue("journalPath", ".sync_journal.db")
+            settings.endArray()
+            settings.setValue("size", len(users))
+            sync_paths.update({username: sync_path})
+
         settings.endGroup()
 
-    settings.beginGroup("Folders")
-    for idx, username in enumerate(users):
-        sync_path = create_space_path(username, space)
-        settings.beginWriteArray(str(idx + 1), len(users))
+        settings.sync()
+    except Exception as e:
+        # Do not create config if there is an error.
+        # If not cleared, the 'sync()' will be called by the destructor of QSettings.
+        settings.clear()
+        raise e
 
-        if space == 'Personal':
-            space_id = get_personal_space_id(username)
-        else:
-            space_id = get_space_id(space, username)
-        dav_endpoint = QUrl(url_join(server_url, '/dav/spaces/', space_id))
-        settings.setValue("spaceId", space_id)
-        settings.setValue("accountUUID", users_uuids[username])
-        settings.setValue("davUrl", dav_endpoint)
-        settings.setValue("deployed", 'false')
-        settings.setValue("displayString", get_config('syncConnectionName'))
-        settings.setValue("ignoreHiddenFiles", 'true')
-        settings.setValue("localPath", sync_path)
-        settings.setValue("paused", 'false')
-        settings.setValue("priority", '50')
-        if is_windows():
-            settings.setValue("virtualFilesMode", 'cfapi')
-        else:
-            settings.setValue("virtualFilesMode", 'off')
-        settings.setValue("journalPath", ".sync_journal.db")
-        settings.endArray()
-        settings.setValue("size", len(users))
-        sync_paths.update({username: sync_path})
-
-    settings.endGroup()
-
-    settings.sync()
     return sync_paths
 
 
