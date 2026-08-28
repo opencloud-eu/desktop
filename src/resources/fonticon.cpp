@@ -60,6 +60,17 @@ public:
     {
     }
 
+    QString fontName() const
+    {
+        switch (_family) {
+        case FontIcon::FontFamily::FontAwesome:
+            return fontAwesomeFamily();
+        case FontIcon::FontFamily::RemixIcon:
+            return remixFontFamily();
+        }
+        Q_UNREACHABLE();
+    }
+
     void paint(QPainter *painter, const QRect &rect, QIcon::Mode, QIcon::State) override
     {
         painter->save();
@@ -70,17 +81,7 @@ public:
         painter->setPen(pen);
 
         auto font = painter->font();
-        switch (_family) {
-        case FontIcon::FontFamily::FontAwesome:
-            font.setFamily(fontAwesomeFamily());
-            break;
-        case FontIcon::FontFamily::RemixIcon:
-            font.setFamily(remixFontFamily());
-            break;
-        }
-        if (!font.exactMatch()) {
-            qCWarning(lcFontIcon) << u"Font family not found: " << font.family();
-        }
+        font.setFamily(fontName());
         switch (_size) {
         case FontIcon::Size::Normal:
             font.setPixelSize(rect.height());
