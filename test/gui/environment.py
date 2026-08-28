@@ -7,9 +7,9 @@ from helpers.ConfigHelper import init_config, reset_sync_connection_name
 from helpers.api.provisioning import delete_created_users
 from helpers.SpaceHelper import delete_project_spaces
 from helpers.ConfigHelper import get_config
-from helpers.FilesHelper import prefix_path_namespace, cleanup_created_paths
+from helpers.FilesHelper import cleanup_created_paths
 from helpers.AppHelper import close_and_kill_app
-from helpers.SyncHelper import clear_socket_messages
+from helpers.SyncHelper import clear_socket_messages, close_socket_connection
 from helpers.ReportHelper import (
     normalize_scenario_title,
     hit_screenrecord_limit,
@@ -44,6 +44,10 @@ def after_scenario(context, scenario):
 
     # quit the application
     close_and_kill_app()
+    clear_socket_messages()
+    close_socket_connection()
+    cleanup_current_app_log()
+    reset_sync_connection_name()
 
     # store app log on scenario failure
     if scenario.status in [Status.failed, Status.error] and os.path.exists(
@@ -56,22 +60,9 @@ def after_scenario(context, scenario):
 
     # clean up sync dir
     if os.path.exists(get_config("clientRootSyncPath")):
-        for entry in os.scandir(get_config("clientRootSyncPath")):
-            try:
-                if entry.is_file() or entry.is_symlink():
-                    print("Deleting file: " + entry.name)
-                    os.unlink(prefix_path_namespace(entry.path))
-                elif entry.is_dir():
-                    print("Deleting folder: " + entry.name)
-                    shutil.rmtree(prefix_path_namespace(entry.path))
-            except OSError as e:
-                print(f"Failed to delete '{entry.name}'.\nReason: {e}.")
-    # cleanup paths created outside of the temporary directory during the test
+        shutil.rmtree(get_config("clientRootSyncPath"))
+    # cleanup files and folders created during the test
     cleanup_created_paths()
+
     delete_project_spaces()
     delete_created_users()
-
-    cleanup_current_app_log()
-    clear_socket_messages()
-
-    reset_sync_connection_name()
