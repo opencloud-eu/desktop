@@ -2968,11 +2968,6 @@ Tingues en compte que l’ús de qualsevol opció de línia d’ordres per a reg
         <extracomment>this displays an error string (%2) for a file %1</extracomment>
         <translation>%1: %2</translation>
     </message>
-    <message>
-        <location filename="../src/plugins/vfs/cfapi/cfapiwrapper.cpp" line="76"/>
-        <source>Paths beginning with &apos;#&apos; character are not supported in VFS mode.</source>
-        <translation>Les rutes que comencen amb el caràcter &apos;#&apos; no són compatibles amb el mode VFS.</translation>
-    </message>
 </context>
 <context>
     <name>RemoteInfo</name>

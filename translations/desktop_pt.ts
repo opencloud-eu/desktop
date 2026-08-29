@@ -2968,11 +2968,6 @@ Note que usar opções de registo na linha de comandos substituirá estas defini
         <extracomment>this displays an error string (%2) for a file %1</extracomment>
         <translation>%1: %2</translation>
     </message>
-    <message>
-        <location filename="../src/plugins/vfs/cfapi/cfapiwrapper.cpp" line="76"/>
-        <source>Paths beginning with &apos;#&apos; character are not supported in VFS mode.</source>
-        <translation>Caminhos que comecem pelo carácter «#» não são suportados no modo VFS.</translation>
-    </message>
 </context>
 <context>
     <name>RemoteInfo</name>

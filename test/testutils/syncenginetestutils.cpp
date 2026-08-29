@@ -268,6 +268,7 @@ FileInfo *FileInfo::create(const QString &relativePath, quint64 size, char conte
 {
     const PathComponents pathComponents { relativePath };
     FileInfo *parent = findInvalidatingEtags(pathComponents.parentDirComponents());
+    // if parent is null, you have to call mkdir first
     Q_ASSERT(parent);
     FileInfo &child = parent->children[pathComponents.fileName()] = FileInfo { pathComponents.fileName(), size };
     child.parentPath = parent->path();
