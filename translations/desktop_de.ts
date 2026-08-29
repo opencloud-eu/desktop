@@ -2968,11 +2968,6 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
         <extracomment>this displays an error string (%2) for a file %1</extracomment>
         <translation>%1: %2</translation>
     </message>
-    <message>
-        <location filename="../src/plugins/vfs/cfapi/cfapiwrapper.cpp" line="76"/>
-        <source>Paths beginning with &apos;#&apos; character are not supported in VFS mode.</source>
-        <translation>Mit dem Zeichen „#“ beginnende Pfade werden im VFS-Modus nicht unterstützt.</translation>
-    </message>
 </context>
 <context>
     <name>RemoteInfo</name>

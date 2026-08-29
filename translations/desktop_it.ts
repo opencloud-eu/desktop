@@ -2971,11 +2971,6 @@ Note that using any logging command line options will override the settings.</so
         <extracomment>this displays an error string (%2) for a file %1</extracomment>
         <translation>%1: %2</translation>
     </message>
-    <message>
-        <location filename="../src/plugins/vfs/cfapi/cfapiwrapper.cpp" line="76"/>
-        <source>Paths beginning with &apos;#&apos; character are not supported in VFS mode.</source>
-        <translation>I percorsi che iniziano con il carattere &apos;#&apos; non sono supportati in modalità VFS.</translation>
-    </message>
 </context>
 <context>
     <name>RemoteInfo</name>

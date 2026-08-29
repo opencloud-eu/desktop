@@ -2968,11 +2968,6 @@ Figyelje, hogy a parancssori naplózási beállítások felülírják ezeket.</t
         <extracomment>this displays an error string (%2) for a file %1</extracomment>
         <translation>%1: %2</translation>
     </message>
-    <message>
-        <location filename="../src/plugins/vfs/cfapi/cfapiwrapper.cpp" line="76"/>
-        <source>Paths beginning with &apos;#&apos; character are not supported in VFS mode.</source>
-        <translation>A &apos;#&apos; karakterrel kezdődő elérési utak nem támogatottak VFS módban.</translation>
-    </message>
 </context>
 <context>
     <name>RemoteInfo</name>
