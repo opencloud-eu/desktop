@@ -46,8 +46,6 @@ def after_scenario(context, scenario):
     close_and_kill_app()
     clear_socket_messages()
     close_socket_connection()
-    cleanup_current_app_log()
-    reset_sync_connection_name()
 
     # store app log on scenario failure
     if scenario.status in [Status.failed, Status.error] and os.path.exists(
@@ -61,8 +59,10 @@ def after_scenario(context, scenario):
     # clean up sync dir
     if os.path.exists(get_config("clientRootSyncPath")):
         shutil.rmtree(get_config("clientRootSyncPath"))
-    # cleanup files and folders created during the test
+
     cleanup_created_paths()
+    cleanup_current_app_log()
+    reset_sync_connection_name()
 
     delete_project_spaces()
     delete_created_users()
