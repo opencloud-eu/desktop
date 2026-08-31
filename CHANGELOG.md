@@ -14,6 +14,12 @@
 
 - Use webfinger for OIDC parameter discovery [[#847](https://github.com/opencloud-eu/desktop/pull/847)]
 
+### 📈 Enhancement
+
+- Windows: Shorten name of explorer entry [[#1068](https://github.com/opencloud-eu/desktop/pull/1068)]
+- Refactor plugin loading [[#839](https://github.com/opencloud-eu/desktop/pull/839)]
+- Update SVG logo with new design [[#711](https://github.com/opencloud-eu/desktop/pull/711)]
+
 ### 🐛 Bug Fixes
 
 - Remove special handling of 404 during oauth refresh [[#1046](https://github.com/opencloud-eu/desktop/pull/1046)]
@@ -29,11 +35,6 @@
 - FetchServerSettingsJob always emit finished [[#824](https://github.com/opencloud-eu/desktop/pull/824)]
 - Fix path passed to pinstate [[#810](https://github.com/opencloud-eu/desktop/pull/810)]
 - Fix canonicalPath for drives (c:) [[#701](https://github.com/opencloud-eu/desktop/pull/701)]
-
-### 📈 Enhancement
-
-- Refactor plugin loading [[#839](https://github.com/opencloud-eu/desktop/pull/839)]
-- Update SVG logo with new design [[#711](https://github.com/opencloud-eu/desktop/pull/711)]
 
 ### 📦️ Dependencies
 
