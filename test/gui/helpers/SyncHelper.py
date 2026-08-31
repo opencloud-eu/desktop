@@ -163,6 +163,7 @@ def clear_socket_messages(resource=''):
     else:
         socket_messages.clear()
 
+
 def close_socket_connection():
     socket_messages.clear()
     if SOCKET_CONNECT:
@@ -171,6 +172,7 @@ def close_socket_connection():
             SOCKET_CONNECT.close_conn()
         elif is_linux():
             SOCKET_CONNECT._sock.close()
+
 
 def get_initial_sync_patterns():
     return SYNC_PATTERNS['initial']
