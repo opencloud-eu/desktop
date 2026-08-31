@@ -98,8 +98,8 @@ FolderMan::FolderMan()
             if (accountStatePtr->account()->hasDefaultSyncRoot()) {
                 Folder::prepareFolder(accountStatePtr->account()->defaultSyncRoot(),
                     AccountManager::instance()->accounts().size() == 1
-                        ? Theme::instance()->appNameGUI()
-                        : u"%1 - %2"_s.arg(Theme::instance()->appNameGUI(), accountStatePtr->account()->davDisplayName()),
+                        ? Theme::instance()->appName()
+                        : u"%1 - %2"_s.arg(Theme::instance()->appName(), accountStatePtr->account()->davDisplayName()),
                     accountStatePtr->account()->davDisplayName(), true);
             }
         }
