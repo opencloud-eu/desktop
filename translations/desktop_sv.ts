@@ -779,17 +779,17 @@ The update will be performed in the background, and overwrite the current AppIma
     <message>
         <location filename="../src/plugins/vfs/cfapi/vfs_cfapi.cpp" line="140"/>
         <source>The Virtual filesystem feature does not support a drive as sync root</source>
-        <translation type="unfinished"/>
+        <translation>Funktionen för virtuellt filsystem stöder inte en enhet som synkroniseringsrot</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/cfapi/vfs_cfapi.cpp" line="144"/>
         <source>The Virtual filesystem feature requires a NTFS file system, %1 is using %2</source>
-        <translation type="unfinished"/>
+        <translation>Funktionen för virtuellt filsystem kräver ett NTFS-filsystem; %1 använder %2.</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/cfapi/vfs_cfapi.cpp" line="148"/>
         <source>The Virtual filesystem feature is not supported on network drives</source>
-        <translation type="unfinished"/>
+        <translation>Funktionen för virtuellt filsystem stöds inte på nätverksenheter.</translation>
     </message>
 </context>
 <context>
@@ -1652,7 +1652,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="377"/>
         <source>The id_token could not be parsed</source>
-        <translation type="unfinished"/>
+        <translation>id_token kunde inte tolkas.</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="387"/>
@@ -1682,32 +1682,32 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="574"/>
         <source>WebFinger response had unexpected content type: %1</source>
-        <translation type="unfinished"/>
+        <translation>WebFinger-svaret hade en oväntad innehållstyp: %1</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="584"/>
         <source>Could not parse WebFinger response: %1</source>
-        <translation type="unfinished"/>
+        <translation>Kunde inte tolka WebFinger-svaret: %1</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="592"/>
         <source>WebFinger response subject did not match the requested resource</source>
-        <translation type="unfinished"/>
+        <translation>WebFinger-svarets subject matchade inte den begärda resursen.</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="604"/>
         <source>WebFinger response did not contain an OpenID Connect issuer</source>
-        <translation type="unfinished"/>
+        <translation>WebFinger-svaret innehöll ingen utfärdare för OpenID Connect.</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="611"/>
         <source>WebFinger issuer link had no href</source>
-        <translation type="unfinished"/>
+        <translation>Utfärdarlänken i WebFinger saknade href.</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="692"/>
         <source>Could not parse OIDC discovery response: %1</source>
-        <translation type="unfinished"/>
+        <translation>Kunde inte tolka OIDC-discovery-svaret: %1</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="351"/>
@@ -1783,17 +1783,17 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="198"/>
         <source>Unable to claim the sync root for files on demand, the folder is already claimed by %1</source>
-        <translation type="unfinished"/>
+        <translation>Kunde inte reservera synkroniseringsroten för filer på begäran; mappen används redan av %1.</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="201"/>
         <source>Unable to retrieve registration info. Error: %1</source>
-        <translation type="unfinished"/>
+        <translation>Kunde inte hämta registreringsinformation. Fel: %1</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="434"/>
         <source>Cannot dehydrate a placeholder because the file changed</source>
-        <translation type="unfinished"/>
+        <translation>Kan inte frigöra innehållet i en platshållare eftersom filen har ändrats.</translation>
     </message>
 </context>
 <context>
@@ -1801,32 +1801,32 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="286"/>
         <source>Failed to read /proc/self/mountinfo</source>
-        <translation type="unfinished"/>
+        <translation>Kunde inte läsa /proc/self/mountinfo</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="299"/>
         <source>Failed to unmount the OpenVFS mount %1 Error:%2</source>
-        <translation type="unfinished"/>
+        <translation>Det gick inte att avmontera OpenVFS-monteringen %1. Fel: %2</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="308"/>
         <source>The filesystem for %1 does not support xattributes.</source>
-        <translation type="unfinished"/>
+        <translation>Filsystemet för %1 stöder inte xattributes.</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="311"/>
         <source>The sync path is already claimed by %1</source>
-        <translation type="unfinished"/>
+        <translation>Synkroniseringssökvägen används redan av %1.</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="315"/>
         <source>OpenVFS executable not found, please install it</source>
-        <translation type="unfinished"/>
+        <translation>Kunde inte hitta den körbara filen för OpenVFS. Installera den.</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="321"/>
         <source>Failed to find the OpenVFS config file, please check your installation.</source>
-        <translation type="unfinished"/>
+        <translation>Kunde inte hitta OpenVFS-konfigurationsfilen. Kontrollera installationen.</translation>
     </message>
 </context>
 <context>
@@ -3275,12 +3275,12 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/vfs/vfs.cpp" line="247"/>
         <source>ReFS is currently not supported.</source>
-        <translation type="unfinished"/>
+        <translation>ReFS stöds för närvarande inte.</translation>
     </message>
     <message>
         <location filename="../src/libsync/vfs/vfs.cpp" line="255"/>
         <source>The Virtual filesystem %1 is not supported on this platform</source>
-        <translation type="unfinished"/>
+        <translation>Det virtuella filsystemet %1 stöds inte på den här plattformen.</translation>
     </message>
 </context>
 <context>
