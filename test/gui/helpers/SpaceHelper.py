@@ -47,6 +47,8 @@ def fetch_spaces(user=None, query=''):
 def get_personal_space_id(user):
     search_query = '$filter=driveType eq \'personal\''
     space = fetch_spaces(query=search_query, user=user)
+    if not space:
+        raise LookupError(f'No personal space found for user {user}. Response: {space}')
     return space[0]['id']
 
 
