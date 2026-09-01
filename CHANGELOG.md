@@ -1,6 +1,6 @@
 # Changelog
 
-## [4.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v4.0.0) - 2026-08-31
+## [4.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v4.0.0) - 2026-09-01
 
 ### ❤️ Thanks to all contributors! ❤️
 
@@ -14,14 +14,9 @@
 
 - Use webfinger for OIDC parameter discovery [[#847](https://github.com/opencloud-eu/desktop/pull/847)]
 
-### 📈 Enhancement
-
-- Windows: Shorten name of explorer entry [[#1068](https://github.com/opencloud-eu/desktop/pull/1068)]
-- Refactor plugin loading [[#839](https://github.com/opencloud-eu/desktop/pull/839)]
-- Update SVG logo with new design [[#711](https://github.com/opencloud-eu/desktop/pull/711)]
-
 ### 🐛 Bug Fixes
 
+- Abort a hydration request on failure [[#1067](https://github.com/opencloud-eu/desktop/pull/1067)]
 - Remove special handling of 404 during oauth refresh [[#1046](https://github.com/opencloud-eu/desktop/pull/1046)]
 - Extend ignore file with .Trash to follow https://specifications.freed… [[#1038](https://github.com/opencloud-eu/desktop/pull/1038)]
 - Fix issue with unicode paths in qml [[#1027](https://github.com/opencloud-eu/desktop/pull/1027)]
@@ -35,6 +30,12 @@
 - FetchServerSettingsJob always emit finished [[#824](https://github.com/opencloud-eu/desktop/pull/824)]
 - Fix path passed to pinstate [[#810](https://github.com/opencloud-eu/desktop/pull/810)]
 - Fix canonicalPath for drives (c:) [[#701](https://github.com/opencloud-eu/desktop/pull/701)]
+
+### 📈 Enhancement
+
+- Windows: Shorten name of explorer entry [[#1068](https://github.com/opencloud-eu/desktop/pull/1068)]
+- Refactor plugin loading [[#839](https://github.com/opencloud-eu/desktop/pull/839)]
+- Update SVG logo with new design [[#711](https://github.com/opencloud-eu/desktop/pull/711)]
 
 ### 📦️ Dependencies
 
