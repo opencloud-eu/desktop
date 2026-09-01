@@ -37,7 +37,9 @@ def resource_exists(user, resource):
 
 def get_file_content(user, resource):
     response = request.get(get_resource_path(user, resource), user=user)
-    assert response.status_code == 200, f"Failed to file content. Status: {response.status_code}"
+    assert response.status_code == 200, (
+        f"Failed to get file content. Status: {response.status_code}"
+    )
     if resource.lower().endswith('.txt'):
         return response.text
     return response.content
@@ -77,7 +79,7 @@ def create_folder(user, folder_name):
     response = request.mkcol(url, user=user)
     assert response.status_code == 201, (
         f'Could not create the folder: {folder_name} for user {user}.'
-        + f'Status: {response.status_code}'
+        + f' Status: {response.status_code}'
     )
 
 
