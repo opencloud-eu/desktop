@@ -307,6 +307,36 @@ private Q_SLOTS:
         }
     }
 
+    void testDehydrated404()
+    {
+        QFETCH_GLOBAL(Vfs::Mode, vfsMode);
+        QFETCH_GLOBAL(bool, filesAreDehydrated);
+        if (!filesAreDehydrated) {
+            QSKIP("404 test only applies to dehydrated files");
+        }
+
+        FakeFolder fakeFolder(FileInfo::A12_B12_C12_S12(), vfsMode, filesAreDehydrated);
+        QSignalSpy needSyncSpy(fakeFolder.vfs().get(), &Vfs::needSync);
+
+        fakeFolder.setServerOverride([&](QNetworkAccessManager::Operation op, const QNetworkRequest &request, QIODevice *) -> QNetworkReply * {
+            // fail once
+            if (op == QNetworkAccessManager::GetOperation && request.url().path().endsWith("A/a1"_L1) && needSyncSpy.isEmpty()) {
+                return new FakeErrorReply(op, request, this, 404, "Not Found");
+            }
+            return nullptr;
+        });
+
+        // this will fail as the file no longer exists on the remote, it was either renamed or deleted
+        // the 404 will trigger a needSync signal
+        fakeFolder.localModifier().appendByte(u"A/a1"_s);
+        QVERIFY(!fakeFolder.applyLocalModificationsAndSync());
+        QCOMPARE(needSyncSpy.count(), 1);
+
+        // now the local write will succeed
+        fakeFolder.localModifier().appendByte(u"A/a1"_s);
+        QVERIFY(fakeFolder.applyLocalModificationsAndSync());
+    }
+
     void testFileName()
     {
         QFETCH_GLOBAL(Vfs::Mode, vfsMode);

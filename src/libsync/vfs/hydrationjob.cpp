@@ -60,8 +60,11 @@ void HydrationJob::start()
                 // assume that the local and the remote metadata are out of sync
                 Q_EMIT _vfs->needSync();
             }
-        }
-        if (_job->aborted()) {
+        } else if (_job->httpStatusCode() == 404) {
+            errorMsg = tr("File not found");
+            // assume the file was renamed or deleted
+            Q_EMIT _vfs->needSync();
+        } else if (_job->aborted()) {
             errorMsg = tr("Aborted.");
         }
 
