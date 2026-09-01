@@ -7,22 +7,22 @@
         <translation>Barre de navigation</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/AccountBar.qml" line="112"/>
+        <location filename="../src/gui/qml/AccountBar.qml" line="115"/>
         <source>Add Account</source>
         <translation>Ajouter un compte</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/AccountBar.qml" line="139"/>
+        <location filename="../src/gui/qml/AccountBar.qml" line="145"/>
         <source>Activity</source>
         <translation>Activité</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/AccountBar.qml" line="153"/>
+        <location filename="../src/gui/qml/AccountBar.qml" line="162"/>
         <source>Settings</source>
         <translation>Paramètres</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/AccountBar.qml" line="182"/>
+        <location filename="../src/gui/qml/AccountBar.qml" line="191"/>
         <source>Quit</source>
         <translation>Quitter</translation>
     </message>
@@ -1183,7 +1183,7 @@ Veuillez envisager de supprimer ce dossier du compte et de l&apos;ajouter à nou
 <context>
     <name>OCC::FolderWatcherPrivate</name>
     <message>
-        <location filename="../src/gui/folderwatcher_linux.cpp" line="81"/>
+        <location filename="../src/gui/folderwatcher_linux.cpp" line="92"/>
         <source>This problem usually happens when the inotify watches are exhausted. Check the FAQ for details.</source>
         <translation>Ce problème survient généralement lorsque les observateurs inotify sont épuisées. Consultez la FAQ pour plus de détails.</translation>
     </message>
@@ -1860,102 +1860,102 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
         <translation>Les liens symboliques ne sont pas pris en charge pour la synchronisation.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="186"/>
+        <location filename="../src/libsync/discovery.cpp" line="185"/>
         <source>File names ending with a period are not supported on this file system.</source>
         <translation>Les noms de fichiers se terminant par un point ne sont pas pris en charge sur ce système de fichiers.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="199"/>
+        <location filename="../src/libsync/discovery.cpp" line="198"/>
         <source>File names containing the character &apos;%1&apos; are not supported on this file system.</source>
         <translation>Les noms de fichiers contenant le caractère « %1 » ne sont pas pris en charge sur ce système de fichiers.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="202"/>
+        <location filename="../src/libsync/discovery.cpp" line="201"/>
         <source>File name contains at least one invalid character</source>
         <translation>Le nom du fichier contient au moins un caractère non valide</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="204"/>
+        <location filename="../src/libsync/discovery.cpp" line="203"/>
         <source>The file name is a reserved name on this file system.</source>
         <translation>Le nom du fichier est un nom réservé sur ce système de fichiers.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="213"/>
+        <location filename="../src/libsync/discovery.cpp" line="212"/>
         <source>Filename contains trailing spaces.</source>
         <translation>Le nom du fichier contient des espaces à la fin.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="216"/>
+        <location filename="../src/libsync/discovery.cpp" line="215"/>
         <source>Filename is too long.</source>
         <translation>Le nom du fichier est trop long.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="219"/>
+        <location filename="../src/libsync/discovery.cpp" line="218"/>
         <source>File/Folder is ignored because it&apos;s hidden.</source>
         <translation>Le fichier/dossier est ignoré parce qu&apos;il est caché.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="223"/>
+        <location filename="../src/libsync/discovery.cpp" line="222"/>
         <source>Conflict: Server version downloaded, local copy renamed and not uploaded.</source>
         <translation>Conflit : Version serveur téléchargée, copie locale renommée et non téléversée.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="227"/>
+        <location filename="../src/libsync/discovery.cpp" line="226"/>
         <source>The filename is blacklisted on the server.</source>
         <translation>Le nom de fichier est sur la liste noire du serveur.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1090"/>
+        <location filename="../src/libsync/discovery.cpp" line="1089"/>
         <source>Moved to invalid target, restoring</source>
         <translation>Déplacement vers une cible invalide, restauration en cours</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1103"/>
+        <location filename="../src/libsync/discovery.cpp" line="1102"/>
         <source>Not allowed to remove, restoring</source>
         <translation>Suppression non autorisée, restauration en cours</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1259"/>
+        <location filename="../src/libsync/discovery.cpp" line="1258"/>
         <source>Server replied with an error while reading directory »%1«: %2</source>
         <translation>Le serveur a renvoyé une erreur lors de la lecture du répertoire « %1 » : %2</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1049"/>
+        <location filename="../src/libsync/discovery.cpp" line="1048"/>
         <source>Not allowed because you don&apos;t have permission to add subfolders to that folder</source>
         <translation>Non autorisé car vous n&apos;avez pas le droit d&apos;ajouter des sous-dossiers à ce dossier.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="181"/>
+        <location filename="../src/libsync/discovery.cpp" line="180"/>
         <source>The file is listed on the ignore list.</source>
         <translation>Le fichier figure sur la liste des fichiers ignorés.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="527"/>
+        <location filename="../src/libsync/discovery.cpp" line="526"/>
         <source>Error while doing a rename, unhandled status code: %1</source>
         <translation>Erreur lors du renommage, code non géré : %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1017"/>
+        <location filename="../src/libsync/discovery.cpp" line="1016"/>
         <source>Selective sync: Ignored because its path is deselected</source>
         <translation>Synchronisation sélective : ignoré car son chemin est désélectionné</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1054"/>
+        <location filename="../src/libsync/discovery.cpp" line="1053"/>
         <source>Not allowed because you don&apos;t have permission to add files in that folder</source>
         <translation>Non autorisé car vous n&apos;avez pas la permission d&apos;ajouter des fichiers dans ce dossier</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1067"/>
+        <location filename="../src/libsync/discovery.cpp" line="1066"/>
         <source>Not allowed to upload this file because it is read-only on the server, restoring</source>
         <translation>Pas autorisé à téléverser ce fichier car il est en lecture seule sur le serveur, restauration</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1213"/>
+        <location filename="../src/libsync/discovery.cpp" line="1212"/>
         <source>Error while reading the database</source>
         <translation>Erreur lors de la lecture de la base de données</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1238"/>
+        <location filename="../src/libsync/discovery.cpp" line="1237"/>
         <source>This Space is currently unavailable</source>
         <translation>Cet espace est actuellement indisponible</translation>
     </message>
@@ -2966,11 +2966,6 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
         <source>%1: %2</source>
         <extracomment>this displays an error string (%2) for a file %1</extracomment>
         <translation>%1 : %2</translation>
-    </message>
-    <message>
-        <location filename="../src/plugins/vfs/cfapi/cfapiwrapper.cpp" line="76"/>
-        <source>Paths beginning with &apos;#&apos; character are not supported in VFS mode.</source>
-        <translation>Les chemins commençant par le caractère &apos;#&apos; ne sont pas pris en charge en mode VFS.</translation>
     </message>
 </context>
 <context>

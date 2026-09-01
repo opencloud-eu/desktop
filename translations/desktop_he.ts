@@ -7,22 +7,22 @@
         <translation>סרגל ניווט</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/AccountBar.qml" line="112"/>
+        <location filename="../src/gui/qml/AccountBar.qml" line="115"/>
         <source>Add Account</source>
         <translation>הוספת חשבון</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/AccountBar.qml" line="139"/>
+        <location filename="../src/gui/qml/AccountBar.qml" line="145"/>
         <source>Activity</source>
         <translation>פעילות</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/AccountBar.qml" line="153"/>
+        <location filename="../src/gui/qml/AccountBar.qml" line="162"/>
         <source>Settings</source>
         <translation>הגדרות</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/AccountBar.qml" line="182"/>
+        <location filename="../src/gui/qml/AccountBar.qml" line="191"/>
         <source>Quit</source>
         <translation>יציאה</translation>
     </message>
@@ -1183,7 +1183,7 @@ Please consider removing this folder from the account and adding it again.</sour
 <context>
     <name>OCC::FolderWatcherPrivate</name>
     <message>
-        <location filename="../src/gui/folderwatcher_linux.cpp" line="81"/>
+        <location filename="../src/gui/folderwatcher_linux.cpp" line="92"/>
         <source>This problem usually happens when the inotify watches are exhausted. Check the FAQ for details.</source>
         <translation>בעיה זו מתרחשת בדרך כלל כאשר משאבי ה-inotify watches מוצו. בדקו את השאלות הנפוצות (FAQ) לפרטים.</translation>
     </message>
@@ -1861,102 +1861,102 @@ Note that using any logging command line options will override the settings.</so
         <translation>קישורים סימבוליים אינם נתמכים בסנכרון.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="186"/>
+        <location filename="../src/libsync/discovery.cpp" line="185"/>
         <source>File names ending with a period are not supported on this file system.</source>
         <translation>שמות קבצים המסתיימים בנקודה אינם נתמכים במערכת קבצים זו.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="199"/>
+        <location filename="../src/libsync/discovery.cpp" line="198"/>
         <source>File names containing the character &apos;%1&apos; are not supported on this file system.</source>
         <translation>שמות קבצים המכילים את התו &apos;%1&apos; אינם נתמכים במערכת קבצים זו.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="202"/>
+        <location filename="../src/libsync/discovery.cpp" line="201"/>
         <source>File name contains at least one invalid character</source>
         <translation>שם הקובץ מכיל לפחות תו אחד לא חוקי</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="204"/>
+        <location filename="../src/libsync/discovery.cpp" line="203"/>
         <source>The file name is a reserved name on this file system.</source>
         <translation>שם הקובץ הוא שם שמור במערכת קבצים זו.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="213"/>
+        <location filename="../src/libsync/discovery.cpp" line="212"/>
         <source>Filename contains trailing spaces.</source>
         <translation>שם הקובץ מכיל רווחים בסוף השם.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="216"/>
+        <location filename="../src/libsync/discovery.cpp" line="215"/>
         <source>Filename is too long.</source>
         <translation>שם הקובץ ארוך מדי.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="219"/>
+        <location filename="../src/libsync/discovery.cpp" line="218"/>
         <source>File/Folder is ignored because it&apos;s hidden.</source>
         <translation>הקובץ/תיקייה קיבלו התעלמות מכיוון שהם מוסתרים.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="223"/>
+        <location filename="../src/libsync/discovery.cpp" line="222"/>
         <source>Conflict: Server version downloaded, local copy renamed and not uploaded.</source>
         <translation>התנגשות: גרסת השרת הורדה, העותק המקומי שונה שם ולא הועלה.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="227"/>
+        <location filename="../src/libsync/discovery.cpp" line="226"/>
         <source>The filename is blacklisted on the server.</source>
         <translation>שם הקובץ נמצא ברשימה השחורה בשרת.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1090"/>
+        <location filename="../src/libsync/discovery.cpp" line="1089"/>
         <source>Moved to invalid target, restoring</source>
         <translation>הועבר ליעד לא חוקי, משחזר</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1103"/>
+        <location filename="../src/libsync/discovery.cpp" line="1102"/>
         <source>Not allowed to remove, restoring</source>
         <translation>אין הרשאה להסרה, משחזר</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1259"/>
+        <location filename="../src/libsync/discovery.cpp" line="1258"/>
         <source>Server replied with an error while reading directory »%1«: %2</source>
         <translation>השרת החזיר שגיאה בעת קריאת התיקייה »%1«: %2</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1049"/>
+        <location filename="../src/libsync/discovery.cpp" line="1048"/>
         <source>Not allowed because you don&apos;t have permission to add subfolders to that folder</source>
         <translation>לא מורשה מכיוון שאין לך הרשאה להוסיף תת-תיקיות לתיקייה זו</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="181"/>
+        <location filename="../src/libsync/discovery.cpp" line="180"/>
         <source>The file is listed on the ignore list.</source>
         <translation>הקובץ כלול ברשימת ההתעלמות.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="527"/>
+        <location filename="../src/libsync/discovery.cpp" line="526"/>
         <source>Error while doing a rename, unhandled status code: %1</source>
         <translation>שגיאה בעת שינוי שם, קוד סטטוס לא מטופל: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1017"/>
+        <location filename="../src/libsync/discovery.cpp" line="1016"/>
         <source>Selective sync: Ignored because its path is deselected</source>
         <translation>סנכרון סלקטיבי: קיבל התעלמות מכיוון שהנתיב שלו לא נבחר</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1054"/>
+        <location filename="../src/libsync/discovery.cpp" line="1053"/>
         <source>Not allowed because you don&apos;t have permission to add files in that folder</source>
         <translation>לא מורשה מכיוון שאין לך הרשאה להוסיף קבצים לתיקייה זו</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1067"/>
+        <location filename="../src/libsync/discovery.cpp" line="1066"/>
         <source>Not allowed to upload this file because it is read-only on the server, restoring</source>
         <translation>אין הרשאה להעלות קובץ זה מכיוון שהוא לקריאה בלבד בשרת, משחזר</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1213"/>
+        <location filename="../src/libsync/discovery.cpp" line="1212"/>
         <source>Error while reading the database</source>
         <translation>שגיאה בעת קריאת מסד הנתונים</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1238"/>
+        <location filename="../src/libsync/discovery.cpp" line="1237"/>
         <source>This Space is currently unavailable</source>
         <translation>מרחב זה אינו זמין כרגע</translation>
     </message>
@@ -2967,11 +2967,6 @@ Note that using any logging command line options will override the settings.</so
         <source>%1: %2</source>
         <extracomment>this displays an error string (%2) for a file %1</extracomment>
         <translation>%1: %2</translation>
-    </message>
-    <message>
-        <location filename="../src/plugins/vfs/cfapi/cfapiwrapper.cpp" line="76"/>
-        <source>Paths beginning with &apos;#&apos; character are not supported in VFS mode.</source>
-        <translation>נתיבים המתחילים בתו &apos;#&apos; אינם נתמכים במצב VFS.</translation>
     </message>
 </context>
 <context>

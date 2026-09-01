@@ -7,22 +7,22 @@
         <translation>Navigeringsfältet</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/AccountBar.qml" line="112"/>
+        <location filename="../src/gui/qml/AccountBar.qml" line="115"/>
         <source>Add Account</source>
         <translation>Lägg till konto</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/AccountBar.qml" line="139"/>
+        <location filename="../src/gui/qml/AccountBar.qml" line="145"/>
         <source>Activity</source>
         <translation>Aktivitet</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/AccountBar.qml" line="153"/>
+        <location filename="../src/gui/qml/AccountBar.qml" line="162"/>
         <source>Settings</source>
         <translation>Inställningar</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/AccountBar.qml" line="182"/>
+        <location filename="../src/gui/qml/AccountBar.qml" line="191"/>
         <source>Quit</source>
         <translation>Lämna</translation>
     </message>
@@ -779,17 +779,17 @@ The update will be performed in the background, and overwrite the current AppIma
     <message>
         <location filename="../src/plugins/vfs/cfapi/vfs_cfapi.cpp" line="140"/>
         <source>The Virtual filesystem feature does not support a drive as sync root</source>
-        <translation type="unfinished"/>
+        <translation>Funktionen för virtuellt filsystem stöder inte en enhet som synkroniseringsrot</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/cfapi/vfs_cfapi.cpp" line="144"/>
         <source>The Virtual filesystem feature requires a NTFS file system, %1 is using %2</source>
-        <translation type="unfinished"/>
+        <translation>Funktionen för virtuellt filsystem kräver ett NTFS-filsystem; %1 använder %2.</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/cfapi/vfs_cfapi.cpp" line="148"/>
         <source>The Virtual filesystem feature is not supported on network drives</source>
-        <translation type="unfinished"/>
+        <translation>Funktionen för virtuellt filsystem stöds inte på nätverksenheter.</translation>
     </message>
 </context>
 <context>
@@ -1172,7 +1172,7 @@ Please consider removing this folder from the account and adding it again.</sour
 <context>
     <name>OCC::FolderWatcherPrivate</name>
     <message>
-        <location filename="../src/gui/folderwatcher_linux.cpp" line="81"/>
+        <location filename="../src/gui/folderwatcher_linux.cpp" line="92"/>
         <source>This problem usually happens when the inotify watches are exhausted. Check the FAQ for details.</source>
         <translation>Det här problemet uppstår vanligtvis när inotify-övervakningarna är uttömda. Se FAQ för mer information.</translation>
     </message>
@@ -1652,7 +1652,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="377"/>
         <source>The id_token could not be parsed</source>
-        <translation type="unfinished"/>
+        <translation>id_token kunde inte tolkas.</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="387"/>
@@ -1682,32 +1682,32 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="574"/>
         <source>WebFinger response had unexpected content type: %1</source>
-        <translation type="unfinished"/>
+        <translation>WebFinger-svaret hade en oväntad innehållstyp: %1</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="584"/>
         <source>Could not parse WebFinger response: %1</source>
-        <translation type="unfinished"/>
+        <translation>Kunde inte tolka WebFinger-svaret: %1</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="592"/>
         <source>WebFinger response subject did not match the requested resource</source>
-        <translation type="unfinished"/>
+        <translation>WebFinger-svarets subject matchade inte den begärda resursen.</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="604"/>
         <source>WebFinger response did not contain an OpenID Connect issuer</source>
-        <translation type="unfinished"/>
+        <translation>WebFinger-svaret innehöll ingen utfärdare för OpenID Connect.</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="611"/>
         <source>WebFinger issuer link had no href</source>
-        <translation type="unfinished"/>
+        <translation>Utfärdarlänken i WebFinger saknade href.</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="692"/>
         <source>Could not parse OIDC discovery response: %1</source>
-        <translation type="unfinished"/>
+        <translation>Kunde inte tolka OIDC-discovery-svaret: %1</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="351"/>
@@ -1783,17 +1783,17 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="198"/>
         <source>Unable to claim the sync root for files on demand, the folder is already claimed by %1</source>
-        <translation type="unfinished"/>
+        <translation>Kunde inte reservera synkroniseringsroten för filer på begäran; mappen används redan av %1.</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="201"/>
         <source>Unable to retrieve registration info. Error: %1</source>
-        <translation type="unfinished"/>
+        <translation>Kunde inte hämta registreringsinformation. Fel: %1</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="434"/>
         <source>Cannot dehydrate a placeholder because the file changed</source>
-        <translation type="unfinished"/>
+        <translation>Kan inte frigöra innehållet i en platshållare eftersom filen har ändrats.</translation>
     </message>
 </context>
 <context>
@@ -1801,32 +1801,32 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="286"/>
         <source>Failed to read /proc/self/mountinfo</source>
-        <translation type="unfinished"/>
+        <translation>Kunde inte läsa /proc/self/mountinfo</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="299"/>
         <source>Failed to unmount the OpenVFS mount %1 Error:%2</source>
-        <translation type="unfinished"/>
+        <translation>Det gick inte att avmontera OpenVFS-monteringen %1. Fel: %2</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="308"/>
         <source>The filesystem for %1 does not support xattributes.</source>
-        <translation type="unfinished"/>
+        <translation>Filsystemet för %1 stöder inte xattributes.</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="311"/>
         <source>The sync path is already claimed by %1</source>
-        <translation type="unfinished"/>
+        <translation>Synkroniseringssökvägen används redan av %1.</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="315"/>
         <source>OpenVFS executable not found, please install it</source>
-        <translation type="unfinished"/>
+        <translation>Kunde inte hitta den körbara filen för OpenVFS. Installera den.</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="321"/>
         <source>Failed to find the OpenVFS config file, please check your installation.</source>
-        <translation type="unfinished"/>
+        <translation>Kunde inte hitta OpenVFS-konfigurationsfilen. Kontrollera installationen.</translation>
     </message>
 </context>
 <context>
@@ -1845,102 +1845,102 @@ Note that using any logging command line options will override the settings.</so
         <translation>Symboliska länkar stöds inte vid synkronisering.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="186"/>
+        <location filename="../src/libsync/discovery.cpp" line="185"/>
         <source>File names ending with a period are not supported on this file system.</source>
         <translation>Filnamn som slutar med en punkt stöds inte i detta filsystem.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="199"/>
+        <location filename="../src/libsync/discovery.cpp" line="198"/>
         <source>File names containing the character &apos;%1&apos; are not supported on this file system.</source>
         <translation>Filnamn som innehåller tecknet &apos;%1&apos; stöds inte i detta filsystem.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="202"/>
+        <location filename="../src/libsync/discovery.cpp" line="201"/>
         <source>File name contains at least one invalid character</source>
         <translation>Filnamnet innehåller minst ett ogiltigt tecken</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="204"/>
+        <location filename="../src/libsync/discovery.cpp" line="203"/>
         <source>The file name is a reserved name on this file system.</source>
         <translation>Filnamnet är ett reserverat namn i detta filsystem.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="213"/>
+        <location filename="../src/libsync/discovery.cpp" line="212"/>
         <source>Filename contains trailing spaces.</source>
         <translation>Filnamnet innehåller efterföljande mellanslag.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="216"/>
+        <location filename="../src/libsync/discovery.cpp" line="215"/>
         <source>Filename is too long.</source>
         <translation>Filnamnet är för långt.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="219"/>
+        <location filename="../src/libsync/discovery.cpp" line="218"/>
         <source>File/Folder is ignored because it&apos;s hidden.</source>
         <translation>Filen/mappen ignoreras eftersom den är dold.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="223"/>
+        <location filename="../src/libsync/discovery.cpp" line="222"/>
         <source>Conflict: Server version downloaded, local copy renamed and not uploaded.</source>
         <translation>Konflikt: Serverversionen har laddats ner, den lokala kopian har bytt namn och har inte laddats upp.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="227"/>
+        <location filename="../src/libsync/discovery.cpp" line="226"/>
         <source>The filename is blacklisted on the server.</source>
         <translation>Filnamnet är svartlistat på servern.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1090"/>
+        <location filename="../src/libsync/discovery.cpp" line="1089"/>
         <source>Moved to invalid target, restoring</source>
         <translation>Flyttad till ogiltigt mål, återställer</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1103"/>
+        <location filename="../src/libsync/discovery.cpp" line="1102"/>
         <source>Not allowed to remove, restoring</source>
         <translation>Får inte tas bort, återställas</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1259"/>
+        <location filename="../src/libsync/discovery.cpp" line="1258"/>
         <source>Server replied with an error while reading directory »%1«: %2</source>
         <translation>Servern svarade med ett fel vid läsning av katalogen »%1«: %2</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1049"/>
+        <location filename="../src/libsync/discovery.cpp" line="1048"/>
         <source>Not allowed because you don&apos;t have permission to add subfolders to that folder</source>
         <translation>Det är inte tillåtet eftersom du inte har behörighet att lägga till undermappar i den mappen</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="181"/>
+        <location filename="../src/libsync/discovery.cpp" line="180"/>
         <source>The file is listed on the ignore list.</source>
         <translation>Filen finns med på ignorera-listan.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="527"/>
+        <location filename="../src/libsync/discovery.cpp" line="526"/>
         <source>Error while doing a rename, unhandled status code: %1</source>
         <translation>Fel vid namnbyte, obehandlad statuskod: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1017"/>
+        <location filename="../src/libsync/discovery.cpp" line="1016"/>
         <source>Selective sync: Ignored because its path is deselected</source>
         <translation>Selektiv synkronisering: Ignoreras eftersom dess sökväg är avmarkerad</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1054"/>
+        <location filename="../src/libsync/discovery.cpp" line="1053"/>
         <source>Not allowed because you don&apos;t have permission to add files in that folder</source>
         <translation>Det är inte tillåtet eftersom du inte har behörighet att lägga till filer i den mappen</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1067"/>
+        <location filename="../src/libsync/discovery.cpp" line="1066"/>
         <source>Not allowed to upload this file because it is read-only on the server, restoring</source>
         <translation>Det går inte att ladda upp den här filen eftersom den är skrivskyddad på servern. Återställning pågår</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1213"/>
+        <location filename="../src/libsync/discovery.cpp" line="1212"/>
         <source>Error while reading the database</source>
         <translation>Fel vid läsning av databasen</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1238"/>
+        <location filename="../src/libsync/discovery.cpp" line="1237"/>
         <source>This Space is currently unavailable</source>
         <translation>Denna arbetsyta är för närvarande inte tillgänglig</translation>
     </message>
@@ -2950,11 +2950,6 @@ Note that using any logging command line options will override the settings.</so
         <extracomment>this displays an error string (%2) for a file %1</extracomment>
         <translation>%1: %2</translation>
     </message>
-    <message>
-        <location filename="../src/plugins/vfs/cfapi/cfapiwrapper.cpp" line="76"/>
-        <source>Paths beginning with &apos;#&apos; character are not supported in VFS mode.</source>
-        <translation>Sökvägar som börjar med tecknet &apos;#&apos; stöds inte i VFS-läge.</translation>
-    </message>
 </context>
 <context>
     <name>RemoteInfo</name>
@@ -3280,12 +3275,12 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/vfs/vfs.cpp" line="247"/>
         <source>ReFS is currently not supported.</source>
-        <translation type="unfinished"/>
+        <translation>ReFS stöds för närvarande inte.</translation>
     </message>
     <message>
         <location filename="../src/libsync/vfs/vfs.cpp" line="255"/>
         <source>The Virtual filesystem %1 is not supported on this platform</source>
-        <translation type="unfinished"/>
+        <translation>Det virtuella filsystemet %1 stöds inte på den här plattformen.</translation>
     </message>
 </context>
 <context>

@@ -1023,6 +1023,7 @@ private Q_SLOTS:
     {
         QObject replyParent;
         int tokenRequestCount = 0;
+        HttpCredentials::TokenRefreshDefaultTimeoutOneError = 0s;
 
         auto override = [&replyParent, &tokenRequestCount](QNetworkAccessManager::Operation op, const QNetworkRequest &req, QIODevice *) -> QNetworkReply * {
             if (req.url().path().endsWith(QLatin1String("status.php"))) {
@@ -1075,7 +1076,7 @@ private Q_SLOTS:
 
         // ContentNotFoundError → timeout=0s, nextTry increments each time.
         // After TokenRefreshMaxRetries (3) errors, terminal branch emits authenticationFailed.
-        QTRY_VERIFY_WITH_TIMEOUT(authFailedSpy.count() == 1, 10000);
+        QTRY_VERIFY_WITH_TIMEOUT(authFailedSpy.count() == 1, 1s);
         QCOMPARE(fetchedSpy.count(), 1);
         QVERIFY(tokenRequestCount >= 3);
     }

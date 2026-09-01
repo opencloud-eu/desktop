@@ -7,22 +7,22 @@
         <translation>Navigációs sáv</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/AccountBar.qml" line="112"/>
+        <location filename="../src/gui/qml/AccountBar.qml" line="115"/>
         <source>Add Account</source>
         <translation>Fiók hozzáadása</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/AccountBar.qml" line="139"/>
+        <location filename="../src/gui/qml/AccountBar.qml" line="145"/>
         <source>Activity</source>
         <translation>Aktivitás</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/AccountBar.qml" line="153"/>
+        <location filename="../src/gui/qml/AccountBar.qml" line="162"/>
         <source>Settings</source>
         <translation>Beállítások</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/AccountBar.qml" line="182"/>
+        <location filename="../src/gui/qml/AccountBar.qml" line="191"/>
         <source>Quit</source>
         <translation>Kilépés</translation>
     </message>
@@ -1183,7 +1183,7 @@ Kérjük vegye fontolóra a mappa eltávolítását a fiókból és újbóli hoz
 <context>
     <name>OCC::FolderWatcherPrivate</name>
     <message>
-        <location filename="../src/gui/folderwatcher_linux.cpp" line="81"/>
+        <location filename="../src/gui/folderwatcher_linux.cpp" line="92"/>
         <source>This problem usually happens when the inotify watches are exhausted. Check the FAQ for details.</source>
         <translation>Ez a probléma általában akkor fordul elő, amikor az inotify megfigyelők kimerülnek. A részletekért tekintse meg a GyIK-et.</translation>
     </message>
@@ -1861,102 +1861,102 @@ Figyelje, hogy a parancssori naplózási beállítások felülírják ezeket.</t
         <translation>A szimbolikus hivatkozások nem támogatottak a szinkronizálásban.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="186"/>
+        <location filename="../src/libsync/discovery.cpp" line="185"/>
         <source>File names ending with a period are not supported on this file system.</source>
         <translation>A ponttal végződő fájlnevek nem támogatottak ezen a fájlrendszeren.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="199"/>
+        <location filename="../src/libsync/discovery.cpp" line="198"/>
         <source>File names containing the character &apos;%1&apos; are not supported on this file system.</source>
         <translation>A(z) &apos;%1&apos; karaktert tartalmazó fájlnevek nem támogatottak ezen a fájlrendszeren.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="202"/>
+        <location filename="../src/libsync/discovery.cpp" line="201"/>
         <source>File name contains at least one invalid character</source>
         <translation>A fájlnév legalább egy érvénytelen karaktert tartalmaz</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="204"/>
+        <location filename="../src/libsync/discovery.cpp" line="203"/>
         <source>The file name is a reserved name on this file system.</source>
         <translation>A fájlnév foglalt név ezen a fájlrendszeren.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="213"/>
+        <location filename="../src/libsync/discovery.cpp" line="212"/>
         <source>Filename contains trailing spaces.</source>
         <translation>A fájlnév záró szóközöket tartalmaz.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="216"/>
+        <location filename="../src/libsync/discovery.cpp" line="215"/>
         <source>Filename is too long.</source>
         <translation>A fájlnév túl hosszú.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="219"/>
+        <location filename="../src/libsync/discovery.cpp" line="218"/>
         <source>File/Folder is ignored because it&apos;s hidden.</source>
         <translation>A fájl/mappa figyelmen kívül van hagyva, mert rejtett.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="223"/>
+        <location filename="../src/libsync/discovery.cpp" line="222"/>
         <source>Conflict: Server version downloaded, local copy renamed and not uploaded.</source>
         <translation>Ütközés: A szerveres verzió letöltve, a helyi másolat át lett nevezve és nem lett feltöltve.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="227"/>
+        <location filename="../src/libsync/discovery.cpp" line="226"/>
         <source>The filename is blacklisted on the server.</source>
         <translation>A fájlnév a szerveren tiltólistán van.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1090"/>
+        <location filename="../src/libsync/discovery.cpp" line="1089"/>
         <source>Moved to invalid target, restoring</source>
         <translation>Érvénytelen célhelyre lett áthelyezve, visszaállítás</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1103"/>
+        <location filename="../src/libsync/discovery.cpp" line="1102"/>
         <source>Not allowed to remove, restoring</source>
         <translation>Az eltávolítás nem engedélyezett, visszaállítás</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1259"/>
+        <location filename="../src/libsync/discovery.cpp" line="1258"/>
         <source>Server replied with an error while reading directory »%1«: %2</source>
         <translation>A szerver hibával válaszolt a(z) »%1« könyvtár olvasásakor: %2</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1049"/>
+        <location filename="../src/libsync/discovery.cpp" line="1048"/>
         <source>Not allowed because you don&apos;t have permission to add subfolders to that folder</source>
         <translation>Nem engedélyezett, mert nincs jogosultsága almappákat hozzáadni ahhoz a mappához</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="181"/>
+        <location filename="../src/libsync/discovery.cpp" line="180"/>
         <source>The file is listed on the ignore list.</source>
         <translation>A fájl szerepel a kizárási listán.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="527"/>
+        <location filename="../src/libsync/discovery.cpp" line="526"/>
         <source>Error while doing a rename, unhandled status code: %1</source>
         <translation>Hiba az átnevezés közben, kezeletlen állapotkód: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1017"/>
+        <location filename="../src/libsync/discovery.cpp" line="1016"/>
         <source>Selective sync: Ignored because its path is deselected</source>
         <translation>Szelektív szinkronizálás: Figyelmen kívül hagyva, mert az elérési útja ki van választva</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1054"/>
+        <location filename="../src/libsync/discovery.cpp" line="1053"/>
         <source>Not allowed because you don&apos;t have permission to add files in that folder</source>
         <translation>Nem engedélyezett, mert nincs jogosultsága fájlokat hozzáadni ahhoz a mappához</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1067"/>
+        <location filename="../src/libsync/discovery.cpp" line="1066"/>
         <source>Not allowed to upload this file because it is read-only on the server, restoring</source>
         <translation>A fájl feltöltése nem engedélyezett, mert a szerveren csak olvasható, visszaállítás</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1213"/>
+        <location filename="../src/libsync/discovery.cpp" line="1212"/>
         <source>Error while reading the database</source>
         <translation>Hiba az adatbázis olvasásakor</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1238"/>
+        <location filename="../src/libsync/discovery.cpp" line="1237"/>
         <source>This Space is currently unavailable</source>
         <translation>Ez a Space jelenleg nem érhető el</translation>
     </message>
@@ -2967,11 +2967,6 @@ Figyelje, hogy a parancssori naplózási beállítások felülírják ezeket.</t
         <source>%1: %2</source>
         <extracomment>this displays an error string (%2) for a file %1</extracomment>
         <translation>%1: %2</translation>
-    </message>
-    <message>
-        <location filename="../src/plugins/vfs/cfapi/cfapiwrapper.cpp" line="76"/>
-        <source>Paths beginning with &apos;#&apos; character are not supported in VFS mode.</source>
-        <translation>A &apos;#&apos; karakterrel kezdődő elérési utak nem támogatottak VFS módban.</translation>
     </message>
 </context>
 <context>

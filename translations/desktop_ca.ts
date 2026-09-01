@@ -7,22 +7,22 @@
         <translation>Barra de navegació</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/AccountBar.qml" line="112"/>
+        <location filename="../src/gui/qml/AccountBar.qml" line="115"/>
         <source>Add Account</source>
         <translation>Afegeix un compte</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/AccountBar.qml" line="139"/>
+        <location filename="../src/gui/qml/AccountBar.qml" line="145"/>
         <source>Activity</source>
         <translation>Activitat</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/AccountBar.qml" line="153"/>
+        <location filename="../src/gui/qml/AccountBar.qml" line="162"/>
         <source>Settings</source>
         <translation>Configuracions</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/AccountBar.qml" line="182"/>
+        <location filename="../src/gui/qml/AccountBar.qml" line="191"/>
         <source>Quit</source>
         <translation>Sortir</translation>
     </message>
@@ -1183,7 +1183,7 @@ Si us plau, considereu eliminar aquesta carpeta del compte i afegir-la de nou.</
 <context>
     <name>OCC::FolderWatcherPrivate</name>
     <message>
-        <location filename="../src/gui/folderwatcher_linux.cpp" line="81"/>
+        <location filename="../src/gui/folderwatcher_linux.cpp" line="92"/>
         <source>This problem usually happens when the inotify watches are exhausted. Check the FAQ for details.</source>
         <translation>Aquest problema sol passar quan s&apos;exhaureixen les observacions inotify. Consulta les preguntes freqüents per a més detalls.</translation>
     </message>
@@ -1861,102 +1861,102 @@ Tingues en compte que l’ús de qualsevol opció de línia d’ordres per a reg
         <translation>Els enllaços simbòlics no són compatibles amb la sincronització.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="186"/>
+        <location filename="../src/libsync/discovery.cpp" line="185"/>
         <source>File names ending with a period are not supported on this file system.</source>
         <translation>Els noms de fitxer que acaben amb un període no estan admesos en aquest sistema de fitxers.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="199"/>
+        <location filename="../src/libsync/discovery.cpp" line="198"/>
         <source>File names containing the character &apos;%1&apos; are not supported on this file system.</source>
         <translation>Els noms de fitxer que contenen el caràcter &apos;%1&apos; no estan admesos en aquest sistema de fitxers.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="202"/>
+        <location filename="../src/libsync/discovery.cpp" line="201"/>
         <source>File name contains at least one invalid character</source>
         <translation>El nom de fitxer conté almenys un caràcter no vàlid</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="204"/>
+        <location filename="../src/libsync/discovery.cpp" line="203"/>
         <source>The file name is a reserved name on this file system.</source>
         <translation>El nom del fitxer és un nom reservat en aquest sistema de fitxers.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="213"/>
+        <location filename="../src/libsync/discovery.cpp" line="212"/>
         <source>Filename contains trailing spaces.</source>
         <translation>El nom de fitxer conté espais finals.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="216"/>
+        <location filename="../src/libsync/discovery.cpp" line="215"/>
         <source>Filename is too long.</source>
         <translation>El nom del fitxer és massa llarg.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="219"/>
+        <location filename="../src/libsync/discovery.cpp" line="218"/>
         <source>File/Folder is ignored because it&apos;s hidden.</source>
         <translation>El fitxer/carpeta s&apos;ignora perquè està amagat.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="223"/>
+        <location filename="../src/libsync/discovery.cpp" line="222"/>
         <source>Conflict: Server version downloaded, local copy renamed and not uploaded.</source>
         <translation>Conflicte: s&apos;ha baixat la versió del servidor, s&apos;ha canviat el nom de la còpia local i no s&apos;ha pujat.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="227"/>
+        <location filename="../src/libsync/discovery.cpp" line="226"/>
         <source>The filename is blacklisted on the server.</source>
         <translation>El nom de fitxer està a la llista negra del servidor.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1090"/>
+        <location filename="../src/libsync/discovery.cpp" line="1089"/>
         <source>Moved to invalid target, restoring</source>
         <translation>S&apos;ha mogut a una destinació no vàlida, s&apos;està restaurant</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1103"/>
+        <location filename="../src/libsync/discovery.cpp" line="1102"/>
         <source>Not allowed to remove, restoring</source>
         <translation>No es permet eliminar, s&apos;està restaurant</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1259"/>
+        <location filename="../src/libsync/discovery.cpp" line="1258"/>
         <source>Server replied with an error while reading directory »%1«: %2</source>
         <translation>El servidor ha respost amb un error en llegir el directori »%1«: %2</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1049"/>
+        <location filename="../src/libsync/discovery.cpp" line="1048"/>
         <source>Not allowed because you don&apos;t have permission to add subfolders to that folder</source>
         <translation>No permès perquè no teniu permís per afegir subcarpetes a aquesta carpeta.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="181"/>
+        <location filename="../src/libsync/discovery.cpp" line="180"/>
         <source>The file is listed on the ignore list.</source>
         <translation>El fitxer apareix a la llista d&apos;ignorats.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="527"/>
+        <location filename="../src/libsync/discovery.cpp" line="526"/>
         <source>Error while doing a rename, unhandled status code: %1</source>
         <translation>Error en canviar el nom, codi d&apos;estat no gestionat: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1017"/>
+        <location filename="../src/libsync/discovery.cpp" line="1016"/>
         <source>Selective sync: Ignored because its path is deselected</source>
         <translation>Sincronització selectiva: s&apos;ignora perquè el seu camí està desseleccionat</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1054"/>
+        <location filename="../src/libsync/discovery.cpp" line="1053"/>
         <source>Not allowed because you don&apos;t have permission to add files in that folder</source>
         <translation>No permès perquè no tens permís per afegir fitxers en aquesta carpeta.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1067"/>
+        <location filename="../src/libsync/discovery.cpp" line="1066"/>
         <source>Not allowed to upload this file because it is read-only on the server, restoring</source>
         <translation>No es permet carregar aquest fitxer perquè és de només lectura al servidor, s&apos;està restaurant</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1213"/>
+        <location filename="../src/libsync/discovery.cpp" line="1212"/>
         <source>Error while reading the database</source>
         <translation>Error en llegir la base de dades</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1238"/>
+        <location filename="../src/libsync/discovery.cpp" line="1237"/>
         <source>This Space is currently unavailable</source>
         <translation>Aquest espai no està disponible actualment</translation>
     </message>
@@ -2967,11 +2967,6 @@ Tingues en compte que l’ús de qualsevol opció de línia d’ordres per a reg
         <source>%1: %2</source>
         <extracomment>this displays an error string (%2) for a file %1</extracomment>
         <translation>%1: %2</translation>
-    </message>
-    <message>
-        <location filename="../src/plugins/vfs/cfapi/cfapiwrapper.cpp" line="76"/>
-        <source>Paths beginning with &apos;#&apos; character are not supported in VFS mode.</source>
-        <translation>Les rutes que comencen amb el caràcter &apos;#&apos; no són compatibles amb el mode VFS.</translation>
     </message>
 </context>
 <context>

@@ -7,22 +7,22 @@
         <translation>Γραμμή πλοήγησης</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/AccountBar.qml" line="112"/>
+        <location filename="../src/gui/qml/AccountBar.qml" line="115"/>
         <source>Add Account</source>
         <translation>Προσθήκη λογαριασμού</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/AccountBar.qml" line="139"/>
+        <location filename="../src/gui/qml/AccountBar.qml" line="145"/>
         <source>Activity</source>
         <translation>Δραστηριότητα</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/AccountBar.qml" line="153"/>
+        <location filename="../src/gui/qml/AccountBar.qml" line="162"/>
         <source>Settings</source>
         <translation>Ρυθμίσεις</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/AccountBar.qml" line="182"/>
+        <location filename="../src/gui/qml/AccountBar.qml" line="191"/>
         <source>Quit</source>
         <translation>Έξοδος</translation>
     </message>
@@ -1183,7 +1183,7 @@ Please consider removing this folder from the account and adding it again.</sour
 <context>
     <name>OCC::FolderWatcherPrivate</name>
     <message>
-        <location filename="../src/gui/folderwatcher_linux.cpp" line="81"/>
+        <location filename="../src/gui/folderwatcher_linux.cpp" line="92"/>
         <source>This problem usually happens when the inotify watches are exhausted. Check the FAQ for details.</source>
         <translation>Αυτό το πρόβλημα συνήθως συμβαίνει όταν έχουν εξαντληθεί οι παρακολουθήσεις inotify. Ελέγξτε τις Συχνές Ερωτήσεις (FAQ) για λεπτομέρειες.</translation>
     </message>
@@ -1861,102 +1861,102 @@ Note that using any logging command line options will override the settings.</so
         <translation>Οι συμβολικοί σύνδεσμοι δεν υποστηρίζονται στον συγχρονισμό.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="186"/>
+        <location filename="../src/libsync/discovery.cpp" line="185"/>
         <source>File names ending with a period are not supported on this file system.</source>
         <translation>Τα ονόματα αρχείων που τελειώνουν σε τελεία δεν υποστηρίζονται σε αυτό το σύστημα αρχείων.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="199"/>
+        <location filename="../src/libsync/discovery.cpp" line="198"/>
         <source>File names containing the character &apos;%1&apos; are not supported on this file system.</source>
         <translation>Τα ονόματα αρχείων που περιέχουν τον χαρακτήρα &apos;%1&apos; δεν υποστηρίζονται σε αυτό το σύστημα αρχείων.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="202"/>
+        <location filename="../src/libsync/discovery.cpp" line="201"/>
         <source>File name contains at least one invalid character</source>
         <translation>Το όνομα του αρχείου περιέχει τουλάχιστον έναν μη έγκυρο χαρακτήρα</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="204"/>
+        <location filename="../src/libsync/discovery.cpp" line="203"/>
         <source>The file name is a reserved name on this file system.</source>
         <translation>Το όνομα αρχείου είναι δεσμευμένο όνομα σε αυτό το σύστημα αρχείων.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="213"/>
+        <location filename="../src/libsync/discovery.cpp" line="212"/>
         <source>Filename contains trailing spaces.</source>
         <translation>Το όνομα αρχείου περιέχει κενά στο τέλος.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="216"/>
+        <location filename="../src/libsync/discovery.cpp" line="215"/>
         <source>Filename is too long.</source>
         <translation>Το όνομα αρχείου είναι πολύ μεγάλο.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="219"/>
+        <location filename="../src/libsync/discovery.cpp" line="218"/>
         <source>File/Folder is ignored because it&apos;s hidden.</source>
         <translation>Το αρχείο/φάκελος αγνοείται επειδή είναι κρυφό.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="223"/>
+        <location filename="../src/libsync/discovery.cpp" line="222"/>
         <source>Conflict: Server version downloaded, local copy renamed and not uploaded.</source>
         <translation>Διένεξη: Λήφθηκε η έκδοση του διακομιστή, το τοπικό αντίγραφο μετονομάστηκε και δεν ανέβηκε.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="227"/>
+        <location filename="../src/libsync/discovery.cpp" line="226"/>
         <source>The filename is blacklisted on the server.</source>
         <translation>Το όνομα αρχείου είναι στη μαύρη λίστα του διακομιστή.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1090"/>
+        <location filename="../src/libsync/discovery.cpp" line="1089"/>
         <source>Moved to invalid target, restoring</source>
         <translation>Μετακινήθηκε σε μη έγκυρο προορισμό, γίνεται επαναφορά</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1103"/>
+        <location filename="../src/libsync/discovery.cpp" line="1102"/>
         <source>Not allowed to remove, restoring</source>
         <translation>Δεν επιτρέπεται η αφαίρεση, γίνεται επαναφορά</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1259"/>
+        <location filename="../src/libsync/discovery.cpp" line="1258"/>
         <source>Server replied with an error while reading directory »%1«: %2</source>
         <translation>Ο διακομιστής απάντησε με σφάλμα κατά την ανάγνωση του καταλόγου »%1«: %2</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1049"/>
+        <location filename="../src/libsync/discovery.cpp" line="1048"/>
         <source>Not allowed because you don&apos;t have permission to add subfolders to that folder</source>
         <translation>Δεν επιτρέπεται επειδή δεν έχετε δικαίωμα να προσθέτετε υποφακέλους σε αυτόν τον φάκελο</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="181"/>
+        <location filename="../src/libsync/discovery.cpp" line="180"/>
         <source>The file is listed on the ignore list.</source>
         <translation>Το αρχείο περιλαμβάνεται στη λίστα αγνοουμένων.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="527"/>
+        <location filename="../src/libsync/discovery.cpp" line="526"/>
         <source>Error while doing a rename, unhandled status code: %1</source>
         <translation>Σφάλμα κατά τη μετονομασία, μη υποστηριζόμενος κωδικός κατάστασης: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1017"/>
+        <location filename="../src/libsync/discovery.cpp" line="1016"/>
         <source>Selective sync: Ignored because its path is deselected</source>
         <translation>Επιλεκτικός συγχρονισμός: Αγνοήθηκε επειδή η διαδρομή του δεν είναι επιλεγμένη</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1054"/>
+        <location filename="../src/libsync/discovery.cpp" line="1053"/>
         <source>Not allowed because you don&apos;t have permission to add files in that folder</source>
         <translation>Δεν επιτρέπεται επειδή δεν έχετε δικαίωμα να προσθέτετε αρχεία σε αυτόν τον φάκελο</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1067"/>
+        <location filename="../src/libsync/discovery.cpp" line="1066"/>
         <source>Not allowed to upload this file because it is read-only on the server, restoring</source>
         <translation>Δεν επιτρέπεται η μεταφόρτωση αυτού του αρχείου επειδή είναι μόνο για ανάγνωση στον διακομιστή, γίνεται επαναφορά</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1213"/>
+        <location filename="../src/libsync/discovery.cpp" line="1212"/>
         <source>Error while reading the database</source>
         <translation>Σφάλμα κατά την ανάγνωση της βάσης δεδομένων</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1238"/>
+        <location filename="../src/libsync/discovery.cpp" line="1237"/>
         <source>This Space is currently unavailable</source>
         <translation>Αυτός ο Χώρος είναι προσωρινά μη διαθέσιμος</translation>
     </message>
@@ -2967,11 +2967,6 @@ Note that using any logging command line options will override the settings.</so
         <source>%1: %2</source>
         <extracomment>this displays an error string (%2) for a file %1</extracomment>
         <translation>%1: %2</translation>
-    </message>
-    <message>
-        <location filename="../src/plugins/vfs/cfapi/cfapiwrapper.cpp" line="76"/>
-        <source>Paths beginning with &apos;#&apos; character are not supported in VFS mode.</source>
-        <translation>Διαδρομές που ξεκινούν με τον χαρακτήρα &apos;#&apos; δεν υποστηρίζονται στη λειτουργία VFS.</translation>
     </message>
 </context>
 <context>

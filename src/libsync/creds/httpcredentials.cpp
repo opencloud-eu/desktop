@@ -34,8 +34,6 @@ Q_LOGGING_CATEGORY(lcHttpCredentials, "sync.credentials.http", QtInfoMsg)
 
 namespace {
 constexpr int TokenRefreshMaxRetries = 3;
-constexpr std::chrono::seconds TokenRefreshDefaultTimeout = 30s;
-const char authenticationFailedC[] = "opencloud-authentication-failed";
 
 auto refreshTokenKeyC()
 {
@@ -44,6 +42,9 @@ auto refreshTokenKeyC()
 }
 
 namespace OCC {
+
+// Duration of the timeout when there is one error, this can be applied `TokenRefreshMaxRetries` times
+std::chrono::seconds HttpCredentials::TokenRefreshDefaultTimeoutOneError =  30s;
 
 class HttpCredentialsAccessManager : public AccessManager
 {
@@ -161,7 +162,6 @@ void HttpCredentials::slotAuthentication(QNetworkReply *reply, QAuthenticator *a
     // Because of issue #4326, we need to set the login and password manually at every requests
     // Thus, if we reach this signal, those credentials were invalid and we terminate.
     qCWarning(lcHttpCredentials) << u"Stop request: Authentication failed for " << reply->url().toString() << reply->request().rawHeader("Original-Request-ID");
-    reply->setProperty(authenticationFailedC, true);
 
     if (!_oAuthJob) {
         qCInfo(lcHttpCredentials) << u"Refreshing token";
@@ -205,13 +205,9 @@ bool HttpCredentials::refreshAccessTokenInternal(int tokenRefreshRetriesCount)
 
         if (networkUnavailable()) {
             nextTry = 0;
-            timeout = TokenRefreshDefaultTimeout;
+            timeout = TokenRefreshDefaultTimeoutOneError;
         } else {
             switch (error) {
-            case QNetworkReply::ContentNotFoundError:
-                // 404: bigip f5?
-                timeout = 0s;
-                break;
             case QNetworkReply::HostNotFoundError:
                 [[fallthrough]];
             case QNetworkReply::TimeoutError:
@@ -226,7 +222,7 @@ bool HttpCredentials::refreshAccessTokenInternal(int tokenRefreshRetriesCount)
                 nextTry = 0;
                 [[fallthrough]];
             default:
-                timeout = TokenRefreshDefaultTimeout;
+                timeout = TokenRefreshDefaultTimeoutOneError;
             }
         }
 

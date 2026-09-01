@@ -58,7 +58,7 @@ jobs:
             - target: macos-clang-arm64
               os: macos-latest
               container:
-              signing:
+              signing: &macos_signing
                 enabled: *signing_enabled
                 keyfile_secret_name: kv/data/signing/mac-keychain
                 keyfile_secret_field: b64
@@ -71,6 +71,10 @@ jobs:
                   - secret_name: kv/data/signing/mac-keychain
                     secret_field: notarization_pw
                     env_name: CRAFT_SECRET_MAC_APP_PASSWORD
+            - target: macos-clang-x86_64
+              os: macos-latest
+              container:
+              signing: *macos_signing
             - target: linux-gcc-x86_64
               os: ubuntu-latest
               container: invent-registry.kde.org/sysadmin/ci-images/craft-appimage-alma9:latest
@@ -218,7 +222,7 @@ jobs:
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --no-cache --test opencloud/opencloud-desktop
 
     - name: Clang tidy
-      if: ${{ github.event_name != 'pull_request' }}
+      if: ${{ github.event_name != 'pull_request' && matrix.target  == 'linux-gcc-x86_64' }}
       run: |
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c libs/llvm dev-utils/clazy python-modules/pip
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --run python3 -m pip install clang-html
