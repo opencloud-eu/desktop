@@ -32,6 +32,8 @@ public:
 
     QByteArray fileId() const { return _fileId; }
 
+    QIODevice *device() const { return _device.get(); }
+
 Q_SIGNALS:
     void finished();
     void error(const QString &error);
