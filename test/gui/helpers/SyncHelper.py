@@ -169,11 +169,15 @@ def close_socket_connection():
     global socket_messages
     socket_messages.clear()
     if SOCKET_CONNECT:
-        SOCKET_CONNECT.connected = False
         if is_windows():
             SOCKET_CONNECT.close_conn()
         elif is_linux():
-            SOCKET_CONNECT._sock.close()
+            # linux only dependency so cannot import at the top level
+            from gi.repository import GObject
+
+            GObject.source_remove(SOCKET_CONNECT._watch_id)
+            if SOCKET_CONNECT._sock is not None:
+                SOCKET_CONNECT._sock.close()
         SOCKET_CONNECT = None
 
 
