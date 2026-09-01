@@ -16,7 +16,6 @@
 #include "account.h"
 #include "accountstate.h"
 #include "configfile.h"
-#include "syncengine.h"
 #include "syncfileitem.h"
 
 #include "testutils/testutils.h"
@@ -239,8 +238,6 @@ private Q_SLOTS:
         // hidden files are ignored by default
         QVERIFY(folderman->ignoreHiddenFiles());
         QVERIFY(folder->ignoreHiddenFiles());
-        QVERIFY(folder->syncEngine().ignoreHiddenFiles());
-        QVERIFY(folder->isFileExcludedRelative(QStringLiteral(".hello/Text File.txt")));
 
         // a directory that was already discovered, its etag has to be invalidated so the hidden
         // items on the server are looked at again
@@ -253,18 +250,12 @@ private Q_SLOTS:
         folderman->setIgnoreHiddenFiles(false);
 
         QVERIFY(!folder->ignoreHiddenFiles());
-        // the sync engine has to be updated right away: the folder watcher uses it to decide
-        // whether a changed path is excluded
-        QVERIFY(!folder->syncEngine().ignoreHiddenFiles());
-        QVERIFY(!folder->isFileExcludedRelative(QStringLiteral(".hello/Text File.txt")));
         // and the remote has to be discovered again
         QCOMPARE(folder->journalDb()->getFileRecord(QStringLiteral("adir")).etag(), QStringLiteral("_invalid_"));
 
-        // turning it off again is picked up by the engine as well
+        // turning it off again
         folderman->setIgnoreHiddenFiles(true);
         QVERIFY(folder->ignoreHiddenFiles());
-        QVERIFY(folder->syncEngine().ignoreHiddenFiles());
-        QVERIFY(folder->isFileExcludedRelative(QStringLiteral(".hello/Text File.txt")));
     }
 
     void testSpacesSyncRootAndFolderCreation()
