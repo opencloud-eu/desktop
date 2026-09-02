@@ -62,6 +62,7 @@ def get_capabilities():
     server_url = get_config('localBackendUrl')
     url = url_join(server_url, '/ocs/v1.php/cloud/capabilities?format=json')
     response = request.get(url)
+    request.assert_http_status(response, 200, "Failed to fetch capabilities")
     response_str = response.text
     response_doc = QJsonDocument.fromJson(response_str.encode("utf-8"))
     response_obj = response_doc.object()

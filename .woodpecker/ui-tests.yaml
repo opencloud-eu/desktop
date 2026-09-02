@@ -92,6 +92,7 @@ steps:
       OC_URL: https://opencloud:9200
       PROXY_ENABLE_BASIC_AUTH: true
       WEB_UI_CONFIG_FILE: /woodpecker/desktop/test/gui/woodpecker/config-opencloud.json
+      OC_LDAP_LOOKUP_CACHE_TTL: 0
     commands:
       - opencloud init
       - opencloud server
