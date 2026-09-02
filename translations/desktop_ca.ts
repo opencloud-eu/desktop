@@ -1360,7 +1360,12 @@ Si us plau, considereu eliminar aquesta carpeta del compte i afegir-la de nou.</
         <translation>S&apos;ha transferit una mida de fitxer inesperada. S&apos;espera que %1 hagi rebut %2</translation>
     </message>
     <message>
-        <location filename="../src/libsync/vfs/hydrationjob.cpp" line="65"/>
+        <location filename="../src/libsync/vfs/hydrationjob.cpp" line="64"/>
+        <source>File not found</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/libsync/vfs/hydrationjob.cpp" line="68"/>
         <source>Aborted.</source>
         <translation>Avortat.</translation>
     </message>

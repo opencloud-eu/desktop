@@ -1358,7 +1358,12 @@ Rozważ usunięcie tego folderu z konta i dodanie go ponownie.</translation>
         <translation>Przesłano nieoczekiwany rozmiar pliku. Oczekiwano %1, otrzymano %2</translation>
     </message>
     <message>
-        <location filename="../src/libsync/vfs/hydrationjob.cpp" line="65"/>
+        <location filename="../src/libsync/vfs/hydrationjob.cpp" line="64"/>
+        <source>File not found</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/libsync/vfs/hydrationjob.cpp" line="68"/>
         <source>Aborted.</source>
         <translation>Przerwano.</translation>
     </message>

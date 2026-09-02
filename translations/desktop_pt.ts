@@ -1360,7 +1360,12 @@ Considere remover esta pasta da conta e adicioná-la novamente.</translation>
         <translation>Tamanho de ficheiro transferido inesperado. Esperado %1, recebido %2</translation>
     </message>
     <message>
-        <location filename="../src/libsync/vfs/hydrationjob.cpp" line="65"/>
+        <location filename="../src/libsync/vfs/hydrationjob.cpp" line="64"/>
+        <source>File not found</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/libsync/vfs/hydrationjob.cpp" line="68"/>
         <source>Aborted.</source>
         <translation>Interrompido.</translation>
     </message>

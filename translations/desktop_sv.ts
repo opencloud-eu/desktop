@@ -1349,7 +1349,12 @@ Please consider removing this folder from the account and adding it again.</sour
         <translation>Oväntad filstorlek överförd. Förväntad %1 mottagen %2</translation>
     </message>
     <message>
-        <location filename="../src/libsync/vfs/hydrationjob.cpp" line="65"/>
+        <location filename="../src/libsync/vfs/hydrationjob.cpp" line="64"/>
+        <source>File not found</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/libsync/vfs/hydrationjob.cpp" line="68"/>
         <source>Aborted.</source>
         <translation>Avbruten.</translation>
     </message>
