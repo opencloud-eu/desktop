@@ -1362,7 +1362,12 @@ Si consiglia di rimuovere questa cartella dall&apos;account e di aggiungerla nuo
         <translation>Dimensione file trasferita inaspettata. Previsto %1 ricevuto %2</translation>
     </message>
     <message>
-        <location filename="../src/libsync/vfs/hydrationjob.cpp" line="65"/>
+        <location filename="../src/libsync/vfs/hydrationjob.cpp" line="64"/>
+        <source>File not found</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/libsync/vfs/hydrationjob.cpp" line="68"/>
         <source>Aborted.</source>
         <translation>Annullato.</translation>
     </message>

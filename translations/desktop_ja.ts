@@ -1360,7 +1360,12 @@ Please consider removing this folder from the account and adding it again.</sour
         <translation>転送されたファイルサイズが予期しないものです。期待値: %1、受信値: %2</translation>
     </message>
     <message>
-        <location filename="../src/libsync/vfs/hydrationjob.cpp" line="65"/>
+        <location filename="../src/libsync/vfs/hydrationjob.cpp" line="64"/>
+        <source>File not found</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/libsync/vfs/hydrationjob.cpp" line="68"/>
         <source>Aborted.</source>
         <translation>中止されました</translation>
     </message>

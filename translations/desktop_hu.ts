@@ -1360,7 +1360,12 @@ Kérjük vegye fontolóra a mappa eltávolítását a fiókból és újbóli hoz
         <translation>Váratlan fájlméret lett átküldve. Várt: %1, kapott: %2</translation>
     </message>
     <message>
-        <location filename="../src/libsync/vfs/hydrationjob.cpp" line="65"/>
+        <location filename="../src/libsync/vfs/hydrationjob.cpp" line="64"/>
+        <source>File not found</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/libsync/vfs/hydrationjob.cpp" line="68"/>
         <source>Aborted.</source>
         <translation>Megszakítva.</translation>
     </message>
