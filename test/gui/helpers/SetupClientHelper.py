@@ -95,10 +95,9 @@ def generate_account_config(users, space='Personal'):
     server_url = get_config('localBackendUrl')
     capabilities = provisioning.get_capabilities()
 
+    settings = QSettings(get_config('clientConfigFile'), QSettings.Format.IniFormat)
+    capabilities_variant = QJsonValue(capabilities).toVariant()
     try:
-        settings = QSettings(get_config('clientConfigFile'), QSettings.Format.IniFormat)
-        capabilities_variant = QJsonValue(capabilities).toVariant()
-
         for idx, username in enumerate(users):
             users_uuids[username] = QUuid.createUuid()
             settings.beginGroup("Accounts")
