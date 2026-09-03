@@ -22,4 +22,4 @@ if ($clazyPlugin)
 
 $clangCommand = $clazyCommand + @("-p",  "$env:BUILD_DIR")
 
-run-clang-tidy @clangCommand | Tee-Object -Path "$([System.IO.Path]::GetTempPath())/clang-tidy.log"
+run-clang-tidy @clangCommand | clang-tidy-sarif  | Tee-Object -Path "${env:GITHUB_WORKSPACE}/clang-tidy.sarif" | sarif-fmt
