@@ -20,6 +20,8 @@ if ($clazyPlugin)
     $clazyCommand = @()
 }
 
-$clangCommand = $clazyCommand + @("-p",  "$env:BUILD_DIR")
+$ignorePrefixRegex = [regex]::Escape($env:KDEROOT) + ".*"
+
+$clangCommand = $clazyCommand + @("-exclude-header-filter=$ignorePrefixRegex", "-p",  "$env:BUILD_DIR")
 
 run-clang-tidy @clangCommand | clang-tidy-sarif  | Tee-Object -Path "${env:GITHUB_WORKSPACE}/clang-tidy.sarif" | sarif-fmt
