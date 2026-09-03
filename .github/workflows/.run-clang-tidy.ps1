@@ -15,11 +15,13 @@ $CLAZY_LEVEL2="clazy-ctor-missing-parent-argument,clazy-base-class-event,clazy-c
 
 if ($clazyPlugin)
 {
-    $clazyCommand = @("-load=${clazyPlugin}", "-checks=${CLAZY_LEVEL0},-overloaded-signal,qt-keywords")
+    $clazyCommand = @("-load=${clazyPlugin}", "-checks=${CLAZY_LEVEL0},${CLAZY_LEVEL1},${CLAZY_LEVEL2},-overloaded-signal,qt-keywords")
 } else {
     $clazyCommand = @()
 }
 
-$clangCommand = $clazyCommand + @("-p",  "$env:BUILD_DIR")
+$ignorePrefixRegex = [regex]::Escape($env:KDEROOT) + ".*"
 
-run-clang-tidy @clangCommand | Tee-Object -Path "$([System.IO.Path]::GetTempPath())/clang-tidy.log"
+$clangCommand = $clazyCommand + @("-exclude-header-filter=$ignorePrefixRegex", "-p",  "$env:BUILD_DIR")
+
+run-clang-tidy @clangCommand | clang-tidy-sarif  | Tee-Object -Path "${env:GITHUB_WORKSPACE}/clang-tidy.sarif" | sarif-fmt
