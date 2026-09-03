@@ -1351,7 +1351,7 @@ Please consider removing this folder from the account and adding it again.</sour
     <message>
         <location filename="../src/libsync/vfs/hydrationjob.cpp" line="64"/>
         <source>File not found</source>
-        <translation type="unfinished"/>
+        <translation>Filen hittades inte</translation>
     </message>
     <message>
         <location filename="../src/libsync/vfs/hydrationjob.cpp" line="68"/>
