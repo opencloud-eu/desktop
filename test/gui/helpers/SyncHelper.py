@@ -4,7 +4,7 @@ import time
 import urllib.request
 
 from pageObjects.SyncConnection import SyncConnection
-from helpers.ConfigHelper import get_config, is_windows
+from helpers.ConfigHelper import get_config, is_windows, is_linux
 from helpers.FilesHelper import sanitize_path
 from helpers.Utils import wait_for
 
@@ -162,6 +162,23 @@ def clear_socket_messages(resource=''):
         socket_messages = [msg for msg in socket_messages if msg not in resource_messages]
     else:
         socket_messages.clear()
+
+
+def close_socket_connection():
+    global SOCKET_CONNECT
+    global socket_messages
+    socket_messages.clear()
+    if SOCKET_CONNECT:
+        if is_windows():
+            SOCKET_CONNECT.close_conn()
+        elif is_linux():
+            # linux only dependency so cannot import at the top level
+            from gi.repository import GObject
+
+            GObject.source_remove(SOCKET_CONNECT._watch_id)
+            if SOCKET_CONNECT._sock is not None:
+                SOCKET_CONNECT._sock.close()
+        SOCKET_CONNECT = None
 
 
 def get_initial_sync_patterns():

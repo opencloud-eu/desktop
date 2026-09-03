@@ -37,6 +37,9 @@ def resource_exists(user, resource):
 
 def get_file_content(user, resource):
     response = request.get(get_resource_path(user, resource), user=user)
+    assert response.status_code == 200, (
+        f"Failed to get file content. Status: {response.status_code}"
+    )
     if resource.lower().endswith('.txt'):
         return response.text
     return response.content
@@ -75,7 +78,8 @@ def create_folder(user, folder_name):
     url = get_resource_path(user, folder_name)
     response = request.mkcol(url, user=user)
     assert response.status_code == 201, (
-        f'Could not create the folder: {folder_name} for user {user}'
+        f'Could not create the folder: {folder_name} for user {user}.'
+        + f' Status: {response.status_code}'
     )
 
 
@@ -85,7 +89,7 @@ def create_file(user, file_name, contents):
     assert response.status_code in [
         201,
         204,
-    ], f"Could not create file '{file_name}' for user {user}"
+    ], f"Could not create file '{file_name}' for user {user}. Status: {response.status_code}"
 
 
 def upload_file(user, file_name, destination):
@@ -98,7 +102,9 @@ def upload_file(user, file_name, destination):
 def delete_resource(user, resource):
     url = get_resource_path(user, resource)
     response = request.delete(url, user=user)
-    assert response.status_code == 204, f"Could not delete folder '{resource}'"
+    assert response.status_code == 204, (
+        f"Could not delete folder '{resource}'. Status: {response.status_code}"
+    )
 
 
 def get_resource_id(user, resource):
@@ -146,5 +152,5 @@ def send_resource_share_invitation(user, resource, sharee, permission_role):
 
     response = request.post(url, body=json.dumps(body), user=user)
     assert response.status_code in [200, 201], (
-        f"Failed to send share invitation: {response.status_code}"
+        f"Failed to send share invitation. Status: {response.status_code}"
     )
