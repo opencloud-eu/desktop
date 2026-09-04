@@ -35,6 +35,7 @@
 #endif
 
 #include <QMessageBox>
+#include <QStandardPaths>
 #include <QtCore>
 
 using namespace Qt::Literals::StringLiterals;
@@ -767,6 +768,17 @@ Folder *FolderMan::addFolderFromFolderWizardResult(const AccountStatePtr &accoun
 
 QString FolderMan::suggestSyncFolder(NewFolderType folderType, const QUuid &accountUuid)
 {
+#ifdef Q_OS_MACOS
+    // NSFileProvider mode: the spaces are reached via Finder "Locations" (the
+    // CloudStorage mount). The on-disk sync root only backs the journal / change
+    // detection — it holds no user-visible files — so place it in a hidden
+    // Application Support location instead of cluttering the user's home with an
+    // ~/OpenCloud folder full of empty placeholder directories.
+    if (VfsPluginManager::instance().bestAvailableVfsMode() == Vfs::Mode::MacOSNSFileProvider) {
+        const QString hiddenBase = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+        return FolderMan::instance()->findGoodPathForNewSyncFolder(hiddenBase, QStringLiteral("spaces"), folderType, accountUuid);
+    }
+#endif
     return FolderMan::instance()->findGoodPathForNewSyncFolder(QDir::homePath(), Theme::instance()->appName(), folderType, accountUuid);
 }
 

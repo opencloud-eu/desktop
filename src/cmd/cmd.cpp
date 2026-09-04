@@ -36,6 +36,10 @@
 
 #include <zlib.h>
 
+#if defined(Q_OS_MACOS)
+#include "cmd/nsfpdiagnostic.h"
+#endif
+
 
 using namespace OCC;
 
@@ -311,6 +315,11 @@ CmdOptions parseOptions(const QStringList &app_args)
     const auto testCrashReporter =
         addOption({{QStringLiteral("crash")}, QStringLiteral("Crash the client to test the crash reporter")}, QCommandLineOption::HiddenFromHelp);
 
+#if defined(Q_OS_MACOS)
+    auto dumpNsfpDomainsOption =
+        addOption({{QStringLiteral("dump-nsfp-domains")}, QStringLiteral("Dump all registered NSFileProvider domains and exit (macOS only)")});
+#endif
+
     auto verbosityOption = addOption({{QStringLiteral("verbose")},
         QStringLiteral("Specify the [verbosity]\n0: no logging (default)\n"
                        "1: general logging\n"
@@ -331,6 +340,12 @@ CmdOptions parseOptions(const QStringList &app_args)
 
     parser.process(app_args);
 
+#if defined(Q_OS_MACOS)
+    // Handle --dump-nsfp-domains early: no server URL or credentials needed.
+    if (parser.isSet(dumpNsfpDomainsOption)) {
+        exit(OCC::dumpNSFileProviderDomains());
+    }
+#endif
 
     const int verbosity = parser.value(verbosityOption).toInt();
     if (verbosity >= 0 && verbosity <= 3) {
