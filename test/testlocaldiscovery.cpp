@@ -212,6 +212,39 @@ private Q_SLOTS:
         QVERIFY(fakeFolder.currentRemoteState().find(QStringLiteral("A/newDir/subDir/file")));
     }
 
+    // Items that were skipped because they are hidden are not in the database, so an incremental
+    // local discovery cannot find them once hidden files are enabled: only a full local discovery
+    // does. See Folder::setIgnoreHiddenFiles().
+    void testHiddenFilesNeedFullLocalDiscovery()
+    {
+        QFETCH_GLOBAL(Vfs::Mode, vfsMode);
+        QFETCH_GLOBAL(bool, filesAreDehydrated);
+
+        FakeFolder fakeFolder(FileInfo::A12_B12_C12_S12(), vfsMode, filesAreDehydrated);
+        fakeFolder.syncEngine().setIgnoreHiddenFiles(true);
+        QVERIFY(fakeFolder.applyLocalModificationsAndSync());
+
+        // the user creates a hidden folder while hidden files are still ignored
+        fakeFolder.localModifier().mkdir(QStringLiteral(".hello"));
+        fakeFolder.localModifier().insert(QStringLiteral(".hello/Text File.txt"));
+        QVERIFY(fakeFolder.applyLocalModificationsAndSync());
+        QVERIFY(!fakeFolder.currentRemoteState().find(QStringLiteral(".hello")));
+
+        // the user enables hidden files, but an incremental sync only looks at the paths the
+        // folder watcher reported and the hidden folder is not among them
+        fakeFolder.syncEngine().setIgnoreHiddenFiles(false);
+        fakeFolder.localModifier().insert(QStringLiteral("A/a3"));
+        fakeFolder.syncEngine().setLocalDiscoveryOptions(LocalDiscoveryStyle::DatabaseAndFilesystem, {QStringLiteral("A")});
+        QVERIFY(fakeFolder.applyLocalModificationsAndSync());
+        QVERIFY(fakeFolder.currentRemoteState().find(QStringLiteral("A/a3")));
+        QVERIFY(!fakeFolder.currentRemoteState().find(QStringLiteral(".hello")));
+
+        // a full local discovery, as requested by Folder::setIgnoreHiddenFiles(), picks it up
+        fakeFolder.syncEngine().setLocalDiscoveryOptions(LocalDiscoveryStyle::FilesystemOnly);
+        QVERIFY(fakeFolder.applyLocalModificationsAndSync());
+        QVERIFY(fakeFolder.currentRemoteState().find(QStringLiteral(".hello/Text File.txt")));
+    }
+
     // Tests the behavior of invalid filename detection
     void testServerBlacklist()
     {
