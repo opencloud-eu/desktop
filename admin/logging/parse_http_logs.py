@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Klaas Freitag <k.freitag@opencloud.eu>, Copilot assisted
 
 import html
 import re
