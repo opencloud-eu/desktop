@@ -63,5 +63,5 @@
 
 1. Crash the client using system tray debug actions: `System tray icon -> Debug actions -> Crash now - qFatal`.
    - [ ] Verify the crash log file is generated:
-     - `/tmp/OpenCloud-crash.log`
-     - `%USERPROFILE%\AppData\Local\Temp\OpenCloud-crash.log`
+     - Linux: `/tmp/OpenCloud-crash.log`
+     - Windows: `%USERPROFILE%\AppData\Local\Temp\OpenCloud-crash.log`
