@@ -6,7 +6,7 @@ Feature: Syncing files
     Background:
         Given user "Alice" has been created in the server with default attributes
 
-    @issue-9733 @skip
+    @issue-649 @skip
     Scenario: Syncing a file from the server and creating a conflict
         Given user "Alice" has uploaded file with content "server content" to "/conflict.txt" in the server
         And user "Alice" has set up a client with default settings
