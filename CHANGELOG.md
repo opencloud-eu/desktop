@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.0.1](https://github.com/opencloud-eu/desktop/releases/tag/v4.0.1) - 2026-09-07
+
+### ❤️ Thanks to all contributors! ❤️
+
+@saw-jan
+
+
+
 ## [4.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v4.0.0) - 2026-09-03
 
 ### ❤️ Thanks to all contributors! ❤️
