@@ -32,46 +32,42 @@ OAuthCredentialsSetupWizardState::OAuthCredentialsSetupWizardState(SetupWizardCo
         // bring window up top again, as the browser may have been raised in front of it
         _context->window()->raise();
 
-        auto finish = [result, token, refreshToken, oAuth, this] {
-            oAuth->deleteLater();
-            switch (result) {
-            case OAuth::Result::LoggedIn: {
-                _context->accountBuilder().setAuthenticationStrategy(
-                    std::make_unique<OAuth2AuthenticationStrategy>(token, refreshToken, oAuth->dynamicRegistrationData(), oAuth->idToken()));
-                Q_EMIT evaluationSuccessful();
-                break;
-            }
-            case OAuth::Result::Error: {
-                Q_EMIT evaluationFailed(tr("Error while trying to log in to OAuth2-enabled server."));
-                break;
-            }
-            case OAuth::Result::ErrorInsecureUrl: {
-                Q_EMIT evaluationFailed(tr("Oauth2 authentication requires a secured connection."));
-                break;
-            }
-            }
-        };
-
         // This discovers which OpenCloud instance(s) the authenticated user has access to.
         // Uses the OAuth bearer token and resource="acct:me@{host}".
         // Looking for: rel="http://webfinger.opencloud/rel/server-instance"
         // Backend WebFinger docs: https://github.com/opencloud-eu/opencloud/blob/main/services/webfinger/README.md
         auto *job = Jobs::WebFingerInstanceLookupJobFactory(_context->accessManager(), token).startJob(_context->accountBuilder().serverUrl(), this);
 
-        connect(job, &CoreJob::finished, this, [finish, job, this]() {
+        connect(job, &CoreJob::finished, this, [result, token, refreshToken, oAuth, job, this]() {
             if (!job->success()) {
                 Q_EMIT evaluationFailed(QStringLiteral("Failed to look up instances: %1").arg(job->errorMessage()));
+                return;
             } else {
                 const auto instanceUrls = qvariant_cast<QVector<QUrl>>(job->result());
 
                 if (instanceUrls.isEmpty()) {
                     Q_EMIT evaluationFailed(QStringLiteral("Server returned empty list of instances"));
+                    return;
                 } else {
                     _context->accountBuilder().setWebFingerInstances(instanceUrls);
                 }
             }
-
-            finish();
+            switch (result) {
+            case OAuth::Result::LoggedIn: {
+                _context->accountBuilder().setAuthenticationStrategy(
+                    std::make_unique<OAuth2AuthenticationStrategy>(token, refreshToken, oAuth->dynamicRegistrationData(), oAuth->idToken()));
+                Q_EMIT evaluationSuccessful();
+                return;
+            }
+            case OAuth::Result::Error: {
+                Q_EMIT evaluationFailed(tr("Error while trying to log in to OAuth2-enabled server."));
+                return;
+            }
+            case OAuth::Result::ErrorInsecureUrl: {
+                Q_EMIT evaluationFailed(tr("Oauth2 authentication requires a secured connection."));
+                return;
+            }
+            }
         });
     });
 
