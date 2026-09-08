@@ -33,6 +33,8 @@ class AbstractSetupWizardState : public QObject
     Q_OBJECT
 
 public:
+    ~AbstractSetupWizardState() override;
+
     /**
      * Used to display page within content widget.
      * @return page associated to this state
