@@ -46,11 +46,13 @@ QmlOAuthCredentials::QmlOAuthCredentials(OAuth *oauth, const QUrl &host, const Q
     : QmlCredentials(host, displayName, parent)
     , _oauth(oauth)
 {
-    connect(_oauth, &OAuth::authorisationLinkChanged, this, [this] {
-        _ready = true;
-        Q_EMIT readyChanged();
-    });
-    connect(_oauth, &QObject::destroyed, this, &QmlOAuthCredentials::readyChanged);
+    if (_oauth) {
+        connect(_oauth, &OAuth::authorisationLinkChanged, this, [this] {
+            _ready = true;
+            Q_EMIT readyChanged();
+        });
+        connect(_oauth, &QObject::destroyed, this, &QmlOAuthCredentials::readyChanged);
+    }
 }
 
 void QmlOAuthCredentials::copyAuthenticationUrlToClipboard()

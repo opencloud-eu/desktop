@@ -550,6 +550,7 @@ void OAuth::fetchWellKnown()
             };
 
             if (webfingerReply->error() != QNetworkReply::NoError) {
+                qCWarning(lcOauth) << "Error getting webfinger:" << webfingerReply->errorString();
                 handleError(webfingerReply->error(), webfingerReply->errorString());
                 return;
             }

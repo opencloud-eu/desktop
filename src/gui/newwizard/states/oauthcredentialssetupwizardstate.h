@@ -23,7 +23,7 @@ class OAuthCredentialsSetupWizardState : public AbstractSetupWizardState
     Q_OBJECT
 
 public:
-    OAuthCredentialsSetupWizardState(SetupWizardContext *context);
+    OAuthCredentialsSetupWizardState(SetupWizardContext *context, bool failed);
 
     SetupWizardState state() const override;
 

@@ -102,13 +102,15 @@ void SetupWizardController::changeStateTo(SetupWizardState nextState, ChangeReas
         break;
     }
     case SetupWizardState::CredentialsState:
-        _currentState = new OAuthCredentialsSetupWizardState(_context);
+        _currentState = new OAuthCredentialsSetupWizardState(_context, reason == ChangeReason::EvaluationFailed);
         break;
     case SetupWizardState::AccountConfiguredState: {
         _currentState = new AccountConfiguredSetupWizardState(_context);
 
         switch (reason) {
         case ChangeReason::Default:
+            [[fallthrough]];
+        case ChangeReason::EvaluationRetry:
             break;
         case ChangeReason::EvaluationFailed:
             // whenever the evaluation of the last page fails, it's safe to assume it's due to some issue with the advanced
@@ -120,8 +122,6 @@ void SetupWizardController::changeStateTo(SetupWizardState nextState, ChangeReas
         }
         break;
     }
-    default:
-        Q_UNREACHABLE();
     }
 
     Q_ASSERT(_currentState != nullptr);
@@ -176,9 +176,15 @@ void SetupWizardController::changeStateTo(SetupWizardState nextState, ChangeReas
     });
 
     connect(_currentState, &AbstractSetupWizardState::evaluationFailed, this, [this](const QString &errorMessage) {
-        _currentState->deleteLater();
         _context->window()->showErrorMessage(errorMessage);
+        _currentState->deleteLater();
         changeStateTo(_currentState->state(), ChangeReason::EvaluationFailed);
+    });
+
+    connect(_currentState, &AbstractSetupWizardState::evaluationRetry, this, [this] {
+        _currentState->deleteLater();
+        _context->window()->slotStartTransition();
+        changeStateTo(_currentState->state(), ChangeReason::EvaluationRetry);
     });
 
     _context->window()->displayPage(_currentState->page(), _currentState->state());

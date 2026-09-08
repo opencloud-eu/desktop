@@ -62,6 +62,12 @@ Q_SIGNALS:
      */
     void evaluationFailed(QString errorMessage);
 
+    /**
+     * Retry evaluation of the current page.
+     * Some pages might execute more complex operations and require a retry after an error was resolved.
+     */
+    void evaluationRetry() const;
+
 protected:
     explicit AbstractSetupWizardState(SetupWizardContext *context);
 

@@ -30,6 +30,7 @@ OAuthCredentialsSetupWizardPage::OAuthCredentialsSetupWizardPage(OAuth *oauth, c
     setFocusProxy(widget);
 
     auto *oauthCredentials = new QmlOAuthCredentials(oauth, serverUrl, {});
+    connect(oauthCredentials, &QmlOAuthCredentials::requestRestart, this, &OAuthCredentialsSetupWizardPage::requestAuthRestart);
     oauthCredentials->setIsRefresh(false);
     widget->setOCContext(
         QUrl(QStringLiteral("qrc:/qt/qml/eu/OpenCloud/gui/qml/credentials/OAuthCredentials.qml")), this, oauthCredentials, QJSEngine::JavaScriptOwnership);
