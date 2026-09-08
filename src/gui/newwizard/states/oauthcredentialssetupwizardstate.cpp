@@ -32,8 +32,24 @@ OAuthCredentialsSetupWizardState::OAuthCredentialsSetupWizardState(SetupWizardCo
         // bring window up top again, as the browser may have been raised in front of it
         _context->window()->raise();
 
-        auto finish = [result, token, refreshToken, oAuth, this] {
+        // This discovers which OpenCloud instance(s) the authenticated user has access to.
+        // Uses the OAuth bearer token and resource="acct:me@{host}".
+        // Looking for: rel="http://webfinger.opencloud/rel/server-instance"
+        // Backend WebFinger docs: https://github.com/opencloud-eu/opencloud/blob/main/services/webfinger/README.md
+        auto *job = Jobs::WebFingerInstanceLookupJobFactory(_context->accessManager(), token).startJob(_context->accountBuilder().serverUrl(), this);
+
+        connect(job, &CoreJob::finished, this, [result, token, refreshToken, oAuth, job, this]() {
             oAuth->deleteLater();
+            if (!job->success()) {
+                Q_EMIT evaluationFailed(tr("Failed to look up instances: %1").arg(job->errorMessage()));
+            } else {
+                auto instanceUrls = qvariant_cast<QVector<QUrl>>(job->result());
+                if (instanceUrls.isEmpty()) {
+                    Q_EMIT evaluationFailed(tr("Server returned empty list of instances"));
+                } else {
+                    _context->accountBuilder().setWebFingerInstances(instanceUrls);
+                }
+            }
             switch (result) {
             case OAuth::Result::LoggedIn: {
                 _context->accountBuilder().setAuthenticationStrategy(
@@ -50,28 +66,6 @@ OAuthCredentialsSetupWizardState::OAuthCredentialsSetupWizardState(SetupWizardCo
                 break;
             }
             }
-        };
-
-        // This discovers which OpenCloud instance(s) the authenticated user has access to.
-        // Uses the OAuth bearer token and resource="acct:me@{host}".
-        // Looking for: rel="http://webfinger.opencloud/rel/server-instance"
-        // Backend WebFinger docs: https://github.com/opencloud-eu/opencloud/blob/main/services/webfinger/README.md
-        auto *job = Jobs::WebFingerInstanceLookupJobFactory(_context->accessManager(), token).startJob(_context->accountBuilder().serverUrl(), this);
-
-        connect(job, &CoreJob::finished, this, [finish, job, this]() {
-            if (!job->success()) {
-                Q_EMIT evaluationFailed(QStringLiteral("Failed to look up instances: %1").arg(job->errorMessage()));
-            } else {
-                const auto instanceUrls = qvariant_cast<QVector<QUrl>>(job->result());
-
-                if (instanceUrls.isEmpty()) {
-                    Q_EMIT evaluationFailed(QStringLiteral("Server returned empty list of instances"));
-                } else {
-                    _context->accountBuilder().setWebFingerInstances(instanceUrls);
-                }
-            }
-
-            finish();
         });
     });
 
