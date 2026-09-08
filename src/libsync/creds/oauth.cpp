@@ -683,6 +683,8 @@ void OAuth::fetchWellKnown()
                             if (flag & defaultOauthPromtValue())
                                 _supportedPromtValues |= flag;
                         }
+                    } else {
+                        _supportedPromtValues = PromptValuesSupported::consent;
                     }
 
                     qCDebug(lcOauth) << u"parsing .well-known reply successful, auth endpoint" << _authEndpoint << u"and token endpoint" << _tokenEndpoint
