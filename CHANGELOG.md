@@ -1,12 +1,14 @@
 # Changelog
 
-## [4.0.1](https://github.com/opencloud-eu/desktop/releases/tag/v4.0.1) - 2026-09-08
+## [4.1.0](https://github.com/opencloud-eu/desktop/releases/tag/v4.1.0) - 2026-09-08
 
 ### ❤️ Thanks to all contributors! ❤️
 
 @TheOneRing, @prashant-gurung899, @saw-jan
 
+### 📈 Enhancement
 
+- Fallback to consent if prompt_values_supported is not exposed [[#1092](https://github.com/opencloud-eu/desktop/pull/1092)]
 
 ## [4.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v4.0.0) - 2026-09-03
 
