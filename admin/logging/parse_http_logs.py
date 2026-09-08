@@ -148,8 +148,8 @@ def make_flow(log_id, request, response):
 
 def generate_html(data, output_file):
     try:
-        with open(output_file, 'w') as f:
-            f.write("<!DOCTYPE html><html><head><style>body { font-family: sans-serif; } pre { background: #eee; padding: 10px; white-space: pre-wrap; word-break: break-all; }</style></head><body><h1>HTTP Log</h1>")
+        with open(output_file, 'w', encoding='utf-8') as f:
+            f.write('<!DOCTYPE html><html><head><meta charset="utf-8"><style>body { font-family: sans-serif; } pre { background: #eee; padding: 10px; white-space: pre-wrap; word-break: break-all; }</style></head><body><h1>HTTP Log</h1>')
             for log_id, entry in data.items():
                 f.write(f"<h2>ID: {html.escape(log_id)}</h2>")
                 request = entry['request']
