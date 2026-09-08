@@ -4,7 +4,7 @@
 
 ### ❤️ Thanks to all contributors! ❤️
 
-@prashant-gurung899, @saw-jan
+@TheOneRing, @prashant-gurung899, @saw-jan
 
 
 
