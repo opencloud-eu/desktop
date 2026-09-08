@@ -722,6 +722,36 @@ private Q_SLOTS:
         QVERIFY(*pin != PinState::Excluded);
     }
 
+    void testFolderPinStatePropagation()
+    {
+        if (!VfsPluginManager::instance().isVfsPluginAvailable(Vfs::Mode::OpenVFS)) {
+            QSKIP("Pin states require the OpenVFS plugin");
+        }
+
+        FakeFolder fakeFolder(FileInfo::A12_B12_C12_S12(), Vfs::Mode::OpenVFS, false);
+        QCOMPARE(fakeFolder.currentLocalState(), fakeFolder.currentRemoteState());
+
+        auto isDehydrated = [&](const QString &path) { return fakeFolder.vfs()->isDehydratedPlaceholder(fakeFolder.localPath() + path); };
+
+        QVERIFY(fakeFolder.vfs()->setPinState(QStringLiteral("A"), PinState::OnlineOnly));
+        QVERIFY(fakeFolder.applyLocalModificationsAndSync());
+        QVERIFY(isDehydrated(QStringLiteral("A/a1")));
+        QVERIFY(isDehydrated(QStringLiteral("A/a2")));
+        QVERIFY(!isDehydrated(QStringLiteral("B/b1")));
+        const auto onlineOnlyPin = fakeFolder.vfs()->pinState(QStringLiteral("A/a1"));
+        QVERIFY(onlineOnlyPin);
+        QCOMPARE(*onlineOnlyPin, PinState::OnlineOnly);
+
+        QVERIFY(fakeFolder.vfs()->setPinState(QStringLiteral("A"), PinState::AlwaysLocal));
+        QVERIFY(fakeFolder.applyLocalModificationsAndSync());
+        QVERIFY(!isDehydrated(QStringLiteral("A/a1")));
+        QVERIFY(!isDehydrated(QStringLiteral("A/a2")));
+        QCOMPARE(fakeFolder.currentLocalState(), fakeFolder.currentRemoteState());
+        const auto alwaysLocalPin = fakeFolder.vfs()->pinState(QStringLiteral("A/a1"));
+        QVERIFY(alwaysLocalPin);
+        QCOMPARE(*alwaysLocalPin, PinState::AlwaysLocal);
+    }
+
 #ifndef Q_OS_WIN
     void testPropagatePermissions()
     {
