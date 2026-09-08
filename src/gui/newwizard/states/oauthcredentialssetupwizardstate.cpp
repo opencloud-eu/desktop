@@ -18,61 +18,67 @@
 
 namespace OCC::Wizard {
 
-OAuthCredentialsSetupWizardState::OAuthCredentialsSetupWizardState(SetupWizardContext *context)
+OAuthCredentialsSetupWizardState::OAuthCredentialsSetupWizardState(SetupWizardContext *context, bool failed)
     : AbstractSetupWizardState(context)
 {
-    const auto authServerUrl = _context->accountBuilder().serverUrl();
-    auto oAuth = new OAuth(authServerUrl, _context->accessManager(), {}, this);
-    _page = new OAuthCredentialsSetupWizardPage(oAuth, authServerUrl);
-
-
-    connect(oAuth, &OAuth::result, this, [oAuth, this](OAuth::Result result, const QString &token, const QString &refreshToken) {
-        _context->window()->slotStartTransition();
-
-        // bring window up top again, as the browser may have been raised in front of it
-        _context->window()->raise();
-
-        // This discovers which OpenCloud instance(s) the authenticated user has access to.
-        // Uses the OAuth bearer token and resource="acct:me@{host}".
-        // Looking for: rel="http://webfinger.opencloud/rel/server-instance"
-        // Backend WebFinger docs: https://github.com/opencloud-eu/opencloud/blob/main/services/webfinger/README.md
-        auto *job = Jobs::WebFingerInstanceLookupJobFactory(_context->accessManager(), token).startJob(_context->accountBuilder().serverUrl(), this);
-
-        connect(job, &CoreJob::finished, this, [result, token, refreshToken, oAuth, job, this]() {
-            oAuth->deleteLater();
-            if (!job->success()) {
-                Q_EMIT evaluationFailed(tr("Failed to look up instances: %1").arg(job->errorMessage()));
-            } else {
-                auto instanceUrls = qvariant_cast<QVector<QUrl>>(job->result());
-                if (instanceUrls.isEmpty()) {
-                    Q_EMIT evaluationFailed(tr("Server returned empty list of instances"));
-                } else {
-                    _context->accountBuilder().setWebFingerInstances(instanceUrls);
-                }
-            }
-            switch (result) {
-            case OAuth::Result::LoggedIn: {
-                _context->accountBuilder().setAuthenticationStrategy(
-                    std::make_unique<OAuth2AuthenticationStrategy>(token, refreshToken, oAuth->dynamicRegistrationData(), oAuth->idToken()));
-                Q_EMIT evaluationSuccessful();
-                break;
-            }
-            case OAuth::Result::Error: {
-                Q_EMIT evaluationFailed(tr("Error while trying to log in to OAuth2-enabled server."));
-                break;
-            }
-            case OAuth::Result::ErrorInsecureUrl: {
-                Q_EMIT evaluationFailed(tr("Oauth2 authentication requires a secured connection."));
-                break;
-            }
-            }
-        });
-    });
-
     // the implementation moves to the next state automatically once ready, no user interaction needed
     _context->window()->disableNextButton();
 
-    oAuth->startAuthentication();
+    const auto authServerUrl = _context->accountBuilder().serverUrl();
+    // pass a null pointer if failed to indicate an error state
+    auto *oAuth = failed ? nullptr : new OAuth(authServerUrl, _context->accessManager(), {}, this);
+    auto *page = new OAuthCredentialsSetupWizardPage(oAuth, authServerUrl);
+    _page = page;
+    connect(page, &OAuthCredentialsSetupWizardPage::requestAuthRestart, this, &OAuthCredentialsSetupWizardState::evaluationRetry);
+
+    // bring window up top again, as the browser may have been raised in front of it
+    _context->window()->raise();
+
+    if (!failed) {
+        connect(oAuth, &OAuth::result, this, [oAuth, this](OAuth::Result result, const QString &token, const QString &refreshToken) {
+            _context->window()->slotStartTransition();
+            switch (result) {
+            case OAuth::Result::LoggedIn:
+                break;
+            case OAuth::Result::ErrorInsecureUrl:
+                oAuth->deleteLater();
+                Q_EMIT evaluationFailed(tr("Oauth2 authentication requires a secured connection."));
+                return;
+            case OAuth::Result::Error:
+                oAuth->deleteLater();
+                Q_EMIT evaluationFailed(tr("Error while trying to log in to OAuth2-enabled server."));
+                return;
+            }
+
+            Q_ASSERT(result == OAuth::Result::LoggedIn);
+
+            // This discovers which OpenCloud instance(s) the authenticated user has access to.
+            // Uses the OAuth bearer token and resource="acct:me@{host}".
+            // Looking for: rel="http://webfinger.opencloud/rel/server-instance"
+            // Backend WebFinger docs: https://github.com/opencloud-eu/opencloud/blob/main/services/webfinger/README.md
+            auto *job = Jobs::WebFingerInstanceLookupJobFactory(_context->accessManager(), token).startJob(_context->accountBuilder().serverUrl(), this);
+
+            connect(job, &CoreJob::finished, this, [token, refreshToken, oAuth, job, this]() {
+                oAuth->deleteLater();
+                if (!job->success()) {
+                    Q_EMIT evaluationFailed(tr("Failed to look up instances: %1").arg(job->errorMessage()));
+                } else {
+                    auto instanceUrls = qvariant_cast<QVector<QUrl>>(job->result());
+                    if (instanceUrls.isEmpty()) {
+                        _context->window()->showErrorMessage(tr("Server returned empty list of instances"));
+                    } else {
+                        _context->accountBuilder().setWebFingerInstances(instanceUrls);
+                    }
+                    _context->accountBuilder().setAuthenticationStrategy(
+                        std::make_unique<OAuth2AuthenticationStrategy>(token, refreshToken, oAuth->dynamicRegistrationData(), oAuth->idToken()));
+                    Q_EMIT evaluationSuccessful();
+                }
+            });
+        });
+
+
+        oAuth->startAuthentication();
+    }
 }
 
 SetupWizardState OAuthCredentialsSetupWizardState::state() const

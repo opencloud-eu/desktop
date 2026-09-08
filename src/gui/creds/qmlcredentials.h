@@ -64,6 +64,7 @@ class QmlOAuthCredentials : public QmlCredentials
     QML_UNCREATABLE("C++ only")
 
 public:
+    // oauth might be null to indicate an error state
     QmlOAuthCredentials(OAuth *oauth, const QUrl &host, const QString &displayName, QObject *parent = nullptr);
 
     Q_INVOKABLE void copyAuthenticationUrlToClipboard();
