@@ -196,8 +196,8 @@ def generate_mitm_flows(data, output_file):
 
 if __name__ == '__main__':
     if len(sys.argv) < 3:
-        print("This script parses the http logs of an OpenCloud client and")
-        print("generates human useable output for debugging.")
+        print("This script parses the HTTP logs of an OpenCloud client and")
+        print("generates human usable output for debugging.")
         print("")
         print("Usage: python parse_http_logs.py <input_file> <output_file>")
         print("       output_file extension decides the format:")
