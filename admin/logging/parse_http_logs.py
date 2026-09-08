@@ -31,7 +31,7 @@ def parse_timestamp(ts_str):
         epoch = time.mktime(time.strptime(date_part, TS_FORMAT))
         return epoch + int(ms_part) / 1000.0
     except ValueError:
-        return time.time()
+        return None
 
 
 def read_lines(file_path):
