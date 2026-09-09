@@ -4,7 +4,7 @@
 
 ### ❤️ Thanks to all contributors! ❤️
 
-@TheOneRing, @dragotin, @prashant-gurung899, @saw-jan
+@TheOneRing, @dragotin, @jnweiger, @prashant-gurung899, @saw-jan
 
 ### 🐛 Bug Fixes
 
