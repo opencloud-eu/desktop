@@ -10,7 +10,7 @@ dependencies = [
     "flask==3.1.* ; sys_platform == 'linux'",
     "imageio-ffmpeg==0.6.*",
     "mss==10.2.*",
-    "numpy==2.5.* ; sys_platform == 'linux'",
+    "numpy==2.5.* ",
     "openpyxl==3.1.*",
     "playwright==1.62.*",
     "psutil==7.2.*",
@@ -23,6 +23,7 @@ dependencies = [
     "pywin32==312 ; sys_platform == 'win32'",
     "requests==2.34.*",
     "sure==2.0.*",
+    "pyperclip==1.11.*",
 ]
 
 [dependency-groups]

@@ -38,31 +38,75 @@ def after_step(context, step):
 
 
 def after_scenario(context, scenario):
-    # stop screen recording
-    if get_config("record_video_on_failure"):
-        ScreenRecorder.stop_recording(passed=scenario.status == Status.passed)
+    try:
+        try:
+            if get_config("record_video_on_failure"):ScreenRecorder.stop_recording( passed=scenario.status == Status.passed)
+        except Exception as e:
+            print(f"[CLEANUP] Failed to stop recording: {e}")
 
-    # quit the application
-    close_and_kill_app()
-    clear_socket_messages()
-    close_socket_connection()
+        try:
+            close_and_kill_app()
+        except Exception as e:
+            print(f"[CLEANUP] Failed to close app: {e}")
 
-    # store app log on scenario failure
-    if scenario.status in [Status.failed, Status.error] and os.path.exists(
-        get_config('currentAppLogFile')
-    ):
-        save_app_log(scenario)
+        try:
+            clear_socket_messages()
+        except Exception as e:
+            print(f"[CLEANUP] Failed to clear socket messages: {e}")
 
-    if os.path.exists(get_config('crash_log_file')):
-        save_crash_log(scenario)
+        try:
+            close_socket_connection()
+        except Exception as e:
+            print(f"[CLEANUP] Failed to close socket: {e}")
 
-    # clean up sync dir
-    if os.path.exists(get_config("clientRootSyncPath")):
-        shutil.rmtree(get_config("clientRootSyncPath"))
+        try:
+            if (
+                scenario.status in [Status.failed, Status.error]
+                and os.path.exists(get_config("currentAppLogFile"))
+            ):
+                save_app_log(scenario)
+        except Exception as e:
+            print(f"[CLEANUP] Failed to save app log: {e}")
 
-    cleanup_created_paths()
-    cleanup_current_app_log()
-    reset_sync_connection_name()
+        try:
+            if os.path.exists(get_config("crash_log_file")):
+                save_crash_log(scenario)
+        except Exception as e:
+            print(f"[CLEANUP] Failed to save crash log: {e}")
 
-    delete_project_spaces()
-    delete_created_users()
+        try:
+            if os.path.exists(get_config("clientRootSyncPath")):
+                shutil.rmtree(
+                    get_config("clientRootSyncPath"),
+                    ignore_errors=True,
+                )
+        except Exception as e:
+            print(f"[CLEANUP] Failed to remove sync directory: {e}")
+
+        try:
+            cleanup_created_paths()
+        except Exception as e:
+            print(f"[CLEANUP] Failed to cleanup created paths: {e}")
+
+        try:
+            cleanup_current_app_log()
+        except Exception as e:
+            print(f"[CLEANUP] Failed to cleanup app log: {e}")
+
+        try:
+            reset_sync_connection_name()
+        except Exception as e:
+            print(f"[CLEANUP] Failed to reset sync connection name: {e}")
+
+        try:
+            delete_project_spaces()
+        except Exception as e:
+            print(f"[CLEANUP] Failed to delete project spaces: {e}")
+
+    finally:
+        try:
+            print("[CLEANUP] Deleting created users...")
+            delete_created_users()
+            print("[CLEANUP] Created users deleted")
+        except Exception as e:
+            print(f"[CLEANUP] Failed to delete created users: {e}")

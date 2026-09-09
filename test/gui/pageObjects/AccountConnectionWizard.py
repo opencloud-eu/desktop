@@ -1,11 +1,12 @@
 import os
 import time
+import pyperclip
 from types import SimpleNamespace
 from appium.webdriver.common.appiumby import AppiumBy as By
 from selenium.common.exceptions import WebDriverException
 
 from helpers.WebUIHelper import authorize_via_webui
-from helpers.ConfigHelper import get_config
+from helpers.ConfigHelper import get_config, is_windows
 from helpers.SetupClientHelper import (
     create_user_sync_path,
     get_temp_resource_path,
@@ -25,8 +26,8 @@ class AccountConnectionWizard:
         selector="QApplication.Settings.centralwidget.dialogStack.SetupWizardWidget.nextButton",
     )
     ACCEPT_CERTIFICATE_YES = SimpleNamespace(
-        by=By.NAME,
-        selector="Yes",
+        by=By.ACCESSIBILITY_ID,
+        selector="QApplication.OCC__TlsErrorDialog.buttonBox.QPushButton",
     )
     SELECT_LOCAL_FOLDER_BUTTON = SimpleNamespace(
         by=By.ACCESSIBILITY_ID,
@@ -41,10 +42,10 @@ class AccountConnectionWizard:
         selector="QApplication.Settings.centralwidget.dialogStack.SetupWizardWidget.contentWidget.AccountConfiguredWizardPage.advancedConfigGroupBox.advancedConfigGroupBoxContentWidget.localDirectoryGroupBox.chooseLocalDirectoryButton",
     )
     CHOOSE_FOLDER_BUTTON = SimpleNamespace(by=By.NAME, selector="Choose")
-    LOGIN_DIALOG = SimpleNamespace(by=By.NAME, selector="Log in with your web browser")
+    LOGIN_DIALOG = SimpleNamespace(by=By.XPATH, selector="//*[contains(@Name, 'Log in with your web browser')]")
     COPY_URL_TO_CLIPBOARD_BUTTON = SimpleNamespace(
-        by=By.NAME,
-        selector="Copy URL",
+        by=By.XPATH,
+        selector= "//*[contains(@Name, 'Copy URL')]",
     )
     CONF_SYNC_MANUALLY_RADIO_BUTTON = SimpleNamespace(
         by=By.NAME, selector="Configure synchronization manually"
@@ -56,6 +57,10 @@ class AccountConnectionWizard:
     DIRECTORY_NAME_EDIT_BOX = SimpleNamespace(
         by=By.ACCESSIBILITY_ID,
         selector="QApplication.QFileDialog.fileNameEdit",
+    )
+    WINDOWS_DIRECTORY_NAME_EDIT_BOX = SimpleNamespace(
+        by=By.CLASS_NAME,
+        selector="Edit",
     )
     SYNC_EVERYTHING_RADIO_BUTTON = SimpleNamespace(
         by=By.NAME, selector="Synchronize all existing spaces"
@@ -78,9 +83,11 @@ class AccountConnectionWizard:
             AccountConnectionWizard.ACCEPT_CERTIFICATE_YES.by,
             AccountConnectionWizard.ACCEPT_CERTIFICATE_YES.selector,
         )
+        
+        buttons[-2].click()
         # click the last button
-        last_button = buttons.pop()
-        last_button.click()
+        # last_button = buttons.pop()
+        # last_button.click()
 
     @staticmethod
     def add_user_credentials(username, password):
@@ -102,14 +109,20 @@ class AccountConnectionWizard:
         login_url = ""
         try:
             AccountConnectionWizard.copy_login_url()
-            login_url = app().get_clipboard_text()
+            if is_windows():
+                login_url = pyperclip.paste()
+            else:
+                login_url = app().get_clipboard_text()
             if not login_url.startswith("https://"):
                 raise WebDriverException(f"Invalid clipboard text: {login_url}")
         except WebDriverException:
             # retry once upon failure
             time.sleep(0.5)
             AccountConnectionWizard.copy_login_url()
-            login_url = app().get_clipboard_text()
+            if is_windows():
+                login_url = pyperclip.paste()
+            else:
+                login_url = app().get_clipboard_text()
         except Exception as e:
             print(f"[Error] Failed to get login URL. Clipboard value: {login_url}")
             raise e
@@ -132,14 +145,23 @@ class AccountConnectionWizard:
         # create sync folder for user
         sync_path = create_user_sync_path(user)
 
+        if is_windows():
+            AccountConnectionWizard.select_download_everything_option()
+
         app().find_element(
             AccountConnectionWizard.DIRECTORY_NAME_BOX.by,
             AccountConnectionWizard.DIRECTORY_NAME_BOX.selector,
         ).click()
-        dir_location_input = app().find_element(
-            AccountConnectionWizard.DIRECTORY_NAME_EDIT_BOX.by,
-            AccountConnectionWizard.DIRECTORY_NAME_EDIT_BOX.selector,
-        )
+        if is_windows():
+            dir_location_input = app().find_element(
+                AccountConnectionWizard.WINDOWS_DIRECTORY_NAME_EDIT_BOX.by,
+                AccountConnectionWizard.WINDOWS_DIRECTORY_NAME_EDIT_BOX.selector,
+            )
+        else:
+            dir_location_input = app().find_element(
+                AccountConnectionWizard.DIRECTORY_NAME_EDIT_BOX.by,
+                AccountConnectionWizard.DIRECTORY_NAME_EDIT_BOX.selector,
+            )
         dir_location_input.clear()
         dir_location_input.send_keys(sync_path)
         app().find_element(
@@ -225,10 +247,12 @@ class AccountConnectionWizard:
 
     @staticmethod
     def select_advanced_config():
-        app().find_element(
+        element = app().find_element(
             AccountConnectionWizard.ADVANCED_CONFIGURATION_CHECKBOX.by,
             AccountConnectionWizard.ADVANCED_CONFIGURATION_CHECKBOX.selector,
-        ).click()
+        )
+        element.native_click()
+        breakpoint()
 
     @staticmethod
     def can_change_local_sync_dir():
