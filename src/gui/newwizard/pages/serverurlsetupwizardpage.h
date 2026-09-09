@@ -16,6 +16,10 @@
 
 #include "abstractsetupwizardpage.h"
 
+#include <QList>
+#include <QSslCertificate>
+#include <QSslKey>
+
 namespace Ui {
 class ServerUrlSetupWizardPage;
 }
@@ -34,8 +38,21 @@ public:
 
     void keyPressEvent(QKeyEvent *event) override;
 
+    // Optional client certificate for mTLS, selected on this page before the account exists.
+    // Null/empty when the user has not configured one.
+    QSslCertificate clientCertificate() const;
+    QSslKey clientPrivateKey() const;
+    QList<QSslCertificate> clientCaCertificates() const;
+
 private:
+    void slotConfigureClientCertificate();
+    void updateClientCertStatus();
+
     ::Ui::ServerUrlSetupWizardPage *_ui;
+
+    QSslCertificate _clientCertificate;
+    QSslKey _clientPrivateKey;
+    QList<QSslCertificate> _clientCaCertificates;
 
 public:
     ~ServerUrlSetupWizardPage() noexcept override;

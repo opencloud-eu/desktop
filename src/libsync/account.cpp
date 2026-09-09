@@ -195,6 +195,9 @@ void Account::setCredentials(AbstractCredentials *cred)
     if (jar) {
         _am->setCookieJar(jar);
     }
+    if (!_clientCertificate.isNull()) {
+        _am->setClientCertificate(_clientCertificate, _clientPrivateKey);
+    }
     connect(_credentials.data(), &AbstractCredentials::fetched, this, [this] {
         Q_EMIT credentialsFetched();
         _queueGuard.unblock();
@@ -249,6 +252,37 @@ void Account::addApprovedCerts(const QSet<QSslCertificate> &certs)
     _approvedCerts.unite(certs);
     _am->setCustomTrustedCaCertificates(_approvedCerts);
     Q_EMIT wantsAccountSaved(this);
+}
+
+QSslCertificate Account::clientCertificate() const
+{
+    return _clientCertificate;
+}
+
+QSslKey Account::clientPrivateKey() const
+{
+    return _clientPrivateKey;
+}
+
+bool Account::hasClientCertificate() const
+{
+    return !_clientCertificate.isNull();
+}
+
+void Account::setClientCertificate(const QSslCertificate &cert, const QSslKey &key)
+{
+    _clientCertificate = cert;
+    _clientPrivateKey = key;
+    if (_am) {
+        _am->setClientCertificate(cert, key);
+    }
+    Q_EMIT clientCertificateChanged();
+    Q_EMIT wantsAccountSaved(this);
+}
+
+void Account::clearClientCertificate()
+{
+    setClientCertificate(QSslCertificate(), QSslKey());
 }
 
 void Account::setUrl(const QUrl &url)

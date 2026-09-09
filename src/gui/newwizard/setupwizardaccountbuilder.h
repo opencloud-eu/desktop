@@ -90,6 +90,12 @@ public:
     void clearCustomTrustedCaCertificates();
 
     /**
+     * Store the client certificate (mTLS) for the newly built account.
+     * Passing a null certificate/key means no client certificate is configured.
+     */
+    void setClientCertificate(const QSslCertificate &certificate, const QSslKey &privateKey);
+
+    /**
      * Attempt to build an account from the previously entered information.
      * @return built account or null if information is still missing
      */
@@ -112,6 +118,9 @@ private:
     QString _displayName;
 
     QSet<QSslCertificate> _customTrustedCaCertificates;
+
+    QSslCertificate _clientCertificate;
+    QSslKey _clientPrivateKey;
 
     QString _defaultSyncTargetDir;
 };

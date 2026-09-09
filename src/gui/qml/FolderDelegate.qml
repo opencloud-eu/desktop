@@ -87,6 +87,10 @@ Pane {
                         text: CommonStrings.showInWebBrowser()
                         onTriggered: Qt.openUrlExternally(accountSettings.accountState.account.url)
                     }
+                    MenuItem {
+                        text: qsTr("Client Certificate (mTLS)...")
+                        onTriggered: accountSettings.slotConfigureClientCertificate()
+                    }
 
                     MenuItem {
                         text: qsTr("Remove")
