@@ -220,19 +220,6 @@ public:
     virtual QVector<quint16> oauthPorts() const;
 
     /**
-     * Returns the required opeidconnect scopes
-     */
-    virtual QString openIdConnectScopes() const;
-
-    /**
-     * Returns the openidconnect promt type
-     * It is supposed to be "consent select_account".
-     * For Konnect it currently needs to be select_account,
-     * which is the current default.
-     */
-    virtual QString openIdConnectPrompt() const;
-
-    /**
      * Defines whether the client attempts danamic registration with the IdP or uses the
      * oauthClientId() and oauthClientSecret()
      * Default: True

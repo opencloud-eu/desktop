@@ -46,22 +46,10 @@ Q_LOGGING_CATEGORY(lcOauth, "sync.credentials.oauth", QtInfoMsg)
 namespace {
 
 const QString wellKnownPathC = QStringLiteral("/.well-known/openid-configuration");
+
 QString redirectUrlC()
 {
     return QStringLiteral("http://127.0.0.1");
-}
-
-auto defaultOauthPromtValue()
-{
-    static const auto promptValue = [] {
-        OAuth::PromptValuesSupportedFlags out = OAuth::PromptValuesSupported::none;
-        // convert the legacy openIdConnectPrompt() to QFlags
-        for (const auto &x : Theme::instance()->openIdConnectPrompt().split(QLatin1Char(' '))) {
-            out |= Utility::stringToEnum<OAuth::PromptValuesSupported>(x);
-        }
-        return out;
-    }();
-    return promptValue;
 }
 
 QString renderHttpTemplate(const QString &title, const QString &content)
@@ -238,8 +226,6 @@ OAuth::OAuth(const QUrl &serverUrl, QNetworkAccessManager *networkAccessManager,
     , _networkAccessManager(networkAccessManager)
     , _clientId(Theme::instance()->oauthClientId())
     , _clientSecret(Theme::instance()->oauthClientSecret())
-    , _scopes(Theme::instance()->openIdConnectScopes())
-    , _supportedPromtValues(defaultOauthPromtValue())
 {
 }
 
@@ -438,7 +424,7 @@ QNetworkReply *OAuth::postTokenRequest(QUrlQuery &&queryItems)
     req.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded; charset=UTF-8"));
     req.setAttribute(HttpCredentials::DontAddCredentialsAttribute, true);
 
-    queryItems.addQueryItem(QStringLiteral("scope"), QString::fromUtf8(QUrl::toPercentEncoding(this->_scopes)));
+    queryItems.addQueryItem(QStringLiteral("scope"), QString::fromUtf8(QUrl::toPercentEncoding(_scopes)));
     req.setUrl(_tokenEndpoint);
     return _networkAccessManager->post(req, queryItems.toString(QUrl::FullyEncoded).toUtf8());
 }
@@ -465,7 +451,7 @@ QUrl OAuth::authorisationLink() const
         {QStringLiteral("redirect_uri"), QStringLiteral("%1:%2").arg(redirectUrlC(), QString::number(_server.serverPort()))},
         {QStringLiteral("code_challenge"), QString::fromLatin1(code_challenge)},
         {QStringLiteral("code_challenge_method"), QStringLiteral("S256")},
-        {QStringLiteral("scope"), QString::fromUtf8(QUrl::toPercentEncoding(this->_scopes))},
+        {QStringLiteral("scope"), QString::fromUtf8(QUrl::toPercentEncoding(_scopes))},
         {QStringLiteral("prompt"), QString::fromUtf8(QUrl::toPercentEncoding(toString(_supportedPromtValues)))},
         {QStringLiteral("state"), QString::fromUtf8(_state)},
     };
@@ -632,7 +618,7 @@ void OAuth::fetchWellKnown()
 
                     scopeList.append(scope);
                 }
-                this->_scopes = scopeList.join(QStringLiteral(" "));
+                _scopes = scopeList.join(QStringLiteral(" "));
             }
 
             auto const oidcWellKnownUrl = Utility::concatUrlPath(QUrl(issuerUrl), wellKnownPathC);
@@ -676,14 +662,16 @@ void OAuth::fetchWellKnown()
                     }
                     const auto promptValuesSupported = data.value(QStringLiteral("prompt_values_supported")).toArray();
                     if (!promptValuesSupported.isEmpty()) {
+                        // filter _supportedPromtValues by what is supported by the idp
+                        const auto defaultOauthPromtValue = _supportedPromtValues;
                         _supportedPromtValues = PromptValuesSupported::none;
                         for (const auto &x : promptValuesSupported) {
                             const auto flag = Utility::stringToEnum<PromptValuesSupported>(x.toString());
-                            // only use flags present in Theme::instance()->openIdConnectPrompt()
-                            if (flag & defaultOauthPromtValue())
+                            if (flag & defaultOauthPromtValue)
                                 _supportedPromtValues |= flag;
                         }
                     } else {
+                        // fall back to consent if the idp does not support any prompt values
                         _supportedPromtValues = PromptValuesSupported::consent;
                     }
 
