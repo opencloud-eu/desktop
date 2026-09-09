@@ -60,7 +60,7 @@ public:
     Q_ENUM(TokenEndpointAuthMethods)
 
     enum class PromptValuesSupported : char { none = 0, consent = 1 << 0, select_account = 1 << 1, login = 1 << 2 };
-    Q_ENUM(PromptValuesSupported)
+    Q_FLAG(PromptValuesSupported)
     Q_DECLARE_FLAGS(PromptValuesSupportedFlags, PromptValuesSupported)
 
     OAuth(const QUrl &serverUrl, QNetworkAccessManager *networkAccessManager, const QVariantMap &dynamicRegistrationData, QObject *parent);

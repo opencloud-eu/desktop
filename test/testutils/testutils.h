@@ -14,6 +14,19 @@
 namespace OCC {
 
 namespace TestUtils {
+    Q_NAMESPACE
+
+    // Helper enum to trest enum related utilities
+    enum class TestFlag {
+        None = 0,
+        Flag0 = 0x1 << 0,
+        Flag1 = 0x1 << 1,
+        // Flag2 is omitted on purpose
+        Flag3 = 0x1 << 3
+    };
+    Q_FLAG_NS(TestFlag)
+    Q_DECLARE_FLAGS(TestFlags, TestFlag)
+
     namespace TestUtilsPrivate {
         void accountStateDeleter(OCC::AccountState *acc);
 

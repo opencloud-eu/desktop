@@ -876,10 +876,11 @@ void AccountBasedOAuth::refreshAuthentication(const QString &refreshToken)
 QString OCC::toString(OAuth::PromptValuesSupportedFlags s)
 {
     QStringList out;
-    for (auto k : {OAuth::PromptValuesSupported::consent, OAuth::PromptValuesSupported::select_account})
+    for (auto k : Utility::enumValues<OAuth::PromptValuesSupported>()) {
         if (s & k) {
             out += Utility::enumToString(k);
         }
+    }
     return out.join(QLatin1Char(' '));
 }
 
