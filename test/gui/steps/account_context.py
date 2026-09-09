@@ -21,7 +21,7 @@ from helpers.SyncHelper import (
     listen_sync_status_for_item,
 )
 from helpers.UserHelper import get_password_for_user
-from helpers.ConfigHelper import get_config
+from helpers.ConfigHelper import get_config, is_windows
 from helpers.TableParser import table_rows_hash
 from helpers.AppHelper import close_and_kill_app, wait_until_app_terminated
 from helpers.FilesHelper import convert_path_separators_for_os
@@ -54,6 +54,9 @@ def step(context, username):
 
 @Given('user "{username}" has set up a client with default settings')
 def step(context, username):
+    if is_windows():
+        AccountConnectionWizard.add_server('%local_server%', get_config('localBackendUrl'))
+
     password = get_password_for_user(username)
     setup_client(username)
     enter_password = EnterPassword()
