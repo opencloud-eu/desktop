@@ -39,30 +39,36 @@ def after_step(context, step):
 
 def after_scenario(context, scenario):
     # stop screen recording
-    if get_config("record_video_on_failure"):
-        ScreenRecorder.stop_recording(passed=scenario.status == Status.passed)
+    try:
+        if get_config("record_video_on_failure"):
+            ScreenRecorder.stop_recording(passed=scenario.status == Status.passed)
 
-    # quit the application
-    close_and_kill_app()
-    clear_socket_messages()
-    close_socket_connection()
+        # quit the application
+        close_and_kill_app()
+        clear_socket_messages()
+        close_socket_connection()
 
-    # store app log on scenario failure
-    if scenario.status in [Status.failed, Status.error] and os.path.exists(
-        get_config('currentAppLogFile')
-    ):
-        save_app_log(scenario)
+        # store app log on scenario failure
+        if scenario.status in [Status.failed, Status.error] and os.path.exists(
+            get_config('currentAppLogFile')
+        ):
+            save_app_log(scenario)
 
-    if os.path.exists(get_config('crash_log_file')):
-        save_crash_log(scenario)
+        if os.path.exists(get_config('crash_log_file')):
+            save_crash_log(scenario)
 
-    # clean up sync dir
-    if os.path.exists(get_config("clientRootSyncPath")):
-        shutil.rmtree(get_config("clientRootSyncPath"))
+        # clean up sync dir
+        if os.path.exists(get_config("clientRootSyncPath")):
+            shutil.rmtree(get_config("clientRootSyncPath"))
 
-    cleanup_created_paths()
-    cleanup_current_app_log()
-    reset_sync_connection_name()
+        cleanup_created_paths()
+        cleanup_current_app_log()
+        reset_sync_connection_name()
 
-    delete_project_spaces()
-    delete_created_users()
+        delete_project_spaces()
+    finally:
+        # Always runs, even if any step above raised.
+        try:
+            delete_created_users()
+        except Exception as e:
+            print(f"[CLEANUP] delete_created_users failed: {e}")
