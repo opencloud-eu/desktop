@@ -207,7 +207,21 @@ else()
       PROPERTIES
       MACOSX_PACKAGE_LOCATION Resources
       )
-  set_target_properties(opencloud PROPERTIES OUTPUT_NAME "${APPLICATION_SHORTNAME}" MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/MacOSXBundleInfo.plist)
+  # Generate main app entitlements with the configured App Group identifier.
+  set(APP_GROUP_IDENTIFIER "${APPLE_DEVELOPMENT_TEAM}.${APPLICATION_REV_DOMAIN}")
+  configure_file(
+      "${CMAKE_SOURCE_DIR}/src/OpenCloud.entitlements"
+      "${CMAKE_CURRENT_BINARY_DIR}/OpenCloud.entitlements"
+      @ONLY
+  )
+  set_target_properties(opencloud PROPERTIES
+      OUTPUT_NAME "${APPLICATION_SHORTNAME}"
+      MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/MacOSXBundleInfo.plist
+      XCODE_ATTRIBUTE_CODE_SIGN_ENTITLEMENTS "${CMAKE_CURRENT_BINARY_DIR}/OpenCloud.entitlements"
+      XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "$(CODE_SIGN_IDENTITY)"
+      XCODE_ATTRIBUTE_DEVELOPMENT_TEAM "${APPLE_DEVELOPMENT_TEAM}"
+      XCODE_ATTRIBUTE_ENABLE_HARDENED_RUNTIME NO
+  )
 endif()
 
 install(TARGETS opencloud OpenCloudGui ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

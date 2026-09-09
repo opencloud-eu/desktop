@@ -83,7 +83,13 @@ void setUpInitialSyncFolder(AccountStatePtr accountStatePtr, bool useVfs)
             if (!spaces.isEmpty()) {
                 const QString localDir(accountStatePtr->account()->defaultSyncRoot());
                 FileSystem::setFolderMinimumPermissions(localDir);
-                Utility::setupFavLink(localDir);
+                // In NSFileProvider mode the spaces appear under Finder "Locations"
+                // automatically, and the legacy local sync root is only a backing
+                // skeleton (empty placeholder folders). Adding it to Favorites makes
+                // users trip over those empty folders — so skip it in NSFP mode.
+                if (VfsPluginManager::instance().bestAvailableVfsMode() != Vfs::Mode::MacOSNSFileProvider) {
+                    Utility::setupFavLink(localDir);
+                }
                 for (const auto *space : spaces) {
                     const QString name = space->displayName();
                     const QString folderName = FolderMan::instance()->findGoodPathForNewSyncFolder(
