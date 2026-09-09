@@ -278,7 +278,7 @@ QString AbstractNetworkJob::errorStringParsingBody(QByteArray *body)
 AbstractNetworkJob::~AbstractNetworkJob()
 {
     if (!_finished && !_aborted && !_timedout) {
-        qCCritical(lcNetworkJob) << u"Deleting running job" << this;
+        qCCritical(lcNetworkJob) << u"Deleting running job" << requestId();
     }
     if (_reply) {
         // the body must live as long as the reply exists
