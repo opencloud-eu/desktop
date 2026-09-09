@@ -34,12 +34,12 @@ def parse_timestamp(ts_str):
         return None
 
 
-def read_lines(file_path):
-    """Read the log file, tolerating both UTF-8 and UTF-16 encoded files."""
+def get_encoding(file_path):
     for encoding in ('utf-8', 'utf-16'):
         try:
-            with open(file_path, 'r', encoding=encoding) as f:
-                return f.readlines()
+            with open(file_path, 'rt', encoding=encoding) as f:
+                f.readline()
+            return encoding
         except (UnicodeError, UnicodeDecodeError):
             continue
     print(f"Could not decode {file_path} as utf-8 or utf-16.")
@@ -47,35 +47,34 @@ def read_lines(file_path):
 
 
 def parse_log(file_path):
-    data = {}
     try:
-        lines = read_lines(file_path)
+        encoding = get_encoding(file_path)
     except FileNotFoundError:
         print(f"File {file_path} not found.")
         sys.exit(1)
 
-    for line in lines:
-        if 'sync.httplogger' not in line:
-            continue
-        match = LOG_LINE_RE.search(line)
-        if not match:
-            continue
-        log_type = match.group('type')
-        log_id = match.group('id')
-        json_str = match.group('json')
-        timestamp = parse_timestamp(match.group('ts'))
-        try:
-            payload = json.loads(json_str)
-        except json.JSONDecodeError as e:
-            print(f"Error decoding JSON for {log_id}: {e}")
-            continue
+    with open(file_path, 'rt', encoding=encoding) as f:
+        data = {}
+        for line in f:
+            match = LOG_LINE_RE.search(line)
+            if not match:
+                continue
+            log_type = match.group('type')
+            log_id = match.group('id')
+            json_str = match.group('json')
+            timestamp = parse_timestamp(match.group('ts'))
+            try:
+                payload = json.loads(json_str)
+            except json.JSONDecodeError as e:
+                print(f"Error decoding JSON for {log_id}: {e}")
+                continue
 
-        entry = data.setdefault(log_id, {'request': None, 'response': None})
-        if log_type == 'REQUEST':
-            entry['request'] = extract_request(payload, timestamp)
-        else:
-            entry['response'] = extract_response(payload, timestamp)
-    return data
+            entry = data.setdefault(log_id, {'request': None, 'response': None})
+            if log_type == 'REQUEST':
+                entry['request'] = extract_request(payload, timestamp)
+            else:
+                entry['response'] = extract_response(payload, timestamp)
+        return data
 
 
 def extract_request(payload, timestamp):
