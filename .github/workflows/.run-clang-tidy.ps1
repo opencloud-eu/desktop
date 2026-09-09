@@ -1,10 +1,17 @@
+# ensure sarif are in path
+$env:PATH+="$([IO.Path]::PathSeparator)${HOME}/.cargo/bin/"
+
 $clazyPlugin="ClazyClangTidy"
+
+$extraArgs = @()
 
 if($isWindows) {
     $clazyPlugin = $null
     #$clazy += ".dll" // don't use clazy on windows for now
 } elseif($isLinux) {
     $clazyPlugin = "${env:KDEROOT}/lib/${clazyPlugin}.so"
+    # the project was bui wit gcc ensure craft clang finds the toolchain
+    $extraArgs += @("-extra-arg=--gcc-toolchain=$($(Get-Item $(Get-command ${env:CXX}).Source).Directory.Parent)")
 } else
 {
     $clazyPlugin = "${env:KDEROOT}/lib/${clazyPlugin}.dylib"
@@ -15,11 +22,12 @@ $CLAZY_LEVEL2="clazy-ctor-missing-parent-argument,clazy-base-class-event,clazy-c
 
 if ($clazyPlugin)
 {
-    $clazyCommand = @("-load=${clazyPlugin}", "-checks=${CLAZY_LEVEL0},-overloaded-signal,qt-keywords")
+    $clazyCommand = @("-load=${clazyPlugin}", "-checks=${CLAZY_LEVEL0},${CLAZY_LEVEL1},-overloaded-signal,qt-keywords")
 } else {
     $clazyCommand = @()
 }
 
-$clangCommand = $clazyCommand + @("-p",  "$env:BUILD_DIR")
+$clangCommand = $clazyCommand + $extraArgs + @("-p",  "$env:BUILD_DIR")
 
-run-clang-tidy @clangCommand | Tee-Object -Path "$([System.IO.Path]::GetTempPath())/clang-tidy.log"
+Write-Host "Running run-clang-tidy ${clangCommand}"
+run-clang-tidy @clangCommand | clang-tidy-sarif  | Tee-Object -Path "${env:GITHUB_WORKSPACE}/clang-tidy.sarif" | sarif-fmt
