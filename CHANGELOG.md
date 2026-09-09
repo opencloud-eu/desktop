@@ -6,6 +6,10 @@
 
 @TheOneRing, @prashant-gurung899, @saw-jan
 
+### 🐛 Bug Fixes
+
+- Fix check for OAuth::PromptValuesSupported [[#1091](https://github.com/opencloud-eu/desktop/pull/1091)]
+
 ### 📈 Enhancement
 
 - Fallback to consent if prompt_values_supported is not exposed [[#1092](https://github.com/opencloud-eu/desktop/pull/1092)]
