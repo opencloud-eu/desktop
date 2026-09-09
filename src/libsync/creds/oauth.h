@@ -117,7 +117,7 @@ protected:
 
     QString _clientId;
     QString _clientSecret;
-    QString _scopes;
+    QString _scopes = QStringLiteral("openid offline_access email profile");
 
     QUrl _registrationEndpoint;
 
