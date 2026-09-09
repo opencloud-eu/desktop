@@ -8,6 +8,7 @@
 
 ### 🐛 Bug Fixes
 
+- Display logout button if reauthentication failed [[#1089](https://github.com/opencloud-eu/desktop/pull/1089)]
 - Fix check for OAuth::PromptValuesSupported [[#1091](https://github.com/opencloud-eu/desktop/pull/1091)]
 
 ### 📈 Enhancement
