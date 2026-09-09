@@ -1,11 +1,13 @@
 import os
 import time
+import pyperclip
+import pyautogui
 from types import SimpleNamespace
 from appium.webdriver.common.appiumby import AppiumBy as By
 from selenium.common.exceptions import WebDriverException
 
 from helpers.WebUIHelper import authorize_via_webui
-from helpers.ConfigHelper import get_config
+from helpers.ConfigHelper import get_config, is_windows
 from helpers.SetupClientHelper import (
     create_user_sync_path,
     get_temp_resource_path,
@@ -41,7 +43,14 @@ class AccountConnectionWizard:
         selector="QApplication.Settings.centralwidget.dialogStack.SetupWizardWidget.contentWidget.AccountConfiguredWizardPage.advancedConfigGroupBox.advancedConfigGroupBoxContentWidget.localDirectoryGroupBox.chooseLocalDirectoryButton",
     )
     CHOOSE_FOLDER_BUTTON = SimpleNamespace(by=By.NAME, selector="Choose")
-    LOGIN_DIALOG = SimpleNamespace(by=By.NAME, selector="Log in with your web browser")
+    SELECT_FOLDER_BUTTON = SimpleNamespace(by=By.NAME, selector="Select Folder")
+    LOGIN_DIALOG = SimpleNamespace(
+        by=By.XPATH, selector="//*[contains(@Name, 'Log in with your web browser')]"
+    )
+    COPY_URL_TO_CLIPBOARD_BUTTON_WINDOW = SimpleNamespace(
+        by=By.XPATH,
+        selector="//*[contains(@Name, 'Copy URL')]",
+    )
     COPY_URL_TO_CLIPBOARD_BUTTON = SimpleNamespace(
         by=By.NAME,
         selector="Copy URL",
@@ -56,6 +65,10 @@ class AccountConnectionWizard:
     DIRECTORY_NAME_EDIT_BOX = SimpleNamespace(
         by=By.ACCESSIBILITY_ID,
         selector="QApplication.QFileDialog.fileNameEdit",
+    )
+    WINDOWS_DIRECTORY_NAME_EDIT_BOX = SimpleNamespace(
+        by=By.CLASS_NAME,
+        selector="Edit",
     )
     SYNC_EVERYTHING_RADIO_BUTTON = SimpleNamespace(
         by=By.NAME, selector="Synchronize all existing spaces"
@@ -78,9 +91,12 @@ class AccountConnectionWizard:
             AccountConnectionWizard.ACCEPT_CERTIFICATE_YES.by,
             AccountConnectionWizard.ACCEPT_CERTIFICATE_YES.selector,
         )
-        # click the last button
-        last_button = buttons.pop()
-        last_button.click()
+        if is_windows():
+            pyautogui.hotkey("alt", "y")
+        else:
+            # click the last button
+            last_button = buttons.pop()
+            last_button.click()
 
     @staticmethod
     def add_user_credentials(username, password):
@@ -92,24 +108,30 @@ class AccountConnectionWizard:
 
     @staticmethod
     def copy_login_url():
-        app().find_element(
-            AccountConnectionWizard.COPY_URL_TO_CLIPBOARD_BUTTON.by,
-            AccountConnectionWizard.COPY_URL_TO_CLIPBOARD_BUTTON.selector,
-        ).click()
+        if is_windows():
+            app().find_element(
+                AccountConnectionWizard.COPY_URL_TO_CLIPBOARD_BUTTON_WINDOW.by,
+                AccountConnectionWizard.COPY_URL_TO_CLIPBOARD_BUTTON_WINDOW.selector,
+            ).click()
+        else:
+            app().find_element(
+                AccountConnectionWizard.COPY_URL_TO_CLIPBOARD_BUTTON.by,
+                AccountConnectionWizard.COPY_URL_TO_CLIPBOARD_BUTTON.selector,
+            ).click()
 
     @staticmethod
     def get_login_url():
         login_url = ""
         try:
             AccountConnectionWizard.copy_login_url()
-            login_url = app().get_clipboard_text()
+            login_url = pyperclip.paste() if is_windows() else app().get_clipboard_text()
             if not login_url.startswith("https://"):
                 raise WebDriverException(f"Invalid clipboard text: {login_url}")
         except WebDriverException:
             # retry once upon failure
             time.sleep(0.5)
             AccountConnectionWizard.copy_login_url()
-            login_url = app().get_clipboard_text()
+            login_url = pyperclip.paste() if is_windows() else app().get_clipboard_text()
         except Exception as e:
             print(f"[Error] Failed to get login URL. Clipboard value: {login_url}")
             raise e
@@ -136,10 +158,16 @@ class AccountConnectionWizard:
             AccountConnectionWizard.DIRECTORY_NAME_BOX.by,
             AccountConnectionWizard.DIRECTORY_NAME_BOX.selector,
         ).click()
-        dir_location_input = app().find_element(
-            AccountConnectionWizard.DIRECTORY_NAME_EDIT_BOX.by,
-            AccountConnectionWizard.DIRECTORY_NAME_EDIT_BOX.selector,
-        )
+        if is_windows():
+            dir_location_input = app().find_element(
+                AccountConnectionWizard.WINDOWS_DIRECTORY_NAME_EDIT_BOX.by,
+                AccountConnectionWizard.WINDOWS_DIRECTORY_NAME_EDIT_BOX.selector,
+            )
+        else:
+            dir_location_input = app().find_element(
+                AccountConnectionWizard.DIRECTORY_NAME_EDIT_BOX.by,
+                AccountConnectionWizard.DIRECTORY_NAME_EDIT_BOX.selector,
+            )
         dir_location_input.clear()
         dir_location_input.send_keys(sync_path)
         app().find_element(
@@ -225,27 +253,42 @@ class AccountConnectionWizard:
 
     @staticmethod
     def select_advanced_config():
-        app().find_element(
+        element = app().find_element(
             AccountConnectionWizard.ADVANCED_CONFIGURATION_CHECKBOX.by,
             AccountConnectionWizard.ADVANCED_CONFIGURATION_CHECKBOX.selector,
-        ).click()
+        )
+        if is_windows():
+            element.native_toggle()
+        else:
+            element.click()
 
     @staticmethod
     def can_change_local_sync_dir():
         can_change = False
         try:
-            app().find_element(
+            select_local_folder = app().find_element(
                 AccountConnectionWizard.SELECT_LOCAL_FOLDER_BUTTON.by,
                 AccountConnectionWizard.SELECT_LOCAL_FOLDER_BUTTON.selector,
-            ).click()
+            )
+            if is_windows():
+                app().execute_script("windows: invoke", select_local_folder)
+                time.sleep(5)
+            else:
+                select_local_folder.click()
             app().find_element(
                 AccountConnectionWizard.DIRECTORY_NAME_BOX.by,
                 AccountConnectionWizard.DIRECTORY_NAME_BOX.selector,
             )
-            app().find_element(
-                AccountConnectionWizard.CHOOSE_FOLDER_BUTTON.by,
-                AccountConnectionWizard.CHOOSE_FOLDER_BUTTON.selector,
-            )
+            if is_windows():
+                app().find_element(
+                    AccountConnectionWizard.SELECT_FOLDER_BUTTON.by,
+                    AccountConnectionWizard.SELECT_FOLDER_BUTTON.selector,
+                )
+            else:
+                app().find_element(
+                    AccountConnectionWizard.CHOOSE_FOLDER_BUTTON.by,
+                    AccountConnectionWizard.CHOOSE_FOLDER_BUTTON.selector,
+                )
             can_change = True
         except Exception:
             pass
@@ -257,6 +300,8 @@ class AccountConnectionWizard:
             AccountConnectionWizard.SYNC_EVERYTHING_RADIO_BUTTON.by,
             AccountConnectionWizard.SYNC_EVERYTHING_RADIO_BUTTON.selector,
         )
+        if is_windows():
+            return element.is_selected()
         return element.get_attribute("checked") == "true"
 
     @staticmethod

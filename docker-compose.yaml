@@ -1,0 +1,19 @@
+services:
+  opencloud:
+    image: opencloudeu/opencloud-rolling:latest
+    entrypoint: /bin/sh
+    command: ['-c', 'opencloud init || true && opencloud server']
+    environment:
+      OC_LOG_LEVEL: 'error'
+      OC_LOG_PRETTY: true
+      OC_LOG_COLOR: true
+      OC_INSECURE: true
+
+      OC_URL: 'https://host.docker.internal:9200'
+      # OC_URL: 'https://10.0.2.2:9200'
+      # OC_URL: 'https://192.168.2.128:9200'
+      IDM_ADMIN_PASSWORD: 'admin'
+      PROXY_ENABLE_BASIC_AUTH: true
+    ports:
+      - 9200:9200
+
