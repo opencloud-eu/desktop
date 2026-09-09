@@ -483,12 +483,22 @@ File synchronization desktop utility.</source>
 <context>
     <name>OAuthCredentialsSetupWizardState</name>
     <message>
-        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="45"/>
+        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="44"/>
+        <source>Failed to look up instances: %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="48"/>
+        <source>Server returned empty list of instances</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="61"/>
         <source>Error while trying to log in to OAuth2-enabled server.</source>
         <translation>OAuth2 지원 서버에 로그인을 시도하는 동안 오류가 발생했습니다.</translation>
     </message>
     <message>
-        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="49"/>
+        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="65"/>
         <source>Oauth2 authentication requires a secured connection.</source>
         <translation>Oauth2 인증에는 보안 연결이 필요합니다.</translation>
     </message>
@@ -1730,7 +1740,7 @@ Note that using any logging command line options will override the settings.</so
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="692"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="694"/>
         <source>Could not parse OIDC discovery response: %1</source>
         <translation type="unfinished"/>
     </message>

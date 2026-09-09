@@ -483,12 +483,22 @@ Desktop-Client zur Dateisynchronisierung.</translation>
 <context>
     <name>OAuthCredentialsSetupWizardState</name>
     <message>
-        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="45"/>
+        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="44"/>
+        <source>Failed to look up instances: %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="48"/>
+        <source>Server returned empty list of instances</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="61"/>
         <source>Error while trying to log in to OAuth2-enabled server.</source>
         <translation>Fehler beim Anmelden an OAuth2-aktiviertem Server.</translation>
     </message>
     <message>
-        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="49"/>
+        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="65"/>
         <source>Oauth2 authentication requires a secured connection.</source>
         <translation>Oauth2-Authentifizierung benötigt eine gesicherte Verbindung.</translation>
     </message>
@@ -1726,7 +1736,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
         <translation>Der WebFinger-Ausstellerlink hatte keinen href-Wert.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="692"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="694"/>
         <source>Could not parse OIDC discovery response: %1</source>
         <translation>Die OIDC-Erkennungsantwort konnte nicht verarbeitet werden: %1</translation>
     </message>

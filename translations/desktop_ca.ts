@@ -483,12 +483,22 @@ Aplicació d&apos;escriptori per sincronitzar fitxers.</translation>
 <context>
     <name>OAuthCredentialsSetupWizardState</name>
     <message>
-        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="45"/>
+        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="44"/>
+        <source>Failed to look up instances: %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="48"/>
+        <source>Server returned empty list of instances</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="61"/>
         <source>Error while trying to log in to OAuth2-enabled server.</source>
         <translation>S&apos;ha produït un error en intentar iniciar la sessió al servidor habilitat per OAuth2.</translation>
     </message>
     <message>
-        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="49"/>
+        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="65"/>
         <source>Oauth2 authentication requires a secured connection.</source>
         <translation>L&apos;autenticació OAuth2 requereix una connexió segura.</translation>
     </message>
@@ -1726,7 +1736,7 @@ Tingues en compte que l’ús de qualsevol opció de línia d’ordres per a reg
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="692"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="694"/>
         <source>Could not parse OIDC discovery response: %1</source>
         <translation type="unfinished"/>
     </message>
