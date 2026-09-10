@@ -10,7 +10,7 @@ if($isWindows) {
     #$clazy += ".dll" // don't use clazy on windows for now
 } elseif($isLinux) {
     $clazyPlugin = "${env:KDEROOT}/lib/${clazyPlugin}.so"
-    # the project was bui wit gcc ensure craft clang finds the toolchain
+    # the project was built wit gcc ensure craft clang finds the toolchain
     $extraArgs += @("-extra-arg=--gcc-toolchain=$($(Get-Item $(Get-command ${env:CXX}).Source).Directory.Parent)")
 } else
 {
