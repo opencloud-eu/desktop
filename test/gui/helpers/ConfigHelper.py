@@ -6,11 +6,12 @@ from configparser import ConfigParser
 from pathlib import Path
 
 CURRENT_DIR = Path(__file__).resolve().parent
-APP_CONFIG_FILE = "opencloud.cfg"
+APP_NAME = "OpenCloud"
+APP_CONFIG_FILE = f"{APP_NAME.lower()}.cfg"
 CUMULATIVE_APP_LOG_FILE = "opencloud.log"
 CURRENT_APP_LOG_FILE = "app.log"
 DEFAULT_SYNC_CONNECTION_NAME = "Personal"
-CRASH_LOG_FILE = "OpenCloud-crash.log"
+CRASH_LOG_FILE = f"{APP_NAME}-crash.log"
 
 
 def is_windows():
@@ -61,6 +62,7 @@ def get_app_env():
 # map environment variables to config keys
 CONFIG_ENV_MAP = {
     'app_path': 'APP_PATH',
+    'app_name': 'APP_NAME',
     'localBackendUrl': 'BACKEND_HOST',
     'sync_timeout': 'SYNC_TIMEOUT',
     'clientRootSyncPath': 'CLIENT_ROOT_SYNC_PATH',
@@ -73,7 +75,6 @@ CONFIG_ENV_MAP = {
 DEFAULT_PATH_CONFIG = {
     'custom_lib': os.path.abspath(os.path.join(os.path.dirname(__file__), 'custom_lib')),
     'home_dir': get_default_home_dir(),
-    'clientConfigFile': os.path.join(get_config_home(), "OpenCloud", APP_CONFIG_FILE),
     # allow to record first 5 videos
     'video_record_limit': 5,
     'max_timeout': 60,
@@ -81,14 +82,13 @@ DEFAULT_PATH_CONFIG = {
     'lowest_timeout': 1,
     'min_sync_timeout': 5,
     'files_for_upload': os.path.join(CURRENT_DIR.parent, 'files-for-upload'),
-    # actual file path where the client stores the crash log.
-    'crash_log_file': os.path.join(gettempdir(), CRASH_LOG_FILE),
     'webdriver_url': 'http://localhost:4723',
 }
 
 # mutable configs
 CONFIG = {
     'app_path': None,
+    'app_name': APP_NAME,
     'localBackendUrl': 'https://localhost:9200/',
     'sync_timeout': 60,
     'clientRootSyncPath': get_client_root_path(),
@@ -96,6 +96,9 @@ CONFIG = {
     'test_temp_dir': os.path.join(get_client_root_path(), 'temp'),
     'record_video_on_failure': False,
     'syncConnectionName': DEFAULT_SYNC_CONNECTION_NAME,
+    'clientConfigFile': os.path.join(get_config_home(), APP_NAME, APP_CONFIG_FILE),
+    # actual file path where the client stores the crash log.
+    'crash_log_file': os.path.join(gettempdir(), CRASH_LOG_FILE),
     ###############################
     # dynamic configs             #
     ###############################
@@ -172,6 +175,11 @@ def init_config():
     if not os.path.isfile(CONFIG['app_path']):
         raise KeyError(f'App path is not a file: {CONFIG["app_path"]}')
 
+    if CONFIG['app_name'] != APP_NAME:
+        app_name = CONFIG['app_name']
+        app_config_file = f"{app_name.lower().replace(' ', '_')}.cfg"
+        CONFIG['clientConfigFile'] = os.path.join(get_config_home(), app_name, app_config_file)
+        CONFIG['crash_log_file'] = os.path.join(gettempdir(), f"{app_name}-crash.log"),
     ### initialize dynamic config values
     # file to store app logs for the current scenario run
     CONFIG['currentAppLogFile'] = os.path.join(CONFIG["guiTestReportDir"], CURRENT_APP_LOG_FILE)
