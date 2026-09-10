@@ -176,19 +176,19 @@ File synchronization desktop utility.</source>
 <context>
     <name>Credentials</name>
     <message>
-        <location filename="../src/gui/qml/credentials/Credentials.qml" line="47"/>
+        <location filename="../src/gui/qml/credentials/Credentials.qml" line="48"/>
         <source>Stay logged out</source>
         <translation>ຢູ່ໃນສະຖານະອອກຈາກລະບົບຕໍ່ໄປ</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/credentials/Credentials.qml" line="85"/>
+        <location filename="../src/gui/qml/credentials/Credentials.qml" line="86"/>
         <source>Connecting %1 to:
 %2</source>
         <translation>ກຳລັງເຊື່ອມຕໍ່ %1 ຫາ:
 %2</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/credentials/Credentials.qml" line="85"/>
+        <location filename="../src/gui/qml/credentials/Credentials.qml" line="86"/>
         <source>Connecting to:
 %1</source>
         <translation>ກຳລັງເຊື່ອມຕໍ່ຫາ:
@@ -475,7 +475,7 @@ File synchronization desktop utility.</source>
         <translation>ຄັດລອກ URL</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/credentials/OAuthCredentials.qml" line="100"/>
+        <location filename="../src/gui/qml/credentials/OAuthCredentials.qml" line="102"/>
         <source>Restart authentication</source>
         <translation>ເລີ່ມການຢືນຢັນຕົວຕົນໃໝ່</translation>
     </message>
@@ -1649,109 +1649,109 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::OAuth</name>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="364"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="350"/>
         <source>Error returned from the server: &lt;em&gt;%1&lt;/em&gt;</source>
         <translation>ຂໍ້ຜິດພາດຈາກເຊີບເວີ: &lt;em&gt;%1&lt;/em&gt;</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="366"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="352"/>
         <source>There was an error accessing the &apos;token&apos; endpoint: &lt;br&gt;&lt;em&gt;%1&lt;/em&gt;</source>
         <translation>ເກີດຂໍ້ຜິດພາດໃນການເຂົ້າເຖິງ &apos;token&apos; endpoint: &lt;br&gt;&lt;em&gt;%1&lt;/em&gt;</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="368"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="354"/>
         <source>Could not parse the JSON returned from the server: &lt;br&gt;&lt;em&gt;%1&lt;/em&gt;</source>
         <translation>ບໍ່ສາມາດອ່ານ JSON ທີ່ຕອບກັບມາຈາກເຊີບເວີໄດ້: &lt;br&gt;&lt;em&gt;%1&lt;/em&gt;</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="370"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="356"/>
         <source>Unsupported token type: %1</source>
         <translation>ປະເພດ token ບໍ່ຮອງຮັບ: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="372"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="358"/>
         <source>The reply from the server did not contain all expected fields
 :%1</source>
         <translation>ການຕອບກັບຈາກເຊີບເວີມີຂໍ້ມູນບໍ່ຄົບຖ້ວນຕາມທີ່ຄາດໄວ້
 :%1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="374"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="360"/>
         <source>Unknown Error</source>
         <translation>ຂໍ້ຜິດພາດທີ່ບໍ່ຮູ້ຈັກ</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="377"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="363"/>
         <source>The id_token could not be parsed</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="387"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="373"/>
         <source>&lt;h1&gt;Incorrect user&lt;/h1&gt;&lt;p&gt;You logged-in as user &lt;em&gt;%1&lt;/em&gt;, but must login with user &lt;em&gt;%2&lt;/em&gt;.&lt;br&gt;Please return to the %3 and restart the authentication.&lt;/p&gt;</source>
         <translation>&lt;h1&gt;ຜູ້ໃຊ້ບໍ່ຖືກຕ້ອງ&lt;/h1&gt;&lt;p&gt;ທ່ານເຂົ້າສູ່ລະບົບດ້ວຍຊື່ &lt;em&gt;%1&lt;/em&gt;, ແຕ່ຕ້ອງເຂົ້າສູ່ລະບົບດ້ວຍຊື່ &lt;em&gt;%2&lt;/em&gt;.&lt;br&gt;ກະລຸນາກັບໄປທີ່ %3 ແລະ ເລີ່ມການຢືນຢັນຕົວຕົນໃໝ່.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="392"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="378"/>
         <source>&lt;h1&gt;Incorrect user&lt;/h1&gt;&lt;p&gt;You logged-in as a different user than is associated with this account.&lt;br&gt;Please return to the %1 and restart the authentication.&lt;/p&gt;</source>
         <translation>&lt;h1&gt;ຜູ້ໃຊ້ບໍ່ຖືກຕ້ອງ&lt;/h1&gt;&lt;p&gt;ທ່ານເຂົ້າສູ່ລະບົບດ້ວຍຊື່ຜູ້ໃຊ້ອື່ນທີ່ບໍ່ກົງກັບບັນຊີນີ້.&lt;br&gt;ກະລຸນາກັບໄປທີ່ %1 ແລະ ເລີ່ມການຢືນຢັນຕົວຕົນໃໝ່.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="397"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="383"/>
         <source>Incorrect user</source>
         <translation>ຜູ້ໃຊ້ບໍ່ຖືກຕ້ອງ</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="411"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="397"/>
         <source>&lt;h1&gt;Login successful&lt;/h1&gt;&lt;p&gt;You can close this window.&lt;/p&gt;</source>
         <translation>&lt;h1&gt;ເຂົ້າສູ່ລະບົບສຳເລັດແລ້ວ&lt;/h1&gt;&lt;p&gt;ທ່ານສາມາດປິດໜ້າຕ່າງນີ້ໄດ້ເລີຍ.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="412"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="398"/>
         <source>Login successful</source>
         <translation>ເຂົ້າສູ່ລະບົບສຳເລັດແລ້ວ</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="574"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="560"/>
         <source>WebFinger response had unexpected content type: %1</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="584"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="570"/>
         <source>Could not parse WebFinger response: %1</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="592"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="578"/>
         <source>WebFinger response subject did not match the requested resource</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="604"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="590"/>
         <source>WebFinger response did not contain an OpenID Connect issuer</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="611"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="597"/>
         <source>WebFinger issuer link had no href</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="694"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="682"/>
         <source>Could not parse OIDC discovery response: %1</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="351"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="337"/>
         <source>Login Error</source>
         <translation>ຂໍ້ຜິດພາດໃນການເຂົ້າສູ່ລະບົບ</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="379"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="365"/>
         <source>The audience of the id_token did not contain &quot;%1&quot;</source>
         <translation>Audience ຂອງ id_token ບໍ່ມີ &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="351"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="337"/>
         <source>&lt;h1&gt;Login Error&lt;/h1&gt;&lt;p&gt;%1&lt;/p&gt;</source>
         <translation>&lt;h1&gt;ຂໍ້ຜິດພາດໃນການເຂົ້າສູ່ລະບົບ&lt;/h1&gt;&lt;p&gt;%1&lt;/p&gt;</translation>
     </message>

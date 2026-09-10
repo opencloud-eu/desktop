@@ -176,19 +176,19 @@ Skrivebordsverktøy for filsynkronisering.</translation>
 <context>
     <name>Credentials</name>
     <message>
-        <location filename="../src/gui/qml/credentials/Credentials.qml" line="47"/>
+        <location filename="../src/gui/qml/credentials/Credentials.qml" line="48"/>
         <source>Stay logged out</source>
         <translation>Forbli utlogget</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/credentials/Credentials.qml" line="85"/>
+        <location filename="../src/gui/qml/credentials/Credentials.qml" line="86"/>
         <source>Connecting %1 to:
 %2</source>
         <translation>Kobler %1 til:
 %2</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/credentials/Credentials.qml" line="85"/>
+        <location filename="../src/gui/qml/credentials/Credentials.qml" line="86"/>
         <source>Connecting to:
 %1</source>
         <translation>Kobler til:
@@ -475,7 +475,7 @@ Skrivebordsverktøy for filsynkronisering.</translation>
         <translation>Kopier URL-en</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/credentials/OAuthCredentials.qml" line="100"/>
+        <location filename="../src/gui/qml/credentials/OAuthCredentials.qml" line="102"/>
         <source>Restart authentication</source>
         <translation>Start på nytt med autentisering</translation>
     </message>
@@ -485,12 +485,12 @@ Skrivebordsverktøy for filsynkronisering.</translation>
     <message>
         <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="44"/>
         <source>Failed to look up instances: %1</source>
-        <translation type="unfinished"/>
+        <translation>Kunne ikke slå opp instanser: %1</translation>
     </message>
     <message>
         <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="48"/>
         <source>Server returned empty list of instances</source>
-        <translation type="unfinished"/>
+        <translation>Tjeneren returnerte en tom liste med instanser</translation>
     </message>
     <message>
         <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="61"/>
@@ -933,7 +933,7 @@ Oppdateringen vil bli utført i bakgrunnen og overskrive den nåværende AppImag
         <location filename="../src/gui/folder.cpp" line="464"/>
         <source>»%1« has been removed.</source>
         <comment>%1 names a file.</comment>
-        <translation type="unfinished"/>
+        <translation>«%1» er fjernet.</translation>
     </message>
     <message numerus="yes">
         <location filename="../src/gui/folder.cpp" line="469"/>
@@ -1649,109 +1649,109 @@ Merk at bruk av alle kommandolinjealternativer for logging vil overstyre innstil
 <context>
     <name>OCC::OAuth</name>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="364"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="350"/>
         <source>Error returned from the server: &lt;em&gt;%1&lt;/em&gt;</source>
         <translation>Feil fra tjeneren: &lt;em&gt;%1&lt;/em&gt;</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="366"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="352"/>
         <source>There was an error accessing the &apos;token&apos; endpoint: &lt;br&gt;&lt;em&gt;%1&lt;/em&gt;</source>
         <translation>Det oppstod en feil ved tilgang til «token»-endepunktet: &lt;br&gt;&lt;em&gt;%1&lt;/em&gt;</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="368"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="354"/>
         <source>Could not parse the JSON returned from the server: &lt;br&gt;&lt;em&gt;%1&lt;/em&gt;</source>
         <translation>Kunne ikke tolke JSON-en som kom fra tjeneren: &lt;br&gt;&lt;em&gt;%1&lt;/em&gt;</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="370"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="356"/>
         <source>Unsupported token type: %1</source>
         <translation>Støttes ikke tokentype: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="372"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="358"/>
         <source>The reply from the server did not contain all expected fields
 :%1</source>
         <translation>Svaret fra tjeneren inneholdt ikke alle forventede feltene
 :%1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="374"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="360"/>
         <source>Unknown Error</source>
         <translation>Ukjent feil</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="377"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="363"/>
         <source>The id_token could not be parsed</source>
         <translation>ID-tokenet kunne ikke tolkes</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="387"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="373"/>
         <source>&lt;h1&gt;Incorrect user&lt;/h1&gt;&lt;p&gt;You logged-in as user &lt;em&gt;%1&lt;/em&gt;, but must login with user &lt;em&gt;%2&lt;/em&gt;.&lt;br&gt;Please return to the %3 and restart the authentication.&lt;/p&gt;</source>
         <translation>&lt;h1&gt;Feil bruker&lt;/h1&gt;&lt;p&gt;Du er logget inn som bruker &lt;em&gt;%1&lt;/em&gt;, men må logge inn med bruker &lt;em&gt;%2&lt;/em&gt;.&lt;br&gt;Vennligst gå tilbake til %3 og start på nytt.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="392"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="378"/>
         <source>&lt;h1&gt;Incorrect user&lt;/h1&gt;&lt;p&gt;You logged-in as a different user than is associated with this account.&lt;br&gt;Please return to the %1 and restart the authentication.&lt;/p&gt;</source>
         <translation>&lt;h1&gt;Feil bruker&lt;/h1&gt;&lt;p&gt;Du er logget inn som en annen bruker enn den som er knyttet til denne kontoen.&lt;br&gt;Vennligst gå tilbake til %1 og start om autentiseringen.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="397"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="383"/>
         <source>Incorrect user</source>
         <translation>Feil bruker</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="411"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="397"/>
         <source>&lt;h1&gt;Login successful&lt;/h1&gt;&lt;p&gt;You can close this window.&lt;/p&gt;</source>
         <translation>&lt;h1&gt;Innlogging vellykket&lt;/h1&gt;&lt;p&gt;Du kan lukke dette vinduet.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="412"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="398"/>
         <source>Login successful</source>
         <translation>Innlogging vellykket</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="574"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="560"/>
         <source>WebFinger response had unexpected content type: %1</source>
         <translation>WebFinger-svaret hadde uventet innholdstype: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="584"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="570"/>
         <source>Could not parse WebFinger response: %1</source>
         <translation>Kunne ikke tolke WebFinger-svaret: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="592"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="578"/>
         <source>WebFinger response subject did not match the requested resource</source>
         <translation>WebFinger-svar-subjektet samsvarte ikke med den forespurte ressursen</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="604"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="590"/>
         <source>WebFinger response did not contain an OpenID Connect issuer</source>
         <translation>WebFinger-respons inneholdt ikke en OpenID Connect-utsteder</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="611"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="597"/>
         <source>WebFinger issuer link had no href</source>
         <translation>WebFinger-utstederlenken hadde ingen href</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="694"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="682"/>
         <source>Could not parse OIDC discovery response: %1</source>
         <translation>Kunne ikke tolke OIDC-oppdagelsessvar: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="351"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="337"/>
         <source>Login Error</source>
         <translation>Innloggingsfeil</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="379"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="365"/>
         <source>The audience of the id_token did not contain &quot;%1&quot;</source>
         <translation>Mottakeren av id_token inneholdt ikke «%1»</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="351"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="337"/>
         <source>&lt;h1&gt;Login Error&lt;/h1&gt;&lt;p&gt;%1&lt;/p&gt;</source>
         <translation>&lt;h1&gt;Innloggingsfeil&lt;/h1&gt;&lt;p&gt;%1&lt;/p&gt;</translation>
     </message>
