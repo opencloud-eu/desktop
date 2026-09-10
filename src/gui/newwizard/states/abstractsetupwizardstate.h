@@ -33,6 +33,8 @@ class AbstractSetupWizardState : public QObject
     Q_OBJECT
 
 public:
+    ~AbstractSetupWizardState() override;
+
     /**
      * Used to display page within content widget.
      * @return page associated to this state
@@ -61,6 +63,12 @@ Q_SIGNALS:
      * Emitted when evaluatePage() has found an error.
      */
     void evaluationFailed(QString errorMessage);
+
+    /**
+     * Retry evaluation of the current page.
+     * Some pages might execute more complex operations and require a retry after an error was resolved.
+     */
+    void evaluationRetry() const;
 
 protected:
     explicit AbstractSetupWizardState(SetupWizardContext *context);

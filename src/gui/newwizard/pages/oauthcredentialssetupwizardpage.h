@@ -33,6 +33,7 @@ namespace Wizard {
 
     Q_SIGNALS:
         void openBrowserButtonPushed(const QUrl &url);
+        void requestAuthRestart();
     };
 
 }

@@ -21,6 +21,11 @@ AbstractSetupWizardState::AbstractSetupWizardState(SetupWizardContext *context)
 {
 }
 
+AbstractSetupWizardState::~AbstractSetupWizardState()
+{
+    delete _page;
+}
+
 AbstractSetupWizardPage *AbstractSetupWizardState::page() const
 {
     return _page;
