@@ -51,12 +51,14 @@ def create_user(username):
 
 def delete_created_users():
     for username, user_info in list(created_users.items()):
-        user_id = user_info['id']
-        url = url_join(get_graph_url(), "users", user_id)
-        response = request.delete(url)
-        request.assert_http_status(response, 204, "Failed to delete user")
-        del created_users[username]
-
+        try:
+            user_id = user_info['id']
+            url = url_join(get_graph_url(), "users", user_id)
+            response = request.delete(url)
+            request.assert_http_status(response, 204, "Failed to delete user")
+            del created_users[username]
+        except Exception as e:
+            print(f"[CLEANUP] Failed to delete user '{username}': {e}")
 
 def get_capabilities():
     server_url = get_config('localBackendUrl')
