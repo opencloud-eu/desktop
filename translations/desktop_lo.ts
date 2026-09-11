@@ -483,22 +483,22 @@ File synchronization desktop utility.</source>
 <context>
     <name>OAuthCredentialsSetupWizardState</name>
     <message>
-        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="44"/>
+        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="64"/>
         <source>Failed to look up instances: %1</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="48"/>
+        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="68"/>
         <source>Server returned empty list of instances</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="61"/>
+        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="49"/>
         <source>Error while trying to log in to OAuth2-enabled server.</source>
         <translation>ເກີດຂໍ້ຜິດພາດຂະນະພະຍາຍາມເຂົ້າສູ່ລະບົບເຊີບເວີທີ່ຮອງຮັບ OAuth2.</translation>
     </message>
     <message>
-        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="65"/>
+        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="45"/>
         <source>Oauth2 authentication requires a secured connection.</source>
         <translation>ການຢືນຢັນຕົວຕົນ OAuth2 ຕ້ອງການການເຊື່ອມຕໍ່ທີ່ປອດໄພ.</translation>
     </message>
@@ -1711,32 +1711,32 @@ Note that using any logging command line options will override the settings.</so
         <translation>ເຂົ້າສູ່ລະບົບສຳເລັດແລ້ວ</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="560"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="561"/>
         <source>WebFinger response had unexpected content type: %1</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="570"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="571"/>
         <source>Could not parse WebFinger response: %1</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="578"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="579"/>
         <source>WebFinger response subject did not match the requested resource</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="590"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="591"/>
         <source>WebFinger response did not contain an OpenID Connect issuer</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="597"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="598"/>
         <source>WebFinger issuer link had no href</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="682"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="683"/>
         <source>Could not parse OIDC discovery response: %1</source>
         <translation type="unfinished"/>
     </message>

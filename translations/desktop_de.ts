@@ -483,22 +483,22 @@ Desktop-Client zur Dateisynchronisierung.</translation>
 <context>
     <name>OAuthCredentialsSetupWizardState</name>
     <message>
-        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="44"/>
+        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="64"/>
         <source>Failed to look up instances: %1</source>
         <translation>Fehler beim Suchen der Instanzen: %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="48"/>
+        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="68"/>
         <source>Server returned empty list of instances</source>
         <translation>Der Server hat eine leere Liste von Instanzen zurückgegeben.</translation>
     </message>
     <message>
-        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="61"/>
+        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="49"/>
         <source>Error while trying to log in to OAuth2-enabled server.</source>
         <translation>Fehler beim Anmelden an OAuth2-aktiviertem Server.</translation>
     </message>
     <message>
-        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="65"/>
+        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="45"/>
         <source>Oauth2 authentication requires a secured connection.</source>
         <translation>Oauth2-Authentifizierung benötigt eine gesicherte Verbindung.</translation>
     </message>
@@ -1495,7 +1495,7 @@ Elemente, bei denen das Löschen erlaubt ist, werden gelöscht, wenn sie verhind
     <message>
         <location filename="../src/gui/logbrowser.ui" line="53"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;b&gt;The logs contain sensitive information which you should not make publicly available&lt;/b&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;b&gt;Die Protokolle enthalten sensible Informationen, die nicht öffentlich zugänglich gemacht werden sollten&lt;/b&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;b&gt;Die Protokolle enthalten sensible Informationen, die nicht öffentlich zugänglich gemacht werden sollten.&lt;/b&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../src/gui/logbrowser.ui" line="71"/>
@@ -1711,32 +1711,32 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
         <translation>Anmeldung erfolgreich</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="560"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="561"/>
         <source>WebFinger response had unexpected content type: %1</source>
         <translation>Die WebFinger-Antwort enthielt einen unerwarteten Inhaltstyp: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="570"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="571"/>
         <source>Could not parse WebFinger response: %1</source>
         <translation>Die WebFinger-Antwort konnte nicht verarbeitet werden: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="578"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="579"/>
         <source>WebFinger response subject did not match the requested resource</source>
         <translation>Der Betreff der WebFinger-Antwort stimmte nicht mit der angeforderten Ressource überein.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="590"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="591"/>
         <source>WebFinger response did not contain an OpenID Connect issuer</source>
         <translation>Die WebFinger-Antwort enthielt keinen OpenID-Connect-Aussteller.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="597"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="598"/>
         <source>WebFinger issuer link had no href</source>
         <translation>Der WebFinger-Ausstellerlink hatte keinen href-Wert.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="682"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="683"/>
         <source>Could not parse OIDC discovery response: %1</source>
         <translation>Die OIDC-Erkennungsantwort konnte nicht verarbeitet werden: %1</translation>
     </message>
