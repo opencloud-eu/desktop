@@ -483,22 +483,22 @@ Skrivebordsverktøy for filsynkronisering.</translation>
 <context>
     <name>OAuthCredentialsSetupWizardState</name>
     <message>
-        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="44"/>
+        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="64"/>
         <source>Failed to look up instances: %1</source>
         <translation>Kunne ikke slå opp instanser: %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="48"/>
+        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="68"/>
         <source>Server returned empty list of instances</source>
         <translation>Tjeneren returnerte en tom liste med instanser</translation>
     </message>
     <message>
-        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="61"/>
+        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="49"/>
         <source>Error while trying to log in to OAuth2-enabled server.</source>
         <translation>Feil under forsøk på å logge på OAuth2-aktivert tjener.</translation>
     </message>
     <message>
-        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="65"/>
+        <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="45"/>
         <source>Oauth2 authentication requires a secured connection.</source>
         <translation>OAuth2-autentisering krever en sikret forbindelse.</translation>
     </message>
@@ -1711,32 +1711,32 @@ Merk at bruk av alle kommandolinjealternativer for logging vil overstyre innstil
         <translation>Innlogging vellykket</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="560"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="561"/>
         <source>WebFinger response had unexpected content type: %1</source>
         <translation>WebFinger-svaret hadde uventet innholdstype: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="570"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="571"/>
         <source>Could not parse WebFinger response: %1</source>
         <translation>Kunne ikke tolke WebFinger-svaret: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="578"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="579"/>
         <source>WebFinger response subject did not match the requested resource</source>
         <translation>WebFinger-svar-subjektet samsvarte ikke med den forespurte ressursen</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="590"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="591"/>
         <source>WebFinger response did not contain an OpenID Connect issuer</source>
         <translation>WebFinger-respons inneholdt ikke en OpenID Connect-utsteder</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="597"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="598"/>
         <source>WebFinger issuer link had no href</source>
         <translation>WebFinger-utstederlenken hadde ingen href</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="682"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="683"/>
         <source>Could not parse OIDC discovery response: %1</source>
         <translation>Kunne ikke tolke OIDC-oppdagelsessvar: %1</translation>
     </message>
