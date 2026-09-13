@@ -329,7 +329,18 @@ bool Folder::ignoreHiddenFiles()
 
 void Folder::setIgnoreHiddenFiles(bool ignore)
 {
+    if (_definition.ignoreHiddenFiles == ignore) {
+        return;
+    }
     _definition.ignoreHiddenFiles = ignore;
+
+    if (!ignore) {
+        // The hidden items were skipped by the previous runs, so they are neither in the local
+        // database nor did the remote etags change: nothing would make us look at them again.
+        // Invalidate both, the same way a change of the ignore list does.
+        _journal.forceRemoteDiscoveryNextSync();
+        slotNextSyncFullLocalDiscovery();
+    }
 }
 
 QString Folder::cleanPath() const
