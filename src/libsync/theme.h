@@ -21,8 +21,6 @@
 
 #include <QFileInfo>
 #include <QObject>
-#include <QPalette>
-#include <qquickwindow.h>
 
 namespace OCC {
 
@@ -33,51 +31,10 @@ class SyncResult;
  * @ingroup libsync
  */
 
-class QmlUrlButton
-{
-    Q_GADGET
-    Q_PROPERTY(QString icon MEMBER icon CONSTANT)
-    Q_PROPERTY(QString name MEMBER name CONSTANT)
-    Q_PROPERTY(QUrl url MEMBER url CONSTANT)
-    QML_VALUE_TYPE(urlbuttondata)
-
-public:
-    QmlUrlButton();
-    QmlUrlButton(const std::tuple<QString, QString, QUrl> &tuple);
-
-    QString icon;
-    QString name;
-    QUrl url;
-};
-
-class QmlButtonColor
-{
-    Q_GADGET
-    Q_PROPERTY(QColor color MEMBER color CONSTANT)
-    Q_PROPERTY(QColor textColor MEMBER textColor CONSTANT)
-    Q_PROPERTY(QColor textColorDisabled MEMBER textColorDisabled CONSTANT)
-    Q_PROPERTY(bool valid READ valid CONSTANT)
-    QML_VALUE_TYPE(buttonColor)
-
-public:
-    QColor color = {};
-    QColor textColor = {};
-    QColor textColorDisabled = {};
-
-    bool valid() const;
-};
 
 class OPENCLOUD_SYNC_EXPORT Theme : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(bool multiAccount READ multiAccount FINAL CONSTANT)
-    Q_PROPERTY(QList<QmlUrlButton> urlButtons READ qmlUrlButtons FINAL CONSTANT)
-    Q_PROPERTY(QColor brandedBackgoundColor READ wizardHeaderBackgroundColor CONSTANT)
-    Q_PROPERTY(QColor brandedForegroundColor READ wizardHeaderTitleColor CONSTANT)
-    Q_PROPERTY(QmlButtonColor primaryButtonColor READ primaryButtonColor CONSTANT)
-    Q_PROPERTY(QmlButtonColor secondaryButtonColor READ secondaryButtonColor CONSTANT)
-    QML_SINGLETON
-    QML_ELEMENT
 public:
     enum class VersionFormat {
         Plain,
@@ -89,50 +46,8 @@ public:
 
     /* returns a singleton instance. */
     static Theme *instance();
-    static Theme *create(QQmlEngine *qmlEngine, QJSEngine *);
 
     ~Theme() override;
-
-    /**
-     * @brief appNameGUI - Human readable application name.
-     *
-     * Use and redefine this if the human readable name contains spaces,
-     * special chars and such.
-     *
-     * By default, the name is derived from the APPLICATION_NAME
-     * cmake variable.
-     *
-     * @return QString with human readable app name.
-     */
-    virtual QString appNameGUI() const;
-
-    /**
-     * @brief appName - Application name (short)
-     *
-     * Use and redefine this as an application name. Keep it straight as
-     * it is used for config files etc. If you need a more sophisticated
-     * name in the GUI, redefine appNameGUI.
-     *
-     * By default, the name is derived from the APPLICATION_SHORTNAME
-     * cmake variable, and should be the same. This method is only
-     * reimplementable for legacy reasons.
-     *
-     * Warning: Do not modify this value, as many things, e.g. settings
-     * depend on it! You most likely want to modify \ref appNameGUI().
-     *
-     * @return QString with app name.
-     */
-    QString appName() const;
-
-    QString orgDomainName() const;
-
-    QString vendor() const;
-
-    /**
-     * @brief configFileName
-     * @return the name of the config file.
-     */
-    virtual QString configFileName() const;
 
     /**
      * get an sync state icon
@@ -142,13 +57,6 @@ public:
 
     QString syncStateIconName(const SyncResult &result) const;
 
-    virtual QIcon applicationIcon() const;
-    virtual QIcon aboutIcon() const;
-
-    /**
-     * When true, client works with multiple accounts.
-     */
-    virtual bool multiAccount() const;
 
     /**
      * URL to documentation.
@@ -159,17 +67,6 @@ public:
      * the menu.
      */
     virtual QUrl helpUrl() const;
-
-    /** @return color for the setup wizard */
-    virtual QColor wizardHeaderTitleColor() const;
-
-    /** @return color for the setup wizard. */
-    virtual QColor wizardHeaderBackgroundColor() const;
-    virtual QmlButtonColor primaryButtonColor() const;
-    virtual QmlButtonColor secondaryButtonColor() const;
-
-    /** @return logo for the setup wizard. */
-    virtual QIcon wizardHeaderLogo() const;
 
     /**
      * The SHA sum of the released git commit
@@ -249,24 +146,10 @@ public:
 
 
     /**
-     * Warn if we find multiple db files in the sync root.
-     * This can indicate that the sync dir is shared between multiple clients or accounts
-     */
-    virtual bool warnOnMultipleDb() const;
-
-
-    /**
      * Whether to or not to allow multiple sync folder pairs for the same remote folder.
      * Default: true
      */
     virtual bool allowDuplicatedFolderSyncPair() const;
-
-    /**
-     * Returns a list of IconName, Name, Url pairs that will be displayed as buttons on AccountSettings.
-     * For each url there must be an icon provided in the form of #IconName.svg or multiple #IconName-#resolution.png like for the other theme icons.
-     * */
-    virtual QVector<std::tuple<QString, QString, QUrl>> urlButtons() const;
-
 
     /**
      * Whether or not to enable move-to-trash instead of deleting files that are gone from the server.
@@ -287,17 +170,10 @@ public:
 protected:
     Theme();
 
-    // compat with legacy themes
-    [[deprecated("Use Resources::themeUniversalIcon")]] auto themeUniversalIcon(const QString &iconName) const
-    {
-        return Resources::themeUniversalIcon(iconName);
-    }
-
 Q_SIGNALS:
     void themeChanged();
 
 private:
-    QList<QmlUrlButton> qmlUrlButtons() const;
     Theme(Theme const &);
     Theme &operator=(Theme const &);
 

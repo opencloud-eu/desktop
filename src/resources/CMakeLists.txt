@@ -7,6 +7,7 @@ add_library(OpenCloudResources SHARED
     themewatcher.cpp
     template.cpp
     fonticon.cpp
+    jsontheme.cpp
 )
 
 generate_theme(OpenCloudResources OPENCLOUD_SIDEBAR_ICONS)
@@ -17,7 +18,6 @@ set(OPENCLOUD_SIDEBAR_ICONS ${OPENCLOUD_SIDEBAR_ICONS} CACHE INTERNAL "Sidebar i
 target_link_libraries(OpenCloudResources PUBLIC Qt::Core Qt::Gui Qt::Quick)
 apply_common_target_settings(OpenCloudResources)
 target_include_directories(OpenCloudResources PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..> $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/..>)
-target_compile_definitions(OpenCloudResources PRIVATE APPLICATION_SHORTNAME="${APPLICATION_SHORTNAME}")
 
 set_target_properties(OpenCloudResources PROPERTIES
     OUTPUT_NAME "OpenCloudResources"

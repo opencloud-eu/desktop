@@ -4,6 +4,7 @@
 #include "fonticon.h"
 
 #include "resources.h"
+#include "resources/jsontheme.h"
 
 #include <QFontDatabase>
 #include <QIconEngine>
@@ -56,7 +57,7 @@ public:
         : _family(family)
         , _glyph(glyph)
         , _size(size)
-        , _color(color.isValid() ? color : OCC::Resources::tint())
+        , _color(color.isValid() ? color : JsonTheme::instance().iconTint())
     {
     }
 

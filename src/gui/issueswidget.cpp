@@ -22,9 +22,11 @@
 #include "folderman.h"
 #include "gui/models/expandingheaderview.h"
 #include "issueswidget.h"
+
 #include "libsync/configfile.h"
 #include "models/models.h"
 #include "protocolwidget.h"
+#include "resources/jsontheme.h"
 #include "syncengine.h"
 #include "syncfileitem.h"
 #include "theme.h"
@@ -205,7 +207,7 @@ IssuesWidget::IssuesWidget(QWidget *parent)
     connect(ProgressDispatcher::instance(), &ProgressDispatcher::excluded, this, [this](Folder *f, const QString &file) {
         auto item = SyncFileItemPtr::create(file);
         item->_status = SyncFileItem::FilenameReserved;
-        item->_errorString = tr("The file »%1« was ignored as its name is reserved by %2").arg(file, Theme::instance()->appNameGUI());
+        item->_errorString = tr("The file »%1« was ignored as its name is reserved by %2").arg(file, Resources::JsonTheme::instance().applicationDisplayName());
         _model->addProtocolItem(ProtocolItem { f, item });
     });
 

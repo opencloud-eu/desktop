@@ -24,6 +24,7 @@
 #include "gui/folderman.h"
 #include "gui/fonticonmessagebox.h"
 #include "gui/qmlutils.h"
+#include "resources/jsontheme.h"
 #include "resources/qmlresources.h"
 #include "resources/resources.h"
 #include "theme.h"
@@ -105,7 +106,7 @@ SettingsDialog::SettingsDialog(QWidget *parent)
     , _ui(new Ui::SettingsDialog)
 {
     setObjectName(QStringLiteral("Settings")); // required as group for saveGeometry call
-    setWindowTitle(Theme::instance()->appNameGUI());
+    setWindowTitle(Resources::JsonTheme::instance().applicationDisplayName());
     _ui->setupUi(this);
 
     setMinimumSize(::minimumSizeHint(this));
@@ -120,8 +121,10 @@ SettingsDialog::SettingsDialog(QWidget *parent)
     connect(
         _ui->quickWidget->engine(), &QQmlEngine::quit, QApplication::instance(),
         [this] {
-            auto box = new FontIconMessageBox({Resources::FontIcon::DefaultGlyphes::Question}, tr("Quit %1").arg(Theme::instance()->appNameGUI()),
-                tr("Are you sure you want to quit %1?").arg(Theme::instance()->appNameGUI()), QMessageBox::Yes | QMessageBox::No, this);
+            auto box = new FontIconMessageBox({Resources::FontIcon::DefaultGlyphes::Question},
+                tr("Quit %1").arg(Resources::JsonTheme::instance().applicationDisplayName()),
+                tr("Are you sure you want to quit %1?").arg(Resources::JsonTheme::instance().applicationDisplayName()), QMessageBox::Yes | QMessageBox::No,
+                this);
             box->setAttribute(Qt::WA_DeleteOnClose);
             connect(box, &QMessageBox::accepted, this, [] {
                 // delay quit to prevent a Qt 6.6 crash in the destructor of the dialog
@@ -146,9 +149,9 @@ SettingsDialog::SettingsDialog(QWidget *parent)
     connect(_ui->dialogStack, &QStackedWidget::currentChanged, this, [this] {
         auto *w = _ui->dialogStack->currentWidget();
         if (!w->windowTitle().isEmpty()) {
-            setWindowTitle(tr("%1 - %2").arg(Theme::instance()->appNameGUI(), w->windowTitle()));
+            setWindowTitle(tr("%1 - %2").arg(Resources::JsonTheme::instance().applicationDisplayName(), w->windowTitle()));
         } else {
-            setWindowTitle(Theme::instance()->appNameGUI());
+            setWindowTitle(Resources::JsonTheme::instance().applicationDisplayName());
         }
     });
 

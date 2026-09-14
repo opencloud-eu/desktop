@@ -18,6 +18,7 @@
 #include "common/version.h"
 #include "libsync/globalconfig.h"
 #include "logger.h"
+#include "resources/jsontheme.h"
 #include "theme.h"
 
 #include "creds/abstractcredentials.h"
@@ -249,7 +250,7 @@ QString ConfigFile::backup() const
 
 QString ConfigFile::configFile()
 {
-    return configPath() + Theme::instance()->configFileName();
+    return u"%1%2.cfg"_s.arg(configPath(), Resources::JsonTheme::instance().applicationName());
 }
 
 QSettings ConfigFile::makeQSettings()

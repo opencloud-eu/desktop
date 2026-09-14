@@ -3,7 +3,9 @@
 
 #include "libsync/globalconfig.h"
 #include "libsync/theme.h"
+#include "resources/jsontheme.h"
 
+#include <QKeyEvent>
 #include <QValidator>
 
 using namespace Qt::Literals::StringLiterals;
@@ -61,9 +63,9 @@ ServerUrlSetupWizardPage::ServerUrlSetupWizardPage(const QUrl &serverUrl)
     }
 
     _ui->logoLabel->setText(QString());
-    _ui->logoLabel->setPixmap(Theme::instance()->wizardHeaderLogo().pixmap(200, 200));
+    _ui->logoLabel->setPixmap(Resources::JsonTheme::instance().wizardLogo().pixmap(200, 200));
     //: This is the accessibility text for the logo in the setup wizard page. The parameter is the name for the (branded) application.
-    _ui->logoLabel->setAccessibleName(tr("%1 logo").arg(Theme::instance()->appNameGUI()));
+    _ui->logoLabel->setAccessibleName(tr("%1 logo").arg(Resources::JsonTheme::instance().applicationDisplayName()));
 
     auto *validator = new UrlValidator(_ui->urlLineEdit);
     _ui->urlLineEdit->setValidator(validator);

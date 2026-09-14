@@ -17,6 +17,7 @@
 #include "guiutility.h"
 
 #include "libsync/theme.h"
+#include "resources/jsontheme.h"
 
 #include <QProcess>
 
@@ -47,15 +48,17 @@ void Utility::startShellIntegration()
 
     // Tell Finder to use the Extension (checking it from System Preferences -> Extensions)
     _system(QStringLiteral("pluginkit"),
-        {QStringLiteral("-e"), QStringLiteral("use"), QStringLiteral("-i"), Theme::instance()->orgDomainName() + QStringLiteral(".FinderSyncExt")});
+        {QStringLiteral("-e"), QStringLiteral("use"), QStringLiteral("-i"),
+            Resources::JsonTheme::instance().organizationDomain() + QStringLiteral(".FinderSyncExt")});
 }
 
 QString Utility::socketApiSocketPath()
 {
+    // TODO: the extension does not know about the theme...
     // This must match the code signing Team setting of the extension
     // Example for developer builds (with ad-hoc signing identity): "" "eu.opencloud.desktop" ".socketApi"
     // Example for official signed packages: "9B5WD74GWJ." "eu.opencloud.desktop" ".socketApi"
-    return QStringLiteral("%1%2.socketApi").arg(QStringLiteral(SOCKETAPI_TEAM_IDENTIFIER_PREFIX), Theme::instance()->orgDomainName());
+    return QStringLiteral("%1%2.socketApi").arg(QStringLiteral(SOCKETAPI_TEAM_IDENTIFIER_PREFIX), Resources::JsonTheme::instance().organizationDomain());
 }
 
 bool Utility::isInstalledByStore()

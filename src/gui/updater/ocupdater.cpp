@@ -375,8 +375,8 @@ void WindowsUpdater::showNewVersionAvailableWidget(const UpdateInfo &info)
     // if the version tag is set, there is a newer version.
     QString txt = tr("<p>A new version of the %1 Desktop App is available.</p>"
                      "<p><b>%2</b> is available for download. The installed version is %3.</p>")
-                      .arg(Utility::escape(Theme::instance()->appNameGUI()),
-                          Utility::escape(info.versionString()), Utility::escape(Version::versionWithBuildNumber().toString()));
+                      .arg(Utility::escape(Resources::JsonTheme::instance().applicationDisplayName()), Utility::escape(info.versionString()),
+                          Utility::escape(Version::versionWithBuildNumber().toString()));
     auto *widget = new NewVersionAvailableWidget(ocApp()->settingsDialog(), txt);
 
     connect(widget, &NewVersionAvailableWidget::versionSkipped, this, &WindowsUpdater::slotSetPreviouslySkippedVersion);
@@ -408,8 +408,8 @@ void WindowsUpdater::showUpdateErrorDialog(const QString &targetVersion)
     QLabel *lbl = new QLabel;
     QString txt = tr("<p>A new version of the %1 Desktop App is available but the updating process failed.</p>"
                      "<p><b>%2</b> has been downloaded. The installed version is %3.</p>")
-                      .arg(Utility::escape(Theme::instance()->appNameGUI()),
-                          Utility::escape(targetVersion), Utility::escape(Version::versionWithBuildNumber().toString()));
+                      .arg(Utility::escape(Resources::JsonTheme::instance().applicationDisplayName()), Utility::escape(targetVersion),
+                          Utility::escape(Version::versionWithBuildNumber().toString()));
 
     lbl->setText(txt);
     lbl->setTextFormat(Qt::RichText);

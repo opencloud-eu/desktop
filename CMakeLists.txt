@@ -48,7 +48,26 @@ include(CTest)
 include(OCBundleResources)
 include(OCApplyCommonSettings)
 
-include("${CMAKE_CURRENT_LIST_DIR}/THEME.cmake")
+set( APPLICATION_NAME       "OpenCloud Desktop")
+set( APPLICATION_SHORTNAME  "OpenCloud" )
+set( APPLICATION_EXECUTABLE "opencloud" )
+set( APPLICATION_ICON_NAME  "opencloud" )
+set( APPLICATION_REV_DOMAIN "eu.opencloud.desktop" )
+
+if(BETA_CHANNEL_BUILD)
+    set( APPLICATION_REV_DOMAIN "${APPLICATION_REV_DOMAIN}.beta" )
+
+    configure_file("${PROJECT_SOURCE_DIR}/beta.json" "${CMAKE_CURRENT_BINARY_DIR}/bin/opencloud_theme.json" COPYONLY)
+    if(APPLE)
+        list(APPEND OPENCLOUD_BUNDLED_RESOURCES "${CMAKE_CURRENT_BINARY_DIR}/bin/opencloud_theme.json")
+    else()
+        install(FILES "${CMAKE_CURRENT_BINARY_DIR}/bin/opencloud_theme.json" DESTINATION "bin/opencloud_theme.json")
+    endif()
+endif()
+# TODO: re enable once we got icons
+#set( MAC_INSTALLER_BACKGROUND_FILE "${CMAKE_SOURCE_DIR}/admin/osx/installer-background.png")
+
+option( WITH_CRASHREPORTER "Build crashreporter" OFF )
 
 if(NOT WITH_CRASHREPORTER)
     message(STATUS "Build of crashreporter disabled.")
