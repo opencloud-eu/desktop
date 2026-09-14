@@ -155,3 +155,9 @@ qint64 CfApiWrapper::HydrationDevice::writeData(const char *data, qint64 len)
     }
     return len;
 }
+
+void CfApiWrapper::HydrationDevice::close()
+{
+    Q_ASSERT(_buffer.isEmpty());
+    QIODevice::close();
+}
