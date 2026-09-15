@@ -120,7 +120,7 @@ namespace CfApiWrapper {
     Result<OCC::Vfs::ConvertToPlaceholderResult, QString> setPinState(const QString &path, PinState state, SetPinRecurseMode mode);
     Result<void, QString> createPlaceholderInfo(const QString &path, time_t modtime, qint64 size, const QByteArray &fileId);
     Result<OCC::Vfs::ConvertToPlaceholderResult, QString> updatePlaceholderInfo(
-        const QString &path, time_t modtime, qint64 size, const QByteArray &fileId, const QString &replacesPath = QString());
+        const QString &path, time_t modtime, qint64 size, const QByteArray &fileId, const QString &replacesPath, bool isHydrated);
     Result<OCC::Vfs::ConvertToPlaceholderResult, QString> convertToPlaceholder(
         const QString &path, time_t modtime, qint64 size, const QByteArray &fileId, const QString &replacesPath);
     Result<OCC::Vfs::ConvertToPlaceholderResult, QString> dehydratePlaceholder(const QString &path, const QByteArray &fileId);
