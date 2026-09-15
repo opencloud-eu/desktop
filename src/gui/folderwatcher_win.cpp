@@ -40,7 +40,7 @@ WatcherThread::WatchChanges WatcherThread::watchChanges(size_t fileNotifyBufferS
 
     QScopeGuard todoBeforeReturn([this]() {
         CancelIo(_directory);
-        closeHandle();
+        _directory.close();
     });
 
     OVERLAPPED overlapped = {};
@@ -155,13 +155,6 @@ void WatcherThread::processEntries(FILE_NOTIFY_INFORMATION *curEntry)
     }
 }
 
-void WatcherThread::closeHandle()
-{
-    if (_directory) {
-        _directory.close();
-    }
-}
-
 void WatcherThread::run()
 {
     _resultEvent = CreateEvent(nullptr, true, false, nullptr);
@@ -195,16 +188,12 @@ WatcherThread::WatcherThread(FolderWatcherPrivate *parent, const QString &path)
     , _parent(parent)
     , _path(path + (path.endsWith(QLatin1Char('/')) ? QString() : QStringLiteral("/")))
     , _longPath(FileSystem::longWinPath(_path))
-    , _directory(nullptr)
     , _resultEvent(nullptr)
     , _stopEvent(nullptr)
 {
 }
 
-WatcherThread::~WatcherThread()
-{
-    closeHandle();
-}
+WatcherThread::~WatcherThread() { }
 
 void WatcherThread::stop()
 {

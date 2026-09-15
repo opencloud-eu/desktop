@@ -47,7 +47,6 @@ protected:
     void run() override;
     WatchChanges watchChanges(size_t fileNotifyBufferSize);
     void processEntries(FILE_NOTIFY_INFORMATION *curEntry);
-    void closeHandle();
 
 Q_SIGNALS:
     void changed(QSet<QString> path);
