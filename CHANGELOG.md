@@ -1,10 +1,10 @@
 # Changelog
 
-## [4.1.0](https://github.com/opencloud-eu/desktop/releases/tag/v4.1.0) - 2026-09-11
+## [4.1.0](https://github.com/opencloud-eu/desktop/releases/tag/v4.1.0) - 2026-09-15
 
 ### ❤️ Thanks to all contributors! ❤️
 
-@TheOneRing, @dragotin, @jnweiger, @prashant-gurung899, @saw-jan
+@TheOneRing, @dragotin, @flimmy, @jnweiger, @prashant-gurung899, @saw-jan
 
 ### 🐛 Bug Fixes
 
