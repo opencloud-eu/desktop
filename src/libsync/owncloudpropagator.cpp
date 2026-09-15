@@ -552,15 +552,13 @@ Result<QString, bool> OwncloudPropagator::localFileNameClash(const QString &relF
         }
 #elif defined(Q_OS_WIN)
         WIN32_FIND_DATA FindFileData;
-        const Utility::Handle hFind(FindFirstFileW(reinterpret_cast<const wchar_t *>(FileSystem::longWinPath(fileInfo.filePath()).utf16()), &FindFileData),
-            [](HANDLE h) { FindClose(h); });
+        const auto path = FileSystem::toFilesystemPath(fileInfo.filePath());
+        HANDLE hFind = FindFirstFileW(path.c_str(), &FindFileData);
         if (hFind != INVALID_HANDLE_VALUE) {
-            const QString realFileName = QString::fromWCharArray(FindFileData.cFileName);
-
-            if (!fileInfo.filePath().endsWith(realFileName, Qt::CaseSensitive)) {
-                const QString clashName = fileInfo.path() + QLatin1Char('/') + realFileName;
-                qCWarning(lcPropagator) << u"Detected case clash between" << fileInfo.filePath() << u"and" << clashName;
-                return clashName;
+            const Utility::Handle handle(hFind, path.parent_path() / FindFileData.cFileName, [](HANDLE h) { FindClose(h); });
+            if (path.compare(handle.path()) != 0) {
+                qCWarning(lcPropagator) << u"Detected case clash between" << fileInfo.filePath() << u"and" << handle.path().native();
+                return FileSystem::fromFilesystemPath(handle.path().native());
             }
         }
 #else
