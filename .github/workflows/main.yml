@@ -38,7 +38,7 @@ jobs:
       # actions/upload-artifact doesn't need contents: write
       contents: read
       actions: read
-      security-events: read
+      security-events: write
     strategy:
         fail-fast: true
         matrix:

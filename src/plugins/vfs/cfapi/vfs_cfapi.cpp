@@ -191,7 +191,8 @@ Result<Vfs::ConvertToPlaceholderResult, QString> VfsCfApi::updateMetadata(const 
         return result;
     } else {
         if (cfapi::findPlaceholderInfo<CF_PLACEHOLDER_BASIC_INFO>(localPath)) {
-            return cfapi::updatePlaceholderInfo(localPath, syncItem._modtime, syncItem._size, syncItem._fileId, replacesPath);
+            return cfapi::updatePlaceholderInfo(
+                localPath, syncItem._modtime, syncItem._size, syncItem._fileId, replacesPath, syncItem._type != ItemTypeVirtualFile);
         } else {
             return cfapi::convertToPlaceholder(localPath, syncItem._modtime, syncItem._size, syncItem._fileId, replacesPath);
         }
