@@ -108,7 +108,7 @@ Utility::Handle::Handle(HANDLE h, const std::filesystem::path &path, std::functi
     }
 }
 
-Utility::Handle Utility::Handle::createHandle(const std::filesystem::path &path, const CreateHandleParameter &p)
+Utility::Handle Utility::Handle::createHandle(const std::filesystem::path &path, const CreateHandleParameter &p, std::function<void(HANDLE)> &&close)
 {
     uint32_t flags = FILE_ATTRIBUTE_NORMAL | FILE_FLAG_BACKUP_SEMANTICS;
     if (!p.followSymlinks) {
@@ -117,7 +117,8 @@ Utility::Handle Utility::Handle::createHandle(const std::filesystem::path &path,
     if (p.async) {
         flags |= FILE_FLAG_OVERLAPPED;
     }
-    return Utility::Handle{CreateFileW(path.native().data(), p.accessMode, p.shareMode, nullptr, p.creationFlags, flags, nullptr), path};
+    return Utility::Handle{
+        CreateFileW(path.lexically_normal().native().data(), p.accessMode, p.shareMode, nullptr, p.creationFlags, flags, nullptr), path, std::move(close)};
 }
 
 Utility::Handle::Handle(HANDLE h, const std::filesystem::path &path)

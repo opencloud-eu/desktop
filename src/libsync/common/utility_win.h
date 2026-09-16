@@ -43,7 +43,7 @@ namespace Utility {
             bool followSymlinks = true;
             bool async = false;
         };
-        static Handle createHandle(const std::filesystem::path &path, const CreateHandleParameter &p = {});
+        static Handle createHandle(const std::filesystem::path &path, const CreateHandleParameter &p = {}, std::function<void(HANDLE)> &&close = CloseHandle);
 
         Handle(const Handle &) = delete;
         Handle &operator=(const Handle &) = delete;
