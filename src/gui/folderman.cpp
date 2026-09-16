@@ -687,7 +687,14 @@ void FolderMan::setIgnoreHiddenFiles(bool ignore)
     // Note that the setting will revert to 'true' if all folders
     // are deleted...
     for (auto *folder : std::as_const(_folders)) {
+        if (folder->ignoreHiddenFiles() == ignore) {
+            continue;
+        }
         folder->setIgnoreHiddenFiles(ignore);
+        if (!ignore && folder->canSync()) {
+            // sync the items that were hidden so far instead of waiting for the next scheduled run
+            _scheduler->enqueueFolder(folder);
+        }
     }
     saveFolders();
 }
