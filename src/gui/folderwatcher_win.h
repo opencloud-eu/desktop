@@ -33,7 +33,7 @@ class WatcherThread : public QThread
     Q_OBJECT
 public:
     WatcherThread(FolderWatcherPrivate *parent, const QString &path);
-    ~WatcherThread() override;
+    ~WatcherThread() override = default;
 
     void stop();
 
@@ -56,9 +56,7 @@ private:
     FolderWatcherPrivate *_parent;
     const QString _path;
     const QString _longPath;
-    Utility::Handle _directory;
-    HANDLE _resultEvent;
-    HANDLE _stopEvent;
+    Utility::Handle _stopEvent;
 };
 
 /**
