@@ -57,6 +57,26 @@ void ServerUrlSetupWizardState::evaluatePage()
         // and certificates are deleted from the access manager
         _context->resetAccessManager();
 
+        // Apply an optional client certificate (mTLS) selected on this page. This must happen after the
+        // access manager and account builder resets above, so the certificate is present for the very first
+        // probe: a server that gates status.php/WebFinger/OAuth behind mTLS can only be reached this way.
+        // The wizard's access manager presents the cert on the probes; the account builder carries it onto
+        // the account that gets created; any CA certs bundled in the PKCS#12 are trusted for the server chain.
+        if (!serverUrlSetupWizardPage->clientCertificate().isNull()) {
+            const auto clientCert = serverUrlSetupWizardPage->clientCertificate();
+            const auto clientKey = serverUrlSetupWizardPage->clientPrivateKey();
+            _context->accessManager()->setClientCertificate(clientCert, clientKey);
+            _context->accountBuilder().setClientCertificate(clientCert, clientKey);
+
+            const auto caCerts = serverUrlSetupWizardPage->clientCaCertificates();
+            if (!caCerts.isEmpty()) {
+                _context->accessManager()->addCustomTrustedCaCertificates(caCerts);
+                for (const auto &caCertificate : caCerts) {
+                    _context->accountBuilder().addCustomTrustedCaCertificate(caCertificate);
+                }
+            }
+        }
+
         // first, we must resolve the actual server URL
         auto *resolveJob = Jobs::ResolveUrlJobFactory(_context->accessManager()).startJob(_context->accountBuilder().serverUrl(), this);
 

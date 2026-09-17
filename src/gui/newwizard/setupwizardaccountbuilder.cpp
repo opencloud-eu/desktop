@@ -96,6 +96,10 @@ AccountPtr SetupWizardAccountBuilder::build() const
 
     newAccountPtr->addApprovedCerts({ _customTrustedCaCertificates.begin(), _customTrustedCaCertificates.end() });
 
+    if (!_clientCertificate.isNull()) {
+        newAccountPtr->setClientCertificate(_clientCertificate, _clientPrivateKey);
+    }
+
     if (!_defaultSyncTargetDir.isEmpty()) {
         newAccountPtr->setDefaultSyncRoot(_defaultSyncTargetDir);
         if (!QFileInfo::exists(_defaultSyncTargetDir)) {
@@ -139,6 +143,12 @@ void SetupWizardAccountBuilder::addCustomTrustedCaCertificate(const QSslCertific
 void SetupWizardAccountBuilder::clearCustomTrustedCaCertificates()
 {
     _customTrustedCaCertificates.clear();
+}
+
+void SetupWizardAccountBuilder::setClientCertificate(const QSslCertificate &certificate, const QSslKey &privateKey)
+{
+    _clientCertificate = certificate;
+    _clientPrivateKey = privateKey;
 }
 
 OAuth2AuthenticationStrategy *SetupWizardAccountBuilder::authenticationStrategy() const
