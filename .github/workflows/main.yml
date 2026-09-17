@@ -238,6 +238,7 @@ jobs:
       uses: github/codeql-action/upload-sarif@v4
       with:
         sarif_file: clang-tidy.sarif
+        checkout_path: /__w/desktop/desktop
 
     - name: get signing key
       if: ${{ matrix.signing.enabled && matrix.signing.keyfile_secret_name != null }}
