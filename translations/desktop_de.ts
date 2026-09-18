@@ -2590,7 +2590,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/libsync/syncengine.cpp" line="777"/>
         <source>Space quota exceeded. Please contact the Administrator of this space.</source>
-        <translation>Space-Quota überschritten. Bitte wenden Sie sich an den für diesen Space zuständigen Administrator.</translation>
+        <translation>Space-Quota überschritten. Bitte wenden Sie sich an die für diesen Space zuständige Administration.</translation>
     </message>
     <message>
         <location filename="../src/libsync/syncengine.cpp" line="266"/>
