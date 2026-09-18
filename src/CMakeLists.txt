@@ -45,6 +45,11 @@ endif()
 
 add_subdirectory(plugins)
 
+# On macOS 12+ (Darwin 21+), build the File Provider App Extension for Files On Demand
+if(APPLE AND CMAKE_SYSTEM_VERSION VERSION_GREATER_EQUAL "21.0")
+    add_subdirectory(extensions/fileprovider)
+endif()
+
 install(EXPORT ${APPLICATION_SHORTNAME}Config DESTINATION "${KDE_INSTALL_CMAKEPACKAGEDIR}/${APPLICATION_SHORTNAME}" NAMESPACE OpenCloud::)
 
 ecm_setup_version(PROJECT

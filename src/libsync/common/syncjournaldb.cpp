@@ -36,6 +36,10 @@
 
 #include <cstring>
 
+#ifdef Q_OS_MAC
+#import <os/log.h>
+#endif
+
 using namespace Qt::Literals::StringLiterals;
 Q_LOGGING_CATEGORY(lcDb, "sync.database", QtInfoMsg)
 
@@ -826,6 +830,10 @@ Result<void, QString> SyncJournalDb::setFileRecord(const SyncJournalFileRecord &
 bool SyncJournalDb::deleteFileRecord(const QString &filename, bool recursively)
 {
     QMutexLocker locker(&_mutex);
+
+#ifdef Q_OS_MAC
+    os_log_fault(OS_LOG_DEFAULT, "deleteFileRecord: %{public}s recursive=%d", qPrintable(filename), recursively);
+#endif
 
     if (checkConnect()) {
         // if (!recursively) {
