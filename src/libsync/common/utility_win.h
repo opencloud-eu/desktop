@@ -32,8 +32,8 @@ namespace Utility {
          * A RAAI for Windows Handles
          */
         Handle() = default;
-        explicit Handle(HANDLE h);
-        explicit Handle(HANDLE h, std::function<void(HANDLE)> &&close, uint32_t error = NO_ERROR);
+        explicit Handle(HANDLE h, const std::filesystem::path &path);
+        explicit Handle(HANDLE h, const std::filesystem::path &path, std::function<void(HANDLE)> &&close, uint32_t error = NO_ERROR);
 
         struct CreateHandleParameter
         {
@@ -43,7 +43,7 @@ namespace Utility {
             bool followSymlinks = true;
             bool async = false;
         };
-        static Handle createHandle(const std::filesystem::path &path, const CreateHandleParameter &p = {});
+        static Handle createHandle(const std::filesystem::path &path, const CreateHandleParameter &p = {}, std::function<void(HANDLE)> &&close = CloseHandle);
 
         Handle(const Handle &) = delete;
         Handle &operator=(const Handle &) = delete;
