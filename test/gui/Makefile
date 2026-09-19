@@ -44,6 +44,10 @@ install-chromium: check-uv
 run-atpsi-webdriver: check-uv
 	bash woodpecker/run_atspi_webdriver.sh
 
+.PHONY: run-appium-webdriver
+run-appium-webdriver:
+	.\woodpecker\run_appium_webdriver.sh
+
 .PHONY: python-lint
 python-lint: check-uv
 	uv run --no-sync ruff format . --diff

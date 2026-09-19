@@ -8,7 +8,7 @@ from appium.webdriver.common.appiumby import AppiumBy as By
 from selenium.common.exceptions import WebDriverException, NoSuchElementException
 
 import helpers.api.http_helper as request
-from helpers.ConfigHelper import get_config, get_app_env
+from helpers.ConfigHelper import get_config, get_app_env, is_windows
 from helpers.ElementHelper import get_element_center_xy
 from helpers.keys.keys_map import get_key
 from helpers.Utils import wait_for
@@ -34,6 +34,10 @@ def native_double_click(self, **kwargs):
     pyautogui.doubleClick(x, y, **kwargs)
 
 
+def native_toggle(self):
+    app().execute_script("windows: toggle", self)
+
+
 def native_send_keys(self, key):
     pyautogui.press(get_key(key))
 
@@ -43,7 +47,6 @@ def find_element(self, by, selector, timeout=None):
     Returns a visible element.
     Throws if no elements are found or if multiple visible elements are found.
     """
-
     if timeout is not None:
         set_implicit_wait(timeout)
 
@@ -59,7 +62,6 @@ def find_element(self, by, selector, timeout=None):
             raise NoSuchElementException(f'No element found for "{by}={selector}"')
         return elements[0]
     finally:
-        # reset implicit wait to default value
         if timeout is not None:
             set_implicit_wait(get_config('min_timeout'))
 
@@ -68,11 +70,11 @@ def pause(self):
     threading.Event().wait()
 
 
-# bind custom element methods
 Remote.find_element = find_element
 Remote.pause = pause
 WebElement.native_click = native_click
 WebElement.native_double_click = native_double_click
+WebElement.native_toggle = native_toggle
 WebElement.native_send_keys = native_send_keys
 WebElement.find_element = find_element
 
@@ -85,20 +87,40 @@ def app():
 
 def create_app_session():
     global app_driver
-    logfile = get_config("currentAppLogFile")
-    command_args = f' --logfile {logfile}'
 
     options = AppiumOptions()
-    options.set_capability(
-        'app',
-        f'{get_config("app_path")} -s {command_args} --logdebug',
-    )
+
+    if is_windows():
+        options.set_capability('automationName', 'NovaWindows')
+        options.set_capability('platformName', 'Windows')
+        options.set_capability('app', get_config('app_path'))
+
+        try:
+            logfile = get_config('currentAppLogFile')
+        except (KeyError, Exception):
+            logfile = None
+
+        if logfile:
+            options.set_capability('appArguments', f'--logfile {logfile} --logdebug')
+
+        options.set_capability('shouldCloseApp', True)
+    else:
+        try:
+            logfile = get_config('currentAppLogFile')
+        except (KeyError, Exception):
+            logfile = None
+
+        app_args = '-s --logdebug'
+        if logfile:
+            app_args += f' --logfile {logfile}'
+        options.set_capability(
+            'app',
+            f'{get_config("app_path")} {app_args}',
+        )
+
     options.set_capability('appium:environ', get_app_env())
     options.set_capability('timeouts', {'implicit': get_config('min_timeout') * 1000})
     app_driver = Remote(command_executor=get_config('webdriver_url'), options=options)
-    # NOTE: these methods to set implicit wait are not working:
-    # app_driver.implicitly_wait(5)
-    # app_driver.implicitly_wait = 5
 
 
 def close_and_kill_app():
@@ -111,23 +133,32 @@ def close_and_kill_app():
     if app_driver is not None:
         app_driver.quit()
 
-    # Kill remaining process by exe path
-    app_path = get_config("app_path")
-    for process in psutil.process_iter(['pid', 'exe']):
-        if process.info['exe'] == app_path:
-            print("Closing desktop client...")
-            psutil.Process(process.info['pid']).kill()
-            break
-
-    # Reset driver for reuse
+    if is_windows():
+        for process in psutil.process_iter(['pid', 'name']):
+            if 'opencloud' in process.info['name'].lower():
+                print("Closing desktop client...")
+                psutil.Process(process.info['pid']).kill()
+                break
+    else:
+        app_path = get_config("app_path")
+        for process in psutil.process_iter(['pid', 'exe']):
+            if process.info['exe'] == app_path:
+                print("Closing desktop client...")
+                psutil.Process(process.info['pid']).kill()
+                break
     app_driver = None
 
 
 def wait_until_app_terminated():
     def check_app():
-        for process in psutil.process_iter(['exe']):
-            if process.info['exe'] == get_config("app_path"):
-                return False
+        if is_windows():
+            for process in psutil.process_iter(['name']):
+                if 'opencloud' in process.info['name'].lower():
+                    return False
+        else:
+            for process in psutil.process_iter(['exe']):
+                if process.info['exe'] == get_config("app_path"):
+                    return False
         return True
 
     terminated = wait_for(
@@ -139,7 +170,7 @@ def wait_until_app_terminated():
 
 
 def get_window_location():
-    window = app().find_element(By.XPATH, "//*[contains(@name,'OpenCloud Desktop')]").location
+    window = app().find_element(By.XPATH, "//*[contains(@name,'OpenCloud')]").location
     return window['x'], window['y']
 
 
