@@ -1,7 +1,6 @@
 set(_VERSION_SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR})
 
 include(${PROJECT_SOURCE_DIR}/VERSION.cmake)
-include(${PROJECT_SOURCE_DIR}/THEME.cmake)
 
 function(add_windows_version_info targetName)
     if(NOT WIN32)

@@ -20,6 +20,7 @@
 #include "gui/folderman.h"
 #include "gui/networkinformation.h"
 #include "libsync/theme.h"
+#include "resources/jsontheme.h"
 
 #include <QApplication>
 #include <QDesktopServices>
@@ -52,9 +53,9 @@ Systray::Systray(QObject *parent)
 void Systray::setToolTip(const QString &tip)
 {
 #ifdef Q_OS_WIN
-    QSystemTrayIcon::setToolTip(tr("%1: %2").arg(Theme::instance()->appNameGUI(), tip));
+    QSystemTrayIcon::setToolTip(tr("%1: %2").arg(Resources::JsonTheme::instance().applicationDisplayName(), tip));
 #else
-    QSystemTrayIcon::setToolTip(u"%1\n%2"_s.arg(Theme::instance()->appNameGUI(), tip));
+    QSystemTrayIcon::setToolTip(u"%1\n%2"_s.arg(Resources::JsonTheme::instance().applicationDisplayName(), tip));
 #endif
 }
 
@@ -141,9 +142,10 @@ void Systray::slotComputeOverallSyncStatus()
 void Systray::computeContextMenu()
 {
     Q_ASSERT(!contextMenu());
-    auto *menu = new QMenu(Theme::instance()->appNameGUI());
+    auto *menu = new QMenu(Resources::JsonTheme::instance().applicationDisplayName());
 
-    menu->addAction(Theme::instance()->applicationIcon(), tr("Show %1").arg(Theme::instance()->appNameGUI()), ocApp(), &Application::showSettings);
+    menu->addAction(Resources::JsonTheme::instance().applicationIcon(), tr("Show %1").arg(Resources::JsonTheme::instance().applicationDisplayName()), ocApp(),
+        &Application::showSettings);
     auto *pauseResume = new QAction(menu);
     auto updatePauseResumeAction = [pauseResume] {
         pauseResume->setText(FolderMan::instance()->scheduler()->isRunning() ? tr("Pause synchronizations") : tr("Resume synchronizations"));

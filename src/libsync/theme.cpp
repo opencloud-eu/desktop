@@ -18,6 +18,7 @@
 #include "common/version.h"
 #include "config.h"
 #include "configfile.h"
+#include "resources/jsontheme.h"
 #include "vfs/vfs.h"
 
 #include "resources/qmlresources.h"
@@ -30,9 +31,6 @@
 
 #include "themewatcher.h"
 
-#ifdef THEME_INCLUDE
-#include THEME_INCLUDE
-#endif
 
 using namespace Qt::Literals::StringLiterals;
 
@@ -40,90 +38,18 @@ namespace OCC {
 
 Theme *Theme::_instance = nullptr;
 
-QmlUrlButton::QmlUrlButton() { }
-
-QmlUrlButton::QmlUrlButton(const std::tuple<QString, QString, QUrl> &tuple)
-    : icon(QStringLiteral("urlIcons/%1").arg(std::get<0>(tuple)))
-    , name(std::get<1>(tuple))
-    , url(std::get<2>(tuple))
-{
-}
-
-bool QmlButtonColor::valid() const
-{
-    return color.isValid() && textColor.isValid() && textColorDisabled.isValid();
-}
-
 Theme *Theme::instance()
 {
     if (!_instance) {
-        _instance = new THEME_CLASS;
+        _instance = new Theme();
         auto *watcher = new Resources::ThemeWatcher(_instance);
         connect(watcher, &Resources::ThemeWatcher::themeChanged, _instance, &Theme::themeChanged);
     }
     return _instance;
 }
 
-Theme *Theme::create(QQmlEngine *qmlEngine, QJSEngine *)
-{
-    Q_ASSERT(qmlEngine->thread() == Theme::instance()->thread());
-    QJSEngine::setObjectOwnership(Theme::instance(), QJSEngine::CppOwnership);
-    return instance();
-}
-
 Theme::~Theme()
 {
-}
-
-QString Theme::appNameGUI() const
-{
-    return QStringLiteral(APPLICATION_NAME);
-}
-
-QString Theme::appName() const
-{
-    return QStringLiteral(APPLICATION_SHORTNAME);
-}
-
-QString Theme::orgDomainName() const
-{
-    return QStringLiteral(APPLICATION_REV_DOMAIN);
-}
-
-QString Theme::vendor() const
-{
-    return QStringLiteral(APPLICATION_VENDOR);
-}
-
-QString Theme::configFileName() const
-{
-    return QStringLiteral(APPLICATION_EXECUTABLE ".cfg");
-}
-
-QIcon Theme::applicationIcon() const
-{
-    const auto icon = Resources::themeUniversalIcon(QStringLiteral(APPLICATION_ICON_NAME "-icon"));
-    if (Version::isBeta()) {
-        QPixmap pix(512, 512);
-        pix.fill(Qt::transparent);
-        {
-            QPainter p(&pix);
-            icon.paint(&p, pix.rect());
-            p.setPen(Qt::yellow);
-            auto font = p.font();
-            font.setPixelSize(pix.height() / 2.0);
-            font.setBold(true);
-            p.setFont(font);
-            p.drawText(pix.rect(), Qt::AlignCenter, u"Beta"_s);
-        }
-        return pix;
-    }
-    return icon;
-}
-
-QIcon Theme::aboutIcon() const
-{
-    return applicationIcon();
 }
 
 QIcon Theme::themeTrayIcon(const SyncResult &result, Resources::IconType iconType) const
@@ -143,22 +69,6 @@ QIcon Theme::themeTrayIcon(const SyncResult &result, Resources::IconType iconTyp
 Theme::Theme()
     : QObject(nullptr)
 {
-}
-
-QList<QmlUrlButton> Theme::qmlUrlButtons() const
-{
-    const auto urls = urlButtons();
-    QList<QmlUrlButton> out;
-    out.reserve(urls.size());
-    for (const auto &u : urls) {
-        out.append(QmlUrlButton(u));
-    }
-    return out;
-}
-
-bool Theme::multiAccount() const
-{
-    return true;
 }
 
 QUrl Theme::helpUrl() const
@@ -241,7 +151,7 @@ QString Theme::aboutVersions(Theme::VersionFormat format) const
         "Libraries Qt %3, %4%7"
         "Using virtual files plugin: %5%7"
         "%6")
-        .arg(appName(), _version, qtVersionString, QSslSocket::sslLibraryVersionString(),
+        .arg(Resources::JsonTheme::instance().applicationName(), _version, qtVersionString, QSslSocket::sslLibraryVersionString(),
             Utility::enumToString(VfsPluginManager::instance().bestAvailableVfsMode()), sysInfo.join(br), br, gitUrl);
 }
 
@@ -292,32 +202,6 @@ QString Theme::syncStateIconName(const SyncResult &result) const
     Q_UNREACHABLE();
 }
 
-
-QColor Theme::wizardHeaderTitleColor() const
-{
-    return qApp->palette().text().color();
-}
-
-QColor Theme::wizardHeaderBackgroundColor() const
-{
-    return QColor();
-}
-
-QmlButtonColor Theme::primaryButtonColor() const
-{
-    return {};
-}
-
-QmlButtonColor Theme::secondaryButtonColor() const
-{
-    return {};
-}
-
-QIcon Theme::wizardHeaderLogo() const
-{
-    return applicationIcon();
-}
-
 QString Theme::oauthClientId() const
 {
     return QStringLiteral("OpenCloudDesktop");
@@ -359,19 +243,10 @@ bool Theme::enableSocketApiIconSupport() const
     return true;
 }
 
-bool Theme::warnOnMultipleDb() const
-{
-    return Resources::isVanillaTheme();
-}
 
 bool Theme::allowDuplicatedFolderSyncPair() const
 {
     return true;
-}
-
-QVector<std::tuple<QString, QString, QUrl>> Theme::urlButtons() const
-{
-    return {};
 }
 
 bool Theme::enableMoveToTrash() const

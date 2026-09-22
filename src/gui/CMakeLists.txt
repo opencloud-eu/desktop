@@ -143,7 +143,7 @@ IF( APPLE )
             settingsdialog_mac.mm
             guiutility_mac.mm
             folderwatcher_mac.cpp)
-    set_source_files_properties(guiutility_mac.mm PROPERTIES COMPILE_DEFINITIONS SOCKETAPI_TEAM_IDENTIFIER_PREFIX="${SOCKETAPI_TEAM_IDENTIFIER_PREFIX}")
+    set_source_files_properties(guiutility_mac.mm PROPERTIES COMPILE_DEFINITIONS SOCKETAPI_TEAM_IDENTIFIER_PREFIX="${SOCKETAPI_TEAM_IDENTIFIER_PREFIX}" APPLICATION_REV_DOMAIN)
 elseif( WIN32 )
     target_sources(OpenCloudGui PRIVATE
             guiutility_win.cpp

@@ -12,11 +12,11 @@ import eu.OpenCloud.resources 1.0
 Pane {
     readonly property UpdateUrlDialog updateUrlDialog: ocContext
 
-    palette.window: Theme.brandedBackgoundColor
-    palette.windowText: Theme.brandedForegroundColor
-    palette.button: Theme.primaryButtonColor.color
-    palette.buttonText: Theme.primaryButtonColor.textColor
-    palette.disabled.buttonText: Theme.primaryButtonColor.textColorDisabled
+    palette.window: JsonTheme.primaryBackgroundColor
+    palette.windowText: JsonTheme.primaryForegroundColor
+    palette.button: JsonTheme.primaryButtonColor.color
+    palette.buttonText: JsonTheme.primaryButtonColor.textColor
+    palette.disabled.buttonText: JsonTheme.primaryButtonColor.textColorDisabled
 
     RowLayout {
         anchors.fill: parent
@@ -26,7 +26,7 @@ Pane {
             spacing: 30
             Image {
                 Layout.alignment: Qt.AlignCenter
-                source: OCUtils.resourcePath("fontawesome", "", enabled, FontIcon.Normal, Theme.primaryButtonColor.color)
+                source: OCUtils.resourcePath("fontawesome", "", enabled, FontIcon.Normal, JsonTheme.primaryButtonColor.color)
                 fillMode: Image.PreserveAspectFit
                 sourceSize.width: 128
                 sourceSize.height: 128

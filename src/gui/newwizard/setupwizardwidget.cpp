@@ -1,10 +1,12 @@
 #include "setupwizardwidget.h"
+
 #include "ui_setupwizardwidget.h"
 
 #include "gui/application.h"
 #include "gui/fonticonmessagebox.h"
 #include "gui/guiutility.h"
 #include "gui/settingsdialog.h"
+#include "resources/jsontheme.h"
 #include "resources/template.h"
 #include "theme.h"
 
@@ -22,8 +24,8 @@ QString replaceCssColors()
 {
     return Resources::Template::renderTemplateFromFile(QStringLiteral(":/client/resources/wizard/style.qss"),
         {
-            {QStringLiteral("WIZARD_BACKGROUND_COLOR"), Theme::instance()->wizardHeaderBackgroundColor().name()}, //
-            {QStringLiteral("WIZARD_FONT_COLOR"), Theme::instance()->wizardHeaderTitleColor().name()} //
+            {QStringLiteral("WIZARD_BACKGROUND_COLOR"), Resources::JsonTheme::instance().primaryBackgroundColor().name()}, //
+            {QStringLiteral("WIZARD_FONT_COLOR"), Resources::JsonTheme::instance().primaryForegroundColor().name()} //
         });
 }
 
@@ -83,7 +85,7 @@ SetupWizardWidget::SetupWizardWidget(SettingsDialog *parent)
     loadStylesheet();
 
     _ui->transitionProgressIndicator->setFixedSize(32, 32);
-    _ui->transitionProgressIndicator->setColor(Theme::instance()->wizardHeaderTitleColor());
+    _ui->transitionProgressIndicator->setColor(Resources::JsonTheme::instance().primaryForegroundColor());
 }
 
 void SetupWizardWidget::loadStylesheet()

@@ -113,7 +113,7 @@ Pane {
             Layout.maximumWidth: widthHint
             icon.source: OCUtils.resourcePath("fontawesome", "+", enabled)
             text: qsTr("Add Account")
-            visible: Theme.multiAccount || AccountManager.accounts.length === 0
+            visible: JsonThme.multiAccount || AccountManager.accounts.length === 0
 
             Keys.onBacktabPressed: event => {
                 // If there are no account buttons, we're the first button, so handle the back-tab
@@ -167,18 +167,19 @@ Pane {
         }
         Repeater {
             // branded buttons with a URL
-            model: Theme.urlButtons
+            model: JsonTheme.urlButtons
 
             delegate: AccountButton {
-                property urlbuttondata urlButton: modelData
+                required property int index
+                required property urlButton modelData
 
                 Layout.fillHeight: true
                 Layout.maximumWidth: widthHint
-                icon.source: OCUtils.resourcePath("universal", urlButton.icon, enabled)
-                text: urlButton.name
+                icon.source: OCUtils.resourcePath("urlbutton", index, enabled)
+                text: modelData.text
 
                 onClicked: {
-                    Qt.openUrlExternally(urlButton.url);
+                    Qt.openUrlExternally(modelData.url);
                 }
             }
         }

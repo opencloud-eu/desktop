@@ -25,6 +25,7 @@
 #include "guiutility.h"
 #include "libsync/syncengine.h"
 #include "lockwatcher.h"
+#include "resources/jsontheme.h"
 #include "scheduling/syncscheduler.h"
 #include "socketapi/socketapi.h"
 #include "syncresult.h"
@@ -98,8 +99,8 @@ FolderMan::FolderMan()
             if (accountStatePtr->account()->hasDefaultSyncRoot()) {
                 Folder::prepareFolder(accountStatePtr->account()->defaultSyncRoot(),
                     AccountManager::instance()->accounts().size() == 1
-                        ? Theme::instance()->appName()
-                        : u"%1 - %2"_s.arg(Theme::instance()->appName(), accountStatePtr->account()->davDisplayName()),
+                        ? Resources::JsonTheme::instance().applicationName()
+                        : u"%1 - %2"_s.arg(Resources::JsonTheme::instance().applicationName(), accountStatePtr->account()->davDisplayName()),
                     accountStatePtr->account()->davDisplayName(), true);
             }
         }
@@ -530,7 +531,7 @@ static QString checkPathForSyncRootMarkingRecursive(const QString &path, FolderM
 {
     std::pair<QString, QUuid> existingTags = Utility::getDirectorySyncRootMarkings(path);
     if (!existingTags.first.isEmpty()) {
-        if (existingTags.first != Theme::instance()->orgDomainName()) {
+        if (existingTags.first != Resources::JsonTheme::instance().organizationDomain()) {
             // another application uses this as spaces root folder
             return FolderMan::tr("The folder »%1« is already in use by application %2!").arg(path, existingTags.first);
         }
@@ -692,30 +693,6 @@ void FolderMan::setIgnoreHiddenFiles(bool ignore)
     saveFolders();
 }
 
-Result<void, QString> FolderMan::unsupportedConfiguration(const QString &path) const
-{
-    auto it = _unsupportedConfigurationError.find(path);
-    if (it == _unsupportedConfigurationError.end()) {
-        it = _unsupportedConfigurationError.insert(path, [&]() -> Result<void, QString> {
-            if (numberOfSyncJournals(path) > 1) {
-                const QString error = tr("Multiple accounts are sharing the folder »%1«.\n"
-                                         "This configuration is know to lead to dataloss and is no longer supported.\n"
-                                         "Please consider removing this folder from the account and adding it again.")
-                                          .arg(path);
-                if (Theme::instance()->warnOnMultipleDb()) {
-                    qCWarning(lcFolderMan) << error;
-                    return error;
-                } else {
-                    qCWarning(lcFolderMan) << error << u"this error is not displayed to the user as this is a branded"
-                                           << u"client and the error itself might be a false positive caused by a previous broken migration";
-                }
-            }
-            return {};
-        }());
-    }
-    return *it;
-}
-
 bool FolderMan::isSpaceSynced(GraphApi::Space *space) const
 {
     auto it = std::find_if(_folders.cbegin(), _folders.cend(), [space](auto f) { return f->space() == space; });
@@ -767,7 +744,7 @@ Folder *FolderMan::addFolderFromFolderWizardResult(const AccountStatePtr &accoun
 
 QString FolderMan::suggestSyncFolder(NewFolderType folderType, const QUuid &accountUuid)
 {
-    return FolderMan::instance()->findGoodPathForNewSyncFolder(QDir::homePath(), Theme::instance()->appName(), folderType, accountUuid);
+    return FolderMan::instance()->findGoodPathForNewSyncFolder(QDir::homePath(), Resources::JsonTheme::instance().applicationName(), folderType, accountUuid);
 }
 
 bool FolderMan::prepareFolder(const QString &folder)

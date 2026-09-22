@@ -212,9 +212,6 @@ public:
     void scheduleAllFolders();
     void setDirtyNetworkLimits();
 
-    /** If the folder configuration is no longer supported this will return an error string */
-    Result<void, QString> unsupportedConfiguration(const QString &path) const;
-
     [[nodiscard]] bool isSpaceSynced(GraphApi::Space *space) const;
 
 Q_SIGNALS:
