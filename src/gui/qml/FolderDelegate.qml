@@ -73,6 +73,10 @@ Pane {
 
                 Menu {
                     id: accountMenu
+                    property bool shiftPressed: false
+                    onAboutToShow: {
+                        shiftPressed = OCUtils.hasKeyboardModifiers(Qt.ShiftModifier)
+                    }
 
                     MenuItem {
                         text: accountSettings.accountState.state === AccountState.SignedOut ? qsTr("Log in") : qsTr("Log out")
@@ -87,7 +91,12 @@ Pane {
                         text: CommonStrings.showInWebBrowser()
                         onTriggered: Qt.openUrlExternally(accountSettings.accountState.account.url)
                     }
-
+                    MenuItem {
+                        text: CommonStrings.copyUrlToClipBoard()
+                        onTriggered: OCUtils.setClipBoard(accountSettings.accountState.account.url)
+                        visible: accountMenu.shiftPressed
+                        height: visible ? implicitHeight : 0
+                    }
                     MenuItem {
                         text: qsTr("Remove")
                         onTriggered: accountSettings.slotDeleteAccount()
@@ -315,6 +324,10 @@ Pane {
 
                         Menu {
                             id: contextMenu
+                            property bool shiftPressed: false
+                            onAboutToShow: {
+                                    shiftPressed = OCUtils.hasKeyboardModifiers(Qt.ShiftModifier)
+                            }
 
                             MenuItem {
                                 text: CommonStrings.showInFileBrowser()
@@ -322,8 +335,24 @@ Pane {
                             }
 
                             MenuItem {
+                                text: CommonStrings.copyFilePathToClipBoard()
+                                onTriggered: OCUtils.setClipBoardFromFilePath(folderDelegate.folder.path)
+                                visible: contextMenu.shiftPressed
+                                height: visible ? implicitHeight : 0
+                            }
+
+                            MenuItem {
                                 text: CommonStrings.showInWebBrowser()
-                                onTriggered: folderDelegate.folder.openInWebBrowser()
+                                onTriggered: Qt.openUrlExternally(folderDelegate.folder.webUrl)
+                                enabled: folderDelegate.folder.webUrl
+                            }
+
+                            MenuItem {
+                                text: CommonStrings.copyUrlToClipBoard()
+                                onTriggered: OCUtils.setClipBoard(folderDelegate.folder.webUrl)
+                                visible: contextMenu.shiftPressed
+                                height: visible ? implicitHeight : 0
+                                enabled: folderDelegate.folder.webUrl
                             }
 
                             MenuSeparator {}

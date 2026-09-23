@@ -83,5 +83,12 @@ public:
     Q_INVOKABLE QUrl avatarPath(const QString &accountID, bool enabled = true, int size = 0);
 
     Q_INVOKABLE void showInFileManager(const QString &path);
+
+    Q_INVOKABLE bool hasKeyboardModifiers(Qt::KeyboardModifiers modifiers) const;
+    Q_INVOKABLE void setClipBoard(const QString &text) const;
+    /**
+     * Same as setClipBoard, but converts the path to native separators
+     */
+    Q_INVOKABLE void setClipBoardFromFilePath(const QString &text) const;
 };
 }
