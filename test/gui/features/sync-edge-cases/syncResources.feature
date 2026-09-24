@@ -200,7 +200,7 @@ Feature: Syncing files
             | simple-folder/simple.pdf | Blacklisted | Brian Murphy@%local_server_hostname% |
 
 
-	Scenario: Sync a received shared folder with Editor permission role
+    Scenario: Sync a received shared folder with Editor permission role
         Given user "Brian" has been created in the server with default attributes
         And user "Alice" has created folder "simple-folder" in the server
         And user "Alice" has uploaded file with content "test content" to "simple-folder/uploaded-lorem.txt" in the server
@@ -227,7 +227,7 @@ Feature: Syncing files
         And user "Alice" has created folder "Öü" in the server
         And user "Alice" has uploaded file with content "openCloud test" to "Öü/testFile.txt" in the server
         When user "Alice" creates a folder "Öü" inside the sync folder
-        When user "Alice" creates a file "Öü/newfile.txt" with the following content inside the sync folder
+        And user "Alice" creates a file "Öü/newfile.txt" with the following content inside the sync folder
             """
             test content
             """
@@ -238,3 +238,45 @@ Feature: Syncing files
         And as user "Alice" folder "/" should contain "1" items in the server
         And as "Alice" file "Öü/testFile.txt" should exist in the server
         And as "Alice" file "Öü/newfile.txt" should exist in the server
+
+    @issue-12231
+    Scenario: Existing hidden files are downloaded when sync of hidden files is enabled
+        Given user "Alice" has uploaded file with content "hidden content" to "/.hidden-file.txt" in the server
+        And user "Alice" has created folder "folder" in the server
+        And user "Alice" has uploaded file with content "hidden in folder" to "/folder/.hidden-in-folder.txt" in the server
+        And user "Alice" has set up a client with default settings
+        # hidden files are ignored by default, so they must not be downloaded yet
+        Then the file ".hidden-file.txt" should not exist on the file system
+        And the file "folder/.hidden-in-folder.txt" should not exist on the file system
+        When the user enables sync of hidden files in the settings
+        And the user opens the account "Alice"
+        And the user force syncs the files
+        And the user waits for the files to sync
+        Then the file ".hidden-file.txt" should exist on the file system with the following content
+            """
+            hidden content
+            """
+        And the file "folder/.hidden-in-folder.txt" should exist on the file system with the following content
+            """
+            hidden in folder
+            """
+
+
+    @issue-12231
+    Scenario: Hidden files are downloaded when sync of hidden files is enabled
+        Given user "Alice" has created folder "folder" in the server
+        And user "Alice" has set up a client with default settings
+        When the user enables sync of hidden files in the settings
+        And the user opens the account "Alice"
+        And user "Alice" uploads file with content "hidden content" to "/.hidden-file.txt" in the server
+        And user "Alice" uploads file with content "hidden in folder" to "/folder/.hidden-in-folder.txt" in the server
+        And the user force syncs the files
+        And the user waits for the files to sync
+        Then the file ".hidden-file.txt" should exist on the file system with the following content
+            """
+            hidden content
+            """
+        And the file "folder/.hidden-in-folder.txt" should exist on the file system with the following content
+            """
+            hidden in folder
+            """

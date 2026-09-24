@@ -54,7 +54,7 @@ Feature: move file and folder
         And as "Alice" folder "folder1" should not exist in the server
 
     @smoke
-	Scenario: Move files from one folder to another
+    Scenario: Move files from one folder to another
         Given user "Alice" has uploaded file with content "test file 1" to "folder1/file1.txt" in the server
         And user "Alice" has uploaded file with content "test file 2" to "folder1/file2.txt" in the server
         And user "Alice" has set up a client with default settings
@@ -80,7 +80,7 @@ Feature: move file and folder
         And as "Alice" folder "folder1/folder2/folder3/folder4/test-folder" should not exist in the server
 
 
-	Scenario: Syncing a 50MB file moved into the local sync folder
+    Scenario: Syncing a 50MB file moved into the local sync folder
         Given user "Alice" has set up a client with default settings
         And user "Alice" has created a folder "NewFolder" inside the sync folder
         And the user has created a file "newfile.txt" with size "50MB" in the sync folder

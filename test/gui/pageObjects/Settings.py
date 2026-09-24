@@ -63,6 +63,15 @@ class Settings:
         return app().find_element(locator.by, locator.selector).is_displayed()
 
     @staticmethod
+    def set_sync_hidden_files(enabled=True):
+        checkbox = app().find_element(
+            Settings.ADVANCED_SETTING_SYNC_HIDDEN_FILES.by,
+            Settings.ADVANCED_SETTING_SYNC_HIDDEN_FILES.selector,
+        )
+        if checkbox.is_selected() != enabled:
+            checkbox.click()
+
+    @staticmethod
     def open_about_dialog():
         app().find_element(Settings.ABOUT_BUTTON.by, Settings.ABOUT_BUTTON.selector).click()
 
