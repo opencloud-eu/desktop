@@ -43,7 +43,7 @@ public:
 
     bool needsMetadataUpdate(const SyncFileItem &item) override;
     bool isDehydratedPlaceholder(const QString &filePath) override;
-    LocalInfo statTypeVirtualFile(const std::filesystem::directory_entry &path, ItemType type) override;
+    LocalInfo statTypeVirtualFile(LocalInfo &&info) override;
 
     bool setPinState(const QString &folderPath, PinState state) override;
     Optional<PinState> pinState(const QString &folderPath) override;

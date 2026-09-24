@@ -492,23 +492,23 @@ bool OpenVFS::isDehydratedPlaceholder(const QString &filePath)
     return false;
 }
 
-LocalInfo OpenVFS::statTypeVirtualFile(const std::filesystem::directory_entry &path, ItemType type)
+LocalInfo OpenVFS::statTypeVirtualFile(LocalInfo &&info)
 {
-    if (type == ItemTypeFile) {
-        const auto attribs = placeHolderAttributes(path.path());
+    if (info.type() == ItemTypeFile) {
+        const auto attribs = placeHolderAttributes(info.path());
         if (attribs.state == ::OpenVFS::Constants::States::DeHydrated) {
-            type = ItemTypeVirtualFile;
+            info.setType(ItemTypeVirtualFile);
             if (attribs.pinState == convertPinState(PinState::AlwaysLocal)) {
-                type = ItemTypeVirtualFileDownload;
+                info.setType(ItemTypeVirtualFileDownload);
             }
         } else {
             if (attribs.pinState == convertPinState(PinState::OnlineOnly)) {
-                type = ItemTypeVirtualFileDehydration;
+                info.setType(ItemTypeVirtualFileDehydration);
             }
         }
     }
     qCDebug(lcOpenVFS) << path.path().native() << Utility::enumToString(type);
-    return LocalInfo(path, type);
+    return info;
 }
 
 bool OpenVFS::setPinState(const QString &folderPath, PinState state)

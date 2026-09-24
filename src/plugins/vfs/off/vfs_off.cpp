@@ -70,9 +70,9 @@ Vfs::AvailabilityResult VfsOff::availability(const QString &)
     return VfsItemAvailability::AlwaysLocal;
 }
 
-LocalInfo VfsOff::statTypeVirtualFile(const std::filesystem::directory_entry &path, ItemType type)
+LocalInfo VfsOff::statTypeVirtualFile(LocalInfo &&path)
 {
-    return LocalInfo(path, type);
+    return path;
 }
 
 void VfsOff::startImpl(const VfsSetupParams &)

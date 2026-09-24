@@ -198,11 +198,7 @@ void DiscoverySingleLocalDirectoryJob::run() {
     const auto localPath = FileSystem::toFilesystemPath(_localPath);
     QVector<LocalInfo> results;
     for (const auto &dirent : std::filesystem::directory_iterator{localPath, ec}) {
-        ItemType type = LocalInfo::typeFromDirectoryEntry(dirent);
-        if (type == ItemTypeUnsupported) {
-            continue;
-        }
-        auto info = _vfs->statTypeVirtualFile(dirent, type);
+        auto info = _vfs->statTypeVirtualFile(dirent);
         if (!info.isValid()) {
             continue;
         }
