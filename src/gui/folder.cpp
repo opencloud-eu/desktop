@@ -107,9 +107,7 @@ Folder::Folder(const FolderDefinition &definition, const AccountStatePtr &accoun
         connect(_engine.data(), &SyncEngine::seenLockedFile, FolderMan::instance(), &FolderMan::slotSyncOnceFileUnlocks);
         connect(_engine.data(), &SyncEngine::syncError, this, &Folder::slotSyncError);
 
-        connect(ProgressDispatcher::instance(), &ProgressDispatcher::folderConflicts,
-            this, &Folder::slotFolderConflicts);
-        connect(_engine.data(), &SyncEngine::excluded, this, [this](const QString &path) { Q_EMIT ProgressDispatcher::instance()->excluded(this, path); });
+        connect(ProgressDispatcher::instance(), &ProgressDispatcher::folderConflicts, this, &Folder::slotFolderConflicts);
 
         _localDiscoveryTracker.reset(new LocalDiscoveryTracker);
         connect(_engine.data(), &SyncEngine::finished,

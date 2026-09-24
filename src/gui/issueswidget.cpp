@@ -202,13 +202,6 @@ IssuesWidget::IssuesWidget(QWidget *parent)
             _model->addProtocolItem(ProtocolItem { folder, item });
         });
 
-    connect(ProgressDispatcher::instance(), &ProgressDispatcher::excluded, this, [this](Folder *f, const QString &file) {
-        auto item = SyncFileItemPtr::create(file);
-        item->_status = SyncFileItem::FilenameReserved;
-        item->_errorString = tr("The file »%1« was ignored as its name is reserved by %2").arg(file, Theme::instance()->appNameGUI());
-        _model->addProtocolItem(ProtocolItem { f, item });
-    });
-
     _model = new ProtocolItemModel(20000, true, this);
     _sortModel = new Models::SignalledQSortFilterProxyModel(this);
     connect(_sortModel, &Models::SignalledQSortFilterProxyModel::filterChanged, this, &IssuesWidget::filterDidChange);
