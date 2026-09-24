@@ -227,21 +227,21 @@ bool VfsCfApi::isDehydratedPlaceholder(const QString &filePath)
     return cfapi::isDehydratedPlaceholder(FileSystem::Path(filePath));
 }
 
-LocalInfo VfsCfApi::statTypeVirtualFile(const std::filesystem::directory_entry &entry, ItemType type)
+LocalInfo VfsCfApi::statTypeVirtualFile(LocalInfo &&fileInfo)
 {
     // only get placeholder info if it's a file
-    if (type == ItemTypeFile) {
-        const auto path = FileSystem::Path(entry);
-        const auto handle = OCC::Utility::Handle::createHandle(path);
+    if (fileInfo.type() == ItemTypeFile) {
+        const auto handle = OCC::Utility::Handle::createHandle(fileInfo.path());
         if (!handle) {
-            qCWarning(lcCfApi) << u"Couldn't create handle for placeholder" << path;
+            qCWarning(lcCfApi) << u"Couldn't create handle for placeholder" << fileInfo.path().native();
             return {};
         }
         if (auto placeholderInfo = cfapi::findPlaceholderInfo<CF_PLACEHOLDER_BASIC_INFO>(handle)) {
+            Q_ASSERT(placeholderInfo.handle());
             FILE_ATTRIBUTE_TAG_INFO attributeInfo = {};
             if (!GetFileInformationByHandleEx(handle, FileAttributeTagInfo, &attributeInfo, sizeof(attributeInfo))) {
                 const auto error = GetLastError();
-                qCCritical(lcCfApi) << u"GetFileInformationByHandle failed on" << path << OCC::Utility::formatWinError(error);
+                qCCritical(lcCfApi) << u"GetFileInformationByHandle failed on" << fileInfo.path().native() << OCC::Utility::formatWinError(error);
                 return {};
             }
             const CF_PLACEHOLDER_STATE placeholderState = CfGetPlaceholderStateFromAttributeTag(attributeInfo.FileAttributes, attributeInfo.ReparseTag);
@@ -249,23 +249,23 @@ LocalInfo VfsCfApi::statTypeVirtualFile(const std::filesystem::directory_entry &
                 if (placeholderState & CF_PLACEHOLDER_STATE_PARTIAL) {
                     if (placeholderInfo.pinState() == PinState::AlwaysLocal) {
                         Q_ASSERT(attributeInfo.FileAttributes & FILE_ATTRIBUTE_PINNED);
-                        type = ItemTypeVirtualFileDownload;
+                        fileInfo.setType(ItemTypeVirtualFileDownload);
                     } else {
-                        type = ItemTypeVirtualFile;
+                        fileInfo.setType(ItemTypeVirtualFile);
                     }
                 } else {
                     if (placeholderInfo.pinState() == PinState::OnlineOnly) {
                         Q_ASSERT(attributeInfo.FileAttributes & FILE_ATTRIBUTE_UNPINNED);
-                        type = ItemTypeVirtualFileDehydration;
+                        fileInfo.setType(ItemTypeVirtualFileDehydration);
                     } else {
                         // nothing to do
-                        Q_ASSERT(type == ItemTypeFile);
+                        Q_ASSERT(fileInfo.type() == ItemTypeFile);
                     }
                 }
             }
         }
     }
-    return LocalInfo(entry, type);
+    return fileInfo;
 }
 
 bool VfsCfApi::setPinState(const QString &folderPath, PinState state)

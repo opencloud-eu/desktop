@@ -14,7 +14,7 @@ add_library(libsync SHARED
     capabilities.cpp
     cookiejar.cpp
     discovery.cpp
-    discoveryinfo.cpp
+    localinfo.cpp
     discoveryphase.cpp
     discoveryremoteinfo.cpp
     filesystem.cpp
