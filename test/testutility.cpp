@@ -411,7 +411,7 @@ private Q_SLOTS:
             // we must not use toFilesystemPath as we would get a \\?\ path which is not supported with shortcuts
             QVERIFY(mkLNK(qApp->applicationFilePath().toStdWString(), target));
             auto entry = std::filesystem::directory_entry{target};
-            OCC::LocalInfo fileInfo(entry, ItemTypeFile);
+            OCC::LocalInfo fileInfo(entry);
             const auto qFileInfo = QFileInfo(qtTarget);
             const auto qFileInfoTarget = QFileInfo(qtTarget);
 
@@ -433,7 +433,7 @@ private Q_SLOTS:
             // create an invalid link
             QVERIFY(mkLNK(L"", target));
             auto entry = std::filesystem::directory_entry{target};
-            OCC::LocalInfo fileInfo(entry, ItemTypeFile);
+            OCC::LocalInfo fileInfo(entry);
             const auto qFileInfo = QFileInfo(qtTarget);
 
             QVERIFY(!qFileInfo.exists());
