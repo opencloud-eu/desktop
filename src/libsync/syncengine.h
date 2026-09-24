@@ -139,7 +139,6 @@ Q_SIGNALS:
 
     /// We've produced a new sync error of a type.
     void syncError(const QString &message, ErrorCategory category = ErrorCategory::Normal);
-    void excluded(const QString &path);
 
     void finished(bool success);
     void started();
