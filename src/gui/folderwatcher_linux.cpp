@@ -197,14 +197,14 @@ void FolderWatcherPrivate::slotReceivedNotification(int fd)
             continue;
         }
         if (auto path = Utility::optionalFind(_watchToPath, event->wd)) {
-            const QString p = Utility::ensureTrailingSlash(path->value()) + fileName;
-            paths.insert(p);
-
-            if ((event->mask & (IN_MOVED_TO | IN_CREATE)) && QFileInfo(p).isDir() && !_parent->pathIsIgnored(p)) {
-                slotAddFolderRecursive(p);
+            const auto p = paths.insert(Utility::ensureTrailingSlash(path->value()) + fileName);
+            std::error_code ec;
+            if ((event->mask & (IN_MOVED_TO | IN_CREATE)) && std::filesystem::is_directory(FileSystem::toFilesystemPath(*p), ec) && !ec
+                && !_parent->pathIsIgnored(*p)) {
+                slotAddFolderRecursive(*p);
             }
             if (event->mask & (IN_MOVED_FROM | IN_DELETE)) {
-                removeFoldersBelow(p);
+                removeFoldersBelow(*p);
             }
         } else {
             qCWarning(lcFolderWatcher) << "Received event for unknown watch descriptor: " << event->wd;
