@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // SPDX-FileCopyrightText: 2025 Hannah von Reth <h.vonreth@opencloud.eu>
 
-#include "libsync/discoveryinfo.h"
+#include "libsync/localinfo.h"
 
 #include "libsync/filesystem.h"
 
@@ -21,11 +21,10 @@ public:
     LocalInfoData() = default;
     ~LocalInfoData() = default;
 
-    LocalInfoData(const std::filesystem::directory_entry &dirent, ItemType type)
-        : _name(FileSystem::fromFilesystemPath(dirent.path().filename()))
-        , _type(type)
+    LocalInfoData(const std::filesystem::directory_entry &dirent)
+        : _path(dirent.path())
+        , _name(FileSystem::fromFilesystemPath(_path.filename()))
     {
-        Q_ASSERT(!dirent.is_symlink() || type == ItemTypeSymLink);
 #ifdef Q_OS_WIN
         auto h = Utility::Handle::createHandle(dirent.path(), {.followSymlinks = false});
         if (!h) {
@@ -46,6 +45,13 @@ public:
         _modtime = FileSystem::fileTimeToTime_t(std::filesystem::file_time_type{std::filesystem::file_time_type::duration {
             ULARGE_INTEGER{fileInfo.ftLastWriteTime.dwLowDateTime, fileInfo.ftLastWriteTime.dwHighDateTime}.QuadPart
         }});
+        if (fileInfo.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT) {
+            _type = ItemTypeSymLink;
+        } else if (fileInfo.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+            _type = ItemTypeDirectory;
+        } else {
+            _type = ItemTypeFile;
+        }
 #else
         struct stat sb;
         if (lstat(dirent.path().native().data(), &sb) < 0) {
@@ -56,12 +62,22 @@ public:
         _inode = sb.st_ino;
         _size = sb.st_size;
         _modtime = sb.st_mtime;
+        if (S_ISLNK(sb.st_mode)) {
+            _type = ItemTypeSymLink;
+        } else if (S_ISDIR(sb.st_mode)) {
+            _type = ItemTypeDirectory;
+        } else if (S_ISREG(sb.st_mode)) {
+            _type = ItemTypeFile;
+        } else {
+            _type = ItemTypeUnsupported;
+        }
 #ifdef Q_OS_MAC
         _isHidden = sb.st_flags & UF_HIDDEN;
 #endif
 #endif
     }
 
+    std::filesystem::path _path;
     QString _name;
     ItemType _type = ItemTypeUnsupported;
     time_t _modtime = 0;
@@ -78,10 +94,8 @@ LocalInfo::LocalInfo()
 {
 }
 
-LocalInfo::LocalInfo(const std::filesystem::directory_entry &dirent, ItemType type)
-    : d(new LocalInfoData(dirent, type))
-{
-}
+
+LocalInfo::LocalInfo(LocalInfo &&other) noexcept = default;
 
 LocalInfo::~LocalInfo() = default;
 
@@ -90,28 +104,13 @@ LocalInfo::LocalInfo(const LocalInfo &other) = default;
 LocalInfo &LocalInfo::operator=(const LocalInfo &other) = default;
 
 LocalInfo::LocalInfo(const std::filesystem::directory_entry &dirent)
-    : LocalInfo(dirent, LocalInfo::typeFromDirectoryEntry(dirent))
+    : d(new LocalInfoData(dirent))
 {
 }
 
 LocalInfo::LocalInfo(const std::filesystem::path &path)
     : LocalInfo(std::filesystem::directory_entry{path})
 {
-}
-
-ItemType LocalInfo::typeFromDirectoryEntry(const std::filesystem::directory_entry &dirent)
-{
-    // a file can be a symlink but point to a regular file, so we check for symlink first
-    if (dirent.is_symlink()) {
-        return ItemTypeSymLink;
-    }
-    if (dirent.is_regular_file()) {
-        return ItemTypeFile;
-    }
-    if (dirent.is_directory()) {
-        return ItemTypeDirectory;
-    }
-    return ItemTypeUnsupported;
 }
 
 bool LocalInfo::isHidden() const
@@ -122,6 +121,11 @@ bool LocalInfo::isHidden() const
 QString LocalInfo::name() const
 {
     return d->_name;
+}
+
+std::filesystem::path LocalInfo::path() const
+{
+    return d->_path;
 }
 
 time_t LocalInfo::modtime() const
@@ -142,6 +146,11 @@ uint64_t LocalInfo::inode() const
 ItemType LocalInfo::type() const
 {
     return d->_type;
+}
+
+void LocalInfo::setType(ItemType type)
+{
+    d->_type = type;
 }
 
 bool LocalInfo::isDirectory() const

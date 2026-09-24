@@ -45,7 +45,7 @@ public:
     Optional<PinState> pinState(const QString &) override;
     AvailabilityResult availability(const QString &) override;
 
-    LocalInfo statTypeVirtualFile(const std::filesystem::directory_entry &path, ItemType type) override;
+    LocalInfo statTypeVirtualFile(LocalInfo &&info) override;
 
 public Q_SLOTS:
     void fileStatusChanged(const QString &, SyncFileStatus) override;

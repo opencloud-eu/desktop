@@ -17,28 +17,29 @@ public:
     LocalInfo();
     ~LocalInfo();
     LocalInfo(const LocalInfo &other);
+    LocalInfo(LocalInfo &&other) noexcept;
     LocalInfo &operator=(const LocalInfo &other);
 
     void swap(LocalInfo &other) noexcept { d.swap(other.d); }
     QT_MOVE_ASSIGNMENT_OPERATOR_IMPL_VIA_MOVE_AND_SWAP(LocalInfo);
 
-    LocalInfo(const std::filesystem::directory_entry &dirent, ItemType type);
     LocalInfo(const std::filesystem::directory_entry &dirent);
 
     // TODO: consume path by default
     LocalInfo(const std::filesystem::path &path);
 
-
-    static ItemType typeFromDirectoryEntry(const std::filesystem::directory_entry &dirent);
-
     bool isHidden() const;
 
     /** FileName of the entry (this does not contain any directory or path, just the plain name */
     QString name() const;
+    std::filesystem::path path() const;
+
     time_t modtime() const;
     int64_t size() const;
     uint64_t inode() const;
     ItemType type() const;
+    void setType(ItemType type);
+
     bool isDirectory() const;
     bool isVirtualFile() const;
     bool isSymLink() const;

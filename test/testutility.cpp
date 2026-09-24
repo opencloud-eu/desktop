@@ -8,8 +8,8 @@
 
 #include "libsync/common/filesystembase.h"
 #include "libsync/common/utility.h"
-#include "libsync/discoveryinfo.h"
 #include "libsync/filesystem.h"
+#include "libsync/localinfo.h"
 
 #ifdef Q_OS_WIN
 // the lnk code requires some parts we usually no include
@@ -411,7 +411,7 @@ private Q_SLOTS:
             // we must not use toFilesystemPath as we would get a \\?\ path which is not supported with shortcuts
             QVERIFY(mkLNK(qApp->applicationFilePath().toStdWString(), target));
             auto entry = std::filesystem::directory_entry{target};
-            OCC::LocalInfo fileInfo(entry, ItemTypeFile);
+            OCC::LocalInfo fileInfo(entry);
             const auto qFileInfo = QFileInfo(qtTarget);
             const auto qFileInfoTarget = QFileInfo(qtTarget);
 
@@ -433,7 +433,7 @@ private Q_SLOTS:
             // create an invalid link
             QVERIFY(mkLNK(L"", target));
             auto entry = std::filesystem::directory_entry{target};
-            OCC::LocalInfo fileInfo(entry, ItemTypeFile);
+            OCC::LocalInfo fileInfo(entry);
             const auto qFileInfo = QFileInfo(qtTarget);
 
             QVERIFY(!qFileInfo.exists());
@@ -455,7 +455,7 @@ private Q_SLOTS:
     {
         // validate that the different ways to access file metadata behave the same
         auto entry = std::filesystem::directory_entry{OCC::FileSystem::toFilesystemPath(qApp->applicationFilePath())};
-        OCC::LocalInfo fileInfo(entry, ItemTypeFile);
+        OCC::LocalInfo fileInfo(entry);
         QFileInfo qFileInfo(OCC::FileSystem::fromFilesystemPath(entry.path()));
 
         QCOMPARE(entry.file_size(), fileInfo.size());

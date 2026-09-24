@@ -19,7 +19,7 @@
 #include "libsync/common/result.h"
 #include "libsync/common/syncfilestatus.h"
 #include "libsync/common/utility.h"
-#include "libsync/discoveryinfo.h"
+#include "libsync/localinfo.h"
 #include "libsync/opencloudsynclib.h"
 #include "libsync/path.h"
 
@@ -164,7 +164,7 @@ public:
      *
      * Returning true means that type was fully determined.
      */
-    [[nodiscard]] virtual LocalInfo statTypeVirtualFile(const std::filesystem::directory_entry &path, ItemType type) = 0;
+    [[nodiscard]] virtual LocalInfo statTypeVirtualFile(LocalInfo &&info) = 0;
 
     /** Sets the pin state for the item at a path.
      *
