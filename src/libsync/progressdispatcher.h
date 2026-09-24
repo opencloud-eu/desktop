@@ -311,8 +311,6 @@ Q_SIGNALS:
      */
     void syncError(Folder *folder, const QString &message, ErrorCategory category);
 
-    void excluded(Folder *folder, const QString &path);
-
 
     /**
      * @brief Emitted for a folder when a sync is done, listing all pending conflicts
