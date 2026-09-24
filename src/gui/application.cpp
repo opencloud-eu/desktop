@@ -88,7 +88,8 @@ void setUpInitialSyncFolder(AccountStatePtr accountStatePtr, bool useVfs)
                     const QString name = space->displayName();
                     const QString folderName = FolderMan::instance()->findGoodPathForNewSyncFolder(
                         localDir, name, FolderMan::NewFolderType::SpacesFolder, accountStatePtr->account()->uuid());
-                    auto folder = addFolder(folderName, QUrl(space->drive().getRoot().getWebDavUrl()), space->drive().getRoot().getId(), name);
+                    auto folder =
+                        addFolder(folderName, QUrl(space->drive().getRootValue().getWebDavUrlValue()), space->drive().getRootValue().getIdValue(), name);
                     folder->setPriority(space->priority());
                 }
                 finalize();

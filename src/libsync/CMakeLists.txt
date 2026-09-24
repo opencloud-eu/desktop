@@ -1,10 +1,3 @@
-find_package(LibreGraphAPI 1.0.4 REQUIRED)
-set_package_properties(LibreGraphAPI PROPERTIES
-        URL https://github.com/opencloud-eu/libre-graph-api-cpp-qt-client
-        DESCRIPTION "Libre Graph is a free API for cloud collaboration inspired by the MS Graph API"
-        TYPE REQUIRED
-)
-
 configure_file(config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
 
@@ -67,7 +60,6 @@ add_library(libsync SHARED
     path.cpp
 )
 
-
 set_source_files_properties(accessmanager.cpp PROPERTIES COMPILE_DEFINITIONS WITH_HTTP2=$<BOOL:${WITH_HTTP2}>)
 
 if(WIN32)
@@ -122,7 +114,6 @@ set_source_files_properties(configfile.cpp
         COMPILE_DEFINITIONS EXCLUDE_FILE_NAME="${EXCLUDE_FILE_NAME}"
 )
 
-target_link_libraries(libsync PUBLIC $<BUILD_INTERFACE:OpenAPI::LibreGraphAPI>)
 add_subdirectory(graphapi)
 add_subdirectory(vfs)
 
