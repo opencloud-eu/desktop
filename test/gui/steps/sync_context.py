@@ -91,6 +91,12 @@ def step(context):
     Toolbar.open_settings_tab()
 
 
+@When('the user enables sync of hidden files in the settings')
+def step(context):
+    Toolbar.open_settings_tab()
+    Settings.set_sync_hidden_files(True)
+
+
 @Then('the table of conflict warnings should include file "{filename}"')
 def step(context, filename):
     Activity.has_conflict_file(filename)
