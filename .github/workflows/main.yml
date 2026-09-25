@@ -339,7 +339,7 @@ jobs:
 
     - name: submit msix for signing
       id: submit-signing-request
-      uses: signpath/github-action-submit-signing-request@v2
+      uses: signpath/github-action-submit-signing-request@v3
       if: ${{ matrix.signing.enabled && steps.upload-unsigned-artifact.conclusion == 'success' }}
       with:
         api-token: '${{ secrets.SIGNPATH_API_TOKEN }}'
