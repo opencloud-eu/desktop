@@ -24,8 +24,8 @@ def build_conflicted_regex(filename):
     return rf"{filename} \(conflicted copy \d{{4}}-\d{{2}}-\d{{2}} \d{{6}}\)"
 
 
-def sanitize_path(path):
-    return path.replace("//", "/")
+def normalize_path(path):
+    return re.sub(r'[\\/]+', '/', path)
 
 
 def prefix_path_namespace(path):

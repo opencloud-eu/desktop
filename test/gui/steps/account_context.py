@@ -21,7 +21,7 @@ from helpers.SyncHelper import (
     listen_sync_status_for_item,
 )
 from helpers.UserHelper import get_password_for_user
-from helpers.ConfigHelper import get_config, is_windows
+from helpers.ConfigHelper import get_config
 from helpers.TableParser import table_rows_hash
 from helpers.AppHelper import close_and_kill_app, wait_until_app_terminated
 from helpers.FilesHelper import convert_path_separators_for_os
@@ -54,9 +54,6 @@ def step(context, username):
 
 @Given('user "{username}" has set up a client with default settings')
 def step(context, username):
-    if is_windows():
-        AccountConnectionWizard.add_server('%local_server%', get_config('localBackendUrl'))
-
     password = get_password_for_user(username)
     setup_client(username)
     enter_password = EnterPassword()
@@ -217,10 +214,10 @@ def step(context):
         AccountConnectionWizard.can_change_local_sync_dir().should.be.true
 
 
-@Then('the download everything option should be selected by default for Linux')
+@Then('the synchronize all existing spaces should be selected by default')
 def step(context):
-    with ensure('Sync everything option is not checked'):
-        AccountConnectionWizard.is_sync_everything_option_checked().should.be.true
+    with ensure('Sync all spaces option is not checked'):
+        AccountConnectionWizard.is_sync_all_spaces_option_checked().should.be.true
 
 
 @When('the user cancels the sync connection wizard')

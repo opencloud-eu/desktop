@@ -1,17 +1,23 @@
+import re
+
 import pyautogui
 import psutil
 import threading
 import json
+import base64
 from appium.webdriver import Remote, WebElement
 from appium.options.common.base import AppiumOptions
 from appium.webdriver.common.appiumby import AppiumBy as By
 from selenium.common.exceptions import WebDriverException, NoSuchElementException
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 import helpers.api.http_helper as request
-from helpers.ConfigHelper import get_config, get_app_env, is_windows
+from helpers.ConfigHelper import get_config, get_app_env, is_linux, is_windows
 from helpers.ElementHelper import get_element_center_xy
 from helpers.keys.keys_map import get_key
 from helpers.Utils import wait_for
+from helpers.FilesHelper import normalize_path
 
 
 def native_click(self, **kwargs):
@@ -34,8 +40,13 @@ def native_double_click(self, **kwargs):
     pyautogui.doubleClick(x, y, **kwargs)
 
 
-def native_toggle(self):
-    app().execute_script("windows: toggle", self)
+def native_checkbox_toggle(self):
+    if is_windows():
+        app().execute_script("windows: toggle", self)
+    elif is_linux():
+        self.click()
+    else:
+        raise NotImplementedError("unsupported platform.")
 
 
 def native_send_keys(self, key):
@@ -62,21 +73,54 @@ def find_element(self, by, selector, timeout=None):
             raise NoSuchElementException(f'No element found for "{by}={selector}"')
         return elements[0]
     finally:
+        # reset implicit wait to default value
         if timeout is not None:
             set_implicit_wait(get_config('min_timeout'))
+
+
+def find_elements_with_wait(self, by, selector, timeout=get_config('min_timeout')):
+    wait = WebDriverWait(self, timeout)
+    try:
+        wait.until(EC.element_to_be_clickable((by, selector)))
+    except WebDriverException as e:
+        if not re.search(r"Found \d+ elements using", str(e)):
+            raise
+    return self.find_elements(by, selector)
+
+
+def is_checked(self):
+    if is_windows():
+        return self.is_selected()
+    if is_linux():
+        return self.get_attribute("checked") == "true"
+    raise NotImplementedError("unsupported platform.")
+
+
+def get_native_clipboard_text(self):
+    if is_windows():
+        clipboard = self.execute_script("windows: getClipboard", {"contentType": "plaintext"})
+        return base64.b64decode(clipboard).decode("utf-8")
+    if is_linux():
+        return self.get_clipboard_text()
+    raise NotImplementedError("unsupported platform.")
 
 
 def pause(self):
     threading.Event().wait()
 
 
+# bind custom element methods
 Remote.find_element = find_element
 Remote.pause = pause
+Remote.find_elements_with_wait = find_elements_with_wait
+Remote.get_native_clipboard_text = get_native_clipboard_text
 WebElement.native_click = native_click
 WebElement.native_double_click = native_double_click
-WebElement.native_toggle = native_toggle
+WebElement.native_checkbox_toggle = native_checkbox_toggle
 WebElement.native_send_keys = native_send_keys
 WebElement.find_element = find_element
+WebElement.find_elements_with_wait = find_elements_with_wait
+WebElement.is_checked = is_checked
 
 app_driver = None
 
@@ -90,24 +134,20 @@ def create_app_session():
 
     options = AppiumOptions()
 
-    try:
-        logfile = get_config('currentAppLogFile')
-    except (KeyError, Exception):
-        logfile = None
+    logfile = get_config('currentAppLogFile')
+
+    app_args = '-s --logdebug'
+    if logfile:
+        app_args += f' --logfile {logfile}'
 
     if is_windows():
         options.set_capability('automationName', 'NovaWindows')
         options.set_capability('platformName', 'Windows')
         options.set_capability('app', get_config('app_path'))
+        options.set_capability('appArguments', app_args)
         options.set_capability("shouldCloseApp", True)
 
-        if logfile:
-            options.set_capability('appArguments', f'--logfile {logfile} --logdebug')
-
-    else:
-        app_args = '-s --logdebug'
-        if logfile:
-            app_args += f' --logfile {logfile}'
+    elif is_linux():
         options.set_capability('app', f'{get_config("app_path")} {app_args}')
 
     options.set_capability('appium:environ', get_app_env())
@@ -128,44 +168,33 @@ def close_and_kill_app():
     if app_driver is not None:
         app_driver.quit()
 
-    if is_windows():
+    # Kill remaining process by exe path
+    app_path = get_config("app_path")
+    app_path = normalize_path(app_path)
 
-        def is_target(info):
-            return (info.get("name") or "").lower() == "opencloud.exe"
-    else:
-        app_path = get_config("app_path")
+    for process in psutil.process_iter(['exe']):
+        process_path = process.info["exe"] or ''
+        process_path = normalize_path(process_path)
+        if process_path == app_path:
+            print("Closing desktop client...")
+            process.kill()
+            process.wait(timeout=get_config('min_timeout'))
+            break
 
-        def is_target(info):
-            return info.get("exe") == app_path
-
-    for process in psutil.process_iter(["name", "exe"]):
-        try:
-            if is_target(process.info):
-                print("Closing desktop client...")
-                process.kill()
-                process.wait(timeout=10)
-                break
-        except (
-            psutil.NoSuchProcess,
-            psutil.AccessDenied,
-            psutil.TimeoutExpired,
-        ):
-            continue
-
-    # Reset driver for reuse.
+    # Reset driver for reuse
     app_driver = None
 
 
 def wait_until_app_terminated():
+    app_path = get_config("app_path")
+    app_path = normalize_path(app_path)
+
     def check_app():
-        if is_windows():
-            for process in psutil.process_iter(['name']):
-                if 'opencloud' in process.info['name'].lower():
-                    return False
-        else:
-            for process in psutil.process_iter(['exe']):
-                if process.info['exe'] == get_config("app_path"):
-                    return False
+        for process in psutil.process_iter(['exe']):
+            process_path = process.info["exe"] or ''
+            process_path = normalize_path(process_path)
+            if process_path == app_path:
+                return False
         return True
 
     terminated = wait_for(
@@ -177,10 +206,7 @@ def wait_until_app_terminated():
 
 
 def get_window_location():
-    if is_windows():
-        window = app().find_element(By.XPATH, "//*[contains(@name,'OpenCloud')]").location
-    else:
-        window = app().find_element(By.XPATH, "//*[contains(@name,'OpenCloud Desktop')]").location
+    window = app().find_element(By.XPATH, "//*[contains(@name,'OpenCloud Desktop')]").location
     return window['x'], window['y']
 
 
