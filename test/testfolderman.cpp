@@ -9,11 +9,14 @@
 #include <QTemporaryDir>
 #include <QtTest>
 
+#include "common/syncjournaldb.h"
+#include "common/syncjournalfilerecord.h"
 #include "common/utility.h"
 #include "folderman.h"
 #include "account.h"
 #include "accountstate.h"
 #include "configfile.h"
+#include "syncfileitem.h"
 
 #include "testutils/testutils.h"
 
@@ -215,6 +218,44 @@ private Q_SLOTS:
         // normalise the name
         QCOMPARE(folderman->findGoodPathForNewSyncFolder(dirPath, QStringLiteral("            Bo:*<>!b          "), folderType, uuid),
             QString(dirPath + QStringLiteral("/Bo____!b")));
+    }
+
+    // Enabling "sync hidden files" has to invalidate the state that was built up while the hidden
+    // items were ignored, otherwise they are only picked up after a restart of the client (#714).
+    void testSetIgnoreHiddenFiles()
+    {
+        auto dir = TestUtils::createTempDir();
+        QVERIFY(dir.isValid());
+        QDir dir2(dir.path());
+        QVERIFY(dir2.mkpath(QStringLiteral("OpenCloud")));
+        const QString folderPath = dir2.canonicalPath() + QStringLiteral("/OpenCloud");
+
+        auto accountState = TestUtils::createDummyAccount();
+        FolderMan *folderman = TestUtils::folderMan();
+        auto *folder = folderman->addFolder(accountState.get(), TestUtils::createDummyFolderDefinition(accountState->account(), folderPath));
+        QVERIFY(folder);
+
+        // hidden files are ignored by default
+        QVERIFY(folderman->ignoreHiddenFiles());
+        QVERIFY(folder->ignoreHiddenFiles());
+
+        // a directory that was already discovered, its etag has to be invalidated so the hidden
+        // items on the server are looked at again
+        auto item = TestUtils::dummyItem(QStringLiteral("adir"));
+        item._type = ItemTypeDirectory;
+        item._etag = QStringLiteral("etag");
+        item._remotePerm = RemotePermissions::fromDbValue("RW");
+        QVERIFY(folder->journalDb()->setFileRecord(SyncJournalFileRecord::fromSyncFileItem(item)));
+
+        folderman->setIgnoreHiddenFiles(false);
+
+        QVERIFY(!folder->ignoreHiddenFiles());
+        // and the remote has to be discovered again
+        QCOMPARE(folder->journalDb()->getFileRecord(QStringLiteral("adir")).etag(), QStringLiteral("_invalid_"));
+
+        // turning it off again
+        folderman->setIgnoreHiddenFiles(true);
+        QVERIFY(folder->ignoreHiddenFiles());
     }
 
     void testSpacesSyncRootAndFolderCreation()
