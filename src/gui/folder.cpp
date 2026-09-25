@@ -117,7 +117,7 @@ Folder::Folder(const FolderDefinition &definition, const AccountStatePtr &accoun
 
         connect(_accountState->account()->spacesManager(), &GraphApi::SpacesManager::spaceChanged, this, [this](GraphApi::Space *changedSpace) {
             if (_definition.spaceId() == changedSpace->id()) {
-                prepareFolder(path(), displayName(), changedSpace->drive().getDescription(), true);
+                prepareFolder(path(), displayName(), changedSpace->drive().getDescriptionValue(), true);
                 Q_EMIT spaceChanged();
             }
         });
@@ -350,7 +350,7 @@ QUrl Folder::webDavUrl() const
     const QString spaceId = _definition.spaceId();
     if (!spaceId.isEmpty()) {
         if (auto *space = _accountState->account()->spacesManager()->space(spaceId)) {
-            return QUrl(space->drive().getRoot().getWebDavUrl());
+            return QUrl(space->drive().getRootValue().getWebDavUrlValue());
         }
     }
     return _definition.webDavUrl();

@@ -63,11 +63,11 @@ void SpacesManager::refresh()
         if (drivesJob->httpStatusCode() == 200) {
             auto oldKeys = _spacesMap.keys();
             for (const auto &dr : drivesJob->drives()) {
-                auto *space = this->space(dr.getId());
-                oldKeys.removeAll(dr.getId());
+                auto *space = this->space(dr.getIdValue());
+                oldKeys.removeAll(dr.getIdValue());
                 if (!space) {
                     space = new Space(this, dr);
-                    _spacesMap.insert(dr.getId(), space);
+                    _spacesMap.insert(dr.getIdValue(), space);
                 } else {
                     space->setDrive(dr);
                 }

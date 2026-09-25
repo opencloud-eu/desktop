@@ -28,8 +28,8 @@ include(KDECompilerSettings NO_POLICY_SCOPE)
 include(ECMEnableSanitizers)
 include(ECMQmlModule)
 
-find_package(Qt6 COMPONENTS Core Concurrent Network Widgets Xml Quick QuickWidgets QuickControls2 Linguist REQUIRED)
-qt6_standard_project_setup(REQUIRES 6.8)
+find_package(Qt6 COMPONENTS Core Concurrent Network Widgets Xml Quick QuickWidgets QuickControls2 Linguist OpenApiCommon OpenApiTools REQUIRED)
+qt6_standard_project_setup(REQUIRES 6.11)
 
 
 get_target_property (QT_QMAKE_EXECUTABLE Qt::qmake IMPORTED_LOCATION)

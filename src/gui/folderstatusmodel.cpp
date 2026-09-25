@@ -262,8 +262,8 @@ QVariant FolderStatusModel::data(const QModelIndex &index, int role) const
 
     auto getDescription = [f] {
         if (auto *space = f->space()) {
-            if (!space->drive().getDescription().isEmpty()) {
-                return space->drive().getDescription();
+            if (!space->drive().getDescriptionValue().isEmpty()) {
+                return space->drive().getDescriptionValue();
             }
         }
         return tr("Local folder: %1").arg(f->shortGuiLocalPath());
@@ -291,10 +291,10 @@ QVariant FolderStatusModel::data(const QModelIndex &index, int role) const
         qint64 used{};
         qint64 total{};
         if (auto *space = f->space()) {
-            const auto quota = space->drive().getQuota();
+            const auto quota = space->drive().getQuotaValue();
             if (quota.isValid()) {
-                used = quota.getUsed();
-                total = quota.getTotal();
+                used = quota.getUsedValue();
+                total = quota.getTotalValue();
             }
         }
         if (total <= 0) {

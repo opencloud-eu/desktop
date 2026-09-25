@@ -33,7 +33,7 @@ const auto personalC = QLatin1String("personal");
 const auto sharesIdC = QLatin1String("a0ca6a90-a365-4782-871e-d44447bbc668$a0ca6a90-a365-4782-871e-d44447bbc668");
 }
 
-Space::Space(SpacesManager *spacesManager, const OpenAPI::OAIDrive &drive)
+Space::Space(SpacesManager *spacesManager, const QtOpenAPI::Drive &drive)
     : QObject(spacesManager)
     , _spaceManager(spacesManager)
     , _image(new SpaceImage(this))
@@ -42,12 +42,12 @@ Space::Space(SpacesManager *spacesManager, const OpenAPI::OAIDrive &drive)
     connect(_image, &SpaceImage::imageChanged, this, &Space::imageChanged);
 }
 
-OpenAPI::OAIDrive Space::drive() const
+QtOpenAPI::Drive Space::drive() const
 {
     return _drive;
 }
 
-void Space::setDrive(const OpenAPI::OAIDrive &drive)
+void Space::setDrive(const QtOpenAPI::Drive &drive)
 {
     _drive = drive;
     _image->update();
@@ -63,9 +63,9 @@ QIcon SpaceImage::image() const
 {
     if (_image.isNull()) {
         // remix icons is not compatible with nerdfonts so the preview will be broken
-        if (_space->drive().getDriveType() == personalC) {
+        if (_space->drive().getDriveTypeValue() == personalC) {
             return Resources::FontIcon(Resources::FontIcon::FontFamily::RemixIcon, u'', Resources::FontIcon::Size::Half);
-        } else if (_space->drive().getId() == sharesIdC) {
+        } else if (_space->drive().getIdValue() == sharesIdC) {
             return Resources::FontIcon(Resources::FontIcon::FontFamily::RemixIcon, u'', Resources::FontIcon::Size::Half);
         }
         return Resources::FontIcon(Resources::FontIcon::FontFamily::RemixIcon, u'', Resources::FontIcon::Size::Half);
@@ -85,12 +85,13 @@ QUrl SpaceImage::qmlImageUrl() const
 
 void SpaceImage::update()
 {
-    const auto &special = _space->drive().getSpecial();
-    const auto img = std::find_if(special.cbegin(), special.cend(), [](const auto &it) { return it.getSpecialFolder().getName() == QLatin1String("image"); });
+    const auto &special = _space->drive().getSpecialValue();
+    const auto img =
+        std::find_if(special.cbegin(), special.cend(), [](const auto &it) { return it.getSpecialFolderValue().getNameValue() == QLatin1String("image"); });
     if (img != special.cend()) {
         _fetched = false;
-        _url = QUrl(img->getWebDavUrl());
-        _etag = Utility::normalizeEtag(img->getETag());
+        _url = QUrl(img->getWebDavUrlValue());
+        _etag = Utility::normalizeEtag(img->getETagValue());
         auto job = _space->_spaceManager->account()->resourcesCache()->makeGetJob(_url, {}, _space);
         QObject::connect(job, &SimpleNetworkJob::finishedSignal, _space, [job, this] {
             _fetched = true;
@@ -108,20 +109,20 @@ void SpaceImage::update()
 
 QString Space::displayName() const
 {
-    if (_drive.getDriveType() == personalC) {
+    if (_drive.getDriveTypeValue() == personalC) {
         return tr("Personal");
-    } else if (_drive.getId() == sharesIdC) {
+    } else if (_drive.getIdValue() == sharesIdC) {
         // don't call it ShareJail
         return tr("Shares");
     }
-    return _drive.getName();
+    return _drive.getNameValue();
 }
 
 uint32_t Space::priority() const
 {
-    if (_drive.getDriveType() == personalC) {
+    if (_drive.getDriveTypeValue() == personalC) {
         return 100;
-    } else if (_drive.getId() == sharesIdC) {
+    } else if (_drive.getIdValue() == sharesIdC) {
         return 50;
     }
     return 0;
@@ -130,7 +131,7 @@ uint32_t Space::priority() const
 bool Space::disabled() const
 {
     // this is how disabled spaces are represented in the graph API
-    return _drive.getRoot().getDeleted().getState() == QLatin1String("trashed");
+    return _drive.getRootValue().getDeletedValue().getStateValue() == QLatin1String("trashed");
 }
 
 SpaceImage *Space::image() const
@@ -140,10 +141,10 @@ SpaceImage *Space::image() const
 
 QString Space::id() const
 {
-    return _drive.getRoot().getId();
+    return _drive.getRootValue().getIdValue();
 }
 
 QUrl Space::webdavUrl() const
 {
-    return QUrl(_drive.getRoot().getWebDavUrl());
+    return QUrl(_drive.getRootValue().getWebDavUrlValue());
 }

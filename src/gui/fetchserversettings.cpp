@@ -19,9 +19,8 @@
 #include "gui/networkinformation.h"
 
 #include "libsync/account.h"
+#include "libsync/graphapi/client/user.h"
 #include "libsync/networkjobs/jsonjob.h"
-
-#include <OAIUser.h>
 
 #include <QImageReader>
 
@@ -90,9 +89,9 @@ void FetchServerSettingsJob::runAsyncUpdates()
         userJob->setTimeout(fetchSettingsTimeout());
         connect(userJob, &JsonApiJob::finishedSignal, account.data(), [userJob, account] {
             if (userJob->httpStatusCode() == 200) {
-                OpenAPI::OAIUser me;
+                QtOpenAPI::User me;
                 me.fromJsonObject(userJob->data());
-                account->setDavDisplayName(me.getDisplayName());
+                account->setDavDisplayName(me.getDisplayNameValue());
             }
         });
         userJob->start();

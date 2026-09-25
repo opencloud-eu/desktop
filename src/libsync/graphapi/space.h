@@ -16,9 +16,7 @@
 
 #include "opencloudsynclib.h"
 
-#include "libsync/accountfwd.h"
-
-#include <OAIDrive.h>
+#include "libsync/graphapi/client/drive.h"
 
 #include <QIcon>
 #include <QtQmlIntegration>
@@ -75,7 +73,7 @@ namespace GraphApi {
         QString id() const;
 
 
-        OpenAPI::OAIDrive drive() const;
+        QtOpenAPI::Drive drive() const;
 
         /***
          * Asign a priority to a drive, used for sorting
@@ -95,11 +93,11 @@ namespace GraphApi {
         void imageChanged();
 
     private:
-        Space(SpacesManager *spaceManager, const OpenAPI::OAIDrive &drive);
-        void setDrive(const OpenAPI::OAIDrive &drive);
+        Space(SpacesManager *spaceManager, const QtOpenAPI::Drive &drive);
+        void setDrive(const QtOpenAPI::Drive &drive);
 
         SpacesManager *_spaceManager;
-        OpenAPI::OAIDrive _drive;
+        QtOpenAPI::Drive _drive;
 
         SpaceImage *_image;
 
