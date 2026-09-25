@@ -92,6 +92,7 @@ Q_SIGNALS:
 public Q_SLOTS:
     void slotAccountStateChanged();
     void slotSpacesUpdated();
+    Q_INVOKABLE void slotConfigureClientCertificate();
 
 protected Q_SLOTS:
     void slotAddFolder();
