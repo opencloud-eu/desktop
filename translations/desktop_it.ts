@@ -897,141 +897,141 @@ L&apos;aggiornamento verrà eseguito in background e sovrascriverà il file AppI
 <context>
     <name>OCC::Folder</name>
     <message>
-        <location filename="../src/gui/folder.cpp" line="148"/>
+        <location filename="../src/gui/folder.cpp" line="146"/>
         <source>The path »%1« is too long. Please enable long paths in the Windows settings or choose a different folder.</source>
         <translation>Il percorso »%1« è troppo lungo. Abilita i percorsi lunghi nelle impostazioni di Windows o scegli una cartella diversa.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="193"/>
+        <location filename="../src/gui/folder.cpp" line="191"/>
         <source>Failed to open the database for »%1«.</source>
         <translation>Impossibile aprire il database per »%1«.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="171"/>
+        <location filename="../src/gui/folder.cpp" line="169"/>
         <source>Local folder »%1« does not exist.</source>
         <translation>La cartella locale »%1« non esiste.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="199"/>
+        <location filename="../src/gui/folder.cpp" line="197"/>
         <source>»%1« should be a folder but is not.</source>
         <translation>»%1« dovrebbe essere una cartella ma non lo è.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="201"/>
+        <location filename="../src/gui/folder.cpp" line="199"/>
         <source>»%1« is not readable.</source>
         <translation>»%1« non è leggibile.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="203"/>
+        <location filename="../src/gui/folder.cpp" line="201"/>
         <source>»%1« is not writable.</source>
         <translation>»%1« non è scrivibile.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="462"/>
+        <location filename="../src/gui/folder.cpp" line="460"/>
         <source>»%1« and %n other file(s) have been removed.</source>
         <translation><numerusform>»%1« e %n altri file sono stati rimossi.</numerusform><numerusform>»%1« e %n altri file sono stati rimossi.</numerusform><numerusform>»%1« e %n altri file sono stati rimossi.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="464"/>
+        <location filename="../src/gui/folder.cpp" line="462"/>
         <source>»%1« has been removed.</source>
         <comment>%1 names a file.</comment>
         <translation>»%1« è stato rimosso.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="469"/>
+        <location filename="../src/gui/folder.cpp" line="467"/>
         <source>»%1« and %n other file(s) have been added.</source>
         <translation><numerusform>Sono stati aggiunti »%1« e %n altri file.</numerusform><numerusform>Sono stati aggiunti »%1« e %n altri file.</numerusform><numerusform>Sono stati aggiunti »%1« e %n altri file.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="471"/>
+        <location filename="../src/gui/folder.cpp" line="469"/>
         <source>»%1« has been added.</source>
         <comment>%1 names a file.</comment>
         <translation>»%1« è stato aggiunto.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="476"/>
+        <location filename="../src/gui/folder.cpp" line="474"/>
         <source>»%1« and %n other file(s) have been updated.</source>
         <translation><numerusform>»%1« e %n altri file sono stati aggiornati.</numerusform><numerusform>»%1« e %n altri file sono stati aggiornati.</numerusform><numerusform>»%1« e %n altri file sono stati aggiornati.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="478"/>
+        <location filename="../src/gui/folder.cpp" line="476"/>
         <source>»%1« has been updated.</source>
         <comment>%1 names a file.</comment>
         <translation>»%1« è stato aggiornato.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="483"/>
+        <location filename="../src/gui/folder.cpp" line="481"/>
         <source>»%1« has been renamed to »%2« and %n other file(s) have been renamed.</source>
         <translation><numerusform>»%1« è stato rinominato in »%2« e %n altri file sono stati rinominati.</numerusform><numerusform>»%1« è stato rinominato in »%2« e %n altri file sono stati rinominati.</numerusform><numerusform>»%1« è stato rinominato in »%2« e %n altri file sono stati rinominati.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="485"/>
+        <location filename="../src/gui/folder.cpp" line="483"/>
         <source>»%1« has been renamed to »%2«.</source>
         <comment>%1 and %2 name files.</comment>
         <translation>»%1« è stato rinominato in »%2«.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="490"/>
+        <location filename="../src/gui/folder.cpp" line="488"/>
         <source>»%1« has been moved to »%2« and %n other file(s) have been moved.</source>
         <translation><numerusform>»%1« è stato spostato in »%2« e %n altri file sono stati spostati.</numerusform><numerusform>»%1« è stato spostato in »%2« e %n altri file sono stati spostati.</numerusform><numerusform>»%1« è stato spostato in »%2« e %n altri file sono stati spostati.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="492"/>
+        <location filename="../src/gui/folder.cpp" line="490"/>
         <source>»%1« has been moved to »%2«.</source>
         <translation>»%1« è stato spostato in »%2«.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="497"/>
+        <location filename="../src/gui/folder.cpp" line="495"/>
         <source>»%1« and %n other file(s) have sync conflicts.</source>
         <translation><numerusform>»%1« e %n altri file presentano conflitti di sincronizzazione.</numerusform><numerusform>»%1« e %n altri file presentano conflitti di sincronizzazione.</numerusform><numerusform>»%1« e %n altri file presentano conflitti di sincronizzazione.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="499"/>
+        <location filename="../src/gui/folder.cpp" line="497"/>
         <source>»%1« has a sync conflict. Please check the conflict file!</source>
         <translation>»%1« ha un conflitto di sincronizzazione. Controlla il file di conflitto!</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="504"/>
+        <location filename="../src/gui/folder.cpp" line="502"/>
         <source>»%1« and %n other file(s) could not be synced due to errors. See the log for details.</source>
         <translation><numerusform>»%1« e %n altri file non sono stati sincronizzati a causa di errori. Consultare il registro per i dettagli.</numerusform><numerusform>»%1« e %n altri file non sono stati sincronizzati a causa di errori. Consultare il registro per i dettagli.</numerusform><numerusform>»%1« e %n altri file non sono stati sincronizzati a causa di errori. Consultare il registro per i dettagli.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="506"/>
+        <location filename="../src/gui/folder.cpp" line="504"/>
         <source>»%1« could not be synced due to an error. See the log for details.</source>
         <translation>»%1« non è stato sincronizzato a causa di un errore. Consultare il registro per i dettagli.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="512"/>
+        <location filename="../src/gui/folder.cpp" line="510"/>
         <source>Sync Activity</source>
         <translation>Sincronizza attività</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="715"/>
+        <location filename="../src/gui/folder.cpp" line="713"/>
         <source>Switching VFS mode on folder »%1«</source>
         <translation>Commutazione della modalità VFS sulla cartella »%1«</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1055"/>
+        <location filename="../src/gui/folder.cpp" line="1053"/>
         <source>The folder »%1« was created but was excluded from synchronization previously. Data inside it will not be synchronized.</source>
         <translation>La cartella »%1« è stata creata ma in precedenza era stata esclusa dalla sincronizzazione. I dati al suo interno non verranno sincronizzati.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1058"/>
+        <location filename="../src/gui/folder.cpp" line="1056"/>
         <source>The file »%1« was created but was excluded from synchronization previously. It will not be synchronized.</source>
         <translation>Il file »%1« è stato creato ma in precedenza era stato escluso dalla sincronizzazione. Non verrà sincronizzato.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1062"/>
+        <location filename="../src/gui/folder.cpp" line="1060"/>
         <source>»%1« is not synchronized</source>
         <translation>»%1« non è sincronizzato</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="851"/>
+        <location filename="../src/gui/folder.cpp" line="849"/>
         <source>Could not read system exclude file</source>
         <translation>Impossibile leggere il file di esclusione del sistema</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1070"/>
+        <location filename="../src/gui/folder.cpp" line="1068"/>
         <source>Changes in synchronized folders could not be tracked reliably.
 
 This means that the synchronization client might not upload local changes immediately and will instead only scan for local changes and upload them occasionally (every two hours by default).
@@ -1452,7 +1452,7 @@ Gli elementi la cui eliminazione è consentita verranno eliminati se impediscono
 <context>
     <name>OCC::IssuesWidget</name>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="358"/>
+        <location filename="../src/gui/issueswidget.cpp" line="351"/>
         <source>Filter</source>
         <translation>Filtro:</translation>
     </message>
@@ -1467,22 +1467,17 @@ Gli elementi la cui eliminazione è consentita verranno eliminati se impediscono
         <translation>C&apos;erano troppi problemi. Non tutti saranno visibili qui.</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="208"/>
-        <source>The file »%1« was ignored as its name is reserved by %2</source>
-        <translation>Il file »%1« è stato ignorato perché il suo nome è riservato a %2</translation>
-    </message>
-    <message>
-        <location filename="../src/gui/issueswidget.cpp" line="234"/>
+        <location filename="../src/gui/issueswidget.cpp" line="227"/>
         <source>Reset column sizes</source>
         <translation>Reimposta le dimensioni delle colonne</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="268"/>
+        <location filename="../src/gui/issueswidget.cpp" line="261"/>
         <source>Filter menu</source>
         <translation>Menù Filtra</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="270"/>
+        <location filename="../src/gui/issueswidget.cpp" line="263"/>
         <source>Account</source>
         <translation>Account</translation>
     </message>
@@ -1556,12 +1551,12 @@ Note that using any logging command line options will override the settings.</so
         <translation>Tutti</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="288"/>
+        <location filename="../src/gui/issueswidget.cpp" line="281"/>
         <source>Reset Filters</source>
         <translation>Reimposta Filtri</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="373"/>
+        <location filename="../src/gui/issueswidget.cpp" line="366"/>
         <source>Status Filter:</source>
         <translation>Filtro stato:</translation>
     </message>
@@ -1873,107 +1868,107 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::ProcessDirectoryJob</name>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="172"/>
+        <location filename="../src/libsync/discovery.cpp" line="169"/>
         <source>Symbolic links are not supported in syncing.</source>
         <translation>I collegamenti simbolici non sono supportati nella sincronizzazione.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="185"/>
+        <location filename="../src/libsync/discovery.cpp" line="181"/>
         <source>File names ending with a period are not supported on this file system.</source>
         <translation>Questo file system non supporta i nomi di file che terminano con un punto.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="198"/>
+        <location filename="../src/libsync/discovery.cpp" line="194"/>
         <source>File names containing the character &apos;%1&apos; are not supported on this file system.</source>
         <translation>I nomi di file contenenti il ​​carattere &apos;%1&apos; non sono supportati su questo file system.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="201"/>
+        <location filename="../src/libsync/discovery.cpp" line="197"/>
         <source>File name contains at least one invalid character</source>
         <translation>Il nome del file contiene almeno un carattere non valido</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="203"/>
+        <location filename="../src/libsync/discovery.cpp" line="199"/>
         <source>The file name is a reserved name on this file system.</source>
         <translation>Il nome del file è un nome riservato su questo file system.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="212"/>
+        <location filename="../src/libsync/discovery.cpp" line="208"/>
         <source>Filename contains trailing spaces.</source>
         <translation>Il nome del file contiene spazi consecutivi</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="215"/>
+        <location filename="../src/libsync/discovery.cpp" line="211"/>
         <source>Filename is too long.</source>
         <translation>Il nome del file è troppo lungo.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="218"/>
+        <location filename="../src/libsync/discovery.cpp" line="214"/>
         <source>File/Folder is ignored because it&apos;s hidden.</source>
         <translation>Il file/la cartella viene ignorato perché è nascosto.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="222"/>
+        <location filename="../src/libsync/discovery.cpp" line="218"/>
         <source>Conflict: Server version downloaded, local copy renamed and not uploaded.</source>
         <translation>Conflitto: versione del server scaricata, copia locale rinominata e non caricata.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="226"/>
+        <location filename="../src/libsync/discovery.cpp" line="222"/>
         <source>The filename is blacklisted on the server.</source>
         <translation>Il nome del file è nella blacklist del server.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1089"/>
+        <location filename="../src/libsync/discovery.cpp" line="1085"/>
         <source>Moved to invalid target, restoring</source>
         <translation>Spostato su destinazione non valida, ripristino</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1102"/>
+        <location filename="../src/libsync/discovery.cpp" line="1098"/>
         <source>Not allowed to remove, restoring</source>
         <translation>Non è consentito rimuovere, ripristinare</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1258"/>
+        <location filename="../src/libsync/discovery.cpp" line="1254"/>
         <source>Server replied with an error while reading directory »%1«: %2</source>
         <translation>Il server ha risposto con un errore durante la lettura della directory »%1«: %2</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1048"/>
+        <location filename="../src/libsync/discovery.cpp" line="1044"/>
         <source>Not allowed because you don&apos;t have permission to add subfolders to that folder</source>
         <translation>Non consentito perché non hai l&apos;autorizzazione per aggiungere sottocartelle a quella cartella</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="180"/>
+        <location filename="../src/libsync/discovery.cpp" line="176"/>
         <source>The file is listed on the ignore list.</source>
         <translation>Il file è elencato nell&apos;elenco degli ignorati.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="526"/>
+        <location filename="../src/libsync/discovery.cpp" line="522"/>
         <source>Error while doing a rename, unhandled status code: %1</source>
         <translation>Errore durante la ridenominazione, codice di stato non gestito: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1016"/>
+        <location filename="../src/libsync/discovery.cpp" line="1012"/>
         <source>Selective sync: Ignored because its path is deselected</source>
         <translation>Sincronizzazione selettiva: ignorata perché il suo percorso è deselezionato</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1053"/>
+        <location filename="../src/libsync/discovery.cpp" line="1049"/>
         <source>Not allowed because you don&apos;t have permission to add files in that folder</source>
         <translation>Non consentito perché non hai l&apos;autorizzazione per aggiungere file in quella cartella</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1066"/>
+        <location filename="../src/libsync/discovery.cpp" line="1062"/>
         <source>Not allowed to upload this file because it is read-only on the server, restoring</source>
         <translation>Non è consentito caricare questo file perché è di sola lettura sul server, ripristino in corso</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1212"/>
+        <location filename="../src/libsync/discovery.cpp" line="1208"/>
         <source>Error while reading the database</source>
         <translation>Errore durante la lettura del database</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1237"/>
+        <location filename="../src/libsync/discovery.cpp" line="1233"/>
         <source>This Space is currently unavailable</source>
         <translation>Questo spazio non è attualmente disponibile</translation>
     </message>
@@ -2585,12 +2580,12 @@ Note that using any logging command line options will override the settings.</so
         <translation>Impossibile aprire o creare il database di sincronizzazione locale. Assicurati di avere accesso in scrittura alla cartella di sincronizzazione.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="770"/>
+        <location filename="../src/libsync/syncengine.cpp" line="768"/>
         <source>Disk space is low: Downloads that would reduce free space below %1 were skipped.</source>
         <translation>Lo spazio su disco è insufficiente: i download che avrebbero ridotto lo spazio libero al di sotto di %1 sono stati saltati.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="777"/>
+        <location filename="../src/libsync/syncengine.cpp" line="775"/>
         <source>Space quota exceeded. Please contact the Administrator of this space.</source>
         <translation>Space quota exceeded. Please contact the Administrator of this space.</translation>
     </message>
@@ -2610,12 +2605,12 @@ Note that using any logging command line options will override the settings.</so
         <translation>Impossibile leggere dal registro di sincronizzazione.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="473"/>
+        <location filename="../src/libsync/syncengine.cpp" line="471"/>
         <source>Cannot open the sync journal</source>
         <translation>Impossibile aprire il registro di sincronizzazione</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="753"/>
+        <location filename="../src/libsync/syncengine.cpp" line="751"/>
         <source>Aborted due to: %1</source>
         <translation>Interrotto a causa di: %1</translation>
     </message>

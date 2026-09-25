@@ -895,141 +895,141 @@ L&apos;actualització es realitzarà en segon pla i substituirà el fitxer AppIm
 <context>
     <name>OCC::Folder</name>
     <message>
-        <location filename="../src/gui/folder.cpp" line="148"/>
+        <location filename="../src/gui/folder.cpp" line="146"/>
         <source>The path »%1« is too long. Please enable long paths in the Windows settings or choose a different folder.</source>
         <translation>El camí »%1« és massa llarg. Si us plau, activa els camins llargs a la configuració de Windows o tria una carpeta diferent.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="193"/>
+        <location filename="../src/gui/folder.cpp" line="191"/>
         <source>Failed to open the database for »%1«.</source>
         <translation>No s&apos;ha pogut obrir la base de dades per a »%1«.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="171"/>
+        <location filename="../src/gui/folder.cpp" line="169"/>
         <source>Local folder »%1« does not exist.</source>
         <translation>La carpeta local »%1« no existeix.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="199"/>
+        <location filename="../src/gui/folder.cpp" line="197"/>
         <source>»%1« should be a folder but is not.</source>
         <translation>»%1« hauria de ser una carpeta, però no ho és.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="201"/>
+        <location filename="../src/gui/folder.cpp" line="199"/>
         <source>»%1« is not readable.</source>
         <translation>»%1« no és llegible.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="203"/>
+        <location filename="../src/gui/folder.cpp" line="201"/>
         <source>»%1« is not writable.</source>
         <translation>No es pot escriure a »%1«.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="462"/>
+        <location filename="../src/gui/folder.cpp" line="460"/>
         <source>»%1« and %n other file(s) have been removed.</source>
         <translation><numerusform>S&apos;ha eliminat »%1« i %n altre fitxer.</numerusform><numerusform>S&apos;han eliminat »%1« i %n altres fitxers.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="464"/>
+        <location filename="../src/gui/folder.cpp" line="462"/>
         <source>»%1« has been removed.</source>
         <comment>%1 names a file.</comment>
         <translation>S&apos;ha eliminat »%1«.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="469"/>
+        <location filename="../src/gui/folder.cpp" line="467"/>
         <source>»%1« and %n other file(s) have been added.</source>
         <translation><numerusform>S&apos;ha afegit »%1« i %n altre fitxer.</numerusform><numerusform>S&apos;han afegit »%1« i %n altres fitxers.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="471"/>
+        <location filename="../src/gui/folder.cpp" line="469"/>
         <source>»%1« has been added.</source>
         <comment>%1 names a file.</comment>
         <translation>S&apos;ha afegit »%1«.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="476"/>
+        <location filename="../src/gui/folder.cpp" line="474"/>
         <source>»%1« and %n other file(s) have been updated.</source>
         <translation><numerusform>S&apos;ha actualitzat »%1« i »%n« altre fitxer.</numerusform><numerusform>S&apos;han actualitzat »%1« i »%n« altres fitxers.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="478"/>
+        <location filename="../src/gui/folder.cpp" line="476"/>
         <source>»%1« has been updated.</source>
         <comment>%1 names a file.</comment>
         <translation>S&apos;ha actualitzat »%1«.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="483"/>
+        <location filename="../src/gui/folder.cpp" line="481"/>
         <source>»%1« has been renamed to »%2« and %n other file(s) have been renamed.</source>
         <translation><numerusform>S&apos;ha canviat el nom de »%1« a »%2« i s&apos;ha reanomenat %n altre fitxer.</numerusform><numerusform>S&apos;ha canviat el nom de »%1« a »%2« i s&apos;han reanomenat %n altres fitxers.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="485"/>
+        <location filename="../src/gui/folder.cpp" line="483"/>
         <source>»%1« has been renamed to »%2«.</source>
         <comment>%1 and %2 name files.</comment>
         <translation>S&apos;ha renombrat »%1« a »%2«.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="490"/>
+        <location filename="../src/gui/folder.cpp" line="488"/>
         <source>»%1« has been moved to »%2« and %n other file(s) have been moved.</source>
         <translation><numerusform>S&apos;ha mogut »%1« a »%2« i s&apos;ha mogut %n altre fitxer.</numerusform><numerusform>S&apos;ha mogut »%1« a »%2« i s&apos;han mogut %n altres fitxers.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="492"/>
+        <location filename="../src/gui/folder.cpp" line="490"/>
         <source>»%1« has been moved to »%2«.</source>
         <translation>S&apos;ha mogut »%1« a »%2«.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="497"/>
+        <location filename="../src/gui/folder.cpp" line="495"/>
         <source>»%1« and %n other file(s) have sync conflicts.</source>
         <translation><numerusform>»%1« i %n altre fitxer tenen conflictes de sincronització.</numerusform><numerusform>»%1« i %n altres fitxers tenen conflictes de sincronització.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="499"/>
+        <location filename="../src/gui/folder.cpp" line="497"/>
         <source>»%1« has a sync conflict. Please check the conflict file!</source>
         <translation>»%1« té un conflicte de sincronització. Si us plau, revisa el fitxer en conflicte!</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="504"/>
+        <location filename="../src/gui/folder.cpp" line="502"/>
         <source>»%1« and %n other file(s) could not be synced due to errors. See the log for details.</source>
         <translation><numerusform>No s&apos;ha pogut sincronitzar »%1« ni %n altre fitxer a causa d&apos;errors. Consulta el registre per a més detalls.</numerusform><numerusform>No s&apos;ha pogut sincronitzar »%1« ni %n altres fitxers a causa d&apos;errors. Consulta el registre per a més detalls.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="506"/>
+        <location filename="../src/gui/folder.cpp" line="504"/>
         <source>»%1« could not be synced due to an error. See the log for details.</source>
         <translation>»%1« no s&apos;ha pogut sincronitzar a causa d&apos;un error. Consulta el registre per a més detalls.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="512"/>
+        <location filename="../src/gui/folder.cpp" line="510"/>
         <source>Sync Activity</source>
         <translation>Activitat de sincronització</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="715"/>
+        <location filename="../src/gui/folder.cpp" line="713"/>
         <source>Switching VFS mode on folder »%1«</source>
         <translation>Canviant el mode VFS a la carpeta »%1«.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1055"/>
+        <location filename="../src/gui/folder.cpp" line="1053"/>
         <source>The folder »%1« was created but was excluded from synchronization previously. Data inside it will not be synchronized.</source>
         <translation>La carpeta »%1« es va crear, però anteriorment s’excloïa de la sincronització. Les dades que contingui no se sincronitzaran.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1058"/>
+        <location filename="../src/gui/folder.cpp" line="1056"/>
         <source>The file »%1« was created but was excluded from synchronization previously. It will not be synchronized.</source>
         <translation>El fitxer »%1« es va crear, però anteriorment s’excloïa de la sincronització. No se sincronitzarà.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1062"/>
+        <location filename="../src/gui/folder.cpp" line="1060"/>
         <source>»%1« is not synchronized</source>
         <translation>»%1« no està sincronitzat.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="851"/>
+        <location filename="../src/gui/folder.cpp" line="849"/>
         <source>Could not read system exclude file</source>
         <translation>No s&apos;ha pogut llegir el fitxer d&apos;exclusió del sistema.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1070"/>
+        <location filename="../src/gui/folder.cpp" line="1068"/>
         <source>Changes in synchronized folders could not be tracked reliably.
 
 This means that the synchronization client might not upload local changes immediately and will instead only scan for local changes and upload them occasionally (every two hours by default).
@@ -1450,7 +1450,7 @@ Els elements on es permeti l&apos;eliminació seran esborrats si impedeixen que 
 <context>
     <name>OCC::IssuesWidget</name>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="358"/>
+        <location filename="../src/gui/issueswidget.cpp" line="351"/>
         <source>Filter</source>
         <translation>Filtre</translation>
     </message>
@@ -1465,22 +1465,17 @@ Els elements on es permeti l&apos;eliminació seran esborrats si impedeixen que 
         <translation>Hi havia massa incidències. No totes seran visibles aquí.</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="208"/>
-        <source>The file »%1« was ignored as its name is reserved by %2</source>
-        <translation>S&apos;ha ignorat el fitxer »%1«, ja que el seu nom està reservat per %2</translation>
-    </message>
-    <message>
-        <location filename="../src/gui/issueswidget.cpp" line="234"/>
+        <location filename="../src/gui/issueswidget.cpp" line="227"/>
         <source>Reset column sizes</source>
         <translation>Restableix la mida de les columnes</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="268"/>
+        <location filename="../src/gui/issueswidget.cpp" line="261"/>
         <source>Filter menu</source>
         <translation>Menú de filtres</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="270"/>
+        <location filename="../src/gui/issueswidget.cpp" line="263"/>
         <source>Account</source>
         <translation>Compte</translation>
     </message>
@@ -1555,12 +1550,12 @@ Tingues en compte que l’ús de qualsevol opció de línia d’ordres per a reg
         <translation>Tots</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="288"/>
+        <location filename="../src/gui/issueswidget.cpp" line="281"/>
         <source>Reset Filters</source>
         <translation>Restableix els filtres</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="373"/>
+        <location filename="../src/gui/issueswidget.cpp" line="366"/>
         <source>Status Filter:</source>
         <translation>Filtre d&apos;estat:</translation>
     </message>
@@ -1871,107 +1866,107 @@ Tingues en compte que l’ús de qualsevol opció de línia d’ordres per a reg
 <context>
     <name>OCC::ProcessDirectoryJob</name>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="172"/>
+        <location filename="../src/libsync/discovery.cpp" line="169"/>
         <source>Symbolic links are not supported in syncing.</source>
         <translation>Els enllaços simbòlics no són compatibles amb la sincronització.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="185"/>
+        <location filename="../src/libsync/discovery.cpp" line="181"/>
         <source>File names ending with a period are not supported on this file system.</source>
         <translation>Els noms de fitxer que acaben amb un període no estan admesos en aquest sistema de fitxers.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="198"/>
+        <location filename="../src/libsync/discovery.cpp" line="194"/>
         <source>File names containing the character &apos;%1&apos; are not supported on this file system.</source>
         <translation>Els noms de fitxer que contenen el caràcter &apos;%1&apos; no estan admesos en aquest sistema de fitxers.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="201"/>
+        <location filename="../src/libsync/discovery.cpp" line="197"/>
         <source>File name contains at least one invalid character</source>
         <translation>El nom de fitxer conté almenys un caràcter no vàlid</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="203"/>
+        <location filename="../src/libsync/discovery.cpp" line="199"/>
         <source>The file name is a reserved name on this file system.</source>
         <translation>El nom del fitxer és un nom reservat en aquest sistema de fitxers.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="212"/>
+        <location filename="../src/libsync/discovery.cpp" line="208"/>
         <source>Filename contains trailing spaces.</source>
         <translation>El nom de fitxer conté espais finals.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="215"/>
+        <location filename="../src/libsync/discovery.cpp" line="211"/>
         <source>Filename is too long.</source>
         <translation>El nom del fitxer és massa llarg.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="218"/>
+        <location filename="../src/libsync/discovery.cpp" line="214"/>
         <source>File/Folder is ignored because it&apos;s hidden.</source>
         <translation>El fitxer/carpeta s&apos;ignora perquè està amagat.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="222"/>
+        <location filename="../src/libsync/discovery.cpp" line="218"/>
         <source>Conflict: Server version downloaded, local copy renamed and not uploaded.</source>
         <translation>Conflicte: s&apos;ha baixat la versió del servidor, s&apos;ha canviat el nom de la còpia local i no s&apos;ha pujat.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="226"/>
+        <location filename="../src/libsync/discovery.cpp" line="222"/>
         <source>The filename is blacklisted on the server.</source>
         <translation>El nom de fitxer està a la llista negra del servidor.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1089"/>
+        <location filename="../src/libsync/discovery.cpp" line="1085"/>
         <source>Moved to invalid target, restoring</source>
         <translation>S&apos;ha mogut a una destinació no vàlida, s&apos;està restaurant</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1102"/>
+        <location filename="../src/libsync/discovery.cpp" line="1098"/>
         <source>Not allowed to remove, restoring</source>
         <translation>No es permet eliminar, s&apos;està restaurant</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1258"/>
+        <location filename="../src/libsync/discovery.cpp" line="1254"/>
         <source>Server replied with an error while reading directory »%1«: %2</source>
         <translation>El servidor ha respost amb un error en llegir el directori »%1«: %2</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1048"/>
+        <location filename="../src/libsync/discovery.cpp" line="1044"/>
         <source>Not allowed because you don&apos;t have permission to add subfolders to that folder</source>
         <translation>No permès perquè no teniu permís per afegir subcarpetes a aquesta carpeta.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="180"/>
+        <location filename="../src/libsync/discovery.cpp" line="176"/>
         <source>The file is listed on the ignore list.</source>
         <translation>El fitxer apareix a la llista d&apos;ignorats.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="526"/>
+        <location filename="../src/libsync/discovery.cpp" line="522"/>
         <source>Error while doing a rename, unhandled status code: %1</source>
         <translation>Error en canviar el nom, codi d&apos;estat no gestionat: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1016"/>
+        <location filename="../src/libsync/discovery.cpp" line="1012"/>
         <source>Selective sync: Ignored because its path is deselected</source>
         <translation>Sincronització selectiva: s&apos;ignora perquè el seu camí està desseleccionat</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1053"/>
+        <location filename="../src/libsync/discovery.cpp" line="1049"/>
         <source>Not allowed because you don&apos;t have permission to add files in that folder</source>
         <translation>No permès perquè no tens permís per afegir fitxers en aquesta carpeta.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1066"/>
+        <location filename="../src/libsync/discovery.cpp" line="1062"/>
         <source>Not allowed to upload this file because it is read-only on the server, restoring</source>
         <translation>No es permet carregar aquest fitxer perquè és de només lectura al servidor, s&apos;està restaurant</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1212"/>
+        <location filename="../src/libsync/discovery.cpp" line="1208"/>
         <source>Error while reading the database</source>
         <translation>Error en llegir la base de dades</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1237"/>
+        <location filename="../src/libsync/discovery.cpp" line="1233"/>
         <source>This Space is currently unavailable</source>
         <translation>Aquest espai no està disponible actualment</translation>
     </message>
@@ -2583,12 +2578,12 @@ Tingues en compte que l’ús de qualsevol opció de línia d’ordres per a reg
         <translation>No es pot obrir o crear la base de dades de sincronització local. Assegureu-vos que teniu accés d&apos;escriptura a la carpeta de sincronització.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="770"/>
+        <location filename="../src/libsync/syncengine.cpp" line="768"/>
         <source>Disk space is low: Downloads that would reduce free space below %1 were skipped.</source>
         <translation>Espai en disc baix: s&apos;han omès les descàrregues que reduirien l&apos;espai lliure per sota de %1.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="777"/>
+        <location filename="../src/libsync/syncengine.cpp" line="775"/>
         <source>Space quota exceeded. Please contact the Administrator of this space.</source>
         <translation>Quota d&apos;espai superada. Poseu-vos en contacte amb l&apos;administrador d&apos;aquest espai.</translation>
     </message>
@@ -2608,12 +2603,12 @@ Tingues en compte que l’ús de qualsevol opció de línia d’ordres per a reg
         <translation>No es pot llegir del diari de sincronització.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="473"/>
+        <location filename="../src/libsync/syncengine.cpp" line="471"/>
         <source>Cannot open the sync journal</source>
         <translation>No es pot obrir el diari de sincronització</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="753"/>
+        <location filename="../src/libsync/syncengine.cpp" line="751"/>
         <source>Aborted due to: %1</source>
         <translation>Avortat a causa de: %1</translation>
     </message>
