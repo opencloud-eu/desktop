@@ -24,7 +24,9 @@ def build_conflicted_regex(filename):
     return rf"{filename} \(conflicted copy \d{{4}}-\d{{2}}-\d{{2}} \d{{6}}\)"
 
 
-def sanitize_path(path):
+def normalize_path(path):
+    if is_windows():
+        return re.sub(r'[\\/]+', '/', path)
     return path.replace("//", "/")
 
 

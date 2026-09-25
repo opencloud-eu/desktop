@@ -15,7 +15,7 @@ Feature: adding accounts
             | user     | Alice |
             | password | 1234  |
         And the user opens the advanced configuration
-        Then the download everything option should be selected by default for Linux
+        Then the synchronize all existing spaces should be selected by default
         And the user should be able to choose the local download directory
 
     @smoke
