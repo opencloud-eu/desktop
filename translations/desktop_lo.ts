@@ -895,141 +895,141 @@ The update will be performed in the background, and overwrite the current AppIma
 <context>
     <name>OCC::Folder</name>
     <message>
-        <location filename="../src/gui/folder.cpp" line="148"/>
+        <location filename="../src/gui/folder.cpp" line="146"/>
         <source>The path »%1« is too long. Please enable long paths in the Windows settings or choose a different folder.</source>
         <translation>ເສັ້ນທາງ »%1« ຍາວເກີນໄປ. ກະລຸນາເປີດໃຊ້ &quot;long paths&quot; ໃນການຕັ້ງຄ່າ Windows ຫຼື ເລືອກໂຟນເດີອື່ນ.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="193"/>
+        <location filename="../src/gui/folder.cpp" line="191"/>
         <source>Failed to open the database for »%1«.</source>
         <translation>ບໍ່ສາມາດເປີດຖານຂໍ້ມູນສຳລັບ »%1« ໄດ້.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="171"/>
+        <location filename="../src/gui/folder.cpp" line="169"/>
         <source>Local folder »%1« does not exist.</source>
         <translation>ບໍ່ມີໂຟນເດີ »%1« ຢູ່ໃນເຄື່ອງ.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="199"/>
+        <location filename="../src/gui/folder.cpp" line="197"/>
         <source>»%1« should be a folder but is not.</source>
         <translation>»%1« ຄວນຈະເປັນໂຟນເດີ ແຕ່ບໍ່ແມ່ນ.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="201"/>
+        <location filename="../src/gui/folder.cpp" line="199"/>
         <source>»%1« is not readable.</source>
         <translation>»%1« ບໍ່ສາມາດອ່ານໄດ້.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="203"/>
+        <location filename="../src/gui/folder.cpp" line="201"/>
         <source>»%1« is not writable.</source>
         <translation>»%1« ບໍ່ສາມາດຂຽນຂໍ້ມູນລົງໄດ້.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="462"/>
+        <location filename="../src/gui/folder.cpp" line="460"/>
         <source>»%1« and %n other file(s) have been removed.</source>
         <translation><numerusform>»%1« ແລະ ອີກ %n ໄຟລ໌ໄດ້ຖືກລຶບອອກແລ້ວ.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="464"/>
+        <location filename="../src/gui/folder.cpp" line="462"/>
         <source>»%1« has been removed.</source>
         <comment>%1 names a file.</comment>
         <translation>»%1« ຖືກລຶບອອກແລ້ວ.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="469"/>
+        <location filename="../src/gui/folder.cpp" line="467"/>
         <source>»%1« and %n other file(s) have been added.</source>
         <translation><numerusform>»%1« ແລະ ອີກ %n ໄຟລ໌ໄດ້ຖືກເພີ່ມເຂົ້າແລ້ວ.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="471"/>
+        <location filename="../src/gui/folder.cpp" line="469"/>
         <source>»%1« has been added.</source>
         <comment>%1 names a file.</comment>
         <translation>»%1« ຖືກເພີ່ມເຂົ້າແລ້ວ.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="476"/>
+        <location filename="../src/gui/folder.cpp" line="474"/>
         <source>»%1« and %n other file(s) have been updated.</source>
         <translation><numerusform>»%1« ແລະ ອີກ %n ໄຟລ໌ໄດ້ຖືກອັບເດດແລ້ວ.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="478"/>
+        <location filename="../src/gui/folder.cpp" line="476"/>
         <source>»%1« has been updated.</source>
         <comment>%1 names a file.</comment>
         <translation>»%1« ຖືກອັບເດດແລ້ວ.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="483"/>
+        <location filename="../src/gui/folder.cpp" line="481"/>
         <source>»%1« has been renamed to »%2« and %n other file(s) have been renamed.</source>
         <translation><numerusform>»%1« ຖືກປ່ຽນຊື່ເປັນ »%2« ແລະ ອີກ %n ໄຟລ໌ໄດ້ຖືກປ່ຽນຊື່ແລ້ວ.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="485"/>
+        <location filename="../src/gui/folder.cpp" line="483"/>
         <source>»%1« has been renamed to »%2«.</source>
         <comment>%1 and %2 name files.</comment>
         <translation>»%1« ຖືກປ່ຽນຊື່ເປັນ »%2«.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="490"/>
+        <location filename="../src/gui/folder.cpp" line="488"/>
         <source>»%1« has been moved to »%2« and %n other file(s) have been moved.</source>
         <translation><numerusform>»%1« ຖືກຍ້າຍໄປທີ່ »%2« ແລະ ອີກ %n ໄຟລ໌ໄດ້ຖືກຍ້າຍແລ້ວ.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="492"/>
+        <location filename="../src/gui/folder.cpp" line="490"/>
         <source>»%1« has been moved to »%2«.</source>
         <translation>»%1« ຖືກຍ້າຍໄປທີ່ »%2«.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="497"/>
+        <location filename="../src/gui/folder.cpp" line="495"/>
         <source>»%1« and %n other file(s) have sync conflicts.</source>
         <translation><numerusform>»%1« ແລະ ອີກ %n ໄຟລ໌ເກີດການຂັດແຍ່ງໃນການຊິງໂຄຣໄນ.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="499"/>
+        <location filename="../src/gui/folder.cpp" line="497"/>
         <source>»%1« has a sync conflict. Please check the conflict file!</source>
         <translation>»%1« ເກີດການຂັດແຍ່ງໃນການຊິງໂຄຣໄນ. ກະລຸນາກວດສອບໄຟລ໌ທີ່ຂັດແຍ່ງ!</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="504"/>
+        <location filename="../src/gui/folder.cpp" line="502"/>
         <source>»%1« and %n other file(s) could not be synced due to errors. See the log for details.</source>
         <translation><numerusform>»%1« ແລະ ອີກ %n ໄຟລ໌ບໍ່ສາມາດຊິງໂຄຣໄນໄດ້ເນື່ອງຈາກຂໍ້ຜິດພາດ. ເບິ່ງລາຍລະອຽດໃນບັນທຶກ (log).</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="506"/>
+        <location filename="../src/gui/folder.cpp" line="504"/>
         <source>»%1« could not be synced due to an error. See the log for details.</source>
         <translation>»%1« ບໍ່ສາມາດຊິງໂຄຣໄນໄດ້ເນື່ອງຈາກຂໍ້ຜິດພາດ. ເບິ່ງລາຍລະອຽດໃນບັນທຶກ (log).</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="512"/>
+        <location filename="../src/gui/folder.cpp" line="510"/>
         <source>Sync Activity</source>
         <translation>ກິດຈະກຳການຊິງໂຄຣໄນ</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="715"/>
+        <location filename="../src/gui/folder.cpp" line="713"/>
         <source>Switching VFS mode on folder »%1«</source>
         <translation>ກຳລັງປ່ຽນໂໝດ VFS ໃນໂຟນເດີ »%1«</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1055"/>
+        <location filename="../src/gui/folder.cpp" line="1053"/>
         <source>The folder »%1« was created but was excluded from synchronization previously. Data inside it will not be synchronized.</source>
         <translation>ໂຟນເດີ »%1« ຖືກສ້າງຂຶ້ນແຕ່ຖືກລະເວັ້ນຈາກການຊິງໂຄຣໄນກ່ອນໜ້ານີ້. ຂໍ້ມູນພາຍໃນຈະບໍ່ຖືກຊິງໂຄຣໄນ.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1058"/>
+        <location filename="../src/gui/folder.cpp" line="1056"/>
         <source>The file »%1« was created but was excluded from synchronization previously. It will not be synchronized.</source>
         <translation>ໄຟລ໌ »%1« ຖືກສ້າງຂຶ້ນແຕ່ຖືກລະເວັ້ນຈາກການຊິງໂຄຣໄນກ່ອນໜ້ານີ້. ມັນຈະບໍ່ຖືກຊິງໂຄຣໄນ.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1062"/>
+        <location filename="../src/gui/folder.cpp" line="1060"/>
         <source>»%1« is not synchronized</source>
         <translation>»%1« ບໍ່ໄດ້ຖືກຊິງໂຄຣໄນ</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="851"/>
+        <location filename="../src/gui/folder.cpp" line="849"/>
         <source>Could not read system exclude file</source>
         <translation>ບໍ່ສາມາດອ່ານໄຟລ໌ລະເວັ້ນຂອງລະບົບໄດ້</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1070"/>
+        <location filename="../src/gui/folder.cpp" line="1068"/>
         <source>Changes in synchronized folders could not be tracked reliably.
 
 This means that the synchronization client might not upload local changes immediately and will instead only scan for local changes and upload them occasionally (every two hours by default).
@@ -1450,7 +1450,7 @@ Items where deletion is allowed will be deleted if they prevent a directory from
 <context>
     <name>OCC::IssuesWidget</name>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="358"/>
+        <location filename="../src/gui/issueswidget.cpp" line="351"/>
         <source>Filter</source>
         <translation>ຕົວຕອງ</translation>
     </message>
@@ -1465,22 +1465,17 @@ Items where deletion is allowed will be deleted if they prevent a directory from
         <translation>ມີບັນຫາຫຼາຍເກີນໄປ. ອາດຈະສະແດງໃຫ້ເຫັນບໍ່ໝົດທຸກຢ່າງໃນນີ້.</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="208"/>
-        <source>The file »%1« was ignored as its name is reserved by %2</source>
-        <translation>ໄຟລ໌ »%1« ຖືກລະເວັ້ນເນື່ອງຈາກຊື່ນີ້ຖືກຈອງໄວ້ໂດຍ %2</translation>
-    </message>
-    <message>
-        <location filename="../src/gui/issueswidget.cpp" line="234"/>
+        <location filename="../src/gui/issueswidget.cpp" line="227"/>
         <source>Reset column sizes</source>
         <translation>ຄືນຄ່າຂະໜາດຖັນ</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="268"/>
+        <location filename="../src/gui/issueswidget.cpp" line="261"/>
         <source>Filter menu</source>
         <translation>ເມນູຕົວຕອງ</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="270"/>
+        <location filename="../src/gui/issueswidget.cpp" line="263"/>
         <source>Account</source>
         <translation>ບັນຊີ</translation>
     </message>
@@ -1555,12 +1550,12 @@ Note that using any logging command line options will override the settings.</so
         <translation>ທັງໝົດ</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="288"/>
+        <location filename="../src/gui/issueswidget.cpp" line="281"/>
         <source>Reset Filters</source>
         <translation>ຄືນຄ່າຕົວຕອງ</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="373"/>
+        <location filename="../src/gui/issueswidget.cpp" line="366"/>
         <source>Status Filter:</source>
         <translation>ຕົວຕອງສະຖານະ:</translation>
     </message>
@@ -1871,107 +1866,107 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::ProcessDirectoryJob</name>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="172"/>
+        <location filename="../src/libsync/discovery.cpp" line="169"/>
         <source>Symbolic links are not supported in syncing.</source>
         <translation>ບໍ່ຮອງຮັບການຊິງໂຄຣໄນ Symbolic links.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="185"/>
+        <location filename="../src/libsync/discovery.cpp" line="181"/>
         <source>File names ending with a period are not supported on this file system.</source>
         <translation>ຊື່ໄຟລ໌ທີ່ລົງທ້າຍດ້ວຍຈ້ຳ (.) ບໍ່ໄດ້ຮັບການຮອງຮັບໃນລະບົບໄຟລ໌ນີ້.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="198"/>
+        <location filename="../src/libsync/discovery.cpp" line="194"/>
         <source>File names containing the character &apos;%1&apos; are not supported on this file system.</source>
         <translation>ຊື່ໄຟລ໌ທີ່ມີຕົວອັກສອນ &apos;%1&apos; ບໍ່ໄດ້ຮັບການຮອງຮັບໃນລະບົບໄຟລ໌ນີ້.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="201"/>
+        <location filename="../src/libsync/discovery.cpp" line="197"/>
         <source>File name contains at least one invalid character</source>
         <translation>ຊື່ໄຟລ໌ມີຕົວອັກສອນທີ່ບໍ່ຖືກຕ້ອງຢ່າງໜ້ອຍໜຶ່ງຕົວ</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="203"/>
+        <location filename="../src/libsync/discovery.cpp" line="199"/>
         <source>The file name is a reserved name on this file system.</source>
         <translation>ຊື່ໄຟລ໌ນີ້ເປັນຊື່ທີ່ລະບົບສະຫງວນໄວ້.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="212"/>
+        <location filename="../src/libsync/discovery.cpp" line="208"/>
         <source>Filename contains trailing spaces.</source>
         <translation>ຊື່ໄຟລ໌ມີຍະຫວ່າງ (space) ຢູ່ທາງທ້າຍ.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="215"/>
+        <location filename="../src/libsync/discovery.cpp" line="211"/>
         <source>Filename is too long.</source>
         <translation>ຊື່ໄຟລ໌ຍາວເກີນໄປ.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="218"/>
+        <location filename="../src/libsync/discovery.cpp" line="214"/>
         <source>File/Folder is ignored because it&apos;s hidden.</source>
         <translation>ໄຟລ໌ ຫຼື ໂຟນເດີຖືກລະເວັ້ນຍ້ອນວ່າມັນຖືກຊື່ອງໄວ້.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="222"/>
+        <location filename="../src/libsync/discovery.cpp" line="218"/>
         <source>Conflict: Server version downloaded, local copy renamed and not uploaded.</source>
         <translation>ຂັດແຍ່ງ: ດາວໂຫລດເວີຊັນຈາກເຊີບເວີແລ້ວ, ໄຟລ໌ໃນເຄື່ອງຖືກປ່ຽນຊື່ ແລະ ບໍ່ໄດ້ອັບໂຫລດ.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="226"/>
+        <location filename="../src/libsync/discovery.cpp" line="222"/>
         <source>The filename is blacklisted on the server.</source>
         <translation>ຊື່ໄຟລ໌ນີ້ຖືກຕິດບັນຊີດຳ (blacklist) ໃນເຊີບເວີ.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1089"/>
+        <location filename="../src/libsync/discovery.cpp" line="1085"/>
         <source>Moved to invalid target, restoring</source>
         <translation>ຍ້າຍໄປບ່ອນທີ່ບໍ່ຖືກຕ້ອງ, ກຳລັງກູ້ຄືນ</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1102"/>
+        <location filename="../src/libsync/discovery.cpp" line="1098"/>
         <source>Not allowed to remove, restoring</source>
         <translation>ບໍ່ໄດ້ຮັບອະນຸຍາດໃຫ້ລຶບ, ກຳລັງກູ້ຄືນ</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1258"/>
+        <location filename="../src/libsync/discovery.cpp" line="1254"/>
         <source>Server replied with an error while reading directory »%1«: %2</source>
         <translation>ເຊີບເວີແຈ້ງຂໍ້ຜິດພາດຂະນະອ່ານໂຟນເດີ »%1«: %2</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1048"/>
+        <location filename="../src/libsync/discovery.cpp" line="1044"/>
         <source>Not allowed because you don&apos;t have permission to add subfolders to that folder</source>
         <translation>ບໍ່ໄດ້ຮັບອະນຸຍາດ ເພາະທ່ານບໍ່ມີສິດເພີ່ມໂຟນເດີຍ່ອຍໃນໂຟນເດີນັ້ນ</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="180"/>
+        <location filename="../src/libsync/discovery.cpp" line="176"/>
         <source>The file is listed on the ignore list.</source>
         <translation>ໄຟລ໌ນີ້ຢູ່ໃນລາຍຊື່ລະເວັ້ນ.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="526"/>
+        <location filename="../src/libsync/discovery.cpp" line="522"/>
         <source>Error while doing a rename, unhandled status code: %1</source>
         <translation>ເກີດຂໍ້ຜິດພາດຂະນະປ່ຽນຊື່, ລະຫັດສະຖານະທີ່ບໍ່ຮອງຮັບ: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1016"/>
+        <location filename="../src/libsync/discovery.cpp" line="1012"/>
         <source>Selective sync: Ignored because its path is deselected</source>
         <translation>Selective sync: ຖືກລະເວັ້ນເນື່ອງຈາກບໍ່ໄດ້ເລືອກເສັ້ນທາງນີ້ໄວ້</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1053"/>
+        <location filename="../src/libsync/discovery.cpp" line="1049"/>
         <source>Not allowed because you don&apos;t have permission to add files in that folder</source>
         <translation>ບໍ່ໄດ້ຮັບອະນຸຍາດ ເພາະທ່ານບໍ່ມີສິດເພີ່ມໄຟລ໌ໃນໂຟນເດີນັ້ນ</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1066"/>
+        <location filename="../src/libsync/discovery.cpp" line="1062"/>
         <source>Not allowed to upload this file because it is read-only on the server, restoring</source>
         <translation>ບໍ່ສາມາດອັບໂຫລດໄຟລ໌ນີ້ໄດ້ ເພາະມັນເປັນແບບອ່ານຢ່າງດຽວໃນເຊີບເວີ, ກຳລັງກູ້ຄືນ</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1212"/>
+        <location filename="../src/libsync/discovery.cpp" line="1208"/>
         <source>Error while reading the database</source>
         <translation>ເກີດຂໍ້ຜິດພາດຂະນະອ່ານຖານຂໍ້ມູນ</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1237"/>
+        <location filename="../src/libsync/discovery.cpp" line="1233"/>
         <source>This Space is currently unavailable</source>
         <translation>Space ນີ້ຍັງບໍ່ພ້ອມໃຊ້ງານໃນເວລານີ້</translation>
     </message>
@@ -2583,12 +2578,12 @@ Note that using any logging command line options will override the settings.</so
         <translation>ບໍ່ສາມາດເປີດ ຫຼື ສ້າງຖານຂໍ້ມູນການຊິງໂຄຣໄນໃນເຄື່ອງໄດ້. ກະລຸນາກວດສອບໃຫ້ແນ່ໃຈວ່າທ່ານມີສິດຂຽນຂໍ້ມູນໃນໂຟນເດີຊິງໂຄຣໄນ.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="770"/>
+        <location filename="../src/libsync/syncengine.cpp" line="768"/>
         <source>Disk space is low: Downloads that would reduce free space below %1 were skipped.</source>
         <translation>ພື້ນທີ່ວ່າງໃນດິສກ໌ເຫຼືອໜ້ອຍ: ການດາວໂຫລດທີ່ຈະເຮັດໃຫ້ພື້ນທີ່ເຫຼືອໜ້ອຍກວ່າ %1 ຈະຖືກຂ້າມໄປ.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="777"/>
+        <location filename="../src/libsync/syncengine.cpp" line="775"/>
         <source>Space quota exceeded. Please contact the Administrator of this space.</source>
         <translation>ໂຄຕ້າພື້ນທີ່ (quota) ເຕັມແລ້ວ. ກະລຸນາຕິດຕໍ່ຜູ້ເບິ່ງແຍງລະບົບຂອງ Space ນີ້.</translation>
     </message>
@@ -2608,12 +2603,12 @@ Note that using any logging command line options will override the settings.</so
         <translation>ບໍ່ສາມາດອ່ານຂໍ້ມູນຈາກໄຟລ໌ບັນທຶກການຊິງໂຄຣໄນໄດ້.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="473"/>
+        <location filename="../src/libsync/syncengine.cpp" line="471"/>
         <source>Cannot open the sync journal</source>
         <translation>ບໍ່ສາມາດເປີດໄຟລ໌ບັນທຶກການຊິງໂຄຣໄນໄດ້</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncengine.cpp" line="753"/>
+        <location filename="../src/libsync/syncengine.cpp" line="751"/>
         <source>Aborted due to: %1</source>
         <translation>ຍົກເລີກເນື່ອງຈາກ: %1</translation>
     </message>
