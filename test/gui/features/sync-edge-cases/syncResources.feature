@@ -239,15 +239,17 @@ Feature: Syncing files
         And as "Alice" file "Öü/testFile.txt" should exist in the server
         And as "Alice" file "Öü/newfile.txt" should exist in the server
 
-    @issue-12231
+    @issue-1127 @skip
     Scenario: Existing hidden files are downloaded when sync of hidden files is enabled
         Given user "Alice" has uploaded file with content "hidden content" to "/.hidden-file.txt" in the server
-        And user "Alice" has created folder "folder" in the server
+        And user "Alice" has created folder "folder/subfolder" in the server
         And user "Alice" has uploaded file with content "hidden in folder" to "/folder/.hidden-in-folder.txt" in the server
+        And user "Alice" has uploaded file with content "hidden in subfolder" to "/folder/subfolder/.hidden-in-subfolder.txt" in the server
         And user "Alice" has set up a client with default settings
         # hidden files are ignored by default, so they must not be downloaded yet
         Then the file ".hidden-file.txt" should not exist on the file system
         And the file "folder/.hidden-in-folder.txt" should not exist on the file system
+        And the file "folder/subfolder/.hidden-in-subfolder.txt" should not exist on the file system
         When the user enables sync of hidden files in the settings
         And the user opens the account "Alice"
         And the user force syncs the files
@@ -260,9 +262,12 @@ Feature: Syncing files
             """
             hidden in folder
             """
+        And the file "folder/subfolder/.hidden-in-subfolder.txt" should exist on the file system with the following content
+            """
+            hidden in subfolder
+            """
 
 
-    @issue-12231
     Scenario: Hidden files are downloaded when sync of hidden files is enabled
         Given user "Alice" has created folder "folder" in the server
         And user "Alice" has set up a client with default settings
