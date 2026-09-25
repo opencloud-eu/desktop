@@ -28,6 +28,11 @@ QString CommonStrings::fileBrowser()
 #endif
 }
 
+QString CommonStrings::copyFilePathToClipBoard()
+{
+    return tr("Copy path to clipboard");
+}
+
 QString CommonStrings::showInFileBrowser(const QString &path)
 {
     if (path.isEmpty()) {
@@ -39,6 +44,11 @@ QString CommonStrings::showInFileBrowser(const QString &path)
 QString CommonStrings::showInWebBrowser()
 {
     return tr("Show in web browser");
+}
+
+QString CommonStrings::copyUrlToClipBoard()
+{
+    return tr("Copy URL to clipboard");
 }
 
 QString CommonStrings::copyToClipBoard()
