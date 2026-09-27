@@ -47,6 +47,10 @@
 #include <qt_windows.h>
 #endif
 
+#ifdef Q_OS_MAC
+#include "macOS/fileprovider.h"
+#endif
+
 #include <QApplication>
 #include <QDesktopServices>
 #include <QMenuBar>
@@ -167,6 +171,9 @@ Application::Application(const QString &displayLanguage, bool debugMode)
     auto *menu = menuBar->addMenu(QString());
     // the actual name is provided by mac
     menu->addAction(QStringLiteral("About"), this, &Application::showAbout)->setMenuRole(QAction::AboutRole);
+
+    // Initialize FileProvider integration (registers domains for logged-in accounts)
+    Mac::FileProvider::instance();
 #endif
 #ifdef Q_OS_WIN
     // update the existing sidebar entries
@@ -214,7 +221,11 @@ void Application::slotCleanup()
     FolderMan::instance()->scheduler()->terminateCurrentSync(tr("Application is shutting down"));
     FolderMan::instance()->unloadAndDeleteAllFolders();
 
-    // Remove the account from the account manager so it can be deleted.
+    // shutdown() emits accountRemoved while unloading saved accounts. These are
+    // not user deletions: preserve FileProvider domains and inactive folders.
+#ifdef Q_OS_MAC
+    delete Mac::FileProvider::_instance;
+#endif
     AccountManager::instance()->shutdown();
 }
 
@@ -320,6 +331,12 @@ void Application::runNewAccountWizard()
 
                     // the account is now ready, emulate a normal account loading and Q_EMIT that the credentials are ready
                     Q_EMIT accountStatePtr->account()->credentialsFetched();
+
+                    if (FolderMan::instance()->useFileProvider()) {
+                        accountStatePtr->setSettingUp(false);
+                        accountStatePtr->checkConnectivity();
+                        return;
+                    }
 
                     switch (syncMode) {
                     case Wizard::SyncMode::SyncEverything:

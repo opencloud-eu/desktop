@@ -1,5 +1,6 @@
 #include "accountconfiguredwizardpage.h"
 
+#include "gui/folderman.h"
 #include "gui/fonticonmessagebox.h"
 #include "libsync/vfs/vfs.h"
 #include "ui_accountconfiguredwizardpage.h"
@@ -18,6 +19,13 @@ AccountConfiguredWizardPage::AccountConfiguredWizardPage(const QString &defaultS
     : _ui(new ::Ui::AccountConfiguredWizardPage)
 {
     _ui->setupUi(this);
+
+    if (FolderMan::instance()->useFileProvider()) {
+        _ui->youreAllSetLabel->setText(tr("You're all set! Your files will be available on demand in Finder."));
+        _ui->youreAllSetLabel->setWordWrap(true);
+        _ui->advancedConfigGroupBox->hide();
+        return;
+    }
 
     // by default, sync everything to an automatically chosen directory, VFS use depends on the OS
     // the defaults are provided by the controller

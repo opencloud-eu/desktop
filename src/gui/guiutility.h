@@ -54,6 +54,14 @@ namespace Utility {
 
     bool isInstalledByStore();
 
+#ifdef Q_OS_MAC
+    /** Check if the Finder Sync extension is enabled in System Settings */
+    OPENCLOUD_GUI_EXPORT bool isFinderSyncExtensionEnabled();
+
+    /** Open System Settings to the Extensions pane for the user to enable/disable extensions */
+    OPENCLOUD_GUI_EXPORT void showFinderSyncExtensionManagementInterface();
+#endif
+
     OPENCLOUD_GUI_EXPORT void markDirectoryAsSyncRoot(const QString &path, const QUuid &accountUuid);
     std::pair<QString, QUuid> getDirectorySyncRootMarkings(const QString &path);
     void unmarkDirectoryAsSyncRoot(const QString &path);

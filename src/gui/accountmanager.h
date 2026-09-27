@@ -103,6 +103,8 @@ private:
 Q_SIGNALS:
     void accountAdded(AccountStatePtr account);
     void accountRemoved(AccountStatePtr account);
+    /// Emitted only when the user deletes an account, never during shutdown.
+    void accountDeleted(AccountStatePtr account);
     void accountsChanged();
 
 private:

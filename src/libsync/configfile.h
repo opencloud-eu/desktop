@@ -115,6 +115,9 @@ public:
     bool moveToTrash() const;
     void setMoveToTrash(bool);
 
+    bool traditionalFolderSync() const;
+    void setTraditionalFolderSync(bool enabled);
+
     /// Used for testing, so we do not change the user's config file.
     static bool setConfDir(const QString &value);
 

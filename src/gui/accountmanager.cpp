@@ -223,6 +223,7 @@ void AccountManager::deleteAccount(AccountStatePtr account)
     account->account()->credentials()->forgetSensitiveData();
     account->account()->credentialManager()->clear();
 
+    Q_EMIT accountDeleted(account);
     Q_EMIT accountRemoved(account);
     Q_EMIT accountsChanged();
     account->deleteLater();
