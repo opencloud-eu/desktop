@@ -49,7 +49,9 @@ public:
         if (auto it = Utility::optionalFind(map, "permissions"_L1)) {
             _remotePerm = RemotePermissions::fromServerString(it->value());
         }
-
+        if (auto it = Utility::optionalFind(map, "integrity-id"_L1)) {
+            _vaultIntegrityId = it->value();
+        }
 
         if (_etag.isEmpty()) {
             errors.append(u"etag"_s);
@@ -76,6 +78,7 @@ public:
     time_t _modtime = 0;
     int64_t _size = 0;
     bool _isDirectory = false;
+    QString _vaultIntegrityId;
 
     QString _error;
 };
@@ -142,6 +145,11 @@ int64_t RemoteInfo::size() const
 QString RemoteInfo::error() const
 {
     return d->_error;
+}
+
+bool RemoteInfo::isVaultFile() const
+{
+    return !d->_vaultIntegrityId.isEmpty();
 }
 
 bool RemoteInfo::isValid() const
