@@ -213,8 +213,8 @@ private Q_SLOTS:
     }
 
     // Items that were skipped because they are hidden are not in the database, so an incremental
-    // local discovery cannot find them once hidden files are enabled: only a full local discovery
-    // does. See Folder::setIgnoreHiddenFiles().
+    // local discovery does not find them in a folder the watcher did not report: only a full local
+    // discovery does. See Folder::setIgnoreHiddenFiles().
     void testHiddenFilesNeedFullLocalDiscovery()
     {
         QFETCH_GLOBAL(Vfs::Mode, vfsMode);
@@ -225,10 +225,10 @@ private Q_SLOTS:
         QVERIFY(fakeFolder.applyLocalModificationsAndSync());
 
         // the user creates a hidden folder while hidden files are still ignored
-        fakeFolder.localModifier().mkdir(QStringLiteral(".hello"));
-        fakeFolder.localModifier().insert(QStringLiteral(".hello/Text File.txt"));
+        fakeFolder.localModifier().mkdir(QStringLiteral("B/.hello"));
+        fakeFolder.localModifier().insert(QStringLiteral("B/.hello/Text File.txt"));
         QVERIFY(fakeFolder.applyLocalModificationsAndSync());
-        QVERIFY(!fakeFolder.currentRemoteState().find(QStringLiteral(".hello")));
+        QVERIFY(!fakeFolder.currentRemoteState().find(QStringLiteral("B/.hello")));
 
         // the user enables hidden files, but an incremental sync only looks at the paths the
         // folder watcher reported and the hidden folder is not among them
@@ -237,12 +237,12 @@ private Q_SLOTS:
         fakeFolder.syncEngine().setLocalDiscoveryOptions(LocalDiscoveryStyle::DatabaseAndFilesystem, {QStringLiteral("A")});
         QVERIFY(fakeFolder.applyLocalModificationsAndSync());
         QVERIFY(fakeFolder.currentRemoteState().find(QStringLiteral("A/a3")));
-        QVERIFY(!fakeFolder.currentRemoteState().find(QStringLiteral(".hello")));
+        QVERIFY(!fakeFolder.currentRemoteState().find(QStringLiteral("B/.hello")));
 
         // a full local discovery, as requested by Folder::setIgnoreHiddenFiles(), picks it up
         fakeFolder.syncEngine().setLocalDiscoveryOptions(LocalDiscoveryStyle::FilesystemOnly);
         QVERIFY(fakeFolder.applyLocalModificationsAndSync());
-        QVERIFY(fakeFolder.currentRemoteState().find(QStringLiteral(".hello/Text File.txt")));
+        QVERIFY(fakeFolder.currentRemoteState().find(QStringLiteral("B/.hello/Text File.txt")));
     }
 
     // Tests the behavior of invalid filename detection
