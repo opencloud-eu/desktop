@@ -6,6 +6,10 @@
 
 @TheOneRing, @dragotin, @flimmy, @jnweiger, @prashant-gurung899, @saw-jan, @v-scharf
 
+### ✨ Features
+
+- Extend context menu with copy to clipboard [[#1115](https://github.com/opencloud-eu/desktop/pull/1115)]
+
 ### 🐛 Bug Fixes
 
 - Fix endless loop in wizard od failed auth [[#1090](https://github.com/opencloud-eu/desktop/pull/1090)]
