@@ -21,6 +21,8 @@
 #include "common/asserts.h"
 #include "common/filesystembase.h"
 #include "common/version.h"
+#include "libsync/filesystem.h"
+#include "libsync/theme.h"
 
 // Note:  This file must compile without QtGui
 #include <QCollator>
@@ -28,6 +30,7 @@
 #include <QDateTime>
 #include <QDir>
 #include <QFile>
+#include <QFileInfo>
 #include <QObject>
 #include <QProcess>
 #include <QRandomGenerator>
@@ -39,6 +42,7 @@
 #include <QThread>
 #include <QTimeZone>
 #include <QUrl>
+#include <QUuid>
 
 #ifdef Q_OS_UNIX
 #include <sys/statvfs.h>
@@ -59,6 +63,16 @@ namespace {
 auto RFC1123PatternC()
 {
     return QStringLiteral("ddd, dd MMM yyyy HH:mm:ss 'GMT'");
+}
+
+const QString dirTag()
+{
+    return QStringLiteral("eu.opencloud.spaces.app");
+}
+
+const QString uuidTag()
+{
+    return QStringLiteral("eu.opencloud.spaces.account-uuid");
 }
 }
 namespace OCC {
@@ -489,6 +503,62 @@ QString Utility::currentCpuArch()
     return QSysInfo::currentCpuArchitecture();
 }
 #endif
+
+void Utility::markDirectoryAsSyncRoot(const QString &path, const QUuid &accountUuid)
+{
+    const auto [oldTag, oldUuid] = getDirectorySyncRootMarkings(path);
+    if (oldUuid == accountUuid && oldTag == Theme::instance()->orgDomainName()) {
+        return;
+    }
+    Q_ASSERT(oldTag.isEmpty());
+    Q_ASSERT(oldUuid.isNull());
+
+    auto result1 = FileSystem::Tags::set(path, dirTag(), Theme::instance()->orgDomainName());
+    if (!result1) {
+        qCWarning(lcUtility) << QStringLiteral("Failed to set tag on »%1«: %2").arg(path, result1.error())
+#ifdef Q_OS_WIN
+                             << QStringLiteral("(filesystem %1)").arg(FileSystem::fileSystemForPath(path))
+#endif // Q_OS_WIN
+            ;
+        return;
+    }
+
+    auto result2 = FileSystem::Tags::set(path, uuidTag(), accountUuid.toString());
+    if (!result2) {
+        qCWarning(lcUtility) << QStringLiteral("Failed to set tag on »%1«: %2").arg(path, result2.error())
+#ifdef Q_OS_WIN
+                             << QStringLiteral("(filesystem %1)").arg(FileSystem::fileSystemForPath(path))
+#endif // Q_OS_WIN
+            ;
+        return;
+    }
+}
+
+std::pair<QString, QUuid> Utility::getDirectorySyncRootMarkings(const QString &path)
+{
+    auto existingDirTag = FileSystem::Tags::get(path, dirTag());
+    auto existingUuidTag = FileSystem::Tags::get(path, uuidTag());
+
+    if (existingDirTag.has_value() && existingUuidTag.has_value()) {
+        return {existingDirTag.value(), QUuid::fromString(existingUuidTag.value())};
+    }
+
+    return {};
+}
+
+void Utility::unmarkDirectoryAsSyncRoot(const QString &path)
+{
+    if (QFileInfo::exists(path)) {
+        if (!FileSystem::Tags::remove(path, dirTag())) {
+            qCWarning(lcUtility) << u"Failed to remove tag on" << path;
+            Q_ASSERT(false);
+        }
+        if (!FileSystem::Tags::remove(path, uuidTag())) {
+            qCWarning(lcUtility) << u"Failed to remove uuid tag on" << path;
+            Q_ASSERT(false);
+        }
+    }
+}
 
 } // namespace OCC
 
