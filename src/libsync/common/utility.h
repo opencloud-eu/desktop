@@ -28,6 +28,7 @@
 #include <QMetaEnum>
 #include <QUrl>
 #include <QUrlQuery>
+#include <QUuid>
 
 #include <functional>
 #include <memory>
@@ -335,6 +336,10 @@ OPENCLOUD_SYNC_EXPORT Q_DECLARE_LOGGING_CATEGORY(lcUtility)
 
     // replacement for QSysInfo::currentCpuArchitecture() that respects macOS's rosetta2
     OPENCLOUD_SYNC_EXPORT QString currentCpuArch();
+
+    OPENCLOUD_SYNC_EXPORT void markDirectoryAsSyncRoot(const QString &path, const QUuid &accountUuid);
+    OPENCLOUD_SYNC_EXPORT std::pair<QString, QUuid> getDirectorySyncRootMarkings(const QString &path);
+    OPENCLOUD_SYNC_EXPORT void unmarkDirectoryAsSyncRoot(const QString &path);
 } // Utility namespace
 /** @} */ // \addtogroup
 
