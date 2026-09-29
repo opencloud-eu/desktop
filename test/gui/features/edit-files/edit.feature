@@ -21,7 +21,7 @@ Feature: edit files
             """
             test content
             """
-		And the user waits for file "testfile.txt" to be synced
+        And the user waits for file "testfile.txt" to be synced
         And the user overwrites the file "testfile.txt" with content "overwrite openCloud test text file"
         And the user waits for file "testfile.txt" to be synced
         Then as "Alice" the file "testfile.txt" should have the content "overwrite openCloud test text file" in the server

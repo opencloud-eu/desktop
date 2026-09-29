@@ -31,36 +31,33 @@ namespace OCC {
 
 WatcherThread::WatchChanges WatcherThread::watchChanges(size_t fileNotifyBufferSize)
 {
-    _directory = Utility::Handle::createHandle(FileSystem::toFilesystemPath(_longPath), {.accessMode = FILE_LIST_DIRECTORY, .async = true});
+    Utility::Handle directory =
+        Utility::Handle::createHandle(FileSystem::toFilesystemPath(_longPath), {.accessMode = FILE_LIST_DIRECTORY, .async = true}, [](HANDLE h) {
+            CancelIo(h);
+            CloseHandle(h);
+        });
+    Utility::Handle resultEvent(CreateEvent(nullptr, true, false, nullptr), {});
 
-    if (!_directory) {
-        qCWarning(lcFolderWatcher) << u"Failed to create handle for" << _path << u", error:" << _directory.errorMessage();
+    if (!directory) {
+        qCWarning(lcFolderWatcher) << u"Failed to create handle for" << _path << u", error:" << directory.errorMessage();
         return WatchChanges::Error;
     }
 
-    QScopeGuard todoBeforeReturn([this]() {
-        CancelIo(_directory);
-        closeHandle();
-    });
-
     OVERLAPPED overlapped = {};
-    overlapped.hEvent = _resultEvent;
+    overlapped.hEvent = resultEvent;
 
     // QVarLengthArray ensures the stack-buffer is aligned like double and qint64.
     QVarLengthArray<char, 4096 * 10> fileNotifyBuffer;
     fileNotifyBuffer.resize(fileNotifyBufferSize);
 
     while (true) {
-        ResetEvent(_resultEvent);
+        ResetEvent(resultEvent);
 
         FILE_NOTIFY_INFORMATION *pFileNotifyBuffer =
                 reinterpret_cast<FILE_NOTIFY_INFORMATION *>(fileNotifyBuffer.data());
         DWORD dwBytesReturned = 0;
-        if (!ReadDirectoryChangesW(_directory, pFileNotifyBuffer,
-                static_cast<DWORD>(fileNotifyBufferSize), true,
-                FILE_NOTIFY_CHANGE_FILE_NAME
-                    | FILE_NOTIFY_CHANGE_DIR_NAME
-                    | FILE_NOTIFY_CHANGE_LAST_WRITE
+        if (!ReadDirectoryChangesW(directory, pFileNotifyBuffer, static_cast<DWORD>(fileNotifyBufferSize), true,
+                FILE_NOTIFY_CHANGE_FILE_NAME | FILE_NOTIFY_CHANGE_DIR_NAME | FILE_NOTIFY_CHANGE_LAST_WRITE
                     | FILE_NOTIFY_CHANGE_ATTRIBUTES, // attributes are for vfs pin state changes
                 &dwBytesReturned, &overlapped, nullptr)) {
             const DWORD errorCode = GetLastError();
@@ -76,7 +73,7 @@ WatcherThread::WatchChanges WatcherThread::watchChanges(size_t fileNotifyBufferS
 
         _parent->_ready = true;
 
-        HANDLE handles[] = { _resultEvent, _stopEvent };
+        HANDLE handles[] = {resultEvent, _stopEvent};
         DWORD result = WaitForMultipleObjects(
             2, handles,
             false, // awake once one of them arrives
@@ -91,7 +88,7 @@ WatcherThread::WatchChanges WatcherThread::watchChanges(size_t fileNotifyBufferS
             return WatchChanges::Error;
         }
 
-        bool ok = GetOverlappedResult(_directory, &overlapped, &dwBytesReturned, false);
+        bool ok = GetOverlappedResult(directory, &overlapped, &dwBytesReturned, false);
         if (!ok) {
             const DWORD errorCode = GetLastError();
             if (errorCode == ERROR_NOTIFY_ENUM_DIR) {
@@ -155,18 +152,8 @@ void WatcherThread::processEntries(FILE_NOTIFY_INFORMATION *curEntry)
     }
 }
 
-void WatcherThread::closeHandle()
-{
-    if (_directory) {
-        _directory.close();
-    }
-}
-
 void WatcherThread::run()
 {
-    _resultEvent = CreateEvent(nullptr, true, false, nullptr);
-    _stopEvent = CreateEvent(nullptr, true, false, nullptr);
-
     // If this buffer fills up before we've extracted its data we will lose
     // change information. Therefore start big.
     size_t bufferSize = 4096 * 10;
@@ -195,15 +182,8 @@ WatcherThread::WatcherThread(FolderWatcherPrivate *parent, const QString &path)
     , _parent(parent)
     , _path(path + (path.endsWith(QLatin1Char('/')) ? QString() : QStringLiteral("/")))
     , _longPath(FileSystem::longWinPath(_path))
-    , _directory(nullptr)
-    , _resultEvent(nullptr)
-    , _stopEvent(nullptr)
+    , _stopEvent(CreateEvent(nullptr, true, false, nullptr), {})
 {
-}
-
-WatcherThread::~WatcherThread()
-{
-    closeHandle();
 }
 
 void WatcherThread::stop()

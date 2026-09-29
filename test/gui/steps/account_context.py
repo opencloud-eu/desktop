@@ -119,6 +119,11 @@ def step(context):
     AccountConnectionWizard.add_account_information(account_details)
 
 
+@When('the user opens the account "{username}"')
+def step(context, username):
+    Toolbar.open_account(username)
+
+
 @When('the user "{username}" logs out using the client-UI')
 def step(context, username):
     Toolbar.open_account(username)

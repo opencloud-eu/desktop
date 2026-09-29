@@ -55,7 +55,7 @@ Feature: deleting files and folders
             | textfile2.txt | openCloud test text file 2  |
         And user "Alice" has set up a client with default settings
         When the user deletes the following files
-        	| file          |
+            | file          |
             | textfile0.txt |
             | textfile1.txt |
         And the user waits for the files to sync

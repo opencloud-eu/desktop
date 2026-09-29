@@ -26,7 +26,7 @@ Feature: adding accounts
             | user     | Alice          |
             | password | 1234           |
         Then "Alice" account should be added
-        Then the add space button should be disabled
+        And the add space button should be disabled
 
     @smoke
     Scenario: Adding multiple accounts
