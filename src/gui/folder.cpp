@@ -28,6 +28,7 @@
 #include "folderwatcher.h"
 #include "gui/accountsettings.h"
 #include "gui/folderdefinition.h"
+#include "guiutility.h"
 #include "libsync/graphapi/spacesmanager.h"
 #include "libsync/vfs/vfs.h"
 #include "localdiscoverytracker.h"
@@ -36,9 +37,7 @@
 #include "socketapi/socketapi.h"
 #include "syncengine.h"
 #include "syncresult.h"
-#include "syncrunfilelog.h"
 #include "theme.h"
-#include "guiutility.h"
 
 #ifdef Q_OS_WIN
 #include "common/utility_win.h"
@@ -75,7 +74,6 @@ Folder::Folder(const FolderDefinition &definition, const AccountStatePtr &accoun
     , _accountState(accountState)
     , _definition(definition)
     , _journal(_definition.absoluteJournalPath())
-    , _fileLog(new SyncRunFileLog)
     , _vfs(vfs.release())
 {
     _timeSinceLastSyncStart.start();
@@ -827,9 +825,6 @@ void Folder::wipeForRemoval()
     QFile::remove(stateDbFile + QStringLiteral("-wal"));
     QFile::remove(stateDbFile + QStringLiteral("-journal"));
 
-    // remove the sync log
-    QFile::remove(u"%1/.OpenCloudSync.log"_s.arg(_canonicalLocalPath));
-
 #ifdef Q_OS_WIN
     // remove the desktop ini
     QFile::remove(u"%1/Desktop.ini"_s.arg(_canonicalLocalPath));
@@ -868,8 +863,6 @@ void Folder::startSync()
     setSyncState(SyncResult::SyncRunning);
 
     qCInfo(lcFolder) << u"*** Start syncing " << displayName() << u"client version" << Theme::instance()->aboutVersions(Theme::VersionFormat::OneLiner);
-
-    _fileLog->start(path());
 
     if (!reloadExcludes()) {
         slotSyncError(tr("Could not read system exclude file"));
@@ -955,7 +948,6 @@ void Folder::slotSyncFinished(bool success)
     } else {
         qCInfo(lcFolder) << u"SyncEngine finished without problem.";
     }
-    _fileLog->finish();
 
     auto anotherSyncNeeded = false;
 
@@ -1030,7 +1022,6 @@ void Folder::slotItemCompleted(const SyncFileItemPtr &item)
 
     _syncResult.processCompletedItem(item);
 
-    _fileLog->logItem(*item);
     Q_EMIT ProgressDispatcher::instance()->itemCompleted(this, item);
 }
 
