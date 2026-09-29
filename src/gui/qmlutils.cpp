@@ -18,6 +18,7 @@
 #include "gui/openfilemanager.h"
 #include "resources/resources.h"
 
+#include <QClipboard>
 #include <QMessageBox>
 #include <QQmlContext>
 #include <QQuickItem>
@@ -116,4 +117,20 @@ void OCC::QmlUtils::OCUtils::showInFileManager(const QString &path)
 int OCC::QmlUtils::OCUtils::compareQVersion(int major, int minor, int patch) const
 {
     return QVersionNumber::compare(QVersionNumber(QT_VERSION_MAJOR, QT_VERSION_MINOR, QT_VERSION_PATCH), QVersionNumber(major, minor, patch));
+}
+
+bool OCC::QmlUtils::OCUtils::hasKeyboardModifiers(Qt::KeyboardModifiers modifiers) const
+{
+    qDebug() << "Keyboard modifiers: " << QGuiApplication::keyboardModifiers() << (QGuiApplication::keyboardModifiers() & Qt::ShiftModifier);
+    return QGuiApplication::keyboardModifiers() & modifiers;
+}
+
+void OCC::QmlUtils::OCUtils::setClipBoard(const QString &text) const
+{
+    QGuiApplication::clipboard()->setText(text);
+}
+
+void OCC::QmlUtils::OCUtils::setClipBoardFromFilePath(const QString &text) const
+{
+    QGuiApplication::clipboard()->setText(QDir::toNativeSeparators(text));
 }

@@ -119,7 +119,8 @@ void ProtocolWidget::showContextMenu(QWidget *parent, QTableView *table, Models:
         const auto &data = itemModel->protocolItem(items.first());
 
         // Show in file browser action
-        const QString localPath = data.folder()->path() + data.path();
+        const QString localPath = QDir::toNativeSeparators(data.folder()->path() + data.path());
+        const bool fileExists = QFileInfo::exists(localPath);
         // keep in sync with ActivityWidget::slotItemContextMenu
         auto showInFileBrowserAction = menu->addAction(CommonStrings::showInFileBrowser(), parent, [localPath] {
             // Double-check if the file still exists
@@ -127,21 +128,37 @@ void ProtocolWidget::showContextMenu(QWidget *parent, QTableView *table, Models:
                 showInFileManager(localPath);
             }
         });
-        if (!QFileInfo::exists(localPath)) {
-            showInFileBrowserAction->setEnabled(false);
+        showInFileBrowserAction->setEnabled(fileExists);
+
+        if (qApp->keyboardModifiers() & Qt::ShiftModifier) {
+            auto copyPathToClipBoard =
+                menu->addAction(CommonStrings::copyFilePathToClipBoard(), parent, [localPath] { qApp->clipboard()->setText(localPath); });
+            copyPathToClipBoard->setEnabled(fileExists);
+            menu->addSeparator();
         }
 
         // "Open in Browser" action
         auto showInWebBrowserAction = menu->addAction(CommonStrings::showInWebBrowser());
+        QAction *copyUrlToClipBoard = nullptr;
+        if (qApp->keyboardModifiers() & Qt::ShiftModifier) {
+            copyUrlToClipBoard = menu->addAction(CommonStrings::copyUrlToClipBoard());
+            copyUrlToClipBoard->setEnabled(false);
+            menu->addSeparator();
+        }
         showInWebBrowserAction->setEnabled(false);
         fetchPrivateLinkUrl(data.folder()->accountState()->account(), data.folder()->webDavUrl(), data.path(), parent,
-            [showInWebBrowserAction, parent, pos = menu->actions().size(), menu = QPointer<QMenu>(menu)](const QUrl &url) {
+            [showInWebBrowserAction, parent, pos = menu->actions().size(), menu = QPointer<QMenu>(menu), copyUrlToClipBoard](const QUrl &url) {
                 // as fetchPrivateLinkUrl is async we need to check the menu still exists
                 if (menu) {
                     connect(showInWebBrowserAction, &QAction::triggered, parent, [url, parent] { Utility::openBrowser(url, parent); });
                     showInWebBrowserAction->setEnabled(true);
+                    if (copyUrlToClipBoard) {
+                        connect(copyUrlToClipBoard, &QAction::triggered, parent, [url] { qApp->clipboard()->setText(url.toString()); });
+                        copyUrlToClipBoard->setEnabled(true);
+                    }
                 }
             });
+
 
         menu->addSeparator();
 

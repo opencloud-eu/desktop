@@ -98,6 +98,21 @@ Folder::Folder(const FolderDefinition &definition, const AccountStatePtr &accoun
 
         connect(_accountState.data(), &AccountState::isConnectedChanged, this, &Folder::canSyncChanged);
 
+
+        auto *context = new QObject(this);
+        // once we successfully retrieved the private link we can delete the context to disconnect the signal
+        connect(_accountState->account().data(), &Account::capabilitiesChanged, context, [context, this] {
+            if (_accountState->account()->capabilities().privateLinkPropertyAvailable()) {
+                fetchPrivateLinkUrl(_accountState->account(), webDavUrl(), {}, this, [context, this](const QUrl &privateLinkUrl) {
+                    _webUrl = privateLinkUrl;
+                    Q_EMIT webUrlChanged();
+                    context->deleteLater();
+                });
+            } else {
+                context->deleteLater();
+            }
+        });
+
         // use a direct connection, the folder status has to be up to date
         connect(_engine.data(), &SyncEngine::finished, this, &Folder::slotSyncFinished, Qt::DirectConnection);
 
@@ -155,6 +170,11 @@ Result<void, QString> Folder::checkPathLength(const QString &path)
 GraphApi::Space *Folder::space() const
 {
     return _accountState->account()->spacesManager()->space(_definition.spaceId());
+}
+
+QUrl Folder::webUrl() const
+{
+    return _webUrl;
 }
 
 bool Folder::checkLocalPath()
@@ -754,11 +774,6 @@ bool Folder::isFileExcludedAbsolute(const QString &fullPath) const
 bool Folder::isFileExcludedRelative(const QString &relativePath) const
 {
     return isFileExcludedAbsolute(path() + relativePath);
-}
-
-void Folder::openInWebBrowser()
-{
-    fetchPrivateLinkUrl(_accountState->account(), webDavUrl(), {}, this, [](const QUrl &url) { Utility::openBrowser(url, nullptr); });
 }
 
 void Folder::wipeForRemoval()

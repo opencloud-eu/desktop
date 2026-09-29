@@ -55,6 +55,7 @@ class OPENCLOUD_GUI_EXPORT Folder : public QObject
     Q_PROPERTY(GraphApi::Space *space READ space NOTIFY spaceChanged)
     Q_PROPERTY(QString path READ path CONSTANT)
     Q_PROPERTY(QUrl webDavUrl READ webDavUrl CONSTANT)
+    Q_PROPERTY(QUrl webUrl READ webUrl NOTIFY webUrlChanged)
     Q_PROPERTY(bool isReady READ isReady NOTIFY isReadyChanged)
     Q_PROPERTY(bool isSyncPaused READ isSyncPaused NOTIFY syncPausedChanged)
     Q_PROPERTY(bool isSyncRunning READ isSyncRunning NOTIFY isSyncRunningChanged)
@@ -220,6 +221,8 @@ public:
      */
     GraphApi::Space *space() const;
 
+    QUrl webUrl() const;
+
 Q_SIGNALS:
     void syncStateChange();
     void syncFinished(const SyncResult &result);
@@ -229,6 +232,8 @@ Q_SIGNALS:
     void isReadyChanged();
     void isSyncRunningChanged();
 
+    void webUrlChanged();
+
 
     /**
      * Fires for each change inside this folder that wasn't caused
@@ -237,8 +242,6 @@ Q_SIGNALS:
     void watchedFileChangedExternally(const QString &path);
 
 public Q_SLOTS:
-    void openInWebBrowser();
-
     /**
       * Starts a sync operation
       *
@@ -372,6 +375,8 @@ private:
      * The vfs mode instance (created by plugin) to use. Never null.
      */
     QSharedPointer<Vfs> _vfs;
+
+    QUrl _webUrl;
 
     friend class FolderMan;
 };
