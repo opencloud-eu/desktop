@@ -206,7 +206,7 @@ Result<Vfs::ConvertToPlaceholderResult, QString> VfsCfApi::updateMetadata(const 
 
 Result<void, QString> VfsCfApi::createPlaceholder(const SyncFileItem &item)
 {
-    return cfapi::createPlaceholderInfo(params().root() / item.localName(), item._modtime, item._size, item._fileId);
+    return cfapi::createPlaceholderInfo(params().root() / item.localName(), item._modtime, item._size, item._fileId, item._type == ItemTypeDirectory);
 }
 
 bool VfsCfApi::needsMetadataUpdate(const SyncFileItem &item)

@@ -15,9 +15,6 @@
 #include "common/utility_win.h"
 #include "libsync/vfs/vfs.h"
 
-
-struct CF_PLACEHOLDER_BASIC_INFO;
-
 // see cloud mirror example
 #define FIELD_SIZE(type, field) (sizeof(((type *)0)->field))
 #define CF_SIZE_OF_OP_PARAM(field) (FIELD_OFFSET(CF_OPERATION_PARAMETERS, field) + FIELD_SIZE(CF_OPERATION_PARAMETERS, field))
@@ -118,7 +115,7 @@ namespace CfApiWrapper {
     enum SetPinRecurseMode { NoRecurse = 0, Recurse, ChildrenOnly };
 
     Result<OCC::Vfs::ConvertToPlaceholderResult, QString> setPinState(const Utility::Handle &handle, PinState state, SetPinRecurseMode mode);
-    Result<void, QString> createPlaceholderInfo(const std::filesystem::path &path, time_t modtime, qint64 size, const QByteArray &fileId);
+    Result<void, QString> createPlaceholderInfo(const std::filesystem::path &path, time_t modtime, qint64 size, const QByteArray &fileId, bool isDirectory);
     Result<OCC::Vfs::ConvertToPlaceholderResult, QString> updatePlaceholderInfo(
         const Utility::Handle &handle, time_t modtime, qint64 size, const QByteArray &fileId, const std::filesystem::path &replacesPath, bool isHydrated);
     Result<OCC::Vfs::ConvertToPlaceholderResult, QString> convertToPlaceholder(
