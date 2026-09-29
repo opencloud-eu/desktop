@@ -12,6 +12,7 @@
 
 ### 🐛 Bug Fixes
 
+- Don't sync .vault folders for now [[#1118](https://github.com/opencloud-eu/desktop/pull/1118)]
 - Fix endless loop in wizard od failed auth [[#1090](https://github.com/opencloud-eu/desktop/pull/1090)]
 - Display logout button if reauthentication failed [[#1089](https://github.com/opencloud-eu/desktop/pull/1089)]
 - Fix check for OAuth::PromptValuesSupported [[#1091](https://github.com/opencloud-eu/desktop/pull/1091)]
