@@ -98,10 +98,6 @@ AccountPtr SetupWizardAccountBuilder::build() const
 
     if (!_defaultSyncTargetDir.isEmpty()) {
         newAccountPtr->setDefaultSyncRoot(_defaultSyncTargetDir);
-        if (!QFileInfo::exists(_defaultSyncTargetDir)) {
-            OC_ASSERT(QDir().mkpath(_defaultSyncTargetDir));
-        }
-        Utility::markDirectoryAsSyncRoot(_defaultSyncTargetDir, newAccountPtr->uuid());
     }
 
     return newAccountPtr;
