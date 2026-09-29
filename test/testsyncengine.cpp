@@ -698,6 +698,39 @@ private Q_SLOTS:
         QVERIFY(fakeFolder.currentRemoteState().find(QStringLiteral("B/.hidden")));
     }
 
+    // The sync root is listed on every run, but a folder whose etag did not change is not, so a
+    // remote hidden file inside it only shows up once the etags are invalidated. A full local
+    // discovery, which is what "Force sync now" asks for, is not enough (#1127).
+    void testRemoteHiddenFileInFolderNeedsRemoteDiscovery()
+    {
+        QFETCH_GLOBAL(Vfs::Mode, vfsMode);
+        QFETCH_GLOBAL(bool, filesAreDehydrated);
+
+        FakeFolder fakeFolder(FileInfo::A12_B12_C12_S12(), vfsMode, filesAreDehydrated);
+        QVERIFY(fakeFolder.applyLocalModificationsAndSync());
+
+        auto localFileExists = [&](const QString &name) {
+            return QFileInfo::exists(fakeFolder.localPath() + name);
+        };
+
+        fakeFolder.syncEngine().setIgnoreHiddenFiles(true);
+        fakeFolder.remoteModifier().insert(QStringLiteral(".hidden"));
+        fakeFolder.remoteModifier().insert(QStringLiteral("A/.hidden"));
+        QVERIFY(fakeFolder.applyLocalModificationsAndSync());
+        QVERIFY(!localFileExists(QStringLiteral(".hidden")));
+        QVERIFY(!localFileExists(QStringLiteral("A/.hidden")));
+
+        fakeFolder.syncEngine().setIgnoreHiddenFiles(false);
+        fakeFolder.syncEngine().setLocalDiscoveryOptions(LocalDiscoveryStyle::FilesystemOnly);
+        QVERIFY(fakeFolder.applyLocalModificationsAndSync());
+        QVERIFY(localFileExists(QStringLiteral(".hidden")));
+        QVERIFY(!localFileExists(QStringLiteral("A/.hidden")));
+
+        fakeFolder.syncJournal().forceRemoteDiscoveryNextSync();
+        QVERIFY(fakeFolder.applyLocalModificationsAndSync());
+        QVERIFY(localFileExists(QStringLiteral("A/.hidden")));
+    }
+
     void testRenameExcludedFile()
     {
         if (!VfsPluginManager::instance().isVfsPluginAvailable(Vfs::Mode::OpenVFS)) {

@@ -354,8 +354,8 @@ void Folder::setIgnoreHiddenFiles(bool ignore)
 
     if (!ignore) {
         // The hidden items were skipped by the previous runs, so they are not in the local
-        // database and the remote etags did not change. Invalidate both, the same way a change
-        // of the ignore list does.
+        // database and the remote etags did not change. Rediscover both sides, the same way a
+        // change of the ignore list does.
         _journal.forceRemoteDiscoveryNextSync();
         slotNextSyncFullLocalDiscovery();
     }
