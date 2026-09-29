@@ -158,11 +158,8 @@ public:
     bool ignoreHiddenFiles();
 
     /**
-      * Change whether hidden files are ignored.
-      *
-      * When hidden files start to be synced, the discovery state that was built while they were
-      * ignored has to be invalidated, otherwise the items that were skipped so far would only
-      * show up after a restart of the client.
+      * Change whether hidden files are ignored. Enabling them forces a remote and a full
+      * local discovery on the next sync, so the items that were skipped so far get synced.
       */
     void setIgnoreHiddenFiles(bool ignore);
 

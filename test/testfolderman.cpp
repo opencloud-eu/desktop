@@ -221,7 +221,7 @@ private Q_SLOTS:
     }
 
     // Enabling "sync hidden files" has to invalidate the state that was built up while the hidden
-    // items were ignored, otherwise they are only picked up after a restart of the client (#714).
+    // items were ignored, otherwise the next sync skips them (#714, #1127).
     void testSetIgnoreHiddenFiles()
     {
         auto dir = TestUtils::createTempDir();
