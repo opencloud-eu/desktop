@@ -156,6 +156,11 @@ public:
       * folder definition
       */
     bool ignoreHiddenFiles();
+
+    /**
+      * Change whether hidden files are ignored. Enabling them forces a remote and a full
+      * local discovery on the next sync, so the items that were skipped so far get synced.
+      */
     void setIgnoreHiddenFiles(bool ignore);
 
     // TODO: don't expose
