@@ -16,7 +16,7 @@
 
 #include "common/asserts.h"
 #include "common/utility.h"
-#include "libsync/discoveryinfo.h"
+#include "libsync/localinfo.h"
 #include "libsync/xattr.h"
 
 #include <QCoreApplication>
@@ -143,19 +143,19 @@ bool FileSystem::fileChanged(const std::filesystem::path &path, const FileChange
         }
     }
 
-    const auto type = LocalInfo::typeFromDirectoryEntry(dirent);
+    const auto info = LocalInfo(dirent);
     if (previousInfo.type != ItemTypeUnsupported) {
         // only check for dir and file, as virtual files are irrelevant here
-        if (previousInfo.type == ItemTypeDirectory && type == ItemTypeFile) {
+        if (previousInfo.type == ItemTypeDirectory && info.type() == ItemTypeFile) {
             qCDebug(lcFileSystem) << u"File" << path.native() << u"has changed: from dir to file";
             return true;
         }
-        if (previousInfo.type == ItemTypeFile && type == ItemTypeDirectory) {
+        if (previousInfo.type == ItemTypeFile && info.type() == ItemTypeDirectory) {
             qCDebug(lcFileSystem) << u"File" << path.native() << u"has changed: from file to dir";
             return true;
         }
     }
-    const auto info = LocalInfo(dirent, type);
+
     if (previousInfo.inode.has_value() && previousInfo.inode.value() != info.inode()) {
         qCDebug(lcFileSystem) << u"File" << path.native() << u"has changed: inode" << previousInfo.inode.value() << u"<-->" << info.inode();
         return true;

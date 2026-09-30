@@ -15,8 +15,8 @@
 #pragma once
 
 #include "libsync/common/syncjournaldb.h"
-#include "libsync/discoveryinfo.h"
 #include "libsync/discoveryphase.h"
+#include "libsync/localinfo.h"
 #include "libsync/syncfileitem.h"
 
 #include <deque>
