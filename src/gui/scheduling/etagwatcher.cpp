@@ -46,7 +46,7 @@ ETagWatcher::ETagWatcher(FolderMan *folderMan, QObject *parent)
                         f->accountState()->tagLastSuccessfullETagRequest(time);
                     });
                     connect(f, &Folder::spaceChanged, this, [f, this] {
-                        const QString etag = Utility::normalizeEtag(f->space()->drive().getRoot().getETag());
+                        const QString etag = Utility::normalizeEtag(f->space()->drive().getRootValue().getETagValue());
                         // the server must provide a valid etag but there might be bugs
                         // https://github.com/owncloud/ocis/issues/7160
                         if (OC_ENSURE_NOT(etag.isEmpty())) {

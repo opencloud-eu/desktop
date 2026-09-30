@@ -15,8 +15,9 @@
 
 #include "networkjobs/jsonjob.h"
 
+#include "libsync/graphapi/client/drive.h"
 #include "opencloudsynclib.h"
-#include <OAIDrive.h>
+
 
 namespace OCC {
 namespace GraphApi {
@@ -28,10 +29,10 @@ namespace GraphApi {
     public:
         Drives(const AccountPtr &account, QObject *parent = nullptr);
         ~Drives();
-        const QList<OpenAPI::OAIDrive> &drives() const;
+        const QList<QtOpenAPI::Drive> &drives() const;
 
     private:
-        mutable QList<OpenAPI::OAIDrive> _drives;
+        mutable QList<QtOpenAPI::Drive> _drives;
     };
 }
 }

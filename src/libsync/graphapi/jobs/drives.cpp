@@ -15,9 +15,10 @@
 #include "drives.h"
 
 #include "account.h"
+#include "collection_of_driveitems.h"
+#include "collection_of_drives.h"
 
-#include <OAICollection_of_drives.h>
-#include <OAIDrive.h>
+#include "client/collection_of_drives.h"
 
 
 using namespace OCC;
@@ -35,15 +36,15 @@ Drives::Drives(const AccountPtr &account, QObject *parent)
 
 Drives::~Drives() { }
 
-const QList<OpenAPI::OAIDrive> &Drives::drives() const
+const QList<QtOpenAPI::Drive> &Drives::drives() const
 {
     if (_drives.isEmpty() && parseError().error == QJsonParseError::NoError) {
-        OpenAPI::OAICollection_of_drives drives;
+        QtOpenAPI::Collection_of_drives drives;
         drives.fromJsonObject(data());
-        _drives = drives.getValue();
+        _drives = drives.getValueValue();
         // At the moment we don't support mountpoints but use the Share Jail
         _drives.erase(
-            std::remove_if(_drives.begin(), _drives.end(), [](const OpenAPI::OAIDrive &it) { return it.getDriveType() == mountpointC; }), _drives.end());
+            std::remove_if(_drives.begin(), _drives.end(), [](const QtOpenAPI::Drive &it) { return it.getDriveTypeValue() == mountpointC; }), _drives.end());
     }
     return _drives;
 }
