@@ -229,72 +229,72 @@ File synchronization desktop utility.</source>
         <translation>Hantera kontot</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="78"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="82"/>
         <source>Log in</source>
         <translation>Logga in</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="78"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="82"/>
         <source>Log out</source>
         <translation>Logga ut</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="82"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="86"/>
         <source>Reconnect</source>
         <translation>Återanslut</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="92"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="101"/>
         <source>Remove</source>
         <translation>Ta bort</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="99"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="108"/>
         <source>Account options Menu</source>
         <translation>Kontoalternativ Meny</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="332"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="361"/>
         <source>Restart sync</source>
         <translation>Starta om synkroniseringen</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="332"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="361"/>
         <source>Force sync now</source>
         <translation>Tvinga synkronisering nu</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="340"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="369"/>
         <source>Resume sync</source>
         <translation>Synkronisera CV</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="340"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="369"/>
         <source>Pause sync</source>
         <translation>Pausa synkronisering</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="348"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="377"/>
         <source>Choose what to sync</source>
         <translation>Välj vad du vill synkronisera</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="355"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="384"/>
         <source>Remove Space</source>
         <translation>Ta bort arbetsyta</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="362"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="391"/>
         <source>Sync options menu</source>
         <translation>Synkroniseringsalternativ-menyn</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="374"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="403"/>
         <source>Add Space</source>
         <translation>Lägg till arbetsyta</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="394"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="423"/>
         <source>You are synchronizing %1 out of %2 Spaces</source>
         <translation>Du synkroniserar %1 av %2 arbetsytor</translation>
     </message>
@@ -810,27 +810,37 @@ The update will be performed in the background, and overwrite the current AppIma
         <translation>filhanterare</translation>
     </message>
     <message>
-        <location filename="../src/gui/commonstrings.cpp" line="34"/>
+        <location filename="../src/gui/commonstrings.cpp" line="33"/>
+        <source>Copy path to clipboard</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/gui/commonstrings.cpp" line="39"/>
         <source>Show in %1</source>
         <translation>Visa i %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/commonstrings.cpp" line="36"/>
+        <location filename="../src/gui/commonstrings.cpp" line="41"/>
         <source>Show »%1« in %2</source>
         <translation>Visa »%1« i %2</translation>
     </message>
     <message>
-        <location filename="../src/gui/commonstrings.cpp" line="41"/>
+        <location filename="../src/gui/commonstrings.cpp" line="46"/>
         <source>Show in web browser</source>
         <translation>Visa i webbläsare</translation>
     </message>
     <message>
-        <location filename="../src/gui/commonstrings.cpp" line="46"/>
+        <location filename="../src/gui/commonstrings.cpp" line="51"/>
+        <source>Copy URL to clipboard</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/gui/commonstrings.cpp" line="56"/>
         <source>Copy</source>
         <translation>Kopiera</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/commonstrings.cpp" line="51"/>
+        <location filename="../src/gui/commonstrings.cpp" line="61"/>
         <source>%n Filter(s)</source>
         <translation><numerusform>%n filter</numerusform><numerusform>%n filter</numerusform></translation>
     </message>
@@ -855,8 +865,8 @@ The update will be performed in the background, and overwrite the current AppIma
 <context>
     <name>OCC::DiscoverySingleDirectoryJob</name>
     <message>
-        <location filename="../src/libsync/discoveryphase.cpp" line="262"/>
-        <location filename="../src/libsync/discoveryphase.cpp" line="304"/>
+        <location filename="../src/libsync/discoveryphase.cpp" line="263"/>
+        <location filename="../src/libsync/discoveryphase.cpp" line="305"/>
         <source>Server error: PROPFIND reply is not XML formatted!</source>
         <translation>Serverfel: PROPFIND-svaret är inte formaterat i XML!</translation>
     </message>
@@ -890,141 +900,141 @@ The update will be performed in the background, and overwrite the current AppIma
 <context>
     <name>OCC::Folder</name>
     <message>
-        <location filename="../src/gui/folder.cpp" line="146"/>
+        <location filename="../src/gui/folder.cpp" line="161"/>
         <source>The path »%1« is too long. Please enable long paths in the Windows settings or choose a different folder.</source>
         <translation>Sökvägen »%1« är för lång. Aktivera långa sökvägar i Windows-inställningarna eller välj en annan mapp.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="191"/>
+        <location filename="../src/gui/folder.cpp" line="211"/>
         <source>Failed to open the database for »%1«.</source>
         <translation>Det gick inte att öppna databasen för »%1«.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="169"/>
+        <location filename="../src/gui/folder.cpp" line="189"/>
         <source>Local folder »%1« does not exist.</source>
         <translation>Den lokala mappen »%1« finns inte.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="197"/>
+        <location filename="../src/gui/folder.cpp" line="217"/>
         <source>»%1« should be a folder but is not.</source>
         <translation>»%1« borde vara en mapp, men är det inte.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="199"/>
+        <location filename="../src/gui/folder.cpp" line="219"/>
         <source>»%1« is not readable.</source>
         <translation>»%1« är inte läsbart.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="201"/>
+        <location filename="../src/gui/folder.cpp" line="221"/>
         <source>»%1« is not writable.</source>
         <translation>»%1« är inte skrivbar.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="460"/>
+        <location filename="../src/gui/folder.cpp" line="480"/>
         <source>»%1« and %n other file(s) have been removed.</source>
         <translation><numerusform>»%1« och %n andra filer har tagits bort.</numerusform><numerusform>»%1« och %n andra filer har tagits bort.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="462"/>
+        <location filename="../src/gui/folder.cpp" line="482"/>
         <source>»%1« has been removed.</source>
         <comment>%1 names a file.</comment>
         <translation>»%1« har tagits bort.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="467"/>
+        <location filename="../src/gui/folder.cpp" line="487"/>
         <source>»%1« and %n other file(s) have been added.</source>
         <translation><numerusform>»%1« och %n andra filer har lagts till.</numerusform><numerusform>»%1« och %n andra filer har lagts till.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="469"/>
+        <location filename="../src/gui/folder.cpp" line="489"/>
         <source>»%1« has been added.</source>
         <comment>%1 names a file.</comment>
         <translation>»%1« har lagts till.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="474"/>
+        <location filename="../src/gui/folder.cpp" line="494"/>
         <source>»%1« and %n other file(s) have been updated.</source>
         <translation><numerusform>»%1« och %n andra filer har uppdaterats.</numerusform><numerusform>»%1« och %n andra filer har uppdaterats.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="476"/>
+        <location filename="../src/gui/folder.cpp" line="496"/>
         <source>»%1« has been updated.</source>
         <comment>%1 names a file.</comment>
         <translation>»%1« har uppdaterats.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="481"/>
+        <location filename="../src/gui/folder.cpp" line="501"/>
         <source>»%1« has been renamed to »%2« and %n other file(s) have been renamed.</source>
         <translation><numerusform>»%1« har bytt namn till »%2« och %n andra filer har bytt namn.</numerusform><numerusform>»%1« har bytt namn till »%2« och %n andra filer har bytt namn.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="483"/>
+        <location filename="../src/gui/folder.cpp" line="503"/>
         <source>»%1« has been renamed to »%2«.</source>
         <comment>%1 and %2 name files.</comment>
         <translation>»%1« har bytt namn till »%2«.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="488"/>
+        <location filename="../src/gui/folder.cpp" line="508"/>
         <source>»%1« has been moved to »%2« and %n other file(s) have been moved.</source>
         <translation><numerusform>»%1« har flyttats till »%2« och %n andra filer har flyttats.</numerusform><numerusform>»%1« har flyttats till »%2« och %n andra filer har flyttats.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="490"/>
+        <location filename="../src/gui/folder.cpp" line="510"/>
         <source>»%1« has been moved to »%2«.</source>
         <translation>»%1« har flyttats till »%2«.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="495"/>
+        <location filename="../src/gui/folder.cpp" line="515"/>
         <source>»%1« and %n other file(s) have sync conflicts.</source>
         <translation><numerusform>»%1« och %n andra filer har synkroniseringskonflikter.</numerusform><numerusform>»%1« och %n andra filer har synkroniseringskonflikter.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="497"/>
+        <location filename="../src/gui/folder.cpp" line="517"/>
         <source>»%1« has a sync conflict. Please check the conflict file!</source>
         <translation>»%1« har en synkroniseringskonflikt. Kontrollera konfliktfilen!</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="502"/>
+        <location filename="../src/gui/folder.cpp" line="522"/>
         <source>»%1« and %n other file(s) could not be synced due to errors. See the log for details.</source>
         <translation><numerusform>»%1« och %n andra filer kunde inte synkroniseras på grund av fel. Se loggen för mer information.</numerusform><numerusform>»%1« och %n andra filer kunde inte synkroniseras på grund av fel. Se loggen för mer information.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="504"/>
+        <location filename="../src/gui/folder.cpp" line="524"/>
         <source>»%1« could not be synced due to an error. See the log for details.</source>
         <translation>»%1« kunde inte synkroniseras på grund av ett fel. Se loggen för mer information.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="510"/>
+        <location filename="../src/gui/folder.cpp" line="530"/>
         <source>Sync Activity</source>
         <translation>Synkronisera aktivitet</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="713"/>
+        <location filename="../src/gui/folder.cpp" line="733"/>
         <source>Switching VFS mode on folder »%1«</source>
         <translation>Aktivera VFS-läge för mappen »%1«</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1053"/>
+        <location filename="../src/gui/folder.cpp" line="1068"/>
         <source>The folder »%1« was created but was excluded from synchronization previously. Data inside it will not be synchronized.</source>
         <translation>Mappen »%1« skapades men exkluderades tidigare från synkroniseringen. Data i mappen kommer inte att synkroniseras.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1056"/>
+        <location filename="../src/gui/folder.cpp" line="1071"/>
         <source>The file »%1« was created but was excluded from synchronization previously. It will not be synchronized.</source>
         <translation>Filen »%1« skapades men exkluderades tidigare från synkroniseringen. Den kommer inte att synkroniseras.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1060"/>
+        <location filename="../src/gui/folder.cpp" line="1075"/>
         <source>»%1« is not synchronized</source>
         <translation>»%1« är inte synkroniserad</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="849"/>
+        <location filename="../src/gui/folder.cpp" line="864"/>
         <source>Could not read system exclude file</source>
         <translation>Kunde inte läsa systemets undantagsfil</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1068"/>
+        <location filename="../src/gui/folder.cpp" line="1083"/>
         <source>Changes in synchronized folders could not be tracked reliably.
 
 This means that the synchronization client might not upload local changes immediately and will instead only scan for local changes and upload them occasionally (every two hours by default).
@@ -1842,7 +1852,7 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::OwncloudPropagator</name>
     <message>
-        <location filename="../src/libsync/owncloudpropagator.cpp" line="733"/>
+        <location filename="../src/libsync/owncloudpropagator.cpp" line="731"/>
         <source>The file »%1« is currently in use</source>
         <translation>Filen »%1« används för närvarande</translation>
     </message>
@@ -1850,107 +1860,112 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::ProcessDirectoryJob</name>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="169"/>
+        <location filename="../src/libsync/discovery.cpp" line="168"/>
         <source>Symbolic links are not supported in syncing.</source>
         <translation>Symboliska länkar stöds inte vid synkronisering.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="181"/>
+        <location filename="../src/libsync/discovery.cpp" line="170"/>
+        <source>Encrypted vault files are not synchronized because they are currently not supported by this application.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/libsync/discovery.cpp" line="182"/>
         <source>File names ending with a period are not supported on this file system.</source>
         <translation>Filnamn som slutar med en punkt stöds inte i detta filsystem.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="194"/>
+        <location filename="../src/libsync/discovery.cpp" line="195"/>
         <source>File names containing the character &apos;%1&apos; are not supported on this file system.</source>
         <translation>Filnamn som innehåller tecknet &apos;%1&apos; stöds inte i detta filsystem.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="197"/>
+        <location filename="../src/libsync/discovery.cpp" line="198"/>
         <source>File name contains at least one invalid character</source>
         <translation>Filnamnet innehåller minst ett ogiltigt tecken</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="199"/>
+        <location filename="../src/libsync/discovery.cpp" line="200"/>
         <source>The file name is a reserved name on this file system.</source>
         <translation>Filnamnet är ett reserverat namn i detta filsystem.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="208"/>
+        <location filename="../src/libsync/discovery.cpp" line="209"/>
         <source>Filename contains trailing spaces.</source>
         <translation>Filnamnet innehåller efterföljande mellanslag.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="211"/>
+        <location filename="../src/libsync/discovery.cpp" line="212"/>
         <source>Filename is too long.</source>
         <translation>Filnamnet är för långt.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="214"/>
+        <location filename="../src/libsync/discovery.cpp" line="215"/>
         <source>File/Folder is ignored because it&apos;s hidden.</source>
         <translation>Filen/mappen ignoreras eftersom den är dold.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="218"/>
+        <location filename="../src/libsync/discovery.cpp" line="219"/>
         <source>Conflict: Server version downloaded, local copy renamed and not uploaded.</source>
         <translation>Konflikt: Serverversionen har laddats ner, den lokala kopian har bytt namn och har inte laddats upp.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="222"/>
+        <location filename="../src/libsync/discovery.cpp" line="223"/>
         <source>The filename is blacklisted on the server.</source>
         <translation>Filnamnet är svartlistat på servern.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1085"/>
+        <location filename="../src/libsync/discovery.cpp" line="1086"/>
         <source>Moved to invalid target, restoring</source>
         <translation>Flyttad till ogiltigt mål, återställer</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1098"/>
+        <location filename="../src/libsync/discovery.cpp" line="1099"/>
         <source>Not allowed to remove, restoring</source>
         <translation>Får inte tas bort, återställas</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1254"/>
+        <location filename="../src/libsync/discovery.cpp" line="1255"/>
         <source>Server replied with an error while reading directory »%1«: %2</source>
         <translation>Servern svarade med ett fel vid läsning av katalogen »%1«: %2</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1044"/>
+        <location filename="../src/libsync/discovery.cpp" line="1045"/>
         <source>Not allowed because you don&apos;t have permission to add subfolders to that folder</source>
         <translation>Det är inte tillåtet eftersom du inte har behörighet att lägga till undermappar i den mappen</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="176"/>
+        <location filename="../src/libsync/discovery.cpp" line="177"/>
         <source>The file is listed on the ignore list.</source>
         <translation>Filen finns med på ignorera-listan.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="522"/>
+        <location filename="../src/libsync/discovery.cpp" line="523"/>
         <source>Error while doing a rename, unhandled status code: %1</source>
         <translation>Fel vid namnbyte, obehandlad statuskod: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1012"/>
+        <location filename="../src/libsync/discovery.cpp" line="1013"/>
         <source>Selective sync: Ignored because its path is deselected</source>
         <translation>Selektiv synkronisering: Ignoreras eftersom dess sökväg är avmarkerad</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1049"/>
+        <location filename="../src/libsync/discovery.cpp" line="1050"/>
         <source>Not allowed because you don&apos;t have permission to add files in that folder</source>
         <translation>Det är inte tillåtet eftersom du inte har behörighet att lägga till filer i den mappen</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1062"/>
+        <location filename="../src/libsync/discovery.cpp" line="1063"/>
         <source>Not allowed to upload this file because it is read-only on the server, restoring</source>
         <translation>Det går inte att ladda upp den här filen eftersom den är skrivskyddad på servern. Återställning pågår</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1208"/>
+        <location filename="../src/libsync/discovery.cpp" line="1209"/>
         <source>Error while reading the database</source>
         <translation>Fel vid läsning av databasen</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1233"/>
+        <location filename="../src/libsync/discovery.cpp" line="1234"/>
         <source>This Space is currently unavailable</source>
         <translation>Denna arbetsyta är för närvarande inte tillgänglig</translation>
     </message>
@@ -1958,12 +1973,12 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::PropagateDirectory</name>
     <message>
-        <location filename="../src/libsync/owncloudpropagator.cpp" line="1108"/>
+        <location filename="../src/libsync/owncloudpropagator.cpp" line="1106"/>
         <source>Error updating metadata: %1</source>
         <translation>Fel vid uppdatering av metadata: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/owncloudpropagator.cpp" line="1111"/>
+        <location filename="../src/libsync/owncloudpropagator.cpp" line="1109"/>
         <source>The folder »%1« is currently in use</source>
         <translation>Mappen »%1« används för närvarande</translation>
     </message>
@@ -2176,12 +2191,12 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::PropagateUpdateMetaDataJob</name>
     <message>
-        <location filename="../src/libsync/owncloudpropagator.cpp" line="1291"/>
+        <location filename="../src/libsync/owncloudpropagator.cpp" line="1289"/>
         <source>Could not update file: %1</source>
         <translation>Kunde inte uppdatera filen: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/owncloudpropagator.cpp" line="1294"/>
+        <location filename="../src/libsync/owncloudpropagator.cpp" line="1292"/>
         <source>The file »%1« is currently in use</source>
         <translation>Filen »%1« används för närvarande</translation>
     </message>
@@ -2345,17 +2360,17 @@ Note that using any logging command line options will override the settings.</so
         <translation>Åtgärdsmeny</translation>
     </message>
     <message>
-        <location filename="../src/gui/protocolwidget.cpp" line="153"/>
+        <location filename="../src/gui/protocolwidget.cpp" line="170"/>
         <source>Sort ascending by %1</source>
         <translation>Sortera stigande efter %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/protocolwidget.cpp" line="157"/>
+        <location filename="../src/gui/protocolwidget.cpp" line="174"/>
         <source>Sort descending by %1</source>
         <translation>Sortera i fallande ordning efter %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/protocolwidget.cpp" line="179"/>
+        <location filename="../src/gui/protocolwidget.cpp" line="196"/>
         <source>Retry sync</source>
         <translation>Försök synkronisera igen</translation>
     </message>
@@ -2964,7 +2979,7 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>RemoteInfo</name>
     <message>
-        <location filename="../src/libsync/discoveryremoteinfo.cpp" line="67"/>
+        <location filename="../src/libsync/discoveryremoteinfo.cpp" line="69"/>
         <source>server reported no %1</source>
         <translation>servern rapporterade inget %1</translation>
     </message>

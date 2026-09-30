@@ -22,7 +22,7 @@ OCC::FileSystem::Path::Path(std::filesystem::path &&path)
 
 OCC::FileSystem::Path OCC::FileSystem::Path::relative(QAnyStringView path)
 {
-    return QtPrivate::toFilesystemPath(path.toString());
+    return QtPrivate::toFilesystemPath(path.toString()).lexically_normal();
 }
 
 QString OCC::FileSystem::Path::toString() const

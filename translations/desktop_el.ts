@@ -232,72 +232,72 @@ File synchronization desktop utility.</source>
         <translation>Διαχείριση λογαριασμού</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="78"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="82"/>
         <source>Log in</source>
         <translation>Σύνδεση</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="78"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="82"/>
         <source>Log out</source>
         <translation>Αποσύνδεση</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="82"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="86"/>
         <source>Reconnect</source>
         <translation>Επανασύνδεση</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="92"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="101"/>
         <source>Remove</source>
         <translation>Αφαίρεση</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="99"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="108"/>
         <source>Account options Menu</source>
         <translation>Μενού επιλογών λογαριασμού</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="332"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="361"/>
         <source>Restart sync</source>
         <translation>Επανεκκίνηση συγχρονισμού</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="332"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="361"/>
         <source>Force sync now</source>
         <translation>Αναγκαστικός συγχρονισμός τώρα</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="340"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="369"/>
         <source>Resume sync</source>
         <translation>Συνέχιση συγχρονισμού</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="340"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="369"/>
         <source>Pause sync</source>
         <translation>Παύση συγχρονισμού</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="348"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="377"/>
         <source>Choose what to sync</source>
         <translation>Επιλέξτε τι θα συγχρονιστεί</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="355"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="384"/>
         <source>Remove Space</source>
         <translation>Αφαίρεση Χώρου</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="362"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="391"/>
         <source>Sync options menu</source>
         <translation>Μενού επιλογών συγχρονισμού</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="374"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="403"/>
         <source>Add Space</source>
         <translation>Προσθήκη Χώρου</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="394"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="423"/>
         <source>You are synchronizing %1 out of %2 Spaces</source>
         <translation>Συγχρονίζετε %1 από %2 Χώρους</translation>
     </message>
@@ -815,27 +815,37 @@ The update will be performed in the background, and overwrite the current AppIma
         <translation>διαχειριστής αρχείων</translation>
     </message>
     <message>
-        <location filename="../src/gui/commonstrings.cpp" line="34"/>
+        <location filename="../src/gui/commonstrings.cpp" line="33"/>
+        <source>Copy path to clipboard</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/gui/commonstrings.cpp" line="39"/>
         <source>Show in %1</source>
         <translation>Προβολή στο %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/commonstrings.cpp" line="36"/>
+        <location filename="../src/gui/commonstrings.cpp" line="41"/>
         <source>Show »%1« in %2</source>
         <translation>Προβολή του »%1« στο %2</translation>
     </message>
     <message>
-        <location filename="../src/gui/commonstrings.cpp" line="41"/>
+        <location filename="../src/gui/commonstrings.cpp" line="46"/>
         <source>Show in web browser</source>
         <translation>Προβολή στο πρόγραμμα περιήγησης</translation>
     </message>
     <message>
-        <location filename="../src/gui/commonstrings.cpp" line="46"/>
+        <location filename="../src/gui/commonstrings.cpp" line="51"/>
+        <source>Copy URL to clipboard</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/gui/commonstrings.cpp" line="56"/>
         <source>Copy</source>
         <translation>Αντιγραφή</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/commonstrings.cpp" line="51"/>
+        <location filename="../src/gui/commonstrings.cpp" line="61"/>
         <source>%n Filter(s)</source>
         <translation><numerusform>%n Φίλτρο</numerusform><numerusform>%n Φίλτρα</numerusform></translation>
     </message>
@@ -860,8 +870,8 @@ The update will be performed in the background, and overwrite the current AppIma
 <context>
     <name>OCC::DiscoverySingleDirectoryJob</name>
     <message>
-        <location filename="../src/libsync/discoveryphase.cpp" line="262"/>
-        <location filename="../src/libsync/discoveryphase.cpp" line="304"/>
+        <location filename="../src/libsync/discoveryphase.cpp" line="263"/>
+        <location filename="../src/libsync/discoveryphase.cpp" line="305"/>
         <source>Server error: PROPFIND reply is not XML formatted!</source>
         <translation>Σφάλμα διακομιστή: η απάντηση PROPFIND δεν έχει μορφή XML!</translation>
     </message>
@@ -895,141 +905,141 @@ The update will be performed in the background, and overwrite the current AppIma
 <context>
     <name>OCC::Folder</name>
     <message>
-        <location filename="../src/gui/folder.cpp" line="146"/>
+        <location filename="../src/gui/folder.cpp" line="161"/>
         <source>The path »%1« is too long. Please enable long paths in the Windows settings or choose a different folder.</source>
         <translation>Η διαδρομή »%1« είναι πολύ μεγάλη. Παρακαλούμε ενεργοποιήστε τις μεγάλες διαδρομές (long paths) στις ρυθμίσεις των Windows ή επιλέξτε έναν διαφορετικό φάκελο.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="191"/>
+        <location filename="../src/gui/folder.cpp" line="211"/>
         <source>Failed to open the database for »%1«.</source>
         <translation>Αποτυχία ανοίγματος της βάσης δεδομένων για το »%1«.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="169"/>
+        <location filename="../src/gui/folder.cpp" line="189"/>
         <source>Local folder »%1« does not exist.</source>
         <translation>Ο τοπικός φάκελος »%1« δεν υπάρχει.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="197"/>
+        <location filename="../src/gui/folder.cpp" line="217"/>
         <source>»%1« should be a folder but is not.</source>
         <translation>Το »%1« θα έπρεπε να είναι φάκελος αλλά δεν είναι.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="199"/>
+        <location filename="../src/gui/folder.cpp" line="219"/>
         <source>»%1« is not readable.</source>
         <translation>Το »%1« δεν είναι αναγνώσιμο.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="201"/>
+        <location filename="../src/gui/folder.cpp" line="221"/>
         <source>»%1« is not writable.</source>
         <translation>Το »%1« δεν είναι εγγράψιμο.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="460"/>
+        <location filename="../src/gui/folder.cpp" line="480"/>
         <source>»%1« and %n other file(s) have been removed.</source>
         <translation><numerusform>Το »%1« και %n ακόμη αρχείο αφαιρέθηκαν.</numerusform><numerusform>Το »%1« και %n ακόμη αρχεία αφαιρέθηκαν.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="462"/>
+        <location filename="../src/gui/folder.cpp" line="482"/>
         <source>»%1« has been removed.</source>
         <comment>%1 names a file.</comment>
         <translation>Το »%1« αφαιρέθηκε.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="467"/>
+        <location filename="../src/gui/folder.cpp" line="487"/>
         <source>»%1« and %n other file(s) have been added.</source>
         <translation><numerusform>Το »%1« και %n ακόμη αρχείο προστέθηκαν.</numerusform><numerusform>Το »%1« και %n ακόμη αρχεία προστέθηκαν.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="469"/>
+        <location filename="../src/gui/folder.cpp" line="489"/>
         <source>»%1« has been added.</source>
         <comment>%1 names a file.</comment>
         <translation>Το »%1« προστέθηκε.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="474"/>
+        <location filename="../src/gui/folder.cpp" line="494"/>
         <source>»%1« and %n other file(s) have been updated.</source>
         <translation><numerusform>Το »%1« και %n ακόμη αρχείο ενημερώθηκαν.</numerusform><numerusform>Το »%1« και %n ακόμη αρχεία ενημερώθηκαν.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="476"/>
+        <location filename="../src/gui/folder.cpp" line="496"/>
         <source>»%1« has been updated.</source>
         <comment>%1 names a file.</comment>
         <translation>Το »%1« ενημερώθηκε.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="481"/>
+        <location filename="../src/gui/folder.cpp" line="501"/>
         <source>»%1« has been renamed to »%2« and %n other file(s) have been renamed.</source>
         <translation><numerusform>Το »%1« μετονομάστηκε σε »%2« και %n ακόμη αρχείο μετονομάστηκε.</numerusform><numerusform>Το »%1« μετονομάστηκε σε »%2« και %n ακόμη αρχεία μετονομάστηκαν.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="483"/>
+        <location filename="../src/gui/folder.cpp" line="503"/>
         <source>»%1« has been renamed to »%2«.</source>
         <comment>%1 and %2 name files.</comment>
         <translation>Το »%1« μετονομάστηκε σε »%2«.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="488"/>
+        <location filename="../src/gui/folder.cpp" line="508"/>
         <source>»%1« has been moved to »%2« and %n other file(s) have been moved.</source>
         <translation><numerusform>Το »%1« μετακινήθηκε στο »%2« και %n ακόμη αρχείο μετακινήθηκε.</numerusform><numerusform>Το »%1« μετακινήθηκε στο »%2« και %n ακόμη αρχεία μετακινήθηκαν.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="490"/>
+        <location filename="../src/gui/folder.cpp" line="510"/>
         <source>»%1« has been moved to »%2«.</source>
         <translation>Το »%1« μετακινήθηκε στο »%2«.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="495"/>
+        <location filename="../src/gui/folder.cpp" line="515"/>
         <source>»%1« and %n other file(s) have sync conflicts.</source>
         <translation><numerusform>Το »%1« και %n ακόμη αρχείο έχουν διενέξεις συγχρονισμού.</numerusform><numerusform>Το »%1« και %n ακόμη αρχεία έχουν διενέξεις συγχρονισμού.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="497"/>
+        <location filename="../src/gui/folder.cpp" line="517"/>
         <source>»%1« has a sync conflict. Please check the conflict file!</source>
         <translation>Το »%1« έχει μια διένεξη συγχρονισμού. Παρακαλούμε ελέγξτε το αρχείο διένεξης!</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="502"/>
+        <location filename="../src/gui/folder.cpp" line="522"/>
         <source>»%1« and %n other file(s) could not be synced due to errors. See the log for details.</source>
         <translation><numerusform>Το »%1« και %n ακόμη αρχείο δεν ήταν δυνατό να συγχρονιστούν λόγω σφαλμάτων. Δείτε την καταγραφή για λεπτομέρειες.</numerusform><numerusform>Το »%1« και %n ακόμη αρχεία δεν ήταν δυνατό να συγχρονιστούν λόγω σφαλμάτων. Δείτε την καταγραφή για λεπτομέρειες.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="504"/>
+        <location filename="../src/gui/folder.cpp" line="524"/>
         <source>»%1« could not be synced due to an error. See the log for details.</source>
         <translation>Το »%1« δεν ήταν δυνατό να συγχρονιστεί λόγω σφάλματος. Δείτε την καταγραφή για λεπτομέρειες.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="510"/>
+        <location filename="../src/gui/folder.cpp" line="530"/>
         <source>Sync Activity</source>
         <translation>Δραστηριότητα συγχρονισμού</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="713"/>
+        <location filename="../src/gui/folder.cpp" line="733"/>
         <source>Switching VFS mode on folder »%1«</source>
         <translation>Εναλλαγή λειτουργίας VFS στον φάκελο »%1«</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1053"/>
+        <location filename="../src/gui/folder.cpp" line="1068"/>
         <source>The folder »%1« was created but was excluded from synchronization previously. Data inside it will not be synchronized.</source>
         <translation>Ο φάκελος »%1« δημιουργήθηκε αλλά είχε εξαιρεθεί από τον συγχρονισμό προηγουμένως. Τα δεδομένα εντός αυτού δεν θα συγχρονιστούν.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1056"/>
+        <location filename="../src/gui/folder.cpp" line="1071"/>
         <source>The file »%1« was created but was excluded from synchronization previously. It will not be synchronized.</source>
         <translation>Το αρχείο »%1« δημιουργήθηκε αλλά είχε εξαιρεθεί από τον συγχρονισμό προηγουμένως. Δεν θα συγχρονιστεί.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1060"/>
+        <location filename="../src/gui/folder.cpp" line="1075"/>
         <source>»%1« is not synchronized</source>
         <translation>Το »%1« δεν συγχρονίζεται</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="849"/>
+        <location filename="../src/gui/folder.cpp" line="864"/>
         <source>Could not read system exclude file</source>
         <translation>Αδυναμία ανάγνωσης του αρχείου εξαιρέσεων συστήματος</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1068"/>
+        <location filename="../src/gui/folder.cpp" line="1083"/>
         <source>Changes in synchronized folders could not be tracked reliably.
 
 This means that the synchronization client might not upload local changes immediately and will instead only scan for local changes and upload them occasionally (every two hours by default).
@@ -1858,7 +1868,7 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::OwncloudPropagator</name>
     <message>
-        <location filename="../src/libsync/owncloudpropagator.cpp" line="733"/>
+        <location filename="../src/libsync/owncloudpropagator.cpp" line="731"/>
         <source>The file »%1« is currently in use</source>
         <translation>Το αρχείο »%1« χρησιμοποιείται αυτή τη στιγμή</translation>
     </message>
@@ -1866,107 +1876,112 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::ProcessDirectoryJob</name>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="169"/>
+        <location filename="../src/libsync/discovery.cpp" line="168"/>
         <source>Symbolic links are not supported in syncing.</source>
         <translation>Οι συμβολικοί σύνδεσμοι δεν υποστηρίζονται στον συγχρονισμό.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="181"/>
+        <location filename="../src/libsync/discovery.cpp" line="170"/>
+        <source>Encrypted vault files are not synchronized because they are currently not supported by this application.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/libsync/discovery.cpp" line="182"/>
         <source>File names ending with a period are not supported on this file system.</source>
         <translation>Τα ονόματα αρχείων που τελειώνουν σε τελεία δεν υποστηρίζονται σε αυτό το σύστημα αρχείων.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="194"/>
+        <location filename="../src/libsync/discovery.cpp" line="195"/>
         <source>File names containing the character &apos;%1&apos; are not supported on this file system.</source>
         <translation>Τα ονόματα αρχείων που περιέχουν τον χαρακτήρα &apos;%1&apos; δεν υποστηρίζονται σε αυτό το σύστημα αρχείων.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="197"/>
+        <location filename="../src/libsync/discovery.cpp" line="198"/>
         <source>File name contains at least one invalid character</source>
         <translation>Το όνομα του αρχείου περιέχει τουλάχιστον έναν μη έγκυρο χαρακτήρα</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="199"/>
+        <location filename="../src/libsync/discovery.cpp" line="200"/>
         <source>The file name is a reserved name on this file system.</source>
         <translation>Το όνομα αρχείου είναι δεσμευμένο όνομα σε αυτό το σύστημα αρχείων.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="208"/>
+        <location filename="../src/libsync/discovery.cpp" line="209"/>
         <source>Filename contains trailing spaces.</source>
         <translation>Το όνομα αρχείου περιέχει κενά στο τέλος.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="211"/>
+        <location filename="../src/libsync/discovery.cpp" line="212"/>
         <source>Filename is too long.</source>
         <translation>Το όνομα αρχείου είναι πολύ μεγάλο.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="214"/>
+        <location filename="../src/libsync/discovery.cpp" line="215"/>
         <source>File/Folder is ignored because it&apos;s hidden.</source>
         <translation>Το αρχείο/φάκελος αγνοείται επειδή είναι κρυφό.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="218"/>
+        <location filename="../src/libsync/discovery.cpp" line="219"/>
         <source>Conflict: Server version downloaded, local copy renamed and not uploaded.</source>
         <translation>Διένεξη: Λήφθηκε η έκδοση του διακομιστή, το τοπικό αντίγραφο μετονομάστηκε και δεν ανέβηκε.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="222"/>
+        <location filename="../src/libsync/discovery.cpp" line="223"/>
         <source>The filename is blacklisted on the server.</source>
         <translation>Το όνομα αρχείου είναι στη μαύρη λίστα του διακομιστή.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1085"/>
+        <location filename="../src/libsync/discovery.cpp" line="1086"/>
         <source>Moved to invalid target, restoring</source>
         <translation>Μετακινήθηκε σε μη έγκυρο προορισμό, γίνεται επαναφορά</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1098"/>
+        <location filename="../src/libsync/discovery.cpp" line="1099"/>
         <source>Not allowed to remove, restoring</source>
         <translation>Δεν επιτρέπεται η αφαίρεση, γίνεται επαναφορά</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1254"/>
+        <location filename="../src/libsync/discovery.cpp" line="1255"/>
         <source>Server replied with an error while reading directory »%1«: %2</source>
         <translation>Ο διακομιστής απάντησε με σφάλμα κατά την ανάγνωση του καταλόγου »%1«: %2</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1044"/>
+        <location filename="../src/libsync/discovery.cpp" line="1045"/>
         <source>Not allowed because you don&apos;t have permission to add subfolders to that folder</source>
         <translation>Δεν επιτρέπεται επειδή δεν έχετε δικαίωμα να προσθέτετε υποφακέλους σε αυτόν τον φάκελο</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="176"/>
+        <location filename="../src/libsync/discovery.cpp" line="177"/>
         <source>The file is listed on the ignore list.</source>
         <translation>Το αρχείο περιλαμβάνεται στη λίστα αγνοουμένων.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="522"/>
+        <location filename="../src/libsync/discovery.cpp" line="523"/>
         <source>Error while doing a rename, unhandled status code: %1</source>
         <translation>Σφάλμα κατά τη μετονομασία, μη υποστηριζόμενος κωδικός κατάστασης: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1012"/>
+        <location filename="../src/libsync/discovery.cpp" line="1013"/>
         <source>Selective sync: Ignored because its path is deselected</source>
         <translation>Επιλεκτικός συγχρονισμός: Αγνοήθηκε επειδή η διαδρομή του δεν είναι επιλεγμένη</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1049"/>
+        <location filename="../src/libsync/discovery.cpp" line="1050"/>
         <source>Not allowed because you don&apos;t have permission to add files in that folder</source>
         <translation>Δεν επιτρέπεται επειδή δεν έχετε δικαίωμα να προσθέτετε αρχεία σε αυτόν τον φάκελο</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1062"/>
+        <location filename="../src/libsync/discovery.cpp" line="1063"/>
         <source>Not allowed to upload this file because it is read-only on the server, restoring</source>
         <translation>Δεν επιτρέπεται η μεταφόρτωση αυτού του αρχείου επειδή είναι μόνο για ανάγνωση στον διακομιστή, γίνεται επαναφορά</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1208"/>
+        <location filename="../src/libsync/discovery.cpp" line="1209"/>
         <source>Error while reading the database</source>
         <translation>Σφάλμα κατά την ανάγνωση της βάσης δεδομένων</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1233"/>
+        <location filename="../src/libsync/discovery.cpp" line="1234"/>
         <source>This Space is currently unavailable</source>
         <translation>Αυτός ο Χώρος είναι προσωρινά μη διαθέσιμος</translation>
     </message>
@@ -1974,12 +1989,12 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::PropagateDirectory</name>
     <message>
-        <location filename="../src/libsync/owncloudpropagator.cpp" line="1108"/>
+        <location filename="../src/libsync/owncloudpropagator.cpp" line="1106"/>
         <source>Error updating metadata: %1</source>
         <translation>Σφάλμα κατά την ενημέρωση μεταδεδομένων: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/owncloudpropagator.cpp" line="1111"/>
+        <location filename="../src/libsync/owncloudpropagator.cpp" line="1109"/>
         <source>The folder »%1« is currently in use</source>
         <translation>Ο φάκελος »%1« χρησιμοποιείται ήδη</translation>
     </message>
@@ -2192,12 +2207,12 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::PropagateUpdateMetaDataJob</name>
     <message>
-        <location filename="../src/libsync/owncloudpropagator.cpp" line="1291"/>
+        <location filename="../src/libsync/owncloudpropagator.cpp" line="1289"/>
         <source>Could not update file: %1</source>
         <translation>Αδυναμία ενημέρωσης αρχείου: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/owncloudpropagator.cpp" line="1294"/>
+        <location filename="../src/libsync/owncloudpropagator.cpp" line="1292"/>
         <source>The file »%1« is currently in use</source>
         <translation>Το αρχείο »%1« χρησιμοποιείται ήδη</translation>
     </message>
@@ -2361,17 +2376,17 @@ Note that using any logging command line options will override the settings.</so
         <translation>Μενού ενεργειών</translation>
     </message>
     <message>
-        <location filename="../src/gui/protocolwidget.cpp" line="153"/>
+        <location filename="../src/gui/protocolwidget.cpp" line="170"/>
         <source>Sort ascending by %1</source>
         <translation>Αύξουσα ταξινόμηση κατά %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/protocolwidget.cpp" line="157"/>
+        <location filename="../src/gui/protocolwidget.cpp" line="174"/>
         <source>Sort descending by %1</source>
         <translation>Φθίνουσα ταξινόμηση κατά %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/protocolwidget.cpp" line="179"/>
+        <location filename="../src/gui/protocolwidget.cpp" line="196"/>
         <source>Retry sync</source>
         <translation>Επανάληψη συγχρονισμού</translation>
     </message>
@@ -2982,7 +2997,7 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>RemoteInfo</name>
     <message>
-        <location filename="../src/libsync/discoveryremoteinfo.cpp" line="67"/>
+        <location filename="../src/libsync/discoveryremoteinfo.cpp" line="69"/>
         <source>server reported no %1</source>
         <translation>ο διακομιστής δεν ανέφερε %1</translation>
     </message>

@@ -520,7 +520,8 @@ OCC::Result<OCC::Vfs::ConvertToPlaceholderResult, QString> OCC::CfApiWrapper::se
     }
 }
 
-OCC::Result<void, QString> OCC::CfApiWrapper::createPlaceholderInfo(const std::filesystem::path &path, time_t modtime, qint64 size, const QByteArray &fileId)
+OCC::Result<void, QString> OCC::CfApiWrapper::createPlaceholderInfo(
+    const std::filesystem::path &path, time_t modtime, qint64 size, const QByteArray &fileId, bool isDirectory)
 {
     const auto fileName = path.filename();
     const auto baseDir = path.parent_path().lexically_normal();
@@ -537,7 +538,7 @@ OCC::Result<void, QString> OCC::CfApiWrapper::createPlaceholderInfo(const std::f
     OCC::Utility::UnixTimeToLargeIntegerFiletime(modtime, &cloudEntry.FsMetadata.BasicInfo.LastAccessTime);
     OCC::Utility::UnixTimeToLargeIntegerFiletime(modtime, &cloudEntry.FsMetadata.BasicInfo.ChangeTime);
 
-    if (std::filesystem::is_directory(path)) {
+    if (isDirectory) {
         cloudEntry.Flags |= CF_PLACEHOLDER_CREATE_FLAG_DISABLE_ON_DEMAND_POPULATION;
         cloudEntry.FsMetadata.BasicInfo.FileAttributes = FILE_ATTRIBUTE_DIRECTORY;
         cloudEntry.FsMetadata.FileSize.QuadPart = 0;
