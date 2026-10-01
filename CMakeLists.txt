@@ -45,10 +45,22 @@ if(UNIT_TESTING)
 endif()
 include(CTest)
 
-include(OCBundleResources)
 include(OCApplyCommonSettings)
 
-include("${CMAKE_CURRENT_LIST_DIR}/THEME.cmake")
+set( APPLICATION_NAME       "OpenCloud Desktop")
+set( APPLICATION_SHORTNAME  "OpenCloud" )
+set( APPLICATION_EXECUTABLE "opencloud" )
+set( APPLICATION_REV_DOMAIN "eu.opencloud.desktop" )
+
+if(BETA_CHANNEL_BUILD)
+    # copy the beta theme to the bin directory so we can use the beta theme during development
+    configure_file("${PROJECT_SOURCE_DIR}/beta.json" "${CMAKE_CURRENT_BINARY_DIR}/bin/opencloud_theme.json" COPYONLY)
+    if(APPLE)
+        list(APPEND OPENCLOUD_BUNDLED_RESOURCES "${CMAKE_CURRENT_BINARY_DIR}/bin/opencloud_theme.json")
+    endif()
+endif()
+
+option( WITH_CRASHREPORTER "Build crashreporter" OFF )
 
 if(NOT WITH_CRASHREPORTER)
     message(STATUS "Build of crashreporter disabled.")
@@ -145,16 +157,6 @@ endif()
 
 find_package(ZLIB REQUIRED)
 find_package(SQLite3 3.9.0 REQUIRED)
-
-# in the ownBrander themes, the icon files are named after the shortname
-# the theme included in this repository defines a custom icon name, therefore we set the shortname as a fallback if the
-# theme does not define the variable
-if (NOT DEFINED APPLICATION_ICON_NAME)
-    set(APPLICATION_ICON_NAME "${APPLICATION_SHORTNAME}")
-endif()
-
-file(GLOB_RECURSE OPENCLOUD_ICONS "${OEM_THEME_DIR}/theme/colored/*-${APPLICATION_ICON_NAME}-icon.png")
-MESSAGE(STATUS "OPENCLOUD_ICONS: ${APPLICATION_ICON_NAME}: ${OPENCLOUD_ICONS}")
 
 add_subdirectory(src)
 if(IS_DIRECTORY ${CMAKE_SOURCE_DIR}/admin)

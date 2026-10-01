@@ -13,14 +13,15 @@
  */
 
 #include "guiutility.h"
-#include "gui/application.h"
+
 #include "gui/settingsdialog.h"
+#include "libsync/theme.h"
+#include "resources/jsontheme.h"
 
 #include <QApplication>
 #include <QDesktopServices>
 #include <QLoggingCategory>
 #include <QMessageBox>
-#include <QQuickWidget>
 #include <QUrlQuery>
 
 namespace OCC {

@@ -20,6 +20,7 @@
 #include "fetchserversettings.h"
 #include "fonticon.h"
 #include "guiutility.h"
+#include "resources/jsontheme.h"
 
 #include "libsync/creds/abstractcredentials.h"
 #include "libsync/creds/httpcredentials.h"
@@ -175,8 +176,8 @@ AccountState::AccountState(AccountPtr account)
     }
 
     connect(account.data(), &Account::appProviderErrorOccured, this, [](const QString &error) {
-        QMessageBox *msgBox =
-            new FontIconMessageBox({Resources::FontIcon::DefaultGlyphes::Warning}, Theme::instance()->appNameGUI(), error, {}, ocApp()->settingsDialog());
+        QMessageBox *msgBox = new FontIconMessageBox(
+            {Resources::FontIcon::DefaultGlyphes::Warning}, Resources::JsonTheme::instance().applicationDisplayName(), error, {}, ocApp()->settingsDialog());
         msgBox->setAttribute(Qt::WA_DeleteOnClose);
         ocApp()->showSettings();
         msgBox->open();

@@ -23,6 +23,7 @@
 #include "common/version.h"
 #include "libsync/filesystem.h"
 #include "libsync/theme.h"
+#include "resources/jsontheme.h"
 
 // Note:  This file must compile without QtGui
 #include <QCollator>
@@ -55,7 +56,6 @@
 
 #include <cstring>
 #include <math.h>
-#include <stdarg.h>
 
 using namespace Qt::Literals::StringLiterals;
 using namespace std::chrono;
@@ -507,13 +507,13 @@ QString Utility::currentCpuArch()
 void Utility::markDirectoryAsSyncRoot(const QString &path, const QUuid &accountUuid)
 {
     const auto [oldTag, oldUuid] = getDirectorySyncRootMarkings(path);
-    if (oldUuid == accountUuid && oldTag == Theme::instance()->orgDomainName()) {
+    if (oldUuid == accountUuid && oldTag == Resources::JsonTheme::instance().organizationDomain()) {
         return;
     }
     Q_ASSERT(oldTag.isEmpty());
     Q_ASSERT(oldUuid.isNull());
 
-    auto result1 = FileSystem::Tags::set(path, dirTag(), Theme::instance()->orgDomainName());
+    auto result1 = FileSystem::Tags::set(path, dirTag(), Resources::JsonTheme::instance().organizationDomain());
     if (!result1) {
         qCWarning(lcUtility) << QStringLiteral("Failed to set tag on »%1«: %2").arg(path, result1.error())
 #ifdef Q_OS_WIN
