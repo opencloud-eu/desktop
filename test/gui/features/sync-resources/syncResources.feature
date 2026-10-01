@@ -240,7 +240,7 @@ Feature: Syncing files
         And as "Alice" file "/PRN" should exist in the server
         And as "Alice" file "/foo%" should exist in the server
 
-    @skipOnLinux @skip
+    @skipOnLinux
     Scenario: Sync invalid system names (Windows only)
         Given user "Alice" has created folder "CON" in the server
         And user "Alice" has created folder "test%" in the server
