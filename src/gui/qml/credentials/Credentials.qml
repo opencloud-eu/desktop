@@ -32,11 +32,11 @@ Pane {
     default property alias content: contentLayout.data
     property alias logOutButton: logutButtonComponent
 
-    palette.window: Theme.brandedBackgoundColor
-    palette.windowText: Theme.brandedForegroundColor
-    palette.button: Theme.primaryButtonColor.color
-    palette.buttonText: Theme.primaryButtonColor.textColor
-    palette.disabled.buttonText: Theme.primaryButtonColor.textColorDisabled
+    palette.window: JsonTheme.primaryBackgroundColor
+    palette.windowText: JsonTheme.primaryForegroundColor
+    palette.button: JsonTheme.primaryButtonColor.color
+    palette.buttonText: JsonTheme.primaryButtonColor.textColor
+    palette.disabled.buttonText: JsonTheme.primaryButtonColor.textColorDisabled
 
     Component {
         id: logutButtonComponent
@@ -48,9 +48,13 @@ Pane {
             text: qsTr("Stay logged out")
             onClicked: credentials.logOutRequested()
 
-            palette.button: Theme.secondaryButtonColor.color
-            palette.buttonText: Theme.secondaryButtonColor.textColor
-            palette.disabled.buttonText: Theme.secondaryButtonColor.textColorDisabled
+            palette.button: JsonTheme.secondaryButtonColor.color
+            palette.buttonText: JsonTheme.secondaryButtonColor.textColor
+            palette.disabled.buttonText: JsonTheme.secondaryButtonColor.textColorDisabled
+            Component.onCompleted: {
+                var foo = JsonTheme.secondaryButtonColor;
+                console.log(JsonTheme.secondaryButtonColor.textColorDisabled);
+            }
 
             Keys.onTabPressed: event => {
                 if (!visible) {
@@ -71,7 +75,7 @@ Pane {
         Image {
             Layout.alignment: Qt.AlignHCenter
             fillMode: Image.PreserveAspectFit
-            source: OCUtils.resourcePath("universal", "wizard_logo", true)
+            source: OCUtils.resourcePath("jsontheme", "wizardLogo", true)
             sourceSize.height: 128
             sourceSize.width: 128
         }

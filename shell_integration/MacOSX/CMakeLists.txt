@@ -1,5 +1,5 @@
 if(APPLE)
-set(OC_OEM_SHARE_ICNS "${CMAKE_BINARY_DIR}/src/gui/${APPLICATION_ICON_NAME}.icns")
+set(OC_OEM_SHARE_ICNS "${CMAKE_BINARY_DIR}/src/gui/opencloud.icns")
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(XCODE_CONFIG "Debug")
@@ -20,7 +20,7 @@ add_custom_target( mac_overlayplugin ALL
         "OC_SOCKETAPI_TEAM_IDENTIFIER_PREFIX=${SOCKETAPI_TEAM_IDENTIFIER_PREFIX}"
     COMMENT building Mac Overlay icons
     VERBATIM)
-add_dependencies(mac_overlayplugin opencloud) # for the ${APPLICATION_ICON_NAME}.icns to be generated
+add_dependencies(mac_overlayplugin opencloud) # for the opencloud.icns to be generated
 add_custom_command(TARGET mac_overlayplugin POST_BUILD COMMAND ${CMAKE_COMMAND}
     ARGS -E copy_directory "${CMAKE_CURRENT_BINARY_DIR}/${XCODE_CONFIG}/FinderSyncExt.appex" "$<TARGET_FILE_DIR:opencloud>/../PlugIns/FinderSyncExt.appex")
 

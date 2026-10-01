@@ -34,6 +34,7 @@
 #include "libsync/graphapi/spacesmanager.h"
 #include "libsync/vfs/vfs.h"
 #include "resources/fonticon.h"
+#include "resources/jsontheme.h"
 #include "settingsdialog.h"
 #include "socketapi/socketapi.h"
 #include "theme.h"
@@ -232,7 +233,7 @@ AccountStatePtr Application::addNewAccount(AccountPtr newAccount)
     shouldSetAutoStart = shouldSetAutoStart && QCoreApplication::applicationDirPath().startsWith(QLatin1String("/Applications/"));
 #endif
     if (shouldSetAutoStart) {
-        Utility::setLaunchOnStartup(Theme::instance()->appName(), Theme::instance()->appNameGUI(), true);
+        Utility::setLaunchOnStartup(Resources::JsonTheme::instance().applicationName(), Resources::JsonTheme::instance().applicationDisplayName(), true);
     }
 
     // showing the UI to show the user that the account has been added successfully

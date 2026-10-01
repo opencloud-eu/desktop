@@ -44,7 +44,7 @@ OCC::FileSystem::Path openVFSExePath()
 
 QString xattrOwnerString(const QUuid &accountUuid)
 {
-    return u"%1:%2"_s.arg(OCC::Theme::instance()->appName(), accountUuid.toString(QUuid::WithoutBraces));
+    return u"%1:%2"_s.arg(OCC::Resources::JsonTheme::instance().appName(), accountUuid.toString(QUuid::WithoutBraces));
 }
 
 OCC::FileSystem::Path openVFSConfigFilePath()

@@ -100,7 +100,7 @@ SnoreToast::SnoreToast(SystemNotificationManager *parent)
                 }
             });
         });
-        if (!_server->listen(QStringLiteral("%1.SnoreToast").arg(Theme::instance()->orgDomainName()))) {
+        if (!_server->listen(QStringLiteral("%1.SnoreToast").arg(Resources::JsonTheme::instance().organisationName()))) {
             qCWarning(lcSnoreToast) << u"Failed to listen on the server";
         }
     } else {
@@ -126,7 +126,7 @@ void SnoreToast::notify(const SystemNotificationRequest &notificationRequest)
         QStringLiteral("-m"), notificationRequest.text(), //
         QStringLiteral("-pipename"), _server->fullServerName(), //
         QStringLiteral("-id"), QString::number(notificationRequest.id()), //
-        QStringLiteral("-appId"), Theme::instance()->orgDomainName(), //
+        QStringLiteral("-appId"), Resources::JsonTheme::instance().organisationName(), //
         QStringLiteral("-pid"), QString::number(qApp->applicationPid()), //
         QStringLiteral("-application"), qApp->applicationFilePath(), //
         QStringLiteral("-p"), Resources::iconToFileSystemUrl(notificationRequest.icon()).toLocalFile() //

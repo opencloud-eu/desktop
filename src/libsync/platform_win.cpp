@@ -91,7 +91,7 @@ void WinPlatform::startShutdownWatcher()
     // ensure to initialise the icon in the main thread
     HICON icon = {};
     if (qobject_cast<QGuiApplication *>(qApp)) {
-        icon = Theme::instance()->applicationIcon().pixmap(64, 64).toImage().toHICON();
+        icon = Resources::JsonTheme::instance().applicationIcon().pixmap(64, 64).toImage().toHICON();
     }
     watchWMCtx.watcherThread = new std::thread([icon] {
         WNDCLASS wc = {};
@@ -109,7 +109,8 @@ void WinPlatform::startShutdownWatcher()
                 auto start = steady_clock::now();
                 if (lParam == ENDSESSION_LOGOFF) {
                     // block the windows shutdown until we are done
-                    const QString description = QApplication::translate("Utility", "Shutting down %1").arg(Theme::instance()->appNameGUI());
+                    const QString description =
+                        QApplication::translate("Utility", "Shutting down %1").arg(Resources::JsonTheme::instance().applicationDisplayName());
                     qCDebug(lcPlatform) << u"Block shutdown until we are ready" << description;
                     OC_ASSERT(ShutdownBlockReasonCreate(hwnd, reinterpret_cast<const wchar_t *>(description.utf16())));
                 }
@@ -125,8 +126,9 @@ void WinPlatform::startShutdownWatcher()
         };
         OC_ASSERT(RegisterClass(&wc));
 
-        auto watcherWindow = CreateWindowW(wc.lpszClassName, reinterpret_cast<const wchar_t *>(Theme::instance()->appNameGUI().utf16()), WS_OVERLAPPED,
-            CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, nullptr, nullptr, wc.hInstance, nullptr);
+        auto watcherWindow =
+            CreateWindowW(wc.lpszClassName, reinterpret_cast<const wchar_t *>(Resources::JsonTheme::instance().applicationDisplayName().utf16()), WS_OVERLAPPED,
+                CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, nullptr, nullptr, wc.hInstance, nullptr);
         OC_ASSERT_X(watcherWindow, Utility::formatWinError(GetLastError()).toUtf8().constData());
 
         MSG msg;
