@@ -187,6 +187,27 @@ void PropagateUploadFileTUS::slotChunkFinished()
 
     QNetworkReply::NetworkError err = job->reply()->error();
     if (err != QNetworkReply::NoError) {
+        // The upload we tried to resume is gone: the server discarded it (404/410), or the transfer
+        // token in its URL expired (403). Forget it and start a new upload, instead of retrying the
+        // dead URL on every sync.
+        const int status = _item->_httpErrorCode;
+        if (HttpLogger::requestVerb(*job->reply()) == "HEAD" && (status == 404 || status == 410 || status == 403) && !_restartedUpload) {
+            qCWarning(lcPropagateUploadTUS) << propagator()->fullRemotePath(_item->localName()) << u"Upload no longer available, starting a new one:" << status
+                                            << _location;
+            _restartedUpload = true;
+            propagator()->_journal->setUploadInfo(_item->localName(), SyncJournalDb::UploadInfo());
+            propagator()->_journal->commit(QStringLiteral("upload file restart"));
+            _location.clear();
+            _currentOffset = 0;
+            propagator()->reportProgress(*_item, 0);
+            startNextChunk();
+            return;
+        }
+        if (status == 460) {
+            // "Checksum Mismatch": the server discarded the upload, the next attempt has to start a new one
+            propagator()->_journal->setUploadInfo(_item->localName(), SyncJournalDb::UploadInfo());
+            propagator()->_journal->commit(QStringLiteral("upload file checksum mismatch"));
+        }
         // try to get the offset if possible, only try once.
         // Also resume on a 409: a TUS Upload-Offset mismatch on a stale/diverged resume
         // (opencloud-eu/desktop#898). Re-query the server's current offset with a HEAD and
