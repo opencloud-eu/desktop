@@ -870,8 +870,8 @@ The update will be performed in the background, and overwrite the current AppIma
 <context>
     <name>OCC::DiscoverySingleDirectoryJob</name>
     <message>
-        <location filename="../src/libsync/discoveryphase.cpp" line="263"/>
-        <location filename="../src/libsync/discoveryphase.cpp" line="305"/>
+        <location filename="../src/libsync/discoveryphase.cpp" line="262"/>
+        <location filename="../src/libsync/discoveryphase.cpp" line="304"/>
         <source>Server error: PROPFIND reply is not XML formatted!</source>
         <translation>שגיאת שרת: תשובת PROPFIND אינה במבנה XML!</translation>
     </message>
@@ -879,17 +879,17 @@ The update will be performed in the background, and overwrite the current AppIma
 <context>
     <name>OCC::DiscoverySingleLocalDirectoryJob</name>
     <message>
-        <location filename="../src/libsync/discoveryphase.cpp" line="213"/>
+        <location filename="../src/libsync/discoveryphase.cpp" line="212"/>
         <source>Error while opening directory »%1«</source>
         <translation>שגיאה בעת פתיחת התיקייה »%1«</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discoveryphase.cpp" line="215"/>
+        <location filename="../src/libsync/discoveryphase.cpp" line="214"/>
         <source>Directory not accessible on client, permission denied</source>
         <translation>התיקייה אינה נגישה בלקוח, הגישה נדחתה</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discoveryphase.cpp" line="219"/>
+        <location filename="../src/libsync/discoveryphase.cpp" line="218"/>
         <source>Directory not found: »%1«</source>
         <translation>התיקייה לא נמצאה: »%1«</translation>
     </message>
@@ -935,111 +935,111 @@ The update will be performed in the background, and overwrite the current AppIma
         <translation>»%1« אינו ניתן לכתיבה.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="480"/>
+        <location filename="../src/gui/folder.cpp" line="491"/>
         <source>»%1« and %n other file(s) have been removed.</source>
         <translation><numerusform>»%1« וקובץ אחד נוסף הוסרו.</numerusform><numerusform>»%1« ו-%n קבצים נוספים הוסרו.</numerusform><numerusform>»%1« ו-%n קבצים נוספים הוסרו.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="482"/>
+        <location filename="../src/gui/folder.cpp" line="493"/>
         <source>»%1« has been removed.</source>
         <comment>%1 names a file.</comment>
         <translation>»%1« הוסר.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="487"/>
+        <location filename="../src/gui/folder.cpp" line="498"/>
         <source>»%1« and %n other file(s) have been added.</source>
         <translation><numerusform>»%1« וקובץ אחד נוסף התווספו.</numerusform><numerusform>»%1« ו-%n קבצים נוספים התווספו.</numerusform><numerusform>»%1« ו-%n קבצים נוספים התווספו.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="489"/>
+        <location filename="../src/gui/folder.cpp" line="500"/>
         <source>»%1« has been added.</source>
         <comment>%1 names a file.</comment>
         <translation>»%1« התווסף.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="494"/>
+        <location filename="../src/gui/folder.cpp" line="505"/>
         <source>»%1« and %n other file(s) have been updated.</source>
         <translation><numerusform>»%1« וקובץ אחד נוסף עודכנו.</numerusform><numerusform>»%1« ו-%n קבצים נוספים עודכנו.</numerusform><numerusform>»%1« ו-%n קבצים נוספים עודכנו.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="496"/>
+        <location filename="../src/gui/folder.cpp" line="507"/>
         <source>»%1« has been updated.</source>
         <comment>%1 names a file.</comment>
         <translation>»%1« עודכן.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="501"/>
+        <location filename="../src/gui/folder.cpp" line="512"/>
         <source>»%1« has been renamed to »%2« and %n other file(s) have been renamed.</source>
         <translation><numerusform>»%1« שונה ל-»%2« וקובץ אחד נוסף שונה שם.</numerusform><numerusform>»%1« שונה ל-»%2« ו-%n קבצים נוספים שונו שם.</numerusform><numerusform>»%1« שונה ל-»%2« ו-%n קבצים נוספים שונו שם.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="503"/>
+        <location filename="../src/gui/folder.cpp" line="514"/>
         <source>»%1« has been renamed to »%2«.</source>
         <comment>%1 and %2 name files.</comment>
         <translation>»%1« שונה שם ל-»%2«.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="508"/>
+        <location filename="../src/gui/folder.cpp" line="519"/>
         <source>»%1« has been moved to »%2« and %n other file(s) have been moved.</source>
         <translation><numerusform>»%1« הועבר ל-»%2« וקובץ אחד נוסף הועבר.</numerusform><numerusform>»%1« הועבר ל-»%2« ו-%n קבצים נוספים הועברו.</numerusform><numerusform>»%1« הועבר ל-»%2« ו-%n קבצים נוספים הועברו.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="510"/>
+        <location filename="../src/gui/folder.cpp" line="521"/>
         <source>»%1« has been moved to »%2«.</source>
         <translation>»%1« הועבר ל-»%2«.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="515"/>
+        <location filename="../src/gui/folder.cpp" line="526"/>
         <source>»%1« and %n other file(s) have sync conflicts.</source>
         <translation><numerusform>ל-»%1« וקובץ אחד נוסף יש התנגשויות סנכרון.</numerusform><numerusform>ל-»%1« ו-%n קבצים נוספים יש התנגשויות סנכרון.</numerusform><numerusform>ל-»%1« ו-%n קבצים נוספים יש התנגשויות סנכרון.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="517"/>
+        <location filename="../src/gui/folder.cpp" line="528"/>
         <source>»%1« has a sync conflict. Please check the conflict file!</source>
         <translation>ל-»%1« יש התנגשות סנכרון. נא לבדוק את קובץ ההתנגשות!</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="522"/>
+        <location filename="../src/gui/folder.cpp" line="533"/>
         <source>»%1« and %n other file(s) could not be synced due to errors. See the log for details.</source>
         <translation><numerusform>לא ניתן לסנכרן את »%1« וקובץ אחד נוסף עקב שגיאות. ראו את היומן לפרטים.</numerusform><numerusform>לא ניתן לסנכרן את »%1« ו-%n קבצים נוספים עקב שגיאות. ראו את היומן לפרטים.</numerusform><numerusform>לא ניתן לסנכרן את »%1« ו-%n קבצים נוספים עקב שגיאות. ראו את היומן לפרטים.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="524"/>
+        <location filename="../src/gui/folder.cpp" line="535"/>
         <source>»%1« could not be synced due to an error. See the log for details.</source>
         <translation>לא ניתן לסנכרן את »%1« עקב שגיאה. ראו את היומן לפרטים.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="530"/>
+        <location filename="../src/gui/folder.cpp" line="541"/>
         <source>Sync Activity</source>
         <translation>פעילות סנכרון</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="733"/>
+        <location filename="../src/gui/folder.cpp" line="744"/>
         <source>Switching VFS mode on folder »%1«</source>
         <translation>החלפת מצב VFS בתיקייה »%1«</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1068"/>
+        <location filename="../src/gui/folder.cpp" line="1079"/>
         <source>The folder »%1« was created but was excluded from synchronization previously. Data inside it will not be synchronized.</source>
         <translation>התיקייה »%1« נוצרה אך הוחרגה מסנכרון בעבר. נתונים בתוכה לא יסונכרנו.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1071"/>
+        <location filename="../src/gui/folder.cpp" line="1082"/>
         <source>The file »%1« was created but was excluded from synchronization previously. It will not be synchronized.</source>
         <translation>הקובץ »%1« נוצר אך הוחרג מסנכרון בעבר. הוא לא יסונכרן.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1075"/>
+        <location filename="../src/gui/folder.cpp" line="1086"/>
         <source>»%1« is not synchronized</source>
         <translation>»%1« אינו מסונכרן</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="864"/>
+        <location filename="../src/gui/folder.cpp" line="875"/>
         <source>Could not read system exclude file</source>
         <translation>לא ניתן לקרוא את קובץ ההחרגה של המערכת</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1083"/>
+        <location filename="../src/gui/folder.cpp" line="1094"/>
         <source>Changes in synchronized folders could not be tracked reliably.
 
 This means that the synchronization client might not upload local changes immediately and will instead only scan for local changes and upload them occasionally (every two hours by default).
@@ -1120,7 +1120,7 @@ This means that the synchronization client might not upload local changes immedi
         <translation>נא לבחור תיקייה מקומית אחרת עבור »%1«.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="701"/>
+        <location filename="../src/gui/folderman.cpp" line="708"/>
         <source>Multiple accounts are sharing the folder »%1«.
 This configuration is know to lead to dataloss and is no longer supported.
 Please consider removing this folder from the account and adding it again.</source>
@@ -1203,7 +1203,7 @@ Please consider removing this folder from the account and adding it again.</sour
 <context>
     <name>OCC::FolderWatcherPrivate</name>
     <message>
-        <location filename="../src/gui/folderwatcher_linux.cpp" line="92"/>
+        <location filename="../src/gui/folderwatcher_linux.cpp" line="96"/>
         <source>This problem usually happens when the inotify watches are exhausted. Check the FAQ for details.</source>
         <translation>בעיה זו מתרחשת בדרך כלל כאשר משאבי ה-inotify watches מוצו. בדקו את השאלות הנפוצות (FAQ) לפרטים.</translation>
     </message>

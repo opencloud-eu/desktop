@@ -490,7 +490,7 @@ Utilitário de sincronização de ficheiros para ambiente de trabalho.</translat
     <message>
         <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="68"/>
         <source>Server returned empty list of instances</source>
-        <translation type="unfinished"/>
+        <translation>O servidor retornou uma lista vazia de instâncias</translation>
     </message>
     <message>
         <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="49"/>
@@ -817,7 +817,7 @@ A atualização será realizada em segundo plano e substituirá o ficheiro AppIm
     <message>
         <location filename="../src/gui/commonstrings.cpp" line="33"/>
         <source>Copy path to clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Copiar caminho para a área de transferência</translation>
     </message>
     <message>
         <location filename="../src/gui/commonstrings.cpp" line="39"/>
@@ -837,7 +837,7 @@ A atualização será realizada em segundo plano e substituirá o ficheiro AppIm
     <message>
         <location filename="../src/gui/commonstrings.cpp" line="51"/>
         <source>Copy URL to clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Copiar URL para a área de transferência</translation>
     </message>
     <message>
         <location filename="../src/gui/commonstrings.cpp" line="56"/>
@@ -870,8 +870,8 @@ A atualização será realizada em segundo plano e substituirá o ficheiro AppIm
 <context>
     <name>OCC::DiscoverySingleDirectoryJob</name>
     <message>
-        <location filename="../src/libsync/discoveryphase.cpp" line="263"/>
-        <location filename="../src/libsync/discoveryphase.cpp" line="305"/>
+        <location filename="../src/libsync/discoveryphase.cpp" line="262"/>
+        <location filename="../src/libsync/discoveryphase.cpp" line="304"/>
         <source>Server error: PROPFIND reply is not XML formatted!</source>
         <translation>Erro do servidor: a resposta PROPFIND não está formatada em XML!</translation>
     </message>
@@ -879,17 +879,17 @@ A atualização será realizada em segundo plano e substituirá o ficheiro AppIm
 <context>
     <name>OCC::DiscoverySingleLocalDirectoryJob</name>
     <message>
-        <location filename="../src/libsync/discoveryphase.cpp" line="213"/>
+        <location filename="../src/libsync/discoveryphase.cpp" line="212"/>
         <source>Error while opening directory »%1«</source>
         <translation>Erro ao abrir a pasta «%1»</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discoveryphase.cpp" line="215"/>
+        <location filename="../src/libsync/discoveryphase.cpp" line="214"/>
         <source>Directory not accessible on client, permission denied</source>
         <translation>Pasta inacessível no cliente, permissão negada</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discoveryphase.cpp" line="219"/>
+        <location filename="../src/libsync/discoveryphase.cpp" line="218"/>
         <source>Directory not found: »%1«</source>
         <translation>Pasta não encontrada: «%1»</translation>
     </message>
@@ -935,111 +935,111 @@ A atualização será realizada em segundo plano e substituirá o ficheiro AppIm
         <translation>Não é possível escrever em «%1».</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="480"/>
+        <location filename="../src/gui/folder.cpp" line="491"/>
         <source>»%1« and %n other file(s) have been removed.</source>
         <translation><numerusform>«%1» e mais %n ficheiro(s) foram removidos.</numerusform><numerusform>«%1» e mais %n ficheiros foram removidos.</numerusform><numerusform>«%1» e mais %n ficheiro(s) foram removidos.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="482"/>
+        <location filename="../src/gui/folder.cpp" line="493"/>
         <source>»%1« has been removed.</source>
         <comment>%1 names a file.</comment>
         <translation>«%1» foi removido.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="487"/>
+        <location filename="../src/gui/folder.cpp" line="498"/>
         <source>»%1« and %n other file(s) have been added.</source>
         <translation><numerusform>«%1» e mais %n ficheiro(s) foram adicionados.</numerusform><numerusform>«%1» e mais %n ficheiros foram adicionados.</numerusform><numerusform>«%1» e mais %n ficheiro(s) foram adicionados.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="489"/>
+        <location filename="../src/gui/folder.cpp" line="500"/>
         <source>»%1« has been added.</source>
         <comment>%1 names a file.</comment>
         <translation>«%1» foi adicionado.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="494"/>
+        <location filename="../src/gui/folder.cpp" line="505"/>
         <source>»%1« and %n other file(s) have been updated.</source>
         <translation><numerusform>«%1» e mais %n ficheiro(s) foram carregados.</numerusform><numerusform>«%1» e mais %n ficheiros foram carregados.</numerusform><numerusform>«%1» e mais %n ficheiro(s) foram carregados.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="496"/>
+        <location filename="../src/gui/folder.cpp" line="507"/>
         <source>»%1« has been updated.</source>
         <comment>%1 names a file.</comment>
         <translation>«%1» foi atualizado.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="501"/>
+        <location filename="../src/gui/folder.cpp" line="512"/>
         <source>»%1« has been renamed to »%2« and %n other file(s) have been renamed.</source>
         <translation><numerusform>«%1» foi renomeado para «%2» e mais %n ficheiro(s) foi renomeado.</numerusform><numerusform>«%1» foi renomeado para «%2» e mais %n ficheiros foram renomeados.</numerusform><numerusform>»%1« foi renomeado para »%2« e mais %n ficheiro(s) foi renomeado.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="503"/>
+        <location filename="../src/gui/folder.cpp" line="514"/>
         <source>»%1« has been renamed to »%2«.</source>
         <comment>%1 and %2 name files.</comment>
         <translation>«%1» foi renomeado para «%2».</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="508"/>
+        <location filename="../src/gui/folder.cpp" line="519"/>
         <source>»%1« has been moved to »%2« and %n other file(s) have been moved.</source>
         <translation><numerusform>»%1« foi renomeado para »%2« e mais %n ficheiro(s) foram movidos.</numerusform><numerusform>»%1« foi renomeado para »%2« e mais %n ficheiros foram movidos.</numerusform><numerusform>»%1« foi renomeado para »%2« e mais %n ficheiro(s) foram movidos.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="510"/>
+        <location filename="../src/gui/folder.cpp" line="521"/>
         <source>»%1« has been moved to »%2«.</source>
         <translation>«%1» foi movido para «%2».</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="515"/>
+        <location filename="../src/gui/folder.cpp" line="526"/>
         <source>»%1« and %n other file(s) have sync conflicts.</source>
         <translation><numerusform>«%1» e mais %n ficheiro têm conflitos de sincronização.</numerusform><numerusform>«%1» e mais %n ficheiros têm conflitos de sincronização.</numerusform><numerusform>«%1» e mais %n ficheiro têm conflitos de sincronização.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="517"/>
+        <location filename="../src/gui/folder.cpp" line="528"/>
         <source>»%1« has a sync conflict. Please check the conflict file!</source>
         <translation>«%1» tem um conflito de sincronização. Verifique o ficheiro de conflito!</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="522"/>
+        <location filename="../src/gui/folder.cpp" line="533"/>
         <source>»%1« and %n other file(s) could not be synced due to errors. See the log for details.</source>
         <translation><numerusform>«%1» e mais %n ficheiro não puderam ser sincronizados devido a erros. Consulte o registo para mais detalhes.</numerusform><numerusform>«%1» e mais %n ficheiros não puderam ser sincronizados devido a erros. Consulte o registo para mais detalhes.</numerusform><numerusform>«%1» e mais %n ficheiro não puderam ser sincronizados devido a erros. Consulte o registo para mais detalhes.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="524"/>
+        <location filename="../src/gui/folder.cpp" line="535"/>
         <source>»%1« could not be synced due to an error. See the log for details.</source>
         <translation>«%1» não pôde ser sincronizado devido a um erro. Consulte o registo para mais detalhes.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="530"/>
+        <location filename="../src/gui/folder.cpp" line="541"/>
         <source>Sync Activity</source>
         <translation>Atividade de sincronização</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="733"/>
+        <location filename="../src/gui/folder.cpp" line="744"/>
         <source>Switching VFS mode on folder »%1«</source>
         <translation>A alterar modo VFS na pasta «%1»</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1068"/>
+        <location filename="../src/gui/folder.cpp" line="1079"/>
         <source>The folder »%1« was created but was excluded from synchronization previously. Data inside it will not be synchronized.</source>
         <translation>A pasta «%1» foi criada, mas estava previamente excluída da sincronização. Os dados dentro dela não serão sincronizados.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1071"/>
+        <location filename="../src/gui/folder.cpp" line="1082"/>
         <source>The file »%1« was created but was excluded from synchronization previously. It will not be synchronized.</source>
         <translation>O ficheiro «%1» foi criado, mas estava previamente excluído da sincronização. Não será sincronizado.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1075"/>
+        <location filename="../src/gui/folder.cpp" line="1086"/>
         <source>»%1« is not synchronized</source>
         <translation>«%1» não está sincronizado</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="864"/>
+        <location filename="../src/gui/folder.cpp" line="875"/>
         <source>Could not read system exclude file</source>
         <translation>Não foi possível ler o ficheiro de exclusões do sistema</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1083"/>
+        <location filename="../src/gui/folder.cpp" line="1094"/>
         <source>Changes in synchronized folders could not be tracked reliably.
 
 This means that the synchronization client might not upload local changes immediately and will instead only scan for local changes and upload them occasionally (every two hours by default).
@@ -1120,7 +1120,7 @@ Isto significa que o cliente de sincronização pode não enviar imediatamente a
         <translation>Escolha outra pasta local para «%1».</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="701"/>
+        <location filename="../src/gui/folderman.cpp" line="708"/>
         <source>Multiple accounts are sharing the folder »%1«.
 This configuration is know to lead to dataloss and is no longer supported.
 Please consider removing this folder from the account and adding it again.</source>
@@ -1203,7 +1203,7 @@ Considere remover esta pasta da conta e adicioná-la novamente.</translation>
 <context>
     <name>OCC::FolderWatcherPrivate</name>
     <message>
-        <location filename="../src/gui/folderwatcher_linux.cpp" line="92"/>
+        <location filename="../src/gui/folderwatcher_linux.cpp" line="96"/>
         <source>This problem usually happens when the inotify watches are exhausted. Check the FAQ for details.</source>
         <translation>Este problema ocorre geralmente quando as observações inotify estão esgotadas. Consulte as FAQ para mais detalhes.</translation>
     </message>
@@ -1382,7 +1382,7 @@ Considere remover esta pasta da conta e adicioná-la novamente.</translation>
     <message>
         <location filename="../src/libsync/vfs/hydrationjob.cpp" line="64"/>
         <source>File not found</source>
-        <translation type="unfinished"/>
+        <translation>Ficheiro não encontrado</translation>
     </message>
     <message>
         <location filename="../src/libsync/vfs/hydrationjob.cpp" line="68"/>
