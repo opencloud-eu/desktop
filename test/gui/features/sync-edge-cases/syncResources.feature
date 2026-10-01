@@ -241,10 +241,11 @@ Feature: Syncing files
 
     @issue-1127
     Scenario: Existing hidden files are downloaded when sync of hidden files is enabled
-        Given user "Alice" has uploaded file with content "hidden content" to "/.hidden-file.txt" in the server
+        Given user "Alice" has uploaded file with content "hidden content" to ".hidden-file.txt" in the server
+        And user "Alice" has created folder "folder" in the server
         And user "Alice" has created folder "folder/subfolder" in the server
-        And user "Alice" has uploaded file with content "hidden in folder" to "/folder/.hidden-in-folder.txt" in the server
-        And user "Alice" has uploaded file with content "hidden in subfolder" to "/folder/subfolder/.hidden-in-subfolder.txt" in the server
+        And user "Alice" has uploaded file with content "hidden in folder" to "folder/.hidden-in-folder.txt" in the server
+        And user "Alice" has uploaded file with content "hidden in subfolder" to "folder/subfolder/.hidden-in-subfolder.txt" in the server
         And user "Alice" has set up a client with default settings
         # hidden files are ignored by default, so they must not be downloaded yet
         Then the file ".hidden-file.txt" should not exist on the file system
