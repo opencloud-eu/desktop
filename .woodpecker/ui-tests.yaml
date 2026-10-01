@@ -128,9 +128,9 @@ steps:
       BEHAVE_TEST_DIR: /woodpecker/desktop/test/gui
       RECORD_VIDEO_ON_FAILURE: 'true'
       # NOTE: Cannot handle tags with spaces inside a container: --tags='@smoke and not @skip' --tags='not @skip'
-      # Use multiple tags without spaces: --tags='@smoke' --tags='~@skip' --tags='~@skipOnLinux'
+      # Use multiple tags without spaces and quotes: --tags=@smoke --tags=~@skip --tags=~@skipOnLinux
       # 'not' -> '~'
-      BEHAVE_PARAMETERS: '--tags="~@skip" --tags="~@skipOnLinux" ${SUITES}'
+      BEHAVE_PARAMETERS: '--tags=~@skip --tags=~@skipOnLinux ${SUITES}'
 
   - name: upload-test-reports
     image: *minio_image
