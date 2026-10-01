@@ -22,9 +22,11 @@
 #include "folderman.h"
 #include "gui/models/expandingheaderview.h"
 #include "issueswidget.h"
+
 #include "libsync/configfile.h"
 #include "models/models.h"
 #include "protocolwidget.h"
+#include "resources/jsontheme.h"
 #include "syncengine.h"
 #include "syncfileitem.h"
 #include "theme.h"

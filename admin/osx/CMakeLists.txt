@@ -14,3 +14,14 @@ endif()
 configure_file(macosx.pkgproj.cmake ${CMAKE_CURRENT_BINARY_DIR}/macosx.pkgproj @ONLY)
 configure_file(pre_install.sh.cmake ${CMAKE_CURRENT_BINARY_DIR}/pre_install.sh @ONLY)
 configure_file(post_install.sh.cmake ${CMAKE_CURRENT_BINARY_DIR}/post_install.sh @ONLY)
+
+# resources for the theme patcher
+# TODO: guard by an option?
+install(
+        FILES
+        ${CMAKE_CURRENT_BINARY_DIR}/macosx.pkgproj
+        ${CMAKE_CURRENT_BINARY_DIR}/pre_install.sh
+        ${CMAKE_CURRENT_BINARY_DIR}/post_install.sh
+        DESTINATION
+        ${CMAKE_INSTALL_PREFIX}/OpenCloudAssets
+)

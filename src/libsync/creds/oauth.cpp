@@ -21,6 +21,7 @@
 #include "networkjobs/checkserverjobfactory.h"
 #include "networkjobs/fetchuserinfojobfactory.h"
 #include "networkjobs/jsonjob.h"
+#include "resources/jsontheme.h"
 #include "resources/template.h"
 #include "theme.h"
 
@@ -64,8 +65,8 @@ QString renderHttpTemplate(const QString &title, const QString &content)
             {"TITLE", title}, //
             {"CONTENT", content}, //
             {"ICON", loadFile(QStringLiteral(":/client/OpenCloud/theme/universal/wizard_logo.svg"))}, //
-            {"BACKGROUND_COLOR", Theme::instance()->wizardHeaderBackgroundColor().name()}, //
-            {"FONT_COLOR", Theme::instance()->wizardHeaderTitleColor().name()}, //
+            {"BACKGROUND_COLOR", Resources::JsonTheme::instance().primaryBackgroundColor().name()}, //
+            {"FONT_COLOR", Resources::JsonTheme::instance().primaryForegroundColor().name()}, //
         });
 }
 
@@ -161,7 +162,8 @@ private:
     void registerClientOnline()
     {
         const QJsonObject json(
-            {{QStringLiteral("client_name"), QStringLiteral("%1 %2").arg(Theme::instance()->appNameGUI(), OCC::Version::versionWithBuildNumber().toString())},
+            {{QStringLiteral("client_name"),
+                 QStringLiteral("%1 %2").arg(Resources::JsonTheme::instance().applicationDisplayName(), OCC::Version::versionWithBuildNumber().toString())},
                 {QStringLiteral("redirect_uris"), QJsonArray{QStringLiteral("http://127.0.0.1")}},
                 {QStringLiteral("application_type"), QStringLiteral("native")}, //
                 {QStringLiteral("token_endpoint_auth_method"), QStringLiteral("none")}});
@@ -373,12 +375,12 @@ void OAuth::startAuthentication()
                             message = tr("<h1>Incorrect user</h1>"
                                          "<p>You logged-in as user <em>%1</em>, but must login with user <em>%2</em>.<br>"
                                          "Please return to the %3 and restart the authentication.</p>")
-                                          .arg(actualName, expectedName, Theme::instance()->appNameGUI());
+                                          .arg(actualName, expectedName, Resources::JsonTheme::instance().applicationDisplayName());
                         } else {
                             message = tr("<h1>Incorrect user</h1>"
                                          "<p>You logged-in as a different user than is associated with this account.<br>"
                                          "Please return to the %1 and restart the authentication.</p>")
-                                          .arg(Theme::instance()->appNameGUI());
+                                          .arg(Resources::JsonTheme::instance().applicationDisplayName());
                         }
                         httpReplyAndClose(socket, QStringLiteral("403 Forbidden"), tr("Incorrect user"), message);
                         Q_EMIT result(Error);

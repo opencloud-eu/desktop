@@ -5,7 +5,6 @@
 
 #pragma once
 #include "Generated/CfApiShellExtensions/customstateprovider.g.h"
-#include "config.h"
 #include <QMap>
 #include <QString>
 #include <windows.storage.provider.h>
