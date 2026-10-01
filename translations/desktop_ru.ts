@@ -870,8 +870,8 @@ The update will be performed in the background, and overwrite the current AppIma
 <context>
     <name>OCC::DiscoverySingleDirectoryJob</name>
     <message>
-        <location filename="../src/libsync/discoveryphase.cpp" line="263"/>
-        <location filename="../src/libsync/discoveryphase.cpp" line="305"/>
+        <location filename="../src/libsync/discoveryphase.cpp" line="262"/>
+        <location filename="../src/libsync/discoveryphase.cpp" line="304"/>
         <source>Server error: PROPFIND reply is not XML formatted!</source>
         <translation>Ошибка сервера: ответ PROPFIND не в формате XML!</translation>
     </message>
@@ -879,17 +879,17 @@ The update will be performed in the background, and overwrite the current AppIma
 <context>
     <name>OCC::DiscoverySingleLocalDirectoryJob</name>
     <message>
-        <location filename="../src/libsync/discoveryphase.cpp" line="213"/>
+        <location filename="../src/libsync/discoveryphase.cpp" line="212"/>
         <source>Error while opening directory »%1«</source>
         <translation>Ошибка при попытке открыть папку »%1«</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discoveryphase.cpp" line="215"/>
+        <location filename="../src/libsync/discoveryphase.cpp" line="214"/>
         <source>Directory not accessible on client, permission denied</source>
         <translation>Папка не доступна на клиенте, доступ запрещен</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discoveryphase.cpp" line="219"/>
+        <location filename="../src/libsync/discoveryphase.cpp" line="218"/>
         <source>Directory not found: »%1«</source>
         <translation>Папка не найдена: »%1«</translation>
     </message>
@@ -935,111 +935,111 @@ The update will be performed in the background, and overwrite the current AppIma
         <translation>Объект недоступен для записи - »%1«.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="480"/>
+        <location filename="../src/gui/folder.cpp" line="491"/>
         <source>»%1« and %n other file(s) have been removed.</source>
         <translation><numerusform>»%1« и %n другой файл были удалены.</numerusform><numerusform>»%1« и %n других файла были удалены.</numerusform><numerusform>»%1« и %n других файлов были удалены.</numerusform><numerusform>»%1« и %n других файлов были удалены.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="482"/>
+        <location filename="../src/gui/folder.cpp" line="493"/>
         <source>»%1« has been removed.</source>
         <comment>%1 names a file.</comment>
         <translation>»%1« был удален.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="487"/>
+        <location filename="../src/gui/folder.cpp" line="498"/>
         <source>»%1« and %n other file(s) have been added.</source>
         <translation><numerusform>»%1« и %n другой файл были добавлены.</numerusform><numerusform>»%1« и %n других файла были добавлены.</numerusform><numerusform>»%1« и %n других файлов были добавлены.</numerusform><numerusform>»%1« и %n других файлов были добавлены.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="489"/>
+        <location filename="../src/gui/folder.cpp" line="500"/>
         <source>»%1« has been added.</source>
         <comment>%1 names a file.</comment>
         <translation>»%1« был добавлен.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="494"/>
+        <location filename="../src/gui/folder.cpp" line="505"/>
         <source>»%1« and %n other file(s) have been updated.</source>
         <translation><numerusform>»%1« и %n другой файл были обновлены.</numerusform><numerusform>»%1« и %n других файла были обновлены.</numerusform><numerusform>»%1« и %n других файлов были обновлены.</numerusform><numerusform>»%1« и %n других файлов были обновлены.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="496"/>
+        <location filename="../src/gui/folder.cpp" line="507"/>
         <source>»%1« has been updated.</source>
         <comment>%1 names a file.</comment>
         <translation>»%1« был обновлен.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="501"/>
+        <location filename="../src/gui/folder.cpp" line="512"/>
         <source>»%1« has been renamed to »%2« and %n other file(s) have been renamed.</source>
         <translation><numerusform>»%1« был переименован в %2 и %n другой файл был переименован.</numerusform><numerusform>»%1« был переименован в %2 и %n других файла были переименованы.</numerusform><numerusform>»%1« был переименован в %2 и %n других файлов были переименованы.</numerusform><numerusform>»%1« был переименован в %2 и %n других файлов были переименованы.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="503"/>
+        <location filename="../src/gui/folder.cpp" line="514"/>
         <source>»%1« has been renamed to »%2«.</source>
         <comment>%1 and %2 name files.</comment>
         <translation>»%1« был переименован в »%2«.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="508"/>
+        <location filename="../src/gui/folder.cpp" line="519"/>
         <source>»%1« has been moved to »%2« and %n other file(s) have been moved.</source>
         <translation><numerusform>»%1« был перемещен в »%2« и %n другой файл были перемещен.</numerusform><numerusform>»%1« был перемещен в »%2« и %n других файла были перемещены.</numerusform><numerusform>»%1« был перемещен в »%2« и %n других файлов были перемещены.</numerusform><numerusform>»%1« был перемещен в »%2« и %n других файлов были перемещены.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="510"/>
+        <location filename="../src/gui/folder.cpp" line="521"/>
         <source>»%1« has been moved to »%2«.</source>
         <translation>»%1« был перемещен в »%2«.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="515"/>
+        <location filename="../src/gui/folder.cpp" line="526"/>
         <source>»%1« and %n other file(s) have sync conflicts.</source>
         <translation><numerusform>»%1« и %n другой файл имеют конфликты при синхронизации.</numerusform><numerusform>»%1« и %n других файла имеют конфликты при синхронизации.</numerusform><numerusform>»%1« и %n других файлов имеют конфликты при синхронизации.</numerusform><numerusform>»%1« и %n других файлов имеют конфликты при синхронизации.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="517"/>
+        <location filename="../src/gui/folder.cpp" line="528"/>
         <source>»%1« has a sync conflict. Please check the conflict file!</source>
         <translation>При синхронизации »%1« произошел конфликт. Пожалуйста, проверьте файл конфликтов!</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="522"/>
+        <location filename="../src/gui/folder.cpp" line="533"/>
         <source>»%1« and %n other file(s) could not be synced due to errors. See the log for details.</source>
         <translation><numerusform>»%1« и %n другой файл не могут быть синхронизированы из-за ошибок. Подробнее в логах.</numerusform><numerusform>»%1« и %n других файла не могут быть синхронизированы из-за ошибок. Подробнее в логах.</numerusform><numerusform>»%1« и %n других файлов не могут быть синхронизированы из-за ошибок. Подробнее в логах.</numerusform><numerusform>»%1« и %n других файлов не могут быть синхронизированы из-за ошибок. Подробнее в логах.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="524"/>
+        <location filename="../src/gui/folder.cpp" line="535"/>
         <source>»%1« could not be synced due to an error. See the log for details.</source>
         <translation>»%1« не может быть синхронизирован из-за ошибок. Подробнее в логах.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="530"/>
+        <location filename="../src/gui/folder.cpp" line="541"/>
         <source>Sync Activity</source>
         <translation>Активность синхронизации</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="733"/>
+        <location filename="../src/gui/folder.cpp" line="744"/>
         <source>Switching VFS mode on folder »%1«</source>
         <translation>Переключение режима VFS для папки »%1«</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1068"/>
+        <location filename="../src/gui/folder.cpp" line="1079"/>
         <source>The folder »%1« was created but was excluded from synchronization previously. Data inside it will not be synchronized.</source>
         <translation>Папка »%1« была создана, но ранее была исключена из синхронизации. Данные в ней не будут синхронизированы.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1071"/>
+        <location filename="../src/gui/folder.cpp" line="1082"/>
         <source>The file »%1« was created but was excluded from synchronization previously. It will not be synchronized.</source>
         <translation>Файл »%1« был создан, но ранее был исключен из синхронизации. Он не будет синхронизирован.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1075"/>
+        <location filename="../src/gui/folder.cpp" line="1086"/>
         <source>»%1« is not synchronized</source>
         <translation>Объект не синхронизирован - »%1«</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="864"/>
+        <location filename="../src/gui/folder.cpp" line="875"/>
         <source>Could not read system exclude file</source>
         <translation>Не удалось прочесть список файлов-исключений</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1083"/>
+        <location filename="../src/gui/folder.cpp" line="1094"/>
         <source>Changes in synchronized folders could not be tracked reliably.
 
 This means that the synchronization client might not upload local changes immediately and will instead only scan for local changes and upload them occasionally (every two hours by default).
@@ -1120,7 +1120,7 @@ This means that the synchronization client might not upload local changes immedi
         <translation>Пожалуйста, выберите другую локальную папку для »%1«.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="701"/>
+        <location filename="../src/gui/folderman.cpp" line="708"/>
         <source>Multiple accounts are sharing the folder »%1«.
 This configuration is know to lead to dataloss and is no longer supported.
 Please consider removing this folder from the account and adding it again.</source>
@@ -1203,7 +1203,7 @@ Please consider removing this folder from the account and adding it again.</sour
 <context>
     <name>OCC::FolderWatcherPrivate</name>
     <message>
-        <location filename="../src/gui/folderwatcher_linux.cpp" line="92"/>
+        <location filename="../src/gui/folderwatcher_linux.cpp" line="96"/>
         <source>This problem usually happens when the inotify watches are exhausted. Check the FAQ for details.</source>
         <translation>Это проблема обычно связана с переходом inotify watches в состояние exhausted. Подробнее в FAQ.</translation>
     </message>
