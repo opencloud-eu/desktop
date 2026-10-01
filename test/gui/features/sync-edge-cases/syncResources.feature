@@ -40,7 +40,7 @@ Feature: Syncing files
             | foldername                  |
             | "folder with space at end " |
 
-    @skipOnLinux @skip
+    @skipOnLinux
     Scenario: Try to sync files having space at the end (Windows only)
         Given user "Alice" has uploaded file with content "lorem epsum" to "trailing-space.txt " in the server
         And user "Alice" has set up a client with default settings
@@ -239,7 +239,7 @@ Feature: Syncing files
         And as "Alice" file "Öü/testFile.txt" should exist in the server
         And as "Alice" file "Öü/newfile.txt" should exist in the server
 
-    @issue-1127 @skip
+    @issue-1127
     Scenario: Existing hidden files are downloaded when sync of hidden files is enabled
         Given user "Alice" has uploaded file with content "hidden content" to "/.hidden-file.txt" in the server
         And user "Alice" has created folder "folder/subfolder" in the server
