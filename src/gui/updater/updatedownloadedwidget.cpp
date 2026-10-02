@@ -27,7 +27,7 @@ UpdateDownloadedWidget::UpdateDownloadedWidget(QWidget *parent, const QString &s
 {
     _ui->setupUi(this);
 
-    _ui->iconLabel->setPixmap(Theme::instance()->applicationIcon().pixmap(128, 128));
+    _ui->iconLabel->setPixmap(Resources::JsonTheme::instance().applicationIcon().pixmap(128, 128));
     _ui->iconLabel->setText(QString());
 
     _ui->descriptionLabel->setText(statusMessage);

@@ -5,9 +5,6 @@ set_package_properties(LibreGraphAPI PROPERTIES
         TYPE REQUIRED
 )
 
-configure_file(config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
-
-
 add_library(libsync SHARED
     account.cpp
     bandwidthmanager.cpp
@@ -27,7 +24,6 @@ add_library(libsync SHARED
     abstractnetworkjob.cpp
     networkjobs.cpp
     owncloudpropagator.cpp
-    opencloudtheme.cpp
     platform.cpp
     progressdispatcher.cpp
     propagatorjobs.cpp

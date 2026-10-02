@@ -23,6 +23,7 @@
 #include "libsync/configfile.h"
 #include "libsync/platform.h"
 #include "libsync/theme.h"
+#include "resources/jsontheme.h"
 #include "resources/loadresources.h"
 
 #include "common/version.h"
@@ -49,6 +50,7 @@
 
 #include <iostream>
 
+using namespace Qt::Literals::StringLiterals;
 using namespace std::chrono_literals;
 
 using namespace OCC;
@@ -71,7 +73,7 @@ void displayHelpText(const QString &t)
     QString spaces(80, QLatin1Char(' ')); // Add a line of non-wrapped space to make the messagebox wide enough.
     QString text =
         QStringLiteral("<qt><pre style='white-space:pre-wrap'>") + t.toHtmlEscaped() + QStringLiteral("</pre><pre>") + spaces + QStringLiteral("</pre></qt>");
-    QMessageBox::information(nullptr, Theme::instance()->appNameGUI(), text);
+    QMessageBox::information(nullptr, Resources::JsonTheme::instance().applicationDisplayName(), text);
 #endif
 }
 
@@ -95,16 +97,13 @@ CommandLineOptions parseOptions(const QStringList &arguments)
     QString descriptionText;
     QTextStream descriptionTextStream(&descriptionText);
 
-    descriptionTextStream << QApplication::translate("CommandLine", "%1 version %2\r\nFile synchronization desktop utility.")
-                                 .arg(Theme::instance()->appName(), OCC::Version::displayString())
-                          << Qt::endl;
-
-    if (Resources::isVanillaTheme()) {
-        descriptionTextStream
-            << Qt::endl
-            << Qt::endl
-            << QApplication::translate("CommandLine", "For more information, see %1", "link to homepage").arg(QStringLiteral("https://www.opencloud.eu"));
-    }
+    descriptionTextStream
+        << QApplication::translate("CommandLine", "%1 version %2\r\nFile synchronization desktop utility.")
+               .arg(Resources::JsonTheme::instance().applicationName(), OCC::Version::displayString())
+        << Qt::endl
+        << Qt::endl
+        << Qt::endl
+        << QApplication::translate("CommandLine", "For more information, see %1", "link to homepage").arg(QStringLiteral("https://www.opencloud.eu"));
 
     parser.setApplicationDescription(descriptionText);
 
@@ -169,7 +168,7 @@ CommandLineOptions parseOptions(const QStringList &arguments)
 
 void showDowngradeDialog()
 {
-    QMessageBox box(QMessageBox::Warning, Theme::instance()->appNameGUI(),
+    QMessageBox box(QMessageBox::Warning, Resources::JsonTheme::instance().applicationDisplayName(),
         QCoreApplication::translate("version check",
             "Some settings were configured in newer versions of this client "
             "and use features that are not available in this version"));
@@ -233,7 +232,7 @@ void setupLogging(const CommandLineOptions &options)
     // Possibly configure logging from config file
     LogBrowser::setupLoggingFromConfig();
 
-    qCInfo(lcMain) << u"##################" << Theme::instance()->appName() << u"locale:" << QLocale::system().name() << u"version:"
+    qCInfo(lcMain) << u"##################" << Resources::JsonTheme::instance().applicationName() << u"locale:" << QLocale::system().name() << u"version:"
                    << Theme::instance()->aboutVersions(Theme::VersionFormat::OneLiner);
     qCInfo(lcMain) << u"Arguments:" << qApp->arguments();
 }
@@ -405,9 +404,10 @@ int main(int argc, char **argv)
 
         // Create the (Q)Application instance:
         QApplication app(argc, argv);
-        app.setOrganizationDomain(Theme::instance()->orgDomainName());
-        app.setApplicationName(Theme::instance()->appName());
-        app.setWindowIcon(Theme::instance()->applicationIcon());
+
+        // this might change the application name etc
+        Resources::JsonTheme::instance().loadSystemTheme();
+
         app.setApplicationVersion(Theme::instance()->versionSwitchOutput());
 
 #ifdef Q_OS_LINUX
@@ -428,7 +428,7 @@ int main(int argc, char **argv)
         // errors and help/version need to be handled in this instance
         const auto options = parseOptions(app.arguments());
 
-        KDSingleApplication singleApplication;
+        KDSingleApplication singleApplication(Resources::JsonTheme::instance().organizationDomain());
 
         if (!singleApplication.isPrimaryInstance()) {
             // if the application is already running, notify it.

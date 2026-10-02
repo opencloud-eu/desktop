@@ -16,6 +16,7 @@
 
 #include "gui/guiutility.h"
 #include "libsync/theme.h"
+#include "resources/jsontheme.h"
 
 #ifdef WITH_AUTO_UPDATER
 #include "libsync/configfile.h"
@@ -30,7 +31,7 @@ namespace {
 #ifdef WITH_AUTO_UPDATER
 bool isTestPilotCloudTheme()
 {
-    return OCC::Theme::instance()->appName() == QLatin1String("testpilotcloud");
+    return OCC::Resources::JsonTheme::instance().appName() == QLatin1String("testpilotcloud");
 }
 #endif
 }
@@ -43,7 +44,7 @@ AboutDialog::AboutDialog(QWidget *parent)
 {
     ui->setupUi(this);
     ui->aboutText->setText(Theme::instance()->about());
-    ui->icon->setPixmap(Theme::instance()->aboutIcon().pixmap(256));
+    ui->icon->setPixmap(Resources::JsonTheme::instance().applicationIcon().pixmap(256));
     ui->versionInfo->setText(Theme::instance()->aboutVersions(Theme::VersionFormat::RichText));
 
     connect(ui->versionInfo, &QTextBrowser::anchorClicked, this, &AboutDialog::openBrowserFromUrl);
