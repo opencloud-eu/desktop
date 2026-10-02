@@ -1193,14 +1193,6 @@ Considere remover esta pasta da conta e adicioná-la novamente.</translation>
     </message>
 </context>
 <context>
-    <name>OCC::FolderWatcher</name>
-    <message>
-        <location filename="../src/gui/folderwatcher.cpp" line="144"/>
-        <source>The watcher did not receive a test notification.</source>
-        <translation>O observador não recebeu uma notificação de teste.</translation>
-    </message>
-</context>
-<context>
     <name>OCC::FolderWatcherPrivate</name>
     <message>
         <location filename="../src/gui/folderwatcher_linux.cpp" line="96"/>

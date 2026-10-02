@@ -1193,14 +1193,6 @@ Veuillez envisager de supprimer ce dossier du compte et de l&apos;ajouter à nou
     </message>
 </context>
 <context>
-    <name>OCC::FolderWatcher</name>
-    <message>
-        <location filename="../src/gui/folderwatcher.cpp" line="144"/>
-        <source>The watcher did not receive a test notification.</source>
-        <translation>L&apos;observateur n&apos;a pas reçu de notification de test.</translation>
-    </message>
-</context>
-<context>
     <name>OCC::FolderWatcherPrivate</name>
     <message>
         <location filename="../src/gui/folderwatcher_linux.cpp" line="96"/>

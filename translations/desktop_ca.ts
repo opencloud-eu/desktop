@@ -1193,14 +1193,6 @@ Si us plau, considereu eliminar aquesta carpeta del compte i afegir-la de nou.</
     </message>
 </context>
 <context>
-    <name>OCC::FolderWatcher</name>
-    <message>
-        <location filename="../src/gui/folderwatcher.cpp" line="144"/>
-        <source>The watcher did not receive a test notification.</source>
-        <translation>El monitor no ha rebut una notificació de prova.</translation>
-    </message>
-</context>
-<context>
     <name>OCC::FolderWatcherPrivate</name>
     <message>
         <location filename="../src/gui/folderwatcher_linux.cpp" line="96"/>

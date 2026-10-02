@@ -1193,14 +1193,6 @@ Vurder å fjerne denne mappen fra kontoen og legge den til på nytt.</translatio
     </message>
 </context>
 <context>
-    <name>OCC::FolderWatcher</name>
-    <message>
-        <location filename="../src/gui/folderwatcher.cpp" line="144"/>
-        <source>The watcher did not receive a test notification.</source>
-        <translation>Vokteren mottok ikke et testvarsel.</translation>
-    </message>
-</context>
-<context>
     <name>OCC::FolderWatcherPrivate</name>
     <message>
         <location filename="../src/gui/folderwatcher_linux.cpp" line="96"/>
