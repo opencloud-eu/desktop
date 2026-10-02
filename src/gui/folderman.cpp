@@ -86,8 +86,9 @@ const SyncResult &TrayOverallStatusResult::overallStatus() const
 
 FolderMan *FolderMan::_instance = nullptr;
 
-FolderMan::FolderMan()
-    : _lockWatcher(new LockWatcher)
+FolderMan::FolderMan(bool useFileProvider)
+    : _useFileProvider(useFileProvider)
+    , _lockWatcher(new LockWatcher)
     , _scheduler(new SyncScheduler(this))
     , _socketApi(new SocketApi)
 {
@@ -107,8 +108,7 @@ FolderMan::FolderMan()
     updateSyncRoots();
     connect(AccountManager::instance(), &AccountManager::accountAdded, this, updateSyncRoots);
 #endif
-    connect(AccountManager::instance(), &AccountManager::accountRemoved,
-        this, &FolderMan::slotRemoveFoldersForAccount);
+    connect(AccountManager::instance(), &AccountManager::accountDeleted, this, &FolderMan::slotRemoveFoldersForAccount);
 
     connect(_lockWatcher.data(), &LockWatcher::fileUnlocked, this, [this](const QString &path, FileSystem::LockMode) {
         if (Folder *f = folderForPath(path)) {
@@ -182,6 +182,9 @@ void FolderMan::registerFolderWithSocketApi(Folder *folder)
 
 std::optional<qsizetype> FolderMan::loadFolders()
 {
+    if (_useFileProvider) {
+        return 0;
+    }
     qCInfo(lcFolderMan) << u"Setup folders from settings file";
 
     auto settings = ConfigFile::makeQSettings();
@@ -215,6 +218,9 @@ std::optional<qsizetype> FolderMan::loadFolders()
 
 void FolderMan::saveFolders()
 {
+    if (_useFileProvider) {
+        return;
+    }
     auto settings = ConfigFile::makeQSettings();
     settings.remove(foldersC());
     settings.beginWriteArray(foldersC(), _folders.size());
@@ -308,7 +314,7 @@ void FolderMan::slotIsConnectedChanged()
 // this is not the same as Pause and Resume of folders.
 void FolderMan::setSyncEnabled(bool enabled)
 {
-    if (enabled) {
+    if (enabled && !_useFileProvider) {
         // We have things in our queue that were waiting for the connection to come back on.
         scheduler()->start();
     } else {
@@ -321,6 +327,38 @@ void FolderMan::setSyncEnabled(bool enabled)
 
 void FolderMan::slotRemoveFoldersForAccount(const AccountStatePtr &accountState)
 {
+    if (_useFileProvider) {
+        // Inactive folders are still saved. Remove only this account's definitions.
+        auto settings = ConfigFile::makeQSettings();
+        // Loading a FolderDefinition prepares its VFS plugin. Keep inactive
+        // records opaque so deleting an account cannot activate another provider
+        // or migrate settings for accounts that remain configured.
+        QVector<QVariantMap> definitions;
+        const auto size = settings.beginReadArray(foldersC());
+        for (int i = 0; i < size; ++i) {
+            settings.setArrayIndex(i);
+            if (settings.value(QStringLiteral("accountUUID")).toUuid() != accountState->account()->uuid()) {
+                QVariantMap definition;
+                const auto keys = settings.allKeys();
+                for (const auto &key : keys) {
+                    definition.insert(key, settings.value(key));
+                }
+                definitions.push_back(std::move(definition));
+            }
+        }
+        settings.endArray();
+        settings.remove(foldersC());
+        settings.beginWriteArray(foldersC(), definitions.size());
+        for (qsizetype i = 0; i < definitions.size(); ++i) {
+            settings.setArrayIndex(i);
+            const auto &definition = definitions.at(i);
+            for (auto it = definition.cbegin(); it != definition.cend(); ++it) {
+                settings.setValue(it.key(), it.value());
+            }
+        }
+        settings.endArray();
+        return;
+    }
     QList<Folder *> foldersToRemove;
     // reserve a magic number
     foldersToRemove.reserve(16);
@@ -364,6 +402,9 @@ bool FolderMan::isAnySyncRunning() const
 
 Folder *FolderMan::addFolder(const AccountStatePtr &accountState, const FolderDefinition &folderDefinition)
 {
+    if (_useFileProvider) {
+        return nullptr;
+    }
     // Choose a db filename
     auto definition = folderDefinition;
     definition.journalPath = SyncJournalDb::makeDbName(folderDefinition.localPath());
@@ -740,6 +781,9 @@ void FolderMan::slotReloadSyncOptions()
 
 Folder *FolderMan::addFolderFromWizard(const AccountStatePtr &accountStatePtr, FolderDefinition &&folderDefinition, bool useVfs)
 {
+    if (_useFileProvider) {
+        return nullptr;
+    }
     if (!FolderMan::prepareFolder(folderDefinition.localPath())) {
         return {};
     }
@@ -789,10 +833,10 @@ bool FolderMan::prepareFolder(const QString &folder)
     return true;
 }
 
-std::unique_ptr<FolderMan> FolderMan::createInstance()
+std::unique_ptr<FolderMan> FolderMan::createInstance(bool useFileProvider)
 {
     OC_ASSERT(!_instance);
-    _instance = new FolderMan();
+    _instance = new FolderMan(useFileProvider);
     return std::unique_ptr<FolderMan>(_instance);
 }
 

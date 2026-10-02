@@ -28,6 +28,9 @@ class QAuthenticator;
 
 namespace OCC {
 class OAuth;
+namespace Mac {
+    class FileProviderXPC;
+}
 
 /*
    The authentication system is this way because of Shibboleth.
@@ -82,6 +85,11 @@ protected:
     QPointer<AccountBasedOAuth> _oAuthJob;
 
 private:
+    // The macOS host forwards the token only through the authenticated
+    // FileProvider XPC connection. Keep this out of the public credential API.
+    friend class Mac::FileProviderXPC;
+    QString accessToken() const { return _accessToken; }
+
     bool refreshAccessTokenInternal(int tokenRefreshRetriesCount);
 };
 

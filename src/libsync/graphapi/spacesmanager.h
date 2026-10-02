@@ -40,6 +40,7 @@ namespace GraphApi {
         Space *space(const QString &id) const;
 
         QVector<Space *> spaces() const;
+        bool isReady() const { return _ready; }
 
         Account *account() const;
 

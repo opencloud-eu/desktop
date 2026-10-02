@@ -8,6 +8,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include(FeatureSummary)
 
+if(APPLE)
+    set(CMAKE_MACOSX_RPATH ON)
+    set(CMAKE_SKIP_BUILD_RPATH FALSE)
+    set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
+    set(CMAKE_INSTALL_RPATH "@executable_path/../Frameworks")
+    set(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
+endif()
+
 find_package(ECM 6.0.0 REQUIRED NO_MODULE)
 
 set_package_properties(ECM PROPERTIES TYPE REQUIRED DESCRIPTION "Extra CMake Modules." URL "https://projects.kde.org/projects/kdesupport/extra-cmake-modules")
@@ -125,9 +133,9 @@ set(VIRTUAL_FILE_SYSTEM_PLUGINS off cfapi CACHE STRING "Name of internal plugin 
 
 if(APPLE)
   ## -DSOCKETAPI_TEAM_IDENTIFIER_PREFIX="com.example."
-  set( SOCKETAPI_TEAM_IDENTIFIER_PREFIX "" CACHE STRING "SocketApi prefix (including a following dot) that must match the codesign key's TeamIdentifier/Organizational Unit" )
+  # Default SOCKETAPI_TEAM_IDENTIFIER_PREFIX from environment if present, otherwise empty.
+  set(SOCKETAPI_TEAM_IDENTIFIER_PREFIX "$ENV{SOCKETAPI_TEAM_IDENTIFIER_PREFIX}" CACHE STRING "SocketApi prefix (including a following dot) that must match the codesign key's TeamIdentifier/Organizational Unit")
 endif()
-
 
 if (WITH_AUTO_UPDATER)
     if(APPLE)

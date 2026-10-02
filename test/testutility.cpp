@@ -24,6 +24,7 @@
 #endif
 
 
+#include <QScopeGuard>
 #include <QTemporaryDir>
 #include <QtTest>
 
@@ -72,6 +73,19 @@ private Q_SLOTS:
 
         const QString appName = QStringLiteral("testLaunchOnStartup.%1").arg(postfix);
         const QString guiName = QStringLiteral("LaunchOnStartup GUI Name");
+
+#ifdef Q_OS_MACOS
+        // macOS keys its launch agent by organization domain, not appName.
+        // Use a test-owned entry so installed clients and other builds are untouched.
+        const QString organizationDomain = QCoreApplication::organizationDomain();
+        const QString launchAgent = QDir::homePath() + QStringLiteral("/Library/LaunchAgents/%1.plist").arg(appName);
+        QVERIFY(!QFile::exists(launchAgent));
+        const auto restoreLaunchAgent = qScopeGuard([organizationDomain, launchAgent] {
+            QFile::remove(launchAgent);
+            QCoreApplication::setOrganizationDomain(organizationDomain);
+        });
+        QCoreApplication::setOrganizationDomain(appName);
+#endif
 
         QVERIFY(hasLaunchOnStartup(appName) == false);
         setLaunchOnStartup(appName, guiName, true);

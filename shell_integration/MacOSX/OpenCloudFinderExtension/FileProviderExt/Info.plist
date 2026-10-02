@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>en</string>
+    <key>CFBundleDisplayName</key>
+    <string>$(OC_APPLICATION_NAME) File Provider</string>
+    <key>CFBundleExecutable</key>
+    <string>$(EXECUTABLE_NAME)</string>
+    <key>CFBundleIdentifier</key>
+    <string>$(OC_APPLICATION_REV_DOMAIN).$(PRODUCT_NAME:rfc1034identifier)</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleName</key>
+    <string>$(PRODUCT_NAME)</string>
+    <key>CFBundlePackageType</key>
+    <string>XPC!</string>
+    <key>CFBundleShortVersionString</key>
+    <string>$(OC_APPLICATION_VERSION)</string>
+    <key>CFBundleVersion</key>
+    <string>$(OC_APPLICATION_BUILD_VERSION)</string>
+    <key>LSMinimumSystemVersion</key>
+    <string>$(MACOSX_DEPLOYMENT_TARGET)</string>
+    <key>NSExtension</key>
+    <dict>
+        <key>NSExtensionFileProviderDocumentGroup</key>
+        <string>$(TeamIdentifierPrefix)eu.opencloud.desktop</string>
+        <key>NSExtensionPointIdentifier</key>
+        <string>com.apple.fileprovider-nonui</string>
+        <key>NSExtensionPrincipalClass</key>
+        <string>$(PRODUCT_MODULE_NAME).FileProviderExtension</string>
+        <key>NSExtensionFileProviderActions</key>
+        <array>
+            <dict>
+                <key>NSExtensionFileProviderActionIdentifier</key>
+                <string>eu.opencloud.open-in-browser</string>
+                <key>NSExtensionFileProviderActionName</key>
+                <string>Open in browser</string>
+                <key>NSExtensionFileProviderActionActivationRule</key>
+                <string>fileproviderItems.@count == 1 AND SUBQUERY(fileproviderItems, $item, $item.userInfo.openCloudActions == YES).@count == 1</string>
+            </dict>
+            <dict>
+                <key>NSExtensionFileProviderActionIdentifier</key>
+                <string>eu.opencloud.share</string>
+                <key>NSExtensionFileProviderActionName</key>
+                <string>Share…</string>
+                <key>NSExtensionFileProviderActionActivationRule</key>
+                <string>fileproviderItems.@count == 1 AND SUBQUERY(fileproviderItems, $item, $item.userInfo.openCloudCanShare == YES).@count == 1</string>
+            </dict>
+            <dict>
+                <key>NSExtensionFileProviderActionIdentifier</key>
+                <string>eu.opencloud.versions</string>
+                <key>NSExtensionFileProviderActionName</key>
+                <string>Show file versions in browser</string>
+                <key>NSExtensionFileProviderActionActivationRule</key>
+                <string>fileproviderItems.@count == 1 AND SUBQUERY(fileproviderItems, $item, $item.userInfo.openCloudCanShowVersions == YES).@count == 1</string>
+            </dict>
+            <dict>
+                <key>NSExtensionFileProviderActionIdentifier</key>
+                <string>eu.opencloud.copy-private-link</string>
+                <key>NSExtensionFileProviderActionName</key>
+                <string>Copy private link</string>
+                <key>NSExtensionFileProviderActionActivationRule</key>
+                <string>fileproviderItems.@count == 1 AND SUBQUERY(fileproviderItems, $item, $item.userInfo.openCloudActions == YES).@count == 1</string>
+            </dict>
+        </array>
+        <key>NSExtensionFileProviderSupportsEnumeration</key>
+        <true/>
+    </dict>
+    <key>AppGroupIdentifier</key>
+    <string>$(TeamIdentifierPrefix)eu.opencloud.desktop</string>
+</dict>
+</plist>

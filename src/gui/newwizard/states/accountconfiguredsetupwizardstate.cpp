@@ -41,6 +41,11 @@ SetupWizardState AccountConfiguredSetupWizardState::state() const
 
 void AccountConfiguredSetupWizardState::evaluatePage()
 {
+    if (FolderMan::instance()->useFileProvider()) {
+        _context->accountBuilder().setSyncTargetDir({});
+        Q_EMIT evaluationSuccessful();
+        return;
+    }
     auto accountConfiguredSetupWizardPage = qobject_cast<AccountConfiguredWizardPage *>(_page);
     Q_ASSERT(accountConfiguredSetupWizardPage != nullptr);
 

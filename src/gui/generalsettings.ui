@@ -85,6 +85,39 @@
         </widget>
        </item>
        <item>
+        <widget class="QGroupBox" name="macSyncModeGroupBox">
+         <property name="title">
+          <string>File synchronization</string>
+         </property>
+         <layout class="QVBoxLayout" name="syncModeLayout">
+          <item>
+           <widget class="QCheckBox" name="traditionalFolderSyncCheckBox">
+            <property name="text">
+             <string>Use traditional folder sync</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="syncModeDescription">
+            <property name="text">
+             <string>By default, files download on demand in Finder. Traditional folder sync disables on-demand files and downloads your selected folders locally. Changes take effect after restarting the app. Existing local files and folder settings are kept.</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="restartSyncModeButton">
+            <property name="text">
+             <string>Restart to apply sync mode</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
         <widget class="QGroupBox" name="advancedGroupBox">
          <property name="title">
           <string>Advanced</string>
@@ -132,6 +165,16 @@
                <widget class="QPushButton" name="logSettingsButton">
                 <property name="text">
                  <string>Log Settings</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="finderExtensionButton">
+                <property name="text">
+                 <string>Finder Integration...</string>
+                </property>
+                <property name="toolTip">
+                 <string>Configure Finder overlay icons and context menu integration</string>
                 </property>
                </widget>
               </item>

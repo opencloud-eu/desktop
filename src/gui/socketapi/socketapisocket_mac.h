@@ -1,5 +1,7 @@
 /*
  * Copyright (C) by Jocelyn Turcotte <jturcotte@woboq.com>
+ * Copyright (C) 2025 OpenCloud GmbH
+ * Copyright (C) 2022 Nextcloud GmbH and Nextcloud contributors
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -10,6 +12,9 @@
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
  * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
  * for more details.
+ *
+ * Unix domain socket wrapper classes for macOS FinderSyncExt communication.
+ * Based on Nextcloud Desktop Client approach.
  */
 
 #ifndef SOCKETAPISOCKET_OSX_H
@@ -38,8 +43,12 @@ public:
 Q_SIGNALS:
     void disconnected();
 
+public:
+    // Accessor for internal use
+    SocketApiSocketPrivate *socketPrivate() { return d_ptr.data(); }
+
 private:
-    // Use Qt's p-impl system to hide objective-c types from C++ code including this file
+    // Use Qt's p-impl system to hide implementation details
     Q_DECLARE_PRIVATE(SocketApiSocket)
     QScopedPointer<SocketApiSocketPrivate> d_ptr;
     friend class SocketApiServerPrivate;
@@ -56,7 +65,7 @@ public:
     bool listen(const QString &name);
     SocketApiSocket *nextPendingConnection();
 
-    static bool removeServer(const QString &) { return false; }
+    static bool removeServer(const QString &path);
 
 Q_SIGNALS:
     void newConnection();
