@@ -15,8 +15,6 @@
 #include "guiutility.h"
 #include "gui/application.h"
 #include "gui/settingsdialog.h"
-#include "libsync/filesystem.h"
-#include "libsync/theme.h"
 
 #include <QApplication>
 #include <QDesktopServices>
@@ -28,18 +26,6 @@
 namespace OCC {
 Q_LOGGING_CATEGORY(lcGuiUtility, "gui.utility", QtInfoMsg)
 }
-
-namespace {
-const QString dirTag()
-{
-    return QStringLiteral("eu.opencloud.spaces.app");
-}
-
-const QString uuidTag()
-{
-    return QStringLiteral("eu.opencloud.spaces.account-uuid");
-}
-} // anonymous namespace
 
 using namespace OCC;
 
@@ -93,56 +79,4 @@ QString Utility::vfsPinActionText()
 QString Utility::vfsFreeSpaceActionText()
 {
     return QCoreApplication::translate("utility", "Free up local space");
-}
-
-void Utility::markDirectoryAsSyncRoot(const QString &path, const QUuid &accountUuid)
-{
-    Q_ASSERT(getDirectorySyncRootMarkings(path).first.isEmpty());
-    Q_ASSERT(getDirectorySyncRootMarkings(path).second.isNull());
-
-    auto result1 = FileSystem::Tags::set(path, dirTag(), Theme::instance()->orgDomainName());
-    if (!result1) {
-        qCWarning(lcGuiUtility) << QStringLiteral("Failed to set tag on »%1«: %2").arg(path, result1.error())
-#ifdef Q_OS_WIN
-                                << QStringLiteral("(filesystem %1)").arg(FileSystem::fileSystemForPath(path))
-#endif // Q_OS_WIN
-            ;
-        return;
-    }
-
-    auto result2 = FileSystem::Tags::set(path, uuidTag(), accountUuid.toString());
-    if (!result2) {
-        qCWarning(lcGuiUtility) << QStringLiteral("Failed to set tag on »%1«: %2").arg(path, result2.error())
-#ifdef Q_OS_WIN
-                                << QStringLiteral("(filesystem %1)").arg(FileSystem::fileSystemForPath(path))
-#endif // Q_OS_WIN
-            ;
-        return;
-    }
-}
-
-std::pair<QString, QUuid> Utility::getDirectorySyncRootMarkings(const QString &path)
-{
-    auto existingDirTag = FileSystem::Tags::get(path, dirTag());
-    auto existingUuidTag = FileSystem::Tags::get(path, uuidTag());
-
-    if (existingDirTag.has_value() && existingUuidTag.has_value()) {
-        return {existingDirTag.value(), QUuid::fromString(existingUuidTag.value())};
-    }
-
-    return {};
-}
-
-void Utility::unmarkDirectoryAsSyncRoot(const QString &path)
-{
-    if (QFileInfo::exists(path)) {
-        if (!FileSystem::Tags::remove(path, dirTag())) {
-            qCWarning(lcGuiUtility) << u"Failed to remove tag on" << path;
-            Q_ASSERT(false);
-        }
-        if (!FileSystem::Tags::remove(path, uuidTag())) {
-            qCWarning(lcGuiUtility) << u"Failed to remove uuid tag on" << path;
-            Q_ASSERT(false);
-        }
-    }
 }
