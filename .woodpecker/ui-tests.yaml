@@ -36,7 +36,7 @@ workspace:
 matrix:
   include:
     - MATRIX_NAME: gui-tests-1
-      SUITES: 'features/add-account features/delete-files-folders features/edit-files features/login-logout features/move-files-folders'
+      SUITES: 'features/add-account features/delete-files-folders features/edit-files features/login-logout features/move-files-folders features/file-context-menu'
     - MATRIX_NAME: gui-tests-2
       SUITES: 'features/activity features/remove-account-connection features/spaces features/sync-edge-cases features/tabs-settings'
     - MATRIX_NAME: gui-tests-3
