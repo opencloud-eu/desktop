@@ -7,6 +7,7 @@ from os.path import isfile, join, isdir, exists
 from behave import when as When, then as Then, given as Given
 from sure import ensure
 
+import helpers.FileExplorerHelper as FileExplorer
 from helpers.SetupClientHelper import get_resource_path, get_temp_resource_path
 from helpers.SyncHelper import (
     listen_sync_status_for_item,
@@ -466,3 +467,32 @@ def step(context):
 @Given('the user has created a file "{filename}" with size "{filesize}" in the sync folder')
 def step(context, filename, filesize):
     create_file_with_size(filename, filesize)
+
+
+@When('user "{username}" copies the private link of file "{resource}" from the file explorer context menu')
+@When('user "{username}" copies the private link of folder "{resource}" from the file explorer context menu')
+def step(context, username, resource):
+    resource_path = get_resource_path(resource, username)
+    FileExplorer.copy_private_link(resource_path)
+
+
+@Then('the following file explorer context menus should be available for file "{resource}" of user "{username}"')
+@Then('the following file explorer context menus should be available for folder "{resource}" of user "{username}"')
+def step(context, resource, username):
+    resource_path = get_resource_path(resource, username)
+    expected_menus = [row['menu'] for row in table_hashes(context.table)]
+    actual_menus = FileExplorer.get_file_context_menus(resource_path)
+
+    for item in expected_menus:
+        with ensure(f'Menu item "{item}" not found in the actual list: {actual_menus}'):
+            (item in actual_menus).should.be.true
+
+
+@Then('the private link should be copied to the clipboard')
+def step(context):
+    clipboard_content = FileExplorer.get_clipboard_content()
+    base_url = get_config('localBackendUrl').rstrip("/")
+    link_pattern = rf'^{re.escape(base_url)}/f/[0-9A-Fa-f-%\$]+$'
+
+    with ensure(f'Clipboard content "{clipboard_content}" does not match the private link pattern "{link_pattern}"'):
+        (re.fullmatch(link_pattern, clipboard_content)).should_not.be.none
