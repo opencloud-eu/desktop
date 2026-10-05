@@ -485,12 +485,12 @@ File synchronization desktop utility.</source>
     <message>
         <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="64"/>
         <source>Failed to look up instances: %1</source>
-        <translation type="unfinished"/>
+        <translation>Αποτυχία αναζήτησης παρουσιών: %1</translation>
     </message>
     <message>
         <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="68"/>
         <source>Server returned empty list of instances</source>
-        <translation type="unfinished"/>
+        <translation>Ο διακομιστής επέστρεψε κενή λίστα παρουσιών</translation>
     </message>
     <message>
         <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="49"/>
@@ -817,7 +817,7 @@ The update will be performed in the background, and overwrite the current AppIma
     <message>
         <location filename="../src/gui/commonstrings.cpp" line="33"/>
         <source>Copy path to clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Αντιγραφή διαδρομής στο πρόχειρο</translation>
     </message>
     <message>
         <location filename="../src/gui/commonstrings.cpp" line="39"/>
@@ -837,7 +837,7 @@ The update will be performed in the background, and overwrite the current AppIma
     <message>
         <location filename="../src/gui/commonstrings.cpp" line="51"/>
         <source>Copy URL to clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Αντιγραφή URL στο πρόχειρο</translation>
     </message>
     <message>
         <location filename="../src/gui/commonstrings.cpp" line="56"/>
@@ -1374,7 +1374,7 @@ Please consider removing this folder from the account and adding it again.</sour
     <message>
         <location filename="../src/libsync/vfs/hydrationjob.cpp" line="64"/>
         <source>File not found</source>
-        <translation type="unfinished"/>
+        <translation>Το αρχείο δεν βρέθηκε</translation>
     </message>
     <message>
         <location filename="../src/libsync/vfs/hydrationjob.cpp" line="68"/>
@@ -1680,7 +1680,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="363"/>
         <source>The id_token could not be parsed</source>
-        <translation type="unfinished"/>
+        <translation>Δεν ήταν δυνατή η ανάλυση του id_token</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="373"/>
@@ -1710,32 +1710,32 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="561"/>
         <source>WebFinger response had unexpected content type: %1</source>
-        <translation type="unfinished"/>
+        <translation>Η απόκριση WebFinger είχε μη αναμενόμενο τύπο περιεχομένου: %1</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="571"/>
         <source>Could not parse WebFinger response: %1</source>
-        <translation type="unfinished"/>
+        <translation>Δεν ήταν δυνατή η ανάλυση της απόκρισης WebFinger: %1</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="579"/>
         <source>WebFinger response subject did not match the requested resource</source>
-        <translation type="unfinished"/>
+        <translation>Το θέμα της απόκρισης WebFinger δεν ταίριαζε με τον ζητούμενο πόρο</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="591"/>
         <source>WebFinger response did not contain an OpenID Connect issuer</source>
-        <translation type="unfinished"/>
+        <translation>Η απόκριση WebFinger δεν περιείχε εκδότη OpenID Connect</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="598"/>
         <source>WebFinger issuer link had no href</source>
-        <translation type="unfinished"/>
+        <translation>Ο σύνδεσμος εκδότη WebFinger δεν είχε href</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="683"/>
         <source>Could not parse OIDC discovery response: %1</source>
-        <translation type="unfinished"/>
+        <translation>Δεν ήταν δυνατή η ανάλυση της απόκρισης εντοπισμού OIDC: %1</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="337"/>
@@ -1811,7 +1811,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="198"/>
         <source>Unable to claim the sync root for files on demand, the folder is already claimed by %1</source>
-        <translation type="unfinished"/>
+        <translation>Αδυναμία δέσμευσης της ρίζας συγχρονισμού για αρχεία κατ&apos; απαίτηση, ο φάκελος έχει ήδη δεσμευτεί από το %1</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="201"/>
@@ -1821,7 +1821,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="434"/>
         <source>Cannot dehydrate a placeholder because the file changed</source>
-        <translation type="unfinished"/>
+        <translation>Δεν είναι δυνατή η αφυδάτωση ενός δεσμευτή θέσης επειδή το αρχείο άλλαξε</translation>
     </message>
 </context>
 <context>
@@ -1829,32 +1829,32 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="286"/>
         <source>Failed to read /proc/self/mountinfo</source>
-        <translation type="unfinished"/>
+        <translation>Αποτυχία ανάγνωσης του /proc/self/mountinfo</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="299"/>
         <source>Failed to unmount the OpenVFS mount %1 Error:%2</source>
-        <translation type="unfinished"/>
+        <translation>Αποτυχία αποπροσάρτησης της προσάρτησης OpenVFS %1 Σφάλμα:%2</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="308"/>
         <source>The filesystem for %1 does not support xattributes.</source>
-        <translation type="unfinished"/>
+        <translation>Το σύστημα αρχείων για το %1 δεν υποστηρίζει xattributes.</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="311"/>
         <source>The sync path is already claimed by %1</source>
-        <translation type="unfinished"/>
+        <translation>Η διαδρομή συγχρονισμού έχει ήδη δεσμευτεί από το %1</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="315"/>
         <source>OpenVFS executable not found, please install it</source>
-        <translation type="unfinished"/>
+        <translation>Το εκτελέσιμο του OpenVFS δεν βρέθηκε, παρακαλούμε εγκαταστήστε το</translation>
     </message>
     <message>
         <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="321"/>
         <source>Failed to find the OpenVFS config file, please check your installation.</source>
-        <translation type="unfinished"/>
+        <translation>Αποτυχία εύρεσης του αρχείου ρυθμίσεων του OpenVFS, παρακαλούμε ελέγξτε την εγκατάστασή σας.</translation>
     </message>
 </context>
 <context>
@@ -1875,7 +1875,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/discovery.cpp" line="170"/>
         <source>Encrypted vault files are not synchronized because they are currently not supported by this application.</source>
-        <translation type="unfinished"/>
+        <translation>Τα κρυπτογραφημένα αρχεία ασφαλούς χώρου δεν συγχρονίζονται επειδή δεν υποστηρίζονται επί του παρόντος από αυτήν την εφαρμογή.</translation>
     </message>
     <message>
         <location filename="../src/libsync/discovery.cpp" line="182"/>
