@@ -469,15 +469,23 @@ def step(context, filename, filesize):
     create_file_with_size(filename, filesize)
 
 
-@When('user "{username}" copies the private link of file "{resource}" from the file explorer context menu')
-@When('user "{username}" copies the private link of folder "{resource}" from the file explorer context menu')
+@When(
+    'user "{username}" copies the private link of file "{resource}" from the file explorer context menu'
+)
+@When(
+    'user "{username}" copies the private link of folder "{resource}" from the file explorer context menu'
+)
 def step(context, username, resource):
     resource_path = get_resource_path(resource, username)
     FileExplorer.copy_private_link(resource_path)
 
 
-@Then('the following file explorer context menus should be available for file "{resource}" of user "{username}"')
-@Then('the following file explorer context menus should be available for folder "{resource}" of user "{username}"')
+@Then(
+    'the following file explorer context menus should be available for file "{resource}" of user "{username}"'
+)
+@Then(
+    'the following file explorer context menus should be available for folder "{resource}" of user "{username}"'
+)
 def step(context, resource, username):
     resource_path = get_resource_path(resource, username)
     expected_menus = [row['menu'] for row in table_hashes(context.table)]
@@ -494,5 +502,7 @@ def step(context):
     base_url = get_config('localBackendUrl').rstrip("/")
     link_pattern = rf'^{re.escape(base_url)}/f/[0-9A-Fa-f-%\$]+$'
 
-    with ensure(f'Clipboard content "{clipboard_content}" does not match the private link pattern "{link_pattern}"'):
+    with ensure(
+        f'Clipboard content "{clipboard_content}" does not match the private link pattern "{link_pattern}"'
+    ):
         (re.fullmatch(link_pattern, clipboard_content)).should_not.be.none
