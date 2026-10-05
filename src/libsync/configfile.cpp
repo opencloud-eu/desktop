@@ -427,6 +427,16 @@ bool ConfigFile::moveToTrash() const
     return false;
 }
 
+bool ConfigFile::traditionalFolderSync() const
+{
+    return getValue(QStringLiteral("macOS/traditionalFolderSync"), false).toBool();
+}
+
+void ConfigFile::setTraditionalFolderSync(bool enabled)
+{
+    setValue(QStringLiteral("macOS/traditionalFolderSync"), enabled);
+}
+
 void ConfigFile::setMoveToTrash(bool isChecked)
 {
     setValue(moveToTrashC(), isChecked);

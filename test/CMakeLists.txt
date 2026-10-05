@@ -72,6 +72,26 @@ endif(UNIX AND NOT APPLE)
 opencloud_add_test(LongPath)
 
 opencloud_add_test(FolderMan)
+opencloud_add_test(SyncProviderSelection)
+if(APPLE)
+    set_source_files_properties(testfileproviderlifecycle.cpp PROPERTIES LANGUAGE CXX COMPILE_FLAGS "-x objective-c++ -fobjc-arc")
+    opencloud_add_test(FileProviderLifecycle)
+    target_include_directories(testfileproviderlifecycle PRIVATE "${PROJECT_SOURCE_DIR}/shell_integration/MacOSX/OpenCloudFinderExtension/FileProviderExt/Services")
+    target_link_libraries(testfileproviderlifecycle "-framework FileProvider" "-framework Foundation")
+endif()
+
+
+if(APPLE)
+    opencloud_add_test(MacSocketApi)
+    target_sources(testmacsocketapi PRIVATE
+        ../src/gui/socketapi/socketapisocket_mac.mm
+        ../src/gui/socketapi/socketapisocket_mac.h)
+    foreach(suite database webdav sockets search status trash actions)
+        add_test(NAME testfileprovider_${suite}
+            COMMAND bash "${PROJECT_SOURCE_DIR}/tools/test-fileprovider-${suite}.sh")
+        set_tests_properties(testfileprovider_${suite} PROPERTIES TIMEOUT 120)
+    endforeach()
+endif()
 
 opencloud_add_test(OAuth)
 

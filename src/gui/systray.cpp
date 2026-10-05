@@ -21,6 +21,10 @@
 #include "gui/networkinformation.h"
 #include "libsync/theme.h"
 
+#ifdef Q_OS_MAC
+#include "macOS/fileprovider.h"
+#endif
+
 #include <QApplication>
 #include <QDesktopServices>
 #include <QMenu>
@@ -43,6 +47,11 @@ Systray::Systray(QObject *parent)
         [this](AccountStatePtr accountState) { connect(accountState.data(), &AccountState::stateChanged, this, &Systray::slotComputeOverallSyncStatus); });
     connect(FolderMan::instance(), &FolderMan::folderSyncStateChange, this, &Systray::slotComputeOverallSyncStatus);
 
+#ifdef Q_OS_MAC
+    if (FolderMan::instance()->useFileProvider()) {
+        connect(Mac::FileProvider::instance(), &Mac::FileProvider::statusChanged, this, &Systray::slotComputeOverallSyncStatus);
+    }
+#endif
     // init systray
     slotComputeOverallSyncStatus();
     computeContextMenu();
@@ -110,6 +119,20 @@ void Systray::slotComputeOverallSyncStatus()
         setIcon(getIconFromStatus(SyncResult::Status::Offline));
         setToolTip(tr("Please sign in"));
         return;
+    } else if (FolderMan::instance()->useFileProvider()) {
+#ifdef Q_OS_MAC
+        const auto provider = Mac::FileProvider::instance();
+        const auto error = provider->error();
+        if (!error.isEmpty()) {
+            setIcon(getIconFromStatus(SyncResult::Error));
+        } else if (!provider->ready()) {
+            setIcon(getIconFromStatus(SyncResult::SyncRunning));
+        } else {
+            setIcon(getIconFromStatus(SyncResult::Success));
+        }
+        setToolTip(provider->syncStatusText());
+#endif
+        return;
     } else if (allPaused) {
         setIcon(getIconFromStatus(SyncResult::Paused));
         setToolTip(tr("Account synchronization is disabled"));
@@ -144,7 +167,32 @@ void Systray::computeContextMenu()
     auto *menu = new QMenu(Theme::instance()->appNameGUI());
 
     menu->addAction(Theme::instance()->applicationIcon(), tr("Show %1").arg(Theme::instance()->appNameGUI()), ocApp(), &Application::showSettings);
+#ifdef Q_OS_MAC
+    if (FolderMan::instance()->useFileProvider()) {
+        auto *status = menu->addMenu(tr("On-demand sync"));
+        auto *provider = Mac::FileProvider::instance();
+        auto updateStatus = [status, provider] {
+            const auto lines = provider->syncStatusText().split(QLatin1Char('\n'));
+            auto actions = status->actions();
+            while (actions.size() < lines.size()) {
+                auto *action = status->addAction(QString());
+                action->setEnabled(false);
+                actions.append(action);
+            }
+            while (actions.size() > lines.size()) {
+                delete actions.takeLast();
+            }
+            for (qsizetype index = 0; index < lines.size(); ++index) {
+                actions.at(index)->setText(lines.at(index));
+            }
+        };
+        connect(provider, &Mac::FileProvider::statusChanged, status, updateStatus);
+        updateStatus();
+        menu->addSeparator();
+    }
+#endif
     auto *pauseResume = new QAction(menu);
+    pauseResume->setVisible(!FolderMan::instance()->useFileProvider());
     auto updatePauseResumeAction = [pauseResume] {
         pauseResume->setText(FolderMan::instance()->scheduler()->isRunning() ? tr("Pause synchronizations") : tr("Resume synchronizations"));
     };

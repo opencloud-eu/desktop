@@ -188,3 +188,9 @@ endif()
 add_subdirectory(common)
 
 install(TARGETS libsync EXPORT ${APPLICATION_SHORTNAME}Config ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+
+if(APPLE)
+    install(TARGETS libsync
+        LIBRARY DESTINATION "${KDE_INSTALL_BUNDLEDIR}/${APPLICATION_SHORTNAME}.app/Contents/Frameworks"
+        NAMELINK_SKIP)
+endif()

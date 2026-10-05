@@ -46,6 +46,10 @@
 #include <QSortFilterProxyModel>
 #include <QtQuickWidgets/QtQuickWidgets>
 
+#ifdef Q_OS_MAC
+#include "macOS/fileprovider.h"
+#endif
+
 using namespace std::chrono_literals;
 using namespace Qt::Literals::StringLiterals;
 
@@ -63,6 +67,11 @@ AccountSettings::AccountSettings(const AccountStatePtr &accountState, QWidget *p
     , _accountState(accountState)
 {
     ui->setupUi(this);
+#ifdef Q_OS_MAC
+    if (useFileProvider()) {
+        connect(Mac::FileProvider::instance(), &Mac::FileProvider::statusChanged, this, &AccountSettings::onDemandSyncStatusChanged);
+    }
+#endif
 
     _model = new FolderStatusModel(this);
     _model->setAccountState(_accountState);
@@ -156,6 +165,9 @@ void AccountSettings::showSelectiveSyncDialog(Folder *folder)
 
 void AccountSettings::slotAddFolder()
 {
+    if (useFileProvider()) {
+        return;
+    }
     FolderMan::instance()->setSyncEnabled(false); // do not start more syncs.
 
     FolderWizard *folderWizard = new FolderWizard(_accountState, this);
@@ -168,6 +180,21 @@ void AccountSettings::slotAddFolder()
     });
 
     addModalLegacyDialog(folderWizard, AccountSettings::ModalWidgetSizePolicy::Expanding);
+}
+
+bool AccountSettings::useFileProvider() const
+{
+    return FolderMan::instance()->useFileProvider();
+}
+
+QString AccountSettings::onDemandSyncStatus() const
+{
+#ifdef Q_OS_MAC
+    if (useFileProvider()) {
+        return Mac::FileProvider::instance()->syncStatusText(_accountState->account()->uuid());
+    }
+#endif
+    return {};
 }
 
 

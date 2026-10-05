@@ -114,6 +114,22 @@ Pane {
             }
         }
 
+        Label {
+            Layout.fillWidth: true
+            visible: accountSettings.useFileProvider
+            wrapMode: Text.WordWrap
+            textFormat: Text.PlainText
+            text: accountSettings.onDemandSyncStatus
+            Accessible.name: text
+        }
+
+        Label {
+            Layout.fillWidth: true
+            visible: accountSettings.useFileProvider
+            wrapMode: Text.WordWrap
+            text: qsTr("Files are available on demand in Finder. To download selected folders locally, enable traditional folder sync in Settings.")
+        }
+
         ScrollView {
             id: scrollView
             Layout.fillHeight: true
@@ -405,7 +421,7 @@ Pane {
                 onClicked: {
                     accountSettings.slotAddFolder();
                 }
-                enabled: (accountSettings.accountState.state === AccountState.Connected) && accountSettings.unsyncedSpaces
+                enabled: !accountSettings.useFileProvider && (accountSettings.accountState.state === AccountState.Connected) && accountSettings.unsyncedSpaces
 
                 Keys.onBacktabPressed: {
                     listView.currentItem.forceActiveFocus(Qt.TabFocusReason);
@@ -421,7 +437,7 @@ Pane {
             }
             Label {
                 text: qsTr("You are synchronizing %1 out of %2 Spaces").arg(accountSettings.syncedSpaces).arg(accountSettings.syncedSpaces + accountSettings.unsyncedSpaces)
-                visible: accountSettings.accountState.state === AccountState.Connected
+                visible: !accountSettings.useFileProvider && accountSettings.accountState.state === AccountState.Connected
             }
         }
     }

@@ -18,8 +18,10 @@
 #include "common/restartmanager.h"
 #include "gui/application.h"
 #include "gui/folderman.h"
+#include "gui/guiutility.h"
 #include "gui/logbrowser.h"
 #include "gui/networkinformation.h"
+#include "gui/settingsdialog.h"
 #include "libsync/configfile.h"
 #include "libsync/platform.h"
 #include "libsync/theme.h"
@@ -34,6 +36,11 @@
 
 #ifdef WITH_AUTO_UPDATER
 #include "updater/updater.h"
+#endif
+
+#ifdef Q_OS_MACOS
+#include "macOS/fileprovider.h"
+#include "macOS/fileproviderdomainmanager.h"
 #endif
 
 #include <QApplication>
@@ -86,6 +93,10 @@ struct CommandLineOptions
     bool logDebug = false;
 
     bool debugMode = false;
+
+#ifdef Q_OS_MACOS
+    bool clearFileProviderDomains = false;
+#endif
 };
 
 CommandLineOptions parseOptions(const QStringList &arguments)
@@ -134,6 +145,11 @@ CommandLineOptions parseOptions(const QStringList &arguments)
     auto debugOption = addOption({QStringLiteral("debug"), QApplication::translate("CommandLine", "Enable debug mode.")});
     addOption({QStringLiteral("cmd"), QApplication::translate("CommandLine", "Forward all arguments to the cmd client. This argument must be the first.")});
 
+#ifdef Q_OS_MACOS
+    auto clearFileProviderDomainsOption = addOption({QStringLiteral("clear-fileprovider-domains"),
+        QApplication::translate("CommandLine", "Remove all FileProvider domains (Finder sidebar locations) and exit. Use to clean up orphaned domains.")});
+#endif
+
     parser.process(arguments);
 
     CommandLineOptions out;
@@ -163,6 +179,12 @@ CommandLineOptions parseOptions(const QStringList &arguments)
         out.logDebug = true;
         out.debugMode = true;
     }
+
+#ifdef Q_OS_MACOS
+    if (parser.isSet(clearFileProviderDomainsOption)) {
+        out.clearFileProviderDomains = true;
+    }
+#endif
 
     return out;
 }
@@ -456,11 +478,36 @@ int main(int argc, char **argv)
         }
 
         setupLogging(options);
+
+#ifdef Q_OS_MACOS
+        // Handle --clear-fileprovider-domains before any other initialization
+        if (options.clearFileProviderDomains) {
+            qCInfo(lcMain) << "Clearing all FileProvider domains...";
+            OCC::Mac::FileProviderDomainManager domainManager;
+            const auto result = domainManager.removeAllDomains();
+            if (!result) {
+                qCCritical(lcMain) << "Could not clear FileProvider domains:" << result.error();
+                return 1;
+            }
+            qCInfo(lcMain) << "FileProvider domains cleared.";
+            return 0;
+        }
+#endif
         NetworkInformation::instance(); //
 
         platform->setApplication(&app);
 
-        auto folderManager = FolderMan::createInstance();
+        bool useFileProvider = false;
+#ifdef Q_OS_MACOS
+        useFileProvider = Mac::FileProvider::fileProviderAvailable() && !ConfigFile().traditionalFolderSync();
+        if (!useFileProvider) {
+            if (auto result = Mac::FileProvider::prepareForFolderSync(); !result) {
+                QMessageBox::critical(nullptr, QCoreApplication::translate("main", "Could not switch sync mode"), result.error());
+                return -1;
+            }
+        }
+#endif
+        auto folderManager = FolderMan::createInstance(useFileProvider);
 
         if (!AccountManager::instance()->restore()) {
             qCCritical(lcMain) << u"Could not read the account settings, quitting";
@@ -525,6 +572,31 @@ int main(int argc, char **argv)
 
         // Now that everything is up and running, start accepting connections/requests from the shell integration.
         folderManager->socketApi()->startShellIntegration();
+
+#ifdef Q_OS_MAC
+        // Check if Finder extension is enabled on first launch or after upgrade
+        // Show a prompt to the user if it's not enabled
+        QTimer::singleShot(2000, ocApp.get(), []() {
+            auto settings = ConfigFile::makeQSettings();
+            const QString lastPromptVersion = settings.value(QStringLiteral("finderExtensionPromptVersion")).toString();
+            const QString currentVersion = Version::versionWithBuildNumber().toString();
+
+            if (!Utility::isFinderSyncExtensionEnabled() && lastPromptVersion != currentVersion) {
+                // Remember that we prompted for this version
+                settings.setValue(QStringLiteral("finderExtensionPromptVersion"), currentVersion);
+
+                auto result = QMessageBox::question(OCC::ocApp()->settingsDialog(), QCoreApplication::translate("main", "Finder Integration"),
+                    QCoreApplication::translate("main",
+                        "The Finder integration (overlay icons and context menus) is not enabled.\n\n"
+                        "Would you like to open System Settings to enable it?"),
+                    QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+
+                if (result == QMessageBox::Yes) {
+                    Utility::showFinderSyncExtensionManagementInterface();
+                }
+            }
+        });
+#endif
 
         return app.exec();
     }).exec(argc, argv);

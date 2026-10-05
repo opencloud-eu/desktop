@@ -54,6 +54,9 @@ protected:
 private:
     void reloadConfig();
     void loadLanguageNamesIntoDropdown();
+#ifdef Q_OS_MAC
+    void updateFinderExtensionButton();
+#endif
 
     Ui::GeneralSettings *_ui;
     QPointer<IgnoreListEditor> _ignoreEditor;
