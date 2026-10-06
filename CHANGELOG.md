@@ -1,10 +1,10 @@
 # Changelog
 
-## [4.1.0](https://github.com/opencloud-eu/desktop/releases/tag/v4.1.0) - 2026-10-05
+## [4.1.0](https://github.com/opencloud-eu/desktop/releases/tag/v4.1.0) - 2026-10-06
 
 ### ❤️ Thanks to all contributors! ❤️
 
-@TheOneRing, @dragotin, @flimmy, @jnweiger, @junkerderprovinz, @prashant-gurung899, @saw-jan, @v-scharf
+@Asmitapaudel, @TheOneRing, @dragotin, @flimmy, @jnweiger, @junkerderprovinz, @prashant-gurung899, @saw-jan, @v-scharf
 
 ### ✨ Features
 
