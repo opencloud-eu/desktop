@@ -214,10 +214,10 @@ def step(context):
         AccountConnectionWizard.can_change_local_sync_dir().should.be.true
 
 
-@Then('the download everything option should be selected by default for Linux')
+@Then('the synchronize all existing spaces should be selected by default')
 def step(context):
-    with ensure('Sync everything option is not checked'):
-        AccountConnectionWizard.is_sync_everything_option_checked().should.be.true
+    with ensure('Sync all spaces option is not checked'):
+        AccountConnectionWizard.is_sync_all_spaces_option_checked().should.be.true
 
 
 @When('the user cancels the sync connection wizard')

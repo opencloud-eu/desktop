@@ -15,7 +15,7 @@ from helpers.Utils import wait_for
 from helpers.ConfigHelper import get_config
 from helpers.FilesHelper import (
     build_conflicted_regex,
-    sanitize_path,
+    normalize_path,
     can_read,
     can_write,
     read_file_content,
@@ -29,14 +29,14 @@ from helpers.FilesHelper import (
 
 def folder_exists(folder_path, timeout=get_config('min_timeout')):
     return wait_for(
-        lambda: isdir(sanitize_path(folder_path)),
+        lambda: isdir(normalize_path(folder_path)),
         timeout,
     )
 
 
 def file_exists(file_path, timeout=get_config('min_timeout')):
     return wait_for(
-        lambda: isfile(sanitize_path(file_path)),
+        lambda: isfile(normalize_path(file_path)),
         timeout,
     )
 
@@ -133,7 +133,7 @@ def move_resource(username, resource_type, source, destination, is_temp_folder=F
 
 def delete_resource(resource, resource_type):
     listen_sync_status_for_item(resource, resource_type)
-    resource_path = sanitize_path(get_resource_path(resource))
+    resource_path = normalize_path(get_resource_path(resource))
     if resource_type == 'file':
         os.remove(resource_path)
     else:
