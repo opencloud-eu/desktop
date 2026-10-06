@@ -62,6 +62,10 @@ class SyncConnection:
         app().find_element(SyncConnection.MENU_ITEM.by, action).click()
 
     @staticmethod
+    def show_in_file_manager():
+        SyncConnection.perform_action("Show in file manager")
+
+    @staticmethod
     def force_sync():
         SyncConnection.perform_action("Force sync now")
 
