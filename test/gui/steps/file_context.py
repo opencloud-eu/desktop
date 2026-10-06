@@ -481,15 +481,14 @@ def step(context, username, resource):
 
 
 @Then(
-    'the following file explorer context menus should be available for file "{resource}" of user "{username}"'
+    'the following file explorer context menu items should be available for file "{resource}" of user "{username}"'
 )
 @Then(
-    'the following file explorer context menus should be available for folder "{resource}" of user "{username}"'
+    'the following file explorer context menu items should be available for folder "{resource}" of user "{username}"'
 )
 def step(context, resource, username):
-    resource_path = get_resource_path(resource, username)
     expected_menus = [row['menu'] for row in table_hashes(context.table)]
-    actual_menus = FileExplorer.get_file_context_menus(resource_path)
+    FileExplorer.check_file_context_menu_items(resource, expected_menus)
 
     for item in expected_menus:
         with ensure(f'Menu item "{item}" not found in the actual list: {actual_menus}'):

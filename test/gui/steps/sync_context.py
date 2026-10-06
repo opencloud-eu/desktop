@@ -20,6 +20,7 @@ from helpers.SetupClientHelper import (
 )
 from helpers.FilesHelper import convert_path_separators_for_os
 from helpers.TableParser import table_hashes, table_raw
+from helpers.FileExplorerHelper import create_session_from_running_explorer, close_file_explorer, open_file_explorer
 
 
 def _check_activities(context, not_synced=False, should_exist=True):
@@ -55,6 +56,21 @@ def step(context):
 @When('the user force syncs the files')
 def step(context):
     SyncConnection.force_sync()
+
+
+@When('user "{username}" opens "{sync_folder}" sync folder in the file manager from the client UI')
+def step(context, username, sync_folder):
+    Toolbar.open_account(username)
+    SyncConnection.show_in_file_manager()
+
+
+@When('user "{username}" opens "{sync_folder}" sync folder in the file manager')
+def step(context, username, sync_folder):
+    # set_config("syncConnectionName", sync_folder)
+    path = get_resource_path()
+    open_file_explorer(path)
+    import time
+    time.sleep(10)
 
 
 @When('the user waits for the files to sync')
@@ -340,3 +356,13 @@ def step(context):
     for row in context.table:
         folders.append(row[0])
     SyncConnectionWizard.unselect_folders_to_sync(folders, new_sync_connection_wizard=False)
+
+
+@Then('the "{sync_folder}" sync folder should be opened in the file manager')
+def step(context, sync_folder):
+    create_session_from_running_explorer(sync_folder)
+
+
+@Then('the user closes the current file manager')
+def step(context):
+    close_file_explorer()

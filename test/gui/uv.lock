@@ -276,6 +276,15 @@ wheels = [
 ]
 
 [[package]]
+name = "dogtail"
+version = "2.1.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/b9/b8/e42563066885731930eb945acf07ba035ce46935bbf72eb87641cf05c827/dogtail-2.1.0.tar.gz", hash = "sha256:cc46bd4c05aed0210ba594e7a1d356c7fa50455d249dc919ef9ec5cd48af823d", size = 204117, upload-time = "2026-08-21T15:13:01.933Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/bd/cc/0e986a65dc7a69c3cd7daac3eace1f190b13a8272e65c8b5491eb735b481/dogtail-2.1.0-py3-none-any.whl", hash = "sha256:5cc9e097d20b4cb287b840381697df5e1565cca97571111c60d984f8d74edb53", size = 148721, upload-time = "2026-08-21T15:13:00.565Z" },
+]
+
+[[package]]
 name = "dominate"
 version = "2.9.0"
 source = { registry = "https://pypi.org/simple" }
@@ -385,6 +394,7 @@ dependencies = [
     { name = "appium-python-client" },
     { name = "behave" },
     { name = "behave-html-pretty-formatter" },
+    { name = "dogtail" },
     { name = "flask", marker = "sys_platform == 'linux'" },
     { name = "imageio-ffmpeg" },
     { name = "mss" },
@@ -414,6 +424,7 @@ requires-dist = [
     { name = "appium-python-client", specifier = "==5.3.*" },
     { name = "behave", specifier = "==1.3.*" },
     { name = "behave-html-pretty-formatter", specifier = "==1.16.*" },
+    { name = "dogtail", specifier = ">=2.1.0" },
     { name = "flask", marker = "sys_platform == 'linux'", specifier = "==3.1.*" },
     { name = "imageio-ffmpeg", specifier = "==0.6.*" },
     { name = "mss", specifier = "==10.2.*" },

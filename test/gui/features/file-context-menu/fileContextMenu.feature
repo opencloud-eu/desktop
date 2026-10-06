@@ -9,7 +9,11 @@ Feature: File Explorer Context Menu
         And user "Alice" has created folder "mydocs" in the server
         And user "Alice" has uploaded file with content "lorem epsum" to "lorem.txt" in the server
         And user "Alice" has set up a client with default settings
-        Then the following file explorer context menus should be available for file "lorem.txt" of user "Alice"
+        When user "Alice" opens "Personal" sync folder in the file manager from the client UI
+        Then the "Personal" sync folder should be opened in the file manager
+        And the user closes the current file manager
+        When user "Alice" opens "Personal" sync folder in the file manager
+        Then the following file explorer context menu items should be available for file "lorem.txt"
             | menu                              |
             | Share...                          |
             | Copy private link to clipboard    |
