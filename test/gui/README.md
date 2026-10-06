@@ -3,12 +3,16 @@
 # Table of Contents
 
 - [Desktop Client GUI Testing](#desktop-client-gui-testing)
+  - [Linux vs Windows](#linux-vs-windows)
 - [Running GUI Tests](#running-gui-tests)
   - [Linux (Ubuntu 24.04)](#linux-ubuntu-2404)
     - [Install System Dependencies](#install-system-dependencies)
     - [Build Desktop Client](#build-desktop-client)
     - [Run GUI Tests](#run-gui-tests)
     - [Test Reports](#test-reports)
+  - [Windows](#windows)
+    - [Install Test Environment Requirements](#install-test-environment-requirements)
+    - [Run GUI Tests](#run-gui-tests-1)
 - [Writing GUI Test](#writing-gui-test)
   - [Code Formatting and Linting](#code-formatting-and-linting)
 
@@ -20,6 +24,16 @@ The OpenCloud desktop GUI tests use the following tools:
 - [Appium](https://appium.io/docs/en/latest/) – Drives the test automation by sending WebDriver commands.
 - [PyAutoGUI](https://pyautogui.readthedocs.io/en/latest/) – Performs mouse and keyboard interactions that are not exposed through the accessibility API.
 - [selenium-webdriver-at-spi](https://invent.kde.org/sdk/selenium-webdriver-at-spi) – A WebDriver implementation for Appium that uses the Linux AT-SPI accessibility API to automate desktop applications.
+- [NovaWindows](https://github.com/AutomateThePlanet/appium-novawindows-driver) – An Appium driver for Windows desktop application automation using Windows UI Automation.
+
+## Linux vs Windows
+
+| Linux | Windows |
+|---|---|
+| Appium Python Client | Appium Python Client |
+| PyAutoGUI | PyAutoGUI |
+| AT-SPI WebDriver | NovaWindows |
+| AT-SPI | Windows UI Automation |
 
 # Running GUI Tests
 
@@ -151,6 +165,17 @@ This guide explains how to build the OpenCloud desktop client and run the GUI te
    bash woodpecker/run_atspi_webdriver.sh
    ```
 
+   > [!NOTE]
+   > If you encounter `ModuleNotFoundError: No module named 'pyatspi'`:
+   > Recreate the virtual environment using the system Python and allow access to system packages:
+   >
+   > ```bash
+   > uv venv --python /usr/bin/python3 --system-site-packages
+   > ```
+   >
+   > This allows the environment to access the system-installed `pyatspi` package.
+
+
 5. Run the GUI Tests
 
    Run a test scenario:
@@ -188,6 +213,83 @@ CI=true \
 RECORD_VIDEO_ON_FAILURE=true \
 uv run behave features/add-account/account.feature
 ```
+
+## Windows
+
+The Windows GUI tests use Appium with the NovaWindows driver to automate the OpenCloud desktop application through Windows UI Automation.
+
+### Install Test Environment Requirements
+
+Install the necessary libraries:
+- python
+- [uv](https://docs.astral.sh/uv/)
+- [Node.js](https://nodejs.org/)
+- npm
+- OpenCloud Desktop
+
+Install [Appium 2 or newer](https://appium.io/docs/en/2.3/quickstart/install/) and the [NovaWindows driver](https://github.com/AutomateThePlanet/appium-novawindows-driver):
+
+Install Appium:
+
+```powershell
+npm install -g appium
+```
+
+Install the NovaWindows driver:
+
+```powershell
+appium driver install --source=npm appium-novawindows-driver
+```
+
+> [!NOTE]
+> To verify that the NovaWindows driver is installed, run:
+>
+> ```powershell
+> appium driver list
+> ```
+>
+> Ensure `appium-novawindows-driver` appears in the list of installed drivers.
+
+
+### Run GUI Tests
+
+1. Start the OpenCloud server
+2. Configure the test environment
+
+   Copy `config.sample.ini` to `config.ini`, then update the required values.
+
+   ```ini
+   [DEFAULT]
+   APP_PATH=<full-path-to>\opencloud.exe # path to the desktop app executable
+   BACKEND_HOST=<opencloud-server-url> # https://localhost:9200
+   ```
+3. Install python test dependencies
+
+   ```powershell
+   cd <desktop-repo-root>\test\gui
+   uv sync
+   ```
+   
+   If the GUI tests require Playwright/Chromium, install it with:
+
+   ```powershell
+   uv run playwright install chromium
+   ```
+
+4. Start NovaWindows driver:
+
+   ```powershell
+   appium
+   ```
+
+5. Run the GUI Tests
+
+   Run a test scenario:
+
+   ```powershell
+   cd .\<desktop-repo-root>\test\gui\
+   uv run behave .\features\add-account\account.feature
+   ```
 
 # Writing GUI Test
 
