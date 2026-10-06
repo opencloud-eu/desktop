@@ -5,7 +5,7 @@ import urllib.request
 
 from pageObjects.SyncConnection import SyncConnection
 from helpers.ConfigHelper import get_config, is_windows, is_linux
-from helpers.FilesHelper import sanitize_path
+from helpers.FilesHelper import normalize_path
 from helpers.Utils import wait_for
 
 if is_windows():
@@ -374,7 +374,7 @@ def has_sync_status(item_name, status):
 def wait_for_resource_to_have_sync_status(
     resource, resource_type, status=SYNC_STATUS['OK'], timeout=None
 ):
-    resource = sanitize_path(resource)
+    resource = normalize_path(resource)
 
     listen_sync_status_for_item(resource, resource_type)
 
