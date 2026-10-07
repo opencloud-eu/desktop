@@ -178,3 +178,6 @@ FakesAssemblies/
 test/gui/config.ini
 test/gui/reports
 */**/__pycache__/
+
+# Visual Studio Code project files
+.vscode
