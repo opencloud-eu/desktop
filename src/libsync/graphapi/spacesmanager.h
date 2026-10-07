@@ -17,9 +17,8 @@
 #include "opencloudsynclib.h"
 
 #include "libsync/accountfwd.h"
+#include "libsync/graphapi/client/drive.h"
 #include "libsync/graphapi/space.h"
-
-#include <OAIDrive.h>
 
 #include <algorithm>
 
