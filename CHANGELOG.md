@@ -4,7 +4,7 @@
 
 ### ❤️ Thanks to all contributors! ❤️
 
-@Asmitapaudel, @TheOneRing, @dragotin, @flimmy, @jnweiger, @junkerderprovinz, @prashant-gurung899, @saw-jan, @v-scharf
+@Asmitapaudel, @TheOneRing, @dragotin, @flimmy, @fracturehill, @jnweiger, @junkerderprovinz, @prashant-gurung899, @saw-jan, @v-scharf
 
 ### ✨ Features
 
