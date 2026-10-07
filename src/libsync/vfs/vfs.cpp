@@ -28,6 +28,7 @@
 #include <QApplication>
 #include <QCoreApplication>
 #include <QLoggingCategory>
+#include <QOperatingSystemVersion>
 #include <QPluginLoader>
 
 #ifdef Q_OS_WIN
@@ -57,6 +58,8 @@ Optional<Vfs::Mode> Vfs::modeFromString(const QString &str)
         return Mode::WindowsCfApi;
     } else if (str == QLatin1String("openvfs")) {
         return Mode::OpenVFS;
+    } else if (str == QLatin1String("nsfp")) {
+        return Mode::MacOSNSFileProvider;
     }
     return {};
 }
@@ -73,6 +76,8 @@ QString Utility::enumToString(Vfs::Mode mode)
         return QStringLiteral("off");
     case Vfs::Mode::OpenVFS:
         return QStringLiteral("openvfs");
+    case Vfs::Mode::MacOSNSFileProvider:
+        return QStringLiteral("nsfp");
     }
     Q_UNREACHABLE();
 }
@@ -136,9 +141,18 @@ Vfs::Mode OCC::VfsPluginManager::bestAvailableVfsMode() const
 {
     if (isVfsPluginAvailable(Vfs::Mode::WindowsCfApi)) {
         return Vfs::Mode::WindowsCfApi;
-    } else if (isVfsPluginAvailable(Vfs::Mode::OpenVFS)) {
+    }
+#if defined(Q_OS_MACOS)
+    if (QOperatingSystemVersion::current() >= QOperatingSystemVersion::MacOSMonterey) {
+        if (isVfsPluginAvailable(Vfs::Mode::MacOSNSFileProvider)) {
+            return Vfs::Mode::MacOSNSFileProvider;
+        }
+    }
+#endif
+    if (isVfsPluginAvailable(Vfs::Mode::OpenVFS)) {
         return Vfs::Mode::OpenVFS;
-    } else if (isVfsPluginAvailable(Vfs::Mode::Off)) {
+    }
+    if (isVfsPluginAvailable(Vfs::Mode::Off)) {
         return Vfs::Mode::Off;
     }
     Q_UNREACHABLE();

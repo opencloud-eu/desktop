@@ -10,6 +10,12 @@ apply_common_target_settings(cmd)
 
 
 if(APPLE)
+    # NSFileProvider diagnostic command (VOD-027)
+    enable_language(OBJCXX)
+    target_sources(cmd PRIVATE nsfpdiagnostic.mm nsfpdiagnostic.h)
+    target_compile_options(cmd PRIVATE -fobjc-arc)
+    target_link_libraries(cmd "-framework Foundation" "-framework FileProvider")
+
     set_target_properties(cmd PROPERTIES RUNTIME_OUTPUT_DIRECTORY "$<TARGET_FILE_DIR:opencloud>")
 else()
     install(TARGETS cmd ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
