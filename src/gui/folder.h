@@ -357,8 +357,6 @@ private:
 
     mutable SyncJournalDb _journal;
 
-    QScopedPointer<SyncRunFileLog> _fileLog;
-
     /**
      * Setting up vfs is a async operation
      */

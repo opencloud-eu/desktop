@@ -60,7 +60,6 @@ target_sources(OpenCloudGui PRIVATE
     selectivesyncwidget.cpp
     settingsdialog.cpp
     tlserrordialog.cpp
-    syncrunfilelog.cpp
     systray.cpp
     accountstate.cpp
     guiutility.cpp

@@ -342,6 +342,11 @@ void Account::setDefaultSyncRoot(const QString &syncRoot)
     Q_ASSERT(_defaultSyncRoot.isEmpty());
     if (!syncRoot.isEmpty()) {
         _defaultSyncRoot = syncRoot;
+        if (!QFileInfo::exists(_defaultSyncRoot)) {
+            OC_ASSERT(QDir().mkpath(_defaultSyncRoot));
+        }
+        Utility::markDirectoryAsSyncRoot(_defaultSyncRoot, uuid());
+        Q_EMIT wantsAccountSaved(this);
     }
 }
 

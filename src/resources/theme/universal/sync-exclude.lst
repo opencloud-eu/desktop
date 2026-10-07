@@ -1,7 +1,6 @@
 # This file contains fixed global exclude patterns
 
 # Internal files
-].OpenCloudSync.log
 ].sync_journal.db*
 
 *~
