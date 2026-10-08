@@ -127,10 +127,10 @@ QPixmap CoreImageProvider::requestPixmap(const QString &id, QSize *size, const Q
         const auto index = qmlIcon.iconName.toInt(&ok);
         const auto buttons = JsonTheme::instance().urlButtons();
         if (!ok || index < 0 || index >= buttons.size()) {
+            qCWarning(lcResources) << u"Invalid urlbutton index:" << qmlIcon.iconName;
             return {};
         }
         icon = buttons.at(index).icon;
-    }
     } else if (qmlIcon.theme == "jsontheme"_L1) {
         icon = JsonTheme::instance().property(qmlIcon.iconName.toUtf8().constData()).value<QIcon>();
     } else if (qmlIcon.theme == QLatin1String("fontawesome")) {
