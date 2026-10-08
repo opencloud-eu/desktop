@@ -211,8 +211,8 @@ IssuesWidget::IssuesWidget(QWidget *parent)
     _statusSortModel = new SyncFileItemStatusSetSortFilterProxyModel(this); // Note: this will restore a previously set filter, if there was one.
     connect(_statusSortModel, &Models::SignalledQSortFilterProxyModel::filterChanged, this, &IssuesWidget::filterDidChange);
     _statusSortModel->setSourceModel(_sortModel);
-    _statusSortModel->setSortRole(Qt::DisplayRole); // Sorting should be done based on the text in the column cells, but...
-    _statusSortModel->setFilterRole(Models::UnderlyingDataRole); // ... filtering should be done on the underlying enum value.
+    _statusSortModel->setSortRole(Models::SortRole);
+    _statusSortModel->setFilterRole(Models::UnderlyingDataRole); // Filtering should be done on the underlying enum value.
     _statusSortModel->setFilterKeyColumn(static_cast<int>(ProtocolItemModel::ProtocolItemRole::Status));
     _ui->_tableView->setModel(_statusSortModel);
 
