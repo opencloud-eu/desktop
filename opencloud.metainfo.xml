@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
-  <id>@APPLICATION_REV_DOMAIN@.@APPLICATION_EXECUTABLE@</id>
+  <id>eu.opencloud.desktop.opencloud</id>
   
-  <name>@APPLICATION_NAME@</name>
+  <name>OpenCloud Desktop</name>
   <summary>Desktop client for OpenCloud file synchronization</summary>
   
   <metadata_license>CC0-1.0</metadata_license>
@@ -34,7 +34,7 @@
   <url type="contribute">https://github.com/opencloud-eu/opencloud/blob/main/CONTRIBUTING.md</url>
   <url type="vcs-browser">https://github.com/opencloud-eu/desktop</url>
   
-  <launchable type="desktop-id">@APPLICATION_EXECUTABLE@.desktop</launchable>
+  <launchable type="desktop-id">opencloud.desktop</launchable>
   <screenshots>
     <screenshot type="default">
       <caption>Main screen of the application</caption>

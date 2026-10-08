@@ -58,7 +58,7 @@ QString Utility::socketApiSocketPath()
     // This must match the code signing Team setting of the extension
     // Example for developer builds (with ad-hoc signing identity): "" "eu.opencloud.desktop" ".socketApi"
     // Example for official signed packages: "9B5WD74GWJ." "eu.opencloud.desktop" ".socketApi"
-    return QStringLiteral("%1%2.socketApi").arg(QStringLiteral(SOCKETAPI_TEAM_IDENTIFIER_PREFIX), Resources::JsonTheme::instance().organizationDomain());
+    return QStringLiteral("%1.socketApi").arg(Resources::JsonTheme::instance().organizationDomain());
 }
 
 bool Utility::isInstalledByStore()

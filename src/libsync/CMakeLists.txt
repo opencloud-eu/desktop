@@ -83,7 +83,7 @@ INSTALL(
         ${CMAKE_CURRENT_BINARY_DIR}/opencloudsynclib.h
         logger.h
         accessmanager.h
-    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/${APPLICATION_SHORTNAME}/libsync
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/OpenCloud/libsync
 )
 
 set_target_properties(libsync PROPERTIES EXPORT_NAME SyncCore)
@@ -183,4 +183,4 @@ endif()
 
 add_subdirectory(common)
 
-install(TARGETS libsync EXPORT ${APPLICATION_SHORTNAME}Config ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS libsync EXPORT OpenCloudConfig ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

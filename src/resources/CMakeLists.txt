@@ -49,7 +49,7 @@ ecm_add_qml_module(OpenCloudResources
 
 ecm_finalize_qml_module(OpenCloudResources DESTINATION ${KDE_INSTALL_QMLDIR})
 
-install(TARGETS OpenCloudResources EXPORT ${APPLICATION_SHORTNAME}Config ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS OpenCloudResources EXPORT OpenCloudConfig ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
 
 # resources for the theme patcher

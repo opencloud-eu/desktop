@@ -1,0 +1,12 @@
+[Desktop Entry]
+Categories=Utility;X-SuSE-SyncUtility;
+Type=Application
+Terminal=true
+Exec=opencloudcmd
+Name=OpenCloud Desktop commandline sync client
+Comment=OpenCloud Desktop commandline synchronization client
+GenericName=Folder Sync Commandline
+Icon=opencloud
+Keywords=OpenCloud Desktop;syncing;file;sharing;
+X-AppImage-Integrate=false
+NoDisplay=true
