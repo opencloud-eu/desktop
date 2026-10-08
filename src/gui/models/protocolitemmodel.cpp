@@ -58,6 +58,18 @@ QVariant ProtocolItemModel::data(const QModelIndex &index, int role) const
     const auto column = static_cast<ProtocolItemRole>(index.column());
     const auto &item = protocolItem(index);
     switch (role) {
+    case Models::SortRole:
+        switch (column) {
+        // Special case for sorting the file size, because using DisplayRole
+        // will just do a string comparison of the human-readable file size (e.g. "1000 kB")
+        case ProtocolItemRole::Size:
+            // When size is irrelevant, sort the entry to be first in the column
+            return item.isSizeRelevant() ? item.size() : -1;
+            break;
+        default:
+            break;
+        }
+        [[fallthrough]];
     case Qt::DisplayRole:
         switch (column) {
         case ProtocolItemRole::Time:
