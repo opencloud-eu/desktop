@@ -27,14 +27,6 @@
 #endif
 #endif
 
-namespace {
-#ifdef WITH_AUTO_UPDATER
-bool isTestPilotCloudTheme()
-{
-    return OCC::Resources::JsonTheme::instance().appName() == QLatin1String("testpilotcloud");
-}
-#endif
-}
 
 namespace OCC {
 
@@ -71,8 +63,8 @@ void AboutDialog::openBrowserFromUrl(const QUrl &s)
 void AboutDialog::setupUpdaterWidget()
 {
 #ifdef WITH_AUTO_UPDATER
-    // non-standard update channels are only supported by the vanilla theme and the testpilotcloud theme
-    if (!Resources::isVanillaTheme() && !isTestPilotCloudTheme()) {
+    // non-standard update channels are only supported by the vanilla theme
+    if (!Resources::isVanillaTheme()) {
         if (Utility::isMac()) {
             // Because we don't have any statusString from the SparkleUpdater anyway we can hide the whole thing
             ui->updaterWidget->hide();
@@ -159,11 +151,8 @@ void AboutDialog::slotUpdateChannelChanged([[maybe_unused]] int index)
     auto msgBox = new QMessageBox(QMessageBox::Warning, tr("Change update channel?"),
         tr("<html>The update channel determines which client updates will be offered for installation.<ul>"
            "<li>\"stable\" contains only upgrades that are considered reliable</li>"
-           "%1"
            "</ul>"
-           "<br>⚠️Downgrades are not supported. If you switch to a stable channel this change will only be applied with the next major release.</html>")
-            .arg(
-                isTestPilotCloudTheme() ? tr("<li>\"beta\" may contain newer features and bugfixes, but have not yet been tested thoroughly</li>") : QString()),
+           "<br>⚠️Downgrades are not supported. If you switch to a stable channel this change will only be applied with the next major release.</html>"),
         QMessageBox::NoButton, this);
     auto acceptButton = msgBox->addButton(tr("Change update channel"), QMessageBox::AcceptRole);
     msgBox->addButton(tr("Cancel"), QMessageBox::RejectRole);
