@@ -2,7 +2,7 @@ add_executable(cmd
     cmd.cpp
     tokencredentials.cpp
 )
-set_target_properties(cmd PROPERTIES OUTPUT_NAME "${APPLICATION_EXECUTABLE}cmd")
+set_target_properties(cmd PROPERTIES OUTPUT_NAME "opencloudcmd")
 ecm_mark_nongui_executable(cmd)
 
 target_link_libraries(cmd libsync Qt::Core Qt::Network ZLIB::ZLIB)
@@ -16,6 +16,5 @@ else()
 endif()
 
 if(UNIX AND NOT APPLE)
-    configure_file(${CMAKE_SOURCE_DIR}/opencloud.desktop.in ${CMAKE_CURRENT_BINARY_DIR}/${APPLICATION_EXECUTABLE}cmd.desktop)
-    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${APPLICATION_EXECUTABLE}cmd.desktop DESTINATION ${KDE_INSTALL_DATADIR}/applications)
+    install(FILES ${CMAKE_SOURCE_DIR}/opencloudcmd.desktop DESTINATION ${KDE_INSTALL_DATADIR}/applications)
 endif()

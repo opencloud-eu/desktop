@@ -142,7 +142,6 @@ IF( APPLE )
             settingsdialog_mac.mm
             guiutility_mac.mm
             folderwatcher_mac.cpp)
-    set_source_files_properties(guiutility_mac.mm PROPERTIES COMPILE_DEFINITIONS SOCKETAPI_TEAM_IDENTIFIER_PREFIX="${SOCKETAPI_TEAM_IDENTIFIER_PREFIX}")
 elseif( WIN32 )
     target_sources(OpenCloudGui PRIVATE
             guiutility_win.cpp
@@ -174,7 +173,7 @@ endif()
 
 add_executable(opencloud main.cpp)
 set_target_properties(opencloud PROPERTIES
-    OUTPUT_NAME "${APPLICATION_EXECUTABLE}"
+    OUTPUT_NAME "opencloud"
     AUTOUIC ON
     AUTORCC ON
 )
@@ -206,23 +205,13 @@ else()
       PROPERTIES
       MACOSX_PACKAGE_LOCATION Resources
       )
-  set_target_properties(opencloud PROPERTIES OUTPUT_NAME "${APPLICATION_SHORTNAME}" MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/MacOSXBundleInfo.plist)
+  set_target_properties(opencloud PROPERTIES OUTPUT_NAME "OpenCloud" MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/MacOSXBundleInfo.plist)
 endif()
 
 install(TARGETS opencloud OpenCloudGui ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 ecm_finalize_qml_module(OpenCloudGui DESTINATION ${KDE_INSTALL_QMLDIR})
 
 if(UNIX AND NOT APPLE)
-    configure_file(${CMAKE_SOURCE_DIR}/opencloud.desktop.in
-                   ${CMAKE_CURRENT_BINARY_DIR}/${APPLICATION_EXECUTABLE}.desktop
-                   @ONLY
-    )
-    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${APPLICATION_EXECUTABLE}.desktop DESTINATION ${KDE_INSTALL_DATADIR}/applications)
-
-    configure_file(${CMAKE_SOURCE_DIR}/opencloud.metainfo.xml.in
-            ${CMAKE_CURRENT_BINARY_DIR}/${APPLICATION_REV_DOMAIN}.${APPLICATION_EXECUTABLE}.metainfo.xml
-            @ONLY
-    )
-
-    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${APPLICATION_REV_DOMAIN}.${APPLICATION_EXECUTABLE}.metainfo.xml DESTINATION ${KDE_INSTALL_METAINFODIR})
+    install(FILES ${CMAKE_SOURCE_DIR}/opencloud.desktop DESTINATION ${KDE_INSTALL_DATADIR}/applications)
+        install(FILES ${CMAKE_SOURCE_DIR}/opencloud.metainfo.xml DESTINATION ${KDE_INSTALL_METAINFODIR} RENAME "eu.opencloud.desktop.opencloud.metainfo.xml")
 endif()

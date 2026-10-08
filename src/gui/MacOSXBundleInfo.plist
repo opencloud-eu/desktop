@@ -7,17 +7,17 @@
         <key>CFBundleDevelopmentRegion</key>
         <string>English</string>
         <key>CFBundleName</key>
-        <string>${APPLICATION_NAME}</string>
+        <string>OpenCloud Desktop</string>
         <key>CFBundleExecutable</key>
-        <string>${APPLICATION_SHORTNAME}</string>
+        <string>OpenCloud</string>
         <key>CFBundleIconFile</key>
         <string>${MACOSX_BUNDLE_ICON_FILE}</string>
         <key>CFBundleIdentifier</key>
-        <string>${APPLICATION_REV_DOMAIN}</string>
+        <string>eu.opencloud.desktop</string>
         <key>CFBundleInfoDictionaryVersion</key>
         <string>6.0</string>
         <key>CFBundleLongVersionString</key>
-        <string>${APPLICATION_NAME} ${MIRALL_VERSION_STRING}</string>
+        <string>OpenCloud Desktop ${MIRALL_VERSION_STRING}</string>
         <key>CFBundlePackageType</key>
         <string>APPL</string>
         <key>CFBundleSignature</key>

@@ -1,5 +1,4 @@
 if(APPLE)
-set(OC_OEM_SHARE_ICNS "${CMAKE_BINARY_DIR}/src/gui/opencloud.icns")
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(XCODE_CONFIG "Debug")
@@ -19,10 +18,7 @@ endif()
 add_custom_target( mac_overlayplugin ALL
     xcodebuild -project ${CMAKE_SOURCE_DIR}/shell_integration/MacOSX/OpenCloudFinderExtension/OpenCloudFinderExtension.xcodeproj
         -target FinderSyncExt -configuration "${XCODE_CONFIG}" "SYMROOT=${CMAKE_CURRENT_BINARY_DIR}"
-        "OC_OEM_SHARE_ICNS=${OC_OEM_SHARE_ICNS}"
-        "OC_APPLICATION_NAME=${APPLICATION_NAME}"
-        "OC_APPLICATION_REV_DOMAIN=${APPLICATION_REV_DOMAIN}"
-        "OC_SOCKETAPI_TEAM_IDENTIFIER_PREFIX=${SOCKETAPI_TEAM_IDENTIFIER_PREFIX}"
+        "OC_OEM_SHARE_ICNS=${CMAKE_BINARY_DIR}/src/gui/opencloud.icns"
         ${XCODE_DEPLOYMENT_TARGET}
     COMMENT building Mac Overlay icons
     VERBATIM)

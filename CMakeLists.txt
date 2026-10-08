@@ -47,11 +47,6 @@ include(CTest)
 
 include(OCApplyCommonSettings)
 
-set( APPLICATION_NAME       "OpenCloud Desktop")
-set( APPLICATION_SHORTNAME  "OpenCloud" )
-set( APPLICATION_EXECUTABLE "opencloud" )
-set( APPLICATION_REV_DOMAIN "eu.opencloud.desktop" )
-
 if(BETA_CHANNEL_BUILD)
     # copy the beta theme to the bin directory so we can use the beta theme during development
     configure_file("${PROJECT_SOURCE_DIR}/beta.json" "${CMAKE_CURRENT_BINARY_DIR}/bin/opencloud_theme.json" COPYONLY)
@@ -134,11 +129,6 @@ add_feature_info(AppImageUpdate WITH_APPIMAGEUPDATER "Built-in libappimageupdate
 ## openvfs: Virtual files for Linux, currently in an experimental state
 ## -DVIRTUAL_FILE_SYSTEM_PLUGINS="off;cfapi;openvfs"
 set(VIRTUAL_FILE_SYSTEM_PLUGINS off cfapi CACHE STRING "Name of internal plugin in src/plugins/vfs or the locations of virtual file plugins")
-
-if(APPLE)
-  ## -DSOCKETAPI_TEAM_IDENTIFIER_PREFIX="com.example."
-  set( SOCKETAPI_TEAM_IDENTIFIER_PREFIX "" CACHE STRING "SocketApi prefix (including a following dot) that must match the codesign key's TeamIdentifier/Organizational Unit" )
-endif()
 
 
 if (WITH_AUTO_UPDATER)
