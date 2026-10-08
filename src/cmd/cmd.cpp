@@ -442,7 +442,10 @@ int main(int argc, char **argv)
     QCoreApplication app(argc, argv);
 
     // this might change the application name etc
-    Resources::JsonTheme::instance().loadSystemTheme();
+    if (auto result = Resources::JsonTheme::instance().loadSystemTheme()) {
+        std::cerr << "Failed to load system theme: " << qPrintable(result.value()) << std::endl;
+        return EXIT_FAILURE;
+    }
 
     platform->setApplication(&app);
 
