@@ -7,6 +7,11 @@ else()
     set(XCODE_CONFIG "Release")
 endif()
 
+# CMAKE_OSX_DEPLOYMENT_TARGET is initialized from the MACOSX_DEPLOYMENT_TARGET environment variable
+if (CMAKE_OSX_DEPLOYMENT_TARGET)
+    set(XCODE_DEPLOYMENT_TARGET "MACOSX_DEPLOYMENT_TARGET=${CMAKE_OSX_DEPLOYMENT_TARGET}")
+endif()
+
 # The bundle identifier and application group need to have compatible values with the client
 # to be able to open a Mach port across the extension's sandbox boundary.
 # Pass the info through the xcodebuild command line and make sure that the project uses
@@ -18,6 +23,7 @@ add_custom_target( mac_overlayplugin ALL
         "OC_APPLICATION_NAME=${APPLICATION_NAME}"
         "OC_APPLICATION_REV_DOMAIN=${APPLICATION_REV_DOMAIN}"
         "OC_SOCKETAPI_TEAM_IDENTIFIER_PREFIX=${SOCKETAPI_TEAM_IDENTIFIER_PREFIX}"
+        ${XCODE_DEPLOYMENT_TARGET}
     COMMENT building Mac Overlay icons
     VERBATIM)
 add_dependencies(mac_overlayplugin opencloud) # for the ${APPLICATION_ICON_NAME}.icns to be generated
