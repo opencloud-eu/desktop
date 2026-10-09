@@ -62,18 +62,18 @@ OCC::FileSystem::Path openVFSConfigFilePath()
     return {};
 }
 
-OpenVFS::PlaceHolderAttributes placeHolderAttributes(const std::filesystem::path &path)
+OpenVFS::PlaceHolderAttributes placeHolderAttributes(const std::filesystem::path &path, bool warnOnMissing = true)
 {
     const auto data = OCC::FileSystem::Xattr::getxattr(path, QString::fromUtf8(OpenVFS::Constants::XAttributeNames::Data));
-    if (!data) {
+    if (!data && warnOnMissing) {
         qCWarning(lcOpenVFS) << u"No OpenVFS xattr found for" << path.native();
     }
     return OpenVFS::PlaceHolderAttributes::fromData(path, data ? std::vector<uint8_t>{data->cbegin(), data->cend()} : std::vector<uint8_t>{});
 }
 
-OpenVFS::PlaceHolderAttributes placeHolderAttributes(const QString &path)
+OpenVFS::PlaceHolderAttributes placeHolderAttributes(const QString &path, bool warnOnMissing = true)
 {
-    return placeHolderAttributes(OCC::FileSystem::toFilesystemPath(path));
+    return placeHolderAttributes(OCC::FileSystem::toFilesystemPath(path), warnOnMissing);
 }
 
 OCC::Result<void, QString> setPlaceholderAttributes(const OpenVFS::PlaceHolderAttributes &attributes)
@@ -91,6 +91,22 @@ OCC::Result<void, QString> setPlaceholderAttributes(const OpenVFS::PlaceHolderAt
     }
     OCC::FileSystem::setModTime(attributes.absolutePath, modtime);
     return {};
+}
+
+bool setPinAttribute(const std::filesystem::path &path, OpenVFS::Constants::PinStates pin)
+{
+    auto attribs = placeHolderAttributes(path, false);
+    if (!attribs) {
+        return false;
+    }
+    if (attribs.pinState == pin) {
+        return true;
+    }
+    attribs.pinState = pin;
+    if (!setPlaceholderAttributes(attribs)) {
+        return false;
+    }
+    return true;
 }
 
 OpenVFS::Constants::PinStates convertPinState(OCC::PinState pState)
@@ -515,14 +531,29 @@ bool OpenVFS::setPinState(const QString &folderPath, PinState state)
 {
     const auto localPath = params().root() / folderPath;
     qCDebug(lcOpenVFS) << localPath.toString() << state;
-    auto attribs = placeHolderAttributes(localPath);
-    if (!attribs) {
-        // the file is not yet converted
+    const auto pin = convertPinState(state);
+    if (!setPinAttribute(localPath.get(), pin)) {
         return false;
     }
-    attribs.pinState = convertPinState(state);
-    if (!setPlaceholderAttributes(attribs)) {
-        return false;
+    std::error_code ec;
+    if (std::filesystem::is_directory(localPath.get(), ec)) {
+        auto it = std::filesystem::recursive_directory_iterator(localPath.get(), std::filesystem::directory_options::skip_permission_denied, ec);
+        if (ec) {
+            qCWarning(lcOpenVFS) << u"Failed to iterate" << localPath.toString() << ec.message();
+            return false;
+        }
+        for (const auto end = std::filesystem::recursive_directory_iterator(); it != end; it.increment(ec)) {
+            if (it->is_symlink(ec)) {
+                continue;
+            }
+            if (!setPinAttribute(it->path(), pin)) {
+                qCDebug(lcOpenVFS) << u"Skipping not yet converted file" << it->path().native();
+            }
+        }
+        if (ec) {
+            qCWarning(lcOpenVFS) << u"Failed to iterate" << localPath.toString() << ec.message();
+            return false;
+        }
     }
     return true;
 }
