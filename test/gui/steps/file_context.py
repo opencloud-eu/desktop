@@ -6,7 +6,9 @@ import zipfile
 from os.path import isfile, join, isdir, exists
 from behave import when as When, then as Then, given as Given
 from sure import ensure
+from pathlib import Path
 
+import helpers.FileExplorerHelper as FileExplorer
 from helpers.SetupClientHelper import get_resource_path, get_temp_resource_path
 from helpers.SyncHelper import (
     listen_sync_status_for_item,
@@ -466,3 +468,44 @@ def step(context):
 @Given('the user has created a file "{filename}" with size "{filesize}" in the sync folder')
 def step(context, filename, filesize):
     create_file_with_size(filename, filesize)
+
+
+@When(
+    'the user copies the private link of file "{resource_path}" from the file explorer context menu'
+)
+@When(
+    'the user copies the private link of folder "{resource_path}" from the file explorer context menu'
+)
+def step(context, resource_path):
+    resource = Path(resource_path)
+    parent_paths = resource.parent.parts
+    resource_name = resource.name
+    FileExplorer.navigate_to(parent_paths)
+    FileExplorer.copy_private_link(resource_name)
+
+
+@Then(
+    'the following file explorer context menu items should be available for file "{resource}" of user "{username}"'
+)
+@Then(
+    'the following file explorer context menu items should be available for folder "{resource}" of user "{username}"'
+)
+def step(context, resource, username):
+    expected_menus = [row['menu'] for row in table_hashes(context.table)]
+    FileExplorer.check_file_context_menu_items(resource, expected_menus)
+
+    for item in expected_menus:
+        with ensure(f'Menu item "{item}" not found in the actual list: {actual_menus}'):
+            (item in actual_menus).should.be.true
+
+
+@Then('the private link should be copied to the clipboard')
+def step(context):
+    clipboard_content = FileExplorer.get_clipboard_content()
+    base_url = get_config('localBackendUrl').rstrip("/")
+    link_pattern = rf'^{re.escape(base_url)}/f/[0-9A-Fa-f-%\$]+$'
+
+    with ensure(
+        f'Clipboard content "{clipboard_content}" does not match the private link pattern "{link_pattern}"'
+    ):
+        (re.fullmatch(link_pattern, clipboard_content)).should_not.be.none
