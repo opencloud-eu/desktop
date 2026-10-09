@@ -6,7 +6,6 @@
 #pragma once
 #include "thumbnailprovideripc.h"
 
-#include "config.h"
 #include "thumbcache.h"
 
 #include <QString>

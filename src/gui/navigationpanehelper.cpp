@@ -5,10 +5,7 @@
 #include "gui/navigationpanehelper.h"
 #include "gui/accountmanager.h"
 #include "gui/accountstate.h"
-#include "libsync/theme.h"
-
-#include <QCoreApplication>
-#include <QDir>
+#include "resources/jsontheme.h"
 
 using namespace OCC;
 using namespace Qt::Literals::StringLiterals;
@@ -31,7 +28,7 @@ void OCC::NavigationPaneHelper::removeLegacyCloudStorageRegistry()
     QSettings explorerNamespaceRegistry(groupKey, QSettings::NativeFormat);
     for (auto &clsi : explorerNamespaceRegistry.childGroups()) {
         const auto key = uR"(%1\%2)"_s.arg(groupKey, clsi);
-        if (explorerNamespaceRegistry.value(uR"(%1\ApplicationName)"_s.arg(key)).toString() != Theme::instance()->appNameGUI()) {
+        if (explorerNamespaceRegistry.value(uR"(%1\ApplicationName)"_s.arg(key)).toString() != Resources::JsonTheme::instance().applicationDisplayName()) {
             continue;
         }
         Q_ASSERT(!QUuid::fromString(clsi).isNull());

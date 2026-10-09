@@ -22,7 +22,7 @@
         <translation>الإعدادات</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/AccountBar.qml" line="191"/>
+        <location filename="../src/gui/qml/AccountBar.qml" line="192"/>
         <source>Quit</source>
         <translation>الخروج</translation>
     </message>
@@ -115,7 +115,7 @@
 <context>
     <name>CommandLine</name>
     <message>
-        <location filename="../src/gui/main.cpp" line="98"/>
+        <location filename="../src/gui/main.cpp" line="101"/>
         <source>%1 version %2<byte value="xd"/>
 File synchronization desktop utility.</source>
         <translation>%1 إصدار %2&lt;byte value=&quot;xd&quot;/&gt;
@@ -128,47 +128,47 @@ File synchronization desktop utility.</source>
         <translation>لمزيد من المعلومات، يرجى مراجعة %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/main.cpp" line="125"/>
+        <location filename="../src/gui/main.cpp" line="124"/>
         <source>Start with the main window visible, or if it is already running, bring it to the front. By default, the client launches in the background.</source>
         <translation>ابدأ مع ظهور النافذة الرئيسية، أو إذا كان البرنامج يعمل بالفعل، أحضره إلى المقدمة. بشكل افتراضي، يبدأ العميل في الخلفية.</translation>
     </message>
     <message>
-        <location filename="../src/gui/main.cpp" line="127"/>
+        <location filename="../src/gui/main.cpp" line="126"/>
         <source>Quit the running instance.</source>
         <translation>إنهاء المثيل الجاري.</translation>
     </message>
     <message>
-        <location filename="../src/gui/main.cpp" line="129"/>
+        <location filename="../src/gui/main.cpp" line="128"/>
         <source>Write log to file (use - to write to stdout).</source>
         <translation>اكتب السجل إلى ملف (استخدم - للكتابة إلى stdout).</translation>
     </message>
     <message>
-        <location filename="../src/gui/main.cpp" line="131"/>
+        <location filename="../src/gui/main.cpp" line="130"/>
         <source>Write each sync log output in a new file in folder.</source>
         <translation>اكتب كل مخرجات سجل المزامنة في ملف جديد في المجلد.</translation>
     </message>
     <message>
-        <location filename="../src/gui/main.cpp" line="132"/>
+        <location filename="../src/gui/main.cpp" line="131"/>
         <source>Flush the log file after every write.</source>
         <translation>أفرغ ملف السجل بعد كل كتابة.</translation>
     </message>
     <message>
-        <location filename="../src/gui/main.cpp" line="133"/>
+        <location filename="../src/gui/main.cpp" line="132"/>
         <source>Output debug-level messages in the log.</source>
         <translation>إخراج رسائل مستوى التصحيح في السجل.</translation>
     </message>
     <message>
-        <location filename="../src/gui/main.cpp" line="134"/>
+        <location filename="../src/gui/main.cpp" line="133"/>
         <source>Enable debug mode.</source>
         <translation>تفعيل وضع التصحيح.</translation>
     </message>
     <message>
-        <location filename="../src/gui/main.cpp" line="135"/>
+        <location filename="../src/gui/main.cpp" line="134"/>
         <source>Forward all arguments to the cmd client. This argument must be the first.</source>
         <translation>أرسل جميع الوسيطات إلى عميل cmd. يجب أن تكون هذه الوسيطة الأولى.</translation>
     </message>
     <message>
-        <location filename="../src/gui/main.cpp" line="151"/>
+        <location filename="../src/gui/main.cpp" line="150"/>
         <source>--logfile and --logdir are mutually exclusive</source>
         <translation>--logfile و --logdir متنافران</translation>
     </message>
@@ -247,57 +247,57 @@ File synchronization desktop utility.</source>
         <translation>إعادة الاتصال</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="101"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="102"/>
         <source>Remove</source>
         <translation>حذف</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="108"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="109"/>
         <source>Account options Menu</source>
         <translation>قائمة خيارات الحساب</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="361"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="363"/>
         <source>Restart sync</source>
         <translation>إعادة تشغيل المزامنة</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="361"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="363"/>
         <source>Force sync now</source>
         <translation>اجبر المزامنة الآن</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="369"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="371"/>
         <source>Resume sync</source>
         <translation>استئناف المزامنة</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="369"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="371"/>
         <source>Pause sync</source>
         <translation>إيقاف المزامنة مؤقتًا</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="377"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="379"/>
         <source>Choose what to sync</source>
         <translation>اختر ما تريد مزامنته</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="384"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="387"/>
         <source>Remove Space</source>
         <translation>إزالة المساحة</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="391"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="395"/>
         <source>Sync options menu</source>
         <translation>قائمة خيارات المزامنة</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="403"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="407"/>
         <source>Add Space</source>
         <translation>إضافة مساحة</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="423"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="427"/>
         <source>You are synchronizing %1 out of %2 Spaces</source>
         <translation>أنت تقوم بمزامنة %1 من أصل %2 مساحة</translation>
     </message>
@@ -526,32 +526,27 @@ File synchronization desktop utility.</source>
         <translation>الإصدارات</translation>
     </message>
     <message>
-        <location filename="../src/gui/aboutdialog.cpp" line="90"/>
+        <location filename="../src/gui/aboutdialog.cpp" line="83"/>
         <source>beta</source>
         <translation>بيتا</translation>
     </message>
     <message>
-        <location filename="../src/gui/aboutdialog.cpp" line="158"/>
+        <location filename="../src/gui/aboutdialog.cpp" line="151"/>
         <source>Change update channel?</source>
         <translation>تغيير قناة التحديث؟</translation>
     </message>
     <message>
-        <location filename="../src/gui/aboutdialog.cpp" line="159"/>
-        <source>&lt;html&gt;The update channel determines which client updates will be offered for installation.&lt;ul&gt;&lt;li&gt;&quot;stable&quot; contains only upgrades that are considered reliable&lt;/li&gt;%1&lt;/ul&gt;&lt;br&gt;⚠️Downgrades are not supported. If you switch to a stable channel this change will only be applied with the next major release.&lt;/html&gt;</source>
-        <translation>&lt;html&gt;تحدد قناة التحديث أي تحديثات للعميل سيتم تقديمها للتثبيت.&lt;ul&gt;&lt;li&gt;&quot;مستقر&quot; يحتوي فقط على الترقيات التي تعتبر موثوقة&lt;/li&gt;%1&lt;/ul&gt;&lt;br&gt;⚠️التخفيضات غير مدعومة. إذا قمت بالتبديل إلى قناة مستقرة، فسيتم تطبيق هذا التغيير فقط مع الإصدار الرئيسي التالي.&lt;/html&gt;</translation>
+        <location filename="../src/gui/aboutdialog.cpp" line="152"/>
+        <source>&lt;html&gt;The update channel determines which client updates will be offered for installation.&lt;ul&gt;&lt;li&gt;&quot;stable&quot; contains only upgrades that are considered reliable&lt;/li&gt;&lt;/ul&gt;&lt;br&gt;⚠️Downgrades are not supported. If you switch to a stable channel this change will only be applied with the next major release.&lt;/html&gt;</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/gui/aboutdialog.cpp" line="165"/>
-        <source>&lt;li&gt;&quot;beta&quot; may contain newer features and bugfixes, but have not yet been tested thoroughly&lt;/li&gt;</source>
-        <translation>&lt;li&gt;&quot;بيتا&quot; قد تحتوي على ميزات أحدث وإصلاحات للأخطاء، لكنها لم تختبر بعد بشكل كامل&lt;/li&gt;</translation>
-    </message>
-    <message>
-        <location filename="../src/gui/aboutdialog.cpp" line="167"/>
+        <location filename="../src/gui/aboutdialog.cpp" line="157"/>
         <source>Change update channel</source>
         <translation>تغيير قناة التحديث</translation>
     </message>
     <message>
-        <location filename="../src/gui/aboutdialog.cpp" line="168"/>
+        <location filename="../src/gui/aboutdialog.cpp" line="158"/>
         <source>Cancel</source>
         <translation>إلغاء</translation>
     </message>
@@ -769,22 +764,22 @@ The update will be performed in the background, and overwrite the current AppIma
 <context>
     <name>OCC::Application</name>
     <message>
-        <location filename="../src/gui/main.cpp" line="176"/>
+        <location filename="../src/gui/main.cpp" line="175"/>
         <source>Quit</source>
         <translation>الخروج</translation>
     </message>
     <message>
-        <location filename="../src/gui/application.cpp" line="188"/>
+        <location filename="../src/gui/application.cpp" line="189"/>
         <source>Unsupported Server Version</source>
         <translation>إصدار الخادم غير مدعوم</translation>
     </message>
     <message>
-        <location filename="../src/gui/application.cpp" line="189"/>
+        <location filename="../src/gui/application.cpp" line="190"/>
         <source>The server on account »%1« runs an unsupported version %2. Using this client with unsupported server versions is untested and potentially dangerous. Proceed at your own risk.</source>
         <translation>الخادم على الحساب »%1« يعمل بإصدار غير مدعوم %2. استخدام هذا العميل مع إصدارات الخادم غير المدعومة غير مختبر ومحفوف بالمخاطر المحتملة. المتابعة على مسؤوليتك الخاصة.</translation>
     </message>
     <message>
-        <location filename="../src/gui/application.cpp" line="214"/>
+        <location filename="../src/gui/application.cpp" line="215"/>
         <source>Application is shutting down</source>
         <translation>التطبيق يتم إغلاقه</translation>
     </message>
@@ -862,7 +857,7 @@ The update will be performed in the background, and overwrite the current AppIma
 <context>
     <name>OCC::CredentialJob</name>
     <message>
-        <location filename="../src/libsync/creds/credentialmanager.cpp" line="222"/>
+        <location filename="../src/libsync/creds/credentialmanager.cpp" line="223"/>
         <source>Failed to parse credentials %1</source>
         <translation>فشل تحليل بيانات الاعتماد %1</translation>
     </message>
@@ -905,141 +900,141 @@ The update will be performed in the background, and overwrite the current AppIma
 <context>
     <name>OCC::Folder</name>
     <message>
-        <location filename="../src/gui/folder.cpp" line="159"/>
+        <location filename="../src/gui/folder.cpp" line="160"/>
         <source>The path »%1« is too long. Please enable long paths in the Windows settings or choose a different folder.</source>
         <translation>المسار »%1« طويل جدًا. يرجى تمكين المسارات الطويلة في إعدادات ويندوز (Windows) أو اختيار مجلد مختلف.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="209"/>
+        <location filename="../src/gui/folder.cpp" line="210"/>
         <source>Failed to open the database for »%1«.</source>
         <translation>فشل فتح قاعدة البيانات لـ »%1«.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="187"/>
+        <location filename="../src/gui/folder.cpp" line="188"/>
         <source>Local folder »%1« does not exist.</source>
         <translation>المجلد المحلي »%1« غير موجود.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="215"/>
+        <location filename="../src/gui/folder.cpp" line="216"/>
         <source>»%1« should be a folder but is not.</source>
         <translation>»%1« يجب أن يكون مجلدًا لكنه ليس كذلك.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="217"/>
+        <location filename="../src/gui/folder.cpp" line="218"/>
         <source>»%1« is not readable.</source>
         <translation>»%1« غير قابل للقراءة.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="219"/>
+        <location filename="../src/gui/folder.cpp" line="220"/>
         <source>»%1« is not writable.</source>
         <translation>»%1« غير قابل للكتابة.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="489"/>
+        <location filename="../src/gui/folder.cpp" line="490"/>
         <source>»%1« and %n other file(s) have been removed.</source>
         <translation><numerusform>تمت إزالة »%1« ولم تتم إزالة ملفات أخرى.</numerusform><numerusform>تمت إزالة »%1« وملف واحد آخر.</numerusform><numerusform>تمت إزالة »%1« وملفين اثنين آخرين.</numerusform><numerusform>تمت إزالة »%1« و%n ملفات أخرى.</numerusform><numerusform>تمت إزالة »%1« و%n ملفا آخر.</numerusform><numerusform>تمت إزالة »%1« و%n ملف آخر.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="491"/>
+        <location filename="../src/gui/folder.cpp" line="492"/>
         <source>»%1« has been removed.</source>
         <comment>%1 names a file.</comment>
         <translation>تمت إزالة »%1«.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="496"/>
+        <location filename="../src/gui/folder.cpp" line="497"/>
         <source>»%1« and %n other file(s) have been added.</source>
         <translation><numerusform>تمت إضافة »%1« ولم تتم إضافة ملف آخر.</numerusform><numerusform>تمت إضافة »%1« وملف واحد  آخر.</numerusform><numerusform>تمت إضافة »%1« وملفين اثنين آخرين.</numerusform><numerusform>تمت إضافة »%1« و%n ملفات أخرى.</numerusform><numerusform>تمت إضافة »%1« و%n ملفا آخر.</numerusform><numerusform>تمت إضافة »%1« و%n ملف آخر.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="498"/>
+        <location filename="../src/gui/folder.cpp" line="499"/>
         <source>»%1« has been added.</source>
         <comment>%1 names a file.</comment>
         <translation>تمت إضافة »%1«.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="503"/>
+        <location filename="../src/gui/folder.cpp" line="504"/>
         <source>»%1« and %n other file(s) have been updated.</source>
         <translation><numerusform>تم تحديث »%1« ولم تتم تحديث ملف آخر.</numerusform><numerusform>تم تحديث »%1« وملف واحد آخر.</numerusform><numerusform>تم تحديث »%1« وملفين اثنين آخرين.</numerusform><numerusform>تم تحديث »%1« و%n ملفات أخرى.</numerusform><numerusform>تم تحديث »%1« و%n ملفا آخر.</numerusform><numerusform>تم تحديث »%1« و%n ملف آخر.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="505"/>
+        <location filename="../src/gui/folder.cpp" line="506"/>
         <source>»%1« has been updated.</source>
         <comment>%1 names a file.</comment>
         <translation>تم تحديث »%1«.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="510"/>
+        <location filename="../src/gui/folder.cpp" line="511"/>
         <source>»%1« has been renamed to »%2« and %n other file(s) have been renamed.</source>
         <translation><numerusform>تمت إعادة تسمية »%1« إلى »%2« ولم تتم إعادة تسمية ملف آخر.</numerusform><numerusform>تمت إعادة تسمية »%1« إلى »%2« وتمت إعادة تسمية ملف واحد آخر.</numerusform><numerusform>تمت إعادة تسمية »%1« إلى »%2« وتمت إعادة تسمية ملفين اثنين آخرين.</numerusform><numerusform>تمت إعادة تسمية »%1« إلى »%2« وتمت إعادة تسمية %n ملفات أخرى.</numerusform><numerusform>تمت إعادة تسمية »%1« إلى »%2« وتمت إعادة تسمية %n ملفا آخر.</numerusform><numerusform>تمت إعادة تسمية »%1« إلى »%2« وتمت إعادة تسمية %n ملف آخر.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="512"/>
+        <location filename="../src/gui/folder.cpp" line="513"/>
         <source>»%1« has been renamed to »%2«.</source>
         <comment>%1 and %2 name files.</comment>
         <translation>تمت إعادة تسمية »%1« إلى »%2«.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="517"/>
+        <location filename="../src/gui/folder.cpp" line="518"/>
         <source>»%1« has been moved to »%2« and %n other file(s) have been moved.</source>
         <translation><numerusform>تم نقل »%1« إلى »%2« ولم يتم نقل ملف آخر.</numerusform><numerusform>تم نقل »%1« إلى »%2« وتم نقل ملف واحد آخر.</numerusform><numerusform>تم نقل »%1« إلى »%2« وتم نقل ملفين اثنين آخرين.</numerusform><numerusform>تم نقل »%1« إلى »%2« وتم نقل %n ملفات أخرى.</numerusform><numerusform>تم نقل »%1« إلى »%2« وتم نقل %n ملفا آخر.</numerusform><numerusform>تم نقل »%1« إلى »%2« وتم نقل %n ملف آخر.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="519"/>
+        <location filename="../src/gui/folder.cpp" line="520"/>
         <source>»%1« has been moved to »%2«.</source>
         <translation>تم نقل »%1« إلى »%2«.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="524"/>
+        <location filename="../src/gui/folder.cpp" line="525"/>
         <source>»%1« and %n other file(s) have sync conflicts.</source>
         <translation><numerusform>لدى »%1« تعارضات في المزامنة ولا يوجد ملف آخر بتعارضات في المزامنة.</numerusform><numerusform>لدى »%1« وملف واحد آخر تعارضات في المزامنة.</numerusform><numerusform>لدى »%1« وملفين اثنين آخرين تعارضات في المزامنة.</numerusform><numerusform>لدى »%1« و%n ملفات أخرى تعارضات في المزامنة.</numerusform><numerusform>لدى »%1« و%n ملفا آخر تعارضات في المزامنة.</numerusform><numerusform>لدى »%1« و%n ملف آخر تعارضات في المزامنة.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="526"/>
+        <location filename="../src/gui/folder.cpp" line="527"/>
         <source>»%1« has a sync conflict. Please check the conflict file!</source>
         <translation>لدى »%1« تعارض في المزامنة. يرجى التحقق من ملف التعارض!</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="531"/>
+        <location filename="../src/gui/folder.cpp" line="532"/>
         <source>»%1« and %n other file(s) could not be synced due to errors. See the log for details.</source>
         <translation><numerusform>تعذر مزامنة »%1« بسبب أخطاء ولا يوجد ملف آخر لا يمكن مزامنته. راجع السجل للتفاصيل.</numerusform><numerusform>تعذر مزامنة »%1« وملف واحد آخر بسبب أخطاء. راجع السجل للتفاصيل.</numerusform><numerusform>تعذر مزامنة »%1« وملفين اثنين آخرين بسبب أخطاء. راجع السجل للتفاصيل.</numerusform><numerusform>تعذر مزامنة »%1« و%n ملفات أخرى بسبب أخطاء. راجع السجل للتفاصيل.</numerusform><numerusform>تعذر مزامنة »%1« و%n ملفا آخر بسبب أخطاء. راجع السجل للتفاصيل.</numerusform><numerusform>تعذر مزامنة »%1« و%n ملف آخر بسبب أخطاء. راجع السجل للتفاصيل.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="533"/>
+        <location filename="../src/gui/folder.cpp" line="534"/>
         <source>»%1« could not be synced due to an error. See the log for details.</source>
         <translation>تعذر مزامنة »%1« بسبب خطأ. راجع السجل للتفاصيل.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="539"/>
+        <location filename="../src/gui/folder.cpp" line="540"/>
         <source>Sync Activity</source>
         <translation>نشاط المزامنة</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="742"/>
+        <location filename="../src/gui/folder.cpp" line="743"/>
         <source>Switching VFS mode on folder »%1«</source>
         <translation>جارٍ تبديل وضع VFS على المجلد »%1«</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1070"/>
+        <location filename="../src/gui/folder.cpp" line="1071"/>
         <source>The folder »%1« was created but was excluded from synchronization previously. Data inside it will not be synchronized.</source>
         <translation>تم إنشاء المجلد »%1« لكنه تم استبعاده من المزامنة مسبقًا. لن يتم مزامنة البيانات الموجودة بداخله.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1073"/>
+        <location filename="../src/gui/folder.cpp" line="1074"/>
         <source>The file »%1« was created but was excluded from synchronization previously. It will not be synchronized.</source>
         <translation>تم إنشاء الملف »%1« لكنه تم استبعاده من المزامنة مسبقًا. لن يتم مزامنته.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1077"/>
+        <location filename="../src/gui/folder.cpp" line="1078"/>
         <source>»%1« is not synchronized</source>
         <translation>»%1« غير مزامن</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="868"/>
+        <location filename="../src/gui/folder.cpp" line="869"/>
         <source>Could not read system exclude file</source>
         <translation>تعذر قراءة ملف الاستبعاد النظامي</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1085"/>
+        <location filename="../src/gui/folder.cpp" line="1086"/>
         <source>Changes in synchronized folders could not be tracked reliably.
 
 This means that the synchronization client might not upload local changes immediately and will instead only scan for local changes and upload them occasionally (every two hours by default).
@@ -1055,106 +1050,97 @@ This means that the synchronization client might not upload local changes immedi
 <context>
     <name>OCC::FolderMan</name>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="239"/>
+        <location filename="../src/gui/folderman.cpp" line="240"/>
         <source>Could not reset folder state</source>
         <translation>تعذر إعادة تعيين حالة المجلد</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="240"/>
+        <location filename="../src/gui/folderman.cpp" line="241"/>
         <source>An old sync journal %1 was found, but could not be removed. Please make sure that no application is currently using it.</source>
         <translation>تم العثور على دفتر مزامنة قديم %1، لكنه لا يمكن إزالته. يرجى التأكد من عدم استخدام أي تطبيق له حاليًا.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="302"/>
+        <location filename="../src/gui/folderman.cpp" line="303"/>
         <source>Account disconnected or paused</source>
         <translation>الحساب منفصل أو متوقف مؤقتًا</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="446"/>
+        <location filename="../src/gui/folderman.cpp" line="447"/>
         <source>Folder is about to be removed</source>
         <translation>سيتم حذف الملف</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="469"/>
+        <location filename="../src/gui/folderman.cpp" line="470"/>
         <source> (backup)</source>
         <translation> (نسخة احتياطية)</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="474"/>
+        <location filename="../src/gui/folderman.cpp" line="475"/>
         <source> (backup %1)</source>
         <translation> (نسخة احتياطية %1)</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="515"/>
+        <location filename="../src/gui/folderman.cpp" line="516"/>
         <source>Sync was successful, unresolved conflicts.</source>
         <translation>المزامنة ناجحة، تعارضات غير محلولة.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="524"/>
+        <location filename="../src/gui/folderman.cpp" line="525"/>
         <source>%1 (Sync is paused)</source>
         <translation>%1 (المزامنة متوقفة مؤقتًا)</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="535"/>
+        <location filename="../src/gui/folderman.cpp" line="536"/>
         <source>The folder »%1« is already in use by application %2!</source>
         <translation>المجلد »%1« قيد الاستخدام بالفعل بواسطة التطبيق %2!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="548"/>
+        <location filename="../src/gui/folderman.cpp" line="549"/>
         <source>The folder »%1« is already in use by another account.</source>
         <translation>المجلد »%1« قيد الاستخدام بالفعل بواسطة حساب آخر.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="624"/>
+        <location filename="../src/gui/folderman.cpp" line="625"/>
         <source>The local folder »%1« already contains a folder used in a folder sync connection. Please pick another local folder!</source>
         <translation>المجلد المحلي »%1« يحتوي بالفعل على مجلد مستخدم في اتصال مزامنة الملفات. يرجى اختيار مجلد محلي آخر!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="630"/>
+        <location filename="../src/gui/folderman.cpp" line="631"/>
         <source>The local folder »%1« is already contained in a folder used in a folder sync connection. Please pick another local folder!</source>
         <translation>المجلد المحلي »%1« موجود بالفعل داخل مجلد مستخدم في اتصال مزامنة الملفات. يرجى اختيار مجلد محلي آخر!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="638"/>
+        <location filename="../src/gui/folderman.cpp" line="639"/>
         <source>Please pick another local folder for »%1«.</source>
         <translation>يرجى اختيار مجلد محلي آخر لـ »%1«.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="708"/>
-        <source>Multiple accounts are sharing the folder »%1«.
-This configuration is know to lead to dataloss and is no longer supported.
-Please consider removing this folder from the account and adding it again.</source>
-        <translation>حسابات متعددة تشارك المجلد »%1«.
-من المعروف أن هذا التكوين يؤدي إلى فقدان البيانات ولا يتم دعمه بعد الآن.
-يرجى التفكير في إزالة هذا المجلد من الحساب وإضافته مرة أخرى.</translation>
-    </message>
-    <message>
-        <location filename="../src/gui/folderman.cpp" line="563"/>
+        <location filename="../src/gui/folderman.cpp" line="564"/>
         <source>No valid folder selected!</source>
         <translation>لم يتم اختيار مجلد صالح!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="581"/>
+        <location filename="../src/gui/folderman.cpp" line="582"/>
         <source>The selected path does not exist!</source>
         <translation>المسار المحدد غير موجود!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="585"/>
+        <location filename="../src/gui/folderman.cpp" line="586"/>
         <source>The folder »%1« is used in a folder sync connection!</source>
         <translation>المجلد »%1« مستخدم في اتصال مزامنة الملفات!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="591"/>
+        <location filename="../src/gui/folderman.cpp" line="592"/>
         <source>The selected path is not a folder!</source>
         <translation>المسار المحدد ليس مجلدًا!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="595"/>
+        <location filename="../src/gui/folderman.cpp" line="596"/>
         <source>You have no permission to write to the selected folder!</source>
         <translation>ليس لديك إذن للكتابة في المجلد المحدد!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="621"/>
+        <location filename="../src/gui/folderman.cpp" line="622"/>
         <source>There is already a sync from the server to this local folder. Please pick another local folder!</source>
         <translation>توجد بالفعل مزامنة من الخادم إلى هذا المجلد المحلي. يرجى اختيار مجلد محلي آخر!</translation>
     </message>
@@ -1162,32 +1148,32 @@ Please consider removing this folder from the account and adding it again.</sour
 <context>
     <name>OCC::FolderStatusModel</name>
     <message>
-        <location filename="../src/gui/folderstatusmodel.cpp" line="258"/>
+        <location filename="../src/gui/folderstatusmodel.cpp" line="254"/>
         <source>There are unresolved conflicts.</source>
         <translation>توجد تعارضات غير محلولة.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderstatusmodel.cpp" line="303"/>
+        <location filename="../src/gui/folderstatusmodel.cpp" line="299"/>
         <source>%1 of %2 used</source>
         <translation>%1 من %2 مستخدم</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderstatusmodel.cpp" line="386"/>
+        <location filename="../src/gui/folderstatusmodel.cpp" line="382"/>
         <source>Checking for changes in remote »%1«</source>
         <translation>جارٍ التحقق من التغييرات في »%1« البعيد</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderstatusmodel.cpp" line="388"/>
+        <location filename="../src/gui/folderstatusmodel.cpp" line="384"/>
         <source>Checking for changes in local »%1«</source>
         <translation>جارٍ التحقق من التغييرات في »%1« المحلي</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderstatusmodel.cpp" line="392"/>
+        <location filename="../src/gui/folderstatusmodel.cpp" line="388"/>
         <source>Reconciling changes</source>
         <translation>توحيد التغييرات</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderstatusmodel.cpp" line="269"/>
+        <location filename="../src/gui/folderstatusmodel.cpp" line="265"/>
         <source>Local folder: %1</source>
         <translation>المجلد المحلي: %1</translation>
     </message>
@@ -1313,27 +1299,27 @@ Please consider removing this folder from the account and adding it again.</sour
         <translation>متقدم</translation>
     </message>
     <message>
-        <location filename="../src/gui/generalsettings.cpp" line="145"/>
+        <location filename="../src/gui/generalsettings.cpp" line="146"/>
         <source>You cannot disable autostart because system-wide autostart is enabled.</source>
         <translation>لا يمكنك تعطيل التشغيل التلقائي لأن التشغيل التلقائي على مستوى النظام ممكّن.</translation>
     </message>
     <message>
-        <location filename="../src/gui/generalsettings.cpp" line="53"/>
+        <location filename="../src/gui/generalsettings.cpp" line="55"/>
         <source>Warning</source>
         <translation>تحذير</translation>
     </message>
     <message>
-        <location filename="../src/gui/generalsettings.cpp" line="53"/>
+        <location filename="../src/gui/generalsettings.cpp" line="55"/>
         <source>Language changes require a restart of this application to take effect.</source>
         <translation>تتطلب تغييرات اللغة إعادة تشغيل هذا التطبيق لتصبح سارية.</translation>
     </message>
     <message>
-        <location filename="../src/gui/generalsettings.cpp" line="178"/>
+        <location filename="../src/gui/generalsettings.cpp" line="179"/>
         <source>unknown (%1)</source>
         <translation>غير معروف (%1)</translation>
     </message>
     <message>
-        <location filename="../src/gui/generalsettings.cpp" line="162"/>
+        <location filename="../src/gui/generalsettings.cpp" line="163"/>
         <source>(use default)</source>
         <translation>(استخدم الافتراضي)</translation>
     </message>
@@ -1452,7 +1438,7 @@ Items where deletion is allowed will be deleted if they prevent a directory from
 <context>
     <name>OCC::IssuesWidget</name>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="351"/>
+        <location filename="../src/gui/issueswidget.cpp" line="353"/>
         <source>Filter</source>
         <translation>مرشح</translation>
     </message>
@@ -1467,17 +1453,17 @@ Items where deletion is allowed will be deleted if they prevent a directory from
         <translation>كان هناك الكثير من المشاكل. لن تكون جميعها مرئية هنا.</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="227"/>
+        <location filename="../src/gui/issueswidget.cpp" line="229"/>
         <source>Reset column sizes</source>
         <translation>إعادة تعيين أحجام الأعمدة</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="261"/>
+        <location filename="../src/gui/issueswidget.cpp" line="263"/>
         <source>Filter menu</source>
         <translation>قائمة المرشح</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="263"/>
+        <location filename="../src/gui/issueswidget.cpp" line="265"/>
         <source>Account</source>
         <translation>الحساب</translation>
     </message>
@@ -1552,12 +1538,12 @@ Note that using any logging command line options will override the settings.</so
         <translation>الكل</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="281"/>
+        <location filename="../src/gui/issueswidget.cpp" line="283"/>
         <source>Reset Filters</source>
         <translation>إعادة تعيين المرشحات</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="366"/>
+        <location filename="../src/gui/issueswidget.cpp" line="368"/>
         <source>Status Filter:</source>
         <translation>حالة المرشح:</translation>
     </message>
@@ -1646,109 +1632,109 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::OAuth</name>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="350"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="352"/>
         <source>Error returned from the server: &lt;em&gt;%1&lt;/em&gt;</source>
         <translation>تم إرجاع خطأ من الخادم: &lt;em&gt;%1&lt;/em&gt;</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="352"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="354"/>
         <source>There was an error accessing the &apos;token&apos; endpoint: &lt;br&gt;&lt;em&gt;%1&lt;/em&gt;</source>
         <translation>حدث خطأ أثناء الوصول إلى نقطة النهاية &apos;token&apos;: &lt;br&gt;&lt;em&gt;%1&lt;/em&gt;</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="354"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="356"/>
         <source>Could not parse the JSON returned from the server: &lt;br&gt;&lt;em&gt;%1&lt;/em&gt;</source>
         <translation>تعذر تحليل JSON المرتجع من الخادم: &lt;br&gt;&lt;em&gt;%1&lt;/em&gt;</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="356"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="358"/>
         <source>Unsupported token type: %1</source>
         <translation>نوع الرمز غير مدعوم: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="358"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="360"/>
         <source>The reply from the server did not contain all expected fields
 :%1</source>
         <translation>لم يحتوِ الرد من الخادم على جميع الحقول المتوقعة
 :%1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="360"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="362"/>
         <source>Unknown Error</source>
         <translation>خطأ غير معروف</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="363"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="365"/>
         <source>The id_token could not be parsed</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="373"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="375"/>
         <source>&lt;h1&gt;Incorrect user&lt;/h1&gt;&lt;p&gt;You logged-in as user &lt;em&gt;%1&lt;/em&gt;, but must login with user &lt;em&gt;%2&lt;/em&gt;.&lt;br&gt;Please return to the %3 and restart the authentication.&lt;/p&gt;</source>
         <translation>&lt;h1&gt;مستخدم غير صحيح&lt;/h1&gt;&lt;p&gt;لقد قمت بتسجيل الدخول كمستخدم &lt;em&gt;%1&lt;/em&gt;، لكن يجب تسجيل الدخول باستخدام المستخدم &lt;em&gt;%2&lt;/em&gt;.&lt;br&gt;يرجى العودة إلى %3 وإعادة تشغيل المصادقة.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="378"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="380"/>
         <source>&lt;h1&gt;Incorrect user&lt;/h1&gt;&lt;p&gt;You logged-in as a different user than is associated with this account.&lt;br&gt;Please return to the %1 and restart the authentication.&lt;/p&gt;</source>
         <translation>&lt;h1&gt;مستخدم غير صحيح&lt;/h1&gt;&lt;p&gt;لقد قمت بتسجيل الدخول كمستخدم مختلف عن المرتبط بهذا الحساب.&lt;br&gt;يرجى العودة إلى %1 وإعادة تشغيل المصادقة.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="383"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="385"/>
         <source>Incorrect user</source>
         <translation>مستخدم غير صحيح</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="397"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="399"/>
         <source>&lt;h1&gt;Login successful&lt;/h1&gt;&lt;p&gt;You can close this window.&lt;/p&gt;</source>
         <translation>&lt;h1&gt;تم تسجيل الدخول بنجاح&lt;/h1&gt;&lt;p&gt;يمكنك إغلاق هذه النافذة.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="398"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="400"/>
         <source>Login successful</source>
         <translation>تم تسجيل الدخول بنجاح</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="561"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="563"/>
         <source>WebFinger response had unexpected content type: %1</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="571"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="573"/>
         <source>Could not parse WebFinger response: %1</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="579"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="581"/>
         <source>WebFinger response subject did not match the requested resource</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="591"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="593"/>
         <source>WebFinger response did not contain an OpenID Connect issuer</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="598"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="600"/>
         <source>WebFinger issuer link had no href</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="683"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="685"/>
         <source>Could not parse OIDC discovery response: %1</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="337"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="339"/>
         <source>Login Error</source>
         <translation>خطأ في تسجيل الدخول</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="365"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="367"/>
         <source>The audience of the id_token did not contain &quot;%1&quot;</source>
         <translation>لم يحتوي جمهور id_token على &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="337"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="339"/>
         <source>&lt;h1&gt;Login Error&lt;/h1&gt;&lt;p&gt;%1&lt;/p&gt;</source>
         <translation>&lt;h1&gt;خطأ في تسجيل الدخول&lt;/h1&gt;&lt;p&gt;%1&lt;/p&gt;</translation>
     </message>
@@ -2386,33 +2372,33 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::SelectiveSyncWidget</name>
     <message>
-        <location filename="../src/gui/selectivesyncwidget.cpp" line="69"/>
+        <location filename="../src/gui/selectivesyncwidget.cpp" line="70"/>
         <source>Loading...</source>
         <translation>جارٍ التحميل...</translation>
     </message>
     <message>
-        <location filename="../src/gui/selectivesyncwidget.cpp" line="75"/>
+        <location filename="../src/gui/selectivesyncwidget.cpp" line="76"/>
         <source>Deselect remote folders you do not wish to synchronize.</source>
         <translation>قم بإلغاء تحديد المجلدات البعيدة التي لا ترغب في مزامنتها.</translation>
     </message>
     <message>
-        <location filename="../src/gui/selectivesyncwidget.cpp" line="89"/>
+        <location filename="../src/gui/selectivesyncwidget.cpp" line="90"/>
         <source>Name</source>
         <translation>الاسم</translation>
     </message>
     <message>
-        <location filename="../src/gui/selectivesyncwidget.cpp" line="90"/>
+        <location filename="../src/gui/selectivesyncwidget.cpp" line="91"/>
         <source>Size</source>
         <translation>الحجم</translation>
     </message>
     <message>
-        <location filename="../src/gui/selectivesyncwidget.cpp" line="108"/>
-        <location filename="../src/gui/selectivesyncwidget.cpp" line="243"/>
+        <location filename="../src/gui/selectivesyncwidget.cpp" line="109"/>
+        <location filename="../src/gui/selectivesyncwidget.cpp" line="244"/>
         <source>Currently there are no subfolders on the server.</source>
         <translation>حاليًا لا توجد مجلدات فرعية على الخادم.</translation>
     </message>
     <message>
-        <location filename="../src/gui/selectivesyncwidget.cpp" line="110"/>
+        <location filename="../src/gui/selectivesyncwidget.cpp" line="111"/>
         <source>An error occurred while loading the list of subfolders.</source>
         <translation>حدث خطأ أثناء تحميل قائمة المجلدات الفرعية.</translation>
     </message>
@@ -2420,22 +2406,22 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::SettingsDialog</name>
     <message>
-        <location filename="../src/gui/settingsdialog.cpp" line="114"/>
+        <location filename="../src/gui/settingsdialog.cpp" line="115"/>
         <source>Hide</source>
         <translation>إخفاء</translation>
     </message>
     <message>
-        <location filename="../src/gui/settingsdialog.cpp" line="123"/>
+        <location filename="../src/gui/settingsdialog.cpp" line="125"/>
         <source>Quit %1</source>
         <translation>الخروج من %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/settingsdialog.cpp" line="124"/>
+        <location filename="../src/gui/settingsdialog.cpp" line="126"/>
         <source>Are you sure you want to quit %1?</source>
         <translation>هل أنت متأكد أنك تريد الخروج من %1؟</translation>
     </message>
     <message>
-        <location filename="../src/gui/settingsdialog.cpp" line="149"/>
+        <location filename="../src/gui/settingsdialog.cpp" line="152"/>
         <source>%1 - %2</source>
         <translation>%1 - %2</translation>
     </message>
@@ -2448,38 +2434,38 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::SocketApi</name>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="505"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="507"/>
         <source>Share with %1</source>
         <comment>parameter is OpenCloud</comment>
         <translation>مشاركة مع %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="603"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="605"/>
         <source>Confirm deletion</source>
         <translation>تأكيد الحذف</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="605"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="607"/>
         <source>Do you want to delete the directory »%1« and all its contents permanently?</source>
         <translation>هل تريد حذف المجلد »%1« وجميع محتوياته بشكل دائم؟</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="606"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="608"/>
         <source>Do you want to delete the file »%1« permanently?</source>
         <translation>هل تريد حذف الملف »%1« بشكل دائم؟</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="648"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="650"/>
         <source>Select new location...</source>
         <translation>اختر موقعًا جديدًا...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="658"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="660"/>
         <source>Error</source>
         <translation>خطأ</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="659"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="661"/>
         <source>Moving file failed:
 
 %1</source>
@@ -2488,80 +2474,80 @@ Note that using any logging command line options will override the settings.</so
 %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="762"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="763"/>
         <source>I shared something with you</source>
         <translation>لقد شاركت شيئًا معك</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="775"/>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="805"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="776"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="806"/>
         <source>Share...</source>
         <translation>مشاركة...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="777"/>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="809"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="778"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="810"/>
         <source>Copy private link to clipboard</source>
         <translation>نسخ الرابط الخاص إلى الحافظة</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="778"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="779"/>
         <source>Send private link by email...</source>
         <translation>إرسال رابط خاص عبر البريد الإلكتروني...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="803"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="804"/>
         <source>Resharing this file is not allowed</source>
         <translation>إعادة مشاركة هذا الملف غير مسموح بها</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="803"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="804"/>
         <source>Resharing this folder is not allowed</source>
         <translation>إعادة مشاركة هذا المجلد غير مسموح بها</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="874"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="875"/>
         <source>Open in %1</source>
         <translation>فتح في %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="885"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="886"/>
         <source>Show file versions in web browser</source>
         <translation>إظهار إصدارات الملف في متصفح الويب</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="907"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="908"/>
         <source>Rename...</source>
         <translation>إعادة التسمية...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="910"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="911"/>
         <source>Rename and upload...</source>
         <translation>إعادة التسمية والرفع...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="915"/>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="919"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="916"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="920"/>
         <source>Move and rename...</source>
         <translation>النقل وإعادة التسمية...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="922"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="923"/>
         <source>Move, rename and upload...</source>
         <translation>النقل، إعادة التسمية والرفع...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="925"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="926"/>
         <source>Delete local changes</source>
         <translation>حذف التغييرات المحلية</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="930"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="931"/>
         <source>Move and upload...</source>
         <translation>النقل والرفع...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="931"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="932"/>
         <source>Delete</source>
         <translation>حذف</translation>
     </message>
@@ -2631,77 +2617,77 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::Systray</name>
     <message>
-        <location filename="../src/gui/systray.cpp" line="55"/>
+        <location filename="../src/gui/systray.cpp" line="56"/>
         <source>%1: %2</source>
         <translation>%1: %2</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="93"/>
+        <location filename="../src/gui/systray.cpp" line="94"/>
         <source>Disconnected from %1</source>
         <translation>منفصل من %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="96"/>
+        <location filename="../src/gui/systray.cpp" line="97"/>
         <source>Disconnected from accounts:</source>
         <translation>منفصل من الحسابات:</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="98"/>
+        <location filename="../src/gui/systray.cpp" line="99"/>
         <source>Account %1</source>
         <translation>الحساب %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="111"/>
+        <location filename="../src/gui/systray.cpp" line="112"/>
         <source>Please sign in</source>
         <translation>يرجى تسجيل الدخول</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="115"/>
+        <location filename="../src/gui/systray.cpp" line="116"/>
         <source>Account synchronization is disabled</source>
         <translation>مزامنة الحساب معطلة</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="134"/>
+        <location filename="../src/gui/systray.cpp" line="135"/>
         <source>Space »%1«: %2</source>
         <translation>المساحة »%1«: %2</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="146"/>
+        <location filename="../src/gui/systray.cpp" line="147"/>
         <source>Show %1</source>
         <translation>إظهار %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="149"/>
+        <location filename="../src/gui/systray.cpp" line="151"/>
         <source>Pause synchronizations</source>
         <translation>إيقاف المزامنات مؤقتًا</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="149"/>
+        <location filename="../src/gui/systray.cpp" line="151"/>
         <source>Resume synchronizations</source>
         <translation>استئناف المزامنات</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="154"/>
+        <location filename="../src/gui/systray.cpp" line="156"/>
         <source>Synchronization paused</source>
         <translation>المزامنة متوقفة مؤقتًا</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="188"/>
+        <location filename="../src/gui/systray.cpp" line="190"/>
         <source>Help</source>
         <translation>المساعدة</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="191"/>
+        <location filename="../src/gui/systray.cpp" line="193"/>
         <source>About</source>
         <translation>حول</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="194"/>
+        <location filename="../src/gui/systray.cpp" line="196"/>
         <source>About Qt</source>
         <translation>حول Qt</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="196"/>
+        <location filename="../src/gui/systray.cpp" line="198"/>
         <source>Quit</source>
         <translation>الخروج</translation>
     </message>
@@ -2709,7 +2695,7 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::Theme</name>
     <message>
-        <location filename="../src/libsync/theme.cpp" line="251"/>
+        <location filename="../src/libsync/theme.cpp" line="160"/>
         <source>&lt;p&gt;Version %1. For more information visit &lt;a href=&quot;https://opencloud.eu/&quot;&gt;https://opencloud.eu/&lt;/a&gt;&lt;/p&gt;&lt;p&gt;For known issues and help, please visit: &lt;a href=&quot;https://github.com/opencloud-eu/desktop&quot;&gt;GitHub&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Copyright OpenCloud GmbH&lt;br/&gt;Copyright ownCloud GmbH&lt;/p&gt;&lt;p&gt;Distributed by OpenCloud GmbH and licensed under the GNU General Public License (GPL) Version 2.0.&lt;br/&gt;&lt;p&gt;&lt;small&gt;%2&lt;/small&gt;&lt;/p&gt;</source>
         <translation>&lt;p&gt;الإصدار %1. لمزيد من المعلومات قم بزيارة &lt;a href=&quot;https://opencloud.eu/&quot;&gt;https://opencloud.eu/&lt;/a&gt;&lt;/p&gt;&lt;p&gt;للمشاكل المعروفة والمساعدة، يرجى زيارة: &lt;a href=&quot;https://github.com/opencloud-eu/desktop&quot;&gt;GitHub&lt;/a&gt;&lt;/p&gt;&lt;p&gt;حقوق النشر OpenCloud GmbH&lt;br/&gt;حقوق النشر ownCloud GmbH&lt;/p&gt;&lt;p&gt;موزع بواسطة OpenCloud GmbH ومرخص بموجب ترخيص GNU العام العام (GPL) الإصدار 2.0.&lt;br/&gt;&lt;p&gt;&lt;small&gt;%2&lt;/small&gt;&lt;/p&gt;</translation>
     </message>
@@ -2870,55 +2856,55 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::Wizard::SetupWizardWidget</name>
     <message>
-        <location filename="../src/gui/newwizard/setupwizardwidget.cpp" line="43"/>
-        <location filename="../src/gui/newwizard/setupwizardwidget.cpp" line="44"/>
+        <location filename="../src/gui/newwizard/setupwizardwidget.cpp" line="45"/>
+        <location filename="../src/gui/newwizard/setupwizardwidget.cpp" line="46"/>
         <source>Back</source>
         <translation>العودة</translation>
     </message>
     <message>
-        <location filename="../src/gui/newwizard/setupwizardwidget.cpp" line="43"/>
+        <location filename="../src/gui/newwizard/setupwizardwidget.cpp" line="45"/>
         <source>&lt; &amp;Back</source>
         <translation>&lt; &amp;العودة</translation>
     </message>
     <message>
-        <location filename="../src/gui/newwizard/setupwizardwidget.cpp" line="49"/>
+        <location filename="../src/gui/newwizard/setupwizardwidget.cpp" line="51"/>
         <source>Cancel Setup</source>
         <translation>إلغاء الإعداد</translation>
     </message>
     <message>
-        <location filename="../src/gui/newwizard/setupwizardwidget.cpp" line="50"/>
+        <location filename="../src/gui/newwizard/setupwizardwidget.cpp" line="52"/>
         <source>Do you really want to cancel the account setup?</source>
         <translation>هل تريد حقًا إلغاء إعداد الحساب؟</translation>
     </message>
     <message>
-        <location filename="../src/gui/newwizard/setupwizardwidget.cpp" line="107"/>
-        <location filename="../src/gui/newwizard/setupwizardwidget.cpp" line="108"/>
+        <location filename="../src/gui/newwizard/setupwizardwidget.cpp" line="109"/>
+        <location filename="../src/gui/newwizard/setupwizardwidget.cpp" line="110"/>
         <source>Done</source>
         <translation>تم</translation>
     </message>
     <message>
-        <location filename="../src/gui/newwizard/setupwizardwidget.cpp" line="107"/>
+        <location filename="../src/gui/newwizard/setupwizardwidget.cpp" line="109"/>
         <source>&amp;Finish</source>
         <translation>&amp;إنهاء</translation>
     </message>
     <message>
-        <location filename="../src/gui/newwizard/setupwizardwidget.cpp" line="108"/>
+        <location filename="../src/gui/newwizard/setupwizardwidget.cpp" line="110"/>
         <source>Finish</source>
         <translation>إنهاء</translation>
     </message>
     <message>
-        <location filename="../src/gui/newwizard/setupwizardwidget.cpp" line="110"/>
-        <location filename="../src/gui/newwizard/setupwizardwidget.cpp" line="111"/>
+        <location filename="../src/gui/newwizard/setupwizardwidget.cpp" line="112"/>
+        <location filename="../src/gui/newwizard/setupwizardwidget.cpp" line="113"/>
         <source>Continue</source>
         <translation>متابعة</translation>
     </message>
     <message>
-        <location filename="../src/gui/newwizard/setupwizardwidget.cpp" line="110"/>
+        <location filename="../src/gui/newwizard/setupwizardwidget.cpp" line="112"/>
         <source>&amp;Next &gt;</source>
         <translation>&amp;التالي &gt;</translation>
     </message>
     <message>
-        <location filename="../src/gui/newwizard/setupwizardwidget.cpp" line="111"/>
+        <location filename="../src/gui/newwizard/setupwizardwidget.cpp" line="113"/>
         <source>Next</source>
         <translation>التالي</translation>
     </message>
@@ -2926,7 +2912,7 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OpenCloudTheme::aboutVersions()</name>
     <message>
-        <location filename="../src/libsync/theme.cpp" line="238"/>
+        <location filename="../src/libsync/theme.cpp" line="147"/>
         <source>%1 %2%7%8Libraries Qt %3, %4%7Using virtual files plugin: %5%7%6</source>
         <translation>%1 %2%7%8مكتبات Qt %3، %4%7باستخدام ملحق الملفات الافتراضية: %5%7%6</translation>
     </message>
@@ -2934,7 +2920,7 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OpenCloudTheme::qtVer</name>
     <message>
-        <location filename="../src/libsync/theme.cpp" line="221"/>
+        <location filename="../src/libsync/theme.cpp" line="130"/>
         <source>%1 (Built against Qt %2)</source>
         <translation>%1 (مُبنى ضد Qt %2)</translation>
     </message>
@@ -2942,7 +2928,7 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OpenCloudTheme::versionWithSha</name>
     <message>
-        <location filename="../src/libsync/theme.cpp" line="226"/>
+        <location filename="../src/libsync/theme.cpp" line="135"/>
         <source>%1 %2</source>
         <translation>%1 %2</translation>
     </message>
@@ -3035,7 +3021,7 @@ Note that using any logging command line options will override the settings.</so
         <translation>ما هو عنوان خادمك؟</translation>
     </message>
     <message>
-        <location filename="../src/gui/newwizard/pages/serverurlsetupwizardpage.cpp" line="66"/>
+        <location filename="../src/gui/newwizard/pages/serverurlsetupwizardpage.cpp" line="68"/>
         <source>%1 logo</source>
         <extracomment>This is the accessibility text for the logo in the setup wizard page. The parameter is the name for the (branded) application.</extracomment>
         <translation>%1 شعار</translation>
@@ -3300,7 +3286,7 @@ Note that using any logging command line options will override the settings.</so
         <translation>%1 %2</translation>
     </message>
     <message>
-        <location filename="../src/libsync/platform_win.cpp" line="112"/>
+        <location filename="../src/libsync/platform_win.cpp" line="114"/>
         <source>Shutting down %1</source>
         <translation>جارٍ إيقاف %1</translation>
     </message>
@@ -3459,32 +3445,32 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>utility</name>
     <message>
-        <location filename="../src/gui/guiutility.cpp" line="38"/>
+        <location filename="../src/gui/guiutility.cpp" line="39"/>
         <source>Could not open browser</source>
         <translation>تعذر فتح المتصفح</translation>
     </message>
     <message>
-        <location filename="../src/gui/guiutility.cpp" line="39"/>
+        <location filename="../src/gui/guiutility.cpp" line="40"/>
         <source>There was an error when launching the browser to go to URL %1. Maybe no default browser is configured?</source>
         <translation>حدث خطأ عند تشغيل المتصفح للانتقال إلى الرابط %1. ربما لم يتم تكوين متصفح افتراضي؟</translation>
     </message>
     <message>
-        <location filename="../src/gui/guiutility.cpp" line="62"/>
+        <location filename="../src/gui/guiutility.cpp" line="63"/>
         <source>Could not open email client</source>
         <translation>تعذر فتح عميل البريد الإلكتروني</translation>
     </message>
     <message>
-        <location filename="../src/gui/guiutility.cpp" line="63"/>
+        <location filename="../src/gui/guiutility.cpp" line="64"/>
         <source>There was an error when launching the email client to create a new message. Maybe no default email client is configured?</source>
         <translation>حدث خطأ عند تشغيل عميل البريد الإلكتروني لإنشاء رسالة جديدة. ربما لم يتم تكوين عميل بريد إلكتروني افتراضي؟</translation>
     </message>
     <message>
-        <location filename="../src/gui/guiutility.cpp" line="76"/>
+        <location filename="../src/gui/guiutility.cpp" line="77"/>
         <source>Make always available locally</source>
         <translation>اجعله متاحًا دائمًا محليًا</translation>
     </message>
     <message>
-        <location filename="../src/gui/guiutility.cpp" line="81"/>
+        <location filename="../src/gui/guiutility.cpp" line="82"/>
         <source>Free up local space</source>
         <translation>حرر مساحة محلية</translation>
     </message>
@@ -3492,7 +3478,7 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>version check</name>
     <message>
-        <location filename="../src/gui/main.cpp" line="173"/>
+        <location filename="../src/gui/main.cpp" line="172"/>
         <source>Some settings were configured in newer versions of this client and use features that are not available in this version</source>
         <translation>تم تكوين بعض الإعدادات في إصدارات أحدث من هذا العميل وتستخدم ميزات غير متوفرة في هذا الإصدار</translation>
     </message>

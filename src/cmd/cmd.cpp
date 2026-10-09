@@ -25,6 +25,7 @@
 #include "networkjobs/checkserverjobfactory.h"
 #include "networkjobs/jsonjob.h"
 #include "platform.h"
+#include "resources/jsontheme.h"
 #include "syncengine.h"
 
 #include <QJsonObject>
@@ -439,6 +440,9 @@ int main(int argc, char **argv)
     qInstallMessageHandler(messageHandler);
 
     QCoreApplication app(argc, argv);
+
+    // this might change the application name etc
+    Resources::JsonTheme::instance().loadSystemTheme();
 
     platform->setApplication(&app);
 

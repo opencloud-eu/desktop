@@ -2,15 +2,15 @@
 // SPDX-FileCopyrightText: 2025 Hannah von Reth <h.vonreth@opencloud.eu>
 
 #include "gui/notifications/dbusnotifications.h"
+
+#include "gui/application.h"
 #include "gui/dbusnotifications_interface.h"
-
+#include "gui/notifications/systemnotification.h"
+#include "gui/notifications/systemnotificationmanager.h"
 #include "libsync/theme.h"
+#include "resources/jsontheme.h"
 
-#include <QPixmap>
-
-#include "application.h"
-#include "systemnotification.h"
-#include "systemnotificationmanager.h"
+#include <QGuiApplication>
 
 Q_LOGGING_CATEGORY(lcDbusNotification, "gui.notifications.dbus", QtInfoMsg)
 
@@ -116,8 +116,8 @@ void DBusNotifications::notify(const SystemNotificationRequest &notificationRequ
     }
 
     qCDebug(lcDbusNotification) << u"Creating system notification" << notificationRequest.id();
-    const auto reply = d->dbusInterface.Notify(Theme::instance()->appNameGUI(), 0, Resources::iconToFileSystemUrl(qGuiApp->windowIcon()).toString(),
-        notificationRequest.title(), notificationRequest.text(), actionList, hints, -1);
+    const auto reply = d->dbusInterface.Notify(Resources::JsonTheme::instance().applicationDisplayName(), 0,
+        Resources::iconToFileSystemUrl(qGuiApp->windowIcon()).toString(), notificationRequest.title(), notificationRequest.text(), actionList, hints, -1);
 
     auto *watcher = new QDBusPendingCallWatcher(reply, this);
     connect(watcher, &QDBusPendingCallWatcher::finished, this, [id = notificationRequest.id(), this](QDBusPendingCallWatcher *watcher) {

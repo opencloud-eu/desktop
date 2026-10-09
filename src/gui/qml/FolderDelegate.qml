@@ -96,6 +96,7 @@ Pane {
                         onTriggered: OCUtils.setClipBoard(accountSettings.accountState.account.url)
                         visible: accountMenu.shiftPressed
                         height: visible ? implicitHeight : 0
+                        enabled: visible
                     }
                     MenuItem {
                         text: qsTr("Remove")
@@ -339,6 +340,7 @@ Pane {
                                 onTriggered: OCUtils.setClipBoardFromFilePath(folderDelegate.folder.path)
                                 visible: contextMenu.shiftPressed
                                 height: visible ? implicitHeight : 0
+                                enabled: visible
                             }
 
                             MenuItem {
@@ -352,14 +354,14 @@ Pane {
                                 onTriggered: OCUtils.setClipBoard(folderDelegate.folder.webUrl)
                                 visible: contextMenu.shiftPressed
                                 height: visible ? implicitHeight : 0
-                                enabled: folderDelegate.folder.webUrl
+                                enabled: folderDelegate.folder.webUrl && visible
                             }
 
                             MenuSeparator {}
 
                             MenuItem {
                                 text: folderDelegate.folder.isSyncRunning ? qsTr("Restart sync") : qsTr("Force sync now")
-                                enabled: accountSettings.accountState.state === AccountState.Connected && !folderDelegate.folder.isSyncPaused
+                                enabled: accountSettings.accountState.state === AccountState.Connected && !folderDelegate.folder.isSyncPaused && visible
                                 onTriggered: accountSettings.slotForceSyncCurrentFolder(folderDelegate.folder)
                                 visible: folderDelegate.folder.isReady
                                 height: visible ? implicitHeight : 0
@@ -367,7 +369,7 @@ Pane {
 
                             MenuItem {
                                 text: folderDelegate.folder.isSyncPaused ? qsTr("Resume sync") : qsTr("Pause sync")
-                                enabled: accountSettings.accountState.state === AccountState.Connected
+                                enabled: accountSettings.accountState.state === AccountState.Connected && visible
                                 onTriggered: accountSettings.slotEnableCurrentFolder(folderDelegate.folder, true)
                                 visible: folderDelegate.folder.isReady
                                 height: visible ? implicitHeight : 0
@@ -378,6 +380,7 @@ Pane {
                                 onTriggered: accountSettings.showSelectiveSyncDialog(folderDelegate.folder)
                                 visible: folderDelegate.folder.isReady && folderDelegate.folder.vfsMode !== 1
                                 height: visible ? implicitHeight : 0
+                                enabled: visible
                             }
 
                             MenuItem {
@@ -385,6 +388,7 @@ Pane {
                                 onTriggered: accountSettings.slotRemoveCurrentFolder(folderDelegate.folder)
                                 visible: !folderDelegate.isDeployed
                                 height: visible ? implicitHeight : 0
+                                enabled: visible
                             }
 
                             onOpened: {

@@ -142,7 +142,6 @@ IF( APPLE )
             settingsdialog_mac.mm
             guiutility_mac.mm
             folderwatcher_mac.cpp)
-    set_source_files_properties(guiutility_mac.mm PROPERTIES COMPILE_DEFINITIONS SOCKETAPI_TEAM_IDENTIFIER_PREFIX="${SOCKETAPI_TEAM_IDENTIFIER_PREFIX}")
 elseif( WIN32 )
     target_sources(OpenCloudGui PRIVATE
             guiutility_win.cpp
@@ -174,27 +173,27 @@ endif()
 
 add_executable(opencloud main.cpp)
 set_target_properties(opencloud PROPERTIES
-    OUTPUT_NAME "${APPLICATION_EXECUTABLE}"
+    OUTPUT_NAME "opencloud"
     AUTOUIC ON
     AUTORCC ON
 )
 apply_common_target_settings(opencloud)
 target_link_libraries(opencloud PUBLIC OpenCloudGui OpenCloudResources KDAB::kdsingleapplication )
 
-MESSAGE(STATUS "OPENCLOUD_SIDEBAR_ICONS: ${APPLICATION_ICON_NAME}: ${OPENCLOUD_SIDEBAR_ICONS}")
+file(GLOB_RECURSE OPENCLOUD_ICONS "${PROJECT_SOURCE_DIR}/src/resources/theme/colored/*-opencloud-icon.png")
+file(GLOB_RECURSE OPENCLOUD_SIDEBAR_ICONS "${PROJECT_SOURCE_DIR}/src/resources/theme/colored/*-opencloud-icon-sidebar.png")
 
-ecm_add_app_icon(appIcons ICONS "${OPENCLOUD_ICONS}" SIDEBAR_ICONS "${OPENCLOUD_SIDEBAR_ICONS}" OUTFILE_BASENAME "${APPLICATION_ICON_NAME}")
+ecm_add_app_icon(appIcons ICONS "${OPENCLOUD_ICONS}" SIDEBAR_ICONS "${OPENCLOUD_SIDEBAR_ICONS}" OUTFILE_BASENAME "opencloud")
 target_sources(opencloud PRIVATE ${appIcons})
 
 if(NOT APPLE)
     if(WIN32)
         target_sources(opencloud PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/opencloud.exe.manifest)
     else()
-        file(GLOB _icons "${OEM_THEME_DIR}/theme/colored/*-${APPLICATION_ICON_NAME}-icon.png")
-        foreach(_file ${_icons})
-            string(REPLACE "${OEM_THEME_DIR}/theme/colored/" "" _res ${_file})
-            string(REPLACE "-${APPLICATION_ICON_NAME}-icon.png" "" _res ${_res})
-            install(FILES ${_file} RENAME ${APPLICATION_ICON_NAME}.png DESTINATION ${KDE_INSTALL_DATADIR}/icons/hicolor/${_res}x${_res}/apps)
+        foreach(_file ${OPENCLOUD_ICONS})
+            string(REPLACE "${PROJECT_SOURCE_DIR}/src/resources/theme/colored/" "" _res ${_file})
+            string(REPLACE "-opencloud-icon.png" "" _res ${_res})
+            install(FILES ${_file} RENAME opencloud.png DESTINATION ${KDE_INSTALL_DATADIR}/icons/hicolor/${_res}x${_res}/apps)
         endforeach(_file)
     endif()
 
@@ -206,23 +205,13 @@ else()
       PROPERTIES
       MACOSX_PACKAGE_LOCATION Resources
       )
-  set_target_properties(opencloud PROPERTIES OUTPUT_NAME "${APPLICATION_SHORTNAME}" MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/MacOSXBundleInfo.plist)
+  set_target_properties(opencloud PROPERTIES OUTPUT_NAME "OpenCloud" MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/MacOSXBundleInfo.plist)
 endif()
 
 install(TARGETS opencloud OpenCloudGui ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 ecm_finalize_qml_module(OpenCloudGui DESTINATION ${KDE_INSTALL_QMLDIR})
 
 if(UNIX AND NOT APPLE)
-    configure_file(${CMAKE_SOURCE_DIR}/opencloud.desktop.in
-                   ${CMAKE_CURRENT_BINARY_DIR}/${APPLICATION_EXECUTABLE}.desktop
-                   @ONLY
-    )
-    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${APPLICATION_EXECUTABLE}.desktop DESTINATION ${KDE_INSTALL_DATADIR}/applications)
-
-    configure_file(${CMAKE_SOURCE_DIR}/opencloud.metainfo.xml.in
-            ${CMAKE_CURRENT_BINARY_DIR}/${APPLICATION_REV_DOMAIN}.${APPLICATION_EXECUTABLE}.metainfo.xml
-            @ONLY
-    )
-
-    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${APPLICATION_REV_DOMAIN}.${APPLICATION_EXECUTABLE}.metainfo.xml DESTINATION ${KDE_INSTALL_METAINFODIR})
+    install(FILES ${CMAKE_SOURCE_DIR}/opencloud.desktop DESTINATION ${KDE_INSTALL_DATADIR}/applications)
+        install(FILES ${CMAKE_SOURCE_DIR}/opencloud.metainfo.xml DESTINATION ${KDE_INSTALL_METAINFODIR} RENAME "eu.opencloud.desktop.opencloud.metainfo.xml")
 endif()

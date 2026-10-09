@@ -27,7 +27,7 @@ NewVersionAvailableWidget::NewVersionAvailableWidget(QWidget *parent, const QStr
 {
     _ui->setupUi(this);
 
-    _ui->icon->setPixmap(Theme::instance()->applicationIcon().pixmap(128, 128));
+    _ui->icon->setPixmap(Resources::JsonTheme::instance().applicationIcon().pixmap(128, 128));
     _ui->label->setText(statusMessage);
 
     QPushButton *skipButton = _ui->buttonBox->addButton(tr("Skip this version"), QDialogButtonBox::ResetRole);

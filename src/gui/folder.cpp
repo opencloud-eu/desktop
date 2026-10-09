@@ -32,6 +32,7 @@
 #include "libsync/graphapi/spacesmanager.h"
 #include "libsync/vfs/vfs.h"
 #include "localdiscoverytracker.h"
+#include "resources/jsontheme.h"
 #include "scheduling/syncscheduler.h"
 #include "settingsdialog.h"
 #include "socketapi/socketapi.h"
@@ -273,7 +274,7 @@ void Folder::prepareFolder(const QString &path, const QString &displayName, cons
             }
             out << u"InfoTip="_s;
             if (description.isEmpty()) {
-                out << Theme::instance()->appNameGUI();
+                out << Resources::JsonTheme::instance().applicationDisplayName();
                 if (!displayName.isEmpty()) {
                     out << u" - "_s << displayName;
                 }
@@ -548,8 +549,8 @@ void Folder::startVfs()
 
     VfsSetupParams vfsParams(_accountState->account(), webDavUrl(), _definition.spaceId(), displayName(), _engine.get());
     vfsParams.journal = &_journal;
-    vfsParams.providerDisplayName = Theme::instance()->appNameGUI();
-    vfsParams.providerName = Theme::instance()->appName();
+    vfsParams.providerDisplayName = Resources::JsonTheme::instance().applicationDisplayName();
+    vfsParams.providerName = Resources::JsonTheme::instance().applicationName();
     vfsParams.providerVersion = Version::version();
     vfsParams.socketPath = Utility::socketApiSocketPath();
 
@@ -1081,7 +1082,7 @@ void Folder::slotWatcherUnreliable(const QString &message)
 {
     qCWarning(lcFolder) << u"Folder watcher for" << path() << u"became unreliable:" << message;
 
-    QMessageBox *msgBox = new FontIconMessageBox({Resources::FontIcon::DefaultGlyphes::Info}, Theme::instance()->appNameGUI(),
+    QMessageBox *msgBox = new FontIconMessageBox({Resources::FontIcon::DefaultGlyphes::Info}, Resources::JsonTheme::instance().applicationDisplayName(),
         tr("Changes in synchronized folders could not be tracked reliably.\n"
            "\n"
            "This means that the synchronization client might not upload local changes "

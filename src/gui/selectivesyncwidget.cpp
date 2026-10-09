@@ -17,6 +17,7 @@
 #include "libsync/configfile.h"
 #include "libsync/networkjobs.h"
 #include "libsync/theme.h"
+#include "resources/jsontheme.h"
 
 #include "resources/fonticon.h"
 
@@ -250,7 +251,7 @@ void SelectiveSyncWidget::slotUpdateDirectories(QStringList list)
     if (!root) {
         root = new SelectiveSyncTreeViewItem(_folderTree);
         root->setText(0, _rootName);
-        root->setIcon(0, Theme::instance()->applicationIcon());
+        root->setIcon(0, Resources::JsonTheme::instance().applicationIcon());
         root->setData(0, Qt::UserRole, QString());
         root->setCheckState(0, Qt::Checked);
         qint64 size = job ? job->sizes().value(rootPath, -1) : -1;
