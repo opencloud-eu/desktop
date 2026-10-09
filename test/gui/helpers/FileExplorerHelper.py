@@ -3,7 +3,6 @@ from appium.options.common.base import AppiumOptions
 from selenium.webdriver.common.by import By
 from dogtail.tree import root
 
-from helpers.SyncHelper import get_socket_connection
 from helpers.ConfigHelper import get_config, is_linux
 
 
@@ -35,13 +34,14 @@ def open_file_explorer(resource_path):
 
 
 def get_running_explorer_pid(window_name):
-    global file_explorer_session
     apps = root.applications()
     for app in apps:
-        if app.name in LINUX_FILE_EXPLORERS:
-            for window in app.children:
-                if window.name == window_name:
-                    return app.get_process_id()
+        # print("App: ", app.name)
+        if app.name not in LINUX_FILE_EXPLORERS:
+            continue
+        for window in app.children:
+            if window.name == window_name:
+                return app.get_process_id()
     return None
 
 
@@ -57,29 +57,12 @@ def create_session_from_running_explorer(window_name="Personal"):
     return file_explorer_session
 
 
-def check_file_context_menu_items(resource):
+def navigate_to(parent_paths = ()):
     explorer = get_file_explorer()
+    for parent_path in parent_paths:
+        parent = explorer.find_element(By.NAME, parent_path)
+        parent.native_double_click()
 
-    resource = explorer.find_element(By.NAME, resource)
-    resource.native_click(button='right')
-    menu = explorer.find_element(By.NAME, 'OpenCloud Desktop')
-    menu.native_click()
-    items = menu.find_elements(By.NAME, "Share...")
-    print(len(items))
-    for item in items:
-        item.native_click()
-    # menu_items = []
-    # socket_connect = get_socket_connection()
-    # socket_connect.sendCommand(f'GET_MENU_ITEMS:{resource}\n')
-    # if not socket_connect.read_socket_data_with_timeout(0.1):
-    #     return menu_items
-    # for line in socket_connect.get_available_responses():
-    #     if line == 'GET_MENU_ITEMS:END':
-    #         break
-    #     if line.startswith('MENU_ITEM:'):
-    #         item = line.split("::")[1]
-    #         menu_items.append(item)
-    # return menu_items
 
 def check_file_context_menu_items(resource):
     explorer = get_file_explorer()
@@ -94,8 +77,13 @@ def check_file_context_menu_items(resource):
         item.native_click()
 
 def copy_private_link(resource):
-    socket_connect = get_socket_connection()
-    socket_connect.sendCommand(f'COPY_PRIVATE_LINK:{resource}\n')
+    explorer = get_file_explorer()
+    resource = explorer.find_element(By.NAME, resource)
+    resource.native_click(button='right')
+    menu = explorer.find_element(By.NAME, 'OpenCloud Desktop')
+    menu.native_click()
+    copy_private_link_item = menu.find_element(By.NAME, "Copy private link to clipboard")
+    copy_private_link_item.native_click()
 
 
 def get_clipboard_content():

@@ -6,6 +6,7 @@ import zipfile
 from os.path import isfile, join, isdir, exists
 from behave import when as When, then as Then, given as Given
 from sure import ensure
+from pathlib import Path
 
 import helpers.FileExplorerHelper as FileExplorer
 from helpers.SetupClientHelper import get_resource_path, get_temp_resource_path
@@ -470,14 +471,17 @@ def step(context, filename, filesize):
 
 
 @When(
-    'user "{username}" copies the private link of file "{resource}" from the file explorer context menu'
+    'the user copies the private link of file "{resource_path}" from the file explorer context menu'
 )
 @When(
-    'user "{username}" copies the private link of folder "{resource}" from the file explorer context menu'
+    'the user copies the private link of folder "{resource_path}" from the file explorer context menu'
 )
-def step(context, username, resource):
-    resource_path = get_resource_path(resource, username)
-    FileExplorer.copy_private_link(resource_path)
+def step(context, resource_path):
+    resource = Path(resource_path)
+    parent_paths = resource.parent.parts
+    resource_name = resource.name
+    FileExplorer.navigate_to(parent_paths)
+    FileExplorer.copy_private_link(resource_name)
 
 
 @Then(

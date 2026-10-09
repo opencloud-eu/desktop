@@ -14,6 +14,9 @@ spec.loader.exec_module(base)
 app = base.app
 sessions = base.sessions
 
+# TODO:
+# 1. Implement: /session/{sessionId}/window/rect
+# 2. Allow gtk in _createNode2 toolkitName filtering
 
 def session_element_rect(session_id, element_id):
     session = sessions[session_id]
