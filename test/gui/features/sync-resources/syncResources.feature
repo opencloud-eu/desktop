@@ -280,16 +280,16 @@ Feature: Syncing files
     Scenario: various types of files can be synced from client to server
         Given user "Alice" has set up a client with default settings
         When user "Alice" creates the following files inside the sync folder:
-            | files            |
-            | /testavatar.png  |
-            | /testavatar.jpg  |
-            | /testavatar.jpeg |
-            | /testaudio.mp3   |
-            | /test_video.mp4  |
-            | /simple.txt      |
-            | /simple.docx     |
-            | /simple.pptx     |
-            | /simple.xlsx     |
+            | filename         | content |
+            | /testavatar.png  | test    |
+            | /testavatar.jpg  | test    |
+            | /testavatar.jpeg | test    |
+            | /testaudio.mp3   | test    |
+            | /test_video.mp4  | test    |
+            | /simple.txt      | test    |
+            | /simple.docx     | test    |
+            | /simple.pptx     | test    |
+            | /simple.xlsx     | test    |
         And the user waits for the files to sync
         Then as "Alice" file "testavatar.png" should exist in the server
         And as "Alice" file "testavatar.jpg" should exist in the server

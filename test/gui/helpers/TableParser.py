@@ -102,3 +102,18 @@ def table_hashes(table: Table):
             row_dict[heading] = row.cells[idx]
         data_table.append(row_dict)
     return data_table
+
+
+def validate_table_headers(table: Table, expected_headers: list):
+    """
+    Args:
+        table (Table): Behave Table object.
+        expected_headers (list): List of expected header names.
+    Returns:
+        bool: True if all expected headers are present, otherwise raises a ValueError.
+    """
+    headers = table.headings
+    for header in expected_headers:
+        if header not in headers:
+            raise ValueError(f"Expected header '{header}' not found in table headers: {headers}")
+    return True

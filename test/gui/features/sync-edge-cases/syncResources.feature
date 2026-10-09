@@ -239,50 +239,156 @@ Feature: Syncing files
         And as "Alice" file "Öü/testFile.txt" should exist in the server
         And as "Alice" file "Öü/newfile.txt" should exist in the server
 
-    @issue-1127
-    Scenario: Existing hidden files are downloaded when sync of hidden files is enabled
-        Given user "Alice" has uploaded file with content "hidden content" to ".hidden-file.txt" in the server
-        And user "Alice" has created folder "folder" in the server
-        And user "Alice" has created folder "folder/subfolder" in the server
-        And user "Alice" has uploaded file with content "hidden in folder" to "folder/.hidden-in-folder.txt" in the server
-        And user "Alice" has uploaded file with content "hidden in subfolder" to "folder/subfolder/.hidden-in-subfolder.txt" in the server
-        And user "Alice" has set up a client with default settings
-        # hidden files are ignored by default, so they must not be downloaded yet
-        Then the file ".hidden-file.txt" should not exist on the file system
-        And the file "folder/.hidden-in-folder.txt" should not exist on the file system
-        And the file "folder/subfolder/.hidden-in-subfolder.txt" should not exist on the file system
-        When the user enables sync of hidden files in the settings
-        And the user opens the account "Alice"
-        And the user force syncs the files
-        And the user waits for the files to sync
-        Then the file ".hidden-file.txt" should exist on the file system with the following content
-            """
-            hidden content
-            """
-        And the file "folder/.hidden-in-folder.txt" should exist on the file system with the following content
-            """
-            hidden in folder
-            """
-        And the file "folder/subfolder/.hidden-in-subfolder.txt" should exist on the file system with the following content
-            """
-            hidden in subfolder
-            """
 
-
-    Scenario: Hidden files are downloaded when sync of hidden files is enabled
+    Scenario: Try to sync hidden files and folders
         Given user "Alice" has created folder "folder" in the server
+        And user "Alice" has created folder ".hidefol" in the server
+        And user "Alice" has created folder "folder/subfolder" in the server
+        And user "Alice" has created folder "folder/.hidesubfol" in the server
+        And user "Alice" has uploaded file with content "lorem" to ".roothide.txt" in the server
+        And user "Alice" has uploaded file with content "lorem" to "folder/.hidefile.txt" in the server
+        And user "Alice" has uploaded file with content "lorem" to ".hidefol/file.txt" in the server
+        And user "Alice" has uploaded file with content "lorem" to "folder/subfolder/.hidesubfile.txt" in the server
+        And user "Alice" has uploaded file with content "lorem" to "folder/.hidesubfol/subfile.txt" in the server
+        And user "Alice" has created the following folders inside the sync folder:
+            | foldername                |
+            | localFol                  |
+            | .localhideFol             |
+            | localFol/localsub         |
+            | localFol/.localsubhideFol |
+        And user "Alice" has created the following files inside the sync folder:
+            | filename                                  | content |
+            | .localroothide.txt                        | local   |
+            | localFol/.localhide.txt                   | local   |
+            | .localhideFol/localfile.txt               | local   |
+            | localFol/localsub/.localsubhide.txt       | local   |
+            | localFol/.localsubhideFol/localsubfle.txt | local   |
+        And user "Alice" has set up a client with default settings
+
+        # update files content
+        When user "Alice" uploads file with content "lorem-edited" to ".roothide.txt" in the server
+        And user "Alice" uploads file with content "lorem-edited" to "folder/.hidefile.txt" in the server
+        And user "Alice" uploads file with content "lorem-edited" to ".hidefol/file.txt" in the server
+        And user "Alice" uploads file with content "lorem-edited" to "folder/subfolder/.hidesubfile.txt" in the server
+        And user "Alice" uploads file with content "lorem-edited" to "folder/.hidesubfol/subfile.txt" in the server
+        And user "Alice" updates the content of the following files inside the sync folder:
+            | filename                                  | content      |
+            | .localroothide.txt                        | local-edited |
+            | localFol/.localhide.txt                   | local-edited |
+            | .localhideFol/localfile.txt               | local-edited |
+            | localFol/localsub/.localsubhide.txt       | local-edited |
+            | localFol/.localsubhideFol/localsubfle.txt | local-edited |
+        And the user force syncs the files
+        And the user waits for the files to sync
+        Then the file ".roothide.txt" should not exist on the file system
+        And the file "folder/.hidefile.txt" should not exist on the file system
+        And the file ".hidefol/file.txt" should not exist on the file system
+        And the file "folder/subfolder/.hidesubfile.txt" should not exist on the file system
+        And the file "folder/.hidesubfol/subfile.txt" should not exist on the file system
+        And as "Alice" file ".localroothide.txt" should not exist in the server
+        And as "Alice" file "localFol/.localhide.txt" should not exist in the server
+        And as "Alice" file ".localhideFol/localfile.txt" should not exist in the server
+        And as "Alice" file "localFol/localsub/.localsubhide.txt" should not exist in the server
+        And as "Alice" file "localFol/.localsubhideFol/localsubfle.txt" should not exist in the server
+
+    @issue-1127 @issue-714
+    Scenario: Sync hidden files
+        Given user "Alice" has created folder "folder" in the server
+        And user "Alice" has created folder "folder/subfolder" in the server
+        And user "Alice" has uploaded file with content "lorem" to ".roothide.txt" in the server
+        And user "Alice" has uploaded file with content "lorem" to "folder/.hidefile.txt" in the server
+        And user "Alice" has uploaded file with content "lorem" to "folder/subfolder/.hidesubfile.txt" in the server
+        And user "Alice" has created the following folders inside the sync folder:
+            | foldername        |
+            | localFol          |
+            | localFol/localsub |
+        And user "Alice" has created the following files inside the sync folder:
+            | filename                            | content |
+            | .localroothide.txt                  | local   |
+            | localFol/.localhide.txt             | local   |
+            | localFol/localsub/.localsubhide.txt | local   |
         And user "Alice" has set up a client with default settings
         When the user enables sync of hidden files in the settings
         And the user opens the account "Alice"
-        And user "Alice" uploads file with content "hidden content" to "/.hidden-file.txt" in the server
-        And user "Alice" uploads file with content "hidden in folder" to "/folder/.hidden-in-folder.txt" in the server
-        And the user force syncs the files
         And the user waits for the files to sync
-        Then the file ".hidden-file.txt" should exist on the file system with the following content
-            """
-            hidden content
-            """
-        And the file "folder/.hidden-in-folder.txt" should exist on the file system with the following content
-            """
-            hidden in folder
-            """
+        Then the following files should exist on the file system with the content:
+            | filename                          | content |
+            | .roothide.txt                     | lorem   |
+            | folder/.hidefile.txt              | lorem   |
+            | folder/subfolder/.hidesubfile.txt | lorem   |
+        And as "Alice" file ".localroothide.txt" should exist in the server
+        And as "Alice" file "localFol/.localhide.txt" should exist in the server
+        And as "Alice" file "localFol/localsub/.localsubhide.txt" should exist in the server
+
+        # add/update files
+        When user "Alice" uploads file with content "lorem" to ".newhide.txt" in the server
+        And user "Alice" uploads file with content "lorem-edited" to ".roothide.txt" in the server
+        And user "Alice" uploads file with content "lorem-edited" to "folder/.hidefile.txt" in the server
+        And user "Alice" uploads file with content "lorem-edited" to "folder/subfolder/.hidesubfile.txt" in the server
+        And user "Alice" updates the content of the following files inside the sync folder:
+            | filename                            | content      |
+            | .newlocalhide.txt                   | local        |
+            | .localroothide.txt                  | local-edited |
+            | localFol/.localhide.txt             | local-edited |
+            | localFol/localsub/.localsubhide.txt | local-edited |
+        And the user waits for the files to sync without force sync
+        Then the following files should exist on the file system with the content:
+            | filename                          | content      |
+            | .newhide.txt                      | lorem        |
+            | .roothide.txt                     | lorem-edited |
+            | folder/.hidefile.txt              | lorem-edited |
+            | folder/subfolder/.hidesubfile.txt | lorem-edited |
+        And as "Alice" the file ".newlocalhide.txt" should have the content "local" in the server
+        And as "Alice" the file ".localroothide.txt" should have the content "local-edited" in the server
+        And as "Alice" the file "localFol/.localhide.txt" should have the content "local-edited" in the server
+        And as "Alice" the file "localFol/localsub/.localsubhide.txt" should have the content "local-edited" in the server
+
+    @issue-714 @skip
+    Scenario: Sync hidden folders
+        Given user "Alice" has created folder "parent" in the server
+        And user "Alice" has created folder ".folder" in the server
+        And user "Alice" has created folder "parent/.subfolder" in the server
+        And user "Alice" has uploaded file with content "lorem" to ".folder/file.txt" in the server
+        And user "Alice" has uploaded file with content "lorem" to "parent/.subfolder/subfile.txt" in the server
+        And user "Alice" has created the following folders inside the sync folder:
+            | foldername             |
+            | localFol               |
+            | .localhideFol          |
+            | localFol/.localhidesub |
+        And user "Alice" has created the following files inside the sync folder:
+            | filename                                | content |
+            | .localhideFol/localfile.txt             | local   |
+            | localFol/.localhidesub/localsubfile.txt | local   |
+        And user "Alice" has set up a client with default settings
+        When the user enables sync of hidden files in the settings
+        And the user opens the account "Alice"
+        And the user waits for the files to sync without force sync
+        Then the following files should exist on the file system with the content:
+            | filename                      | content |
+            | .folder/file.txt              | lorem   |
+            | parent/.subfolder/subfile.txt | lorem   |
+        And as "Alice" file ".localhideFol/localfile.txt" should exist in the server
+        And as "Alice" file "localFol/.localhidesub/localsubfile.txt" should exist in the server
+
+        # add/update files
+        When user "Alice" creates folder ".newfolder" in the server
+        And user "Alice" uploads file with content "lorem" to ".newfolder/newfile.txt" in the server
+        And user "Alice" uploads file with content "lorem-edited" to ".folder/file.txt" in the server
+        And user "Alice" uploads file with content "lorem-edited" to "parent/.subfolder/subfile.txt" in the server
+        And user "Alice" creates a folder ".newlocal" inside the sync folder
+        And user "Alice" creates the following files inside the sync folder:
+            | filename                   | content |
+            | .newlocal/newlocalfile.txt | local   |
+        And user "Alice" updates the content of the following files inside the sync folder:
+            | filename                                | content      |
+            | .localhideFol/localfile.txt             | local-edited |
+            | localFol/.localhidesub/localsubfile.txt | local-edited |
+        And the user waits for the files to sync without force sync
+        Then the following files should exist on the file system with the content:
+            | filename                      | content      |
+            | .newfolder/newfile.txt        | lorem        |
+            | .folder/file.txt              | lorem-edited |
+            | parent/.subfolder/subfile.txt | lorem-edited |
+        And as "Alice" the file ".newlocal/newlocalfile.txt" should have the content "local" in the server
+        And as "Alice" the file ".localhideFol/localfile.txt" should have the content "local-edited" in the server
+        And as "Alice" the file "localFol/.localhidesub/localsubfile.txt" should have the content "local-edited" in the server

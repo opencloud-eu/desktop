@@ -62,6 +62,11 @@ def step(context):
     wait_for_resource_to_sync(get_resource_path('/'), force_sync=True)
 
 
+@When('the user waits for the files to sync without force sync')
+def step(context):
+    wait_for_resource_to_sync(get_resource_path('/'))
+
+
 @When('the user waits for {resource_type:ResourceType} "{resource}" to be synced')
 def step(context, resource_type, resource):
     resource = get_resource_path(resource)

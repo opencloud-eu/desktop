@@ -60,6 +60,7 @@ def step(context, user_name, folder_name, items_number):
 
 
 @Given('user "{user}" has created folder "{folder_name}" in the server')
+@When('user "{user}" creates folder "{folder_name}" in the server')
 def step(context, user, folder_name):
     webdav.create_folder(user, folder_name)
 
@@ -67,10 +68,6 @@ def step(context, user, folder_name):
 @Given(
     'user "{user}" has uploaded file with content "{file_content}" to "{file_name}" in the server'
 )
-def step(context, user, file_content, file_name):
-    webdav.create_file(user, file_name, file_content)
-
-
 @When('user "{user}" uploads file with content "{file_content}" to "{file_name}" in the server')
 def step(context, user, file_content, file_name):
     webdav.create_file(user, file_name, file_content)
