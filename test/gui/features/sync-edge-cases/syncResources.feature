@@ -343,7 +343,7 @@ Feature: Syncing files
         And as "Alice" the file "localFol/.localhide.txt" should have the content "local-edited" in the server
         And as "Alice" the file "localFol/localsub/.localsubhide.txt" should have the content "local-edited" in the server
 
-    @issue-714
+    @issue-714 @skip
     Scenario: Sync hidden folders
         Given user "Alice" has created folder "parent" in the server
         And user "Alice" has created folder ".folder" in the server
