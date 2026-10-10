@@ -1,5 +1,28 @@
 # Changelog
 
+## [4.1.0](https://github.com/opencloud-eu/desktop/releases/tag/v4.1.0) - 2026-10-10
+
+### ❤️ Thanks to all contributors! ❤️
+
+@Asmitapaudel, @TheOneRing, @dragotin, @flimmy, @fracturehill, @jnweiger, @junkerderprovinz, @prashant-gurung899, @saw-jan, @v-scharf
+
+### ✨ Features
+
+- Extend context menu with copy to clipboard [[#1115](https://github.com/opencloud-eu/desktop/pull/1115)]
+
+### 🐛 Bug Fixes
+
+- Fix sorting by file size in IssuesWidget [[#1160](https://github.com/opencloud-eu/desktop/pull/1160)]
+- Invalidate the discovery state when hidden files are enabled [[#1029](https://github.com/opencloud-eu/desktop/pull/1029)]
+- Don't sync .vault folders for now [[#1118](https://github.com/opencloud-eu/desktop/pull/1118)]
+- Fix endless loop in wizard od failed auth [[#1090](https://github.com/opencloud-eu/desktop/pull/1090)]
+- Display logout button if reauthentication failed [[#1089](https://github.com/opencloud-eu/desktop/pull/1089)]
+- Fix check for OAuth::PromptValuesSupported [[#1091](https://github.com/opencloud-eu/desktop/pull/1091)]
+
+### 📈 Enhancement
+
+- Fallback to consent if prompt_values_supported is not exposed [[#1092](https://github.com/opencloud-eu/desktop/pull/1092)]
+
 ## [4.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v4.0.0) - 2026-09-03
 
 ### ❤️ Thanks to all contributors! ❤️
