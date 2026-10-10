@@ -32,6 +32,7 @@ namespace Models {
 
         // data() should return boolean values for this role to work in conjunction with FilteringProxyModel
         FilterRole,
+        SortRole,
     };
     Q_ENUM_NS(DataRoles)
 

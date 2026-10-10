@@ -29,9 +29,9 @@ Feature: filter activity for user
         And user "Alice" has set up a client with default settings
         And user "Alice" has created a folder "Folder1" inside the sync folder
         When user "Alice" creates the following files inside the sync folder:
-            | files             |
-            | /.htaccess        |
-            | /Folder1/a\\a.txt |
+            | filename          | content |
+            | /.htaccess        | test    |
+            | /Folder1/a\\a.txt | test    |
         And the user opens the activity tab
         And the user selects "Not Synced" tab in the activity
         Then the file "Folder1/a\\a.txt" should be blacklisted
@@ -46,8 +46,8 @@ Feature: filter activity for user
         Given user "Alice" has been created in the server with default attributes
         And user "Alice" has set up a client with default settings
         When user "Alice" creates the following files inside the sync folder:
-            | files      |
-            | /.htaccess |
+            | filename   | content |
+            | /.htaccess | test    |
         And the user opens the activity tab
         And the user selects "Not Synced" tab in the activity
         Then the file ".htaccess" should be excluded
