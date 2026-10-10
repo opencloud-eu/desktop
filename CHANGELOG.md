@@ -1,6 +1,6 @@
 # Changelog
 
-## [4.1.0](https://github.com/opencloud-eu/desktop/releases/tag/v4.1.0) - 2026-10-09
+## [4.1.0](https://github.com/opencloud-eu/desktop/releases/tag/v4.1.0) - 2026-10-10
 
 ### ❤️ Thanks to all contributors! ❤️
 
@@ -12,6 +12,7 @@
 
 ### 🐛 Bug Fixes
 
+- Fix sorting by file size in IssuesWidget [[#1160](https://github.com/opencloud-eu/desktop/pull/1160)]
 - Invalidate the discovery state when hidden files are enabled [[#1029](https://github.com/opencloud-eu/desktop/pull/1029)]
 - Don't sync .vault folders for now [[#1118](https://github.com/opencloud-eu/desktop/pull/1118)]
 - Fix endless loop in wizard od failed auth [[#1090](https://github.com/opencloud-eu/desktop/pull/1090)]
