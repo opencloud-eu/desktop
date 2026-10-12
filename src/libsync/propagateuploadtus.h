@@ -35,6 +35,8 @@ private:
 
     quint64 _currentOffset = 0;
     QUrl _location;
+    // whether a new upload was started because the one we tried to resume was gone
+    bool _restartedUpload = false;
 
 public:
     PropagateUploadFileTUS(OwncloudPropagator *propagator, const SyncFileItemPtr &item);
