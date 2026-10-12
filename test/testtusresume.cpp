@@ -11,6 +11,7 @@
 #include <QTest>
 
 using namespace OCC;
+using namespace std::chrono_literals;
 
 namespace {
 
@@ -34,6 +35,10 @@ public:
     QByteArrayList requests;
     // the status for requests to uploads the server does not know (404, or 403 for an expired transfer token)
     int unknownUploadStatus = 404;
+    // when false, the final response lacks ETag and OC-Perm, so the client has to PROPFIND the file (opencloud-eu/desktop#1165)
+    bool sendFinalHeaders = true;
+    // remote path -> status for failing PROPFINDs on that path
+    QHash<QString, int> propfindErrors;
 
     explicit FakeTusServer(FakeFolder &folder)
         : _folder(folder)
@@ -65,6 +70,15 @@ private:
             }
         }
         const QString path = request.url().path();
+        if (verb == "PROPFIND") {
+            for (auto it = propfindErrors.cbegin(); it != propfindErrors.cend(); ++it) {
+                if (path.endsWith(QLatin1Char('/') + it.key())) {
+                    requests.append(verb);
+                    return new FakeErrorReply(op, request, &_folder, it.value());
+                }
+            }
+            return nullptr;
+        }
         if (verb == "POST" && request.hasRawHeader("Upload-Length")) {
             requests.append(verb);
             Upload upload;
@@ -121,11 +135,13 @@ private:
             remote.insert(upload.path, static_cast<quint64>(upload.length), upload.data.isEmpty() ? 'W' : upload.data.at(0));
             FileInfo *fi = remote.find(upload.path);
             fi->setLastModifiedFromSecondsUTC(upload.mtime);
-            // like the server, report the etag, file id and permissions with the last chunk
-            headers.append("OC-ETag", fi->etag.toUtf8());
-            headers.append("ETag", fi->etag.toUtf8());
-            headers.append("OC-FileID", fi->fileId);
-            headers.append("OC-Perm", "WDNVCKR");
+            if (sendFinalHeaders) {
+                // like the server, report the etag, file id and permissions with the last chunk
+                headers.append("OC-ETag", fi->etag.toUtf8());
+                headers.append("ETag", fi->etag.toUtf8());
+                headers.append("OC-FileID", fi->fileId);
+                headers.append("OC-Perm", "WDNVCKR");
+            }
         }
         return new FakePayloadReply(op, request, {}, headers, &_folder);
     }
@@ -246,6 +262,53 @@ private Q_SLOTS:
         QVERIFY(fakeFolder.syncOnce());
         QCOMPARE(server.requests, (QByteArrayList{"POST", "PATCH", "PATCH"}));
         QCOMPARE(fakeFolder.currentRemoteState().find(tusFile())->contentSize, tusFileSize);
+    }
+
+    void testPropfindAfterUploadFails_data()
+    {
+        QTest::addColumn<quint64>("size");
+        QTest::addColumn<int>("status");
+        for (const quint64 size : {quint64{0}, tusFileSize}) {
+            for (const int status : {503, 500, 404}) {
+                QTest::addRow("size %llu, %d", size, status) << size << status;
+            }
+        }
+    }
+
+    // The final upload response lacks ETag or OC-Perm, the client asks for them with a PROPFIND
+    // and that fails. The item has to fail instead of the sync hanging forever, and the next
+    // sync has to complete (opencloud-eu/desktop#1165).
+    void testPropfindAfterUploadFails()
+    {
+        QFETCH(quint64, size);
+        QFETCH(int, status);
+        FakeFolder fakeFolder(FileInfo::A12_B12_C12_S12());
+        FakeTusServer server(fakeFolder);
+        server.sendFinalHeaders = false;
+        server.propfindErrors.insert(tusFile(), status);
+        fakeFolder.localModifier().insert(tusFile(), size, 'T');
+        QVERIFY(fakeFolder.applyLocalModificationsWithoutSync());
+
+        {
+            ItemCompletedSpy completeSpy(fakeFolder);
+            QSignalSpy finishedSpy(&fakeFolder.syncEngine(), &SyncEngine::finished);
+            fakeFolder.scheduleSync();
+            // don't use syncOnce(), a hanging sync would only time out after an hour
+            QVERIFY(finishedSpy.wait(10s));
+            QVERIFY(!finishedSpy.first().first().toBool());
+            QVERIFY(server.requests.contains("PROPFIND"));
+            const auto item = completeSpy.findItem(tusFile());
+            QVERIFY(item);
+            QVERIFY(item->_status != SyncFileItem::Success);
+            QVERIFY(!item->_errorString.isEmpty());
+        }
+
+        // the server recovers
+        server.propfindErrors.clear();
+        fakeFolder.syncJournal().wipeErrorBlacklist();
+        QVERIFY(fakeFolder.syncOnce());
+        QCOMPARE(fakeFolder.currentRemoteState().find(tusFile())->contentSize, size);
+        QVERIFY(fakeFolder.syncJournal().getFileRecord(tusFile()).isValid());
     }
 };
 

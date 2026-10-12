@@ -295,6 +295,7 @@ void PropagateUploadFileTUS::slotChunkFinished()
             _item->_remotePerm = RemotePermissions::fromServerString(map.value(QStringLiteral("permissions")));
             finalize(Utility::normalizeEtag(map.value(QStringLiteral("getetag"))), map.value(QStringLiteral("fileid")).toUtf8());
         });
+        connect(check, &PropfindJob::finishedWithError, this, [check, this]() { commonErrorHandling(check); });
         check->start();
         return;
     }
