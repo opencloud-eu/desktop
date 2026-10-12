@@ -6,8 +6,7 @@ variables:
       from_secret: cache_s3_access_key
     AWS_SECRET_ACCESS_KEY:
       from_secret: cache_s3_secret_key
-    CACHE_BUCKET:
-      from_secret: cache_s3_bucket
+    PUBLIC_BUCKET: public
     MC_HOST: 'https://s3.ci.opencloud.eu'
   - &trigger_path
     include:
@@ -85,7 +84,7 @@ steps:
       - if $BROWSER_CACHE_FOUND; then exit 0; fi
       - playwright_version=$(bash test/gui/woodpecker/script.sh get_playwright_version)
       - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-      - mc cp -r -a $CI_WORKSPACE/test/gui/playwright-browsers.tar.gz s3/$CACHE_BUCKET/desktop/browsers-cache/$playwright_version/
+      - mc cp -r -a $CI_WORKSPACE/test/gui/playwright-browsers.tar.gz s3/$PUBLIC_BUCKET/desktop/browsers-cache/$playwright_version/
 
   - name: upload-python-cache
     image: *minio_image
@@ -96,4 +95,4 @@ steps:
       - if $PYTHON_CACHE_FOUND; then exit 0; fi
       - requirements_sha=$(bash test/gui/woodpecker/script.sh get_requirementstxt_hash)
       - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-      - mc cp -r -a $CI_WORKSPACE/test/gui/python-cache*.tar.gz s3/$CACHE_BUCKET/desktop/python-cache/$requirements_sha/
+      - mc cp -r -a $CI_WORKSPACE/test/gui/python-cache*.tar.gz s3/$PUBLIC_BUCKET/desktop/python-cache/$requirements_sha/

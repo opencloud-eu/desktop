@@ -25,7 +25,7 @@ get_playwright_version() {
 check_browsers_cache() {
     playwright_version=$(get_playwright_version)
 
-    playwright_cache=$(mc find s3/$CACHE_BUCKET/desktop/browsers-cache/$playwright_version/playwright-browsers.tar.gz 2>&1 | grep 'Object does not exist')
+    playwright_cache=$(mc find s3/$PUBLIC_BUCKET/desktop/browsers-cache/$playwright_version/playwright-browsers.tar.gz 2>&1 | grep 'Object does not exist')
 
     if [[ "$playwright_cache" != "" ]]
     then
@@ -45,7 +45,7 @@ get_requirementstxt_hash() {
 
 check_python_cache() {
     requirements_sha=$(get_requirementstxt_hash)
-    python_cache=$(mc find s3/$CACHE_BUCKET/desktop/python-cache/$requirements_sha/python-cache.tar.gz 2>&1 | grep 'Object does not exist')
+    python_cache=$(mc find s3/$PUBLIC_BUCKET/desktop/python-cache/$requirements_sha/python-cache.tar.gz 2>&1 | grep 'Object does not exist')
 
     if [[ "$python_cache" != "" ]]
     then
