@@ -4,7 +4,7 @@
 
 ### ❤️ Thanks to all contributors! ❤️
 
-@Asmitapaudel, @TheOneRing, @dragotin, @flimmy, @fracturehill, @jnweiger, @junkerderprovinz, @prashant-gurung899, @saw-jan, @v-scharf
+@Asmitapaudel, @Mortimer-RR, @TheOneRing, @dragotin, @flimmy, @fracturehill, @jnweiger, @junkerderprovinz, @prashant-gurung899, @saw-jan, @v-scharf
 
 ### ✨ Features
 
@@ -12,6 +12,7 @@
 
 ### 🐛 Bug Fixes
 
+- Recover TUS uploads whose resume URL is no longer valid [[#1145](https://github.com/opencloud-eu/desktop/pull/1145)]
 - Fix sorting by file size in IssuesWidget [[#1160](https://github.com/opencloud-eu/desktop/pull/1160)]
 - Invalidate the discovery state when hidden files are enabled [[#1029](https://github.com/opencloud-eu/desktop/pull/1029)]
 - Don't sync .vault folders for now [[#1118](https://github.com/opencloud-eu/desktop/pull/1118)]
