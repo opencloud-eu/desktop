@@ -118,7 +118,8 @@
         <location filename="../src/gui/main.cpp" line="101"/>
         <source>%1 version %2<byte value="xd"/>
 File synchronization desktop utility.</source>
-        <translation>%1 version %2 Verktyg för filsynkronisering på skrivbordet.</translation>
+        <translation>%1 version %2&lt;byte value=&quot;xd&quot;/&gt;
+Verktyg för filsynkronisering på skrivbordet.</translation>
     </message>
     <message>
         <location filename="../src/gui/main.cpp" line="106"/>
@@ -183,13 +184,15 @@ File synchronization desktop utility.</source>
         <location filename="../src/gui/qml/credentials/Credentials.qml" line="86"/>
         <source>Connecting %1 to:
 %2</source>
-        <translation>Ansluter %1 till: %2</translation>
+        <translation>Ansluter %1 till:
+%2</translation>
     </message>
     <message>
         <location filename="../src/gui/qml/credentials/Credentials.qml" line="86"/>
         <source>Connecting to:
 %1</source>
-        <translation>Ansluter till: %1</translation>
+        <translation>Ansluter till:
+%1</translation>
     </message>
 </context>
 <context>
@@ -535,7 +538,7 @@ File synchronization desktop utility.</source>
     <message>
         <location filename="../src/gui/aboutdialog.cpp" line="152"/>
         <source>&lt;html&gt;The update channel determines which client updates will be offered for installation.&lt;ul&gt;&lt;li&gt;&quot;stable&quot; contains only upgrades that are considered reliable&lt;/li&gt;&lt;/ul&gt;&lt;br&gt;⚠️Downgrades are not supported. If you switch to a stable channel this change will only be applied with the next major release.&lt;/html&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;html&gt;Uppdateringskanalen avgör vilka klientuppdateringar som erbjuds för installation.&lt;ul&gt;&lt;li&gt;”stabil” innehåller endast uppgraderingar som anses vara tillförlitliga&lt;/li&gt;&lt;/ul&gt;&lt;br&gt;⚠️Nedgraderingar stöds inte. Om du byter till en stabil kanal tillämpas ändringen först i nästa huvudversion.&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../src/gui/aboutdialog.cpp" line="157"/>
@@ -753,7 +756,9 @@ File synchronization desktop utility.</source>
         <source>An update is available for this AppImage of %1. Do you want to install this update?
 
 The update will be performed in the background, and overwrite the current AppImage file. You need to restart the app to complete the update.</source>
-        <translation>En uppdatering är tillgänglig för denna AppImage av %1. Vill du installera uppdateringen? Uppdateringen kommer att utföras i bakgrunden och skriva över den aktuella AppImage-filen. Du måste starta om appen för att slutföra uppdateringen.</translation>
+        <translation>En uppdatering är tillgänglig för denna AppImage av %1. Vill du installera uppdateringen?
+
+Uppdateringen kommer att utföras i bakgrunden och skriva över den aktuella AppImage-filen. Du måste starta om appen för att slutföra uppdateringen.</translation>
     </message>
 </context>
 <context>
@@ -807,7 +812,7 @@ The update will be performed in the background, and overwrite the current AppIma
     <message>
         <location filename="../src/gui/commonstrings.cpp" line="33"/>
         <source>Copy path to clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Kopiera sökvägen till urklipp</translation>
     </message>
     <message>
         <location filename="../src/gui/commonstrings.cpp" line="39"/>
@@ -827,7 +832,7 @@ The update will be performed in the background, and overwrite the current AppIma
     <message>
         <location filename="../src/gui/commonstrings.cpp" line="51"/>
         <source>Copy URL to clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Kopiera URL till urklipp</translation>
     </message>
     <message>
         <location filename="../src/gui/commonstrings.cpp" line="56"/>
@@ -1035,7 +1040,11 @@ The update will be performed in the background, and overwrite the current AppIma
 This means that the synchronization client might not upload local changes immediately and will instead only scan for local changes and upload them occasionally (every two hours by default).
 
 %1</source>
-        <translation>Ändringar i synkroniserade mappar kunde inte spåras på ett tillförlitligt sätt. Detta innebär att synkroniseringsklienten kanske inte laddar upp lokala ändringar omedelbart, utan istället endast söker efter lokala ändringar och laddar upp dem då och då (varannan timme som standard). %1</translation>
+        <translation>Ändringar i synkroniserade mappar kunde inte spåras på ett tillförlitligt sätt.
+
+Detta innebär att synkroniseringsklienten kanske inte laddar upp lokala ändringar omedelbart, utan i stället endast söker efter lokala ändringar och laddar upp dem då och då, varannan timme som standard.
+
+%1</translation>
     </message>
 </context>
 <context>
@@ -1396,7 +1405,9 @@ This means that the synchronization client might not upload local changes immedi
         <source>Files or folders matching a pattern will not be synchronized. Changes take effect the next time folders are synchronized.
 
 Items where deletion is allowed will be deleted if they prevent a directory from being removed. This is useful for meta data.</source>
-        <translation>Filer eller mappar som matchar ett mönster kommer inte att synkroniseras. Ändringarna träder i kraft nästa gång mapparna synkroniseras. Objekt som får raderas kommer att raderas om de hindrar en katalog från att tas bort. Detta är användbart för metadata.</translation>
+        <translation>Filer eller mappar som matchar ett mönster kommer inte att synkroniseras. Ändringarna träder i kraft nästa gång mapparna synkroniseras.
+
+Objekt som får raderas kommer att raderas om de hindrar en katalog från att tas bort. Detta är användbart för metadata.</translation>
     </message>
     <message>
         <location filename="../src/gui/ignorelisteditor.cpp" line="110"/>
@@ -1473,7 +1484,8 @@ Items where deletion is allowed will be deleted if they prevent a directory from
         <location filename="../src/gui/logbrowser.ui" line="71"/>
         <source>The client can write debug logs to a temporary folder. These logs are very helpful for diagnosing problems.
 Since log files can get large, the client will start a new one for each sync run and compress older ones.</source>
-        <translation>Klienten kan skriva felsökningsloggar till en tillfällig mapp. Dessa loggar är mycket användbara för att diagnostisera problem. Eftersom loggfilerna kan bli stora startar klienten en ny för varje synkronisering och komprimerar äldre filer.</translation>
+        <translation>Klienten kan skriva felsökningsloggar till en tillfällig mapp. Dessa loggar är mycket användbara för att diagnostisera problem.
+Eftersom loggfilerna kan bli stora startar klienten en ny för varje synkronisering och komprimerar äldre filer.</translation>
     </message>
     <message>
         <location filename="../src/gui/logbrowser.ui" line="116"/>
@@ -1504,7 +1516,8 @@ Since log files can get large, the client will start a new one for each sync run
         <location filename="../src/gui/logbrowser.ui" line="167"/>
         <source>These settings persist across client restarts.
 Note that using any logging command line options will override the settings.</source>
-        <translation>Dessa inställningar kvarstår även efter omstart av klienten. Observera att användning av kommandoradsalternativ för loggning åsidosätter inställningarna.</translation>
+        <translation>Dessa inställningar kvarstår även efter omstart av klienten.
+Observera att användning av kommandoradsalternativ för loggning åsidosätter inställningarna.</translation>
     </message>
     <message>
         <location filename="../src/gui/logbrowser.ui" line="178"/>
@@ -1642,7 +1655,8 @@ Note that using any logging command line options will override the settings.</so
         <location filename="../src/libsync/creds/oauth.cpp" line="360"/>
         <source>The reply from the server did not contain all expected fields
 :%1</source>
-        <translation>Svaret från servern innehöll inte alla förväntade fält: %1</translation>
+        <translation>Svaret från servern innehöll inte alla förväntade fält
+:%1</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="362"/>
@@ -1847,7 +1861,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/discovery.cpp" line="170"/>
         <source>Encrypted vault files are not synchronized because they are currently not supported by this application.</source>
-        <translation type="unfinished"/>
+        <translation>Krypterade valvfiler synkroniseras inte eftersom programmet för närvarande inte har stöd för dem.</translation>
     </message>
     <message>
         <location filename="../src/libsync/discovery.cpp" line="182"/>
@@ -2455,7 +2469,9 @@ Note that using any logging command line options will override the settings.</so
         <source>Moving file failed:
 
 %1</source>
-        <translation>Flyttning av fil misslyckades: %1</translation>
+        <translation>Flyttning av fil misslyckades:
+
+%1</translation>
     </message>
     <message>
         <location filename="../src/gui/socketapi/socketapi.cpp" line="763"/>
