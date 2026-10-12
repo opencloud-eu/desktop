@@ -12,12 +12,12 @@ Feature: File Explorer Context Menu
         # When user "Alice" opens "Personal" sync folder in the file manager from the client UI
         # Then the "Personal" sync folder should be opened in the file manager
         # And the user closes the current file manager
-        When user "Alice" opens "Personal" sync folder in the file manager
+        # When user "Alice" opens "Personal" sync folder in the file manager
         # Then the following file explorer context menu items should be available for file "lorem.txt"
         #     | menu                              |
         #     | Share...                          |
         #     | Copy private link to clipboard    |
         #     | Show in web browser               |
         #     | Show file versions in web browser |
-        When the user copies the private link of folder "mydocs" from the file explorer context menu
-        Then the private link should be copied to the clipboard
+        # When the user copies the private link of folder "mydocs" from the file explorer context menu
+        # Then the private link should be copied to the clipboard

@@ -38,10 +38,12 @@ def native_double_click(self, **kwargs):
         win_x, win_y = get_window_location(self.parent)
     else:
         win_x, win_y = get_window_location(self)
-    if x < win_x:
+    print(win_x, win_y, x,y)
+    if x < win_x or y < win_y:
         x = x + win_x
-    if y < win_y:
         y = y + win_y
+    print(win_x, win_y, x,y)
+    # pyautogui.moveTo(x, y)
     pyautogui.doubleClick(x, y, **kwargs)
 
 
@@ -158,6 +160,15 @@ def create_app_session():
     options.set_capability('appium:environ', get_app_env())
     options.set_capability('timeouts', {'implicit': get_config('min_timeout') * 1000})
     app_driver = Remote(command_executor=get_config('webdriver_url'), options=options)
+
+    n_opt = options.set_capability('app', "nautilus")
+    nautilus = Remote(command_executor=get_config('webdriver_url'), options=n_opt)
+    el = nautilus.find_element(By.CLASS_NAME, "[label | cool-retro-term]")
+    print(el)
+    el.native_double_click()
+    import time
+    time.sleep(5)
+    nautilus.quit()
     # NOTE: these methods to set implicit wait are not working:
     # app_driver.implicitly_wait(5)
     # app_driver.implicitly_wait = 5
@@ -211,7 +222,8 @@ def wait_until_app_terminated():
 
 
 def get_window_location(driver):
-    window = driver.find_element(By.XPATH, "//*[contains(@name,'OpenCloud Desktop')]").location
+    window = driver.get_window_rect()
+    print(window)
     return window['x'], window['y']
 
 
