@@ -9,9 +9,13 @@ import sys
 import time
 from urllib.parse import urlparse
 
-from mitmproxy import connection
-from mitmproxy.http import Request, Response, HTTPFlow
-from mitmproxy.io import FlowWriter
+try:
+    from mitmproxy import connection
+    from mitmproxy.http import Request, Response, HTTPFlow
+    from mitmproxy.io import FlowWriter
+    _MitmProxyAvailable = True
+except ImportError:
+    _MitmProxyAvailable = False
 
 # Matches lines from the OpenCloud client logging in format like:
 # 26-09-07 16:06:16:190 [ info sync.httplogger ]:    REQUEST <id> {json...}
@@ -200,11 +204,15 @@ if __name__ == '__main__':
         print("")
         print("Usage: python parse_http_logs.py <input_file> <output_file>")
         print("       output_file extension decides the format:")
-        print("         .mitm -> mitmproxy flow file, anything else -> HTML")
+        print("         .mitm -> mitmproxy flow file (requires mitmproxy), anything else -> HTML")
         sys.exit(1)
     output_file = sys.argv[2]
+    write_mitm = os.path.splitext(output_file)[1].lower() == '.mitm'
+    if write_mitm and not _MitmProxyAvailable:
+        print("Writing .mitm files requires the mitmproxy module (pip install mitmproxy).")
+        sys.exit(1)
     data = parse_log(sys.argv[1])
-    if os.path.splitext(output_file)[1].lower() == '.mitm':
+    if write_mitm:
         generate_mitm_flows(data, output_file)
     else:
         generate_html(data, output_file)
