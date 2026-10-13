@@ -2246,13 +2246,13 @@ Uwaga: użycie opcji logowania w wierszu poleceń nadpisze te ustawienia.</trans
         <translation>Przeliczenie sumy kontrolnej zakończone niepowodzeniem</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateuploadtus.cpp" line="222"/>
+        <location filename="../src/libsync/propagateuploadtus.cpp" line="243"/>
         <source>Upload did not receive a Content-Location.</source>
         <extracomment>Content-Location is a technical term, don't translate.</extracomment>
         <translation>Przesyłanie nie otrzymało nagłówka Content-Location.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateuploadtus.cpp" line="230"/>
+        <location filename="../src/libsync/propagateuploadtus.cpp" line="251"/>
         <source>The local file was removed during sync.</source>
         <translation>Plik lokalny został usunięty podczas synchronizacji</translation>
     </message>
@@ -3313,12 +3313,12 @@ Uwaga: użycie opcji logowania w wierszu poleceń nadpisze te ustawienia.</trans
 <context>
     <name>account loading</name>
     <message>
-        <location filename="../src/gui/main.cpp" line="467"/>
+        <location filename="../src/gui/main.cpp" line="470"/>
         <source>Error accessing the configuration file</source>
         <translation>Błąd dostępu do pliku konfiguracyjnego</translation>
     </message>
     <message>
-        <location filename="../src/gui/main.cpp" line="468"/>
+        <location filename="../src/gui/main.cpp" line="471"/>
         <source>There was an error while accessing the configuration file at %1.</source>
         <translation>Wystąpił błąd podczas uzyskiwania dostępu do pliku konfiguracyjnego w %1.</translation>
     </message>

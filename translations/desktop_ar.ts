@@ -2248,13 +2248,13 @@ Note that using any logging command line options will override the settings.</so
         <translation>فشل حساب المجموع الاختباري</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateuploadtus.cpp" line="222"/>
+        <location filename="../src/libsync/propagateuploadtus.cpp" line="243"/>
         <source>Upload did not receive a Content-Location.</source>
         <extracomment>Content-Location is a technical term, don't translate.</extracomment>
         <translation>لم يتلق التحميل Content-Location.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateuploadtus.cpp" line="230"/>
+        <location filename="../src/libsync/propagateuploadtus.cpp" line="251"/>
         <source>The local file was removed during sync.</source>
         <translation>تمت إزالة الملف المحلي أثناء المزامنة.</translation>
     </message>
@@ -3315,12 +3315,12 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>account loading</name>
     <message>
-        <location filename="../src/gui/main.cpp" line="467"/>
+        <location filename="../src/gui/main.cpp" line="470"/>
         <source>Error accessing the configuration file</source>
         <translation>خطأ في الوصول إلى ملف التكوين</translation>
     </message>
     <message>
-        <location filename="../src/gui/main.cpp" line="468"/>
+        <location filename="../src/gui/main.cpp" line="471"/>
         <source>There was an error while accessing the configuration file at %1.</source>
         <translation>حدث خطأ أثناء الوصول إلى ملف التكوين في %1.</translation>
     </message>
