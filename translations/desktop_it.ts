@@ -2248,13 +2248,13 @@ Note that using any logging command line options will override the settings.</so
         <translation>Calcolo del checksum non riuscito</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateuploadtus.cpp" line="222"/>
+        <location filename="../src/libsync/propagateuploadtus.cpp" line="243"/>
         <source>Upload did not receive a Content-Location.</source>
         <extracomment>Content-Location is a technical term, don't translate.</extracomment>
         <translation>Il caricamento non ha ricevuto un Content-Location.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateuploadtus.cpp" line="230"/>
+        <location filename="../src/libsync/propagateuploadtus.cpp" line="251"/>
         <source>The local file was removed during sync.</source>
         <translation>Il file locale è stato rimosso durante la sincronizzazione.</translation>
     </message>
@@ -3317,12 +3317,12 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>account loading</name>
     <message>
-        <location filename="../src/gui/main.cpp" line="467"/>
+        <location filename="../src/gui/main.cpp" line="470"/>
         <source>Error accessing the configuration file</source>
         <translation>Errore durante l&apos;accesso al file di configurazione</translation>
     </message>
     <message>
-        <location filename="../src/gui/main.cpp" line="468"/>
+        <location filename="../src/gui/main.cpp" line="471"/>
         <source>There was an error while accessing the configuration file at %1.</source>
         <translation>Si è verificato un errore durante l&apos;accesso al file di configurazione in %1.</translation>
     </message>

@@ -2248,13 +2248,13 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
         <translation>Berechnung der Prüfsumme fehlgeschlagen</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateuploadtus.cpp" line="222"/>
+        <location filename="../src/libsync/propagateuploadtus.cpp" line="243"/>
         <source>Upload did not receive a Content-Location.</source>
         <extracomment>Content-Location is a technical term, don't translate.</extracomment>
         <translation>Der Upload hat keine Content-Location erhalten.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateuploadtus.cpp" line="230"/>
+        <location filename="../src/libsync/propagateuploadtus.cpp" line="251"/>
         <source>The local file was removed during sync.</source>
         <translation>Die lokale Datei wurde bei der Synchronisierung entfernt.</translation>
     </message>
@@ -3315,12 +3315,12 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
 <context>
     <name>account loading</name>
     <message>
-        <location filename="../src/gui/main.cpp" line="467"/>
+        <location filename="../src/gui/main.cpp" line="470"/>
         <source>Error accessing the configuration file</source>
         <translation>Fehler beim Zugriff auf Konfigurationsdatei</translation>
     </message>
     <message>
-        <location filename="../src/gui/main.cpp" line="468"/>
+        <location filename="../src/gui/main.cpp" line="471"/>
         <source>There was an error while accessing the configuration file at %1.</source>
         <translation>Beim Zugriff auf die Konfigurationsdatei unter %1 ist ein Fehler aufgetreten.</translation>
     </message>

@@ -2248,13 +2248,13 @@ Figyelje, hogy a parancssori naplózási beállítások felülírják ezeket.</t
         <translation>Az ellenőrzőösszeg számítása sikertelen</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateuploadtus.cpp" line="222"/>
+        <location filename="../src/libsync/propagateuploadtus.cpp" line="243"/>
         <source>Upload did not receive a Content-Location.</source>
         <extracomment>Content-Location is a technical term, don't translate.</extracomment>
         <translation>A feltöltés nem kapott Content-Location értéket.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateuploadtus.cpp" line="230"/>
+        <location filename="../src/libsync/propagateuploadtus.cpp" line="251"/>
         <source>The local file was removed during sync.</source>
         <translation>A helyi fájl el lett távolítva a szinkronizálás közben.</translation>
     </message>
@@ -3315,12 +3315,12 @@ Figyelje, hogy a parancssori naplózási beállítások felülírják ezeket.</t
 <context>
     <name>account loading</name>
     <message>
-        <location filename="../src/gui/main.cpp" line="467"/>
+        <location filename="../src/gui/main.cpp" line="470"/>
         <source>Error accessing the configuration file</source>
         <translation>Hiba a konfigurációs fájl elérésekor</translation>
     </message>
     <message>
-        <location filename="../src/gui/main.cpp" line="468"/>
+        <location filename="../src/gui/main.cpp" line="471"/>
         <source>There was an error while accessing the configuration file at %1.</source>
         <translation>Hiba történt a(z) %1 helyen lévő konfigurációs fájl elérésekor.</translation>
     </message>

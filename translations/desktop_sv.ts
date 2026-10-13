@@ -2248,13 +2248,13 @@ Observera att användning av kommandoradsalternativ för loggning åsidosätter 
         <translation>Kontrollsumman kunde inte beräknas</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateuploadtus.cpp" line="222"/>
+        <location filename="../src/libsync/propagateuploadtus.cpp" line="243"/>
         <source>Upload did not receive a Content-Location.</source>
         <extracomment>Content-Location is a technical term, don't translate.</extracomment>
         <translation>Uppladdningen fick inte en Content-Location.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateuploadtus.cpp" line="230"/>
+        <location filename="../src/libsync/propagateuploadtus.cpp" line="251"/>
         <source>The local file was removed during sync.</source>
         <translation>Den lokala filen togs bort under synkroniseringen.</translation>
     </message>
@@ -3315,12 +3315,12 @@ Observera att användning av kommandoradsalternativ för loggning åsidosätter 
 <context>
     <name>account loading</name>
     <message>
-        <location filename="../src/gui/main.cpp" line="467"/>
+        <location filename="../src/gui/main.cpp" line="470"/>
         <source>Error accessing the configuration file</source>
         <translation>Fel vid åtkomst till konfigurationsfilen</translation>
     </message>
     <message>
-        <location filename="../src/gui/main.cpp" line="468"/>
+        <location filename="../src/gui/main.cpp" line="471"/>
         <source>There was an error while accessing the configuration file at %1.</source>
         <translation>Det uppstod ett fel vid åtkomst till konfigurationsfilen på %1.</translation>
     </message>

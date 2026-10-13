@@ -2248,13 +2248,13 @@ Note that using any logging command line options will override the settings.</so
         <translation>Не удалось вычислить контрольную сумму</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateuploadtus.cpp" line="222"/>
+        <location filename="../src/libsync/propagateuploadtus.cpp" line="243"/>
         <source>Upload did not receive a Content-Location.</source>
         <extracomment>Content-Location is a technical term, don't translate.</extracomment>
         <translation>Загрузка не получила локацию контента.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateuploadtus.cpp" line="230"/>
+        <location filename="../src/libsync/propagateuploadtus.cpp" line="251"/>
         <source>The local file was removed during sync.</source>
         <translation>Локальный файл был удален в процессе синхронизации.</translation>
     </message>
@@ -3315,12 +3315,12 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>account loading</name>
     <message>
-        <location filename="../src/gui/main.cpp" line="467"/>
+        <location filename="../src/gui/main.cpp" line="470"/>
         <source>Error accessing the configuration file</source>
         <translation>Ошибка при обращении к файлу конфигураций</translation>
     </message>
     <message>
-        <location filename="../src/gui/main.cpp" line="468"/>
+        <location filename="../src/gui/main.cpp" line="471"/>
         <source>There was an error while accessing the configuration file at %1.</source>
         <translation>Возникла ошибка при попытке обратиться к файлу конфигураций по пути %1</translation>
     </message>

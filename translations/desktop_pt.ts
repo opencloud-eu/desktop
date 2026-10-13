@@ -2248,13 +2248,13 @@ Note que usar opções de registo na linha de comandos substituirá estas defini
         <translation>Falha no cálculo da soma de verificação</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateuploadtus.cpp" line="222"/>
+        <location filename="../src/libsync/propagateuploadtus.cpp" line="243"/>
         <source>Upload did not receive a Content-Location.</source>
         <extracomment>Content-Location is a technical term, don't translate.</extracomment>
         <translation>O upload não recebeu o cabeçalho Content-Location.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateuploadtus.cpp" line="230"/>
+        <location filename="../src/libsync/propagateuploadtus.cpp" line="251"/>
         <source>The local file was removed during sync.</source>
         <translation>O ficheiro local foi removido durante a sincronização.</translation>
     </message>
@@ -3315,12 +3315,12 @@ Note que usar opções de registo na linha de comandos substituirá estas defini
 <context>
     <name>account loading</name>
     <message>
-        <location filename="../src/gui/main.cpp" line="467"/>
+        <location filename="../src/gui/main.cpp" line="470"/>
         <source>Error accessing the configuration file</source>
         <translation>Erro ao aceder ao ficheiro de configuração</translation>
     </message>
     <message>
-        <location filename="../src/gui/main.cpp" line="468"/>
+        <location filename="../src/gui/main.cpp" line="471"/>
         <source>There was an error while accessing the configuration file at %1.</source>
         <translation>Ocorreu um erro ao aceder ao ficheiro de configuração em %1.</translation>
     </message>
