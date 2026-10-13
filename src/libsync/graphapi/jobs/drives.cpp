@@ -19,17 +19,18 @@
 #include <OAICollection_of_drives.h>
 #include <OAIDrive.h>
 
+using namespace Qt::Literals::StringLiterals;
 
 using namespace OCC;
 using namespace GraphApi;
 
 namespace {
-
-const auto mountpointC = QLatin1String("mountpoint");
+constexpr auto mountpointC = "mountpoint"_L1;
+constexpr auto vaultContentTypeC = "application/vnd.opencloud.vault"_L1;
 }
 
 Drives::Drives(const AccountPtr &account, QObject *parent)
-    : JsonJob(account, account->url(), QStringLiteral("/graph/v1.0/me/drives"), "GET", {}, parent)
+    : JsonJob(account, account->url(), u"/graph/v1.0/me/drives"_s, "GET"_ba, {}, parent)
 {
 }
 
@@ -42,8 +43,9 @@ const QList<OpenAPI::OAIDrive> &Drives::drives() const
         drives.fromJsonObject(data());
         _drives = drives.getValue();
         // At the moment we don't support mountpoints but use the Share Jail
-        _drives.erase(
-            std::remove_if(_drives.begin(), _drives.end(), [](const OpenAPI::OAIDrive &it) { return it.getDriveType() == mountpointC; }), _drives.end());
+        _drives.erase(std::remove_if(_drives.begin(), _drives.end(),
+                          [](const OpenAPI::OAIDrive &it) { return it.getDriveType() == mountpointC || it.getLibreGraphContentType() == vaultContentTypeC; }),
+            _drives.end());
     }
     return _drives;
 }

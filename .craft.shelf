@@ -170,7 +170,7 @@ version = 1.6.0
 version = 1.3.1
 
 [opencloud/libre-graph-api-cpp-qt-client]
-version = 1.0.7
+version = 1.0.8
 
 [python-modules/flit-core]
 version = latest
