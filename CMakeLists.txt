@@ -169,4 +169,14 @@ else()
     message(WARNING "ECM ${ECM_VERSION} too old, cannot install clang-format git hook")
 endif()
 
+# Target to generate the base translation file with all translatable strings (translations/desktop_en.ts)
+add_custom_target(update_translations
+    COMMAND ${CMAKE_COMMAND}
+        -DLUPDATE=$<TARGET_FILE:Qt::lupdate>
+        -DTS_FILE=${CMAKE_SOURCE_DIR}/translations/desktop_en.ts
+        -DSRC_DIR=${CMAKE_SOURCE_DIR}
+        -DWAE=FALSE
+        -P ${CMAKE_SOURCE_DIR}/cmake/run_lupdate.cmake
+)
+
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES INCLUDE_QUIET_PACKAGES)
