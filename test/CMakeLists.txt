@@ -81,3 +81,4 @@ configure_file(test_journal.db "${PROJECT_BINARY_DIR}/bin/test_journal.db" COPYO
 opencloud_add_test(JobQueue)
 
 add_subdirectory(modeltests)
+add_subdirectory(cmaketests)

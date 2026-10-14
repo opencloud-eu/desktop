@@ -18,7 +18,7 @@ steps:
       - apt install -y qt6-l10n-tools git curl
       - rm translations/*.ts
       - git checkout translations/desktop_en.ts
-      - /usr/lib/qt6/bin/lupdate src -no-obsolete -ts translations/desktop_en.ts
+      - cmake -DLUPDATE='/usr/lib/qt6/bin/lupdate' -DTS_FILE='translations/desktop_en.ts' -DSRC_DIR=. -P cmake/run_lupdate.cmake
       - curl -o- https://raw.githubusercontent.com/transifex/cli/master/install.sh | bash
       - . ~/.profile
       - tx push -s
