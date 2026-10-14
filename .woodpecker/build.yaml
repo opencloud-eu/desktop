@@ -52,6 +52,7 @@ steps:
     image: *alpine_image
     commands:
       - chmod o+w $CI_WORKSPACE/ -R
+      - exit 1
 
   - name: build-client-for-ui-tests
     image: *build_image
