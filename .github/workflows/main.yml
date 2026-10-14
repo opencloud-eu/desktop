@@ -82,7 +82,7 @@ jobs:
             - target: linux-gcc-x86_64
               os: ubuntu-latest
               clang_tidy: true
-              container: invent-registry.kde.org/sysadmin/ci-images/craft-appimage-alma9:latest
+              container: ghcr.io/opencloud-eu/ci-docker-desktop/appimage:latest
 
     name: ${{ matrix.target }}
 
@@ -138,7 +138,7 @@ jobs:
 
     - name: Clone CraftMaster
       run: |
-        git clone --depth=1 https://invent.kde.org/kde/craftmaster.git "${home}/craft/CraftMaster/CraftMaster"
+        git clone --depth=1 https://github.com/KDE/craftmaster.git "${home}/craft/CraftMaster/CraftMaster"
 
     - name: Craft setup
       run: |
