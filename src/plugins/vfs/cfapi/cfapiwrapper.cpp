@@ -534,9 +534,9 @@ OCC::Result<void, QString> OCC::CfApiWrapper::createPlaceholderInfo(
     cloudEntry.FsMetadata.FileSize.QuadPart = size;
     cloudEntry.FsMetadata.BasicInfo.FileAttributes = FILE_ATTRIBUTE_NORMAL;
     OCC::Utility::UnixTimeToLargeIntegerFiletime(modtime, &cloudEntry.FsMetadata.BasicInfo.CreationTime);
-    OCC::Utility::UnixTimeToLargeIntegerFiletime(modtime, &cloudEntry.FsMetadata.BasicInfo.LastWriteTime);
-    OCC::Utility::UnixTimeToLargeIntegerFiletime(modtime, &cloudEntry.FsMetadata.BasicInfo.LastAccessTime);
-    OCC::Utility::UnixTimeToLargeIntegerFiletime(modtime, &cloudEntry.FsMetadata.BasicInfo.ChangeTime);
+    cloudEntry.FsMetadata.BasicInfo.LastWriteTime = cloudEntry.FsMetadata.BasicInfo.CreationTime;
+    cloudEntry.FsMetadata.BasicInfo.LastAccessTime = cloudEntry.FsMetadata.BasicInfo.CreationTime;
+    cloudEntry.FsMetadata.BasicInfo.ChangeTime = cloudEntry.FsMetadata.BasicInfo.CreationTime;
 
     if (isDirectory) {
         cloudEntry.Flags |= CF_PLACEHOLDER_CREATE_FLAG_DISABLE_ON_DEMAND_POPULATION;
