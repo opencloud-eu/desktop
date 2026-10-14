@@ -1,6 +1,6 @@
 [General]
 version = 2
-blueprintrepositories = https://github.com/opencloud-eu/craft-blueprints-opencloud.git|main|;https://invent.kde.org/packaging/craft-blueprints-kde.git|master|
+blueprintrepositories = https://github.com/opencloud-eu/craft-blueprints-opencloud.git|main|;https://github.com/KDE/craft-blueprints-kde.git|master|
 
 [core/cacert]
 version = 2025-09-09
@@ -14,7 +14,7 @@ version = main
 
 [craft/craft-core]
 version = master
-revision = 28ae91409106c9c4f6f6004f7434381d0729dffc
+revision = 3e68a9099f1cc4854595819411d86ad75ddda60a
 
 [dev-utils/7zip-base]
 version = 25.01
@@ -119,7 +119,7 @@ version = 1.5.7
 version = 20.1.7
 
 [libs/openssl]
-version = 3.6.3
+version = 3.6.4
 
 [libs/pcre2]
 version = 10.44
@@ -170,7 +170,7 @@ version = 1.6.0
 version = 1.3.1
 
 [opencloud/libre-graph-api-cpp-qt-client]
-version = 1.0.7
+version = 1.0.8
 
 [python-modules/flit-core]
 version = latest
