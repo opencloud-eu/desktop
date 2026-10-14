@@ -1,6 +1,6 @@
 [General]
 version = 2
-blueprintrepositories = https://github.com/opencloud-eu/craft-blueprints-opencloud.git|main|;https://invent.kde.org/packaging/craft-blueprints-kde.git|master|
+blueprintrepositories = https://github.com/opencloud-eu/craft-blueprints-opencloud.git|main|;https://github.com/KDE/craft-blueprints-kde.git|master|
 
 [core/cacert]
 version = 2025-09-09
