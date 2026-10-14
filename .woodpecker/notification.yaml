@@ -1,5 +1,5 @@
 variables:
-  - &golang_image 'docker.io/golang:1.24'
+  - &golang_image 'quay.io/opencloudeu/golang-ci:1.26'
   - &qa_repo 'https://github.com/opencloud-eu/qa.git'
   - &qa_repo_branch 'main'
   - &current_repo_id '11'
@@ -48,8 +48,8 @@ steps:
         from_secret: oc_ci_url
       CI_REPO_ID: *current_repo_id
       CI_WOODPECKER_TOKEN: no-auth-needed-on-this-repo
+      MESSAGE_SUFFIX_WHEN_FAILED: 'CC @sajan:jankari.tech @pradip:jankari.tech @prashant:jankari.tech'
     commands:
       - git clone --single-branch --depth 1 --branch $QA_REPO_BRANCH $QA_REPO /tmp/qa
       - cd /tmp/qa/scripts/matrix-notification/
-      - if [ "$CI_PIPELINE_EVENT" = "cron" ]; then export MESSAGE_SUFFIX_WHEN_FAILED="CC @sajan:jankari.tech @pradip:jankari.tech @prashant:jankari.tech"; fi
       - go run matrix-notification.go
