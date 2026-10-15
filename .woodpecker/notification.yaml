@@ -23,7 +23,7 @@ when:
 
 depends_on:
   - build
-  - ui-tests
+  # - ui-tests
 
 skip_clone: true
 

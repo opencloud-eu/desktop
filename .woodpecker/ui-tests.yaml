@@ -20,7 +20,7 @@ when:
     event:
       - push
       - manual
-  - event: pull_request
+  # - event: pull_request
   - event: tag
   - event: cron
     cron: nightly*

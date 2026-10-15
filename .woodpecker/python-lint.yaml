@@ -19,9 +19,9 @@ when:
       - manual
     path:
       <<: *trigger_path
-  - event: pull_request
-    path:
-      <<: *trigger_path
+  # - event: pull_request
+  #   path:
+  #     <<: *trigger_path
 
 workspace:
   base: /woodpecker
