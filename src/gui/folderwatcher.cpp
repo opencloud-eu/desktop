@@ -64,6 +64,7 @@ FolderWatcher::~FolderWatcher()
 void FolderWatcher::init(const QString &root)
 {
     Q_ASSERT(!_d);
+    _root = root;
     _d.reset(new FolderWatcherPrivate(this, root));
 }
 
@@ -140,6 +141,13 @@ QSet<QString> FolderWatcher::popChangeSet()
     // stop the timer as we pop all queued changes
     _timer.stop();
     return std::move(_changeSet);
+}
+
+void FolderWatcher::restart()
+{
+    // ensure the old one is gone before creating a new one
+    _d.reset();
+    _d.reset(new FolderWatcherPrivate(this, _root));
 }
 
 } // namespace OCC
