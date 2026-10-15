@@ -23,7 +23,7 @@ variables:
     exclude:
       - .woodpecker/ready-release-go.yaml
       - .woodpecker/translation.yaml
-      - test/gui/manual-test-plan
+      - test/gui/docs/**
 
 when:
   - branch:
