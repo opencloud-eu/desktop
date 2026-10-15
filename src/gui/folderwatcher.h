@@ -76,6 +76,9 @@ public:
     // pop the accumulated changes
     QSet<QString> popChangeSet();
 
+    /// Restart the folder watcher this might be needed after the ignore pattern changed
+    void restart();
+
 
 Q_SIGNALS:
     /** Emitted when one of the watched directories or one
@@ -112,6 +115,7 @@ private:
     QTimer _timer;
     QSet<QString> _changeSet;
     Folder *_folder;
+    QString _root;
     bool _isReliable = true;
 
     friend class FolderWatcherPrivate;
