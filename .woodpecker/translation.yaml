@@ -15,7 +15,7 @@ steps:
     commands:
       - apt update
       - ln -fs /usr/share/zoneinfo/Europe/Berlin /etc/localtime
-      - apt install -y qt6-l10n-tools git curl
+      - apt install -y qt6-l10n-tools git curl cmake
       - rm translations/*.ts
       - git checkout translations/desktop_en.ts
       - cmake -DLUPDATE='/usr/lib/qt6/bin/lupdate' -DTS_FILE='translations/desktop_en.ts' -DSRC_DIR=. -P cmake/run_lupdate.cmake
