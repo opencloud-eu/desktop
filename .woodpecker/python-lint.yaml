@@ -6,7 +6,10 @@ variables:
       - test/gui/pyproject.toml
       - test/gui/.python-version
       - .woodpecker/**
-
+    exclude:
+      - .woodpecker/ready-release-go.yaml
+      - .woodpecker/translation.yaml
+      - test/gui/docs/**
 when:
   - branch:
       - main
