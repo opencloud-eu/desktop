@@ -30,6 +30,9 @@ Pane {
     Accessible.role: Accessible.List
     Accessible.name: qsTr("Spaces")
 
+    LayoutMirroring.enabled: Qt.application.layoutDirection === Qt.RightToLeft
+    LayoutMirroring.childrenInherit: true
+
     spacing: 10
 
     Connections {
@@ -48,7 +51,8 @@ Pane {
         id: scrollView
         anchors.fill: parent
         clip: true
-        rightPadding: spacesView.spacing * 2
+        leftPadding: LayoutMirroring.enabled ? effectiveScrollBarWidth * 2 : 0
+        rightPadding: LayoutMirroring.enabled ? 0 : effectiveScrollBarWidth * 2
         ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
         ScrollBar.vertical.policy: ScrollBar.AlwaysOn
 
