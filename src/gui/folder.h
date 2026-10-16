@@ -276,7 +276,7 @@ public Q_SLOTS:
     void schedulePathForLocalDiscovery(const QString &relativePath);
 
     /// Reloads the excludes, used when changing the user-defined excludes after saving them to disk.
-    bool reloadExcludes();
+    void reloadExcludes();
 
 private Q_SLOTS:
     void slotSyncFinished(bool);

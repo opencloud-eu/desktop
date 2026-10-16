@@ -91,6 +91,8 @@ Folder::Folder(const FolderDefinition &definition, const AccountStatePtr &accoun
         // pass the setting if hidden files are to be ignored, will be read in csync_update
         _engine->setIgnoreHiddenFiles(_definition.ignoreHiddenFiles);
 
+        reloadExcludes();
+
         if (!_engine->loadDefaultExcludes()) {
             qCWarning(lcFolder, "Could not read system exclude file");
         }
@@ -351,13 +353,7 @@ void Folder::setIgnoreHiddenFiles(bool ignore)
     }
     _definition.ignoreHiddenFiles = ignore;
 
-    if (!ignore) {
-        // The hidden items were skipped by the previous runs, so they are not in the local
-        // database and the remote etags did not change. Rediscover both sides, the same way a
-        // change of the ignore list does.
-        _journal.forceRemoteDiscoveryNextSync();
-        slotNextSyncFullLocalDiscovery();
-    }
+    reloadExcludes();
 }
 
 QString Folder::cleanPath() const
@@ -836,12 +832,32 @@ void Folder::wipeForRemoval()
     _vfs.reset(nullptr); // warning: folder now in an invalid state
 }
 
-bool Folder::reloadExcludes()
+void Folder::reloadExcludes()
 {
-    if (!_engine) {
-        return true;
+    auto doReload = [this] {
+        // The hidden items were skipped by the previous runs, so they are not in the local
+        // database and the remote etags did not change. Rediscover both sides, the same way a
+        // change of the ignore list does.
+        _journal.forceRemoteDiscoveryNextSync();
+
+        slotNextSyncFullLocalDiscovery();
+        // the folder watcher might need to be restarted to start watching hidden files
+        if (_folderWatcher) {
+            _folderWatcher->restart();
+        }
+
+        if (_engine) {
+            _engine->reloadExcludes();
+        }
+    };
+
+    if (FolderMan::instance()->scheduler()->currentSync() == this) {
+        connect(this, &Folder::syncFinished, this, doReload, Qt::SingleShotConnection);
+        FolderMan::instance()->scheduler()->terminateCurrentSync(tr("Reloading excludes on folder »%1«").arg(displayName()));
+        FolderMan::instance()->scheduler()->enqueueFolder(this);
+    } else {
+        doReload();
     }
-    return _engine->reloadExcludes();
 }
 
 void Folder::startSync()
@@ -864,13 +880,6 @@ void Folder::startSync()
     setSyncState(SyncResult::SyncRunning);
 
     qCInfo(lcFolder) << u"*** Start syncing " << displayName() << u"client version" << Theme::instance()->aboutVersions(Theme::VersionFormat::OneLiner);
-
-    if (!reloadExcludes()) {
-        slotSyncError(tr("Could not read system exclude file"));
-        QMetaObject::invokeMethod(
-            this, [this] { slotSyncFinished(false); }, Qt::QueuedConnection);
-        return;
-    }
 
     setDirtyNetworkLimits();
 
