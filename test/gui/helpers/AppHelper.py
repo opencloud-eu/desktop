@@ -21,7 +21,10 @@ from helpers.FilesHelper import normalize_path
 
 def native_click(self, **kwargs):
     x, y = get_element_center_xy(self)
-    win_x, win_y = get_window_location()
+    if isinstance(self, WebElement):
+        win_x, win_y = get_window_location(self.parent)
+    else:
+        win_x, win_y = get_window_location(self)
     if x < win_x:
         x = x + win_x
     if y < win_y:
@@ -31,11 +34,16 @@ def native_click(self, **kwargs):
 
 def native_double_click(self, **kwargs):
     x, y = get_element_center_xy(self)
-    win_x, win_y = get_window_location()
-    if x < win_x:
+    if isinstance(self, WebElement):
+        win_x, win_y = get_window_location(self.parent)
+    else:
+        win_x, win_y = get_window_location(self)
+    print(win_x, win_y, x,y)
+    if x < win_x or y < win_y:
         x = x + win_x
-    if y < win_y:
         y = y + win_y
+    print(win_x, win_y, x,y)
+    # pyautogui.moveTo(x, y)
     pyautogui.doubleClick(x, y, **kwargs)
 
 
@@ -152,6 +160,15 @@ def create_app_session():
     options.set_capability('appium:environ', get_app_env())
     options.set_capability('timeouts', {'implicit': get_config('min_timeout') * 1000})
     app_driver = Remote(command_executor=get_config('webdriver_url'), options=options)
+
+    n_opt = options.set_capability('app', "nautilus")
+    nautilus = Remote(command_executor=get_config('webdriver_url'), options=n_opt)
+    el = nautilus.find_element(By.CLASS_NAME, "[label | cool-retro-term]")
+    print(el)
+    el.native_double_click()
+    import time
+    time.sleep(5)
+    nautilus.quit()
     # NOTE: these methods to set implicit wait are not working:
     # app_driver.implicitly_wait(5)
     # app_driver.implicitly_wait = 5
@@ -204,8 +221,9 @@ def wait_until_app_terminated():
         raise ValueError("Desktop client did not terminate within the timeout period.")
 
 
-def get_window_location():
-    window = app().find_element(By.XPATH, "//*[contains(@name,'OpenCloud Desktop')]").location
+def get_window_location(driver):
+    window = driver.get_window_rect()
+    print(window)
     return window['x'], window['y']
 
 

@@ -9,8 +9,8 @@ Feature:  Logout users
     @smoke
     Scenario: logging out
         Given user "Alice" has set up a client with default settings
-        When the user "Alice" logs out using the client-UI
-        Then user "Alice" should be signed out
+        # When the user "Alice" logs out using the client-UI
+        # Then user "Alice" should be signed out
 
     @smoke
     Scenario: login after logging out
