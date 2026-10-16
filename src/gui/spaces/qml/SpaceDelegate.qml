@@ -28,6 +28,9 @@ Item {
 
     default property alias content: colLayout.data
 
+    LayoutMirroring.enabled: Qt.application.layoutDirection === Qt.RightToLeft
+    LayoutMirroring.childrenInherit: true
+
     ColumnLayout {
         anchors.fill: parent
         spacing: spaceDelegate.spacing
@@ -76,6 +79,7 @@ Item {
                         font.bold: true
                         font.pointSize: 15
                         elide: Text.ElideRight
+                        horizontalAlignment: Text.AlignLeft
                     }
                 }
                 Label {
@@ -85,6 +89,7 @@ Item {
                     // if we have multiline text, fill the delegate
                     Layout.fillHeight: descriptionWrapMode !== Label.NoWrap
                     elide: Text.ElideRight
+                    horizontalAlignment: Text.AlignLeft
                 }
             }
         }

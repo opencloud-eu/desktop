@@ -31,6 +31,9 @@ Pane {
     Accessible.role: Accessible.List
     Accessible.name: qsTr("Folder Sync")
 
+    LayoutMirroring.enabled: Qt.application.layoutDirection === Qt.RightToLeft
+    LayoutMirroring.childrenInherit: true
+
     Connections {
         target: widget
 
@@ -45,6 +48,11 @@ Pane {
                 addSyncButton.nextItemInFocusChain(false).forceActiveFocus(Qt.TabFocusReason);
             }
         }
+    }
+
+    // For some reason layout mirroring doesn't propagate down to a Menu's children, so we have to force it for every MenuItem
+    component OCMenuItem: MenuItem {
+        LayoutMirroring.enabled: Qt.application.layoutDirection === Qt.RightToLeft
     }
 
     ColumnLayout {
@@ -63,6 +71,7 @@ Pane {
             Label {
                 text: accountSettings.connectionLabel
                 Layout.fillWidth: true
+                horizontalAlignment: Text.AlignLeft
             }
             // spacer
             Item {}
@@ -74,31 +83,32 @@ Pane {
                 Menu {
                     id: accountMenu
                     property bool shiftPressed: false
+
                     onAboutToShow: {
                         shiftPressed = OCUtils.hasKeyboardModifiers(Qt.ShiftModifier);
                     }
 
-                    MenuItem {
+                    OCMenuItem {
                         text: accountSettings.accountState.state === AccountState.SignedOut ? qsTr("Log in") : qsTr("Log out")
                         onTriggered: accountSettings.slotToggleSignInState()
                     }
-                    MenuItem {
+                    OCMenuItem {
                         text: qsTr("Reconnect")
                         enabled: accountSettings.accountState.state !== AccountState.SignedOut && accountSettings.accountState.state !== AccountState.Connected
                         onTriggered: accountSettings.accountState.checkConnectivity(true)
                     }
-                    MenuItem {
+                    OCMenuItem {
                         text: CommonStrings.showInWebBrowser()
                         onTriggered: Qt.openUrlExternally(accountSettings.accountState.account.url)
                     }
-                    MenuItem {
+                    OCMenuItem {
                         text: CommonStrings.copyUrlToClipBoard()
                         onTriggered: OCUtils.setClipBoard(accountSettings.accountState.account.url)
                         visible: accountMenu.shiftPressed
                         height: visible ? implicitHeight : 0
                         enabled: visible
                     }
-                    MenuItem {
+                    OCMenuItem {
                         text: qsTr("Remove")
                         onTriggered: accountSettings.slotDeleteAccount()
                     }
@@ -119,7 +129,8 @@ Pane {
             id: scrollView
             Layout.fillHeight: true
             Layout.fillWidth: true
-            rightPadding: folderSyncPanel.spacing * 2
+            leftPadding: LayoutMirroring.enabled ? effectiveScrollBarWidth * 2 : 0
+            rightPadding: LayoutMirroring.enabled ? 0 : effectiveScrollBarWidth * 2
 
             ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
             ScrollBar.vertical.policy: ScrollBar.AlwaysOn
@@ -233,6 +244,7 @@ Pane {
                                         Layout.fillWidth: true
                                         elide: Text.ElideMiddle
                                         text: folderDelegate.overallText
+                                        horizontalAlignment: Text.AlignLeft
                                     }
                                     Label {
                                         id: itemTextLabel
@@ -240,6 +252,7 @@ Pane {
                                         Layout.fillWidth: true
                                         elide: Text.ElideMiddle
                                         text: folderDelegate.itemText
+                                        horizontalAlignment: Text.AlignLeft
                                     }
                                 }
                             }
@@ -252,6 +265,7 @@ Pane {
                                     elide: Text.ElideRight
                                     text: folderDelegate.quota
                                     visible: folderDelegate.quota && !folderDelegate.overallText
+                                    horizontalAlignment: Text.AlignLeft
                                 }
                             }
 
@@ -326,16 +340,17 @@ Pane {
                         Menu {
                             id: contextMenu
                             property bool shiftPressed: false
+
                             onAboutToShow: {
                                 shiftPressed = OCUtils.hasKeyboardModifiers(Qt.ShiftModifier);
                             }
 
-                            MenuItem {
+                            OCMenuItem {
                                 text: CommonStrings.showInFileBrowser()
                                 onTriggered: OCUtils.showInFileManager(folderDelegate.folder.path)
                             }
 
-                            MenuItem {
+                            OCMenuItem {
                                 text: CommonStrings.copyFilePathToClipBoard()
                                 onTriggered: OCUtils.setClipBoardFromFilePath(folderDelegate.folder.path)
                                 visible: contextMenu.shiftPressed
@@ -343,13 +358,13 @@ Pane {
                                 enabled: visible
                             }
 
-                            MenuItem {
+                            OCMenuItem {
                                 text: CommonStrings.showInWebBrowser()
                                 onTriggered: Qt.openUrlExternally(folderDelegate.folder.webUrl)
                                 enabled: folderDelegate.folder.webUrl
                             }
 
-                            MenuItem {
+                            OCMenuItem {
                                 text: CommonStrings.copyUrlToClipBoard()
                                 onTriggered: OCUtils.setClipBoard(folderDelegate.folder.webUrl)
                                 visible: contextMenu.shiftPressed
@@ -359,7 +374,7 @@ Pane {
 
                             MenuSeparator {}
 
-                            MenuItem {
+                            OCMenuItem {
                                 text: folderDelegate.folder.isSyncRunning ? qsTr("Restart sync") : qsTr("Force sync now")
                                 enabled: accountSettings.accountState.state === AccountState.Connected && !folderDelegate.folder.isSyncPaused && visible
                                 onTriggered: accountSettings.slotForceSyncCurrentFolder(folderDelegate.folder)
@@ -367,7 +382,7 @@ Pane {
                                 height: visible ? implicitHeight : 0
                             }
 
-                            MenuItem {
+                            OCMenuItem {
                                 text: folderDelegate.folder.isSyncPaused ? qsTr("Resume sync") : qsTr("Pause sync")
                                 enabled: accountSettings.accountState.state === AccountState.Connected && visible
                                 onTriggered: accountSettings.slotEnableCurrentFolder(folderDelegate.folder, true)
@@ -375,7 +390,7 @@ Pane {
                                 height: visible ? implicitHeight : 0
                             }
 
-                            MenuItem {
+                            OCMenuItem {
                                 text: qsTr("Choose what to sync")
                                 onTriggered: accountSettings.showSelectiveSyncDialog(folderDelegate.folder)
                                 visible: folderDelegate.folder.isReady && folderDelegate.folder.vfsMode !== 1
@@ -383,7 +398,7 @@ Pane {
                                 enabled: visible
                             }
 
-                            MenuItem {
+                            OCMenuItem {
                                 text: qsTr("Remove Space")
                                 onTriggered: accountSettings.slotRemoveCurrentFolder(folderDelegate.folder)
                                 visible: !folderDelegate.isDeployed
@@ -426,6 +441,7 @@ Pane {
             Label {
                 text: qsTr("You are synchronizing %1 out of %2 Spaces").arg(accountSettings.syncedSpaces).arg(accountSettings.syncedSpaces + accountSettings.unsyncedSpaces)
                 visible: accountSettings.accountState.state === AccountState.Connected
+                horizontalAlignment: Text.AlignRight
             }
         }
     }
