@@ -2796,12 +2796,12 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/gui/newwizard/states/accountconfiguredsetupwizardstate.cpp" line="54"/>
         <source>Invalid local download directory: %1</source>
-        <translation type="unfinished"/>
+        <translation>Ungültiges lokales Download-Verzeichnis: %1</translation>
     </message>
     <message>
         <location filename="../src/gui/newwizard/states/accountconfiguredsetupwizardstate.cpp" line="57"/>
         <source>path must be absolute</source>
-        <translation type="unfinished"/>
+        <translation>Pfad muss absolut sein</translation>
     </message>
 </context>
 <context>
@@ -2832,12 +2832,12 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="64"/>
         <source>Failed to look up instances: %1</source>
-        <translation type="unfinished"/>
+        <translation>Fehler beim Suchen der Instanzen: %1</translation>
     </message>
     <message>
         <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="68"/>
         <source>Server returned empty list of instances</source>
-        <translation type="unfinished"/>
+        <translation>Der Server hat eine leere Liste von Instanzen zurückgegeben.</translation>
     </message>
 </context>
 <context>
@@ -2846,7 +2846,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
         <location filename="../src/gui/newwizard/pages/serverurlsetupwizardpage.cpp" line="68"/>
         <source>%1 logo</source>
         <extracomment>This is the accessibility text for the logo in the setup wizard page. The parameter is the name for the (branded) application.</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 Logo</translation>
     </message>
 </context>
 <context>
@@ -2854,7 +2854,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/gui/newwizard/states/serverurlsetupwizardstate.cpp" line="52"/>
         <source>Invalid server URL</source>
-        <translation type="unfinished"/>
+        <translation>Ungültige Server URL</translation>
     </message>
 </context>
 <context>
