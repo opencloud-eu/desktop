@@ -159,6 +159,17 @@ private Q_SLOTS:
         QCOMPARE(check_file_full(QStringLiteral(".sync_journal.db.ctmp")), CSYNC_FILE_SILENTLY_EXCLUDED);
         QCOMPARE(check_file_full(QStringLiteral("subdir/.sync_journal.db")), CSYNC_FILE_SILENTLY_EXCLUDED);
 
+        /* Leftovers written by earlier client versions stay excluded: the sync
+         * run log (rotated to .1 at 10 MiB) and the old journal names. */
+        QCOMPARE(check_file_full(QStringLiteral(".OpenCloudSync.log")), CSYNC_FILE_SILENTLY_EXCLUDED);
+        QCOMPARE(check_file_full(QStringLiteral(".OpenCloudSync.log.1")), CSYNC_FILE_SILENTLY_EXCLUDED);
+        QCOMPARE(check_file_full(QStringLiteral("subdir/.OpenCloudSync.log.1")), CSYNC_FILE_SILENTLY_EXCLUDED);
+        /* "._sync_*.db*" is covered by the generic "._*" rule. */
+        QCOMPARE(check_file_full(QStringLiteral("._sync_5bdd60bdfcfa.db")), CSYNC_FILE_EXCLUDE_LIST);
+        QCOMPARE(check_file_full(QStringLiteral(".sync_5bdd60bdfcfa.db")), CSYNC_FILE_SILENTLY_EXCLUDED);
+        QCOMPARE(check_file_full(QStringLiteral(".csync_journal.db")), CSYNC_FILE_SILENTLY_EXCLUDED);
+        QCOMPARE(check_file_full(QStringLiteral(".csync_journal.db.ctmp")), CSYNC_FILE_SILENTLY_EXCLUDED);
+
         /* pattern ]*.directory - ignore and remove */
         QCOMPARE(check_file_full(QStringLiteral("my.~directory")), CSYNC_FILE_SILENTLY_EXCLUDED);
         QCOMPARE(check_file_full(QStringLiteral("/a_folder/my.~directory")), CSYNC_FILE_SILENTLY_EXCLUDED);
@@ -250,6 +261,15 @@ private Q_SLOTS:
         QCOMPARE(check_file_traversal(QStringLiteral(".sync_journal.db.ctmp")), CSYNC_FILE_SILENTLY_EXCLUDED);
         QCOMPARE(check_file_traversal(QStringLiteral("subdir/.sync_journal.db")), CSYNC_FILE_SILENTLY_EXCLUDED);
         QCOMPARE(check_file_traversal(QStringLiteral("/two/subdir/.sync_journal.db")), CSYNC_FILE_SILENTLY_EXCLUDED);
+
+        /* Leftovers written by earlier client versions stay excluded. */
+        QCOMPARE(check_file_traversal(QStringLiteral(".OpenCloudSync.log")), CSYNC_FILE_SILENTLY_EXCLUDED);
+        QCOMPARE(check_file_traversal(QStringLiteral(".OpenCloudSync.log.1")), CSYNC_FILE_SILENTLY_EXCLUDED);
+        QCOMPARE(check_file_traversal(QStringLiteral("subdir/.OpenCloudSync.log.1")), CSYNC_FILE_SILENTLY_EXCLUDED);
+        /* "._sync_*.db*" is covered by the generic "._*" rule. */
+        QCOMPARE(check_file_traversal(QStringLiteral("._sync_5bdd60bdfcfa.db")), CSYNC_FILE_EXCLUDE_LIST);
+        QCOMPARE(check_file_traversal(QStringLiteral(".sync_5bdd60bdfcfa.db")), CSYNC_FILE_SILENTLY_EXCLUDED);
+        QCOMPARE(check_file_traversal(QStringLiteral(".csync_journal.db")), CSYNC_FILE_SILENTLY_EXCLUDED);
 
         /* Other builtin excludes */
         QCOMPARE(check_file_traversal(QStringLiteral("foo/Desktop.ini")), CSYNC_FILE_SILENTLY_EXCLUDED);

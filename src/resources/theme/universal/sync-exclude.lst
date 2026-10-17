@@ -2,6 +2,9 @@
 
 # Internal files
 ].sync_journal.db*
+].OpenCloudSync.log*
+].sync_*.db*
+].csync_journal.db*
 
 *~
 ~$*
