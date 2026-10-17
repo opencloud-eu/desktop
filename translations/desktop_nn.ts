@@ -2796,12 +2796,12 @@ Merk at kommandolinjeval for logging overstyrer innstillingane.</translation>
     <message>
         <location filename="../src/gui/newwizard/states/accountconfiguredsetupwizardstate.cpp" line="54"/>
         <source>Invalid local download directory: %1</source>
-        <translation type="unfinished"/>
+        <translation>Ugyldig lokal nedlastingsmappe: %1</translation>
     </message>
     <message>
         <location filename="../src/gui/newwizard/states/accountconfiguredsetupwizardstate.cpp" line="57"/>
         <source>path must be absolute</source>
-        <translation type="unfinished"/>
+        <translation>stien må vere absolutt</translation>
     </message>
 </context>
 <context>
@@ -2822,22 +2822,22 @@ Merk at kommandolinjeval for logging overstyrer innstillingane.</translation>
     <message>
         <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="45"/>
         <source>Oauth2 authentication requires a secured connection.</source>
-        <translation type="unfinished"/>
+        <translation>OAuth2-autentisering krev ei sikra tilkopling.</translation>
     </message>
     <message>
         <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="49"/>
         <source>Error while trying to log in to OAuth2-enabled server.</source>
-        <translation type="unfinished"/>
+        <translation>Feil under forsøk på å logge inn på ein tenar med OAuth2.</translation>
     </message>
     <message>
         <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="64"/>
         <source>Failed to look up instances: %1</source>
-        <translation type="unfinished"/>
+        <translation>Klarte ikkje slå opp instansar: %1</translation>
     </message>
     <message>
         <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="68"/>
         <source>Server returned empty list of instances</source>
-        <translation type="unfinished"/>
+        <translation>Tenaren returnerte ei tom liste over instansar</translation>
     </message>
 </context>
 <context>
@@ -2846,7 +2846,7 @@ Merk at kommandolinjeval for logging overstyrer innstillingane.</translation>
         <location filename="../src/gui/newwizard/pages/serverurlsetupwizardpage.cpp" line="68"/>
         <source>%1 logo</source>
         <extracomment>This is the accessibility text for the logo in the setup wizard page. The parameter is the name for the (branded) application.</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1-logo</translation>
     </message>
 </context>
 <context>
@@ -2854,7 +2854,7 @@ Merk at kommandolinjeval for logging overstyrer innstillingane.</translation>
     <message>
         <location filename="../src/gui/newwizard/states/serverurlsetupwizardstate.cpp" line="52"/>
         <source>Invalid server URL</source>
-        <translation type="unfinished"/>
+        <translation>Ugyldig tenar-URL</translation>
     </message>
 </context>
 <context>

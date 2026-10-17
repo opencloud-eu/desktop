@@ -2796,12 +2796,12 @@ Observera att användning av kommandoradsalternativ för loggning åsidosätter 
     <message>
         <location filename="../src/gui/newwizard/states/accountconfiguredsetupwizardstate.cpp" line="54"/>
         <source>Invalid local download directory: %1</source>
-        <translation type="unfinished"/>
+        <translation>Ogiltig lokal nedladdningskatalog: %1</translation>
     </message>
     <message>
         <location filename="../src/gui/newwizard/states/accountconfiguredsetupwizardstate.cpp" line="57"/>
         <source>path must be absolute</source>
-        <translation type="unfinished"/>
+        <translation>Sökvägen måste vara absolut</translation>
     </message>
 </context>
 <context>
@@ -2822,22 +2822,22 @@ Observera att användning av kommandoradsalternativ för loggning åsidosätter 
     <message>
         <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="45"/>
         <source>Oauth2 authentication requires a secured connection.</source>
-        <translation type="unfinished"/>
+        <translation>OAuth2-autentisering kräver en säker anslutning.</translation>
     </message>
     <message>
         <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="49"/>
         <source>Error while trying to log in to OAuth2-enabled server.</source>
-        <translation type="unfinished"/>
+        <translation>Det gick inte att logga in på servern med OAuth2.</translation>
     </message>
     <message>
         <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="64"/>
         <source>Failed to look up instances: %1</source>
-        <translation type="unfinished"/>
+        <translation>Det gick inte att hitta instanser: %1</translation>
     </message>
     <message>
         <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="68"/>
         <source>Server returned empty list of instances</source>
-        <translation type="unfinished"/>
+        <translation>Servern skickade en tom lista över instanser</translation>
     </message>
 </context>
 <context>
@@ -2846,7 +2846,7 @@ Observera att användning av kommandoradsalternativ för loggning åsidosätter 
         <location filename="../src/gui/newwizard/pages/serverurlsetupwizardpage.cpp" line="68"/>
         <source>%1 logo</source>
         <extracomment>This is the accessibility text for the logo in the setup wizard page. The parameter is the name for the (branded) application.</extracomment>
-        <translation type="unfinished"/>
+        <translation>Logotyp för %1</translation>
     </message>
 </context>
 <context>
@@ -2854,7 +2854,7 @@ Observera att användning av kommandoradsalternativ för loggning åsidosätter 
     <message>
         <location filename="../src/gui/newwizard/states/serverurlsetupwizardstate.cpp" line="52"/>
         <source>Invalid server URL</source>
-        <translation type="unfinished"/>
+        <translation>Ogiltig serveradress</translation>
     </message>
 </context>
 <context>
