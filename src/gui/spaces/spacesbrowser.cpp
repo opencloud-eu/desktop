@@ -50,10 +50,6 @@ SpacesBrowser::SpacesBrowser(QWidget *parent)
     _sortModel->setSourceModel(_model);
     _sortModel->setSortRole(static_cast<int>(SpacesModel::Roles::Priority));
     _sortModel->sort(0, Qt::DescendingOrder);
-
-    ui->quickWidget->setOCContext(QUrl(QStringLiteral("qrc:/qt/qml/eu/OpenCloud/gui/spaces/qml/SpacesView.qml")), this);
-
-    setFocusProxy(ui->quickWidget);
 }
 
 SpacesBrowser::~SpacesBrowser()
@@ -68,6 +64,11 @@ void SpacesBrowser::setAccount(OCC::AccountPtr acc)
         _model->setSpacesManager(acc->spacesManager());
         ui->quickWidget->engine()->addImageProvider(QStringLiteral("space"), new Spaces::SpaceImageProvider(acc));
     }
+
+    // Only load the QML file after we've added the image provider to make sure we get Space icons
+    ui->quickWidget->setOCContext(QUrl(QStringLiteral("qrc:/qt/qml/eu/OpenCloud/gui/spaces/qml/SpacesView.qml")), this);
+
+    setFocusProxy(ui->quickWidget);
 }
 
 GraphApi::Space *SpacesBrowser::currentSpace()
