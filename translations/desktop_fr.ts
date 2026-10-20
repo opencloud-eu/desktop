@@ -2836,7 +2836,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
     <message>
         <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="68"/>
         <source>Server returned empty list of instances</source>
-        <translation type="unfinished"/>
+        <translation>Le serveur a renvoyé une liste d&apos;instances vide</translation>
     </message>
 </context>
 <context>
