@@ -179,8 +179,6 @@ jobs:
             & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c dev-utils/nsis
         } elseif($IsLinux) {
             & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c dev-utils/linuxdeploy
-            # ensure we have fuse3-devel installed
-            dnf install -y fuse3-devel file
         } elseif($IsMacOS -and ${env:SIGN_PACKAGE} -ieq "true") {
             brew install packages
         }
@@ -233,7 +231,6 @@ jobs:
     - name: Clang tidy
       if: ${{ matrix.clang_tidy }}
       run: |
-        cargo install clang-tidy-sarif sarif-fmt
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c libs/llvm dev-utils/clazy
         $env:BUILD_DIR = $(& "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --get buildDir -q opencloud/opencloud-desktop)
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --run pwsh "${env:GITHUB_WORKSPACE}/.github/workflows/.run-clang-tidy.ps1"
