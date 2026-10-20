@@ -31,6 +31,19 @@ Pane {
     Accessible.name: qsTr("Spaces")
 
     spacing: 10
+
+    Connections {
+        target: widget
+
+        function onFocusFirst() {
+            listView.forceActiveFocus(Qt.TabFocusReason);
+        }
+
+        function onFocusLast() {
+            listView.forceActiveFocus(Qt.TabFocusReason);
+        }
+    }
+
     ScrollView {
         id: scrollView
         anchors.fill: parent
@@ -41,23 +54,8 @@ Pane {
 
         contentWidth: availableWidth
 
-        Connections {
-            target: widget
-
-            function onFocusFirst() {
-                listView.forceActiveFocus(Qt.TabFocusReason);
-            }
-
-            function onFocusLast() {
-                listView.forceActiveFocus(Qt.TabFocusReason);
-            }
-        }
-
         ListView {
             id: listView
-
-            // TODO: why do I need to fill parent here but must not fill parent in FolderDelegate
-            anchors.fill: parent
 
             spacing: spacesView.spacing
 
