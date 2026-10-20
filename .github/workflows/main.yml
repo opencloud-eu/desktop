@@ -368,5 +368,5 @@ jobs:
       if: ${{ matrix.signing.enabled }}
       run: |
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c s3cmd
-        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --run s3cmd alias set s3 "${env:S3_CACHE_URL}" "${{ secrets.S3_CACHE_ACCESS }}" "${{ secrets.S3_CACHE_SECRET }}"
+        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --run s3cmd alias set s3 "${{ vars.S3_CACHE_URL }}" "${{ secrets.S3_CACHE_ACCESS }}" "${{ secrets.S3_CACHE_SECRET }}"
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --run s3cmd cp -r "${home}/craft/cache/" s3://public/desktop/craft-cache/${{ steps.setup.outputs.OpenCloudVersion }}
