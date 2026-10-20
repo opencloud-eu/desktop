@@ -2795,7 +2795,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
     <message>
         <location filename="../src/gui/newwizard/states/accountconfiguredsetupwizardstate.cpp" line="54"/>
         <source>Invalid local download directory: %1</source>
-        <translation type="unfinished"/>
+        <translation>Répertoire de téléchargement local invalide : %1</translation>
     </message>
     <message>
         <location filename="../src/gui/newwizard/states/accountconfiguredsetupwizardstate.cpp" line="57"/>
@@ -2836,7 +2836,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
     <message>
         <location filename="../src/gui/newwizard/states/oauthcredentialssetupwizardstate.cpp" line="68"/>
         <source>Server returned empty list of instances</source>
-        <translation type="unfinished"/>
+        <translation>Le serveur a renvoyé une liste d&apos;instances vide</translation>
     </message>
 </context>
 <context>
@@ -2845,7 +2845,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
         <location filename="../src/gui/newwizard/pages/serverurlsetupwizardpage.cpp" line="68"/>
         <source>%1 logo</source>
         <extracomment>This is the accessibility text for the logo in the setup wizard page. The parameter is the name for the (branded) application.</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 logo</translation>
     </message>
 </context>
 <context>
@@ -2853,7 +2853,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
     <message>
         <location filename="../src/gui/newwizard/states/serverurlsetupwizardstate.cpp" line="52"/>
         <source>Invalid server URL</source>
-        <translation type="unfinished"/>
+        <translation>URL du serveur non valide</translation>
     </message>
 </context>
 <context>

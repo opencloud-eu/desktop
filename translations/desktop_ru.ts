@@ -776,7 +776,7 @@ The update will be performed in the background, and overwrite the current AppIma
     <message>
         <location filename="../src/gui/commonstrings.cpp" line="33"/>
         <source>Copy path to clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Скопировать путь в буфер обмена</translation>
     </message>
     <message>
         <location filename="../src/gui/commonstrings.cpp" line="39"/>
@@ -796,7 +796,7 @@ The update will be performed in the background, and overwrite the current AppIma
     <message>
         <location filename="../src/gui/commonstrings.cpp" line="51"/>
         <source>Copy URL to clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Скопировать ссылку в буфер обмена</translation>
     </message>
     <message>
         <location filename="../src/gui/commonstrings.cpp" line="56"/>
@@ -1324,7 +1324,7 @@ This means that the synchronization client might not upload local changes immedi
     <message>
         <location filename="../src/libsync/vfs/hydrationjob.cpp" line="64"/>
         <source>File not found</source>
-        <translation type="unfinished"/>
+        <translation>Файл не найден</translation>
     </message>
     <message>
         <location filename="../src/libsync/vfs/hydrationjob.cpp" line="68"/>
@@ -1630,7 +1630,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="365"/>
         <source>The id_token could not be parsed</source>
-        <translation type="unfinished"/>
+        <translation>Не удалось обработать id_token</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="375"/>
@@ -1660,12 +1660,12 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="563"/>
         <source>WebFinger response had unexpected content type: %1</source>
-        <translation type="unfinished"/>
+        <translation>Ответ WebFinger имеет неожиданный тип контента: %1</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="573"/>
         <source>Could not parse WebFinger response: %1</source>
-        <translation type="unfinished"/>
+        <translation>Не удалось обработать ответ WebFinger: %1</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="581"/>
@@ -1685,7 +1685,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="685"/>
         <source>Could not parse OIDC discovery response: %1</source>
-        <translation type="unfinished"/>
+        <translation>Не удалось обработать ответ OIDC discovery: %1</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="339"/>
@@ -2854,7 +2854,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/gui/newwizard/states/serverurlsetupwizardstate.cpp" line="52"/>
         <source>Invalid server URL</source>
-        <translation type="unfinished"/>
+        <translation>Некорректный URL сервера</translation>
     </message>
 </context>
 <context>
