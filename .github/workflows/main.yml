@@ -83,6 +83,8 @@ jobs:
               os: ubuntu-latest
               clang_tidy: true
               container: ghcr.io/opencloud-eu/ci-docker-desktop/appimage:latest
+              signing:
+                enabled: *signing_enabled
 
     name: ${{ matrix.target }}
 
@@ -98,7 +100,7 @@ jobs:
       CRAFT_TARGET: ${{ matrix.target }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       CRAFT_PACKAGE_SYMBOLS: ${{  github.event_name != 'pull_request' }}
-      SIGN_PACKAGE: ${{ matrix.signing.enabled }}
+      SIGN_PACKAGE: ${{ matrix.signing.enabled && 'true' || 'false' }}
       # set the signing key file path if signing is enabled and the keyfile is provided
       SIGNING_KEY_FILE_PATH: ${{
           matrix.signing.keyfile_file_path && matrix.signing.keyfile_file_name
@@ -141,11 +143,14 @@ jobs:
         git clone --depth=1 https://github.com/KDE/craftmaster.git "${home}/craft/CraftMaster/CraftMaster"
 
     - name: Craft setup
+      id: setup
       run: |
         New-Item -Path ~/cache -ItemType Directory -ErrorAction SilentlyContinue
         # disable git's safe.directory
         git config --global --add safe.directory '*'
+        $env:OpenCloudVersion = $(cmake -DMIRALL_ECHO_VERSION=ON -P ${env:GITHUB_WORKSPACE}/VERSION.cmake)
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" --setup
+        Add-Content -Value "OpenCloudVersion=${env:OpenCloudVersion}" -Path "${env:GITHUB_OUTPUT}"
 
     - name: Craft unshelve
       run: |
@@ -174,8 +179,6 @@ jobs:
             & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c dev-utils/nsis
         } elseif($IsLinux) {
             & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c dev-utils/linuxdeploy
-            # ensure we have fuse3-devel installed
-            dnf install -y fuse3-devel file
         } elseif($IsMacOS -and ${env:SIGN_PACKAGE} -ieq "true") {
             brew install packages
         }
@@ -228,7 +231,6 @@ jobs:
     - name: Clang tidy
       if: ${{ matrix.clang_tidy }}
       run: |
-        cargo install clang-tidy-sarif sarif-fmt
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c libs/llvm dev-utils/clazy
         $env:BUILD_DIR = $(& "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --get buildDir -q opencloud/opencloud-desktop)
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --run pwsh "${env:GITHUB_WORKSPACE}/.github/workflows/.run-clang-tidy.ps1"
@@ -361,3 +363,10 @@ jobs:
         name: ${{ matrix.target }}-msix-${{ github.run_number }}
         path: ${{ github.workspace }}/msix/*.msix
         archive: false
+
+    - name: Upload cache
+      if: ${{ matrix.signing.enabled }}
+      run: |
+        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c s3cmd
+        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --run s3cmd alias set s3 "${{ vars.S3_CACHE_URL }}" "${{ secrets.S3_CACHE_ACCESS }}" "${{ secrets.S3_CACHE_SECRET }}"
+        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --run s3cmd cp -r "${home}/craft/cache/" s3://public/desktop/craft-cache/${{ steps.setup.outputs.OpenCloudVersion }}

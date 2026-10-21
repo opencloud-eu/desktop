@@ -38,6 +38,9 @@ Pane {
     palette.buttonText: JsonTheme.primaryButtonColor.textColor
     palette.disabled.buttonText: JsonTheme.primaryButtonColor.textColorDisabled
 
+    LayoutMirroring.enabled: Qt.application.layoutDirection === Qt.RightToLeft
+    LayoutMirroring.childrenInherit: true
+
     Component {
         id: logutButtonComponent
 

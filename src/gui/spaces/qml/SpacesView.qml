@@ -30,34 +30,36 @@ Pane {
     Accessible.role: Accessible.List
     Accessible.name: qsTr("Spaces")
 
+    LayoutMirroring.enabled: Qt.application.layoutDirection === Qt.RightToLeft
+    LayoutMirroring.childrenInherit: true
+
     spacing: 10
+
+    Connections {
+        target: widget
+
+        function onFocusFirst() {
+            listView.forceActiveFocus(Qt.TabFocusReason);
+        }
+
+        function onFocusLast() {
+            listView.forceActiveFocus(Qt.TabFocusReason);
+        }
+    }
+
     ScrollView {
         id: scrollView
         anchors.fill: parent
         clip: true
-        rightPadding: spacesView.spacing * 2
+        leftPadding: LayoutMirroring.enabled ? effectiveScrollBarWidth * 2 : 0
+        rightPadding: LayoutMirroring.enabled ? 0 : effectiveScrollBarWidth * 2
         ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
         ScrollBar.vertical.policy: ScrollBar.AlwaysOn
 
         contentWidth: availableWidth
 
-        Connections {
-            target: widget
-
-            function onFocusFirst() {
-                listView.forceActiveFocus(Qt.TabFocusReason);
-            }
-
-            function onFocusLast() {
-                listView.forceActiveFocus(Qt.TabFocusReason);
-            }
-        }
-
         ListView {
             id: listView
-
-            // TODO: why do I need to fill parent here but must not fill parent in FolderDelegate
-            anchors.fill: parent
 
             spacing: spacesView.spacing
 
