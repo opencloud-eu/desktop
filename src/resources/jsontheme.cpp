@@ -93,6 +93,114 @@ QList<UrlButton> fromJson(const QJsonValue &val)
     return out;
 }
 
+// Convenience classes for reading. Not stored
+class IconOrRef
+{
+public:
+    QIcon icon;
+    QString id;
+    QString idRef;
+};
+
+class SysTrayIcon
+{
+public:
+    IconOrRef iconOrRef;
+    JsonTheme::SysTrayIconType type;
+    JsonTheme::SysTrayIconStyle style;
+};
+
+template <>
+IconOrRef fromJson(const QJsonValue &val)
+{
+    const auto o = val.toObject();
+    return {fromJson<QIcon>(val), o.value("id"_L1).toString(), o.value("idRef"_L1).toString()};
+}
+
+const QLatin1StringView sysTrayTypeToString(JsonTheme::SysTrayIconType type)
+{
+    switch (type) {
+    case JsonTheme::SysTrayIconType::Ok:
+        return "ok"_L1;
+    case JsonTheme::SysTrayIconType::Sync:
+        return "sync"_L1;
+    case JsonTheme::SysTrayIconType::Pause:
+        return "pause"_L1;
+    case JsonTheme::SysTrayIconType::Information:
+        return "information"_L1;
+    case JsonTheme::SysTrayIconType::Offline:
+        return "offline"_L1;
+    case JsonTheme::SysTrayIconType::Error:
+        return "error"_L1;
+    }
+    Q_UNREACHABLE_RETURN(""_L1);
+}
+
+JsonTheme::SysTrayIconType sysTrayStringToType(const QString &type)
+{
+    if (type == "ok"_L1) {
+        return JsonTheme::SysTrayIconType::Ok;
+    } else if (type == "sync"_L1) {
+        return JsonTheme::SysTrayIconType::Sync;
+    } else if (type == "pause"_L1) {
+        return JsonTheme::SysTrayIconType::Pause;
+    } else if (type == "information"_L1) {
+        return JsonTheme::SysTrayIconType::Information;
+    } else if (type == "offline"_L1) {
+        return JsonTheme::SysTrayIconType::Offline;
+    } else if (type == "error"_L1) {
+        return JsonTheme::SysTrayIconType::Error;
+    }
+    Q_UNREACHABLE_RETURN(JsonTheme::SysTrayIconType::Ok);
+}
+
+const QLatin1StringView sysTrayStyleToString(JsonTheme::SysTrayIconStyle style)
+{
+    switch (style) {
+    case JsonTheme::SysTrayIconStyle::Light:
+        return "light-systray"_L1;
+    case JsonTheme::SysTrayIconStyle::Dark:
+        return "dark-systray"_L1;
+    case JsonTheme::SysTrayIconStyle::Mask:
+        return "mask-systray"_L1;
+    }
+    Q_UNREACHABLE();
+}
+
+JsonTheme::SysTrayIconStyle sysTrayStringToStyle(const QString &style)
+{
+    if (style == "light"_L1) {
+        return JsonTheme::SysTrayIconStyle::Light;
+    } else if (style == "dark"_L1) {
+        return JsonTheme::SysTrayIconStyle::Dark;
+    } else if (style == "mask"_L1) {
+        return JsonTheme::SysTrayIconStyle::Mask;
+    }
+    Q_UNREACHABLE_RETURN(JsonTheme::SysTrayIconStyle::Light);
+}
+
+template <>
+SysTrayIcon fromJson(const QJsonValue &val)
+{
+    const auto o = val.toObject();
+    return {
+        fromJson<IconOrRef>(o.value("icon"_L1)), //
+        sysTrayStringToType(o.value("iconType"_L1).toString()), //
+        sysTrayStringToStyle(o.value("iconStyle"_L1).toString()), //
+    };
+}
+
+template <>
+QList<SysTrayIcon> fromJson(const QJsonValue &val)
+{
+    const auto array = val.toArray();
+    QList<SysTrayIcon> out;
+    out.reserve(array.size());
+    for (const auto &a : array) {
+        out.append(fromJson<SysTrayIcon>(a));
+    }
+    return out;
+}
 }
 
 
@@ -124,6 +232,9 @@ public:
 
     QList<UrlButton> _urlButtons;
     bool _isUnbranded = true;
+
+    // The key's real type is SysTrayIconType | SysTrayIconStyle
+    QMap<uint32_t, QIcon> _sysTrayIconsMap;
 
     void load(const QJsonDocument &theme, JsonTheme::ThemeType type)
     {
@@ -157,6 +268,32 @@ public:
             setFromJson(_primaryButtonColor, wizard, "primaryButtonColor"_L1);
             setFromJson(_secondaryButtonColor, wizard, "secondaryButtonColor"_L1);
             setFromJson(_multiAccount, wizard, "multiAccount"_L1);
+        }
+
+        QList<SysTrayIcon> sysTrayIconsList;
+        setFromJson(sysTrayIconsList, desktopSettings, "sysTrayIcons"_L1);
+        for (auto &icon : sysTrayIconsList) {
+            uint32_t key = static_cast<uint32_t>(icon.type) | static_cast<uint32_t>(icon.style);
+            Q_ASSERT(!_sysTrayIconsMap.contains(key));
+
+            if (icon.iconOrRef.icon.isNull()) {
+                Q_ASSERT(!icon.iconOrRef.idRef.isEmpty());
+                Q_ASSERT(icon.iconOrRef.id.isEmpty()); // forbid nested references
+
+                for (auto &otherIcon : sysTrayIconsList) {
+                    if (otherIcon.iconOrRef.id == icon.iconOrRef.idRef) {
+                        icon.iconOrRef.icon = otherIcon.iconOrRef.icon;
+                        break;
+                    }
+                }
+                Q_ASSERT(!icon.iconOrRef.icon.isNull());
+            }
+
+            if (icon.style == JsonTheme::SysTrayIconStyle::Mask) {
+                icon.iconOrRef.icon.setIsMask(true);
+            }
+
+            _sysTrayIconsMap.insert(key, icon.iconOrRef.icon);
         }
     }
 };
@@ -330,4 +467,31 @@ bool JsonTheme::isUnBranded() const
 {
     Q_D(const JsonTheme);
     return d->_isUnbranded;
+}
+
+QIcon JsonTheme::sysTrayIcon(const SysTrayIconType type, const SysTrayIconStyle style) const
+{
+    Q_D(const JsonTheme);
+    auto &map = d->_sysTrayIconsMap;
+
+    // First, try a direct match
+    uint32_t key = static_cast<uint32_t>(type) | static_cast<uint32_t>(style);
+    if (map.contains(key)) {
+        return map[key];
+    }
+
+    // Then, ignore the style and fall back to the light theme equivalent
+    key = static_cast<uint32_t>(type);
+    if (map.contains(key)) {
+        return map[key];
+    }
+
+    // Finally, fall back on the vanilla icon
+    QString fileName = sysTrayTypeToString(type);
+    Q_ASSERT(!fileName.isEmpty());
+
+    QString themeName = sysTrayStyleToString(style);
+    Q_ASSERT(!themeName.isEmpty());
+
+    return Resources::loadIcon(themeName, fileName, IconType::VanillaIcon);
 }
