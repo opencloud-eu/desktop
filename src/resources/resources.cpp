@@ -52,11 +52,6 @@ QString vanillaThemePath()
 {
     return QStringLiteral(":/client/OpenCloud/theme");
 }
-
-QString brandThemePath()
-{
-    return u":/client/%1/theme"_s.arg(JsonTheme::instance().applicationName());
-}
 }
 
 bool OCC::Resources::isUsingDarkTheme()
@@ -68,11 +63,9 @@ bool OCC::Resources::isUsingDarkTheme()
  * helper to load a icon from either the icon theme the desktop provides or from
  * the apps Qt resources.
  */
-QIcon OCC::Resources::loadIcon(const QString &flavor, const QString &name, IconType iconType)
+QIcon OCC::Resources::loadIcon(const QString &flavor, const QString &name)
 {
-    // prevent recusion
-    const bool useCoreIcon = (iconType == IconType::VanillaIcon) || JsonTheme::instance().isUnBranded();
-    const QString path = QStringLiteral("%1/%2/%3").arg(useCoreIcon ? vanillaThemePath() : brandThemePath(), flavor, name);
+    const QString path = QStringLiteral("%1/%2/%3").arg(vanillaThemePath(), flavor, name);
     QIcon &cached = iconCache->_cache[path]; // Take reference, this will also "set" the cache entry
     if (cached.isNull()) {
         const QString svg = QStringLiteral("%1.svg").arg(path);
@@ -101,9 +94,6 @@ QIcon OCC::Resources::loadIcon(const QString &flavor, const QString &name, IconT
         }
     }
     if (cached.isNull()) {
-        if (!useCoreIcon && iconType == IconType::BrandedIconWithFallbackToVanillaIcon) {
-            return loadIcon(flavor, name, IconType::VanillaIcon);
-        }
         qCWarning(lcResources) << u"Failed to locate the icon" << path;
         Q_ASSERT(false);
     }
