@@ -148,6 +148,8 @@ elseif( WIN32 )
             folderwatcher_win.cpp
             navigationpanehelper.cpp
     )
+    # the ids of the Explorer integration, which is registered in Utility::startShellIntegration
+    target_include_directories(OpenCloudGui PRIVATE ${PROJECT_SOURCE_DIR}/shell_integration/windows)
     if (TARGET SnoreToast::SnoreToastActions)
         target_sources(OpenCloudGui PRIVATE
                 notifications/snoretoast.cpp)

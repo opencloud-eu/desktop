@@ -36,6 +36,7 @@
 #include "vfs/hydrationjob.h"
 
 #include <QApplication>
+#include <QCoreApplication>
 #include <QDir>
 #include <QFile>
 #include <QFileDialog>
@@ -777,6 +778,10 @@ void SocketApi::command_GET_STRINGS(const QString &argument, SocketListener *lis
         {QStringLiteral("CONTEXT_MENU_TITLE"), Resources::JsonTheme::instance().applicationDisplayName()},
         {QStringLiteral("COPY_PRIVATE_LINK_MENU_TITLE"), tr("Copy private link to clipboard")},
         {QStringLiteral("EMAIL_PRIVATE_LINK_MENU_TITLE"), tr("Send private link by email...")},
+#ifdef Q_OS_WIN
+        // an icon resource as used by the Windows Explorer integration
+        {QStringLiteral("CONTEXT_MENU_ICON"), QDir::toNativeSeparators(QCoreApplication::applicationFilePath()) + QStringLiteral(",0")},
+#endif
     }};
     listener->sendMessage(QStringLiteral("GET_STRINGS:BEGIN"));
     for (auto key_value : strings) {
