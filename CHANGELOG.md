@@ -12,6 +12,7 @@
 
 ### 🐛 Bug Fixes
 
+- Ci: import qt backport for fotconfig crash [[#1189](https://github.com/opencloud-eu/desktop/pull/1189)]
 - Mirror layout for RTL languages [[#1180](https://github.com/opencloud-eu/desktop/pull/1180)]
 - Fix broken scrollbar in SpacesView [[#1186](https://github.com/opencloud-eu/desktop/pull/1186)]
 - Fix hanging sync if propfind after upload fails [[#1169](https://github.com/opencloud-eu/desktop/pull/1169)]
