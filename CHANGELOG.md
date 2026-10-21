@@ -1,6 +1,6 @@
 # Changelog
 
-## [4.1.0](https://github.com/opencloud-eu/desktop/releases/tag/v4.1.0) - 2026-10-20
+## [4.1.0](https://github.com/opencloud-eu/desktop/releases/tag/v4.1.0) - 2026-10-21
 
 ### ❤️ Thanks to all contributors! ❤️
 
@@ -12,6 +12,8 @@
 
 ### 🐛 Bug Fixes
 
+- Mirror layout for RTL languages [[#1180](https://github.com/opencloud-eu/desktop/pull/1180)]
+- Fix broken scrollbar in SpacesView [[#1186](https://github.com/opencloud-eu/desktop/pull/1186)]
 - Fix hanging sync if propfind after upload fails [[#1169](https://github.com/opencloud-eu/desktop/pull/1169)]
 - Recover TUS uploads whose resume URL is no longer valid [[#1145](https://github.com/opencloud-eu/desktop/pull/1145)]
 - Fix sorting by file size in IssuesWidget [[#1160](https://github.com/opencloud-eu/desktop/pull/1160)]
