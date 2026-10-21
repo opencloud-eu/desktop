@@ -77,6 +77,23 @@ public:
     };
     Q_ENUM(ThemeType)
 
+    enum class SysTrayIconType : uint16_t {
+        Ok = 0,
+        Sync,
+        Pause,
+        Information,
+        Offline,
+        Error,
+    };
+    Q_ENUM(SysTrayIconType)
+
+    enum class SysTrayIconStyle : uint32_t {
+        Light = 0,
+        Dark = 1 << 16,
+        Mask = 2 << 16,
+    };
+    Q_ENUM(SysTrayIconStyle)
+
     static JsonTheme &instance();
 
     // qml signleton
@@ -120,6 +137,9 @@ public:
     QColor iconTint();
 
     bool isUnBranded() const;
+
+    Q_INVOKABLE
+    QIcon sysTrayIcon(const SysTrayIconType type, const SysTrayIconStyle style) const;
 
 Q_SIGNALS:
     void themeLoaded();

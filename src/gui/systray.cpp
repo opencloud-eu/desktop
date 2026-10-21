@@ -19,6 +19,7 @@
 #include "gui/application.h"
 #include "gui/folderman.h"
 #include "gui/networkinformation.h"
+#include "libsync/common/utility.h"
 #include "libsync/theme.h"
 #include "resources/jsontheme.h"
 
@@ -30,6 +31,58 @@ using namespace Qt::Literals::StringLiterals;
 
 namespace OCC {
 
+QIcon getIcon(const SyncResult &result)
+{
+    Resources::JsonTheme::SysTrayIconType iconType;
+    Resources::JsonTheme::SysTrayIconStyle iconStyle;
+
+    switch (result.status()) {
+    case SyncResult::Queued:
+        [[fallthrough]];
+    case SyncResult::SyncRunning:
+        iconType = Resources::JsonTheme::SysTrayIconType::Sync;
+        break;
+    case SyncResult::Paused:
+        iconType = Resources::JsonTheme::SysTrayIconType::Pause;
+        break;
+    case SyncResult::Success:
+        if (!result.hasUnresolvedConflicts()) {
+            iconType = Resources::JsonTheme::SysTrayIconType::Ok;
+            break;
+        }
+        [[fallthrough]];
+    case SyncResult::Problem:
+        [[fallthrough]];
+    case SyncResult::Undefined:
+        // this can happen if no sync connections are configured.
+        iconType = Resources::JsonTheme::SysTrayIconType::Information;
+        break;
+    case SyncResult::Offline:
+        iconType = Resources::JsonTheme::SysTrayIconType::Offline;
+        break;
+    case SyncResult::Error:
+        [[fallthrough]];
+    case SyncResult::SetupError:
+        // FIXME: Use problem once we have an icon.
+        iconType = Resources::JsonTheme::SysTrayIconType::Error;
+        break;
+    default:
+        Q_UNREACHABLE();
+        break;
+    }
+
+#ifdef Q_OS_MAC
+    iconStyle = Resources::JsonTheme::SysTrayIconStyle::Mask;
+#else
+    if (Utility::hasDarkSystray()) {
+        iconStyle = Resources::JsonTheme::SysTrayIconStyle::Dark;
+    } else {
+        iconStyle = Resources::JsonTheme::SysTrayIconStyle::Light;
+    }
+#endif
+
+    return Resources::JsonTheme::instance().sysTrayIcon(iconType, iconStyle);
+};
 
 Systray::Systray(QObject *parent)
     : QSystemTrayIcon(parent)
@@ -61,8 +114,7 @@ void Systray::setToolTip(const QString &tip)
 
 void Systray::slotComputeOverallSyncStatus()
 {
-    auto getIcon = [](const SyncResult &result) { return Theme::instance()->themeTrayIcon(result); };
-    auto getIconFromStatus = [getIcon](const SyncResult::Status &status) { return getIcon(SyncResult{status}); };
+    auto getIconFromStatus = [](const SyncResult::Status &status) { return getIcon(SyncResult{status}); };
     bool allSignedOut = true;
     bool allPaused = true;
     QVector<AccountStatePtr> problemAccounts;
