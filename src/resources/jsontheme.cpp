@@ -198,11 +198,11 @@ public:
     QString _applicationName = u"OpenCloud"_s;
     QString _applicationDisplayName = u"OpenCloud Desktop"_s;
     QString _organizationDomain = u"eu.opencloud.desktop"_s;
-    QIcon _applicationIcon = IsUiApp() ? loadIcon(u"universal"_s, u"opencloud-icon"_s, IconType::VanillaIcon) : QIcon();
+    QIcon _applicationIcon = IsUiApp() ? loadIcon(u"universal"_s, u"opencloud-icon"_s) : QIcon();
 
     // wizard
     QUrl _serverUrl;
-    QIcon _wizardLogo = IsUiApp() ? loadIcon(u"universal"_s, u"wizard_logo"_s, IconType::VanillaIcon) : QIcon();
+    QIcon _wizardLogo = IsUiApp() ? loadIcon(u"universal"_s, u"wizard_logo"_s) : QIcon();
     QColor _primaryBackgroundColor = QColor::fromRgb(0x20434F);
     QColor _primaryForegroundColor = QColor::fromRgb(0xFFFFFF);
     ButtonColor _primaryButtonColor = {
@@ -478,5 +478,5 @@ QIcon JsonTheme::sysTrayIcon(const SysTrayIconType type, const SysTrayIconStyle 
     QString themeName = sysTrayStyleToString(style);
     Q_ASSERT(!themeName.isEmpty());
 
-    return Resources::loadIcon(themeName, fileName, IconType::VanillaIcon);
+    return Resources::loadIcon(themeName, fileName);
 }
