@@ -7,22 +7,22 @@
         <translation>ແຖບນຳທາງ</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/AccountBar.qml" line="115"/>
+        <location filename="../src/gui/qml/AccountBar.qml" line="118"/>
         <source>Add Account</source>
         <translation>ເພີ່ມບັນຊີ</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/AccountBar.qml" line="145"/>
+        <location filename="../src/gui/qml/AccountBar.qml" line="148"/>
         <source>Activity</source>
         <translation>ກິດຈະກຳ</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/AccountBar.qml" line="162"/>
+        <location filename="../src/gui/qml/AccountBar.qml" line="165"/>
         <source>Settings</source>
         <translation>ການຕັ້ງຄ່າ</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/AccountBar.qml" line="192"/>
+        <location filename="../src/gui/qml/AccountBar.qml" line="195"/>
         <source>Quit</source>
         <translation>ອອກຈາກໂປຣແກຣມ</translation>
     </message>
@@ -163,19 +163,19 @@ File synchronization desktop utility.</source>
 <context>
     <name>Credentials</name>
     <message>
-        <location filename="../src/gui/qml/credentials/Credentials.qml" line="48"/>
+        <location filename="../src/gui/qml/credentials/Credentials.qml" line="51"/>
         <source>Stay logged out</source>
         <translation>ຢູ່ໃນສະຖານະອອກຈາກລະບົບຕໍ່ໄປ</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/credentials/Credentials.qml" line="86"/>
+        <location filename="../src/gui/qml/credentials/Credentials.qml" line="89"/>
         <source>Connecting %1 to:
 %2</source>
         <translation>ກຳລັງເຊື່ອມຕໍ່ %1 ຫາ:
 %2</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/credentials/Credentials.qml" line="86"/>
+        <location filename="../src/gui/qml/credentials/Credentials.qml" line="89"/>
         <source>Connecting to:
 %1</source>
         <translation>ກຳລັງເຊື່ອມຕໍ່ຫາ:
@@ -214,77 +214,77 @@ File synchronization desktop utility.</source>
         <translation>ຊິງໂຄຣໄນໂຟນເດີ</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="72"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="81"/>
         <source>Manage Account</source>
         <translation>ຈັດການບັນຊີ</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="82"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="92"/>
         <source>Log in</source>
         <translation>ເຂົ້າສູ່ລະບົບ</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="82"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="92"/>
         <source>Log out</source>
         <translation>ອອກຈາກລະບົບ</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="86"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="96"/>
         <source>Reconnect</source>
         <translation>ເຊື່ອມຕໍ່ໃໝ່</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="102"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="112"/>
         <source>Remove</source>
         <translation>ລຶບອອກ</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="109"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="119"/>
         <source>Account options Menu</source>
         <translation>ເມນູຕົວເລືອກບັນຊີ</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="363"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="378"/>
         <source>Restart sync</source>
         <translation>ເລີ່ມການຊິງໂຄຣໄນໃໝ່</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="363"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="378"/>
         <source>Force sync now</source>
         <translation>ບັງຄັບໃຫ້ຊິງໂຄຣໄນດຽວນີ້</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="371"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="386"/>
         <source>Resume sync</source>
         <translation>ສືບຕໍ່ການຊິງໂຄຣໄນ</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="371"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="386"/>
         <source>Pause sync</source>
         <translation>ຢຸດການຊິງໂຄຣໄນຊົ່ວຄາວ</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="379"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="394"/>
         <source>Choose what to sync</source>
         <translation>ເລືອກສິ່ງທີ່ຈະຊິງໂຄຣໄນ</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="387"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="402"/>
         <source>Remove Space</source>
         <translation>ລຶບ Space ອອກ</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="395"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="410"/>
         <source>Sync options menu</source>
         <translation>ເມນູຕົວເລືອກການຊິງໂຄຣໄນ</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="407"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="422"/>
         <source>Add Space</source>
         <translation>ເພີ່ມ Space</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="427"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="442"/>
         <source>You are synchronizing %1 out of %2 Spaces</source>
         <translation>ທ່ານກຳລັງຊິງໂຄຣໄນ %1 ຈາກທັງໝົດ %2 Space</translation>
     </message>
@@ -3236,17 +3236,17 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>UpdateUrlDialog</name>
     <message>
-        <location filename="../src/gui/qml/UpdateUrlDialog.qml" line="46"/>
+        <location filename="../src/gui/qml/UpdateUrlDialog.qml" line="49"/>
         <source>Cancel</source>
         <translation>ຍົກເລີກ</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/UpdateUrlDialog.qml" line="50"/>
+        <location filename="../src/gui/qml/UpdateUrlDialog.qml" line="53"/>
         <source>Accept and Restart</source>
         <translation>ຍອມຮັບ ແລະ ເລີ່ມໃໝ່</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/UpdateUrlDialog.qml" line="50"/>
+        <location filename="../src/gui/qml/UpdateUrlDialog.qml" line="53"/>
         <source>Accept</source>
         <translation>ຍອມຮັບ</translation>
     </message>
