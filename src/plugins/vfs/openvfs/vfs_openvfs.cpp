@@ -10,7 +10,8 @@
 #include "common/chronoelapsedtimer.h"
 #include "common/syncjournaldb.h"
 #include "filesystem.h"
-#include "libsync/theme.h"
+#include "resources/jsontheme.h"
+
 #include "libsync/xattr.h"
 #include "syncfileitem.h"
 #include "vfs/hydrationjob.h"
@@ -44,7 +45,7 @@ OCC::FileSystem::Path openVFSExePath()
 
 QString xattrOwnerString(const QUuid &accountUuid)
 {
-    return u"%1:%2"_s.arg(OCC::Resources::JsonTheme::instance().appName(), accountUuid.toString(QUuid::WithoutBraces));
+    return u"%1:%2"_s.arg(OCC::Resources::JsonTheme::instance().applicationName(), accountUuid.toString(QUuid::WithoutBraces));
 }
 
 OCC::FileSystem::Path openVFSConfigFilePath()
