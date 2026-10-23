@@ -220,7 +220,12 @@ std::optional<QString> JsonTheme::loadSystemTheme()
 #ifdef Q_OS_MAC
         const QString theme = u"%1/../Resources/opencloud_theme.json"_s.arg(qApp->applicationDirPath());
 #else
-        const QString theme = u"%1/opencloud_theme.json"_s.arg(qApp->applicationDirPath());
+        QString theme = u"%1/opencloud_theme.json"_s.arg(qApp->applicationDirPath());
+
+        // also check in /usr/share if nothing was found in bin
+        if (!QFileInfo::exists(theme)) {
+            theme = QStandardPaths::locate(QStandardPaths::AppDataLocation, u"opencloud_theme.json"_s);
+        }
 #endif
         if (QFileInfo::exists(theme)) {
             QFile file(theme);
