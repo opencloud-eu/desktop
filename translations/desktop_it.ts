@@ -864,141 +864,147 @@ L&apos;aggiornamento verrà eseguito in background e sovrascriverà il file AppI
 <context>
     <name>OCC::Folder</name>
     <message>
-        <location filename="../src/gui/folder.cpp" line="160"/>
+        <location filename="../src/gui/folder.cpp" line="161"/>
         <source>The path »%1« is too long. Please enable long paths in the Windows settings or choose a different folder.</source>
         <translation>Il percorso »%1« è troppo lungo. Abilita i percorsi lunghi nelle impostazioni di Windows o scegli una cartella diversa.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="210"/>
+        <location filename="../src/gui/folder.cpp" line="211"/>
         <source>Failed to open the database for »%1«.</source>
         <translation>Impossibile aprire il database per »%1«.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="188"/>
+        <location filename="../src/gui/folder.cpp" line="189"/>
         <source>Local folder »%1« does not exist.</source>
         <translation>La cartella locale »%1« non esiste.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="216"/>
+        <location filename="../src/gui/folder.cpp" line="95"/>
+        <location filename="../src/gui/folder.cpp" line="848"/>
+        <source>Failed to load excludes</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/gui/folder.cpp" line="217"/>
         <source>»%1« should be a folder but is not.</source>
         <translation>»%1« dovrebbe essere una cartella ma non lo è.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="218"/>
+        <location filename="../src/gui/folder.cpp" line="219"/>
         <source>»%1« is not readable.</source>
         <translation>»%1« non è leggibile.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="220"/>
+        <location filename="../src/gui/folder.cpp" line="221"/>
         <source>»%1« is not writable.</source>
         <translation>»%1« non è scrivibile.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="490"/>
+        <location filename="../src/gui/folder.cpp" line="488"/>
         <source>»%1« and %n other file(s) have been removed.</source>
         <translation><numerusform>»%1« e %n altri file sono stati rimossi.</numerusform><numerusform>»%1« e %n altri file sono stati rimossi.</numerusform><numerusform>»%1« e %n altri file sono stati rimossi.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="492"/>
+        <location filename="../src/gui/folder.cpp" line="490"/>
         <source>»%1« has been removed.</source>
         <comment>%1 names a file.</comment>
         <translation>»%1« è stato rimosso.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="497"/>
+        <location filename="../src/gui/folder.cpp" line="495"/>
         <source>»%1« and %n other file(s) have been added.</source>
         <translation><numerusform>Sono stati aggiunti »%1« e %n altri file.</numerusform><numerusform>Sono stati aggiunti »%1« e %n altri file.</numerusform><numerusform>Sono stati aggiunti »%1« e %n altri file.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="499"/>
+        <location filename="../src/gui/folder.cpp" line="497"/>
         <source>»%1« has been added.</source>
         <comment>%1 names a file.</comment>
         <translation>»%1« è stato aggiunto.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="504"/>
+        <location filename="../src/gui/folder.cpp" line="502"/>
         <source>»%1« and %n other file(s) have been updated.</source>
         <translation><numerusform>»%1« e %n altri file sono stati aggiornati.</numerusform><numerusform>»%1« e %n altri file sono stati aggiornati.</numerusform><numerusform>»%1« e %n altri file sono stati aggiornati.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="506"/>
+        <location filename="../src/gui/folder.cpp" line="504"/>
         <source>»%1« has been updated.</source>
         <comment>%1 names a file.</comment>
         <translation>»%1« è stato aggiornato.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="511"/>
+        <location filename="../src/gui/folder.cpp" line="509"/>
         <source>»%1« has been renamed to »%2« and %n other file(s) have been renamed.</source>
         <translation><numerusform>»%1« è stato rinominato in »%2« e %n altri file sono stati rinominati.</numerusform><numerusform>»%1« è stato rinominato in »%2« e %n altri file sono stati rinominati.</numerusform><numerusform>»%1« è stato rinominato in »%2« e %n altri file sono stati rinominati.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="513"/>
+        <location filename="../src/gui/folder.cpp" line="511"/>
         <source>»%1« has been renamed to »%2«.</source>
         <comment>%1 and %2 name files.</comment>
         <translation>»%1« è stato rinominato in »%2«.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="518"/>
+        <location filename="../src/gui/folder.cpp" line="516"/>
         <source>»%1« has been moved to »%2« and %n other file(s) have been moved.</source>
         <translation><numerusform>»%1« è stato spostato in »%2« e %n altri file sono stati spostati.</numerusform><numerusform>»%1« è stato spostato in »%2« e %n altri file sono stati spostati.</numerusform><numerusform>»%1« è stato spostato in »%2« e %n altri file sono stati spostati.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="520"/>
+        <location filename="../src/gui/folder.cpp" line="518"/>
         <source>»%1« has been moved to »%2«.</source>
         <translation>»%1« è stato spostato in »%2«.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="525"/>
+        <location filename="../src/gui/folder.cpp" line="523"/>
         <source>»%1« and %n other file(s) have sync conflicts.</source>
         <translation><numerusform>»%1« e %n altri file presentano conflitti di sincronizzazione.</numerusform><numerusform>»%1« e %n altri file presentano conflitti di sincronizzazione.</numerusform><numerusform>»%1« e %n altri file presentano conflitti di sincronizzazione.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="527"/>
+        <location filename="../src/gui/folder.cpp" line="525"/>
         <source>»%1« has a sync conflict. Please check the conflict file!</source>
         <translation>»%1« ha un conflitto di sincronizzazione. Controlla il file di conflitto!</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="532"/>
+        <location filename="../src/gui/folder.cpp" line="530"/>
         <source>»%1« and %n other file(s) could not be synced due to errors. See the log for details.</source>
         <translation><numerusform>»%1« e %n altri file non sono stati sincronizzati a causa di errori. Consultare il registro per i dettagli.</numerusform><numerusform>»%1« e %n altri file non sono stati sincronizzati a causa di errori. Consultare il registro per i dettagli.</numerusform><numerusform>»%1« e %n altri file non sono stati sincronizzati a causa di errori. Consultare il registro per i dettagli.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="534"/>
+        <location filename="../src/gui/folder.cpp" line="532"/>
         <source>»%1« could not be synced due to an error. See the log for details.</source>
         <translation>»%1« non è stato sincronizzato a causa di un errore. Consultare il registro per i dettagli.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="540"/>
+        <location filename="../src/gui/folder.cpp" line="538"/>
         <source>Sync Activity</source>
         <translation>Sincronizza attività</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="743"/>
+        <location filename="../src/gui/folder.cpp" line="740"/>
         <source>Switching VFS mode on folder »%1«</source>
         <translation>Commutazione della modalità VFS sulla cartella »%1«</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1071"/>
+        <location filename="../src/gui/folder.cpp" line="873"/>
+        <source>Reloading excludes on folder »%1«</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/gui/folder.cpp" line="1095"/>
         <source>The folder »%1« was created but was excluded from synchronization previously. Data inside it will not be synchronized.</source>
         <translation>La cartella »%1« è stata creata ma in precedenza era stata esclusa dalla sincronizzazione. I dati al suo interno non verranno sincronizzati.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1074"/>
+        <location filename="../src/gui/folder.cpp" line="1098"/>
         <source>The file »%1« was created but was excluded from synchronization previously. It will not be synchronized.</source>
         <translation>Il file »%1« è stato creato ma in precedenza era stato escluso dalla sincronizzazione. Non verrà sincronizzato.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1078"/>
+        <location filename="../src/gui/folder.cpp" line="1102"/>
         <source>»%1« is not synchronized</source>
         <translation>»%1« non è sincronizzato</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="869"/>
-        <source>Could not read system exclude file</source>
-        <translation>Impossibile leggere il file di esclusione del sistema</translation>
-    </message>
-    <message>
-        <location filename="../src/gui/folder.cpp" line="1086"/>
+        <location filename="../src/gui/folder.cpp" line="1110"/>
         <source>Changes in synchronized folders could not be tracked reliably.
 
 This means that the synchronization client might not upload local changes immediately and will instead only scan for local changes and upload them occasionally (every two hours by default).

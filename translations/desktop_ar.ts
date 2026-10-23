@@ -864,141 +864,147 @@ The update will be performed in the background, and overwrite the current AppIma
 <context>
     <name>OCC::Folder</name>
     <message>
-        <location filename="../src/gui/folder.cpp" line="160"/>
+        <location filename="../src/gui/folder.cpp" line="161"/>
         <source>The path »%1« is too long. Please enable long paths in the Windows settings or choose a different folder.</source>
         <translation>المسار »%1« طويل جدًا. يرجى تمكين المسارات الطويلة في إعدادات ويندوز (Windows) أو اختيار مجلد مختلف.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="210"/>
+        <location filename="../src/gui/folder.cpp" line="211"/>
         <source>Failed to open the database for »%1«.</source>
         <translation>فشل فتح قاعدة البيانات لـ »%1«.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="188"/>
+        <location filename="../src/gui/folder.cpp" line="189"/>
         <source>Local folder »%1« does not exist.</source>
         <translation>المجلد المحلي »%1« غير موجود.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="216"/>
+        <location filename="../src/gui/folder.cpp" line="95"/>
+        <location filename="../src/gui/folder.cpp" line="848"/>
+        <source>Failed to load excludes</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/gui/folder.cpp" line="217"/>
         <source>»%1« should be a folder but is not.</source>
         <translation>»%1« يجب أن يكون مجلدًا لكنه ليس كذلك.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="218"/>
+        <location filename="../src/gui/folder.cpp" line="219"/>
         <source>»%1« is not readable.</source>
         <translation>»%1« غير قابل للقراءة.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="220"/>
+        <location filename="../src/gui/folder.cpp" line="221"/>
         <source>»%1« is not writable.</source>
         <translation>»%1« غير قابل للكتابة.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="490"/>
+        <location filename="../src/gui/folder.cpp" line="488"/>
         <source>»%1« and %n other file(s) have been removed.</source>
         <translation><numerusform>تمت إزالة »%1« ولم تتم إزالة ملفات أخرى.</numerusform><numerusform>تمت إزالة »%1« وملف واحد آخر.</numerusform><numerusform>تمت إزالة »%1« وملفين اثنين آخرين.</numerusform><numerusform>تمت إزالة »%1« و%n ملفات أخرى.</numerusform><numerusform>تمت إزالة »%1« و%n ملفا آخر.</numerusform><numerusform>تمت إزالة »%1« و%n ملف آخر.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="492"/>
+        <location filename="../src/gui/folder.cpp" line="490"/>
         <source>»%1« has been removed.</source>
         <comment>%1 names a file.</comment>
         <translation>تمت إزالة »%1«.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="497"/>
+        <location filename="../src/gui/folder.cpp" line="495"/>
         <source>»%1« and %n other file(s) have been added.</source>
         <translation><numerusform>تمت إضافة »%1« ولم تتم إضافة ملف آخر.</numerusform><numerusform>تمت إضافة »%1« وملف واحد  آخر.</numerusform><numerusform>تمت إضافة »%1« وملفين اثنين آخرين.</numerusform><numerusform>تمت إضافة »%1« و%n ملفات أخرى.</numerusform><numerusform>تمت إضافة »%1« و%n ملفا آخر.</numerusform><numerusform>تمت إضافة »%1« و%n ملف آخر.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="499"/>
+        <location filename="../src/gui/folder.cpp" line="497"/>
         <source>»%1« has been added.</source>
         <comment>%1 names a file.</comment>
         <translation>تمت إضافة »%1«.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="504"/>
+        <location filename="../src/gui/folder.cpp" line="502"/>
         <source>»%1« and %n other file(s) have been updated.</source>
         <translation><numerusform>تم تحديث »%1« ولم تتم تحديث ملف آخر.</numerusform><numerusform>تم تحديث »%1« وملف واحد آخر.</numerusform><numerusform>تم تحديث »%1« وملفين اثنين آخرين.</numerusform><numerusform>تم تحديث »%1« و%n ملفات أخرى.</numerusform><numerusform>تم تحديث »%1« و%n ملفا آخر.</numerusform><numerusform>تم تحديث »%1« و%n ملف آخر.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="506"/>
+        <location filename="../src/gui/folder.cpp" line="504"/>
         <source>»%1« has been updated.</source>
         <comment>%1 names a file.</comment>
         <translation>تم تحديث »%1«.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="511"/>
+        <location filename="../src/gui/folder.cpp" line="509"/>
         <source>»%1« has been renamed to »%2« and %n other file(s) have been renamed.</source>
         <translation><numerusform>تمت إعادة تسمية »%1« إلى »%2« ولم تتم إعادة تسمية ملف آخر.</numerusform><numerusform>تمت إعادة تسمية »%1« إلى »%2« وتمت إعادة تسمية ملف واحد آخر.</numerusform><numerusform>تمت إعادة تسمية »%1« إلى »%2« وتمت إعادة تسمية ملفين اثنين آخرين.</numerusform><numerusform>تمت إعادة تسمية »%1« إلى »%2« وتمت إعادة تسمية %n ملفات أخرى.</numerusform><numerusform>تمت إعادة تسمية »%1« إلى »%2« وتمت إعادة تسمية %n ملفا آخر.</numerusform><numerusform>تمت إعادة تسمية »%1« إلى »%2« وتمت إعادة تسمية %n ملف آخر.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="513"/>
+        <location filename="../src/gui/folder.cpp" line="511"/>
         <source>»%1« has been renamed to »%2«.</source>
         <comment>%1 and %2 name files.</comment>
         <translation>تمت إعادة تسمية »%1« إلى »%2«.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="518"/>
+        <location filename="../src/gui/folder.cpp" line="516"/>
         <source>»%1« has been moved to »%2« and %n other file(s) have been moved.</source>
         <translation><numerusform>تم نقل »%1« إلى »%2« ولم يتم نقل ملف آخر.</numerusform><numerusform>تم نقل »%1« إلى »%2« وتم نقل ملف واحد آخر.</numerusform><numerusform>تم نقل »%1« إلى »%2« وتم نقل ملفين اثنين آخرين.</numerusform><numerusform>تم نقل »%1« إلى »%2« وتم نقل %n ملفات أخرى.</numerusform><numerusform>تم نقل »%1« إلى »%2« وتم نقل %n ملفا آخر.</numerusform><numerusform>تم نقل »%1« إلى »%2« وتم نقل %n ملف آخر.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="520"/>
+        <location filename="../src/gui/folder.cpp" line="518"/>
         <source>»%1« has been moved to »%2«.</source>
         <translation>تم نقل »%1« إلى »%2«.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="525"/>
+        <location filename="../src/gui/folder.cpp" line="523"/>
         <source>»%1« and %n other file(s) have sync conflicts.</source>
         <translation><numerusform>لدى »%1« تعارضات في المزامنة ولا يوجد ملف آخر بتعارضات في المزامنة.</numerusform><numerusform>لدى »%1« وملف واحد آخر تعارضات في المزامنة.</numerusform><numerusform>لدى »%1« وملفين اثنين آخرين تعارضات في المزامنة.</numerusform><numerusform>لدى »%1« و%n ملفات أخرى تعارضات في المزامنة.</numerusform><numerusform>لدى »%1« و%n ملفا آخر تعارضات في المزامنة.</numerusform><numerusform>لدى »%1« و%n ملف آخر تعارضات في المزامنة.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="527"/>
+        <location filename="../src/gui/folder.cpp" line="525"/>
         <source>»%1« has a sync conflict. Please check the conflict file!</source>
         <translation>لدى »%1« تعارض في المزامنة. يرجى التحقق من ملف التعارض!</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="532"/>
+        <location filename="../src/gui/folder.cpp" line="530"/>
         <source>»%1« and %n other file(s) could not be synced due to errors. See the log for details.</source>
         <translation><numerusform>تعذر مزامنة »%1« بسبب أخطاء ولا يوجد ملف آخر لا يمكن مزامنته. راجع السجل للتفاصيل.</numerusform><numerusform>تعذر مزامنة »%1« وملف واحد آخر بسبب أخطاء. راجع السجل للتفاصيل.</numerusform><numerusform>تعذر مزامنة »%1« وملفين اثنين آخرين بسبب أخطاء. راجع السجل للتفاصيل.</numerusform><numerusform>تعذر مزامنة »%1« و%n ملفات أخرى بسبب أخطاء. راجع السجل للتفاصيل.</numerusform><numerusform>تعذر مزامنة »%1« و%n ملفا آخر بسبب أخطاء. راجع السجل للتفاصيل.</numerusform><numerusform>تعذر مزامنة »%1« و%n ملف آخر بسبب أخطاء. راجع السجل للتفاصيل.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="534"/>
+        <location filename="../src/gui/folder.cpp" line="532"/>
         <source>»%1« could not be synced due to an error. See the log for details.</source>
         <translation>تعذر مزامنة »%1« بسبب خطأ. راجع السجل للتفاصيل.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="540"/>
+        <location filename="../src/gui/folder.cpp" line="538"/>
         <source>Sync Activity</source>
         <translation>نشاط المزامنة</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="743"/>
+        <location filename="../src/gui/folder.cpp" line="740"/>
         <source>Switching VFS mode on folder »%1«</source>
         <translation>جارٍ تبديل وضع VFS على المجلد »%1«</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1071"/>
+        <location filename="../src/gui/folder.cpp" line="873"/>
+        <source>Reloading excludes on folder »%1«</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/gui/folder.cpp" line="1095"/>
         <source>The folder »%1« was created but was excluded from synchronization previously. Data inside it will not be synchronized.</source>
         <translation>تم إنشاء المجلد »%1« لكنه تم استبعاده من المزامنة مسبقًا. لن يتم مزامنة البيانات الموجودة بداخله.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1074"/>
+        <location filename="../src/gui/folder.cpp" line="1098"/>
         <source>The file »%1« was created but was excluded from synchronization previously. It will not be synchronized.</source>
         <translation>تم إنشاء الملف »%1« لكنه تم استبعاده من المزامنة مسبقًا. لن يتم مزامنته.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1078"/>
+        <location filename="../src/gui/folder.cpp" line="1102"/>
         <source>»%1« is not synchronized</source>
         <translation>»%1« غير مزامن</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="869"/>
-        <source>Could not read system exclude file</source>
-        <translation>تعذر قراءة ملف الاستبعاد النظامي</translation>
-    </message>
-    <message>
-        <location filename="../src/gui/folder.cpp" line="1086"/>
+        <location filename="../src/gui/folder.cpp" line="1110"/>
         <source>Changes in synchronized folders could not be tracked reliably.
 
 This means that the synchronization client might not upload local changes immediately and will instead only scan for local changes and upload them occasionally (every two hours by default).

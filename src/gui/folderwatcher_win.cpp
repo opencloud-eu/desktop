@@ -12,20 +12,15 @@
  * for more details.
  */
 
+#include "gui/folderwatcher_win.h"
+#include "gui/folderwatcher.h"
+#include "libsync/common/asserts.h"
+#include "libsync/common/utility.h"
+#include "libsync/common/utility_win.h"
+#include "libsync/filesystem.h"
+
 #include <QDir>
-#include <QScopeGuard>
-#include <QThread>
-
-#include "common/asserts.h"
-#include "common/utility.h"
-#include "common/utility_win.h"
-#include "filesystem.h"
-#include "folderwatcher.h"
-#include "folderwatcher_win.h"
-
-#include <stdlib.h>
-#include <stdio.h>
-#include <tchar.h>
+#include <QPointer>
 
 namespace OCC {
 
@@ -196,7 +191,14 @@ FolderWatcherPrivate::FolderWatcherPrivate(FolderWatcher *p, const QString &path
 {
     _thread.reset(new WatcherThread(this, path));
     // we are using connects instead of directly emitting on p as we need to cross thread borders, the signal must receive a copy
-    connect(_thread.get(), &WatcherThread::changed, _parent, [this](auto paths) { _parent->addChanges(std::move(paths)); }, Qt::QueuedConnection);
+    connect(
+        _thread.get(), &WatcherThread::changed, _parent,
+        [parent = QPointer(_parent)](auto paths) {
+            if (parent) {
+                parent->addChanges(std::move(paths));
+            }
+        },
+        Qt::QueuedConnection);
     connect(_thread.get(), &WatcherThread::lostChanges, _parent, &FolderWatcher::lostChanges, Qt::QueuedConnection);
     _thread->start();
 }

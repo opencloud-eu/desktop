@@ -864,141 +864,147 @@ Oppdateringa vert køyrd i bakgrunnen og skriv over den gjeldande AppImage-fila.
 <context>
     <name>OCC::Folder</name>
     <message>
-        <location filename="../src/gui/folder.cpp" line="160"/>
+        <location filename="../src/gui/folder.cpp" line="161"/>
         <source>The path »%1« is too long. Please enable long paths in the Windows settings or choose a different folder.</source>
         <translation>Stien «%1» er for lang. Slå på lange stiar i Windows-innstillingane eller vel ei anna mappe.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="210"/>
+        <location filename="../src/gui/folder.cpp" line="211"/>
         <source>Failed to open the database for »%1«.</source>
         <translation>Klarte ikkje opne databasen for «%1».</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="188"/>
+        <location filename="../src/gui/folder.cpp" line="189"/>
         <source>Local folder »%1« does not exist.</source>
         <translation>Lokal mappe «%1» finst ikkje.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="216"/>
+        <location filename="../src/gui/folder.cpp" line="95"/>
+        <location filename="../src/gui/folder.cpp" line="848"/>
+        <source>Failed to load excludes</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/gui/folder.cpp" line="217"/>
         <source>»%1« should be a folder but is not.</source>
         <translation>«%1» skal vere ei mappe, men er det ikkje.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="218"/>
+        <location filename="../src/gui/folder.cpp" line="219"/>
         <source>»%1« is not readable.</source>
         <translation>«%1» kan ikkje lesast.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="220"/>
+        <location filename="../src/gui/folder.cpp" line="221"/>
         <source>»%1« is not writable.</source>
         <translation>Kan ikkje skrive til «%1».</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="490"/>
+        <location filename="../src/gui/folder.cpp" line="488"/>
         <source>»%1« and %n other file(s) have been removed.</source>
         <translation><numerusform>«%1» og %n anna fil er fjerna.</numerusform><numerusform>«%1» og %n andre filer er fjerna.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="492"/>
+        <location filename="../src/gui/folder.cpp" line="490"/>
         <source>»%1« has been removed.</source>
         <comment>%1 names a file.</comment>
         <translation>«%1» er fjerna.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="497"/>
+        <location filename="../src/gui/folder.cpp" line="495"/>
         <source>»%1« and %n other file(s) have been added.</source>
         <translation><numerusform>«%1» og %n anna fil er lagd til.</numerusform><numerusform>«%1» og %n andre filer er lagde til.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="499"/>
+        <location filename="../src/gui/folder.cpp" line="497"/>
         <source>»%1« has been added.</source>
         <comment>%1 names a file.</comment>
         <translation>«%1» er lagt til.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="504"/>
+        <location filename="../src/gui/folder.cpp" line="502"/>
         <source>»%1« and %n other file(s) have been updated.</source>
         <translation><numerusform>«%1» og %n anna fil er oppdatert.</numerusform><numerusform>«%1» og %n andre filer er oppdaterte.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="506"/>
+        <location filename="../src/gui/folder.cpp" line="504"/>
         <source>»%1« has been updated.</source>
         <comment>%1 names a file.</comment>
         <translation>«%1» er oppdatert.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="511"/>
+        <location filename="../src/gui/folder.cpp" line="509"/>
         <source>»%1« has been renamed to »%2« and %n other file(s) have been renamed.</source>
         <translation><numerusform>«%1» har fått nytt namn «%2», og %n anna fil har fått nytt namn.</numerusform><numerusform>«%1» har fått nytt namn «%2», og %n andre filer har fått nytt namn.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="513"/>
+        <location filename="../src/gui/folder.cpp" line="511"/>
         <source>»%1« has been renamed to »%2«.</source>
         <comment>%1 and %2 name files.</comment>
         <translation>«%1» har fått nytt namn «%2».</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="518"/>
+        <location filename="../src/gui/folder.cpp" line="516"/>
         <source>»%1« has been moved to »%2« and %n other file(s) have been moved.</source>
         <translation><numerusform>«%1» er flytt til «%2», og %n anna fil er flytt.</numerusform><numerusform>«%1» er flytt til «%2», og %n andre filer er flytte.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="520"/>
+        <location filename="../src/gui/folder.cpp" line="518"/>
         <source>»%1« has been moved to »%2«.</source>
         <translation>«%1» er flytt til «%2».</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="525"/>
+        <location filename="../src/gui/folder.cpp" line="523"/>
         <source>»%1« and %n other file(s) have sync conflicts.</source>
         <translation><numerusform>«%1» og %n anna fil har synkroniseringskonfliktar.</numerusform><numerusform>«%1» og %n andre filer har synkroniseringskonfliktar.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="527"/>
+        <location filename="../src/gui/folder.cpp" line="525"/>
         <source>»%1« has a sync conflict. Please check the conflict file!</source>
         <translation>«%1» har ein synkroniseringskonflikt. Sjekk konfliktfila!</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="532"/>
+        <location filename="../src/gui/folder.cpp" line="530"/>
         <source>»%1« and %n other file(s) could not be synced due to errors. See the log for details.</source>
         <translation><numerusform>«%1» og %n anna fil kunne ikkje synkroniserast på grunn av feil. Sjå loggen for detaljar.</numerusform><numerusform>«%1» og %n andre filer kunne ikkje synkroniserast på grunn av feil. Sjå loggen for detaljar.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="534"/>
+        <location filename="../src/gui/folder.cpp" line="532"/>
         <source>»%1« could not be synced due to an error. See the log for details.</source>
         <translation>«%1» kunne ikkje synkroniserast på grunn av ein feil. Sjå loggen for detaljar.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="540"/>
+        <location filename="../src/gui/folder.cpp" line="538"/>
         <source>Sync Activity</source>
         <translation>Synkroniseringsaktivitet</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="743"/>
+        <location filename="../src/gui/folder.cpp" line="740"/>
         <source>Switching VFS mode on folder »%1«</source>
         <translation>Byter VFS-modus for mappa «%1»</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1071"/>
+        <location filename="../src/gui/folder.cpp" line="873"/>
+        <source>Reloading excludes on folder »%1«</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/gui/folder.cpp" line="1095"/>
         <source>The folder »%1« was created but was excluded from synchronization previously. Data inside it will not be synchronized.</source>
         <translation>Mappa «%1» vart oppretta, men var tidlegare utelaten frå synkronisering. Data i henne vert ikkje synkroniserte.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1074"/>
+        <location filename="../src/gui/folder.cpp" line="1098"/>
         <source>The file »%1« was created but was excluded from synchronization previously. It will not be synchronized.</source>
         <translation>Fila «%1» vart oppretta, men var tidlegare utelaten frå synkronisering. Ho vert ikkje synkronisert.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1078"/>
+        <location filename="../src/gui/folder.cpp" line="1102"/>
         <source>»%1« is not synchronized</source>
         <translation>«%1» er ikkje synkronisert</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="869"/>
-        <source>Could not read system exclude file</source>
-        <translation>Klarte ikkje lese ekskluderingsfila til systemet</translation>
-    </message>
-    <message>
-        <location filename="../src/gui/folder.cpp" line="1086"/>
+        <location filename="../src/gui/folder.cpp" line="1110"/>
         <source>Changes in synchronized folders could not be tracked reliably.
 
 This means that the synchronization client might not upload local changes immediately and will instead only scan for local changes and upload them occasionally (every two hours by default).
