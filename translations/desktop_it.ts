@@ -776,7 +776,7 @@ L&apos;aggiornamento verrà eseguito in background e sovrascriverà il file AppI
     <message>
         <location filename="../src/gui/commonstrings.cpp" line="33"/>
         <source>Copy path to clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Copia il percorso negli appunti</translation>
     </message>
     <message>
         <location filename="../src/gui/commonstrings.cpp" line="39"/>
@@ -796,7 +796,7 @@ L&apos;aggiornamento verrà eseguito in background e sovrascriverà il file AppI
     <message>
         <location filename="../src/gui/commonstrings.cpp" line="51"/>
         <source>Copy URL to clipboard</source>
-        <translation type="unfinished"/>
+        <translation>Copia il link negli appunti</translation>
     </message>
     <message>
         <location filename="../src/gui/commonstrings.cpp" line="56"/>
@@ -1330,7 +1330,7 @@ Ciò significa che il client di sincronizzazione potrebbe non caricare immediata
     <message>
         <location filename="../src/libsync/vfs/hydrationjob.cpp" line="64"/>
         <source>File not found</source>
-        <translation type="unfinished"/>
+        <translation>File non trovato</translation>
     </message>
     <message>
         <location filename="../src/libsync/vfs/hydrationjob.cpp" line="68"/>
@@ -1765,17 +1765,17 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::OpenVFS</name>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="198"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="199"/>
         <source>Unable to claim the sync root for files on demand, the folder is already claimed by %1</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="201"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="202"/>
         <source>Unable to retrieve registration info. Error: %1</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="434"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="435"/>
         <source>Cannot dehydrate a placeholder because the file changed</source>
         <translation type="unfinished"/>
     </message>
@@ -1783,32 +1783,32 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::OpenVfsPluginFactory</name>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="286"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="287"/>
         <source>Failed to read /proc/self/mountinfo</source>
-        <translation type="unfinished"/>
+        <translation>Errore nella lettura di /proc/self/mountinfo</translation>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="299"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="300"/>
         <source>Failed to unmount the OpenVFS mount %1 Error:%2</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="308"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="309"/>
         <source>The filesystem for %1 does not support xattributes.</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="311"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="312"/>
         <source>The sync path is already claimed by %1</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="315"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="316"/>
         <source>OpenVFS executable not found, please install it</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="321"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="322"/>
         <source>Failed to find the OpenVFS config file, please check your installation.</source>
         <translation type="unfinished"/>
     </message>
@@ -2808,7 +2808,7 @@ Note that using any logging command line options will override the settings.</so
     <message>
         <location filename="../src/gui/newwizard/states/accountconfiguredsetupwizardstate.cpp" line="57"/>
         <source>path must be absolute</source>
-        <translation type="unfinished"/>
+        <translation>È previsto un percorso assoluto</translation>
     </message>
 </context>
 <context>

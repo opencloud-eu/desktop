@@ -1765,17 +1765,17 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::OpenVFS</name>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="198"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="199"/>
         <source>Unable to claim the sync root for files on demand, the folder is already claimed by %1</source>
         <translation>ບໍ່ສາມາດກຳນົດໂຟນເດີຫຼັກສຳລັບ files on demand ໄດ້, ເພາະໂຟນເດີນີ້ຖືກໃຊ້ໂດຍ %1 ແລ້ວ</translation>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="201"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="202"/>
         <source>Unable to retrieve registration info. Error: %1</source>
         <translation>ບໍ່ສາມາດດຶງຂໍ້ມູນການລົງທະບຽນໄດ້. ຂໍ້ຜິດພາດ: %1</translation>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="434"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="435"/>
         <source>Cannot dehydrate a placeholder because the file changed</source>
         <translation>ບໍ່ສາມາດປ່ຽນໄຟລ໌ໃຫ້ເປັນແບບ online-only ໄດ້ ເພາະໄຟລ໌ມີການປ່ຽນແປງ</translation>
     </message>
@@ -1783,32 +1783,32 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::OpenVfsPluginFactory</name>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="286"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="287"/>
         <source>Failed to read /proc/self/mountinfo</source>
         <translation>ບໍ່ສາມາດອ່ານ /proc/self/mountinfo ໄດ້</translation>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="299"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="300"/>
         <source>Failed to unmount the OpenVFS mount %1 Error:%2</source>
         <translation>ບໍ່ສາມາດຍົກເລີກການ mount ຂອງ OpenVFS %1 ໄດ້. ຂໍ້ຜິດພາດ: %2</translation>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="308"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="309"/>
         <source>The filesystem for %1 does not support xattributes.</source>
         <translation>ລະບົບໄຟລ໌ສຳລັບ %1 ບໍ່ຮອງຮັບ xattributes.</translation>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="311"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="312"/>
         <source>The sync path is already claimed by %1</source>
         <translation>ເສັ້ນທາງການຊິງໂຄຣໄນນີ້ຖືກໃຊ້ໂດຍ %1 ຢູ່ແລ້ວ</translation>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="315"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="316"/>
         <source>OpenVFS executable not found, please install it</source>
         <translation>ບໍ່ພົບໄຟລ໌ໂປຣແກຣມ OpenVFS, ກະລຸນາຕິດຕັ້ງມັນກ່ອນ</translation>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="321"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="322"/>
         <source>Failed to find the OpenVFS config file, please check your installation.</source>
         <translation>ບໍ່ພົບໄຟລ໌ກຳນົດຄ່າຂອງ OpenVFS, ກະລຸນາກວດສອບການຕິດຕັ້ງຂອງທ່ານ.</translation>
     </message>

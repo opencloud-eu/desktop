@@ -882,7 +882,7 @@ Oppdateringen vil bli utført i bakgrunnen og overskrive den nåværende AppImag
         <location filename="../src/gui/folder.cpp" line="95"/>
         <location filename="../src/gui/folder.cpp" line="848"/>
         <source>Failed to load excludes</source>
-        <translation type="unfinished"/>
+        <translation>Kunne ikke laste ekskluderingene</translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="217"/>
@@ -986,7 +986,7 @@ Oppdateringen vil bli utført i bakgrunnen og overskrive den nåværende AppImag
     <message>
         <location filename="../src/gui/folder.cpp" line="873"/>
         <source>Reloading excludes on folder »%1«</source>
-        <translation type="unfinished"/>
+        <translation>Laster ekskluderingene for mappen «%1» på nytt</translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="1095"/>
@@ -1765,17 +1765,17 @@ Merk at kommandolinjealternativer for logging overstyrer innstillingene.</transl
 <context>
     <name>OCC::OpenVFS</name>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="198"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="199"/>
         <source>Unable to claim the sync root for files on demand, the folder is already claimed by %1</source>
         <translation>Kan ikke ta i bruk synkroniseringsroten for filer ved behov, mappen er allerede tatt i bruk av %1</translation>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="201"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="202"/>
         <source>Unable to retrieve registration info. Error: %1</source>
         <translation>Kunne ikke hente registreringsinfo. Feil: %1</translation>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="434"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="435"/>
         <source>Cannot dehydrate a placeholder because the file changed</source>
         <translation>Kan ikke fjerne innholdet fra en plassholder fordi filen er endret</translation>
     </message>
@@ -1783,32 +1783,32 @@ Merk at kommandolinjealternativer for logging overstyrer innstillingene.</transl
 <context>
     <name>OCC::OpenVfsPluginFactory</name>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="286"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="287"/>
         <source>Failed to read /proc/self/mountinfo</source>
         <translation>Kunne ikke lese /proc/self/mountinfo</translation>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="299"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="300"/>
         <source>Failed to unmount the OpenVFS mount %1 Error:%2</source>
         <translation>Kunne ikke demontere OpenVFS-monteringen %1. Feil: %2</translation>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="308"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="309"/>
         <source>The filesystem for %1 does not support xattributes.</source>
         <translation>Filsystemet for %1 støtter ikke utvidede attributter (xattr).</translation>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="311"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="312"/>
         <source>The sync path is already claimed by %1</source>
         <translation>Synkroniseringsstien er allerede tatt i bruk av %1</translation>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="315"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="316"/>
         <source>OpenVFS executable not found, please install it</source>
         <translation>Fant ikke den kjørbare OpenVFS-filen. Installer den</translation>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="321"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="322"/>
         <source>Failed to find the OpenVFS config file, please check your installation.</source>
         <translation>Fant ikke OpenVFS-konfigurasjonsfilen. Kontroller installasjonen.</translation>
     </message>

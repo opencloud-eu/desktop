@@ -1764,17 +1764,17 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
 <context>
     <name>OCC::OpenVFS</name>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="198"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="199"/>
         <source>Unable to claim the sync root for files on demand, the folder is already claimed by %1</source>
         <translation>Impossible de revendiquer la racine de synchronisation pour les fichiers à la demande, le dossier est déjà revendiqué par %1</translation>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="201"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="202"/>
         <source>Unable to retrieve registration info. Error: %1</source>
         <translation>Impossible de récupérer les informations d&apos;enregistrement. Erreur : %1</translation>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="434"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="435"/>
         <source>Cannot dehydrate a placeholder because the file changed</source>
         <translation>Impossible de déshydrater un espace réservé car le fichier a été modifié</translation>
     </message>
@@ -1782,32 +1782,32 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
 <context>
     <name>OCC::OpenVfsPluginFactory</name>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="286"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="287"/>
         <source>Failed to read /proc/self/mountinfo</source>
         <translation>Impossible de lire /proc/self/mountinfo</translation>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="299"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="300"/>
         <source>Failed to unmount the OpenVFS mount %1 Error:%2</source>
         <translation>Échec du démontage du montage OpenVFS %1 Erreur : %2</translation>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="308"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="309"/>
         <source>The filesystem for %1 does not support xattributes.</source>
         <translation>Le système de fichiers pour %1 ne prend pas en charge les xattributes</translation>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="311"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="312"/>
         <source>The sync path is already claimed by %1</source>
         <translation>Le chemin de synchronisation est déjà revendiqué par %1</translation>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="315"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="316"/>
         <source>OpenVFS executable not found, please install it</source>
         <translation>L&apos;exécutable OpenVFS est introuvable, merci de l&apos;installer</translation>
     </message>
     <message>
-        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="321"/>
+        <location filename="../src/plugins/vfs/openvfs/vfs_openvfs.cpp" line="322"/>
         <source>Failed to find the OpenVFS config file, please check your installation.</source>
         <translation>Impossible de trouver le fichier de configuration d&apos;OpenVFS, merci de vérifier l&apos;installation.</translation>
     </message>
