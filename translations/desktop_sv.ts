@@ -882,7 +882,7 @@ Uppdateringen kommer att utföras i bakgrunden och skriva över den aktuella App
         <location filename="../src/gui/folder.cpp" line="95"/>
         <location filename="../src/gui/folder.cpp" line="848"/>
         <source>Failed to load excludes</source>
-        <translation type="unfinished"/>
+        <translation>Kunde inte läsa in undantag</translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="217"/>
@@ -986,7 +986,7 @@ Uppdateringen kommer att utföras i bakgrunden och skriva över den aktuella App
     <message>
         <location filename="../src/gui/folder.cpp" line="873"/>
         <source>Reloading excludes on folder »%1«</source>
-        <translation type="unfinished"/>
+        <translation>Läser in undantag igen i mappen »%1«</translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="1095"/>
