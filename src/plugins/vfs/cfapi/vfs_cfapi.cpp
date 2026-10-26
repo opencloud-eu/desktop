@@ -176,7 +176,7 @@ void VfsCfApi::unregisterFolder()
 
 bool VfsCfApi::socketApiPinStateActionsShown() const
 {
-    return true;
+    return false;
 }
 
 Result<Vfs::ConvertToPlaceholderResult, QString> VfsCfApi::updateMetadata(const SyncFileItem &syncItem, const QString &filePath, const QString &replacesFile)

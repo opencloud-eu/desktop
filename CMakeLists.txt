@@ -89,8 +89,8 @@ message(STATUS "GIT_SHA1 ${GIT_SHA1}")
 ## -DNO_MSG_HANDLER=ON
 option(NO_MSG_HANDLER "Don't redirect QDebug outputs to the log window/file" OFF)
 
-if (APPLE)
-    # this option builds the shell integration, currently only available on MacOS
+if (APPLE OR MSVC)
+    # this option builds the shell integration, currently only available on macOS and Windows
     ## -DBUILD_SHELL_INTEGRATION=OFF
     option(BUILD_SHELL_INTEGRATION "BUILD_SHELL_INTEGRATION" ON)
 endif()
