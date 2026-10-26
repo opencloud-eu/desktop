@@ -20,6 +20,10 @@ using namespace Qt::Literals::StringLiterals;
 
 using namespace OCC::Resources;
 
+namespace OCC::Resources {
+class JsonThemePrivate;
+}
+
 namespace {
 
 const bool IsUiApp()
@@ -28,13 +32,20 @@ const bool IsUiApp()
     return isUiApp;
 }
 
-// Convenience classes for reading. Not stored
+// Convenience classes for reading
 class IconOrRef
 {
 public:
-    QIcon icon;
-    QString id;
-    QString idRef;
+    IconOrRef(JsonThemePrivate *parent = nullptr, const QIcon &icon = QIcon(), const QStringView id = QStringView(),
+        const QStringView idRef = QStringView()); // defined below
+    QIcon icon() const;
+
+private:
+    JsonThemePrivate *_parent;
+
+    QIcon _icon;
+    QString _id;
+    QString _idRef;
 };
 
 class SysTrayIcon
@@ -115,14 +126,16 @@ class JsonThemePrivate
 public:
     bool _systemThemeLoaded = false;
 
+    QList<IconOrRef> _iconsCache;
+
     QString _applicationName = u"OpenCloud"_s;
     QString _applicationDisplayName = u"OpenCloud Desktop"_s;
     QString _organizationDomain = u"eu.opencloud.desktop"_s;
-    QIcon _applicationIcon = IsUiApp() ? loadIcon(u"universal"_s, u"opencloud-icon"_s) : QIcon();
+    IconOrRef _applicationIcon = IconOrRef(this, IsUiApp() ? loadIcon(u"universal"_s, u"opencloud-icon"_s) : QIcon());
 
     // wizard
     QUrl _serverUrl;
-    QIcon _wizardLogo = IsUiApp() ? loadIcon(u"universal"_s, u"wizard_logo"_s) : QIcon();
+    IconOrRef _wizardLogo = IconOrRef(this, IsUiApp() ? loadIcon(u"universal"_s, u"wizard_logo"_s) : QIcon());
     QColor _primaryBackgroundColor = QColor::fromRgb(0x20434F);
     QColor _primaryForegroundColor = QColor::fromRgb(0xFFFFFF);
     ButtonColor _primaryButtonColor = {
@@ -139,7 +152,7 @@ public:
     bool _isUnbranded = true;
 
     // The key's real type is SysTrayIconType | SysTrayIconStyle
-    QMap<uint32_t, QIcon> _sysTrayIconsMap;
+    QMap<uint32_t, IconOrRef> _sysTrayIconsMap;
 
     void load(const QJsonDocument &theme, JsonTheme::ThemeType type)
     {
@@ -175,31 +188,7 @@ public:
             setFromJson(_multiAccount, wizard, "multiAccount"_L1);
         }
 
-        QList<SysTrayIcon> sysTrayIconsList;
-        setFromJson(sysTrayIconsList, desktopSettings, "sysTrayIcons"_L1);
-        for (auto &icon : sysTrayIconsList) {
-            uint32_t key = static_cast<uint32_t>(icon.type) | static_cast<uint32_t>(icon.style);
-            Q_ASSERT(!_sysTrayIconsMap.contains(key));
-
-            if (icon.iconOrRef.icon.isNull()) {
-                Q_ASSERT(!icon.iconOrRef.idRef.isEmpty());
-                Q_ASSERT(icon.iconOrRef.id.isEmpty()); // forbid nested references
-
-                for (auto &otherIcon : sysTrayIconsList) {
-                    if (otherIcon.iconOrRef.id == icon.iconOrRef.idRef) {
-                        icon.iconOrRef.icon = otherIcon.iconOrRef.icon;
-                        break;
-                    }
-                }
-                Q_ASSERT(!icon.iconOrRef.icon.isNull());
-            }
-
-            if (icon.style == JsonTheme::SysTrayIconStyle::Mask) {
-                icon.iconOrRef.icon.setIsMask(true);
-            }
-
-            _sysTrayIconsMap.insert(key, icon.iconOrRef.icon);
-        }
+        setFromJson(_sysTrayIconsMap, desktopSettings, "sysTrayIcons"_L1);
     }
 
     template <typename T>
@@ -280,7 +269,7 @@ template <>
 IconOrRef JsonThemePrivate::fromJson(const QJsonValue &val)
 {
     const auto o = val.toObject();
-    return {fromJson<QIcon>(val), o.value("id"_L1).toString(), o.value("idRef"_L1).toString()};
+    return IconOrRef(this, fromJson<QIcon>(val), o.value("id"_L1).toString(), o.value("idRef"_L1).toString());
 }
 
 template <>
@@ -295,16 +284,55 @@ SysTrayIcon JsonThemePrivate::fromJson(const QJsonValue &val)
 }
 
 template <>
-QList<SysTrayIcon> JsonThemePrivate::fromJson(const QJsonValue &val)
+QMap<uint32_t, IconOrRef> JsonThemePrivate::fromJson(const QJsonValue &val)
 {
     const auto array = val.toArray();
-    QList<SysTrayIcon> out;
-    out.reserve(array.size());
+    QMap<uint32_t, IconOrRef> out;
     for (const auto &a : array) {
-        out.append(fromJson<SysTrayIcon>(a));
+        auto newIcon = fromJson<SysTrayIcon>(a);
+        uint32_t key = static_cast<uint32_t>(newIcon.type) | static_cast<uint32_t>(newIcon.style);
+        if (out.contains(key)) {
+            qCritical() << u"sysTrayIcon of type " << newIcon.type << u" and style " << newIcon.style << u"defined multiple times";
+        }
+
+        out.insert(key, newIcon.iconOrRef);
     }
     return out;
 }
+}
+
+IconOrRef::IconOrRef(JsonThemePrivate *parent, const QIcon &icon, const QStringView id, const QStringView idRef)
+    : _parent(parent)
+    , _icon(icon)
+    , _id(id)
+    , _idRef(idRef)
+{
+    if (_parent && (!_id.isEmpty() || !_idRef.isEmpty())) { // no need to store unnamed icons with no references
+        _parent->_iconsCache.push_back(*this);
+    }
+}
+
+QIcon IconOrRef::icon() const
+{
+    if (!_parent) {
+        return _icon;
+    }
+
+    if (_parent) {
+        QList<IconOrRef> &allIcons = _parent->_iconsCache;
+        if (_icon.isNull() && !_idRef.isEmpty()) {
+            for (auto &other : allIcons) {
+                if (_idRef == other._id) {
+                    if (!other._idRef.isEmpty()) {
+                        qCritical() << u"Cannot reference icon id \"" << _idRef << u"\", nested references are forbidden";
+                    }
+                    return other._icon;
+                }
+            }
+        }
+    }
+
+    return _icon;
 }
 
 bool ButtonColor::valid() const
@@ -444,7 +472,7 @@ ButtonColor JsonTheme::secondaryButtonColor() const
 QIcon JsonTheme::wizardLogo() const
 {
     Q_D(const JsonTheme);
-    return d->_wizardLogo;
+    return d->_wizardLogo.icon();
 }
 
 bool JsonTheme::multiAccount() const
@@ -462,7 +490,7 @@ QList<UrlButton> JsonTheme::urlButtons() const
 QIcon JsonTheme::applicationIcon() const
 {
     Q_D(const JsonTheme);
-    return d->_applicationIcon;
+    return d->_applicationIcon.icon();
 }
 
 QColor JsonTheme::iconTint()
@@ -482,16 +510,26 @@ QIcon JsonTheme::sysTrayIcon(const SysTrayIconType type, const SysTrayIconStyle 
     Q_D(const JsonTheme);
     auto &map = d->_sysTrayIconsMap;
 
+    QIcon ret;
+
     // First, try a direct match
     uint32_t key = static_cast<uint32_t>(type) | static_cast<uint32_t>(style);
     if (map.contains(key)) {
-        return map[key];
+        ret = map[key].icon();
     }
 
     // Then, ignore the style and fall back to the light theme equivalent
     key = static_cast<uint32_t>(type);
     if (map.contains(key)) {
-        return map[key];
+        ret = map[key].icon();
+    }
+
+    if (!ret.isNull()) {
+        if (style == SysTrayIconStyle::Mask) {
+            ret.setIsMask(true);
+        }
+
+        return ret;
     }
 
     // Finally, fall back on the vanilla icon
