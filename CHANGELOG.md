@@ -30,6 +30,8 @@
 
 ### 📦️ Dependencies
 
+- build(deps): bump signpath/github-action-submit-signing-request from 2 to 3 [[#1100](https://github.com/opencloud-eu/desktop/pull/1100)]
+- Bump certifi from 2026.7.22 to 2026.10.19 in /test/gui [[#1197](https://github.com/opencloud-eu/desktop/pull/1197)]
 - Bump pillow from 12.3.0 to 13.0.0 in /test/gui [[#1196](https://github.com/opencloud-eu/desktop/pull/1196)]
 
 ## [4.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v4.0.0) - 2026-09-03
