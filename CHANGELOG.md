@@ -28,6 +28,10 @@
 
 - Fallback to consent if prompt_values_supported is not exposed [[#1092](https://github.com/opencloud-eu/desktop/pull/1092)]
 
+### 📦️ Dependencies
+
+- Bump pillow from 12.3.0 to 13.0.0 in /test/gui [[#1196](https://github.com/opencloud-eu/desktop/pull/1196)]
+
 ## [4.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v4.0.0) - 2026-09-03
 
 ### ❤️ Thanks to all contributors! ❤️
