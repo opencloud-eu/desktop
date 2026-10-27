@@ -83,6 +83,42 @@ def create_folder(user, folder_name):
     )
 
 
+def patch_folder_properties(user, folder_path, properties):
+    """
+    Patch the properties of a folder.
+
+    Args:
+        user (str): The username.
+        folder_path (str): The path of the folder to patch.
+        properties (dict): A dictionary of properties to patch.
+                           Where the key is the property name and the value is the property value.
+                           Example: {"ocrclone:integrity-id": "some-value"}
+    Raises:
+        AssertionError: If the server response indicates failure.
+    """
+    url = get_resource_path(user, folder_path)
+
+    props = []
+    for key, value in properties.items():
+        props.append(f'<{key}>{value}</{key}>')
+    props = '\n'.join(props)
+
+    body = f"""
+    <d:propertyupdate xmlns:d="DAV:" xmlns:oc="http://owncloud.org/ns" xmlns:ocrclone="ocrclone">
+        <d:set>
+            <d:prop>
+            {props}
+            </d:prop>
+        </d:set>
+    </d:propertyupdate>
+    """
+    response = request.proppatch(url, body=body, user=user)
+    assert response.status_code == 207, (
+        f'Could not patch properties of "{folder_path}".\n  Properties: {body}'
+        + f'\n  Status: {response.status_code}'
+    )
+
+
 def create_file(user, file_name, contents):
     url = get_resource_path(user, file_name)
     response = request.put(url, body=contents, user=user)

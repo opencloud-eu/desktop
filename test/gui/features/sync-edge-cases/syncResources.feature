@@ -392,3 +392,22 @@ Feature: Syncing files
         And as "Alice" the file ".newlocal/newlocalfile.txt" should have the content "local" in the server
         And as "Alice" the file ".localhideFol/localfile.txt" should have the content "local-edited" in the server
         And as "Alice" the file "localFol/.localhidesub/localsubfile.txt" should have the content "local-edited" in the server
+
+
+    Scenario: Try to sync vault folder
+        Given user "Alice" has created folder "parentvault" in the server
+        And user "Alice" has created folder "secrets.vault" in the server
+        And user "Alice" has created folder "notvault.vault" in the server
+        And user "Alice" has uploaded file with content "root lorem" to "rootfile.txt" in the server
+        And user "Alice" has uploaded file with content "lorem" to "secrets.vault/lorem.txt" in the server
+        And user "Alice" has uploaded file with content "epsum" to "parentvault/epsum.txt" in the server
+        And user "Alice" has uploaded file with content "normal" to "notvault.vault/normal.txt" in the server
+        And user "Alice" has set up folder "secrets.vault" as a vault in the server
+        And user "Alice" has set up folder "parentvault" as a vault in the server
+        And user "Alice" has set up a client with default settings
+        Then the following files should exist on the file system with the content:
+            | filename                  | content    |
+            | rootfile.txt              | root lorem |
+            | notvault.vault/normal.txt | normal     |
+        But the folder "secrets.vault" should not exist on the file system
+        And the folder "parentvault" should not exist on the file system
