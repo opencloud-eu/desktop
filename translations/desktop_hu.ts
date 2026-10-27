@@ -2404,38 +2404,38 @@ Figyelje, hogy a parancssori naplózási beállítások felülírják ezeket.</t
 <context>
     <name>OCC::SocketApi</name>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="507"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="508"/>
         <source>Share with %1</source>
         <comment>parameter is OpenCloud</comment>
         <translation>Megosztás %1 segítségével</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="605"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="606"/>
         <source>Confirm deletion</source>
         <translation>Törlés megerősítése</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="607"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="608"/>
         <source>Do you want to delete the directory »%1« and all its contents permanently?</source>
         <translation>Véglegesen törölni kívánja a(z) »%1« könyvtárat és annak összes tartalmát?</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="608"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="609"/>
         <source>Do you want to delete the file »%1« permanently?</source>
         <translation>Véglegesen törölni kívánja a(z) »%1« fájlt?</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="650"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="651"/>
         <source>Select new location...</source>
         <translation>Új hely kiválasztása...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="660"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="661"/>
         <source>Error</source>
         <translation>Hiba</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="661"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="662"/>
         <source>Moving file failed:
 
 %1</source>
@@ -2444,80 +2444,80 @@ Figyelje, hogy a parancssori naplózási beállítások felülírják ezeket.</t
 %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="763"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="764"/>
         <source>I shared something with you</source>
         <translation>Megosztottam valamit Önnel</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="776"/>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="806"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="777"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="811"/>
         <source>Share...</source>
         <translation>Megosztás...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="778"/>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="810"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="779"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="815"/>
         <source>Copy private link to clipboard</source>
         <translation>Privát hivatkozás másolása a vágólapra</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="779"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="780"/>
         <source>Send private link by email...</source>
         <translation>Privát hivatkozás küldése e-mailben...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="804"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="809"/>
         <source>Resharing this file is not allowed</source>
         <translation>A fájl újramegosztása nem engedélyezett</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="804"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="809"/>
         <source>Resharing this folder is not allowed</source>
         <translation>A mappa újramegosztása nem engedélyezett</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="875"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="880"/>
         <source>Open in %1</source>
         <translation>Megnyitás itt: %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="886"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="891"/>
         <source>Show file versions in web browser</source>
         <translation>Fájlverziók megjelenítése webböngészőben</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="908"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="913"/>
         <source>Rename...</source>
         <translation>Átnevezés...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="911"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="916"/>
         <source>Rename and upload...</source>
         <translation>Átnevezés és feltöltés...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="916"/>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="920"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="921"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="925"/>
         <source>Move and rename...</source>
         <translation>Áthelyezés és átnevezés...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="923"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="928"/>
         <source>Move, rename and upload...</source>
         <translation>Áthelyezés, átnevezés és feltöltés...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="926"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="931"/>
         <source>Delete local changes</source>
         <translation>Helyi változtatások törlése</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="931"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="936"/>
         <source>Move and upload...</source>
         <translation>Áthelyezés és feltöltés...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="932"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="937"/>
         <source>Delete</source>
         <translation>Törlés</translation>
     </message>

@@ -2404,38 +2404,38 @@ Tingues en compte que l’ús de qualsevol opció de línia d’ordres per a reg
 <context>
     <name>OCC::SocketApi</name>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="507"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="508"/>
         <source>Share with %1</source>
         <comment>parameter is OpenCloud</comment>
         <translation>Comparteix amb %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="605"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="606"/>
         <source>Confirm deletion</source>
         <translation>Confirma l&apos;eliminació</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="607"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="608"/>
         <source>Do you want to delete the directory »%1« and all its contents permanently?</source>
         <translation>Voleu suprimir el directori »%1« i tot el seu contingut permanentment?</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="608"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="609"/>
         <source>Do you want to delete the file »%1« permanently?</source>
         <translation>Voleu suprimir el fitxer »%1« permanentment?</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="650"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="651"/>
         <source>Select new location...</source>
         <translation>Selecciona una nova ubicació...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="660"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="661"/>
         <source>Error</source>
         <translation>Error</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="661"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="662"/>
         <source>Moving file failed:
 
 %1</source>
@@ -2444,80 +2444,80 @@ Tingues en compte que l’ús de qualsevol opció de línia d’ordres per a reg
 %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="763"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="764"/>
         <source>I shared something with you</source>
         <translation>He compartit alguna cosa amb tu</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="776"/>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="806"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="777"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="811"/>
         <source>Share...</source>
         <translation>Comparteix...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="778"/>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="810"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="779"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="815"/>
         <source>Copy private link to clipboard</source>
         <translation>Copia l&apos;enllaç privat al porta-retalls</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="779"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="780"/>
         <source>Send private link by email...</source>
         <translation>Enviar enllaç privat per correu electrònic...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="804"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="809"/>
         <source>Resharing this file is not allowed</source>
         <translation>No es permet tornar a compartir aquest fitxer</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="804"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="809"/>
         <source>Resharing this folder is not allowed</source>
         <translation>No es permet tornar a compartir aquesta carpeta</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="875"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="880"/>
         <source>Open in %1</source>
         <translation>Obre en %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="886"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="891"/>
         <source>Show file versions in web browser</source>
         <translation>Mostra les versions dels fitxers al navegador web</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="908"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="913"/>
         <source>Rename...</source>
         <translation>Canvia el nom...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="911"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="916"/>
         <source>Rename and upload...</source>
         <translation>Canvia el nom i puja...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="916"/>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="920"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="921"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="925"/>
         <source>Move and rename...</source>
         <translation>Moure i canviar el nom...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="923"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="928"/>
         <source>Move, rename and upload...</source>
         <translation>Moure, canviar el nom i pujar...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="926"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="931"/>
         <source>Delete local changes</source>
         <translation>Suprimeix els canvis locals</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="931"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="936"/>
         <source>Move and upload...</source>
         <translation>Moure i pujar...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="932"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="937"/>
         <source>Delete</source>
         <translation>Suprimeix</translation>
     </message>

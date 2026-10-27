@@ -2404,38 +2404,38 @@ Observera att användning av kommandoradsalternativ för loggning åsidosätter 
 <context>
     <name>OCC::SocketApi</name>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="507"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="508"/>
         <source>Share with %1</source>
         <comment>parameter is OpenCloud</comment>
         <translation>Dela med %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="605"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="606"/>
         <source>Confirm deletion</source>
         <translation>Bekräfta radering</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="607"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="608"/>
         <source>Do you want to delete the directory »%1« and all its contents permanently?</source>
         <translation>Vill du radera katalogen »%1« och allt dess innehåll permanent?</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="608"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="609"/>
         <source>Do you want to delete the file »%1« permanently?</source>
         <translation>Vill du ta bort filen »%1« permanent?</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="650"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="651"/>
         <source>Select new location...</source>
         <translation>Välj ny plats...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="660"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="661"/>
         <source>Error</source>
         <translation>Fel</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="661"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="662"/>
         <source>Moving file failed:
 
 %1</source>
@@ -2444,80 +2444,80 @@ Observera att användning av kommandoradsalternativ för loggning åsidosätter 
 %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="763"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="764"/>
         <source>I shared something with you</source>
         <translation>Jag delade något med dig</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="776"/>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="806"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="777"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="811"/>
         <source>Share...</source>
         <translation>Dela...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="778"/>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="810"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="779"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="815"/>
         <source>Copy private link to clipboard</source>
         <translation>Kopiera privat länk till urklipp</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="779"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="780"/>
         <source>Send private link by email...</source>
         <translation>Skicka privat länk via e-post...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="804"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="809"/>
         <source>Resharing this file is not allowed</source>
         <translation>Det är inte tillåtet att dela denna fil vidare</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="804"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="809"/>
         <source>Resharing this folder is not allowed</source>
         <translation>Det är inte tillåtet att dela denna mapp igen</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="875"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="880"/>
         <source>Open in %1</source>
         <translation>Öppna i %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="886"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="891"/>
         <source>Show file versions in web browser</source>
         <translation>Visa filversioner i webbläsaren</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="908"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="913"/>
         <source>Rename...</source>
         <translation>Byt namn...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="911"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="916"/>
         <source>Rename and upload...</source>
         <translation>Byt namn och ladda upp...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="916"/>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="920"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="921"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="925"/>
         <source>Move and rename...</source>
         <translation>Flytta och byt namn...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="923"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="928"/>
         <source>Move, rename and upload...</source>
         <translation>Flytta, byt namn och ladda upp...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="926"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="931"/>
         <source>Delete local changes</source>
         <translation>Ta bort lokala ändringar</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="931"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="936"/>
         <source>Move and upload...</source>
         <translation>Flytta och ladda upp...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="932"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="937"/>
         <source>Delete</source>
         <translation>Ta bort</translation>
     </message>
