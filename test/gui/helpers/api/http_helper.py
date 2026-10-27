@@ -48,6 +48,10 @@ def propfind(url, body=None, headers=None, user=None, password=None):
     return send_request(url, "PROPFIND", body, headers, user, password)
 
 
+def proppatch(url, body=None, headers=None, user=None, password=None):
+    return send_request(url, "PROPPATCH", body, headers, user, password)
+
+
 def assert_http_status(response, expected_code, message=""):
     response_body = ""
     if response.text:

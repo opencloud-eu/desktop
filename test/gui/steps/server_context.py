@@ -1,4 +1,5 @@
 import tempfile
+import secrets
 from pathlib import Path
 from behave import given as Given, then as Then, when as When
 from sure import ensure
@@ -132,3 +133,9 @@ def step(context, user):
         resource_details['sharee'],
         resource_details['permissionsRole'],
     )
+
+
+@Given('user "{user}" has set up folder "{folder_path}" as a vault in the server')
+def step(context, user, folder_path):
+    properties = {"ocrclone:integrity-id": secrets.token_urlsafe(32)}
+    webdav.patch_folder_properties(user, folder_path, properties)
