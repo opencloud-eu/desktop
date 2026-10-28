@@ -1408,7 +1408,7 @@ Elemente, bei denen das Löschen erlaubt ist, werden gelöscht, wenn sie verhind
 <context>
     <name>OCC::IssuesWidget</name>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="353"/>
+        <location filename="../src/gui/issueswidget.cpp" line="354"/>
         <source>Filter</source>
         <translation>Filter</translation>
     </message>
@@ -1423,17 +1423,17 @@ Elemente, bei denen das Löschen erlaubt ist, werden gelöscht, wenn sie verhind
         <translation>Es gab zu viele Probleme. Nicht alle werden hier sichtbar sein.</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="229"/>
+        <location filename="../src/gui/issueswidget.cpp" line="230"/>
         <source>Reset column sizes</source>
         <translation>Spaltenbreiten zurücksetzen</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="263"/>
+        <location filename="../src/gui/issueswidget.cpp" line="264"/>
         <source>Filter menu</source>
         <translation>Filtermenü</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="265"/>
+        <location filename="../src/gui/issueswidget.cpp" line="266"/>
         <source>Account</source>
         <translation>Konto</translation>
     </message>
@@ -1508,12 +1508,12 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
         <translation>Alle</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="283"/>
+        <location filename="../src/gui/issueswidget.cpp" line="284"/>
         <source>Reset Filters</source>
         <translation>Filter zurücksetzen</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="368"/>
+        <location filename="../src/gui/issueswidget.cpp" line="369"/>
         <source>Status Filter:</source>
         <translation>Statusfilter:</translation>
     </message>

@@ -1408,7 +1408,7 @@ Os itens cuja eliminação é permitida serão eliminados se impedirem a remoç�
 <context>
     <name>OCC::IssuesWidget</name>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="353"/>
+        <location filename="../src/gui/issueswidget.cpp" line="354"/>
         <source>Filter</source>
         <translation>Filtro</translation>
     </message>
@@ -1423,17 +1423,17 @@ Os itens cuja eliminação é permitida serão eliminados se impedirem a remoç�
         <translation>Há problemas a mais. Nem todos serão visíveis aqui.</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="229"/>
+        <location filename="../src/gui/issueswidget.cpp" line="230"/>
         <source>Reset column sizes</source>
         <translation>Repor tamanho das colunas</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="263"/>
+        <location filename="../src/gui/issueswidget.cpp" line="264"/>
         <source>Filter menu</source>
         <translation>Menu de filtros</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="265"/>
+        <location filename="../src/gui/issueswidget.cpp" line="266"/>
         <source>Account</source>
         <translation>Conta</translation>
     </message>
@@ -1508,12 +1508,12 @@ Note que usar opções de registo na linha de comandos substituirá estas defini
         <translation>Todos</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="283"/>
+        <location filename="../src/gui/issueswidget.cpp" line="284"/>
         <source>Reset Filters</source>
         <translation>Repor filtros</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="368"/>
+        <location filename="../src/gui/issueswidget.cpp" line="369"/>
         <source>Status Filter:</source>
         <translation>Filtro de estado:</translation>
     </message>

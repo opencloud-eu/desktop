@@ -1408,7 +1408,7 @@ Items where deletion is allowed will be deleted if they prevent a directory from
 <context>
     <name>OCC::IssuesWidget</name>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="353"/>
+        <location filename="../src/gui/issueswidget.cpp" line="354"/>
         <source>Filter</source>
         <translation>מסנן</translation>
     </message>
@@ -1423,17 +1423,17 @@ Items where deletion is allowed will be deleted if they prevent a directory from
         <translation>היו יותר מדי בעיות. לא כולן יוצגו כאן.</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="229"/>
+        <location filename="../src/gui/issueswidget.cpp" line="230"/>
         <source>Reset column sizes</source>
         <translation>איפוס גדלי עמודות</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="263"/>
+        <location filename="../src/gui/issueswidget.cpp" line="264"/>
         <source>Filter menu</source>
         <translation>תפריט סינון</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="265"/>
+        <location filename="../src/gui/issueswidget.cpp" line="266"/>
         <source>Account</source>
         <translation>חשבון</translation>
     </message>
@@ -1508,12 +1508,12 @@ Note that using any logging command line options will override the settings.</so
         <translation>הכל</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="283"/>
+        <location filename="../src/gui/issueswidget.cpp" line="284"/>
         <source>Reset Filters</source>
         <translation>איפוס מסננים</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="368"/>
+        <location filename="../src/gui/issueswidget.cpp" line="369"/>
         <source>Status Filter:</source>
         <translation>מסנן סטטוס:</translation>
     </message>

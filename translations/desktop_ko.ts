@@ -1408,7 +1408,7 @@ Items where deletion is allowed will be deleted if they prevent a directory from
 <context>
     <name>OCC::IssuesWidget</name>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="353"/>
+        <location filename="../src/gui/issueswidget.cpp" line="354"/>
         <source>Filter</source>
         <translation>필터</translation>
     </message>
@@ -1423,17 +1423,17 @@ Items where deletion is allowed will be deleted if they prevent a directory from
         <translation>이슈가 너무 많습니다. 여기에 모두 표시되지 않습니다.</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="229"/>
+        <location filename="../src/gui/issueswidget.cpp" line="230"/>
         <source>Reset column sizes</source>
         <translation>열 크기 재설정</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="263"/>
+        <location filename="../src/gui/issueswidget.cpp" line="264"/>
         <source>Filter menu</source>
         <translation>필터 메뉴</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="265"/>
+        <location filename="../src/gui/issueswidget.cpp" line="266"/>
         <source>Account</source>
         <translation>계정</translation>
     </message>
@@ -1511,12 +1511,12 @@ Note that using any logging command line options will override the settings.</so
         <translation>전체</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="283"/>
+        <location filename="../src/gui/issueswidget.cpp" line="284"/>
         <source>Reset Filters</source>
         <translation>필터 초기화</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="368"/>
+        <location filename="../src/gui/issueswidget.cpp" line="369"/>
         <source>Status Filter:</source>
         <translation>상태 필터:</translation>
     </message>

@@ -1406,7 +1406,7 @@ Elementy, dla których zezwolono na usunięcie, zostaną usunięte, jeśli uniem
 <context>
     <name>OCC::IssuesWidget</name>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="353"/>
+        <location filename="../src/gui/issueswidget.cpp" line="354"/>
         <source>Filter</source>
         <translation>Filtr</translation>
     </message>
@@ -1421,17 +1421,17 @@ Elementy, dla których zezwolono na usunięcie, zostaną usunięte, jeśli uniem
         <translation>Wystąpiło zbyt wiele problemów. Nie wszystkie będą tutaj widoczne.</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="229"/>
+        <location filename="../src/gui/issueswidget.cpp" line="230"/>
         <source>Reset column sizes</source>
         <translation>Zresetuj rozmiary kolumn</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="263"/>
+        <location filename="../src/gui/issueswidget.cpp" line="264"/>
         <source>Filter menu</source>
         <translation>Menu filtra</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="265"/>
+        <location filename="../src/gui/issueswidget.cpp" line="266"/>
         <source>Account</source>
         <translation>Konto</translation>
     </message>
@@ -1506,12 +1506,12 @@ Uwaga: użycie opcji logowania w wierszu poleceń nadpisze te ustawienia.</trans
         <translation>Wszystko</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="283"/>
+        <location filename="../src/gui/issueswidget.cpp" line="284"/>
         <source>Reset Filters</source>
         <translation>Zresetuj Filtry</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="368"/>
+        <location filename="../src/gui/issueswidget.cpp" line="369"/>
         <source>Status Filter:</source>
         <translation>Filtr statusu:</translation>
     </message>

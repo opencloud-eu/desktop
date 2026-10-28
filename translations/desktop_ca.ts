@@ -1408,7 +1408,7 @@ Els elements on es permeti l&apos;eliminació seran esborrats si impedeixen que 
 <context>
     <name>OCC::IssuesWidget</name>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="353"/>
+        <location filename="../src/gui/issueswidget.cpp" line="354"/>
         <source>Filter</source>
         <translation>Filtre</translation>
     </message>
@@ -1423,17 +1423,17 @@ Els elements on es permeti l&apos;eliminació seran esborrats si impedeixen que 
         <translation>Hi havia massa incidències. No totes seran visibles aquí.</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="229"/>
+        <location filename="../src/gui/issueswidget.cpp" line="230"/>
         <source>Reset column sizes</source>
         <translation>Restableix la mida de les columnes</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="263"/>
+        <location filename="../src/gui/issueswidget.cpp" line="264"/>
         <source>Filter menu</source>
         <translation>Menú de filtres</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="265"/>
+        <location filename="../src/gui/issueswidget.cpp" line="266"/>
         <source>Account</source>
         <translation>Compte</translation>
     </message>
@@ -1508,12 +1508,12 @@ Tingues en compte que l’ús de qualsevol opció de línia d’ordres per a reg
         <translation>Tots</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="283"/>
+        <location filename="../src/gui/issueswidget.cpp" line="284"/>
         <source>Reset Filters</source>
         <translation>Restableix els filtres</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="368"/>
+        <location filename="../src/gui/issueswidget.cpp" line="369"/>
         <source>Status Filter:</source>
         <translation>Filtre d&apos;estat:</translation>
     </message>

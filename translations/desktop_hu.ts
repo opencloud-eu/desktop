@@ -1408,7 +1408,7 @@ Azok az elemek, amelyeknél a törlés engedélyezett, törlésre kerülnek, ha 
 <context>
     <name>OCC::IssuesWidget</name>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="353"/>
+        <location filename="../src/gui/issueswidget.cpp" line="354"/>
         <source>Filter</source>
         <translation>Szűrő</translation>
     </message>
@@ -1423,17 +1423,17 @@ Azok az elemek, amelyeknél a törlés engedélyezett, törlésre kerülnek, ha 
         <translation>Túl sok probléma volt. Nem mindegyik lesz látható itt.</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="229"/>
+        <location filename="../src/gui/issueswidget.cpp" line="230"/>
         <source>Reset column sizes</source>
         <translation>Oszlopszélességek alaphelyzetbe állítása</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="263"/>
+        <location filename="../src/gui/issueswidget.cpp" line="264"/>
         <source>Filter menu</source>
         <translation>Szűrő menü</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="265"/>
+        <location filename="../src/gui/issueswidget.cpp" line="266"/>
         <source>Account</source>
         <translation>Felhasználói fiók</translation>
     </message>
@@ -1508,12 +1508,12 @@ Figyelje, hogy a parancssori naplózási beállítások felülírják ezeket.</t
         <translation>Összes</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="283"/>
+        <location filename="../src/gui/issueswidget.cpp" line="284"/>
         <source>Reset Filters</source>
         <translation>Szűrők alaphelyzetbe állítása</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="368"/>
+        <location filename="../src/gui/issueswidget.cpp" line="369"/>
         <source>Status Filter:</source>
         <translation>Állapot szűrő:</translation>
     </message>
