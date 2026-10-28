@@ -67,11 +67,12 @@ public:
     void setFilter(const StatusSet &newFilter, bool save = true)
     {
         if (_filter != newFilter) {
+            beginFilterChange();
             _filter = newFilter;
             if (save) {
                 saveFilter();
             }
-            invalidateFilter();
+            endFilterChange(QSortFilterProxyModel::Direction::Rows);
             Q_EMIT filterChanged();
         }
     }

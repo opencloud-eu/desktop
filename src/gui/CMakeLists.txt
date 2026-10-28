@@ -63,7 +63,6 @@ target_sources(OpenCloudGui PRIVATE
     systray.cpp
     accountstate.cpp
     guiutility.cpp
-    elidedlabel.cpp
     translations.cpp
     creds/httpcredentialsgui.cpp
     creds/qmlcredentials.cpp

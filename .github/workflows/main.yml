@@ -367,5 +367,10 @@ jobs:
     - name: Upload cache
       if: ${{ matrix.signing.enabled }}
       run: |
-        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c s3cmd
-        & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --run s3cmd --host "${{ vars.S3_CACHE_URL }}" --host-bucket "${{ vars.S3_CACHE_URL }}" --access_key "${{ secrets.S3_CACHE_ACCESS }}" --secret_key "${{ secrets.S3_CACHE_SECRET }}" put --recursive "${home}/craft/cache/" s3://public/desktop/craft-cache/${{ steps.setup.outputs.OpenCloudVersion }}/
+        $cacheFiles = Get-ChildItem "${home}/craft/cache/" -File -Recurse -ErrorAction SilentlyContinue
+        if ($cacheFiles) {
+          & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c s3cmd
+          & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --run s3cmd --host "${{ vars.S3_CACHE_URL }}" --host-bucket "${{ vars.S3_CACHE_URL }}" --access_key "${{ secrets.S3_CACHE_ACCESS }}" --secret_key "${{ secrets.S3_CACHE_SECRET }}" put --recursive "${home}/craft/cache/" s3://public/desktop/craft-cache/${{ steps.setup.outputs.OpenCloudVersion }}/
+        } else {
+          Write-Host "No cache files to upload, skipping."
+        }
