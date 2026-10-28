@@ -20,6 +20,13 @@ class SyncConnection:
     )
 
     @staticmethod
+    def parse_sync_connection_name(sync_label):
+        # Parse the sync name from the full label.
+        # Actual label: Personal,Success,Local folder: /tmp/opencloudtest/Alice/Personal
+        # Result: Personal
+        return sync_label.split(",")[0]
+
+    @staticmethod
     def get_current_account_connection():
         connections = app().find_elements(
             SyncConnection.ACCOUNT_CONNECTION_CONTAINER.by,
@@ -32,33 +39,21 @@ class SyncConnection:
         return None
 
     @staticmethod
-    def open_menu(sync_folder=None, sync_state="success"):
-        if sync_folder is None:
-            sync_folder = get_config('syncConnectionName')
-
-        if sync_state == "success":
-            status = "Success"
-        elif sync_state == "paused":
-            status = "Sync paused"
-        elif sync_state == "queued":
-            status = "Queued"
-        else:
-            raise ValueError(f"Unknown sync_state: {sync_state}")
-
-        connection = SyncConnection.get_current_account_connection()
-        menu_button = connection.find_element(
-            SyncConnection.FOLDER_SYNC_CONNECTION_MENU_BUTTON.by,
-            SyncConnection.FOLDER_SYNC_CONNECTION_MENU_BUTTON.selector.format(
-                sync_folder=sync_folder,
-                sync_path=get_config("currentUserSyncPath").rstrip("/") + "/",
-                status=status,
-            ),
-        )
-        menu_button.native_click(button='right')
+    def open_menu(sync_connection):
+        connection_elements = SyncConnection.get_sync_connections()
+        connection = None
+        for con in connection_elements:
+            sync_name = SyncConnection.parse_sync_connection_name(con.get_name())
+            if sync_name == sync_connection:
+                connection = con
+                break
+        if connection is None:
+            raise NoSuchElementException(f"Sync connection '{sync_connection}' not found")
+        connection.native_click(button='right')
 
     @staticmethod
-    def perform_action(action, sync_state="success"):
-        SyncConnection.open_menu(sync_state=sync_state)
+    def perform_action(action, sync_connection="Personal"):
+        SyncConnection.open_menu(sync_connection)
         app().find_element(SyncConnection.MENU_ITEM.by, action).click()
 
     @staticmethod
@@ -75,8 +70,22 @@ class SyncConnection:
 
     @staticmethod
     def choose_what_to_sync():
-        SyncConnection.open_menu()
         SyncConnection.perform_action("Choose what to sync")
+
+    @staticmethod
+    def get_sync_connections():
+        active_account = SyncConnection.get_current_account_connection()
+        return active_account.find_elements(By.XPATH, "//list_item")
+
+    @staticmethod
+    def get_sync_connection_list():
+        connections = []
+        connection_elements = SyncConnection.get_sync_connections()
+        for con in connection_elements:
+            sync_name = SyncConnection.parse_sync_connection_name(con.get_name())
+            connections.append(sync_name)
+        return connections
+
 
     @staticmethod
     def has_sync_connection(sync_folder):
@@ -115,8 +124,8 @@ class SyncConnection:
                 return False
 
     @staticmethod
-    def remove_folder_sync_connection():
-        SyncConnection.perform_action("Remove Space")
+    def remove_folder_sync_connection(sync_connection):
+        SyncConnection.perform_action("Remove Space", sync_connection=sync_connection)
 
     @staticmethod
     def confirm_folder_sync_connection_removal():

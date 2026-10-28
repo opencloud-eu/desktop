@@ -110,6 +110,23 @@ class SyncConnectionWizard:
         ).click()
 
     @staticmethod
+    def get_spaces_list():
+        spaces = []
+        list_container = app().find_element(
+            SyncConnectionWizard.SPACES_LIST.by,
+            SyncConnectionWizard.SPACES_LIST.selector,
+        )
+        space_elements = list_container.find_elements(By.XPATH, "//list_item")
+        for space in space_elements:
+            sync_name = space.get_name()
+            # Parse the sync name from the full label.
+            # Actual label: Personal, 
+            # Result: Personal
+            sync_name = sync_name.split(",")[0]
+            spaces.append(sync_name)
+        return spaces
+
+    @staticmethod
     def select_space(space_name):
         spaces_list = app().find_element(
             SyncConnectionWizard.SPACES_LIST.by,
@@ -145,6 +162,13 @@ class SyncConnectionWizard:
             SyncConnectionWizard.ADD_SPACE_BUTTON.selector,
         )
         return element.is_enabled()
+
+    @staticmethod
+    def open_add_space_wizard():
+        app().find_element(
+            SyncConnectionWizard.ADD_SPACE_BUTTON.by,
+            SyncConnectionWizard.ADD_SPACE_BUTTON.selector,
+        ).click()
 
     @staticmethod
     def get_relative_folder_element(target_folder, parent_row):

@@ -14,7 +14,7 @@ def get_space_endpint():
     return url_join(get_config('localBackendUrl'), 'graph', 'v1.0', 'drives')
 
 
-def get_dav_endpint():
+def get_dav_endpoint():
     return url_join(get_config('localBackendUrl'), 'dav', 'spaces')
 
 
@@ -26,8 +26,12 @@ def get_share_endpint():
     )
 
 
-def create_space(space_name):
-    body = json.dumps({'name': space_name})
+def create_space(space_name, vault=False):
+    data = {'name': space_name}
+    if vault:
+        data['@libre.graph.contentType'] = "application/vnd.opencloud.vault"
+
+    body = json.dumps(data)
     response = request.post(get_space_endpint(), body)
     request.assert_http_status(response, 201, f'Failed to create space {space_name}')
     # save created space
@@ -93,7 +97,7 @@ def delete_project_space(space_id):
 
 def create_space_folder(space_name, folder_name):
     space_id = get_space_id(space_name)
-    url = url_join(get_dav_endpint(), space_id, folder_name)
+    url = url_join(get_dav_endpoint(), space_id, folder_name)
     response = request.mkcol(url)
     request.assert_http_status(
         response,
@@ -104,7 +108,7 @@ def create_space_folder(space_name, folder_name):
 
 def create_space_file(space_name, file_name, content):
     space_id = get_space_id(space_name)
-    url = url_join(get_dav_endpint(), space_id, file_name)
+    url = url_join(get_dav_endpoint(), space_id, file_name)
     response = request.put(url, content)
     if response.status_code not in (201, 204):
         raise AssertionError(
@@ -138,7 +142,7 @@ def add_user_to_space(user, space_name, role):
 
 def get_file_content(space_name, file_name, user=None):
     space_id = get_space_id(space_name, user)
-    url = url_join(get_dav_endpint(), space_id, file_name)
+    url = url_join(get_dav_endpoint(), space_id, file_name)
     response = request.get(url=url, user=user)
     request.assert_http_status(response, 200, f'Failed to get file "{file_name}"')
     return response.text
@@ -146,6 +150,43 @@ def get_file_content(space_name, file_name, user=None):
 
 def resource_exists(space_name, resource, user=None):
     space_id = get_space_id(space_name, user)
-    url = url_join(get_dav_endpint(), space_id, resource)
+    url = url_join(get_dav_endpoint(), space_id, resource)
     response = request.get(url=url, user=user)
     return response.status_code == 200
+
+
+def patch_space_properties(space_name, properties):
+    """
+    Patch the properties of a space.
+
+    Args:
+        space_name (str): The name of the space to patch.
+        properties (dict): A dictionary of properties to patch.
+                           Where the key is the property name and the value is the property value.
+                           Example: {"ocrclone:integrity-id": "some-value"}
+    Raises:
+        AssertionError: If the server response indicates failure.
+    """
+    space_id = get_space_id(space_name)
+    url = url_join(get_dav_endpoint(), space_id)
+    print(url)
+
+    props = []
+    for key, value in properties.items():
+        props.append(f'<{key}>{value}</{key}>')
+    props = '\n'.join(props)
+
+    body = f"""
+    <d:propertyupdate xmlns:d="DAV:" xmlns:oc="http://owncloud.org/ns" xmlns:ocrclone="ocrclone">
+        <d:set>
+            <d:prop>
+            {props}
+            </d:prop>
+        </d:set>
+    </d:propertyupdate>
+    """
+    response = request.proppatch(url, body=body)
+    assert response.status_code == 207, (
+        f'Failed to patch properties of space "{space_name}".\n  Properties: {body}'
+        + f'\n  Status: {response.status_code}'
+    )
