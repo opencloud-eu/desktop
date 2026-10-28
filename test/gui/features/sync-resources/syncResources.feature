@@ -340,15 +340,19 @@ Feature: Syncing files
         When the user selects manual sync folder option in advanced section
         And the user cancels the sync connection wizard
         Then "Alice" account should be added
-        And for user "Alice" sync folder "Personal" should not be displayed
-        And for user "Alice" sync folder "Shares" should not be displayed
+        Then user "Alice" should not have the following sync connections:
+            | space    |
+            | Personal |
+            | Shares   |
 
     @issue-11814
     Scenario: Remove folder sync connection (Personal Space)
         Given user "Alice" has created folder "simple-folder" in the server
         And user "Alice" has set up a client with default settings
-        When the user removes the folder sync connection
-        Then for user "Alice" sync folder "Personal" should not be displayed
+        When the user removes "Personal" sync connection
+        Then user "Alice" should not have the following sync connections:
+            | space    |
+            | Personal |
         And the folder "simple-folder" should exist on the file system
         And as "Alice" folder "simple-folder" should exist in the server
 
