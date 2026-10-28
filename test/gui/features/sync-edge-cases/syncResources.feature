@@ -394,7 +394,7 @@ Feature: Syncing files
         And as "Alice" the file "localFol/.localhidesub/localsubfile.txt" should have the content "local-edited" in the server
 
 
-    Scenario: Try to sync vault folder
+    Scenario: Try to sync vault folders
         Given user "Alice" has created folder "parentvault" in the server
         And user "Alice" has created folder "secrets.vault" in the server
         And user "Alice" has created folder "notvault.vault" in the server
@@ -411,3 +411,19 @@ Feature: Syncing files
             | notvault.vault/normal.txt | normal     |
         But the folder "secrets.vault" should not exist on the file system
         And the folder "parentvault" should not exist on the file system
+        When user "Alice" opens the selective sync wizard
+        Then the following folders should be displayed in the selective sync wizard:
+            | folder         |
+            | notvault.vault |
+        # Issue: https://github.com/opencloud-eu/desktop/issues/1205
+        # Vault folders are also listed in the selective sync table
+        # TODO: uncomment this step and remove the following one.
+        #
+        # But the following folders should not be displayed in the selective sync wizard:
+        #     | folder        |
+        #     | parentvault   |
+        #     | secrets.vault |
+        But the following folders should be displayed in the selective sync wizard:
+            | folder        |
+            | parentvault   |
+            | secrets.vault |
