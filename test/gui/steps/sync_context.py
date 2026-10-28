@@ -165,6 +165,28 @@ def step(context):
         SyncConnectionWizard.is_root_folder_checked().should.be.true
 
 
+@Then('the following folders should be displayed in the selective sync wizard:')
+def step(context):
+    validate_table_headers(context.table, ["folder"])
+    folders = [row["folder"] for row in table_hashes(context.table)]
+    actual_folders = SyncConnectionWizard.get_selective_sync_folders_list()
+
+    for folder in folders:
+        with ensure(f'Folder "{folder}" should exist but not found in the list: {actual_folders}'):
+            actual_folders.should.contain(folder)
+
+
+@Then('the following folders should not be displayed in the selective sync wizard:')
+def step(context):
+    validate_table_headers(context.table, ["folder"])
+    folders = [row["folder"] for row in table_hashes(context.table)]
+    actual_folders = SyncConnectionWizard.get_selective_sync_folders_list()
+
+    for folder in folders:
+        with ensure(f'Folder "{folder}" should not exist but found in the list: {actual_folders}'):
+            actual_folders.should_not.contain(folder)
+
+
 @Then('the folders should be in the following order:')
 def step(context):
     row_index = 0
@@ -330,6 +352,12 @@ def step(context):
 @Given('the user has waited for "{wait_for}" seconds')
 def step(context, wait_for):
     time.sleep(float(wait_for))
+
+
+@When('user "{username}" opens the selective sync wizard')
+def step(context, username):
+    Toolbar.open_account(username)
+    SyncConnection.choose_what_to_sync()
 
 
 @When('the user unselects the following folders to sync in "Choose what to sync" window:')
