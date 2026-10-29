@@ -110,6 +110,7 @@ ecm_add_qml_module(OpenCloudGui
             qml/AccountButton.qml
             qml/FolderDelegate.qml
             qml/FolderError.qml
+            qml/GeneralSettings.qml
 
             qml/UpdateUrlDialog.qml
 

@@ -15,6 +15,8 @@
 #ifndef MIRALL_GENERALSETTINGS_H
 #define MIRALL_GENERALSETTINGS_H
 
+#include "qmlutils.h"
+
 #include <QMap>
 #include <QWidget>
 #include <QPointer>
@@ -27,6 +29,18 @@ namespace Ui {
     class GeneralSettings;
 }
 
+class LanguagePair
+{
+    Q_GADGET
+    Q_PROPERTY(QString displayName MEMBER displayName CONSTANT)
+    Q_PROPERTY(QString languageId MEMBER languageId CONSTANT)
+    QML_VALUE_TYPE(languagePair)
+
+public:
+    QString displayName;
+    QString languageId;
+};
+
 /**
  * @brief The GeneralSettings class
  * @ingroup gui
@@ -34,30 +48,65 @@ namespace Ui {
 class GeneralSettings : public QWidget
 {
     Q_OBJECT
+    Q_PROPERTY(bool themeHasCrashReporter READ themeHasCrashReporter CONSTANT)
+    Q_PROPERTY(bool crashReporter READ crashReporter WRITE setCrashReporter NOTIFY crashReporterChanged)
+    Q_PROPERTY(bool moveToTrash READ moveToTrash WRITE setMoveToTrash NOTIFY moveToTrashChanged)
+    Q_PROPERTY(QString language READ language WRITE setLanguage NOTIFY languageChanged)
+    Q_PROPERTY(QList<LanguagePair> allLanguages READ allLanguages CONSTANT)
+    Q_PROPERTY(bool supportsMetered READ supportsMetered CONSTANT)
+    Q_PROPERTY(int useDownloadLimit READ useDownloadLimit WRITE setUseDownloadLimit NOTIFY useDownloadLimitChanged)
+    Q_PROPERTY(int downloadLimit READ downloadLimit WRITE setDownloadLimit NOTIFY downloadLimitChanged)
+    Q_PROPERTY(int useUploadLimit READ useUploadLimit WRITE setUseUploadLimit NOTIFY useUploadLimitChanged)
+    Q_PROPERTY(int uploadLimit READ uploadLimit WRITE setUploadLimit NOTIFY uploadLimitChanged)
+    Q_PROPERTY(bool pauseSyncWhenMetered READ pauseSyncWhenMetered WRITE setPauseSyncWhenMetered NOTIFY pauseSyncWhenMeteredChanged)
+    OC_DECLARE_WIDGET_FOCUS
+    QML_ELEMENT
+    QML_UNCREATABLE("C++ only")
 
 public:
     explicit GeneralSettings(QWidget *parent = nullptr);
     ~GeneralSettings() override;
 
+    bool themeHasCrashReporter() const;
+    bool crashReporter() const;
+    void setCrashReporter(bool enabled);
+    bool moveToTrash() const;
+    void setMoveToTrash(bool enabled);
+    QString language() const;
+    void setLanguage(QString lang);
+    const QList<LanguagePair> &allLanguages();
+    bool supportsMetered() const;
+    int useDownloadLimit() const;
+    void setUseDownloadLimit(int use);
+    int downloadLimit() const;
+    void setDownloadLimit(int limit);
+    int useUploadLimit() const;
+    void setUseUploadLimit(int use);
+    int uploadLimit() const;
+    void setUploadLimit(int limit);
+    bool pauseSyncWhenMetered() const;
+    void setPauseSyncWhenMetered(bool pause);
+
 Q_SIGNALS:
+    void crashReporterChanged();
+    void moveToTrashChanged();
+    void languageChanged();
+    void useDownloadLimitChanged();
+    void downloadLimitChanged();
+    void useUploadLimitChanged();
+    void uploadLimitChanged();
+    void pauseSyncWhenMeteredChanged();
+
     void syncOptionsChanged();
 
-private Q_SLOTS:
-    void saveMiscSettings();
-    void slotToggleLaunchOnStartup(bool);
+public Q_SLOTS:
     void slotIgnoreFilesEditor();
-    void loadMiscSettings();
-
-protected:
-    void showEvent(QShowEvent *event) override;
+    void slotLogBrowser();
+    void slotAboutButton();
 
 private:
-    void reloadConfig();
-    void loadLanguageNamesIntoDropdown();
-
     Ui::GeneralSettings *_ui;
-    QPointer<IgnoreListEditor> _ignoreEditor;
-    bool _currentlyLoading;
+    QList<LanguagePair> _allLanguages;
 };
 
 
