@@ -3,27 +3,7 @@
 set -e
 
 TEST_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")"/../ && pwd)"
-WEBDRIVER_DIR="$TEST_DIR/__webdriver"
-
-mkdir -p "$WEBDRIVER_DIR"
-
-DRIVER_FILE="atspi-webdriver.py"
-DRIVER_URL="https://raw.githubusercontent.com/KDE/selenium-webdriver-at-spi"
-
-# shellcheck disable=SC1091
-. "$TEST_DIR/.woodpecker.env"
-
-if [ -z "$ATSPI_WEBDRIVER_VERSION" ]; then
-    ATSPI_WEBDRIVER_VERSION="master"
-fi
-
-if [ ! -f "$WEBDRIVER_DIR/$DRIVER_FILE" ]; then
-    curl -sSL --fail "$DRIVER_URL/$ATSPI_WEBDRIVER_VERSION/selenium-webdriver-at-spi.py" -o "$WEBDRIVER_DIR/$DRIVER_FILE"
-fi
-
-if [ ! -f "$WEBDRIVER_DIR/app_roles.py" ]; then
-    curl -sSL --fail "$DRIVER_URL/$ATSPI_WEBDRIVER_VERSION/app_roles.py" -o "$WEBDRIVER_DIR/app_roles.py"
-fi
+DRIVER_FILE="$TEST_DIR/atspi-selenium-driver/atspi-selenium-driver.py"
 
 if [ -z "$WEBDRIVER_HOST" ]; then
     WEBDRIVER_HOST="0.0.0.0"
@@ -34,5 +14,5 @@ fi
 
 # run webdriver server
 export FLASK_ENV=production
-export FLASK_APP="$WEBDRIVER_DIR/$DRIVER_FILE"
+export FLASK_APP="$DRIVER_FILE"
 uv run flask run --host="$WEBDRIVER_HOST" --port="$WEBDRIVER_PORT" --no-reload
