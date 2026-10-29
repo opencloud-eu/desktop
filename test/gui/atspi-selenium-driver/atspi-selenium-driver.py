@@ -14,8 +14,10 @@ import sys
 import os
 import urllib.request
 import pyatspi
+import json
 from datetime import datetime, timedelta
 from pathlib import Path
+from flask import request
 
 TEST_DIR = Path(__file__).parent.parent
 DRIVER_DIR = TEST_DIR / "__webdriver"
@@ -69,6 +71,12 @@ def locator(session, strategy, selector, start, findAll=False):
     while datetime.now() < end_time:
         if strategy == 'xpath':
             doc = base._createNode2(start, None)
+            ##### MODIFY START #####
+            # Break early if the node is None. This can happen sometimes when the start node is not the root.
+            if doc is None and findAll:
+                break
+            ##### MODIFY END #####
+
             for c in doc.xpath(selector):
                 path = [int(x) for x in c.get('path').split()]
 
@@ -139,3 +147,50 @@ def locator(session, strategy, selector, start, findAll=False):
 
 
 base.locator = locator
+
+
+def session_element_elements_controller(session_id, element_id):
+    session = sessions[session_id]
+    if not session:
+        return (
+            json.dumps({'value': {'error': 'no such window'}}),
+            404,
+            {'content-type': 'application/json'},
+        )
+
+    blob = json.loads(request.data)
+    strategy = blob['using']
+    selector = blob['value']
+    if not strategy or not selector:
+        return (
+            json.dumps({'value': {'error': 'invalid argument'}}),
+            404,
+            {'content-type': 'application/json'},
+        )
+
+    start = session.elements[element_id]
+    if not start:  # browsing context (no longer) valid
+        return (
+            json.dumps({'value': {'error': 'no such element'}}),
+            404,
+            {'content-type': 'application/json'},
+        )
+
+    results = locator(session, strategy, selector, start, findAll=True)
+
+    if not results:
+        ##### MODIFY START #####
+        # return empty list with 200 instead of 404
+        return json.dumps({'value': results}), 200, {'content-type': 'application/json'}
+        ##### MODIFY END #####
+
+    serializations = []
+    for result in results:
+        unique_id = result.path.replace('/', '-')
+        session.elements[unique_id] = result
+        serializations.append({'element-6066-11e4-a52e-4f735466cecf': unique_id})
+
+    return json.dumps({'value': serializations}), 200, {'content-type': 'application/json'}
+
+
+app.view_functions['session_element_elements'] = session_element_elements_controller

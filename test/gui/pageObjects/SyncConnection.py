@@ -9,10 +9,7 @@ from helpers.Utils import wait_for
 
 class SyncConnection:
     ACCOUNT_CONNECTION_CONTAINER = SimpleNamespace(by=By.NAME, selector="Sync connections")
-    FOLDER_SYNC_CONNECTION_MENU_BUTTON = SimpleNamespace(
-        by=By.NAME,
-        selector="{sync_folder},{status},Local folder: {sync_path}{sync_folder}",
-    )
+    ACCOUNT_CONNECTION_ITEM = SimpleNamespace(by=By.XPATH, selector="//list_item")
     MENU_ITEM = SimpleNamespace(by=By.NAME, selector=None)
     CONFIRM_FOLDER_SYNC_CONNECTION_REMOVE = SimpleNamespace(by=By.NAME, selector="Remove Space")
     PERMISSION_ERROR_LABEL = SimpleNamespace(
@@ -52,7 +49,9 @@ class SyncConnection:
         connection.native_click(button='right')
 
     @staticmethod
-    def perform_action(action, sync_connection="Personal"):
+    def perform_action(action, sync_connection=None):
+        if sync_connection is None:
+            sync_connection = get_config('syncConnectionName')
         SyncConnection.open_menu(sync_connection)
         app().find_element(SyncConnection.MENU_ITEM.by, action).click()
 
@@ -66,7 +65,7 @@ class SyncConnection:
 
     @staticmethod
     def resume_sync():
-        SyncConnection.perform_action("Resume sync", "paused")
+        SyncConnection.perform_action("Resume sync")
 
     @staticmethod
     def choose_what_to_sync():
@@ -75,7 +74,10 @@ class SyncConnection:
     @staticmethod
     def get_sync_connections():
         active_account = SyncConnection.get_current_account_connection()
-        return active_account.find_elements(By.XPATH, "//list_item")
+        return active_account.find_elements(
+            SyncConnection.ACCOUNT_CONNECTION_ITEM.by,
+            SyncConnection.ACCOUNT_CONNECTION_ITEM.selector,
+        )
 
     @staticmethod
     def get_sync_connection_list():
@@ -85,23 +87,6 @@ class SyncConnection:
             sync_name = SyncConnection.parse_sync_connection_name(con.get_name())
             connections.append(sync_name)
         return connections
-
-    @staticmethod
-    def has_sync_connection(sync_folder):
-        connection = SyncConnection.get_current_account_connection()
-        try:
-            connection.find_element(
-                SyncConnection.FOLDER_SYNC_CONNECTION_MENU_BUTTON.by,
-                SyncConnection.FOLDER_SYNC_CONNECTION_MENU_BUTTON.selector.format(
-                    sync_folder=sync_folder,
-                    sync_path=get_config('currentUserSyncPath'),
-                    status="success",
-                ),
-                timeout=get_config("lowest_timeout"),
-            )
-            return True
-        except NoSuchElementException:
-            return False
 
     @staticmethod
     def is_sync_in_progress(sync_folder):
