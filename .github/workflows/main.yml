@@ -365,7 +365,7 @@ jobs:
         archive: false
 
     - name: Upload cache
-      if: ${{ matrix.signing.enabled }}
+      if: ${{ matrix.signing.enabled && false}}
       run: |
         $cacheFiles = Get-ChildItem "${home}/craft/cache/" -File -Recurse -ErrorAction SilentlyContinue
         if ($cacheFiles) {
