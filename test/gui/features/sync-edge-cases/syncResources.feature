@@ -393,7 +393,7 @@ Feature: Syncing files
         And as "Alice" the file ".localhideFol/localfile.txt" should have the content "local-edited" in the server
         And as "Alice" the file "localFol/.localhidesub/localsubfile.txt" should have the content "local-edited" in the server
 
-
+    @issue-1205
     Scenario: Try to sync vault folders
         Given user "Alice" has created folder "parentvault" in the server
         And user "Alice" has created folder "secrets.vault" in the server

@@ -24,9 +24,11 @@ class SyncConnectionWizard:
     SELECTIVE_SYNC_TABLE = SimpleNamespace(
         by=By.XPATH, selector='//filler[@name="Choose what to sync"]'
     )
+    SELECTIVE_SYNC_TABLE_CELL = SimpleNamespace(by=By.XPATH, selector='//table_cell')
     SELECTIVE_SYNC_TREE_HEADER = SimpleNamespace(by=By.NAME, selector='{header}')
     CANCEL_FOLDER_SYNC_CONNECTION_WIZARD = SimpleNamespace(by=By.NAME, selector="Cancel")
     SPACES_LIST = SimpleNamespace(by=By.NAME, selector="Spaces list")
+    SPACES_LIST_ITEM = SimpleNamespace(by=By.XPATH, selector="//list_item")
     SPACE_NAME_SELECTOR = SimpleNamespace(by=By.NAME, selector="{space_name},")
     ADD_SPACE_BUTTON = SimpleNamespace(by=By.NAME, selector='Add Space')
 
@@ -121,7 +123,10 @@ class SyncConnectionWizard:
         #   "folder2",
         #   "%size%",
         # ]
-        table_cells = table.find_elements(By.XPATH, "//table_cell")
+        table_cells = table.find_elements(
+            SyncConnectionWizard.SELECTIVE_SYNC_TABLE_CELL.by,
+            SyncConnectionWizard.SELECTIVE_SYNC_TABLE_CELL.selector,
+        )
         # iterate with step of 2 to get only the folder names, skipping the size cells
         for idx in range(0, len(table_cells), 2):
             cell = table_cells[idx]
@@ -150,7 +155,10 @@ class SyncConnectionWizard:
             SyncConnectionWizard.SPACES_LIST.by,
             SyncConnectionWizard.SPACES_LIST.selector,
         )
-        space_elements = list_container.find_elements(By.XPATH, "//list_item")
+        space_elements = list_container.find_elements(
+            SyncConnectionWizard.SPACES_LIST_ITEM.by,
+            SyncConnectionWizard.SPACES_LIST_ITEM.selector,
+        )
         for space in space_elements:
             sync_name = space.get_name()
             # Parse the sync name from the full label.

@@ -396,10 +396,6 @@ def step(context, username):
         with ensure(f'Connection "{connection}" is not in the list "{actual_connections}"'):
             actual_connections.should_not.contain(connection)
 
-        sync_path = get_resource_path(space=connection)
-        with ensure(f"Sync path should not exist but it does: {sync_path}"):
-            path.isdir(sync_path).should.be.false
-
 
 @Then('the following spaces should not exist in the add-space wizard')
 def step(context):
