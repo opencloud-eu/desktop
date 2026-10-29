@@ -86,7 +86,6 @@ class SyncConnection:
             connections.append(sync_name)
         return connections
 
-
     @staticmethod
     def has_sync_connection(sync_folder):
         connection = SyncConnection.get_current_account_connection()
