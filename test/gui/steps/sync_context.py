@@ -377,9 +377,7 @@ def step(context, username):
     Toolbar.open_account(username)
     actual_connections = SyncConnection.get_sync_connection_list()
     for connection in connections:
-        with ensure(
-            f'Connection "{connection}" is not in the list "{actual_connections}"'
-        ):
+        with ensure(f'Connection "{connection}" is not in the list "{actual_connections}"'):
             actual_connections.should.contain(connection)
 
         sync_path = get_resource_path(space=connection)
@@ -395,9 +393,7 @@ def step(context, username):
     Toolbar.open_account(username)
     actual_connections = SyncConnection.get_sync_connection_list()
     for connection in connections:
-        with ensure(
-            f'Connection "{connection}" is not in the list "{actual_connections}"'
-        ):
+        with ensure(f'Connection "{connection}" is not in the list "{actual_connections}"'):
             actual_connections.should_not.contain(connection)
 
         sync_path = get_resource_path(space=connection)
