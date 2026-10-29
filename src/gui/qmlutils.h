@@ -65,10 +65,16 @@ class OCUtils : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString qVersion READ qVersion CONSTANT)
+    Q_PROPERTY(bool hasSystemLaunchOnStartup READ hasSystemLaunchOnStartup CONSTANT)
+    Q_PROPERTY(bool hasLaunchOnStartup READ hasLaunchOnStartup WRITE setLaunchOnStartup NOTIFY hasLaunchOnStartupChanged)
+    Q_PROPERTY(bool isInstalledByStore READ isInstalledByStore CONSTANT)
     QML_SINGLETON
     QML_ELEMENT
+
 public:
-    using QObject::QObject;
+    ~OCUtils() override;
+    static OCUtils *instance();
+    static OCUtils *create(QQmlEngine *qmlEngine, QJSEngine *);
 
     QString qVersion() const;
 
@@ -90,5 +96,20 @@ public:
      * Same as setClipBoard, but converts the path to native separators
      */
     Q_INVOKABLE void setClipBoardFromFilePath(const QString &text) const;
+
+    bool hasSystemLaunchOnStartup() const;
+    bool hasLaunchOnStartup() const;
+    void setLaunchOnStartup(bool launch);
+
+    bool isInstalledByStore() const;
+
+Q_SIGNALS:
+    void hasLaunchOnStartupChanged();
+
+private:
+    OCUtils(QObject *parent = nullptr);
+
+    static OCUtils *_instance;
+    bool _hasLaunchOnStartup;
 };
 }
