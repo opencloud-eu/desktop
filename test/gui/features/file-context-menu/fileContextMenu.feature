@@ -20,7 +20,6 @@ Feature: File Explorer Context Menu
             | Share...                          |
             | Copy private link to clipboard    |
             | Show in web browser               |
-            | Show file versions in web browser |
         When user "Alice" copies the private link of file "lorem.txt" from the file explorer context menu
         Then the private link should be copied to the clipboard
         When user "Alice" copies the private link of folder "mydocs" from the file explorer context menu
