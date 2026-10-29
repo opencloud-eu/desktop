@@ -23,6 +23,7 @@
 #include <QList>
 #include <QObject>
 #include <QQueue>
+#include <QtQmlIntegration/QtQmlIntegration>
 
 class TestFolderMigration;
 

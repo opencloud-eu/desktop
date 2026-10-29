@@ -15,7 +15,9 @@
 #include "gui/qmlutils.h"
 
 #include "gui/fonticonmessagebox.h"
+#include "gui/guiutility.h"
 #include "gui/openfilemanager.h"
+#include "resources/jsontheme.h"
 #include "resources/resources.h"
 
 #include <QClipboard>
@@ -133,4 +135,25 @@ void OCC::QmlUtils::OCUtils::setClipBoard(const QString &text) const
 void OCC::QmlUtils::OCUtils::setClipBoardFromFilePath(const QString &text) const
 {
     QGuiApplication::clipboard()->setText(QDir::toNativeSeparators(text));
+}
+
+bool OCC::QmlUtils::OCUtils::hasSystemLaunchOnStartup() const
+{
+    return OCC::Utility::hasSystemLaunchOnStartup(OCC::Resources::JsonTheme::instance().applicationName());
+}
+
+bool OCC::QmlUtils::OCUtils::hasLaunchOnStartup() const
+{
+    return OCC::Utility::hasLaunchOnStartup(OCC::Resources::JsonTheme::instance().applicationName());
+}
+
+void OCC::QmlUtils::OCUtils::setLaunchOnStartup(bool launch)
+{
+    return OCC::Utility::setLaunchOnStartup(
+        OCC::Resources::JsonTheme::instance().applicationName(), OCC::Resources::JsonTheme::instance().applicationDisplayName(), launch);
+}
+
+bool OCC::QmlUtils::OCUtils::isInstalledByStore() const
+{
+    return OCC::Utility::isInstalledByStore();
 }
