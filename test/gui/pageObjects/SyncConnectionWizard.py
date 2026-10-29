@@ -21,7 +21,9 @@ class SyncConnectionWizard:
     ADD_SYNC_CONNECTION_BUTTON = SimpleNamespace(
         by=By.XPATH, selector="//dialog[@name='Add Space']//*[@name='Add Space']"
     )
-    SELECTIVE_SYNC_TABLE = SimpleNamespace(by=By.XPATH, selector='//filler[@name="Choose what to sync"]')
+    SELECTIVE_SYNC_TABLE = SimpleNamespace(
+        by=By.XPATH, selector='//filler[@name="Choose what to sync"]'
+    )
     SELECTIVE_SYNC_TREE_HEADER = SimpleNamespace(by=By.NAME, selector='{header}')
     CANCEL_FOLDER_SYNC_CONNECTION_WIZARD = SimpleNamespace(by=By.NAME, selector="Cancel")
     SPACES_LIST = SimpleNamespace(by=By.NAME, selector="Spaces list")
@@ -152,7 +154,7 @@ class SyncConnectionWizard:
         for space in space_elements:
             sync_name = space.get_name()
             # Parse the sync name from the full label.
-            # Actual label: Personal, 
+            # Actual label: Personal,
             # Result: Personal
             sync_name = sync_name.split(",")[0]
             spaces.append(sync_name)

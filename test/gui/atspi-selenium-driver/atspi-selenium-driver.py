@@ -1,3 +1,6 @@
+# disable ruff lint on this file as it contains code that are taken from other sources
+# ruff: noqa
+
 ############################################################################################################
 # This is a wrapper around the original atspi webdriver that allows for modifications and extensions
 # without altering the original source code.
@@ -55,12 +58,12 @@ spec.loader.exec_module(base)
 app = base.app
 sessions = base.sessions
 
+
 # [INFO] The function is taken from the original implementation in atspi-webdriver.py
 # Apart from the modification listed below, the function remains the same.
 # See MODIFY START and MODIFY END comments for the changes made.
-def locator(session, strategy, selector, start, findAll = False):
-    end_time = datetime.now() + \
-        timedelta(milliseconds=session.timeouts['implicit'])
+def locator(session, strategy, selector, start, findAll=False):
+    end_time = datetime.now() + timedelta(milliseconds=session.timeouts['implicit'])
     results = []
 
     while datetime.now() < end_time:
@@ -83,23 +86,43 @@ def locator(session, strategy, selector, start, findAll = False):
             # In a thrilling turn of events [push button | foo] became [button | foo] as of at-spi 2.53. Add compatibility
             if base.requires_button_compat:
                 if '[push button |' in selector:
-                    print("    --> [push button | foo] is deprecated. Please port to [button | foo]")
+                    print(
+                        "    --> [push button | foo] is deprecated. Please port to [button | foo]"
+                    )
                     selector = selector.replace('[push button |', '[button |')
 
             # TODO can I switch this in python +++ raise on unmapped strategy
             pred = None
             if strategy == 'accessibility id':
-                def pred(x): return x.accessibleId.endswith(selector) and (x.getState().contains(pyatspi.STATE_VISIBLE) and x.getState().contains(pyatspi.STATE_SENSITIVE))
+
+                def pred(x):
+                    return x.accessibleId.endswith(selector) and (
+                        x.getState().contains(pyatspi.STATE_VISIBLE)
+                        and x.getState().contains(pyatspi.STATE_SENSITIVE)
+                    )
             # pyatspi strings "[ roleName | name ]"
             elif strategy == 'class name':
-                def pred(x): return str(x) == selector and (x.getState().contains(
-                    pyatspi.STATE_VISIBLE) or x.getState().contains(pyatspi.STATE_SENSITIVE))
+
+                def pred(x):
+                    return str(x) == selector and (
+                        x.getState().contains(pyatspi.STATE_VISIBLE)
+                        or x.getState().contains(pyatspi.STATE_SENSITIVE)
+                    )
             elif strategy == 'name':
-                def pred(x): return x.name == selector and (x.getState().contains(
-                    pyatspi.STATE_VISIBLE) or x.getState().contains(pyatspi.STATE_SENSITIVE))
+
+                def pred(x):
+                    return x.name == selector and (
+                        x.getState().contains(pyatspi.STATE_VISIBLE)
+                        or x.getState().contains(pyatspi.STATE_SENSITIVE)
+                    )
             elif strategy == 'description':
-                def pred(x): return x.description == selector and (x.getState().contains(
-                    pyatspi.STATE_VISIBLE) or x.getState().contains(pyatspi.STATE_SENSITIVE))
+
+                def pred(x):
+                    return x.description == selector and (
+                        x.getState().contains(pyatspi.STATE_VISIBLE)
+                        or x.getState().contains(pyatspi.STATE_SENSITIVE)
+                    )
+
             # there are also id and accessibleId but they seem not ever set. Not sure what to make of that :shrug:
             if findAll:
                 accessible = pyatspi.findAllDescendants(start, pred)
@@ -113,5 +136,6 @@ def locator(session, strategy, selector, start, findAll = False):
             break
 
     return results
+
 
 base.locator = locator
