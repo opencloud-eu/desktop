@@ -3,37 +3,40 @@ version = 2
 blueprintrepositories = https://github.com/opencloud-eu/craft-blueprints-opencloud.git|main|;https://github.com/KDE/craft-blueprints-kde.git|master|
 
 [core/cacert]
-version = 2025-09-09
+version = 2026-10-20
 
 [craft/craft-blueprints-kde]
 version = master
-revision = 8204276698b8a1acc0ea8fa228e17088eb20f102
 
 [craft/craft-blueprints-opencloud]
 version = main
-revision = d2cf4c472bc37f356f1a514fafa704e00ec54526
 
 [craft/craft-core]
 version = master
-revision = 3e68a9099f1cc4854595819411d86ad75ddda60a
 
 [dev-utils/7zip-base]
-version = 25.01
+version = 26.05
 
 [dev-utils/cmake]
 version = latest
 
 [dev-utils/cmake-base]
-version = 4.1.4
+version = 4.4.4
+
+[dev-utils/doxygen]
+version = 1.18.0
 
 [dev-utils/icoutils]
 version = 0.32.3
 
 [dev-utils/jom]
-version = 1_1_3
+version = 1_1_7
 
 [dev-utils/kshimgen]
 version = 0.6.1
+
+[dev-utils/muon]
+version = 0.7.0
 
 [dev-utils/nasm]
 version = 2.16.03
@@ -41,23 +44,20 @@ version = 2.16.03
 [dev-utils/ninja]
 version = 1.13.2
 
-[dev-utils/nsis]
-version = 3.09
-
 [dev-utils/perl]
-version = 5.40.1
+version = 5.44.0
 
 [dev-utils/pkgconf]
-version = 2.5.1
+version = 3.0.5
 
 [dev-utils/snoretoast]
 version = 0.9.1
 
 [kde/frameworks/extra-cmake-modules]
-version = 6.29.0
+version = 6.31.0
 
 [libs/brotli]
-version = 1.1.0
+version = 1.2.1
 
 [libs/cairo]
 version = 1.18.4
@@ -68,26 +68,32 @@ version = 1.14.10
 [libs/expat]
 version = 2.7.3
 
+[libs/fmt]
+version = 12.2.0
+
 [libs/freetype]
 version = 2.14.1
 
 [libs/gettext]
-version = 0.22.3
+version = 1.0
 
 [libs/giflib]
 version = 5.2.1
 
 [libs/glib]
-version = 2.86.0
+version = 2.89.0
 
 [libs/harfbuzz]
 version = 11.2.0
 
 [libs/icu]
-version = 78.1
+version = 78.3
 
 [libs/kdsingleapplication]
 version = 1.2.0
+
+[libs/lcms2]
+version = 2.17
 
 [libs/libb2]
 version = 0.98.1
@@ -96,19 +102,22 @@ version = 0.98.1
 version = 1.0.8
 
 [libs/libffi]
-version = 3.5.2
+version = 3.8.0
 
 [libs/libjpeg-turbo]
-version = 3.0.3
+version = 3.2.0
 
 [libs/liblzma]
-version = 5.2.3
+version = 5.8.4
 
 [libs/libpng]
 version = 1.6.45
 
+[libs/libspng]
+version = 0.7.4
+
 [libs/libunistring]
-version = 1.4.1
+version = 1.4.2
 
 [libs/libxml2]
 version = 2.14.5
@@ -119,8 +128,11 @@ version = 1.5.7
 [libs/llvm]
 version = 20.1.7
 
+[libs/openjpeg]
+version = 2.5.3
+
 [libs/openssl]
-version = 3.6.4
+version = 3.6.5
 
 [libs/pcre2]
 version = 10.44
@@ -129,34 +141,37 @@ version = 10.44
 version = 0.46.4
 
 [libs/python]
-version = 3.11.11
+version = 3.12.13
 
 [libs/qt6/qtbase]
-version = 6.11.1
+version = 6.11.3
 
 [libs/qt6/qtdeclarative]
-version = 6.11.1
+version = 6.11.3
 
 [libs/qt6/qtimageformats]
-version = 6.11.1
+version = 6.11.3
 
 [libs/qt6/qtlanguageserver]
-version = 6.11.1
+version = 6.11.3
 
 [libs/qt6/qtshadertools]
-version = 6.11.1
+version = 6.11.3
 
 [libs/qt6/qtsvg]
-version = 6.11.1
+version = 6.11.3
 
 [libs/qt6/qttools]
-version = 6.11.1
+version = 6.11.3
 
 [libs/qt6/qttranslations]
-version = 6.11.1
+version = 6.11.3
 
 [libs/runtime]
 version = 17
+
+[libs/spdlog]
+version = 1.17.0
 
 [libs/sqlite]
 version = 3.50.4
@@ -172,33 +187,6 @@ version = 1.3.1
 
 [opencloud/libre-graph-api-cpp-qt-client]
 version = 1.0.8
-
-[python-modules/flit-core]
-version = latest
-
-[python-modules/hatchling]
-version = 1.27.0
-
-[python-modules/meson]
-version = 1.9.0
-
-[python-modules/packaging]
-version = master
-
-[python-modules/pathspec]
-version = latest
-
-[python-modules/pip]
-version = 26.1.2
-
-[python-modules/pluggy]
-version = latest
-
-[python-modules/setuptools]
-version = master
-
-[python-modules/trove-classifiers]
-version = latest
 
 [qt-libs/qtkeychain]
 version = 0.16.0
