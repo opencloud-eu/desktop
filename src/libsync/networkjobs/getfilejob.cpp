@@ -10,6 +10,12 @@ using namespace OCC;
 
 Q_LOGGING_CATEGORY(lcGetJob, "sync.networkjob.get", QtInfoMsg)
 
+namespace {
+// Keep the reply's internal buffer small so a slow disk applies backpressure to
+// the socket instead of letting Qt buffer the whole response in memory.
+constexpr qint64 ReplyReadBufferSize = 16 * 1024;
+}
+
 // DOES NOT take ownership of the device.
 GETFileJob::GETFileJob(AccountPtr account, const QUrl &url, const QString &path, QIODevice *device, const QMap<QByteArray, QByteArray> &headers,
     const QString &expectedEtagForResume, qint64 resumeStart, QObject *parent)
@@ -75,9 +81,7 @@ void GETFileJob::finished()
 
 void GETFileJob::newReplyHook(QNetworkReply *reply)
 {
-    if (_bandwidthManager) {
-        reply->setReadBufferSize(16 * 1024); // keep low so we can easier limit the bandwidth
-    }
+    reply->setReadBufferSize(ReplyReadBufferSize);
     connect(reply, &QNetworkReply::metaDataChanged, this, &GETFileJob::slotMetaDataChanged);
     connect(reply, &QNetworkReply::finished, this, &GETFileJob::slotReadyRead);
     connect(reply, &QNetworkReply::downloadProgress, this, &GETFileJob::downloadProgress);
@@ -87,9 +91,7 @@ void GETFileJob::slotMetaDataChanged()
 {
     // For some reason setting the read buffer in GETFileJob::start doesn't seem to go
     // through the HTTP layer thread(?)
-    if (_bandwidthManager) {
-        reply()->setReadBufferSize(16 * 1024);
-    }
+    reply()->setReadBufferSize(ReplyReadBufferSize);
 
     int httpStatus = reply()->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
 
@@ -107,9 +109,7 @@ void GETFileJob::slotMetaDataChanged()
     if (httpStatus / 100 != 2) {
         // Disable the buffer limit, as we don't limit the bandwidth for error messages.
         // (We are only going to do a readAll() at the end.)
-        if (_bandwidthManager) {
-            reply()->setReadBufferSize(0);
-        }
+        reply()->setReadBufferSize(0);
         return;
     }
     if (reply()->error() != QNetworkReply::NoError) {
