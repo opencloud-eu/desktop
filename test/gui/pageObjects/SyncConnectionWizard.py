@@ -21,9 +21,14 @@ class SyncConnectionWizard:
     ADD_SYNC_CONNECTION_BUTTON = SimpleNamespace(
         by=By.XPATH, selector="//dialog[@name='Add Space']//*[@name='Add Space']"
     )
+    SELECTIVE_SYNC_TABLE = SimpleNamespace(
+        by=By.XPATH, selector='//filler[@name="Choose what to sync"]'
+    )
+    SELECTIVE_SYNC_TABLE_CELL = SimpleNamespace(by=By.XPATH, selector='//table_cell')
     SELECTIVE_SYNC_TREE_HEADER = SimpleNamespace(by=By.NAME, selector='{header}')
     CANCEL_FOLDER_SYNC_CONNECTION_WIZARD = SimpleNamespace(by=By.NAME, selector="Cancel")
     SPACES_LIST = SimpleNamespace(by=By.NAME, selector="Spaces list")
+    SPACES_LIST_ITEM = SimpleNamespace(by=By.XPATH, selector="//list_item")
     SPACE_NAME_SELECTOR = SimpleNamespace(by=By.NAME, selector="{space_name},")
     ADD_SPACE_BUTTON = SimpleNamespace(by=By.NAME, selector='Add Space')
 
@@ -95,6 +100,40 @@ class SyncConnectionWizard:
         return str(elements[row_index].text)
 
     @staticmethod
+    def get_selective_sync_folders_list():
+        folders = []
+        table = app().find_element(
+            SyncConnectionWizard.SELECTIVE_SYNC_TABLE.by,
+            SyncConnectionWizard.SELECTIVE_SYNC_TABLE.selector,
+        )
+        # Table format:
+        # Personal      | %size%
+        #   folder1     | %size%
+        #     subfolder | %size%
+        #   folder3     | %size%
+        #
+        # List:
+        # [
+        #   "Personal",
+        #   "%size%",
+        #   "folder1",
+        #   "%size%",
+        #   "subfolder",
+        #   "%size%",
+        #   "folder2",
+        #   "%size%",
+        # ]
+        table_cells = table.find_elements(
+            SyncConnectionWizard.SELECTIVE_SYNC_TABLE_CELL.by,
+            SyncConnectionWizard.SELECTIVE_SYNC_TABLE_CELL.selector,
+        )
+        # iterate with step of 2 to get only the folder names, skipping the size cells
+        for idx in range(0, len(table_cells), 2):
+            cell = table_cells[idx]
+            folders.append(cell.text)
+        return folders
+
+    @staticmethod
     def is_root_folder_checked():
         element = app().find_element(
             SyncConnectionWizard.SELECTIVE_SYNC_ROOT_FOLDER.by,
@@ -108,6 +147,26 @@ class SyncConnectionWizard:
             SyncConnectionWizard.CANCEL_FOLDER_SYNC_CONNECTION_WIZARD.by,
             SyncConnectionWizard.CANCEL_FOLDER_SYNC_CONNECTION_WIZARD.selector,
         ).click()
+
+    @staticmethod
+    def get_spaces_list():
+        spaces = []
+        list_container = app().find_element(
+            SyncConnectionWizard.SPACES_LIST.by,
+            SyncConnectionWizard.SPACES_LIST.selector,
+        )
+        space_elements = list_container.find_elements(
+            SyncConnectionWizard.SPACES_LIST_ITEM.by,
+            SyncConnectionWizard.SPACES_LIST_ITEM.selector,
+        )
+        for space in space_elements:
+            sync_name = space.get_name()
+            # Parse the sync name from the full label.
+            # Actual label: Personal,
+            # Result: Personal
+            sync_name = sync_name.split(",")[0]
+            spaces.append(sync_name)
+        return spaces
 
     @staticmethod
     def select_space(space_name):
@@ -145,6 +204,13 @@ class SyncConnectionWizard:
             SyncConnectionWizard.ADD_SPACE_BUTTON.selector,
         )
         return element.is_enabled()
+
+    @staticmethod
+    def open_add_space_wizard():
+        app().find_element(
+            SyncConnectionWizard.ADD_SPACE_BUTTON.by,
+            SyncConnectionWizard.ADD_SPACE_BUTTON.selector,
+        ).click()
 
     @staticmethod
     def get_relative_folder_element(target_folder, parent_row):
