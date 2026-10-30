@@ -17,8 +17,11 @@ add_test(
 # Clean up the generated file after the test for consistent retries
 add_test(
     NAME translationscleanup
-    COMMAND ${CMAKE_COMMAND} -E rm -- ${output_file}
+    COMMAND ${CMAKE_COMMAND} -E rm -f -- ${output_file}
 )
 
 set_tests_properties(translationscleanup PROPERTIES
     FIXTURES_CLEANUP testtranslations)
+
+set_tests_properties(testtranslations PROPERTIES
+    FIXTURES_REQUIRED testtranslations)
