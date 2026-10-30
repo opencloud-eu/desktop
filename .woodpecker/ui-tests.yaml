@@ -1,7 +1,7 @@
 variables:
-  - &opencloud_image 'quay.io/opencloudeu/opencloud-rolling:latest'
+  - &opencloud_image 'quay.io/opencloudeu/opencloud-rolling:9.0.0'
   - &build_image 'opencloudeu/desktop-client-build:ubuntu-24.04-qt6.10'
-  - &minio_image 'minio/mc:RELEASE.2021-10-07T04-19-58Z'
+  - &minio_image 'quay.io/opencloudeu/minio-mc-ci:1.0'
   - &alpine_image 'alpine:3.22.4'
   - &minio_environment
     AWS_ACCESS_KEY_ID:
@@ -50,7 +50,7 @@ steps:
     commands:
       - requirements_sha=$(cat test/gui/pyproject.toml test/gui/uv.lock | sha1sum | cut -d" " -f1)
       - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-      - mc cp -a s3/$CACHE_BUCKET/desktop/python-cache/$requirements_sha/python-cache.tar.gz $CI_WORKSPACE
+      - mc cp -a s3/$PUBLIC_BUCKET/desktop/python-cache/$requirements_sha/python-cache.tar.gz $CI_WORKSPACE
 
   - name: restore-browsers-cache
     image: *minio_image
@@ -59,7 +59,7 @@ steps:
     commands:
       - playwright_version=$(bash test/gui/woodpecker/script.sh get_playwright_version)
       - mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-      - mc cp -r -a s3/$CACHE_BUCKET/desktop/browsers-cache/$playwright_version/playwright-browsers.tar.gz $CI_WORKSPACE
+      - mc cp -r -a s3/$PUBLIC_BUCKET/desktop/browsers-cache/$playwright_version/playwright-browsers.tar.gz $CI_WORKSPACE
 
   - name: unzip-browsers-cache
     image: owncloud/ubuntu:20.04
