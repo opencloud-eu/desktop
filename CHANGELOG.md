@@ -1,5 +1,40 @@
 # Changelog
 
+## [4.1.0](https://github.com/opencloud-eu/desktop/releases/tag/v4.1.0) - 2026-10-30
+
+### ❤️ Thanks to all contributors! ❤️
+
+@Asmitapaudel, @Mortimer-RR, @TheOneRing, @dragotin, @flimmy, @fracturehill, @jnweiger, @junkerderprovinz, @prashant-gurung899, @saw-jan, @v-scharf
+
+### ✨ Features
+
+- Extend context menu with copy to clipboard [[#1115](https://github.com/opencloud-eu/desktop/pull/1115)]
+
+### 🐛 Bug Fixes
+
+- Ci: import qt backport for fotconfig crash [[#1189](https://github.com/opencloud-eu/desktop/pull/1189)]
+- Mirror layout for RTL languages [[#1180](https://github.com/opencloud-eu/desktop/pull/1180)]
+- Fix broken scrollbar in SpacesView [[#1186](https://github.com/opencloud-eu/desktop/pull/1186)]
+- Fix hanging sync if propfind after upload fails [[#1169](https://github.com/opencloud-eu/desktop/pull/1169)]
+- Recover TUS uploads whose resume URL is no longer valid [[#1145](https://github.com/opencloud-eu/desktop/pull/1145)]
+- Fix sorting by file size in IssuesWidget [[#1160](https://github.com/opencloud-eu/desktop/pull/1160)]
+- Invalidate the discovery state when hidden files are enabled [[#1029](https://github.com/opencloud-eu/desktop/pull/1029)]
+- Don't sync .vault folders for now [[#1118](https://github.com/opencloud-eu/desktop/pull/1118)]
+- Fix endless loop in wizard od failed auth [[#1090](https://github.com/opencloud-eu/desktop/pull/1090)]
+- Display logout button if reauthentication failed [[#1089](https://github.com/opencloud-eu/desktop/pull/1089)]
+- Fix check for OAuth::PromptValuesSupported [[#1091](https://github.com/opencloud-eu/desktop/pull/1091)]
+
+### 📈 Enhancement
+
+- Fallback to consent if prompt_values_supported is not exposed [[#1092](https://github.com/opencloud-eu/desktop/pull/1092)]
+
+### 📦️ Dependencies
+
+- Bump pypdf from 6.19.0 to 6.21.2 in /test/gui [[#1199](https://github.com/opencloud-eu/desktop/pull/1199)]
+- build(deps): bump signpath/github-action-submit-signing-request from 2 to 3 [[#1100](https://github.com/opencloud-eu/desktop/pull/1100)]
+- Bump certifi from 2026.7.22 to 2026.10.19 in /test/gui [[#1197](https://github.com/opencloud-eu/desktop/pull/1197)]
+- Bump pillow from 12.3.0 to 13.0.0 in /test/gui [[#1196](https://github.com/opencloud-eu/desktop/pull/1196)]
+
 ## [4.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v4.0.0) - 2026-09-03
 
 ### ❤️ Thanks to all contributors! ❤️
