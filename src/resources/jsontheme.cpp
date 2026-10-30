@@ -20,6 +20,10 @@ using namespace Qt::Literals::StringLiterals;
 
 using namespace OCC::Resources;
 
+namespace OCC::Resources {
+class JsonThemePrivate;
+}
+
 namespace {
 
 const bool IsUiApp()
@@ -28,71 +32,91 @@ const bool IsUiApp()
     return isUiApp;
 }
 
-template <typename T>
-T fromJson(const QJsonValue &val)
+// Convenience classes for reading
+class IconOrRef
 {
-    return val.toVariant().value<T>();
-}
+public:
+    IconOrRef(JsonThemePrivate *parent = nullptr, const QIcon &icon = QIcon(), const QStringView id = QStringView(),
+        const QStringView idRef = QStringView()); // defined below
+    QIcon icon() const;
 
-template <typename T>
-void setFromJson(T &target, const QJsonObject &obj, auto key)
+private:
+    JsonThemePrivate *_parent;
+
+    QIcon _icon;
+    QString _id;
+    QString _idRef;
+};
+
+class SysTrayIcon
 {
-    if (auto val = obj.find(key); val != obj.end()) {
-        target = fromJson<T>(*val);
+public:
+    IconOrRef iconOrRef;
+    JsonTheme::SysTrayIconType type;
+    JsonTheme::SysTrayIconStyle style;
+};
+
+const QLatin1StringView sysTrayTypeToString(JsonTheme::SysTrayIconType type)
+{
+    switch (type) {
+    case JsonTheme::SysTrayIconType::Ok:
+        return "ok"_L1;
+    case JsonTheme::SysTrayIconType::Sync:
+        return "sync"_L1;
+    case JsonTheme::SysTrayIconType::Pause:
+        return "pause"_L1;
+    case JsonTheme::SysTrayIconType::Information:
+        return "information"_L1;
+    case JsonTheme::SysTrayIconType::Offline:
+        return "offline"_L1;
+    case JsonTheme::SysTrayIconType::Error:
+        return "error"_L1;
     }
+    Q_UNREACHABLE_RETURN(""_L1);
 }
 
-template <typename T>
-T getFromJson(const QJsonObject &obj, auto key, T &&defaultValue)
+JsonTheme::SysTrayIconType sysTrayStringToType(const QString &type)
 {
-    if (auto val = obj.find(key); val != obj.end()) {
-        return fromJson<T>(*val);
+    if (type == "ok"_L1) {
+        return JsonTheme::SysTrayIconType::Ok;
+    } else if (type == "sync"_L1) {
+        return JsonTheme::SysTrayIconType::Sync;
+    } else if (type == "pause"_L1) {
+        return JsonTheme::SysTrayIconType::Pause;
+    } else if (type == "information"_L1) {
+        return JsonTheme::SysTrayIconType::Information;
+    } else if (type == "offline"_L1) {
+        return JsonTheme::SysTrayIconType::Offline;
+    } else if (type == "error"_L1) {
+        return JsonTheme::SysTrayIconType::Error;
     }
-    return defaultValue;
+    Q_UNREACHABLE_RETURN(JsonTheme::SysTrayIconType::Ok);
 }
 
-
-template <>
-QIcon fromJson(const QJsonValue &val)
+const QLatin1StringView sysTrayStyleToString(JsonTheme::SysTrayIconStyle style)
 {
-    if (!IsUiApp()) {
-        return QIcon();
+    switch (style) {
+    case JsonTheme::SysTrayIconStyle::Light:
+        return "light-systray"_L1;
+    case JsonTheme::SysTrayIconStyle::Dark:
+        return "dark-systray"_L1;
+    case JsonTheme::SysTrayIconStyle::Mask:
+        return "mask-systray"_L1;
     }
-    auto object = val.toObject();
-    if (auto result = QByteArray::fromBase64Encoding(object.value("base64"_L1).toString().toUtf8())) {
-        QPixmap pixmap;
-        pixmap.loadFromData(*result);
-        return pixmap;
+    Q_UNREACHABLE();
+}
+
+JsonTheme::SysTrayIconStyle sysTrayStringToStyle(const QString &style)
+{
+    if (style == "light"_L1) {
+        return JsonTheme::SysTrayIconStyle::Light;
+    } else if (style == "dark"_L1) {
+        return JsonTheme::SysTrayIconStyle::Dark;
+    } else if (style == "mask"_L1) {
+        return JsonTheme::SysTrayIconStyle::Mask;
     }
-    return {};
+    Q_UNREACHABLE_RETURN(JsonTheme::SysTrayIconStyle::Light);
 }
-
-template <>
-ButtonColor fromJson(const QJsonValue &val)
-{
-    const auto o = val.toObject();
-    return {o.value("color"_L1).toString(), o.value("textColor"_L1).toString(), o.value("textColorDisabled"_L1).toString()};
-}
-
-template <>
-UrlButton fromJson(const QJsonValue &val)
-{
-    const auto o = val.toObject();
-    return {fromJson<QIcon>(o.value("icon"_L1)), o.value("text"_L1).toString(), QUrl(o.value("url"_L1).toString())};
-}
-
-template <>
-QList<UrlButton> fromJson(const QJsonValue &val)
-{
-    const auto array = val.toArray();
-    QList<UrlButton> out;
-    out.reserve(array.size());
-    for (const auto &a : array) {
-        out.append(fromJson<UrlButton>(a));
-    }
-    return out;
-}
-
 }
 
 
@@ -102,14 +126,16 @@ class JsonThemePrivate
 public:
     bool _systemThemeLoaded = false;
 
+    QList<IconOrRef> _iconsCache;
+
     QString _applicationName = u"OpenCloud"_s;
     QString _applicationDisplayName = u"OpenCloud Desktop"_s;
     QString _organizationDomain = u"eu.opencloud.desktop"_s;
-    QIcon _applicationIcon = IsUiApp() ? loadIcon(u"universal"_s, u"opencloud-icon"_s, IconType::VanillaIcon) : QIcon();
+    IconOrRef _applicationIcon = IconOrRef(this, IsUiApp() ? loadIcon(u"universal"_s, u"opencloud-icon"_s) : QIcon());
 
     // wizard
     QUrl _serverUrl;
-    QIcon _wizardLogo = IsUiApp() ? loadIcon(u"universal"_s, u"wizard_logo"_s, IconType::VanillaIcon) : QIcon();
+    IconOrRef _wizardLogo = IconOrRef(this, IsUiApp() ? loadIcon(u"universal"_s, u"wizard_logo"_s) : QIcon());
     QColor _primaryBackgroundColor = QColor::fromRgb(0x20434F);
     QColor _primaryForegroundColor = QColor::fromRgb(0xFFFFFF);
     ButtonColor _primaryButtonColor = {
@@ -124,6 +150,9 @@ public:
 
     QList<UrlButton> _urlButtons;
     bool _isUnbranded = true;
+
+    // The key's real type is SysTrayIconType | SysTrayIconStyle
+    QMap<uint32_t, IconOrRef> _sysTrayIconsMap;
 
     void load(const QJsonDocument &theme, JsonTheme::ThemeType type)
     {
@@ -158,8 +187,152 @@ public:
             setFromJson(_secondaryButtonColor, wizard, "secondaryButtonColor"_L1);
             setFromJson(_multiAccount, wizard, "multiAccount"_L1);
         }
+
+        setFromJson(_sysTrayIconsMap, desktopSettings, "sysTrayIcons"_L1);
     }
+
+    template <typename T>
+    void setFromJson(T &target, const QJsonObject &obj, auto key);
+
+    template <typename T>
+    T getFromJson(const QJsonObject &obj, auto key, T &&defaultValue);
+
+    template <typename T>
+    T fromJson(const QJsonValue &val);
 };
+
+template <typename T>
+void JsonThemePrivate::setFromJson(T &target, const QJsonObject &obj, auto key)
+{
+    if (auto val = obj.find(key); val != obj.end()) {
+        target = fromJson<T>(*val);
+    }
+}
+
+template <typename T>
+T JsonThemePrivate::getFromJson(const QJsonObject &obj, auto key, T &&defaultValue)
+{
+    if (auto val = obj.find(key); val != obj.end()) {
+        return fromJson<T>(*val);
+    }
+    return defaultValue;
+}
+
+template <typename T>
+T JsonThemePrivate::fromJson(const QJsonValue &val)
+{
+    return val.toVariant().value<T>();
+}
+
+template <>
+QIcon JsonThemePrivate::fromJson(const QJsonValue &val)
+{
+    if (!IsUiApp()) {
+        return QIcon();
+    }
+    auto object = val.toObject();
+    if (auto result = QByteArray::fromBase64Encoding(object.value("base64"_L1).toString().toUtf8())) {
+        QPixmap pixmap;
+        pixmap.loadFromData(*result);
+        return pixmap;
+    }
+    return {};
+}
+
+template <>
+ButtonColor JsonThemePrivate::fromJson(const QJsonValue &val)
+{
+    const auto o = val.toObject();
+    return {o.value("color"_L1).toString(), o.value("textColor"_L1).toString(), o.value("textColorDisabled"_L1).toString()};
+}
+
+template <>
+UrlButton JsonThemePrivate::fromJson(const QJsonValue &val)
+{
+    const auto o = val.toObject();
+    return {fromJson<QIcon>(o.value("icon"_L1)), o.value("text"_L1).toString(), QUrl(o.value("url"_L1).toString())};
+}
+
+template <>
+QList<UrlButton> JsonThemePrivate::fromJson(const QJsonValue &val)
+{
+    const auto array = val.toArray();
+    QList<UrlButton> out;
+    out.reserve(array.size());
+    for (const auto &a : array) {
+        out.append(fromJson<UrlButton>(a));
+    }
+    return out;
+}
+
+template <>
+IconOrRef JsonThemePrivate::fromJson(const QJsonValue &val)
+{
+    const auto o = val.toObject();
+    return IconOrRef(this, fromJson<QIcon>(val), o.value("id"_L1).toString(), o.value("idRef"_L1).toString());
+}
+
+template <>
+SysTrayIcon JsonThemePrivate::fromJson(const QJsonValue &val)
+{
+    const auto o = val.toObject();
+    return {
+        fromJson<IconOrRef>(o.value("icon"_L1)), //
+        sysTrayStringToType(o.value("iconType"_L1).toString()), //
+        sysTrayStringToStyle(o.value("iconStyle"_L1).toString()), //
+    };
+}
+
+template <>
+QMap<uint32_t, IconOrRef> JsonThemePrivate::fromJson(const QJsonValue &val)
+{
+    const auto array = val.toArray();
+    QMap<uint32_t, IconOrRef> out;
+    for (const auto &a : array) {
+        auto newIcon = fromJson<SysTrayIcon>(a);
+        uint32_t key = static_cast<uint32_t>(newIcon.type) | static_cast<uint32_t>(newIcon.style);
+        if (out.contains(key)) {
+            qCritical() << u"sysTrayIcon of type " << newIcon.type << u" and style " << newIcon.style << u"defined multiple times";
+        }
+
+        out.insert(key, newIcon.iconOrRef);
+    }
+    return out;
+}
+}
+
+IconOrRef::IconOrRef(JsonThemePrivate *parent, const QIcon &icon, const QStringView id, const QStringView idRef)
+    : _parent(parent)
+    , _icon(icon)
+    , _id(id)
+    , _idRef(idRef)
+{
+    if (_parent && (!_id.isEmpty() || !_idRef.isEmpty())) { // no need to store unnamed icons with no references
+        _parent->_iconsCache.push_back(*this);
+    }
+}
+
+QIcon IconOrRef::icon() const
+{
+    if (!_parent) {
+        return _icon;
+    }
+
+    if (_parent) {
+        QList<IconOrRef> &allIcons = _parent->_iconsCache;
+        if (_icon.isNull() && !_idRef.isEmpty()) {
+            for (auto &other : allIcons) {
+                if (_idRef == other._id) {
+                    if (!other._idRef.isEmpty()) {
+                        qCritical() << u"Cannot reference icon id \"" << _idRef << u"\", nested references are forbidden";
+                    }
+                    return other._icon;
+                }
+            }
+        }
+    }
+
+    return _icon;
 }
 
 bool ButtonColor::valid() const
@@ -299,7 +472,7 @@ ButtonColor JsonTheme::secondaryButtonColor() const
 QIcon JsonTheme::wizardLogo() const
 {
     Q_D(const JsonTheme);
-    return d->_wizardLogo;
+    return d->_wizardLogo.icon();
 }
 
 bool JsonTheme::multiAccount() const
@@ -317,7 +490,7 @@ QList<UrlButton> JsonTheme::urlButtons() const
 QIcon JsonTheme::applicationIcon() const
 {
     Q_D(const JsonTheme);
-    return d->_applicationIcon;
+    return d->_applicationIcon.icon();
 }
 
 QColor JsonTheme::iconTint()
@@ -330,4 +503,41 @@ bool JsonTheme::isUnBranded() const
 {
     Q_D(const JsonTheme);
     return d->_isUnbranded;
+}
+
+QIcon JsonTheme::sysTrayIcon(const SysTrayIconType type, const SysTrayIconStyle style) const
+{
+    Q_D(const JsonTheme);
+    auto &map = d->_sysTrayIconsMap;
+
+    QIcon ret;
+
+    // First, try a direct match
+    uint32_t key = static_cast<uint32_t>(type) | static_cast<uint32_t>(style);
+    if (map.contains(key)) {
+        ret = map[key].icon();
+    }
+
+    // Then, ignore the style and fall back to the light theme equivalent
+    key = static_cast<uint32_t>(type);
+    if (map.contains(key)) {
+        ret = map[key].icon();
+    }
+
+    if (!ret.isNull()) {
+        if (style == SysTrayIconStyle::Mask) {
+            ret.setIsMask(true);
+        }
+
+        return ret;
+    }
+
+    // Finally, fall back on the vanilla icon
+    QString fileName = sysTrayTypeToString(type);
+    Q_ASSERT(!fileName.isEmpty());
+
+    QString themeName = sysTrayStyleToString(style);
+    Q_ASSERT(!themeName.isEmpty());
+
+    return Resources::loadIcon(themeName, fileName);
 }
