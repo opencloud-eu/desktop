@@ -167,9 +167,6 @@ version = 6.11.3
 [libs/qt6/qttranslations]
 version = 6.11.3
 
-[libs/runtime]
-version = 17
-
 [libs/spdlog]
 version = 1.17.0
 
