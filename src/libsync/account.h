@@ -35,6 +35,7 @@
 #include <QSslCipher>
 #include <QSslConfiguration>
 #include <QSslError>
+#include <QSslKey>
 #include <QSslSocket>
 #include <QUrl>
 #include <QUuid>
@@ -148,6 +149,22 @@ public:
      */
     void addApprovedCerts(const QSet<QSslCertificate> &certs);
 
+    /** Client certificate for mTLS authentication */
+    QSslCertificate clientCertificate() const;
+    QSslKey clientPrivateKey() const;
+    bool hasClientCertificate() const;
+
+    /***
+     * Set the client certificate and private key for mTLS.
+     * Warning calling this will break running network jobs on the current access manager.
+     */
+    void setClientCertificate(const QSslCertificate &cert, const QSslKey &key);
+
+    /***
+     * Remove the client certificate configuration.
+     */
+    void clearClientCertificate();
+
     /** Access the server capabilities */
     const Capabilities &capabilities() const;
     void setCapabilities(const Capabilities &caps);
@@ -211,6 +228,8 @@ Q_SIGNALS:
 
     void unknownConnectionState();
 
+    void clientCertificateChanged();
+
     void requestUrlUpdate(const QUrl &newUrl);
 
     // the signal exists on the Account object as the Approvider itself can change during runtime
@@ -234,6 +253,8 @@ private:
     QString _cacheDirectory;
 
     QSet<QSslCertificate> _approvedCerts;
+    QSslCertificate _clientCertificate;
+    QSslKey _clientPrivateKey;
     Capabilities _capabilities;
     QPointer<AccessManager> _am;
     QPointer<QNetworkDiskCache> _networkCache = nullptr;
