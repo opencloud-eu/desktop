@@ -57,8 +57,20 @@ jobs:
                         || startswith(github.ref,   'refs/tags/')
                       )
                   }}
+            - target: windows-cl-msvc2026-x86_64
+              os: windows-2025-vs2026
+              clang_tidy: false
+              container:
+              signing:
+                enabled: *signing_enabled
+            - target: windows-cl-msvc2026-arm64
+              os: windows-11-vs2026-arm
+              clang_tidy: false
+              container:
+              signing:
+                enabled: *signing_enabled
             - target: macos-clang-arm64
-              os: macos-latest
+              os: macos-26
               clang_tidy: false
               container:
               signing: &macos_signing
@@ -75,13 +87,19 @@ jobs:
                     secret_field: notarization_pw
                     env_name: CRAFT_SECRET_MAC_APP_PASSWORD
             - target: macos-clang-x86_64
-              os: macos-latest
+              os: macos-26-intel
               clang_tidy: false
               container:
               signing: *macos_signing
             - target: linux-gcc-x86_64
               os: ubuntu-latest
               clang_tidy: true
+              container: ghcr.io/opencloud-eu/ci-docker-desktop/appimage:latest
+              signing:
+                enabled: *signing_enabled
+            - target: linux-gcc-arm64
+              os: ubuntu-24.04-arm
+              clang_tidy: false
               container: ghcr.io/opencloud-eu/ci-docker-desktop/appimage:latest
               signing:
                 enabled: *signing_enabled
@@ -315,7 +333,8 @@ jobs:
       if: ${{ startsWith(matrix.os, 'windows-') && github.event_name != 'pull_request' }}
       run: |
         & "${env:GITHUB_WORKSPACE}/.github/workflows/.craft.ps1" -c --no-cache --package --options "[Packager]PackageType=AppxPackager" --options "[Packager]Destination=${{ github.workspace }}/msix/" opencloud/opencloud-desktop
-        Move-Item -Path "${{ github.workspace }}/msix/*.msix" -Destination "${{ github.workspace }}/msix/OpenCloud_Desktop-${{ github.run_number }}.msix" -Force
+        $arch = $env:CRAFT_TARGET.Split('-')[-1]
+        Move-Item -Path "${{ github.workspace }}/msix/*.msix" -Destination "${{ github.workspace }}/msix/OpenCloud_Desktop-${{ github.run_number }}-${arch}.msix" -Force
 
     - name: Upload binary artifacts
       uses: actions/upload-artifact@v7
