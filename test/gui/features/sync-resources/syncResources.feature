@@ -340,7 +340,7 @@ Feature: Syncing files
         When the user selects manual sync folder option in advanced section
         And the user cancels the sync connection wizard
         Then "Alice" account should be added
-        Then user "Alice" should not have the following sync connections:
+        And user "Alice" should not have the following sync connections:
             | space    |
             | Personal |
             | Shares   |

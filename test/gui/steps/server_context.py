@@ -138,4 +138,4 @@ def step(context, user):
 @Given('user "{user}" has set up folder "{folder_path}" as a vault in the server')
 def step(context, user, folder_path):
     properties = {"ocrclone:integrity-id": secrets.token_urlsafe(32)}
-    webdav.patch_folder_properties(user, folder_path, properties)
+    webdav.patch_resource_properties(properties, resource_path=folder_path, user=user)
