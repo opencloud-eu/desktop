@@ -30,6 +30,7 @@
 
 ### 📦️ Dependencies
 
+- Bump pypdf from 6.21.2 to 6.21.4 in /test/gui [[#1214](https://github.com/opencloud-eu/desktop/pull/1214)]
 - Bump pypdf from 6.19.0 to 6.21.2 in /test/gui [[#1199](https://github.com/opencloud-eu/desktop/pull/1199)]
 - build(deps): bump signpath/github-action-submit-signing-request from 2 to 3 [[#1100](https://github.com/opencloud-eu/desktop/pull/1100)]
 - Bump certifi from 2026.7.22 to 2026.10.19 in /test/gui [[#1197](https://github.com/opencloud-eu/desktop/pull/1197)]
