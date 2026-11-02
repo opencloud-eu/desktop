@@ -21,7 +21,11 @@ class SyncConnection:
         # Parse the sync name from the full label.
         # Actual label: Personal,Success,Local folder: /tmp/opencloudtest/Alice/Personal
         # Result: Personal
-        return sync_label.split(",")[0]
+        sync_name = sync_label.split(":")[0]
+        # grab everything from the third-to-last element to the start
+        sync_name = sync_name.split(",")[-3::-1]
+        # reverse the order to get the correct sequence
+        return ",".join(sync_name[::-1])
 
     @staticmethod
     def get_current_account_connection():

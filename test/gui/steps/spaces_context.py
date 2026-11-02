@@ -14,8 +14,8 @@ from helpers.SpaceHelper import (
     add_user_to_space,
     get_file_content,
     resource_exists,
-    patch_space_properties,
 )
+from helpers.api.webdav_helper import patch_resource_properties
 from helpers.ConfigHelper import set_config
 
 
@@ -28,7 +28,7 @@ def step(context, space_name):
 def step(context, space_name):
     create_space(space_name, vault=True)
     properties = {"ocrclone:integrity-id": secrets.token_urlsafe(32)}
-    patch_space_properties(space_name, properties)
+    patch_resource_properties(properties=properties, space_name=space_name)
 
 
 @Given('the administrator has created a folder "{folder_name}" in space "{space_name}"')
