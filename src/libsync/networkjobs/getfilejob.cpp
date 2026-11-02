@@ -99,7 +99,14 @@ void GETFileJob::slotMetaDataChanged()
     // through the HTTP layer thread(?)
     reply()->setReadBufferSize(replyReadBufferSize(bool(_bandwidthManager)));
 
-    int httpStatus = reply()->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+    const int httpStatus = reply()->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+
+    // Non-2xx bodies are consumed at completion (errors) or while recovering
+    // from redirects/auth failures. A persistent connection must be able to
+    // deliver the whole body, so don't let the read-buffer cap stall it.
+    if (httpStatus / 100 != 2) {
+        reply()->setReadBufferSize(0);
+    }
 
     if (httpStatus == 301 || httpStatus == 302 || httpStatus == 303 || httpStatus == 307 || httpStatus == 308 || httpStatus == 401) {
         // Redirects and auth failures (OAuth token renew) are handled by AbstractNetworkJob and
@@ -113,9 +120,6 @@ void GETFileJob::slotMetaDataChanged()
     // If the status code isn't 2xx, don't write the reply body to the file.
     // For any error: handle it when the job is finished, not here.
     if (httpStatus / 100 != 2) {
-        // Disable the buffer limit, as we don't limit the bandwidth for error messages.
-        // (We are only going to do a readAll() at the end.)
-        reply()->setReadBufferSize(0);
         return;
     }
     if (reply()->error() != QNetworkReply::NoError) {

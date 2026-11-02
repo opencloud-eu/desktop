@@ -25,12 +25,13 @@ namespace {
 constexpr qint64 DefaultReplyReadBufferSize = 1024 * 1024;
 constexpr qint64 PayloadSize = 4 * 1024 * 1024;
 
-QByteArray responseHeaders(int status, const QByteArray &reason, qint64 contentLength)
+QByteArray responseHeaders(int status, const QByteArray &reason, qint64 contentLength, const QByteArray &extraHeaders = {})
 {
     QByteArray response = "HTTP/1.1 " + QByteArray::number(status) + ' ' + reason + "\r\n";
     response += "Content-Length: " + QByteArray::number(contentLength) + "\r\n";
     response += "ETag: \"test-etag\"\r\n";
     response += "OC-ETag: \"test-etag\"\r\n";
+    response += extraHeaders;
     response += "Connection: keep-alive\r\n\r\n";
     return response;
 }
@@ -48,15 +49,18 @@ public:
         connect(this, &QTcpServer::newConnection, this, [this] {
             while (QTcpSocket *socket = nextPendingConnection()) {
                 auto request = QSharedPointer<QByteArray>::create();
-                auto responded = QSharedPointer<bool>::create(false);
-                connect(socket, &QTcpSocket::readyRead, socket, [this, socket, request, responded] {
+                connect(socket, &QTcpSocket::readyRead, socket, [this, socket, request] {
                     request->append(socket->readAll());
-                    if (*responded || !request->contains("\r\n\r\n")) {
-                        return;
-                    }
-                    *responded = true;
-                    if (responder) {
-                        responder(socket);
+                    while (true) {
+                        const qsizetype headerEnd = request->indexOf("\r\n\r\n");
+                        if (headerEnd < 0) {
+                            break;
+                        }
+                        const QByteArray currentRequest = request->left(headerEnd + 4);
+                        request->remove(0, headerEnd + 4);
+                        if (responder) {
+                            responder(socket, currentRequest);
+                        }
                     }
                 });
                 connect(socket, &QTcpSocket::disconnected, socket, &QObject::deleteLater);
@@ -66,7 +70,7 @@ public:
 
     QUrl baseUrl() const { return QUrl(QStringLiteral("http://127.0.0.1:%1").arg(serverPort())); }
 
-    std::function<void(QTcpSocket *)> responder;
+    std::function<void(QTcpSocket *, const QByteArray &)> responder;
     QPointer<QTcpSocket> socket;
 };
 
@@ -115,7 +119,7 @@ private Q_SLOTS:
         account->setUrl(server.baseUrl());
 
         const QByteArray payload(PayloadSize, 'x');
-        server.responder = [&](QTcpSocket *socket) {
+        server.responder = [&](QTcpSocket *socket, const QByteArray &) {
             server.socket = socket;
             socket->write(responseHeaders(200, "OK", payload.size()));
         };
@@ -173,7 +177,7 @@ private Q_SLOTS:
               "</d:error>\n";
         errorBody.append(QByteArray(2 * 1024 * 1024, ' '));
 
-        server.responder = [&](QTcpSocket *socket) {
+        server.responder = [&](QTcpSocket *socket, const QByteArray &) {
             socket->write(responseHeaders(400, "Bad Request", errorBody.size()));
             socket->write(errorBody);
         };
@@ -198,6 +202,39 @@ private Q_SLOTS:
         // be lifted for them even when no bandwidth manager is involved.
         QCOMPARE(errorBufferSize, 0);
         QVERIFY2(error.contains(QString::fromUtf8(marker)), qPrintable(error));
+    }
+
+    void testLargeRedirectBodyCompletes()
+    {
+        auto accountState = TestUtils::createDummyAccount();
+        auto account = accountState->account();
+
+        LocalHttpServer server;
+        QVERIFY(server.listen(QHostAddress::LocalHost, 0));
+        account->setUrl(server.baseUrl());
+
+        const QByteArray redirectBody(3 * 1024 * 1024, 'r');
+        server.responder = [&](QTcpSocket *socket, const QByteArray &request) {
+            if (!request.startsWith("GET /redirect ")) {
+                socket->write(responseHeaders(404, "Not Found", 0));
+                return;
+            }
+            socket->write(responseHeaders(302, "Found", redirectBody.size(), "Location: /redirect\r\n"));
+            socket->write(redirectBody);
+        };
+
+        QBuffer device;
+        QVERIFY(device.open(QIODevice::WriteOnly));
+
+        JobGuard job(new GETFileJob(account, server.baseUrl(), QStringLiteral("/redirect"), &device, {}, {}, 0, this));
+        QSignalSpy networkErrorSpy(job.get(), &AbstractNetworkJob::networkError);
+
+        job->start();
+        // Reaching networkError means the redirect response body was consumed
+        // and AbstractNetworkJob can recover; a capped, undrained body stalls here.
+        QVERIFY(networkErrorSpy.wait(5000));
+        QCOMPARE(job->reply()->readBufferSize(), 0);
+        QCOMPARE(job->reply()->bytesAvailable(), qint64(redirectBody.size()));
     }
 };
 
