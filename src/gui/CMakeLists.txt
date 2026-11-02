@@ -19,7 +19,6 @@ target_sources(OpenCloudGui PRIVATE
     accountsettings.ui
     generalsettings.ui
     ignorelisteditor.ui
-    networksettings.ui
     protocolwidget.ui
     issueswidget.ui
     settingsdialog.ui
@@ -50,7 +49,6 @@ target_sources(OpenCloudGui PRIVATE
     logbrowser.cpp
     fonticonmessagebox.cpp
     networkinformation.cpp
-    networksettings.cpp
     notifications.cpp
     openfilemanager.cpp
     protocolwidget.cpp
