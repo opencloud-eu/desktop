@@ -120,15 +120,15 @@ void VfsCfApi::startImpl(const VfsSetupParams &params)
         if (errorMessage.isEmpty()) {
             auto connectResult = cfapi::connectSyncRoot(this->params().root(), this);
             if (!connectResult) {
-                qCCritical(lcCfApi) << u"Initialization failed, couldn't connect sync root:" << connectResult.error();
+                const QString connectError = u"Initialization failed, couldn't connect sync root: %1"_s.arg(connectResult.error());
+                qCCritical(lcCfApi) << connectError;
+                Q_EMIT error(connectError);
                 return;
             }
-
-            _connectionKey = *std::move(connectResult);
+            _connectionKey = connectResult.get();
             Q_EMIT started();
         } else {
             qCCritical(lcCfApi) << errorMessage;
-            Q_ASSERT(false);
             Q_EMIT error(errorMessage);
         }
     });
