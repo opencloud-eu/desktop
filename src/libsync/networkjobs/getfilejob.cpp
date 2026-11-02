@@ -11,9 +11,15 @@ using namespace OCC;
 Q_LOGGING_CATEGORY(lcGetJob, "sync.networkjob.get", QtInfoMsg)
 
 namespace {
-// Keep the reply's internal buffer small so a slow disk applies backpressure to
-// the socket instead of letting Qt buffer the whole response in memory.
-constexpr qint64 ReplyReadBufferSize = 16 * 1024;
+// Normal downloads use a larger buffer for throughput. Bandwidth-managed
+// downloads keep the smaller buffer so throttling can react quickly.
+constexpr qint64 DefaultReplyReadBufferSize = 1024 * 1024;
+constexpr qint64 BandwidthLimitedReplyReadBufferSize = 16 * 1024;
+
+qint64 replyReadBufferSize(bool bandwidthLimited)
+{
+    return bandwidthLimited ? BandwidthLimitedReplyReadBufferSize : DefaultReplyReadBufferSize;
+}
 }
 
 // DOES NOT take ownership of the device.
@@ -81,7 +87,7 @@ void GETFileJob::finished()
 
 void GETFileJob::newReplyHook(QNetworkReply *reply)
 {
-    reply->setReadBufferSize(ReplyReadBufferSize);
+    reply->setReadBufferSize(replyReadBufferSize(bool(_bandwidthManager)));
     connect(reply, &QNetworkReply::metaDataChanged, this, &GETFileJob::slotMetaDataChanged);
     connect(reply, &QNetworkReply::finished, this, &GETFileJob::slotReadyRead);
     connect(reply, &QNetworkReply::downloadProgress, this, &GETFileJob::downloadProgress);
@@ -91,7 +97,7 @@ void GETFileJob::slotMetaDataChanged()
 {
     // For some reason setting the read buffer in GETFileJob::start doesn't seem to go
     // through the HTTP layer thread(?)
-    reply()->setReadBufferSize(ReplyReadBufferSize);
+    reply()->setReadBufferSize(replyReadBufferSize(bool(_bandwidthManager)));
 
     int httpStatus = reply()->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
 

@@ -22,8 +22,8 @@ using namespace OCC;
 
 namespace {
 
-constexpr qint64 ReplyReadBufferSize = 16 * 1024;
-constexpr qint64 PayloadSize = 1 * 1024 * 1024;
+constexpr qint64 DefaultReplyReadBufferSize = 1024 * 1024;
+constexpr qint64 PayloadSize = 4 * 1024 * 1024;
 
 QByteArray responseHeaders(int status, const QByteArray &reason, qint64 contentLength)
 {
@@ -128,7 +128,7 @@ private Q_SLOTS:
         connect(job.get(), &AbstractNetworkJob::finishedSignal, job.get(), [&] { finished = true; });
 
         job->start();
-        QCOMPARE(job->reply()->readBufferSize(), ReplyReadBufferSize);
+        QCOMPARE(job->reply()->readBufferSize(), DefaultReplyReadBufferSize);
         QTRY_VERIFY_WITH_TIMEOUT(server.socket, 5000);
         QTRY_COMPARE_WITH_TIMEOUT(job->reply()->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt(), 200, 5000);
 
@@ -145,8 +145,8 @@ private Q_SLOTS:
         }
 
         QVERIFY2(maxBuffered > 0, "The response body never reached the reply buffer");
-        QVERIFY2(maxBuffered <= ReplyReadBufferSize,
-            qPrintable(QStringLiteral("Qt buffered %1 bytes, expected at most %2").arg(maxBuffered).arg(ReplyReadBufferSize)));
+        QVERIFY2(maxBuffered <= DefaultReplyReadBufferSize,
+            qPrintable(QStringLiteral("Qt buffered %1 bytes, expected at most %2").arg(maxBuffered).arg(DefaultReplyReadBufferSize)));
         QVERIFY(!finished);
 
         job->setChoked(false);
@@ -171,7 +171,7 @@ private Q_SLOTS:
             + marker
             + "</s:message>\n"
               "</d:error>\n";
-        errorBody.append(QByteArray(64 * 1024, ' '));
+        errorBody.append(QByteArray(2 * 1024 * 1024, ' '));
 
         server.responder = [&](QTcpSocket *socket) {
             socket->write(responseHeaders(400, "Bad Request", errorBody.size()));
