@@ -3,7 +3,6 @@
 
 #pragma once
 
-#include "explorercommandids.h"
 #include "socketclient.h"
 
 #include <shobjidl_core.h>

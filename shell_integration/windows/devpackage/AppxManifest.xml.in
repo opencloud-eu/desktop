@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Development only: registers the build directory as an unpacked package, the Explorer extensions mirror the msix package created by craft -->
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  xmlns:com="http://schemas.microsoft.com/appx/manifest/com/windows10"
+  xmlns:desktop3="http://schemas.microsoft.com/appx/manifest/desktop/windows10/3"
+  xmlns:uap6="http://schemas.microsoft.com/appx/manifest/uap/windows10/6"
+  IgnorableNamespaces="uap rescap com desktop3 uap6">
+  <Identity Name="@OC_DEV_PACKAGE_NAME@" Publisher="@OC_DEV_PACKAGE_PUBLISHER@" Version="@OC_DEV_PACKAGE_VERSION@" ProcessorArchitecture="neutral" />
+  <Properties>
+    <DisplayName>@OC_DEV_PACKAGE_DISPLAY_NAME@</DisplayName>
+    <PublisherDisplayName>OpenCloud GmbH</PublisherDisplayName>
+    <Logo>Assets\150-opencloud-icon-ms.png</Logo>
+  </Properties>
+  <Resources>
+    <Resource Language="en-us" />
+  </Resources>
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.26100.0" />
+  </Dependencies>
+  <Capabilities>
+    <rescap:Capability Name="runFullTrust" />
+  </Capabilities>
+  <Applications>
+    <Application Id="@OC_DEV_PACKAGE_APPLICATION_ID@" Executable="$<TARGET_FILE_NAME:opencloud>" EntryPoint="Windows.FullTrustApplication">
+      <uap:VisualElements AppListEntry="none" DisplayName="@OC_DEV_PACKAGE_DISPLAY_NAME@" Description="OpenCloud Desktop development build" BackgroundColor="transparent"
+        Square150x150Logo="Assets\150-opencloud-icon-ms.png" Square44x44Logo="Assets\44-opencloud-icon-ms.png" />
+      <Extensions>
+        <desktop3:Extension Category="windows.cloudFiles">
+          <desktop3:CloudFiles>
+            <!-- the schema requires the handlers once CloudFilesContextMenus is present,
+                 without a Clsid Explorer ignores the sync roots of the package, the null clsid disables them -->
+            <desktop3:CustomStateHandler Clsid="00000000-0000-0000-0000-000000000000" />
+            <desktop3:ThumbnailProviderHandler Clsid="00000000-0000-0000-0000-000000000000" />
+            <desktop3:ExtendedPropertyHandler Clsid="00000000-0000-0000-0000-000000000000" />
+            <desktop3:BannersHandler Clsid="00000000-0000-0000-0000-000000000000" />
+            <desktop3:CloudFilesContextMenus>
+              <desktop3:Verb Id="OpenCloud" Clsid="@OC_EXPLORER_COMMAND_CLSID@" />
+            </desktop3:CloudFilesContextMenus>
+          </desktop3:CloudFiles>
+        </desktop3:Extension>
+        <com:Extension Category="windows.comServer">
+          <com:ComServer>
+            <com:SurrogateServer DisplayName="OpenCloud Explorer integration">
+              <com:Class Id="@OC_EXPLORER_COMMAND_CLSID@" Path="$<TARGET_FILE_NAME:OpenCloudExplorerCommand>" ThreadingModel="STA" />
+            </com:SurrogateServer>
+          </com:ComServer>
+        </com:Extension>
+      </Extensions>
+    </Application>
+  </Applications>
+  <Extensions>
+    <uap6:Extension Category="windows.loaderSearchPathOverride">
+      <uap6:LoaderSearchPathOverride>
+@OC_DEV_PACKAGE_LOADER_SEARCH_PATHS@
+      </uap6:LoaderSearchPathOverride>
+    </uap6:Extension>
+  </Extensions>
+</Package>
