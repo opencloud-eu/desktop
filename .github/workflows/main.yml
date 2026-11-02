@@ -388,3 +388,62 @@ jobs:
         } else {
           Write-Host "No cache files to upload, skipping."
         }
+
+# ------------------------------------------------------------------------------------------------------------------------------------------
+  msix-bundle:
+    needs: build
+    if: ${{ github.event_name != 'pull_request' }}
+    runs-on: windows-2025-vs2026
+    permissions:
+      contents: read
+      actions: read
+
+    steps:
+    - name: Download store msix
+      uses: actions/download-artifact@v8
+      with:
+        pattern: '*.msixupload'
+        path: ${{ runner.temp }}/msixupload
+        merge-multiple: true
+
+    - name: Create msixbundle upload
+      run: |
+        $makeappx = Get-ChildItem "${env:ProgramFiles(x86)}/Windows Kits/10/bin/*/x64/makeappx.exe" |
+          Sort-Object { [version]$_.Directory.Parent.Name } | Select-Object -Last 1
+        if (-not $makeappx) {
+          throw "makeappx.exe not found"
+        }
+
+        $packages = "${{ runner.temp }}/packages"
+        $upload = "${{ runner.temp }}/upload"
+        $destination = "${{ github.workspace }}/msixbundle"
+        New-Item -ItemType Directory $packages, $upload, $destination | Out-Null
+
+        $uploads = Get-ChildItem "${{ runner.temp }}/msixupload/*.msixupload"
+        if ($uploads.Count -ne 2) {
+          throw "Expected 2 msixupload files, found $($uploads.Count): $($uploads.Name -join ', ')"
+        }
+        foreach ($file in $uploads) {
+          7za x $file.FullName "-o$packages" -y
+          if ($LASTEXITCODE -ne 0) { throw "Failed to extract $($file.Name)" }
+        }
+        Move-Item "$packages/*.appxsym" $upload
+        $msix = Get-ChildItem "$packages/*.msix"
+        if ($msix.Count -ne 2) {
+          throw "Expected 2 msix packages, found $($msix.Count): $($msix.Name -join ', ')"
+        }
+
+        $bundleName = "OpenCloud_Desktop-${{ github.run_number }}.msixbundle"
+        & $makeappx.FullName bundle /o /d $packages /p "$upload/$bundleName"
+        if ($LASTEXITCODE -ne 0) { throw "makeappx bundle failed" }
+
+        $msixUpload = "$destination/OpenCloud_Desktop-${{ github.run_number }}.msixupload"
+        7za a -tzip $msixUpload "$upload/*"
+        if ($LASTEXITCODE -ne 0) { throw "Failed to create msixupload" }
+        7za l $msixUpload
+
+    - name: Upload store msixbundle
+      uses: actions/upload-artifact@v7
+      with:
+        path: ${{ github.workspace }}/msixbundle/*.msixupload
+        archive: false
