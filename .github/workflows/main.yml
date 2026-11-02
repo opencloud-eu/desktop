@@ -343,6 +343,7 @@ jobs:
         name: ${{ matrix.target }}-store-msix-${{ github.run_number }}
         path: ${{ github.workspace }}/msix/*.msixupload
         archive: false
+        retention-days: 1
 
     - name: Upload unsigned msix
       id: upload-unsigned-artifact
@@ -351,6 +352,7 @@ jobs:
       with:
         name: ${{ matrix.target }}-msix-unsigned-temp-${{ github.run_number }}
         path: ${{ github.workspace }}/msix/*.msix
+        retention-days: 1
 
     - name: submit msix for signing
       id: submit-signing-request
