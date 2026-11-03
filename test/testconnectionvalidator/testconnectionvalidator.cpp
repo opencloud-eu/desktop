@@ -103,10 +103,11 @@ private Q_SLOTS:
             return nullptr;
         });
 
-        ConnectionValidator val(fakeFolder.account());
-        val.checkServer(ConnectionValidator::ValidationMode::ValidateAuthAndUpdate);
+        // ConnectionValidator calls deleteLater() on itself
+        auto *val = new ConnectionValidator(fakeFolder.account(), &fakeFolder);
+        QSignalSpy spy(val, &ConnectionValidator::connectionResult);
+        val->checkServer(ConnectionValidator::ValidationMode::ValidateAuthAndUpdate);
 
-        QSignalSpy spy(&val, &ConnectionValidator::connectionResult);
         QVERIFY(spy.wait());
         QCOMPARE(spy.first().first().value<ConnectionValidator::Status>(), status);
         QCOMPARE(reachedStage, failStage);
