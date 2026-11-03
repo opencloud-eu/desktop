@@ -205,7 +205,8 @@ def wait_until_app_terminated():
 
 
 def get_window_location():
-    window = app().find_element(By.XPATH, "//*[contains(@name,'OpenCloud Desktop')]").location
+    display_name = get_config('app_display_name')
+    window = app().find_element(By.XPATH, f"//*[contains(@name,'{display_name}')]").location
     return window['x'], window['y']
 
 
