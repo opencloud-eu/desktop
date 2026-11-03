@@ -408,6 +408,21 @@ jobs:
         path: ${{ runner.temp }}/msixupload
         merge-multiple: true
 
+    - name: Install 7-Zip
+      env:
+        SEVENZIP_VERSION: '26.05'
+        SEVENZIP_SHA256: 15b5682dcf971b7a317f5c98893dc66be8f203d1558618feff64b2e09504150d
+      run: |
+        $zip = "${{ runner.temp }}/7zip.zip"
+        $dir = "${{ runner.temp }}/7zip"
+        Invoke-WebRequest "https://github.com/TheOneRing/7zipzip/releases/download/${env:SEVENZIP_VERSION}/7zip-extra-${env:SEVENZIP_VERSION}-x86_64.zip" -OutFile $zip
+        $hash = (Get-FileHash -Algorithm SHA256 $zip).Hash
+        if ($hash -ne $env:SEVENZIP_SHA256) {
+          throw "7-Zip checksum mismatch: $hash"
+        }
+        Expand-Archive $zip -DestinationPath $dir -Force
+        Add-Content $env:GITHUB_PATH $dir
+
     - name: Create msixbundle upload
       run: |
         $makeappx = Get-ChildItem "${env:ProgramFiles(x86)}/Windows Kits/10/bin/*/x64/makeappx.exe" |
