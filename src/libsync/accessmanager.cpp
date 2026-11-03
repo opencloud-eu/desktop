@@ -90,10 +90,7 @@ QNetworkReply *AccessManager::createRequest(QNetworkAccessManager::Operation op,
         return qEnvironmentVariableIntValue("OPENCLOUD_USE_HTTP2") == 1;
     }();
 
-    // Qt's default value is true, if we explicitly set it to false, we don't want to use HTTP/2
-    if (newRequest.attribute(QNetworkRequest::Http2AllowedAttribute).toBool()) {
-        newRequest.setAttribute(QNetworkRequest::Http2AllowedAttribute, useHttp2);
-    }
+    newRequest.setAttribute(QNetworkRequest::Http2AllowedAttribute, useHttp2);
 
     // allow http pipelining
     newRequest.setAttribute(QNetworkRequest::HttpPipeliningAllowedAttribute, true);
