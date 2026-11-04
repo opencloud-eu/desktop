@@ -33,10 +33,6 @@ class TestConnectionValidator : public QObject
     enum class FailStage { Invalid, StatusPhp, Capabilities, UserInfo };
 
 private Q_SLOTS:
-
-
-    void initTestCase() { AbstractNetworkJob::httpTimeout = 50ms; }
-
     void testStatusPhp_data()
     {
         QTest::addColumn<FailStage>("failStage");
@@ -58,6 +54,8 @@ private Q_SLOTS:
         QFETCH(FailStage, failStage);
         QFETCH(TestUtils::Values, values);
         QFETCH(ConnectionValidator::Status, status);
+
+        auto setHttpTimeout = QScopedValueRollback(AbstractNetworkJob::httpTimeout, status == ConnectionValidator::Timeout ? 50ms : 5min);
 
         auto reachedStage = FailStage::Invalid;
         FakeFolder fakeFolder({});
