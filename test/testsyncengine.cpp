@@ -43,6 +43,9 @@ bool itemDidCompleteSuccessfully(const ItemCompletedSpy &spy, const QString &pat
 class TestSyncEngine : public QObject
 {
     Q_OBJECT
+public:
+    enum class LocalAction { None, ReplaceKeepMtime, ReplaceNewMtime, ReplaceWithContent, OverwriteInPlace };
+    Q_ENUM(LocalAction)
 
 private Q_SLOTS:
     void initTestCase_data()
@@ -51,6 +54,11 @@ private Q_SLOTS:
         QTest::addColumn<bool>("filesAreDehydrated");
 
         QTest::newRow("Vfs::Mode::Off") << Vfs::Mode::Off << false;
+
+        if (VfsPluginManager::instance().isVfsPluginAvailable(Vfs::Mode::OpenVFS)) {
+            QTest::newRow("Vfs::Mode::OpenVFS dehydrated") << Vfs::Mode::OpenVFS << true;
+            QTest::newRow("Vfs::Mode::OpenVFS hydrated") << Vfs::Mode::OpenVFS << false;
+        }
 
         if (VfsPluginManager::instance().isVfsPluginAvailable(Vfs::Mode::WindowsCfApi)) {
             QTest::newRow("Vfs::Mode::WindowsCfApi dehydrated") << Vfs::Mode::WindowsCfApi << true;
@@ -203,8 +211,8 @@ private Q_SLOTS:
         QFETCH_GLOBAL(Vfs::Mode, vfsMode);
         QFETCH_GLOBAL(bool, filesAreDehydrated);
 
-        if (vfsMode == Vfs::Mode::WindowsCfApi) {
-            QSKIP("selective sync is not supported with winvfs");
+        if (vfsMode != Vfs::Mode::Off) {
+            QSKIP("selective sync is not supported with virtual files");
         }
 
         FakeFolder fakeFolder(FileInfo { QString(), { FileInfo { QStringLiteral("parentFolder"), { FileInfo { QStringLiteral("subFolderA"), { { QStringLiteral("fileA.txt"), 400 }, { QStringLiteral("fileB.txt"), 400, 'o' }, FileInfo { QStringLiteral("subsubFolder"), { { QStringLiteral("fileC.txt"), 400 }, { QStringLiteral("fileD.txt"), 400, 'o' } } }, FileInfo { QStringLiteral("anotherFolder"), { FileInfo { QStringLiteral("emptyFolder"), {} }, FileInfo { QStringLiteral("subsubFolder"), { { QStringLiteral("fileE.txt"), 400 }, { QStringLiteral("fileF.txt"), 400, 'o' } } } } } } }, FileInfo { QStringLiteral("subFolderB"), {} } } } } }, vfsMode, filesAreDehydrated);
@@ -442,7 +450,7 @@ private Q_SLOTS:
         QFETCH_GLOBAL(Vfs::Mode, vfsMode);
         QFETCH_GLOBAL(bool, filesAreDehydrated);
 
-        if (vfsMode == Vfs::Mode::WindowsCfApi && filesAreDehydrated) {
+        if (filesAreDehydrated) {
             QSKIP("This test expects files to exist in the sync folder before a sync.");
         }
 
@@ -847,6 +855,107 @@ private Q_SLOTS:
         // the deletes happened as they are independent of the error in B
         QVERIFY(!fakeFolder.currentLocalState().find(QStringLiteral("A")));
         QVERIFY(!fakeFolder.currentLocalState().find(QStringLiteral("S")));
+    }
+
+    void testEmptyFileChangedOnServer_data()
+    {
+        QTest::addColumn<LocalAction>("localAction");
+        QTest::addColumn<bool>("syncAfterLocalAction");
+        QTest::addColumn<QString>("fileName");
+
+        for (const auto &fileName : {u"empty.xlsx"_s, u"A/empty.xlsx"_s}) {
+            for (const auto action : {LocalAction::None, LocalAction::ReplaceKeepMtime, LocalAction::ReplaceNewMtime, LocalAction::ReplaceWithContent,
+                     LocalAction::OverwriteInPlace}) {
+                for (const bool syncAfterLocalAction : {true, false}) {
+                    QTest::addRow("%s %s %s", qPrintable(fileName), qPrintable(Utility::enumToString(action)), syncAfterLocalAction ? "synced" : "not synced")
+                        << action << syncAfterLocalAction << fileName;
+                }
+            }
+        }
+    }
+
+    void testEmptyFileChangedOnServer()
+    {
+        QFETCH_GLOBAL(Vfs::Mode, vfsMode);
+        QFETCH_GLOBAL(bool, filesAreDehydrated);
+        QFETCH(LocalAction, localAction);
+        QFETCH(bool, syncAfterLocalAction);
+        QFETCH(QString, fileName);
+
+        FakeFolder fakeFolder(FileInfo{}, vfsMode, filesAreDehydrated);
+        const bool virtualFiles = vfsMode != Vfs::Mode::Off && filesAreDehydrated;
+        const QString localFile = fakeFolder.localPath() + fileName;
+        const auto serverContent = QByteArray(100, FileInfo::DefaultContentChar);
+        const auto readLocalFile = [&localFile] {
+            QFile f(localFile);
+            return f.open(QFile::ReadOnly) ? f.readAll() : QByteArray();
+        };
+
+        if (fileName.contains(u'/')) {
+            fakeFolder.remoteModifier().mkdir(QFileInfo(fileName).path());
+        }
+        fakeFolder.remoteModifier().insert(fileName, 0_B);
+        QVERIFY(fakeFolder.syncOnce());
+        QCOMPARE(QFileInfo(localFile).size(), 0);
+        QCOMPARE(fakeFolder.isDehydratedPlaceholder(localFile), virtualFiles);
+
+        const auto mtime = QDateTime::fromSecsSinceEpoch(FileSystem::getModTime(localFile));
+        auto &localModifier = fakeFolder.localModifier();
+        switch (localAction) {
+        case LocalAction::None:
+            break;
+        case LocalAction::ReplaceKeepMtime:
+        case LocalAction::ReplaceNewMtime:
+        case LocalAction::ReplaceWithContent:
+            localModifier.remove(fileName);
+            localModifier.insert(fileName, localAction == LocalAction::ReplaceWithContent ? 10_B : 0_B, 'L');
+            localModifier.setModTime(fileName, localAction == LocalAction::ReplaceKeepMtime ? mtime : mtime.addSecs(60));
+            break;
+        case LocalAction::OverwriteInPlace:
+            localModifier.setContents(fileName, 10_B, 'L');
+            localModifier.setModTime(fileName, mtime.addSecs(60));
+            break;
+        }
+        QVERIFY(fakeFolder.applyLocalModificationsWithoutSync());
+
+        if (syncAfterLocalAction) {
+            QVERIFY(fakeFolder.syncOnce());
+        }
+
+        fakeFolder.remoteModifier().setContents(fileName, 100_B);
+        const bool conflict = !syncAfterLocalAction && localAction != LocalAction::None && localAction != LocalAction::ReplaceKeepMtime;
+        {
+            ItemCompletedSpy completeSpy(fakeFolder);
+            QVERIFY(fakeFolder.syncOnce());
+            const auto item = completeSpy.findItem(fileName);
+            QVERIFY(item);
+            QVERIFY2(item->_status == (conflict ? SyncFileItem::Conflict : SyncFileItem::Success),
+                qPrintable(u"%1 %2"_s.arg(Utility::enumToString(item->_status), item->_errorString)));
+        }
+
+        QCOMPARE(QFileInfo(localFile).size(), 100);
+        if (!virtualFiles) {
+            QVERIFY(!fakeFolder.isDehydratedPlaceholder(localFile));
+        } else if (localAction == LocalAction::None) {
+            QVERIFY(fakeFolder.isDehydratedPlaceholder(localFile));
+        }
+        if (!fakeFolder.isDehydratedPlaceholder(localFile)) {
+            QCOMPARE(readLocalFile(), serverContent);
+        }
+        if (conflict) {
+            auto localState = fakeFolder.currentLocalState();
+            const auto *conflictFile = findConflict(localState, fileName);
+            QVERIFY(conflictFile);
+            QCOMPARE(conflictFile->contentSize, localAction == LocalAction::ReplaceNewMtime ? 0_B : 10_B);
+        }
+        QVERIFY(fakeFolder.syncOnce());
+
+        if (vfsMode != Vfs::Mode::Off) {
+            QVERIFY(fakeFolder.vfs()->setPinState(fileName, PinState::AlwaysLocal));
+            QVERIFY(fakeFolder.syncOnce());
+            QVERIFY(!fakeFolder.isDehydratedPlaceholder(localFile));
+            QCOMPARE(readLocalFile(), serverContent);
+        }
     }
 };
 
