@@ -476,12 +476,13 @@ FileInfo *FakePutReply::perform(FileInfo &remoteRootFileInfo, const QNetworkRequ
     QString fileName = getFilePathFromUrl(request.url());
     Q_ASSERT(!fileName.isEmpty());
     FileInfo *fileInfo = remoteRootFileInfo.find(fileName);
+    const char contentChar = putPayload.isEmpty() ? '\0' : putPayload.at(0);
     if (fileInfo) {
         fileInfo->contentSize = putPayload.size();
-        fileInfo->contentChar = putPayload.at(0);
+        fileInfo->contentChar = contentChar;
     } else {
         // Assume that the file is filled with the same character
-        fileInfo = remoteRootFileInfo.create(fileName, putPayload.size(), putPayload.at(0));
+        fileInfo = remoteRootFileInfo.create(fileName, putPayload.size(), contentChar);
     }
     fileInfo->fileSize = fileInfo->contentSize; // it's hydrated on the server, so these are the same
     fileInfo->setLastModifiedFromSecondsUTC(request.rawHeader("X-OC-Mtime").toLongLong());

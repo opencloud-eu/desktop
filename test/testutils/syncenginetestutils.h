@@ -628,7 +628,7 @@ private:
 inline const FileInfo *findConflict(FileInfo &dir, const QString &filename)
 {
     QFileInfo info(filename);
-    const FileInfo *parentDir = dir.find(info.path());
+    const FileInfo *parentDir = dir.find(PathComponents(filename).parentDirComponents());
     if (!parentDir)
         return nullptr;
     QString start = info.baseName() + QStringLiteral(" (conflicted copy");
