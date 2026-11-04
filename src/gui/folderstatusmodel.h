@@ -57,7 +57,7 @@ public:
         FolderStatusIcon,
         Folder
     };
-    Q_ENUMS(Roles)
+    Q_ENUM(Roles)
 
     FolderStatusModel(QObject *parent = nullptr);
     ~FolderStatusModel() override;

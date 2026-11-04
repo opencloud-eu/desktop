@@ -75,10 +75,8 @@ class OPENCLOUD_SYNC_EXPORT PropfindJob : public AbstractNetworkJob
 {
     Q_OBJECT
 public:
-    enum class Depth {
-        Zero,
-        One
-    } Q_ENUMS(Depth);
+    enum class Depth { Zero, One };
+    Q_ENUM(Depth)
     explicit PropfindJob(AccountPtr account, const QUrl &url, const QString &path, Depth depth, QObject *parent = nullptr);
     void start() override;
 
