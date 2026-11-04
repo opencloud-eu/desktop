@@ -51,20 +51,6 @@ Theme::~Theme()
 {
 }
 
-QIcon Theme::themeTrayIcon(const SyncResult &result, Resources::IconType iconType) const
-{
-#ifndef Q_OS_MAC
-    // we have a dark sys tray and the theme has support for that
-    auto icon =
-        Resources::loadIcon(Utility::hasDarkSystray() ? QStringLiteral("dark-systray") : QStringLiteral("light-systray"), syncStateIconName(result), iconType);
-#else
-    // This defines the icon as a template and enables automatic macOS color handling
-    auto icon = Resources::loadIcon(QStringLiteral("mask-systray"), syncStateIconName(result), iconType);
-    icon.setIsMask(true);
-#endif
-    return icon;
-}
-
 Theme::Theme()
     : QObject(nullptr)
 {
@@ -169,36 +155,6 @@ QString Theme::about() const
 bool Theme::aboutShowCopyright() const
 {
     return true;
-}
-
-QString Theme::syncStateIconName(const SyncResult &result) const
-{
-    switch (result.status()) {
-    case SyncResult::Queued:
-        [[fallthrough]];
-    case SyncResult::SyncRunning:
-        return QStringLiteral("sync");
-    case SyncResult::Paused:
-        return QStringLiteral("pause");
-    case SyncResult::Success:
-        if (!result.hasUnresolvedConflicts()) {
-            return QStringLiteral("ok");
-        }
-        [[fallthrough]];
-    case SyncResult::Problem:
-        [[fallthrough]];
-    case SyncResult::Undefined:
-        // this can happen if no sync connections are configured.
-        return QStringLiteral("information");
-    case SyncResult::Offline:
-        return QStringLiteral("offline");
-    case SyncResult::Error:
-        [[fallthrough]];
-    case SyncResult::SetupError:
-        // FIXME: Use problem once we have an icon.
-        return QStringLiteral("error");
-    }
-    Q_UNREACHABLE();
 }
 
 QString Theme::oauthClientId() const

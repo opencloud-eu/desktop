@@ -49,14 +49,6 @@ public:
 
     ~Theme() override;
 
-    /**
-     * get an sync state icon
-     */
-
-    QIcon themeTrayIcon(const SyncResult &result, Resources::IconType iconType = Resources::IconType::BrandedIconWithFallbackToVanillaIcon) const;
-
-    QString syncStateIconName(const SyncResult &result) const;
-
 
     /**
      * URL to documentation.

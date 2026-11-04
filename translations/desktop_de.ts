@@ -2587,77 +2587,77 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
 <context>
     <name>OCC::Systray</name>
     <message>
-        <location filename="../src/gui/systray.cpp" line="56"/>
+        <location filename="../src/gui/systray.cpp" line="109"/>
         <source>%1: %2</source>
         <translation>%1: %2</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="94"/>
+        <location filename="../src/gui/systray.cpp" line="146"/>
         <source>Disconnected from %1</source>
         <translation>Getrennt von %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="97"/>
+        <location filename="../src/gui/systray.cpp" line="149"/>
         <source>Disconnected from accounts:</source>
         <translation>Getrennt von folgenden Konten:</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="99"/>
+        <location filename="../src/gui/systray.cpp" line="151"/>
         <source>Account %1</source>
         <translation>Konto %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="112"/>
+        <location filename="../src/gui/systray.cpp" line="164"/>
         <source>Please sign in</source>
         <translation>Bitte anmelden</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="116"/>
+        <location filename="../src/gui/systray.cpp" line="168"/>
         <source>Account synchronization is disabled</source>
         <translation>Kontosynchronisierung ist deaktiviert</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="135"/>
+        <location filename="../src/gui/systray.cpp" line="187"/>
         <source>Space »%1«: %2</source>
         <translation>Space »%1«: %2</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="147"/>
+        <location filename="../src/gui/systray.cpp" line="199"/>
         <source>Show %1</source>
         <translation>%1 anzeigen</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="151"/>
+        <location filename="../src/gui/systray.cpp" line="203"/>
         <source>Pause synchronizations</source>
         <translation>Synchronisierung pausieren</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="151"/>
+        <location filename="../src/gui/systray.cpp" line="203"/>
         <source>Resume synchronizations</source>
         <translation>Synchronisierung fortsetzen</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="156"/>
+        <location filename="../src/gui/systray.cpp" line="208"/>
         <source>Synchronization paused</source>
         <translation>Synchronisierung pausiert</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="190"/>
+        <location filename="../src/gui/systray.cpp" line="242"/>
         <source>Help</source>
         <translation>Hilfe</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="193"/>
+        <location filename="../src/gui/systray.cpp" line="245"/>
         <source>About</source>
         <translation>Über</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="196"/>
+        <location filename="../src/gui/systray.cpp" line="248"/>
         <source>About Qt</source>
         <translation>Über Qt</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="198"/>
+        <location filename="../src/gui/systray.cpp" line="250"/>
         <source>Quit</source>
         <translation>Beenden</translation>
     </message>
@@ -2665,7 +2665,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
 <context>
     <name>OCC::Theme</name>
     <message>
-        <location filename="../src/libsync/theme.cpp" line="160"/>
+        <location filename="../src/libsync/theme.cpp" line="146"/>
         <source>&lt;p&gt;Version %1. For more information visit &lt;a href=&quot;https://opencloud.eu/&quot;&gt;https://opencloud.eu/&lt;/a&gt;&lt;/p&gt;&lt;p&gt;For known issues and help, please visit: &lt;a href=&quot;https://github.com/opencloud-eu/desktop&quot;&gt;GitHub&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Copyright OpenCloud GmbH&lt;br/&gt;Copyright ownCloud GmbH&lt;/p&gt;&lt;p&gt;Distributed by OpenCloud GmbH and licensed under the GNU General Public License (GPL) Version 2.0.&lt;br/&gt;&lt;p&gt;&lt;small&gt;%2&lt;/small&gt;&lt;/p&gt;</source>
         <translation>&lt;p&gt;Version %1. Weitere Informationen finden Sie unter &lt;a href=&quot;https://opencloud.eu/&quot;&gt;https://opencloud.eu/&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Für bekannte Probleme und Hilfe besuchen Sie: &lt;a href=&quot;https://github.com/opencloud-eu/desktop&quot;&gt;GitHub&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Copyright OpenCloud GmbH&lt;br/&gt;Copyright ownCloud GmbH&lt;/p&gt;&lt;p&gt;Vertrieben von OpenCloud GmbH und lizenziert unter der GNU General Public License (GPL) Version 2.0.&lt;br/&gt;&lt;p&gt;&lt;small&gt;%2&lt;/small&gt;&lt;/p&gt;</translation>
     </message>
@@ -2935,7 +2935,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
 <context>
     <name>OpenCloudTheme::aboutVersions()</name>
     <message>
-        <location filename="../src/libsync/theme.cpp" line="147"/>
+        <location filename="../src/libsync/theme.cpp" line="133"/>
         <source>%1 %2%7%8Libraries Qt %3, %4%7Using virtual files plugin: %5%7%6</source>
         <translation>%1 %2%7%8Qt-Bibliotheken %3, %4%7Erweiterung für virtuelle Dateien verwendet: %5%7%6</translation>
     </message>
@@ -2943,7 +2943,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
 <context>
     <name>OpenCloudTheme::qtVer</name>
     <message>
-        <location filename="../src/libsync/theme.cpp" line="130"/>
+        <location filename="../src/libsync/theme.cpp" line="116"/>
         <source>%1 (Built against Qt %2)</source>
         <translation>%1 (Kompiliert mit Qt %2)</translation>
     </message>
@@ -2951,7 +2951,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
 <context>
     <name>OpenCloudTheme::versionWithSha</name>
     <message>
-        <location filename="../src/libsync/theme.cpp" line="135"/>
+        <location filename="../src/libsync/theme.cpp" line="121"/>
         <source>%1 %2</source>
         <translation>%1 %2</translation>
     </message>

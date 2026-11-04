@@ -20,6 +20,7 @@
 #include <QLocalSocket>
 #include <QLoggingCategory>
 #include <QUuid>
+#include <QVersionNumber>
 
 #include <comdef.h>
 #include <ntstatus.h>
@@ -29,6 +30,9 @@
 #include <winrt/Windows.Security.Cryptography.h>
 #include <winrt/windows.Storage.Streams.h>
 #include <winrt/windows.storage.provider.h>
+
+#include <chrono>
+#include <thread>
 
 Q_LOGGING_CATEGORY(lcCfApiWrapper, "sync.vfs.cfapi.wrapper", QtDebugMsg)
 
@@ -343,6 +347,59 @@ QString createSyncRootID(const QString &providerName, const QUuid &accountUUID, 
     return u"%1!%2!%3!%4"_s.arg(providerName, windowsSid, accountUUID.toString(QUuid::WithoutBraces), stableFolderHash);
 }
 
+QString hstringToQString(const winrt::hstring &s)
+{
+    return QString::fromWCharArray(s.c_str(), s.size());
+}
+
+// Validates an existing registration for folder, returns an error message if we must not register the folder
+QString validateExistingSyncRoot(const winrt::IStorageFolder &folder, const QString &id, const OCC::VfsSetupParams &params)
+{
+    winrt::StorageProviderSyncRootInfo previousInfo{nullptr};
+    qCDebug(lcCfApiWrapper) << u"Validating existing sync root for" << params.filesystemPath();
+    try {
+        previousInfo = winrt::StorageProviderSyncRootManager::GetSyncRootInformationForFolder(folder);
+    } catch (const winrt::hresult_error &ex) {
+        if (ex.code() == HRESULT_FROM_WIN32(ERROR_NOT_FOUND)) {
+            // the folder is not part of a sync root yet
+            qCDebug(lcCfApiWrapper) << u"No existing sync root for" << params.filesystemPath();
+            return {};
+        }
+        return u"Failed to query the sync root information for %1: %2"_s.arg(params.filesystemPath(), OCC::Utility::formatWinError(ex.code()));
+    }
+    const QString oldId = hstringToQString(previousInfo.Id());
+    if (oldId.isEmpty()) {
+        return {};
+    }
+    const QString oldPath = hstringToQString(previousInfo.Path().Path());
+    const QString oldDisplayName = hstringToQString(previousInfo.DisplayNameResource());
+    const QString oldVersion = hstringToQString(previousInfo.Version());
+    qCInfo(lcCfApiWrapper) << u"Found a registered sync root for" << params.filesystemPath() << u"Id:" << oldId << u"Path:" << oldPath << u"DisplayName:"
+                           << oldDisplayName << u"Version:" << oldVersion;
+
+    if (oldId != id) {
+        if (!oldId.startsWith(params.providerName + u'!')) {
+            return u"The folder %1 is used by a different client: %2"_s.arg(params.filesystemPath(), oldDisplayName);
+        }
+        // append an empty segment to normalise trailing separators
+        const auto oldRoot = (OCC::FileSystem::Path(oldPath).get() / L"").lexically_normal();
+        const auto root = (params.root().get() / L"").lexically_normal();
+        if (oldRoot != root) {
+            // the folder is located inside of another of our sync roots
+            return u"The folder %1 is already managed by %2"_s.arg(params.filesystemPath(), oldDisplayName);
+        }
+        // a left over registration of ours for the same folder, the id changed for example because the account was set up again
+        qCWarning(lcCfApiWrapper) << u"Removing outdated sync root registration" << oldId << u"replacing it with" << id;
+        winrt::StorageProviderSyncRootManager::Unregister(previousInfo.Id());
+        return {};
+    }
+
+    if (QVersionNumber::fromString(oldVersion) > params.providerVersion) {
+        return u"Downgrading the folder %1 from %2 to %3 is not supported"_s.arg(params.filesystemPath(), oldVersion, params.providerVersion.toString());
+    }
+    return {};
+}
+
 void OCC::CfApiWrapper::registerSyncRoot(const VfsSetupParams &params, const std::function<void(QString)> &callback)
 {
     const auto nativePath = QDir::toNativeSeparators(params.filesystemPath());
@@ -385,7 +442,26 @@ void OCC::CfApiWrapper::registerSyncRoot(const VfsSetupParams &params, const std
                 {
                     // don't confuse Windows with parallel registrations
                     std::lock_guard lock(sRegister_mutex);
-                    winrt::StorageProviderSyncRootManager::Register(info);
+                    if (const auto error = validateExistingSyncRoot(info.Path(), id, params); !error.isEmpty()) {
+                        callback(error);
+                        return;
+                    }
+                    // With package identity Register intermittently fails with ERROR_NOT_FOUND, leaving an incomplete registration
+                    // that can't be unregistered. Repeating the registration succeeds.
+                    constexpr int maxAttempts = 5;
+                    for (int attempt = 1;; ++attempt) {
+                        try {
+                            winrt::StorageProviderSyncRootManager::Register(info);
+                            break;
+                        } catch (const winrt::hresult_error &ex) {
+                            if (ex.code() != HRESULT_FROM_WIN32(ERROR_NOT_FOUND) || attempt == maxAttempts) {
+                                throw;
+                            }
+                            qCWarning(lcCfApiWrapper) << u"Failed to register sync root, retrying" << id << u"attempt:" << attempt
+                                                      << OCC::Utility::formatWinError(ex.code());
+                            std::this_thread::sleep_for(std::chrono::milliseconds(100 * attempt));
+                        }
+                    }
                 }
                 callback({});
             } catch (const winrt::hresult_error &ex) {

@@ -2590,77 +2590,77 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::Systray</name>
     <message>
-        <location filename="../src/gui/systray.cpp" line="56"/>
+        <location filename="../src/gui/systray.cpp" line="109"/>
         <source>%1: %2</source>
         <translation>%1: %2</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="94"/>
+        <location filename="../src/gui/systray.cpp" line="146"/>
         <source>Disconnected from %1</source>
         <translation>%1에서 연결 끊김</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="97"/>
+        <location filename="../src/gui/systray.cpp" line="149"/>
         <source>Disconnected from accounts:</source>
         <translation>계정에서 연결 끊김:</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="99"/>
+        <location filename="../src/gui/systray.cpp" line="151"/>
         <source>Account %1</source>
         <translation>계정 %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="112"/>
+        <location filename="../src/gui/systray.cpp" line="164"/>
         <source>Please sign in</source>
         <translation>로그인하세요</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="116"/>
+        <location filename="../src/gui/systray.cpp" line="168"/>
         <source>Account synchronization is disabled</source>
         <translation>계정 동기화가 비활성화되었습니다</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="135"/>
+        <location filename="../src/gui/systray.cpp" line="187"/>
         <source>Space »%1«: %2</source>
         <translation>스페이스 »%1«: %2</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="147"/>
+        <location filename="../src/gui/systray.cpp" line="199"/>
         <source>Show %1</source>
         <translation>%1 표시</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="151"/>
+        <location filename="../src/gui/systray.cpp" line="203"/>
         <source>Pause synchronizations</source>
         <translation>동기화 일시 중지</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="151"/>
+        <location filename="../src/gui/systray.cpp" line="203"/>
         <source>Resume synchronizations</source>
         <translation>동기화 재개</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="156"/>
+        <location filename="../src/gui/systray.cpp" line="208"/>
         <source>Synchronization paused</source>
         <translation>동기화 일시 중지됨</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="190"/>
+        <location filename="../src/gui/systray.cpp" line="242"/>
         <source>Help</source>
         <translation>도움말</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="193"/>
+        <location filename="../src/gui/systray.cpp" line="245"/>
         <source>About</source>
         <translation>정보</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="196"/>
+        <location filename="../src/gui/systray.cpp" line="248"/>
         <source>About Qt</source>
         <translation>Qt 정보</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="198"/>
+        <location filename="../src/gui/systray.cpp" line="250"/>
         <source>Quit</source>
         <translation>종료</translation>
     </message>
@@ -2668,7 +2668,7 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::Theme</name>
     <message>
-        <location filename="../src/libsync/theme.cpp" line="160"/>
+        <location filename="../src/libsync/theme.cpp" line="146"/>
         <source>&lt;p&gt;Version %1. For more information visit &lt;a href=&quot;https://opencloud.eu/&quot;&gt;https://opencloud.eu/&lt;/a&gt;&lt;/p&gt;&lt;p&gt;For known issues and help, please visit: &lt;a href=&quot;https://github.com/opencloud-eu/desktop&quot;&gt;GitHub&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Copyright OpenCloud GmbH&lt;br/&gt;Copyright ownCloud GmbH&lt;/p&gt;&lt;p&gt;Distributed by OpenCloud GmbH and licensed under the GNU General Public License (GPL) Version 2.0.&lt;br/&gt;&lt;p&gt;&lt;small&gt;%2&lt;/small&gt;&lt;/p&gt;</source>
         <translation>&lt;p&gt;버전 %1. 자세한 내용은 &lt;a href=&quot;https://opencloud.eu/&quot;&gt;https://opencloud.eu/&lt;/a&gt;를 방문하세요.&lt;/p&gt;&lt;p&gt;알려진 문제 및 도움말은 다음을 방문하세요: &lt;a href=&quot;https://github.com/opencloud-eu/desktop&quot;&gt;GitHub&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Copyright OpenCloud GmbH&lt;br/&gt;Copyright ownCloud GmbH&lt;/p&gt;&lt;p&gt;OpenCloud GmbH에서 배포하며 GNU General Public License (GPL) 버전 2.0에 따라 라이선스가 부여됩니다.&lt;br/&gt;&lt;p&gt;&lt;small&gt;%2&lt;/small&gt;&lt;/p&gt;</translation>
     </message>
@@ -2938,7 +2938,7 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OpenCloudTheme::aboutVersions()</name>
     <message>
-        <location filename="../src/libsync/theme.cpp" line="147"/>
+        <location filename="../src/libsync/theme.cpp" line="133"/>
         <source>%1 %2%7%8Libraries Qt %3, %4%7Using virtual files plugin: %5%7%6</source>
         <translation>%1 %2%7%8라이브러리 Qt %3, %4%7가상 파일 플러그인 사용: %5%7%6</translation>
     </message>
@@ -2946,7 +2946,7 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OpenCloudTheme::qtVer</name>
     <message>
-        <location filename="../src/libsync/theme.cpp" line="130"/>
+        <location filename="../src/libsync/theme.cpp" line="116"/>
         <source>%1 (Built against Qt %2)</source>
         <translation>%1 (Qt %2 기반 빌드)</translation>
     </message>
@@ -2954,7 +2954,7 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OpenCloudTheme::versionWithSha</name>
     <message>
-        <location filename="../src/libsync/theme.cpp" line="135"/>
+        <location filename="../src/libsync/theme.cpp" line="121"/>
         <source>%1 %2</source>
         <translation>%1 %2</translation>
     </message>

@@ -2587,77 +2587,77 @@ Figyelje, hogy a parancssori naplózási beállítások felülírják ezeket.</t
 <context>
     <name>OCC::Systray</name>
     <message>
-        <location filename="../src/gui/systray.cpp" line="56"/>
+        <location filename="../src/gui/systray.cpp" line="109"/>
         <source>%1: %2</source>
         <translation>%1: %2</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="94"/>
+        <location filename="../src/gui/systray.cpp" line="146"/>
         <source>Disconnected from %1</source>
         <translation>Lecsatlakoztatva erről: %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="97"/>
+        <location filename="../src/gui/systray.cpp" line="149"/>
         <source>Disconnected from accounts:</source>
         <translation>Lecsatlakoztatva a fiókokról:</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="99"/>
+        <location filename="../src/gui/systray.cpp" line="151"/>
         <source>Account %1</source>
         <translation>%1. fiók</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="112"/>
+        <location filename="../src/gui/systray.cpp" line="164"/>
         <source>Please sign in</source>
         <translation>Kérjük jelentkezzen be</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="116"/>
+        <location filename="../src/gui/systray.cpp" line="168"/>
         <source>Account synchronization is disabled</source>
         <translation>A fiók szinkronizálása le van tiltva</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="135"/>
+        <location filename="../src/gui/systray.cpp" line="187"/>
         <source>Space »%1«: %2</source>
         <translation>Space »%1«: %2</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="147"/>
+        <location filename="../src/gui/systray.cpp" line="199"/>
         <source>Show %1</source>
         <translation>%1 megjelenítése</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="151"/>
+        <location filename="../src/gui/systray.cpp" line="203"/>
         <source>Pause synchronizations</source>
         <translation>Szinkronizálások szüneteltetése</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="151"/>
+        <location filename="../src/gui/systray.cpp" line="203"/>
         <source>Resume synchronizations</source>
         <translation>Szinkronizálások folytatása</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="156"/>
+        <location filename="../src/gui/systray.cpp" line="208"/>
         <source>Synchronization paused</source>
         <translation>Szinkronizálás szüneteltetve</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="190"/>
+        <location filename="../src/gui/systray.cpp" line="242"/>
         <source>Help</source>
         <translation>Súgó</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="193"/>
+        <location filename="../src/gui/systray.cpp" line="245"/>
         <source>About</source>
         <translation>Névjegy</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="196"/>
+        <location filename="../src/gui/systray.cpp" line="248"/>
         <source>About Qt</source>
         <translation>A Qt névjegye</translation>
     </message>
     <message>
-        <location filename="../src/gui/systray.cpp" line="198"/>
+        <location filename="../src/gui/systray.cpp" line="250"/>
         <source>Quit</source>
         <translation>Kilépés</translation>
     </message>
@@ -2665,7 +2665,7 @@ Figyelje, hogy a parancssori naplózási beállítások felülírják ezeket.</t
 <context>
     <name>OCC::Theme</name>
     <message>
-        <location filename="../src/libsync/theme.cpp" line="160"/>
+        <location filename="../src/libsync/theme.cpp" line="146"/>
         <source>&lt;p&gt;Version %1. For more information visit &lt;a href=&quot;https://opencloud.eu/&quot;&gt;https://opencloud.eu/&lt;/a&gt;&lt;/p&gt;&lt;p&gt;For known issues and help, please visit: &lt;a href=&quot;https://github.com/opencloud-eu/desktop&quot;&gt;GitHub&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Copyright OpenCloud GmbH&lt;br/&gt;Copyright ownCloud GmbH&lt;/p&gt;&lt;p&gt;Distributed by OpenCloud GmbH and licensed under the GNU General Public License (GPL) Version 2.0.&lt;br/&gt;&lt;p&gt;&lt;small&gt;%2&lt;/small&gt;&lt;/p&gt;</source>
         <translation>&lt;p&gt;Verzió: %1. További információért látogasson el ide: &lt;a href=&quot;https://opencloud.eu/&quot;&gt;https://opencloud.eu/&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Ismert problémákhoz és segítséghez látogasson el ide: &lt;a href=&quot;https://github.com/opencloud-eu/desktop&quot;&gt;GitHub&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Copyright OpenCloud GmbH&lt;br/&gt;Copyright ownCloud GmbH&lt;/p&gt;&lt;p&gt;Az OpenCloud GmbH terjeszti, a GNU General Public License (GPL) 2.0-s verziója alapján.&lt;br/&gt;&lt;p&gt;&lt;small&gt;%2&lt;/small&gt;&lt;/p&gt;</translation>
     </message>
@@ -2935,7 +2935,7 @@ Figyelje, hogy a parancssori naplózási beállítások felülírják ezeket.</t
 <context>
     <name>OpenCloudTheme::aboutVersions()</name>
     <message>
-        <location filename="../src/libsync/theme.cpp" line="147"/>
+        <location filename="../src/libsync/theme.cpp" line="133"/>
         <source>%1 %2%7%8Libraries Qt %3, %4%7Using virtual files plugin: %5%7%6</source>
         <translation>%1 %2%7%8Könyvtárak Qt %3, %4%7Virtuális fájlok bővítmény: %5%7%6</translation>
     </message>
@@ -2943,7 +2943,7 @@ Figyelje, hogy a parancssori naplózási beállítások felülírják ezeket.</t
 <context>
     <name>OpenCloudTheme::qtVer</name>
     <message>
-        <location filename="../src/libsync/theme.cpp" line="130"/>
+        <location filename="../src/libsync/theme.cpp" line="116"/>
         <source>%1 (Built against Qt %2)</source>
         <translation>%1 (Qt %2 ellen fordítva)</translation>
     </message>
@@ -2951,7 +2951,7 @@ Figyelje, hogy a parancssori naplózási beállítások felülírják ezeket.</t
 <context>
     <name>OpenCloudTheme::versionWithSha</name>
     <message>
-        <location filename="../src/libsync/theme.cpp" line="135"/>
+        <location filename="../src/libsync/theme.cpp" line="121"/>
         <source>%1 %2</source>
         <translation>%1 %2</translation>
     </message>
