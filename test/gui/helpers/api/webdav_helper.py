@@ -4,7 +4,7 @@ import xml.etree.ElementTree as ET
 import json
 
 import helpers.api.http_helper as request
-from helpers.api.utils import url_join
+from helpers.api.utils import url_join, perform_request_with_retry
 from helpers.ConfigHelper import get_config, PERMISSION_ROLES
 from helpers.FilesHelper import get_file_for_upload
 from helpers.SpaceHelper import get_personal_space_id, get_space_id, get_spaces_dav_endpoint
@@ -204,7 +204,15 @@ def patch_resource_properties(properties, resource_path=None, space_name=None, u
     </d:propertyupdate>
     """
 
-    response = request.proppatch(url, body=body, user=user)
+    def do_proppatch():
+        return request.proppatch(url, body=body, user=user)
+
+    def retry_condition(response):
+        # the request can fail with 404 (race condition), so retry in that case
+        return response.status_code != 207 and response.status_code == 404
+
+    response = perform_request_with_retry(do_proppatch, retry_condition)
+
     request.assert_http_status(
         response,
         207,
@@ -215,10 +223,12 @@ def patch_resource_properties(properties, resource_path=None, space_name=None, u
 
     # check if the property patch was successful
     xml = ET.fromstring(response.content)
-    status = xml.find('.//{DAV:}propstat/{DAV:}status')
-    if not status.text.endswith("200 OK"):
-        raise AssertionError(
-            f'Failed to patch properties. Resource: "{resource_path}", Space: "{space_name}"'
-            + f'\n  Properties: {body}'
-            + f'\n  Status: {status.text}'
-        )
+    statuses = xml.findall('.//{DAV:}propstat/{DAV:}status')
+    for status in statuses:
+        if not status.text.endswith("200 OK"):
+            raise AssertionError(
+                f'Failed to patch properties. Resource: "{resource_path}", Space: "{space_name}"'
+                + f'\n  Properties: {body}'
+                + f'\n  Status: {status.text}'
+                + f'\n  Response: {response.content}'
+            )
