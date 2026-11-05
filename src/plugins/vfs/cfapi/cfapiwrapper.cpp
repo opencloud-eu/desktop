@@ -629,7 +629,7 @@ OCC::Result<void, QString> OCC::CfApiWrapper::createPlaceholderInfo(
     Q_ASSERT(parentInfo);
     const auto state = parentInfo && parentInfo.pinState() == PinState::OnlineOnly ? PinState::OnlineOnly : PinState::Inherited;
 
-    const auto handle = OCC::Utility::Handle::createHandle(baseDir);
+    const auto handle = OCC::Utility::Handle::createHandle(path);
     if (!handle) {
         const QString errorMessage = u"Couldn't create handle for placeholder %1 Error: %2"_s.arg(handle.path().native(), handle.errorMessage());
         qCWarning(lcCfApiWrapper) << errorMessage;
