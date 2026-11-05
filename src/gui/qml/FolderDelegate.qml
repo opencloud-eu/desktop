@@ -109,6 +109,10 @@ Pane {
                         enabled: visible
                     }
                     OCMenuItem {
+                        text: qsTr("Client Certificate (mTLS)...")
+                        onTriggered: accountSettings.slotConfigureClientCertificate()
+                    }
+                    OCMenuItem {
                         text: qsTr("Remove")
                         onTriggered: accountSettings.slotDeleteAccount()
                     }
