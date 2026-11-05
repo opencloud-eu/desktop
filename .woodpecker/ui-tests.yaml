@@ -62,7 +62,7 @@ steps:
       - mc cp -r -a s3/$PUBLIC_BUCKET/desktop/browsers-cache/$playwright_version/playwright-browsers.tar.gz $CI_WORKSPACE
 
   - name: unzip-browsers-cache
-    image: owncloud/ubuntu:20.04
+    image: *alpine_image
     commands:
       - cd test/gui
       - tar -xf $CI_WORKSPACE/playwright-browsers.tar.gz -C ./

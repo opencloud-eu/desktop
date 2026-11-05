@@ -10,6 +10,7 @@
 
 #include "libsync/account.h"
 #include "libsync/common/version.h"
+#include "libsync/creds/httpcredentials.h"
 #include "libsync/networkjobs/jsonjob.h"
 
 #include <QDesktopServices>
@@ -33,10 +34,13 @@ void UpdateNotifier::checkForUpdates(const AccountPtr &account)
             connect(job, &JsonJob::finishedSignal, this, [job, this] {
                 if (job->httpStatusCode() == 200) {
                     const auto server = job->data().value("server"_L1).toString().toUtf8();
-                    auto *updateJob = new JsonJob(job->account(), QUrl(u"https://update.opencloud.eu/desktop.json"_s), {}, "GET"_ba,
+                    // the update server is not part of the account, it must not receive the credentials
+                    QNetworkRequest updateRequest;
+                    updateRequest.setAttribute(HttpCredentials::DontAddCredentialsAttribute, true);
+                    auto *updateJob = new JsonJob(job->account(), updateCheckUrl(), {}, "GET"_ba,
                         SimpleNetworkJob::UrlQuery{{u"version"_s, Version::versionWithBuildNumber().toString()}, {u"edition"_s, channel()},
                             {u"server"_s, QString::fromUtf8(QCryptographicHash::hash(server, QCryptographicHash::Sha256).toHex())}},
-                        {}, this);
+                        updateRequest, this);
                     connect(updateJob, &JsonJob::finishedSignal, this, [updateJob, this] {
                         if (updateJob->httpStatusCode() == 200) {
                             const auto data = updateJob->data().value("channels"_L1).toObject().value(channel()).toObject();
@@ -73,6 +77,11 @@ void UpdateNotifier::checkForUpdates(const AccountPtr &account)
             job->start();
         }
     }
+}
+
+QUrl UpdateNotifier::updateCheckUrl() const
+{
+    return QUrl(u"https://update.opencloud.eu/desktop.json"_s);
 }
 
 QString UpdateNotifier::channel() const

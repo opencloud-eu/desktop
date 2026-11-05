@@ -6,6 +6,7 @@
 #include "libsync/accountfwd.h"
 
 #include <QObject>
+#include <QUrl>
 #include <QVersionNumber>
 
 namespace OCC {
@@ -22,6 +23,11 @@ public:
     void checkForUpdates(const AccountPtr &account);
 
 protected:
+    /**
+     * Returns the url of the update server, which is requested without the credentials of the account
+     */
+    virtual QUrl updateCheckUrl() const;
+
     QString channel() const;
 
     /**

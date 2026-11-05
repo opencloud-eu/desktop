@@ -27,8 +27,6 @@
 #include <sddl.h>
 
 #include <winrt/Windows.Foundation.h>
-#include <winrt/Windows.Security.Cryptography.h>
-#include <winrt/windows.Storage.Streams.h>
 #include <winrt/windows.storage.provider.h>
 
 #include <chrono>
@@ -42,10 +40,8 @@ using namespace std::chrono_literals;
 namespace winrt {
 using namespace Windows::Foundation;
 using namespace Windows::Storage;
-using namespace Windows::Storage::Streams;
 using namespace Windows::Storage::Provider;
 using namespace Windows::Foundation::Collections;
-using namespace Windows::Security::Cryptography;
 }
 
 template <>
@@ -434,10 +430,6 @@ void OCC::CfApiWrapper::registerSyncRoot(const VfsSetupParams &params, const std
                 winrt::Uri uri(reinterpret_cast<const wchar_t *>(
                     u"%1/files/trash/project?fileId=%2"_s.arg(params.account->url().toString(QUrl::FullyEncoded), params.spaceId()).utf16()));
                 info.RecycleBinUri(uri);
-
-                winrt::Streams::DataWriter streamWriter;
-                streamWriter.WriteString(params.account->uuid().toString().toStdWString());
-                info.Context(streamWriter.DetachBuffer());
 
                 {
                     // don't confuse Windows with parallel registrations

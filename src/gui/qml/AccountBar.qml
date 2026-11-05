@@ -116,7 +116,7 @@ Pane {
             Layout.maximumWidth: widthHint
             icon.source: OCUtils.resourcePath("fontawesome", "+", enabled)
             text: qsTr("Add Account")
-            visible: JsonThme.multiAccount || AccountManager.accounts.length === 0
+            visible: JsonTheme.multiAccount || AccountManager.accounts.length === 0
 
             Keys.onBacktabPressed: event => {
                 // If there are no account buttons, we're the first button, so handle the back-tab

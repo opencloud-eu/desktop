@@ -162,7 +162,7 @@ public:
         Unknown,
         Unsupported
     };
-    Q_ENUMS(ServerSupportLevel)
+    Q_ENUM(ServerSupportLevel)
     ServerSupportLevel serverSupportLevel() const;
 
     /** True when the server connection is using HTTP2  */
