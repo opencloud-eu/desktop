@@ -48,8 +48,6 @@ public:
         CanAddFile = 5, // C
         CanAddSubDirectories = 6, // K
         CanReshare = 7, // R
-        // Note: on the server, this means SharedWithMe, but in discoveryphase.cpp we also set
-        // this permission when the server reports the any "share-types"
         IsShared = 8, // S
         IsMounted = 9, // M
         IsMountedSub = 10, // m (internal: set if the parent dir has IsMounted)
