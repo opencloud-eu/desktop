@@ -45,6 +45,7 @@ public:
     bool _serverHasIgnoredFiles = false;
     bool _hasDirtyPlaceholder = false;
     QByteArray _checksumHeader;
+    QString _shareTypes;
 
     QString _error;
 };
@@ -93,7 +94,7 @@ QByteArray SyncJournalFileRecord::query()
 {
     return QByteArrayLiteral("SELECT path, inode, modtime, type, md5, fileid, remotePerm, filesize,"
                              " ignoredChildrenRemote, contentchecksumtype.name || ':' || contentChecksum,"
-                             " hasDirtyPlaceholder"
+                             " hasDirtyPlaceholder, shareTypes"
                              " FROM metadata"
                              " LEFT JOIN checksumtype as contentchecksumtype ON metadata.contentChecksumTypeId == contentchecksumtype.id ");
 }
@@ -111,6 +112,7 @@ SyncJournalFileRecord SyncJournalFileRecord::fromSqlQuery(OCC::SqlQuery &query)
     rec.d->_serverHasIgnoredFiles = (query.intValue(8) > 0);
     rec.d->_checksumHeader = query.baValue(9);
     rec.d->_hasDirtyPlaceholder = query.intValue(10);
+    rec.d->_shareTypes = QString::fromUtf8(query.baValue(11));
     qCDebug(lcSyncJournalFileRecord) << u"Restored from db:" << rec;
     Q_ASSERT(rec.validateRecord());
     return rec;
@@ -134,6 +136,7 @@ SyncJournalFileRecord SyncJournalFileRecord::fromSyncFileItem(const SyncFileItem
     rec.d->_remotePerm = syncFile._remotePerm;
     rec.d->_serverHasIgnoredFiles = syncFile._serverHasIgnoredFiles;
     rec.d->_checksumHeader = syncFile._checksumHeader;
+    rec.d->_shareTypes = syncFile._shareTypes;
     Q_ASSERT(rec.validateRecord());
 
     return rec;
@@ -210,6 +213,11 @@ ItemType SyncJournalFileRecord::type() const
     return d->_type;
 }
 
+QString SyncJournalFileRecord::shareTypes() const
+{
+    return d->_shareTypes;
+}
+
 bool SyncJournalFileRecord::hasDirtyPlaceholder() const
 {
     return d->_hasDirtyPlaceholder;
@@ -235,6 +243,7 @@ bool SyncJournalFileRecord::hasError() const
 {
     return !d->_error.isEmpty();
 }
+
 QDebug OCC::operator<<(QDebug debug, const SyncJournalFileRecord &record)
 {
     QDebugStateSaver saver(debug);
@@ -245,7 +254,7 @@ QDebug OCC::operator<<(QDebug debug, const SyncJournalFileRecord &record)
         debug << u"path: " << record.path() << u", inode: " << record.inode() << u", modtime: " << record.modtime() << u", type: " << record.type()
               << u", etag: " << record.etag() << u", fileId: " << record.fileId() << u", remotePerm: " << record.remotePerm().toString() << u", size: "
               << record.size() << u", checksum: " << record.checksumHeader() << u", serverHasIgnoredFiles: " << record.serverHasIgnoredFiles()
-              << u", hasDirtyPlaceholder: " << record.hasDirtyPlaceholder();
+              << u", hasDirtyPlaceholder: " << record.hasDirtyPlaceholder() << u", shareTypes: " << record.shareTypes();
     }
     return debug << u")";
 }
@@ -254,5 +263,5 @@ bool operator==(const SyncJournalFileRecord &lhs, const SyncJournalFileRecord &r
 {
     return lhs.path() == rhs.path() && lhs.inode() == rhs.inode() && lhs.modtime() == rhs.modtime() && lhs.type() == rhs.type() && lhs.etag() == rhs.etag()
         && lhs.fileId() == rhs.fileId() && lhs.size() == rhs.size() && lhs.remotePerm() == rhs.remotePerm()
-        && lhs.serverHasIgnoredFiles() == rhs.serverHasIgnoredFiles() && lhs.checksumHeader() == rhs.checksumHeader();
+        && lhs.serverHasIgnoredFiles() == rhs.serverHasIgnoredFiles() && lhs.checksumHeader() == rhs.checksumHeader() && lhs.shareTypes() == rhs.shareTypes();
 }

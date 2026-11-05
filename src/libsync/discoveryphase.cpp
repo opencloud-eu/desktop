@@ -249,6 +249,7 @@ void DiscoverySingleDirectoryJob::start()
         "getetag"_ba, //
         "http://owncloud.org/ns:id"_ba, //
         "http://owncloud.org/ns:permissions"_ba, //
+        "http://owncloud.org/ns:share-types"_ba, //
         "http://owncloud.org/ns:checksums"_ba, //
         "ocrclone:integrity-id"_ba // vault files
     });

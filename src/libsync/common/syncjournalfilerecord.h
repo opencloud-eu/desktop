@@ -66,6 +66,7 @@ public:
     int64_t size() const;
     uint64_t inode() const;
     ItemType type() const;
+    QString shareTypes() const;
 
     bool hasDirtyPlaceholder() const;
     void setDirtyPlaceholder(bool b);
