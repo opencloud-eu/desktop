@@ -48,8 +48,18 @@ include(CTest)
 include(OCApplyCommonSettings)
 
 if(BETA_CHANNEL_BUILD)
-    # copy the beta theme to the bin directory so we can use the beta theme during development
-    configure_file("${PROJECT_SOURCE_DIR}/beta.json" "${CMAKE_CURRENT_BINARY_DIR}/bin/opencloud_theme.json" COPYONLY)
+    if("${JSON_THEME}" STREQUAL "")
+        set(JSON_THEME "beta.json")
+    endif()
+endif()
+
+if("${JSON_THEME}" STREQUAL "OPENCLOUD")
+    message("Building default theme")
+else()
+    message("Building custom theme ${JSON_THEME}")
+
+    # copy the desired  json theme to the bin directory so we can use the beta theme during development
+    configure_file("${PROJECT_SOURCE_DIR}/${JSON_THEME}" "${CMAKE_CURRENT_BINARY_DIR}/bin/opencloud_theme.json" COPYONLY)
     if(APPLE)
         list(APPEND OPENCLOUD_BUNDLED_RESOURCES "${CMAKE_CURRENT_BINARY_DIR}/bin/opencloud_theme.json")
     endif()
@@ -130,6 +140,8 @@ add_feature_info(AppImageUpdate WITH_APPIMAGEUPDATER "Built-in libappimageupdate
 ## -DVIRTUAL_FILE_SYSTEM_PLUGINS="off;cfapi;openvfs"
 set(VIRTUAL_FILE_SYSTEM_PLUGINS off cfapi CACHE STRING "Name of internal plugin in src/plugins/vfs or the locations of virtual file plugins")
 
+# specify the name of a theme to build. Leave blank for default
+set(JSON_THEME "OPENCLOUD" CACHE STRING "Name of the theme to use")
 
 if (WITH_AUTO_UPDATER)
     if(APPLE)
