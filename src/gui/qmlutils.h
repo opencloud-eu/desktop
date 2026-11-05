@@ -67,6 +67,11 @@ class OCUtils : public QObject
     Q_PROPERTY(QString qVersion READ qVersion CONSTANT)
     QML_SINGLETON
     QML_ELEMENT
+
+    Q_PROPERTY(bool hasSystemLaunchOnStartup READ hasSystemLaunchOnStartup)
+    Q_PROPERTY(bool hasLaunchOnStartup READ hasLaunchOnStartup WRITE setLaunchOnStartup)
+    Q_PROPERTY(bool isInstalledByStore READ isInstalledByStore)
+
 public:
     using QObject::QObject;
 
@@ -90,5 +95,11 @@ public:
      * Same as setClipBoard, but converts the path to native separators
      */
     Q_INVOKABLE void setClipBoardFromFilePath(const QString &text) const;
+
+    bool hasSystemLaunchOnStartup() const;
+    bool hasLaunchOnStartup() const;
+    void setLaunchOnStartup(bool launch);
+
+    bool isInstalledByStore() const;
 };
 }

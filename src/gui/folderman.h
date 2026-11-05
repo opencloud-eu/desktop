@@ -23,6 +23,7 @@
 #include <QList>
 #include <QObject>
 #include <QQueue>
+#include <QtQmlIntegration/QtQmlIntegration>
 
 class TestFolderMigration;
 
@@ -58,6 +59,10 @@ private:
 class OPENCLOUD_GUI_EXPORT FolderMan : public QObject
 {
     Q_OBJECT
+    QML_SINGLETON
+    QML_ELEMENT
+
+    Q_PROPERTY(bool ignoreHiddenFiles READ ignoreHiddenFiles WRITE setIgnoreHiddenFiles NOTIFY ignoreHiddenFilesChanged)
 public:
     /**
      * For a new folder, the type guides what kind of checks are done to ensure the new folder is not embedded in an existing one.
@@ -105,6 +110,7 @@ public:
     static QString checkPathValidityRecursive(const QString &path, FolderMan::NewFolderType folderType, const QUuid &accountUuid);
 
     static std::unique_ptr<FolderMan> createInstance();
+    static FolderMan *create(QQmlEngine *qmlEngine, QJSEngine *);
     ~FolderMan() override;
 
     /**
@@ -221,6 +227,11 @@ Q_SIGNALS:
       * Attention: The folder may be zero. Do a general update of the state then.
       */
     void folderSyncStateChange(Folder *);
+
+    /**
+     * Emitted whenever the setting to ignore hidden files changes.
+     */
+    void ignoreHiddenFilesChanged(bool state);
 
     /**
      * Emitted whenever the list of configured folders changes.
