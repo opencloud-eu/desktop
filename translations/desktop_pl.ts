@@ -2712,18 +2712,18 @@ Uwaga: użycie opcji logowania w wierszu poleceń nadpisze te ustawienia.</trans
 <context>
     <name>OCC::UpdateNotifier</name>
     <message>
-        <location filename="../src/gui/updatenotifier.cpp" line="47"/>
+        <location filename="../src/gui/updatenotifier.cpp" line="51"/>
         <source>Update available</source>
         <translation>Dostępna aktualizacja</translation>
     </message>
     <message>
-        <location filename="../src/gui/updatenotifier.cpp" line="48"/>
+        <location filename="../src/gui/updatenotifier.cpp" line="52"/>
         <source>A new version %1 is available. You are using version %2.</source>
         <comment>The first placeholder is the new version, the second one the current version</comment>
         <translation>Dostępna jest nowa wersja %1. Używasz wersji %2.</translation>
     </message>
     <message>
-        <location filename="../src/gui/updatenotifier.cpp" line="53"/>
+        <location filename="../src/gui/updatenotifier.cpp" line="57"/>
         <source>Open Download Page</source>
         <translation>Otwórz stronę pobierania</translation>
     </message>

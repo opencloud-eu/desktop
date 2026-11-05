@@ -2714,18 +2714,18 @@ Tingues en compte que l’ús de qualsevol opció de línia d’ordres per a reg
 <context>
     <name>OCC::UpdateNotifier</name>
     <message>
-        <location filename="../src/gui/updatenotifier.cpp" line="47"/>
+        <location filename="../src/gui/updatenotifier.cpp" line="51"/>
         <source>Update available</source>
         <translation>Actualització disponible</translation>
     </message>
     <message>
-        <location filename="../src/gui/updatenotifier.cpp" line="48"/>
+        <location filename="../src/gui/updatenotifier.cpp" line="52"/>
         <source>A new version %1 is available. You are using version %2.</source>
         <comment>The first placeholder is the new version, the second one the current version</comment>
         <translation>Hi ha disponible una nova versió %1. Esteu utilitzant la versió %2.</translation>
     </message>
     <message>
-        <location filename="../src/gui/updatenotifier.cpp" line="53"/>
+        <location filename="../src/gui/updatenotifier.cpp" line="57"/>
         <source>Open Download Page</source>
         <translation>Obre la pàgina de descàrregues</translation>
     </message>
