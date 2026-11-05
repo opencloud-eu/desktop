@@ -13,6 +13,7 @@
   - [Windows](#windows)
     - [Set up Test Environment](#set-up-test-environment)
     - [Run GUI Tests](#run-gui-tests-1)
+  - [Testing Beta, RC or Branded Clients](#testing-beta-rc-or-branded-clients)
   - [Test Reports](#test-reports)
 - [Writing GUI Test](#writing-gui-test)
   - [Code Formatting and Linting](#code-formatting-and-linting)
@@ -159,7 +160,14 @@ This guide explains how to build the OpenCloud desktop client and run the GUI te
    [DEFAULT]
    APP_PATH=<full-path-to>/opencloud # desktop app binary: <desktop-repo-root>/build/bin/opencloud
    BACKEND_HOST=<opencloud-server-url> # https://localhost:9200
+   # optional, for Beta/RC or branded clients
+   APP_NAME=
+   APP_DISPLAY_NAME=
+   APP_CONFIG_FILE=
    ```
+
+   > [!NOTE]
+   > Testing a Beta/RC or branded client? See [Testing Beta, RC or Branded Clients](#testing-beta-rc-or-branded-clients).
 
 4. Start the AT-SPI WebDriver
 
@@ -234,7 +242,15 @@ For Windows, we use Appium with the NovaWindows driver to automate the OpenCloud
    [DEFAULT]
    APP_PATH=<full-path-to>\opencloud.exe # path to the desktop app executable
    BACKEND_HOST=<opencloud-server-url> # https://localhost:9200
+   # optional, for Beta/RC or branded clients
+   APP_NAME=
+   APP_DISPLAY_NAME=
+   APP_CONFIG_FILE=
    ```
+
+   > [!NOTE]
+   > Testing a Beta/RC or branded client? See [Testing Beta, RC or Branded Clients](#testing-beta-rc-or-branded-clients).
+
 3. Install python test dependencies
 
    ```powershell
@@ -257,6 +273,24 @@ For Windows, we use Appium with the NovaWindows driver to automate the OpenCloud
 > [!IMPORTANT]
 >
 > Close any running OpenCloud desktop client before running the GUI tests.
+
+## Testing Beta, RC or Branded Clients
+
+Stable builds need only `APP_PATH` and `BACKEND_HOST`. For other clients, also set the following in `config.ini` (or as environment variables):
+
+```ini
+APP_NAME=OpenCloud Beta
+APP_DISPLAY_NAME=OpenCloud Desktop Beta
+APP_CONFIG_FILE=opencloud_beta.cfg # optional
+```
+
+- `APP_NAME` and `APP_DISPLAY_NAME` are `applicationName` and `applicationDisplayName` in the build's `opencloud_theme.json`.
+  That file sits next to the executable and is created from `beta.json` only when the client is built with `-DBETA_CHANNEL_BUILD=ON`.
+  Without it, the build is vanilla and the defaults (`OpenCloud` / `OpenCloud Desktop`) apply.
+  For a prebuilt AppImage or installer, launch it once and check the config home for the folder and `.cfg` file it creates.
+- The settings file is `<config-home>/<APP_NAME>/<APP_CONFIG_FILE>`.
+  `APP_CONFIG_FILE` defaults to the lowercased `APP_NAME` with spaces replaced by `_` (Beta: `opencloud_beta.cfg`).
+  Set it explicitly only if the client uses a different settings filename.
 
 ## Test Reports
 
