@@ -246,7 +246,8 @@ void ProcessDirectoryJob::processFile(const PathTuple &path,
                               << u" | fileid: " << dbEntry.fileId() << u"//" << serverEntry.fileId() //
                               << u" | inode: " << dbEntry.inode() << u"/" << localEntry.inode() << u"/" //
                               << u" | type: " << dbEntry.type() << u"/" << localEntry.type() << u"/"
-                              << (serverEntry.isDirectory() ? ItemTypeDirectory : ItemTypeFile);
+                              << (serverEntry.isDirectory() ? ItemTypeDirectory : ItemTypeFile) //
+                              << u" | isShared: " << dbEntry.isShared() << u"//" << serverEntry.isShared(); //
 
     if (_discoveryData->isRenamed(path._original)) {
         qCDebug(lcDisco) << u"Ignoring renamed";
@@ -316,6 +317,7 @@ void ProcessDirectoryJob::processFileAnalyzeRemoteInfo(
     item->_remotePerm = serverEntry.remotePerm();
     item->_type = serverEntry.isDirectory() ? ItemTypeDirectory : ItemTypeFile;
     item->_etag = serverEntry.etag();
+    item->_isShared = serverEntry.isShared();
 
     // Check for missing server data
     if (!serverEntry.error().isEmpty()) {
@@ -363,7 +365,8 @@ void ProcessDirectoryJob::processFileAnalyzeRemoteInfo(
             } else {
                 item->setInstruction(CSYNC_INSTRUCTION_SYNC);
             }
-        } else if (dbEntry.remotePerm() != serverEntry.remotePerm() || dbEntry.fileId() != serverEntry.fileId()) {
+        } else if (dbEntry.remotePerm() != serverEntry.remotePerm() || dbEntry.fileId() != serverEntry.fileId()
+            || dbEntry.isShared() != serverEntry.isShared()) {
             item->setInstruction(CSYNC_INSTRUCTION_UPDATE_METADATA);
             item->_direction = SyncFileItem::Down;
         } else {

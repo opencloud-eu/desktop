@@ -52,6 +52,10 @@ public:
         if (auto it = Utility::optionalFind(map, "integrity-id"_L1)) {
             _vaultIntegrityId = it->value();
         }
+        if (auto it = Utility::optionalFind(map, "share-types"_L1); it && !it->value().isEmpty()) {
+            // Ignore the value, we only care if any share-type is provided at all
+            _isShared = true;
+        }
 
         if (_etag.isEmpty()) {
             errors.append(u"etag"_s);
@@ -79,6 +83,7 @@ public:
     int64_t _size = 0;
     bool _isDirectory = false;
     QString _vaultIntegrityId;
+    bool _isShared = false;
 
     QString _error;
 };
@@ -155,4 +160,9 @@ bool RemoteInfo::isVaultFile() const
 bool RemoteInfo::isValid() const
 {
     return !d->_name.isNull();
+}
+
+bool RemoteInfo::isShared() const
+{
+    return d->_isShared;
 }

@@ -126,7 +126,7 @@ SyncFileStatus SyncFileStatusTracker::fileStatus(const QString &relativePath)
 
     // First look it up in the database to know if it's shared
     if (const auto rec = _syncEngine->journal()->getFileRecord(relativePath); rec.isValid()) {
-        return resolveSyncAndErrorStatus(relativePath, rec.remotePerm().hasPermission(RemotePermissions::IsShared) ? Shared : NotShared);
+        return resolveSyncAndErrorStatus(relativePath, rec.isShared() ? Shared : NotShared);
     }
 
     // Must be a new file not yet in the database, check if it's syncing or has an error.
@@ -212,7 +212,7 @@ void SyncFileStatusTracker::slotAboutToPropagate(const SyncFileItemSet &items)
             _syncProblems[item->destination()] = SyncFileStatus::StatusExcluded;
         }
 
-        SharedFlag sharedFlag = item->_remotePerm.hasPermission(RemotePermissions::IsShared) ? Shared : NotShared;
+        SharedFlag sharedFlag = item->_isShared ? Shared : NotShared;
         if (item->instruction() & ~(CSYNC_INSTRUCTION_NONE | CSYNC_INSTRUCTION_UPDATE_METADATA | CSYNC_INSTRUCTION_IGNORE | CSYNC_INSTRUCTION_ERROR)) {
             // Mark this path as syncing for instructions that will result in propagation.
             incSyncCountAndEmitStatusChanged(item->destination(), sharedFlag);
@@ -255,7 +255,7 @@ void SyncFileStatusTracker::slotItemCompleted(const SyncFileItemPtr &item)
         _syncProblems.erase(item->destination());
     }
 
-    SharedFlag sharedFlag = item->_remotePerm.hasPermission(RemotePermissions::IsShared) ? Shared : NotShared;
+    SharedFlag sharedFlag = item->_isShared ? Shared : NotShared;
     if (item->instruction() & ~(CSYNC_INSTRUCTION_NONE | CSYNC_INSTRUCTION_UPDATE_METADATA | CSYNC_INSTRUCTION_IGNORE | CSYNC_INSTRUCTION_ERROR)) {
         // decSyncCount calls *must* be symetric with incSyncCount calls in slotAboutToPropagate
         decSyncCountAndEmitStatusChanged(item->destination(), sharedFlag);

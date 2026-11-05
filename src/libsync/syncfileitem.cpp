@@ -38,6 +38,7 @@ SyncFileItemPtr SyncFileItem::fromSyncJournalFileRecord(const SyncJournalFileRec
     item->_remotePerm = rec.remotePerm();
     item->_serverHasIgnoredFiles = rec.serverHasIgnoredFiles();
     item->_checksumHeader = rec.checksumHeader();
+    item->_isShared = rec.isShared();
     return item;
 }
 

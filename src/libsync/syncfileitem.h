@@ -294,6 +294,7 @@ public:
     qint64 _size;
     quint64 _inode;
     QByteArray _fileId;
+    bool _isShared = false;
 
     // This is the value for the 'new' side, matching with _size and _modtime.
     //

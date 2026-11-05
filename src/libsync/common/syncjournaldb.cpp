@@ -313,6 +313,7 @@ bool SyncJournalDb::checkConnect()
                         // contentChecksum
                         // contentChecksumTypeId
                         // hasDirtyPlaceholder
+                        // isShared
                         "PRIMARY KEY(phash)"
                         ");");
 
@@ -637,6 +638,7 @@ bool SyncJournalDb::updateMetadataTableStructure()
         }
         commitInternal(QStringLiteral("update database structure: add contentChecksum col"));
     }
+
     if (columns.indexOf("contentChecksumTypeId") == -1) {
         SqlQuery query(_db);
         query.prepare("ALTER TABLE metadata ADD COLUMN contentChecksumTypeId INTEGER;");
@@ -661,6 +663,16 @@ bool SyncJournalDb::updateMetadataTableStructure()
             re = false;
         }
         commitInternal(QStringLiteral("update database structure: add hasDirtyPlaceholder col"));
+    }
+
+    if (columns.indexOf("isShared") == -1) {
+        SqlQuery query(_db);
+        query.prepare("ALTER TABLE metadata ADD COLUMN isShared INT;");
+        if (!query.exec()) {
+            sqlFail(QStringLiteral("updateMetadataTableStructure: add isShared column"), query);
+            re = false;
+        }
+        commitInternal(QStringLiteral("update database structure: add isShared col"));
     }
 
     auto conflictsColumns = tableColumns("conflicts");
@@ -787,8 +799,8 @@ Result<void, QString> SyncJournalDb::setFileRecord(const SyncJournalFileRecord &
         const auto query = _queryManager.get(PreparedSqlQueryManager::SetFileRecordQuery,
             QByteArrayLiteral("INSERT OR REPLACE INTO metadata "
                               "(phash, path, inode, modtime, type, md5, fileid, remotePerm, filesize, ignoredChildrenRemote, "
-                              "contentChecksum, contentChecksumTypeId, hasDirtyPlaceholder) "
-                              "VALUES (?1 , ?2, ?3 , ?4 , ?5 , ?6 , ?7,  ?8 , ?9 , ?10, ?11, ?12, ?13);"),
+                              "contentChecksum, contentChecksumTypeId, hasDirtyPlaceholder, isShared) "
+                              "VALUES (?1 , ?2, ?3 , ?4 , ?5 , ?6 , ?7,  ?8 , ?9 , ?10, ?11, ?12, ?13, ?14);"),
             _db);
         if (!query) {
             return query->error();
@@ -808,6 +820,7 @@ Result<void, QString> SyncJournalDb::setFileRecord(const SyncJournalFileRecord &
         query->bindValue(i++, checksumHeader.checksum());
         query->bindValue(i++, contentChecksumTypeId);
         query->bindValue(i++, record.hasDirtyPlaceholder());
+        query->bindValue(i++, record.isShared());
 
         if (!query->exec()) {
             return query->error();
