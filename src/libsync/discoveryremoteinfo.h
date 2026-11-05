@@ -45,6 +45,8 @@ public:
 
     bool isValid() const;
 
+    bool isShared() const;
+
 private:
     QExplicitlySharedDataPointer<RemoteInfoData> d;
 };
