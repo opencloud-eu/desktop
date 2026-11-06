@@ -66,9 +66,10 @@ def get_space_id(space_name, user=None):
 def fetch_space_id(space_name, user=None):
     spaces = fetch_spaces(user=user)
     space_id = None
+    username = user.lower()
     for space in spaces:
         if space['name'] == space_name or (
-            space_name == "Personal" and space['driveType'] == 'personal'
+            space_name == "Personal" and space['driveAlias'] == f'personal/{username}'
         ):
             user_spaces[space_name] = space['id']
             space_id = space['id']
