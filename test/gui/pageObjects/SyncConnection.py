@@ -19,11 +19,18 @@ class SyncConnection:
     @staticmethod
     def parse_sync_connection_name(sync_label):
         # Parse the sync name from the full label.
-        # Actual label: Personal,Success,Local folder: /tmp/opencloudtest/Alice/Personal
+        # Actual label examples:
+        # Personal,Success,Local folder: /tmp/opencloudtest/Alice/Personal
+        # Personal,Success, some files were ignored.,Local folder: /tmp/opencloudtest/Alice/Personal
+        #
         # Result: Personal
         sync_name = sync_label.split(":")[0]
-        # grab everything from the third-to-last element to the start
-        sync_name = sync_name.split(",")[-3::-1]
+        if "Success, some files were ignored." in sync_name:
+            # grab everything from the fourth-to-last element to the start
+            sync_name = sync_name.split(",")[-4::-1]
+        else:
+            # grab everything from the third-to-last element to the start
+            sync_name = sync_name.split(",")[-3::-1]
         # reverse the order to get the correct sequence
         return ",".join(sync_name[::-1])
 
@@ -44,7 +51,7 @@ class SyncConnection:
         connection = None
         connection_elements = SyncConnection.get_sync_connections()
         if not connection_elements:
-            raise NoSuchElementException(f"No sync connections found")
+            raise NoSuchElementException("No sync connections found")
 
         for con in connection_elements:
             sync_name = SyncConnection.parse_sync_connection_name(con.get_name())
