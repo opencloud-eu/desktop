@@ -4,7 +4,7 @@ import xml.etree.ElementTree as ET
 import json
 
 import helpers.api.http_helper as request
-from helpers.api.utils import url_join, perform_request_with_retry
+from helpers.api.utils import url_join
 from helpers.ConfigHelper import get_config, PERMISSION_ROLES
 from helpers.FilesHelper import get_file_for_upload
 from helpers.SpaceHelper import get_personal_space_id, get_space_id, get_spaces_dav_endpoint
@@ -185,8 +185,7 @@ def patch_resource_properties(properties, resource_path=None, space_name=None, u
         space_name = "Personal"
 
     encoded_resource_path = sanitize_url_resource_path(resource_path)
-    space_id = get_space_id(space_name)
-
+    space_id = get_space_id(space_name, user)
     url = url_join(get_spaces_dav_endpoint(), space_id, encoded_resource_path)
 
     props = []
@@ -204,14 +203,7 @@ def patch_resource_properties(properties, resource_path=None, space_name=None, u
     </d:propertyupdate>
     """
 
-    def do_proppatch():
-        return request.proppatch(url, body=body, user=user)
-
-    def retry_condition(response):
-        # the request can fail with 404 (race condition), so retry in that case
-        return response.status_code != 207 and response.status_code == 404
-
-    response = perform_request_with_retry(do_proppatch, retry_condition)
+    response = request.proppatch(url, body=body, user=user)
 
     request.assert_http_status(
         response,
