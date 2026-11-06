@@ -41,8 +41,11 @@ class SyncConnection:
 
     @staticmethod
     def open_menu(sync_connection):
-        connection_elements = SyncConnection.get_sync_connections()
         connection = None
+        connection_elements = SyncConnection.get_sync_connections()
+        if not connection_elements:
+            raise NoSuchElementException(f"No sync connections found")
+
         for con in connection_elements:
             sync_name = SyncConnection.parse_sync_connection_name(con.get_name())
             if sync_name == sync_connection:
