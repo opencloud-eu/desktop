@@ -202,19 +202,19 @@ bool HttpCredentials::refreshAccessTokenInternal(int tokenRefreshRetriesCount)
     connect(_oAuthJob, &AccountBasedOAuth::refreshError, this, [tokenRefreshRetriesCount, this](QNetworkReply::NetworkError error, const QString &errorString) {
         _oAuthJob->deleteLater();
 
-        const bool networkUnavailable = [] {
-            if (auto qni = QNetworkInformation::instance()) {
-                return qni->reachability() == QNetworkInformation::Reachability::Disconnected;
+        const bool isBehindCaptivePortal = [] {
+            if (const auto *qni = QNetworkInformation::instance()) {
+                // according to the doc, reachability is not reliable
+                return qni->isBehindCaptivePortal();
             }
             return false;
         }();
-
         // Only invalid_grant (see refreshFinished) logs out, anything else could be a temporarily unreachable server or idp.
-        const int nextTry = networkUnavailable ? tokenRefreshRetriesCount : tokenRefreshRetriesCount + 1;
+        const int nextTry = isBehindCaptivePortal ? tokenRefreshRetriesCount : tokenRefreshRetriesCount + 1;
         const auto timeout =
             std::min(TokenRefreshDefaultTimeoutOneError * (1 << std::min(tokenRefreshRetriesCount, TokenRefreshMaxBackoffExponent)), TokenRefreshMaxTimeout);
         qCWarning(lcHttpCredentials) << u"Failed to refresh the token:" << error << errorString << u"retry" << nextTry << u"in" << timeout;
-        _refreshRetryCount = tokenRefreshRetriesCount;
+        _refreshRetryCount = nextTry;
         _refreshRetryTimer->start(timeout);
     });
 
