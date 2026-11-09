@@ -95,6 +95,11 @@ if (APPLE OR MSVC)
     option(BUILD_SHELL_INTEGRATION "BUILD_SHELL_INTEGRATION" ON)
 endif()
 
+if (MSVC)
+    ## -DWITH_DEV_PACKAGE=ON
+    option(WITH_DEV_PACKAGE "Register the build directory as an unpacked package, requires Developer Mode, for development only" OFF)
+endif()
+
 # build the auto updater component
 ## -DWITH_AUTO_UPDATER=ON
 option(WITH_AUTO_UPDATER "WITH_AUTO_UPDATER" OFF)
