@@ -14,6 +14,7 @@
  */
 
 #include <QAuthenticator>
+#include <QNetworkAccessManager>
 #include <QNetworkRequest>
 
 #include "common/asserts.h"
@@ -31,6 +32,34 @@ using namespace std::chrono_literals;
 
 namespace {
 constexpr int MaxRetryCount = 5;
+
+class AbortedReply : public QNetworkReply
+{
+public:
+    AbortedReply(const QByteArray &verb, const QNetworkRequest &request, QObject *parent)
+        : QNetworkReply(parent)
+    {
+        setRequest(request);
+        setUrl(request.url());
+        setOperation(QNetworkAccessManager::CustomOperation);
+        setAttribute(QNetworkRequest::CustomVerbAttribute, verb);
+        open(QIODevice::ReadOnly);
+        setError(OperationCanceledError, OCC::AbstractNetworkJob::tr("Operation canceled"));
+        QMetaObject::invokeMethod(
+            this,
+            [this] {
+                setFinished(true);
+                Q_EMIT errorOccurred(error());
+                Q_EMIT finished();
+            },
+            Qt::QueuedConnection);
+    }
+
+    void abort() override { }
+
+protected:
+    qint64 readData(char *, qint64) override { return -1; }
+};
 }
 
 
@@ -195,6 +224,7 @@ void AbstractNetworkJob::slotFinished()
     if (_reply->error() != QNetworkReply::NoError) {
         if (_account->jobQueue()->retry(this)) {
             qCDebug(lcNetworkJob) << u"Queued:" << this << u"for retry";
+            _finished = false;
             return;
         }
 
@@ -214,6 +244,7 @@ void AbstractNetworkJob::slotFinished()
         Q_EMIT networkError(_reply);
         if (_account->jobQueue()->retry(this)) {
             qCWarning(lcNetworkJob) << u"Retry Nr:" << _retryCount << _reply->url();
+            _finished = false;
             return;
         } else {
             qCWarning(lcNetworkJob) << u"Don't retry:" << _reply->url();
@@ -376,13 +407,16 @@ void AbstractNetworkJob::retry()
 
 void AbstractNetworkJob::abort()
 {
-    if (_reply) {
+    if (_reply && !_reply->isFinished()) {
         // calling abort will trigger the execution of finished()
         // with _reply->error() == QNetworkReply::OperationCanceledError
         // the api user can then decide whether to discard this job or retry it.
         // The order is important, mark as _aborted before we abort the reply which will trigger slotFinished
         _aborted = true;
         _reply->abort();
+    } else if (!_verb.isEmpty() && !_finished) {
+        _aborted = true;
+        adoptRequest(new AbortedReply(_verb, _request, this));
     } else {
         deleteLater();
     }

@@ -48,7 +48,7 @@ public:
     size_t size() const;
 
     /**
-     * Clear the queue and abort all jobs
+     * Clear the queue and abort all jobs, the blocked state is not changed
      */
     void clear();
 
