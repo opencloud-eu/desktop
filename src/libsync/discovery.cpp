@@ -566,7 +566,8 @@ void ProcessDirectoryJob::processFileAnalyzeLocalInfo(
         }
 
         if (dbEntry.isVirtualFile() && !virtualFileDownload) {
-            item->_type = ItemTypeVirtualFile;
+            const bool localIsRegularFile = localEntry.isValid() && !localEntry.isDirectory() && !localEntry.isVirtualFile();
+            item->_type = localIsRegularFile ? ItemTypeFile : ItemTypeVirtualFile;
         }
         return modifiedOnServer;
     }();
