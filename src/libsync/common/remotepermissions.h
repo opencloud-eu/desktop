@@ -48,14 +48,14 @@ public:
         CanAddFile = 5, // C
         CanAddSubDirectories = 6, // K
         CanReshare = 7, // R
-        IsShared = 8, // S
+        // Value 8 / permission S is deprecated, do not use
         IsMounted = 9, // M
         IsMountedSub = 10, // m (internal: set if the parent dir has IsMounted)
-        DeprecatedRemoved = 11, // z (Deprecated, don't use)
+        // Value 11 / permission z is deprecated, do not use
 
         // Note: when adding support for more permissions, we need to invalid the cache in the database.
         // (by setting forceRemoteDiscovery in SyncJournalDb::checkConnect)
-        PermissionsCount = DeprecatedRemoved
+        PermissionsCount = 11
     };
 
     /// null permissions
