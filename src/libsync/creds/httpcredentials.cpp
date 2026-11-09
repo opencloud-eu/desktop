@@ -33,7 +33,8 @@ using namespace std::chrono_literals;
 Q_LOGGING_CATEGORY(lcHttpCredentials, "sync.credentials.http", QtInfoMsg)
 
 namespace {
-constexpr int TokenRefreshMaxRetries = 3;
+constexpr int TokenRefreshMaxBackoffExponent = 4;
+constexpr std::chrono::seconds TokenRefreshMaxTimeout = 5min;
 
 auto refreshTokenKeyC()
 {
@@ -43,7 +44,6 @@ auto refreshTokenKeyC()
 
 namespace OCC {
 
-// Duration of the timeout when there is one error, this can be applied `TokenRefreshMaxRetries` times
 std::chrono::seconds HttpCredentials::TokenRefreshDefaultTimeoutOneError =  30s;
 
 class HttpCredentialsAccessManager : public AccessManager
@@ -74,10 +74,22 @@ private:
     QPointer<const HttpCredentials> _cred;
 };
 
-HttpCredentials::HttpCredentials(const QString &accessToken)
-    : _accessToken(accessToken)
-    , _ready(true)
+HttpCredentials::HttpCredentials()
+    : _refreshRetryTimer(new QTimer(this))
 {
+    _refreshRetryTimer->setSingleShot(true);
+    connect(_refreshRetryTimer, &QTimer::timeout, this, [this] { refreshAccessTokenInternal(_refreshRetryCount); });
+    if (auto qni = QNetworkInformation::instance()) {
+        connect(qni, &QNetworkInformation::reachabilityChanged, this, &HttpCredentials::slotReachabilityChanged);
+        connect(qni, &QNetworkInformation::isBehindCaptivePortalChanged, this, &HttpCredentials::slotCaptivePortalChanged);
+    }
+}
+
+HttpCredentials::HttpCredentials(const QString &accessToken)
+    : HttpCredentials()
+{
+    _accessToken = accessToken;
+    _ready = true;
 }
 
 AccessManager *HttpCredentials::createAM() const
@@ -187,65 +199,33 @@ bool HttpCredentials::refreshAccessTokenInternal(int tokenRefreshRetriesCount)
 
     // parent with nam to ensure we reset when the nam is reset
     _oAuthJob = new AccountBasedOAuth(_account->sharedFromThis(), _account->accessManager());
-    connect(_oAuthJob, &AccountBasedOAuth::refreshError, this, [tokenRefreshRetriesCount, this](QNetworkReply::NetworkError error, const QString &) {
+    connect(_oAuthJob, &AccountBasedOAuth::refreshError, this, [tokenRefreshRetriesCount, this](QNetworkReply::NetworkError error, const QString &errorString) {
         _oAuthJob->deleteLater();
 
-        auto networkUnavailable = []() {
+        const bool networkUnavailable = [] {
             if (auto qni = QNetworkInformation::instance()) {
-                if (qni->reachability() == QNetworkInformation::Reachability::Disconnected) {
-                    return true;
-                }
+                return qni->reachability() == QNetworkInformation::Reachability::Disconnected;
             }
-
             return false;
-        };
+        }();
 
-        int nextTry = tokenRefreshRetriesCount + 1;
-        std::chrono::seconds timeout = {};
-
-        if (networkUnavailable()) {
-            nextTry = 0;
-            timeout = TokenRefreshDefaultTimeoutOneError;
-        } else {
-            switch (error) {
-            case QNetworkReply::HostNotFoundError:
-                [[fallthrough]];
-            case QNetworkReply::TimeoutError:
-                [[fallthrough]];
-            // Qt reports OperationCanceledError if the request timed out
-            case QNetworkReply::OperationCanceledError:
-                [[fallthrough]];
-            case QNetworkReply::TemporaryNetworkFailureError:
-                [[fallthrough]];
-            // VPN not ready?
-            case QNetworkReply::ConnectionRefusedError:
-                nextTry = 0;
-                [[fallthrough]];
-            default:
-                timeout = TokenRefreshDefaultTimeoutOneError;
-            }
-        }
-
-        if (nextTry >= TokenRefreshMaxRetries) {
-            qCWarning(lcHttpCredentials) << u"Too many failed refreshes" << nextTry << u"-> log out";
-            forgetSensitiveData();
-            // terminal failure: clears the job queue (see Account) and logs out
-            Q_EMIT authenticationFailed();
-            Q_EMIT fetched();
-        } else {
-            // Transient failure: retry. Do NOT emit authenticationFailed() here -- it
-            // would clear the job queue and abort in-flight uploads, silently dropping
-            // files when the run then finalizes as complete (opencloud-eu/desktop#900, #948).
-            QTimer::singleShot(timeout, this, [nextTry, this] {
-                refreshAccessTokenInternal(nextTry);
-            });
-        }
+        // Only invalid_grant (see refreshFinished) logs out, anything else could be a temporarily unreachable server or idp.
+        const int nextTry = networkUnavailable ? tokenRefreshRetriesCount : tokenRefreshRetriesCount + 1;
+        const auto timeout =
+            std::min(TokenRefreshDefaultTimeoutOneError * (1 << std::min(tokenRefreshRetriesCount, TokenRefreshMaxBackoffExponent)), TokenRefreshMaxTimeout);
+        qCWarning(lcHttpCredentials) << u"Failed to refresh the token:" << error << errorString << u"retry" << nextTry << u"in" << timeout;
+        _refreshRetryCount = tokenRefreshRetriesCount;
+        _refreshRetryTimer->start(timeout);
     });
 
     connect(_oAuthJob, &AccountBasedOAuth::refreshFinished, this, [this](const QString &accessToken, const QString &refreshToken) {
         _oAuthJob->deleteLater();
+        if (_refreshToken.isEmpty()) {
+            qCInfo(lcHttpCredentials) << u"Ignoring token refresh result, the credentials were cleared in the meantime";
+            return;
+        }
         if (refreshToken.isEmpty()) {
-            // an error occured, log out
+            qCWarning(lcHttpCredentials) << u"The refresh token is no longer valid -> log out";
             forgetSensitiveData();
             Q_EMIT authenticationFailed();
             Q_EMIT fetched();
@@ -263,6 +243,39 @@ bool HttpCredentials::refreshAccessTokenInternal(int tokenRefreshRetriesCount)
     _oAuthJob->refreshAuthentication(_refreshToken);
 
     return true;
+}
+
+void HttpCredentials::retryRefreshNow()
+{
+    if (_refreshRetryTimer->isActive()) {
+        qCInfo(lcHttpCredentials) << u"Network changed, retrying the token refresh now";
+        _refreshRetryTimer->stop();
+        refreshAccessTokenInternal(0);
+    }
+}
+
+void HttpCredentials::slotReachabilityChanged(QNetworkInformation::Reachability reachability)
+{
+    switch (reachability) {
+    case QNetworkInformation::Reachability::Online:
+        [[fallthrough]];
+    case QNetworkInformation::Reachability::Site:
+        [[fallthrough]];
+    case QNetworkInformation::Reachability::Unknown:
+        retryRefreshNow();
+        break;
+    case QNetworkInformation::Reachability::Disconnected:
+        [[fallthrough]];
+    case QNetworkInformation::Reachability::Local:
+        break;
+    }
+}
+
+void HttpCredentials::slotCaptivePortalChanged(bool behindCaptivePortal)
+{
+    if (!behindCaptivePortal) {
+        retryRefreshNow();
+    }
 }
 
 void HttpCredentials::invalidateToken()
@@ -297,6 +310,7 @@ void HttpCredentials::forgetSensitiveData()
 {
     // need to be done before invalidateToken, so it actually deletes the refresh_token from the keychain
     _refreshToken.clear();
+    _refreshRetryTimer->stop();
 
     invalidateToken();
     _previousPassword.clear();
