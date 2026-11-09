@@ -11,6 +11,7 @@
 
 #include "testutils/syncenginetestutils.h"
 
+#include <QSignalSpy>
 #include <QTest>
 
 using namespace OCC;
@@ -126,6 +127,34 @@ private Q_SLOTS:
             QVERIFY(queueGuard2.block());
             QVERIFY(queue->isBlocked());
         }
+        QVERIFY(!queue->isBlocked());
+    }
+
+    void testClearFinishesQueuedJobs()
+    {
+        FakeFolder fakeFolder{FileInfo::A12_B12_C12_S12()};
+
+        auto queue = fakeFolder.account()->jobQueue();
+        JobQueueGuard queueGuard1(queue);
+        JobQueueGuard queueGuard2(queue);
+
+        QPointer<TestJob> job = new TestJob(fakeFolder.account());
+        QSignalSpy finishedSpy(job.data(), &AbstractNetworkJob::finishedSignal);
+        QVERIFY(queueGuard1.block());
+        QVERIFY(queueGuard2.block());
+        job->start();
+        QCOMPARE(queue->size(), 1);
+
+        QVERIFY(queueGuard2.clear());
+        QCOMPARE(queue->size(), 0);
+        QVERIFY(queue->isBlocked());
+
+        QVERIFY(finishedSpy.wait());
+        QVERIFY(job->aborted());
+        QCOMPARE(job->reply()->error(), QNetworkReply::OperationCanceledError);
+        QTRY_VERIFY(job.isNull());
+
+        QVERIFY(queueGuard1.unblock());
         QVERIFY(!queue->isBlocked());
     }
 };
