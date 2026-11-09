@@ -212,6 +212,7 @@ void CredentialJob::start()
             qCInfo(lcCredentialsManager) << u"Backend unavailable (yet?) Retrying in a few seconds." << _job->errorString();
             QTimer::singleShot(10s, this, &CredentialJob::start);
             _retryOnKeyChainError = false;
+            return;
         }
 #endif
         OC_ASSERT(_job->error() != QKeychain::EntryNotFound);
@@ -219,12 +220,13 @@ void CredentialJob::start()
             QCborParserError error;
             const auto obj = QCborValue::fromCbor(_job->binaryData(), &error);
             if (error.error != QCborError::NoError) {
+                qCWarning(lcCredentialsManager) << u"Failed to parse" << scopedKey(_parent, _key) << error.errorString();
                 _error = QKeychain::OtherError;
                 _errorString = tr("Failed to parse credentials %1").arg(error.errorString());
-                return;
+            } else {
+                _data = obj.toVariant();
+                OC_ASSERT(_data.isValid());
             }
-            _data = obj.toVariant();
-            OC_ASSERT(_data.isValid());
         } else {
             qCWarning(lcCredentialsManager) << u"Failed to get password" << scopedKey(_parent, _key) << _job->errorString();
             _error = _job->error();
