@@ -105,13 +105,7 @@ void ProcessDirectoryJob::process()
         // For windows, the hidden state is also discovered within the vio
         // local stat function.
         // Recall file shall not be ignored (#4420)
-        const bool isHidden = [&] {
-            if (Q_UNLIKELY(Theme::instance()->enableCernBranding())) {
-                return e.localEntry.isHidden() || (f.first[0] == QLatin1Char('.') && f.first != QLatin1String(".sys.admin#recall#"));
-            } else {
-                return e.localEntry.isHidden() || f.first[0] == QLatin1Char('.');
-            }
-        }();
+        const bool isHidden = e.localEntry.isHidden() || f.first[0] == QLatin1Char('.');
         if (handleExcluded(path._target, e.localEntry.name(), e.localEntry.isDirectory() || e.serverEntry.isDirectory(), isHidden, e.localEntry.isSymLink(),
                 e.serverEntry.isVaultFile())) {
             // the file only exists in the db
