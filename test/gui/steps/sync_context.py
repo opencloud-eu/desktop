@@ -1,4 +1,5 @@
 import time
+import os.path as path
 from behave import when as When, then as Then, given as Given
 from sure import ensure
 
@@ -19,7 +20,7 @@ from helpers.SetupClientHelper import (
     get_resource_path,
 )
 from helpers.FilesHelper import convert_path_separators_for_os
-from helpers.TableParser import table_hashes, table_raw
+from helpers.TableParser import table_hashes, table_raw, validate_table_headers
 
 
 def _check_activities(context, not_synced=False, should_exist=True):
@@ -164,6 +165,28 @@ def step(context):
         SyncConnectionWizard.is_root_folder_checked().should.be.true
 
 
+@Then('the following folders should be displayed in the selective sync wizard:')
+def step(context):
+    validate_table_headers(context.table, ["folder"])
+    folders = [row["folder"] for row in table_hashes(context.table)]
+    actual_folders = SyncConnectionWizard.get_selective_sync_folders_list()
+
+    for folder in folders:
+        with ensure(f'Folder "{folder}" should exist but not found in the list: {actual_folders}'):
+            actual_folders.should.contain(folder)
+
+
+@Then('the following folders should not be displayed in the selective sync wizard:')
+def step(context):
+    validate_table_headers(context.table, ["folder"])
+    folders = [row["folder"] for row in table_hashes(context.table)]
+    actual_folders = SyncConnectionWizard.get_selective_sync_folders_list()
+
+    for folder in folders:
+        with ensure(f'Folder "{folder}" should not exist but found in the list: {actual_folders}'):
+            actual_folders.should_not.contain(folder)
+
+
 @Then('the folders should be in the following order:')
 def step(context):
     row_index = 0
@@ -246,17 +269,15 @@ def step(context):
     SyncConnectionWizard.add_sync_connection()
 
 
+@When('user "{username}" opens the add space wizard')
+def step(context, username):
+    Toolbar.open_account(username)
+    SyncConnectionWizard.open_add_space_wizard()
+
+
 @When('user unselects all the remote folders')
 def step(context):
     SyncConnectionWizard.deselect_all_remote_folders()
-
-
-@Then('for user "{user}" sync folder "{sync_folder}" should not be displayed')
-def step(context, user, sync_folder):
-    Toolbar.open_account(user)
-    has_sync_connection = SyncConnection.has_sync_connection(sync_folder)
-    with ensure('There should not be "{0}" folder sync connection, but found.', sync_folder):
-        has_sync_connection.should.be.false
 
 
 @When('the user navigates back in the sync connection wizard')
@@ -264,9 +285,9 @@ def step(context):
     SyncConnectionWizard.back()
 
 
-@When('the user removes the folder sync connection')
-def step(context):
-    SyncConnection.remove_folder_sync_connection()
+@When('the user removes "{sync_connection}" sync connection')
+def step(context, sync_connection):
+    SyncConnection.remove_folder_sync_connection(sync_connection)
     SyncConnection.confirm_folder_sync_connection_removal()
 
 
@@ -333,6 +354,12 @@ def step(context, wait_for):
     time.sleep(float(wait_for))
 
 
+@When('user "{username}" opens the selective sync wizard')
+def step(context, username):
+    Toolbar.open_account(username)
+    SyncConnection.choose_what_to_sync()
+
+
 @When('the user unselects the following folders to sync in "Choose what to sync" window:')
 def step(context):
     SyncConnection.choose_what_to_sync()
@@ -340,3 +367,42 @@ def step(context):
     for row in context.table:
         folders.append(row[0])
     SyncConnectionWizard.unselect_folders_to_sync(folders, new_sync_connection_wizard=False)
+
+
+@Then('user "{username}" should have the following sync connections:')
+def step(context, username):
+    validate_table_headers(context.table, ['space'])
+    connections = [con['space'] for con in table_hashes(context.table)]
+
+    Toolbar.open_account(username)
+    actual_connections = SyncConnection.get_sync_connection_list()
+    for connection in connections:
+        with ensure(f'Connection "{connection}" is not in the list "{actual_connections}"'):
+            actual_connections.should.contain(connection)
+
+        sync_path = get_resource_path(space=connection)
+        with ensure(f"Sync should exist but it does not: {sync_path}"):
+            path.isdir(sync_path).should.be.true
+
+
+@Then('user "{username}" should not have the following sync connections:')
+def step(context, username):
+    validate_table_headers(context.table, ['space'])
+    connections = [con['space'] for con in table_hashes(context.table)]
+
+    Toolbar.open_account(username)
+    actual_connections = SyncConnection.get_sync_connection_list()
+    for connection in connections:
+        with ensure(f'Connection "{connection}" is not in the list "{actual_connections}"'):
+            actual_connections.should_not.contain(connection)
+
+
+@Then('the following spaces should not exist in the add-space wizard')
+def step(context):
+    validate_table_headers(context.table, ['space'])
+    spaces_to_check = [con['space'] for con in table_hashes(context.table)]
+
+    spaces = SyncConnectionWizard.get_spaces_list()
+    for space in spaces_to_check:
+        with ensure(f'Space "{space}" should not exist but it does'):
+            spaces.should_not.contain(space)

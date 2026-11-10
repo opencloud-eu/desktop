@@ -7,7 +7,7 @@ import helpers.api.http_helper as request
 from helpers.api.utils import url_join
 from helpers.ConfigHelper import get_config, PERMISSION_ROLES
 from helpers.FilesHelper import get_file_for_upload
-from helpers.SpaceHelper import get_personal_space_id
+from helpers.SpaceHelper import get_personal_space_id, get_space_id, get_spaces_dav_endpoint
 from helpers.api import provisioning
 
 
@@ -19,10 +19,14 @@ def get_beta_graph_url():
     return url_join(get_config("localBackendUrl"), "graph", "v1beta1")
 
 
-def get_resource_path(user, resource):
+def sanitize_url_resource_path(resource):
     resource = resource.strip('/').replace('\\', '/')
     encoded_resource_path = [quote(path, safe='') for path in resource.split('/')]
-    encoded_resource_path = '/'.join(encoded_resource_path)
+    return '/'.join(encoded_resource_path)
+
+
+def get_resource_path(user, resource):
+    encoded_resource_path = sanitize_url_resource_path(resource)
     return url_join(get_webdav_url(), user, encoded_resource_path)
 
 
@@ -37,8 +41,9 @@ def resource_exists(user, resource):
 
 def get_file_content(user, resource):
     response = request.get(get_resource_path(user, resource), user=user)
-    assert response.status_code == 200, (
-        f"Failed to get file content. Status: {response.status_code}"
+
+    request.assert_http_status(
+        response, 200, f'Failed to get file content. Status: {response.status_code}'
     )
     if resource.lower().endswith('.txt'):
         return response.text
@@ -50,9 +55,9 @@ def get_folder_items(user, resource):
     path = get_resource_path(user, resource)
     xml_response = request.propfind(path, user=user)
 
-    if xml_response.status_code != 207:
-        raise AssertionError(f'Failed to get resource properties: {xml_response.status_code}')
-
+    request.assert_http_status(
+        xml_response, 207, f'Failed to get resource properties: {xml_response.status_code}'
+    )
     return ET.fromstring(xml_response.content)
 
 
@@ -77,19 +82,22 @@ def get_folder_items_count(user, folder_name):
 def create_folder(user, folder_name):
     url = get_resource_path(user, folder_name)
     response = request.mkcol(url, user=user)
-    assert response.status_code == 201, (
+    request.assert_http_status(
+        response,
+        201,
         f'Could not create the folder: {folder_name} for user {user}.'
-        + f' Status: {response.status_code}'
+        + f' Status: {response.status_code}',
     )
 
 
 def create_file(user, file_name, contents):
     url = get_resource_path(user, file_name)
     response = request.put(url, body=contents, user=user)
-    assert response.status_code in [
-        201,
-        204,
-    ], f"Could not create file '{file_name}' for user {user}. Status: {response.status_code}"
+    request.assert_http_status(
+        response,
+        [201, 204],
+        f'Could not create file "{file_name}" for user {user}. Status: {response.status_code}',
+    )
 
 
 def upload_file(user, file_name, destination):
@@ -102,8 +110,8 @@ def upload_file(user, file_name, destination):
 def delete_resource(user, resource):
     url = get_resource_path(user, resource)
     response = request.delete(url, user=user)
-    assert response.status_code == 204, (
-        f"Could not delete folder '{resource}'. Status: {response.status_code}"
+    request.assert_http_status(
+        response, 204, f'Could not delete folder "{resource}". Status: {response.status_code}'
     )
 
 
@@ -151,6 +159,68 @@ def send_resource_share_invitation(user, resource, sharee, permission_role):
     }
 
     response = request.post(url, body=json.dumps(body), user=user)
-    assert response.status_code in [200, 201], (
-        f"Failed to send share invitation. Status: {response.status_code}"
+    request.assert_http_status(
+        response, [200, 201], f'Failed to send share invitation. Status: {response.status_code}'
     )
+
+
+def patch_resource_properties(properties, resource_path=None, space_name=None, user=None):
+    """
+    Patch the properties of a folder or space.
+
+    Args:
+        user (str): The username.
+        properties (dict): A dictionary of properties to patch.
+                           Where the key is the property name and the value is the property value.
+                           Example: {"ocrclone:integrity-id": "some-value"}
+        resource_path (str): The path of the resource to patch.
+        space_name (str): The name of the space.
+    Raises:
+        AssertionError: If the server response indicates failure.
+    """
+    if resource_path is None:
+        resource_path = "/"
+
+    if space_name is None:
+        space_name = "Personal"
+
+    encoded_resource_path = sanitize_url_resource_path(resource_path)
+    space_id = get_space_id(space_name, user)
+    url = url_join(get_spaces_dav_endpoint(), space_id, encoded_resource_path)
+
+    props = []
+    for key, value in properties.items():
+        props.append(f'<{key}>{value}</{key}>')
+    props = '\n'.join(props)
+
+    body = f"""
+    <d:propertyupdate xmlns:d="DAV:" xmlns:oc="http://owncloud.org/ns" xmlns:ocrclone="ocrclone">
+        <d:set>
+            <d:prop>
+            {props}
+            </d:prop>
+        </d:set>
+    </d:propertyupdate>
+    """
+
+    response = request.proppatch(url, body=body, user=user)
+
+    request.assert_http_status(
+        response,
+        207,
+        f'Could not patch properties. Resource: "{resource_path}", Space: "{space_name}"'
+        + f'\n  Properties: {body}'
+        + f'\n  Status: {response.status_code}',
+    )
+
+    # check if the property patch was successful
+    xml = ET.fromstring(response.content)
+    statuses = xml.findall('.//{DAV:}propstat/{DAV:}status')
+    for status in statuses:
+        if not status.text.endswith("200 OK"):
+            raise AssertionError(
+                f'Failed to patch properties. Resource: "{resource_path}", Space: "{space_name}"'
+                + f'\n  Properties: {body}'
+                + f'\n  Status: {status.text}'
+                + f'\n  Response: {response.content}'
+            )

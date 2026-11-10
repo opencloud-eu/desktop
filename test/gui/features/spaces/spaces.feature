@@ -64,8 +64,10 @@ Feature: Project spaces
         Given the administrator has uploaded a file "testfile.txt" with content "some content" inside space "Project101"
         And the administrator has added user "Alice" to space "Project101" with role "manager"
         And user "Alice" has set up a client with space "Project101"
-        When the user removes the folder sync connection
-        Then for user "Alice" sync folder "Project101" should not be displayed
+        When the user removes "Project101" sync connection
+        Then user "Alice" should not have the following sync connections:
+            | space      |
+            | Project101 |
         But the file "testfile.txt" should exist on the file system
 
 
@@ -97,3 +99,31 @@ Feature: Project spaces
         When user "Brian" deletes the folder "Shares/simple-folder" in the server
         And the user waits for the files to sync
         Then the folder "simple-folder" should not exist on the file system
+
+
+    Scenario: Try to sync vault space
+        Given the administrator has created a vault space "Project102"
+        And the administrator has uploaded a file "lorem.txt" with content "lorem" inside space "Project101"
+        And the administrator has uploaded a file "epsum.txt" with content "epsum" inside space "Project102"
+        And the administrator has added user "Alice" to space "Project101" with role "editor"
+        And the administrator has added user "Alice" to space "Project102" with role "editor"
+        And the user has started the client
+        When the user adds the following account:
+            | server   | %local_server% |
+            | user     | Alice          |
+            | password | 1234           |
+        Then "Alice" account should be added
+        And the add space button should be disabled
+        And user "Alice" should have the following sync connections:
+            | space      |
+            | Personal   |
+            | Shares     |
+            | Project101 |
+        But user "Alice" should not have the following sync connections:
+            | space      |
+            | Project102 |
+        When the user removes "Personal" sync connection
+        And user "Alice" opens the add space wizard
+        Then the following spaces should not exist in the add-space wizard
+            | space      |
+            | Project102 |

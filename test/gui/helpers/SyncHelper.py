@@ -75,6 +75,16 @@ SYNC_PATTERNS = {
             SYNC_STATUS['REGISTER'],
             SYNC_STATUS['UPDATE'],
         ],
+        [
+            SYNC_STATUS['REGISTER'],
+            SYNC_STATUS['NOP'],
+            SYNC_STATUS['UPDATE'],
+        ],
+        [
+            SYNC_STATUS['REGISTER'],
+            SYNC_STATUS['REGISTER'],
+            SYNC_STATUS['UPDATE'],
+        ],
         # when syncing empty account (hidden files are ignored)
         # [SYNC_STATUS['UPDATE'], SYNC_STATUS['OK']],
         # [SYNC_STATUS['UPDATE'], SYNC_STATUS['OKAL']],
@@ -234,6 +244,10 @@ def filter_messages_for_item(messages, item):
         item = item.rstrip('/').rstrip('\\')
         if normalized_msg.endswith(item):
             filtered_messages.append(msg)
+        elif item.endswith('Personal'):
+            account_path = item.rstrip('Personal').rstrip('/').rstrip('\\')
+            if normalized_msg.endswith(account_path):
+                filtered_messages.append(msg)
     return filtered_messages
 
 

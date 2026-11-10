@@ -1,3 +1,4 @@
+import secrets
 from sure import ensure
 from behave import given as Given, then as Then
 
@@ -14,12 +15,20 @@ from helpers.SpaceHelper import (
     get_file_content,
     resource_exists,
 )
+from helpers.api.webdav_helper import patch_resource_properties
 from helpers.ConfigHelper import set_config
 
 
 @Given('the administrator has created a space "{space_name}"')
 def step(context, space_name):
     create_space(space_name)
+
+
+@Given('the administrator has created a vault space "{space_name}"')
+def step(context, space_name):
+    create_space(space_name, vault=True)
+    properties = {"ocrclone:integrity-id": secrets.token_urlsafe(32)}
+    patch_resource_properties(properties=properties, space_name=space_name)
 
 
 @Given('the administrator has created a folder "{folder_name}" in space "{space_name}"')

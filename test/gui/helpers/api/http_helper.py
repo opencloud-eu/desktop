@@ -48,11 +48,18 @@ def propfind(url, body=None, headers=None, user=None, password=None):
     return send_request(url, "PROPFIND", body, headers, user, password)
 
 
-def assert_http_status(response, expected_code, message=""):
+def proppatch(url, body=None, headers=None, user=None, password=None):
+    return send_request(url, "PROPPATCH", body, headers, user, password)
+
+
+def assert_http_status(response, expected_code: int | list[int], message=""):
     response_body = ""
     if response.text:
         response_body = response.text
 
-    assert response.status_code == expected_code, (
+    if isinstance(expected_code, int):
+        expected_code = [expected_code]
+
+    assert response.status_code in expected_code, (
         f"{message}\nRequest failed with status code '{response.status_code}'.\n{response_body}"
     )
