@@ -14,6 +14,7 @@
 #include <QtTest>
 
 using namespace OCC;
+using namespace std::chrono_literals;
 
 class TestLocalDiscovery : public QObject
 {
@@ -187,6 +188,43 @@ private Q_SLOTS:
         QVERIFY(fakeFolder.applyLocalModificationsAndSync());
 
         QVERIFY(fakeFolder.currentRemoteState().find(QStringLiteral("A/a4")));
+        QVERIFY(tracker.localDiscoveryPaths().empty());
+    }
+
+    void testTrackerRetriesFileChangedDuringSync()
+    {
+        QFETCH_GLOBAL(Vfs::Mode, vfsMode);
+        QFETCH_GLOBAL(bool, filesAreDehydrated);
+
+        FakeFolder fakeFolder(FileInfo::A12_B12_C12_S12(), vfsMode, filesAreDehydrated);
+
+        LocalDiscoveryTracker tracker;
+        connect(&fakeFolder.syncEngine(), &SyncEngine::itemCompleted, &tracker, &LocalDiscoveryTracker::slotItemCompleted);
+        connect(&fakeFolder.syncEngine(), &SyncEngine::finished, &tracker, &LocalDiscoveryTracker::slotSyncFinished);
+        auto trackerContains = [&](const char *path) {
+            return tracker.localDiscoveryPaths().find(QString::fromLatin1(path)) != tracker.localDiscoveryPaths().end();
+        };
+        auto restoreMinimumFileAge = qScopeGuard([] { SyncEngine::minimumFileAgeForUpload = 0s; });
+
+        fakeFolder.localModifier().insert(QStringLiteral("A/a3"));
+        tracker.addTouchedPath(QStringLiteral("A/a3"));
+
+        SyncEngine::minimumFileAgeForUpload = 1h;
+        ItemCompletedSpy completeSpy(fakeFolder);
+        fakeFolder.syncEngine().setLocalDiscoveryOptions(LocalDiscoveryStyle::DatabaseAndFilesystem, tracker.localDiscoveryPaths());
+        tracker.startSyncPartialDiscovery();
+        QVERIFY(fakeFolder.applyLocalModificationsAndSync());
+
+        QCOMPARE(completeSpy.findItem(QStringLiteral("A/a3"))->_status, SyncFileItem::Message);
+        QVERIFY(!fakeFolder.currentRemoteState().find(QStringLiteral("A/a3")));
+        QVERIFY(trackerContains("A/a3"));
+
+        SyncEngine::minimumFileAgeForUpload = 0s;
+        fakeFolder.syncEngine().setLocalDiscoveryOptions(LocalDiscoveryStyle::DatabaseAndFilesystem, tracker.localDiscoveryPaths());
+        tracker.startSyncPartialDiscovery();
+        QVERIFY(fakeFolder.applyLocalModificationsAndSync());
+
+        QCOMPARE(fakeFolder.currentLocalState(), fakeFolder.currentRemoteState());
         QVERIFY(tracker.localDiscoveryPaths().empty());
     }
 
