@@ -1879,22 +1879,22 @@ Note that using any logging command line options will override the settings.</so
         <translation>ຊື່ໄຟລ໌ນີ້ຖືກຕິດບັນຊີດຳ (blacklist) ໃນເຊີບເວີ.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1086"/>
+        <location filename="../src/libsync/discovery.cpp" line="1087"/>
         <source>Moved to invalid target, restoring</source>
         <translation>ຍ້າຍໄປບ່ອນທີ່ບໍ່ຖືກຕ້ອງ, ກຳລັງກູ້ຄືນ</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1099"/>
+        <location filename="../src/libsync/discovery.cpp" line="1100"/>
         <source>Not allowed to remove, restoring</source>
         <translation>ບໍ່ໄດ້ຮັບອະນຸຍາດໃຫ້ລຶບ, ກຳລັງກູ້ຄືນ</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1255"/>
+        <location filename="../src/libsync/discovery.cpp" line="1256"/>
         <source>Server replied with an error while reading directory »%1«: %2</source>
         <translation>ເຊີບເວີແຈ້ງຂໍ້ຜິດພາດຂະນະອ່ານໂຟນເດີ »%1«: %2</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1045"/>
+        <location filename="../src/libsync/discovery.cpp" line="1046"/>
         <source>Not allowed because you don&apos;t have permission to add subfolders to that folder</source>
         <translation>ບໍ່ໄດ້ຮັບອະນຸຍາດ ເພາະທ່ານບໍ່ມີສິດເພີ່ມໂຟນເດີຍ່ອຍໃນໂຟນເດີນັ້ນ</translation>
     </message>
@@ -1909,27 +1909,27 @@ Note that using any logging command line options will override the settings.</so
         <translation>ເກີດຂໍ້ຜິດພາດຂະນະປ່ຽນຊື່, ລະຫັດສະຖານະທີ່ບໍ່ຮອງຮັບ: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1013"/>
+        <location filename="../src/libsync/discovery.cpp" line="1014"/>
         <source>Selective sync: Ignored because its path is deselected</source>
         <translation>Selective sync: ຖືກລະເວັ້ນເນື່ອງຈາກບໍ່ໄດ້ເລືອກເສັ້ນທາງນີ້ໄວ້</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1050"/>
+        <location filename="../src/libsync/discovery.cpp" line="1051"/>
         <source>Not allowed because you don&apos;t have permission to add files in that folder</source>
         <translation>ບໍ່ໄດ້ຮັບອະນຸຍາດ ເພາະທ່ານບໍ່ມີສິດເພີ່ມໄຟລ໌ໃນໂຟນເດີນັ້ນ</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1063"/>
+        <location filename="../src/libsync/discovery.cpp" line="1064"/>
         <source>Not allowed to upload this file because it is read-only on the server, restoring</source>
         <translation>ບໍ່ສາມາດອັບໂຫລດໄຟລ໌ນີ້ໄດ້ ເພາະມັນເປັນແບບອ່ານຢ່າງດຽວໃນເຊີບເວີ, ກຳລັງກູ້ຄືນ</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1209"/>
+        <location filename="../src/libsync/discovery.cpp" line="1210"/>
         <source>Error while reading the database</source>
         <translation>ເກີດຂໍ້ຜິດພາດຂະນະອ່ານຖານຂໍ້ມູນ</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1234"/>
+        <location filename="../src/libsync/discovery.cpp" line="1235"/>
         <source>This Space is currently unavailable</source>
         <translation>Space ນີ້ຍັງບໍ່ພ້ອມໃຊ້ງານໃນເວລານີ້</translation>
     </message>
