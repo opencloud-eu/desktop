@@ -36,8 +36,11 @@
 
 namespace OCC {
 
-void Utility::setupFavLink(const QString &folder)
+void Utility::setupFavLink(const QString &folder, const QString &displayName, const QString &description, bool override)
 {
+    Q_UNUSED(displayName)
+    Q_UNUSED(description)
+    Q_UNUSED(override)
     // Finder: Place under "Places"/"Favorites" on the left sidebar
     CFStringRef folderCFStr = CFStringCreateWithCString(nullptr, folder.toUtf8().data(), kCFStringEncodingUTF8);
     QScopeGuard freeFolder([folderCFStr]() { CFRelease(folderCFStr); });
