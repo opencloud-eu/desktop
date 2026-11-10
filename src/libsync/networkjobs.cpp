@@ -139,6 +139,7 @@ bool LsColXMLParser::parse(const QByteArray &xml, QHash<QString, qint64> *sizes,
             } else if (name == QLatin1String("response")) {
             } else if (name == QLatin1String("propstat")) {
                 insidePropstat = true;
+                currentTmpProperties.clear();
             } else if (name == QLatin1String("status") && insidePropstat) {
                 QString httpStatus = reader.readElementText();
                 if (httpStatus.startsWith(QLatin1String("HTTP/1.1 200")) || httpStatus.startsWith(QLatin1String("HTTP/1.1 425"))) {
