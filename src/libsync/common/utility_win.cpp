@@ -22,6 +22,7 @@
 #include "libsync/common/asserts.h"
 #include "libsync/common/filesystembase.h"
 #include "libsync/filesystem.h"
+#include "resources/jsontheme.h"
 
 #include <comdef.h>
 #include <qt_windows.h>
@@ -31,8 +32,12 @@
 
 #include <QCoreApplication>
 #include <QDir>
+#include <QFile>
 #include <QFileInfo>
 #include <QSettings>
+#include <QTextStream>
+
+using namespace Qt::Literals::StringLiterals;
 
 namespace {
 const QString systemRunPathC()
@@ -54,7 +59,58 @@ const QString systemThemesC()
 
 namespace OCC {
 
-void Utility::setupFavLink(const QString &) { }
+void Utility::setupDesktopIni(const QString &folder, const QString &displayName, const QString &description, bool override)
+{
+    const QFileInfo desktopIniPath{u"%1/Desktop.ini"_s.arg(folder)};
+    if (!desktopIniPath.exists() || override) {
+        // we can't use QSettings as we require the file to be utf16 encoded
+        qCInfo(lcUtility) << u"Creating" << desktopIniPath.filePath() << u"to set a folder icon in Explorer.";
+        QFile file(desktopIniPath.filePath());
+        if (file.open(QIODevice::WriteOnly)) {
+            QTextStream out(&file);
+            out.setEncoding(QStringConverter::Utf16);
+            out.setGenerateByteOrderMark(true);
+            const QString eol = u"\r\n"_s;
+            out << u"[.ShellClassInfo]"_s << eol << //
+                u"IconResource="_s << QDir::toNativeSeparators(QCoreApplication::applicationFilePath()) << eol << //
+                u"ConfirmFileOp=1"_s << eol;
+            if (!displayName.isEmpty()) {
+                out << u"LocalizedResourcename="_s << displayName << eol;
+            }
+            out << u"InfoTip="_s;
+            if (description.isEmpty()) {
+                out << Resources::JsonTheme::instance().applicationDisplayName();
+                if (!displayName.isEmpty()) {
+                    out << u" - "_s << displayName;
+                }
+            } else {
+                out << description;
+            }
+            out << eol;
+        } else {
+            qCWarning(lcUtility) << u"Failed to write" << desktopIniPath.filePath() << file.errorString();
+        }
+    }
+
+    const QString longFolderPath = FileSystem::longWinPath(folder);
+    const QString longDesktopIniPath = FileSystem::longWinPath(desktopIniPath.absoluteFilePath());
+    // Set the folder as system and Desktop.ini as hidden+system for explorer to pick it.
+    // https://msdn.microsoft.com/en-us/library/windows/desktop/cc144102
+    const DWORD folderAttrs = GetFileAttributesW(reinterpret_cast<const wchar_t *>(longFolderPath.utf16()));
+    if (!SetFileAttributesW(reinterpret_cast<const wchar_t *>(longFolderPath.utf16()), folderAttrs | FILE_ATTRIBUTE_SYSTEM)) {
+        const auto error = GetLastError();
+        qCWarning(lcUtility) << u"SetFileAttributesW failed on" << longFolderPath << Utility::formatWinError(error);
+    }
+    if (!SetFileAttributesW(reinterpret_cast<const wchar_t *>(longDesktopIniPath.utf16()), FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_SYSTEM)) {
+        const auto error = GetLastError();
+        qCWarning(lcUtility) << u"SetFileAttributesW failed on" << longDesktopIniPath << Utility::formatWinError(error);
+    }
+}
+
+void Utility::setupFavLink(const QString &folder, const QString &displayName, const QString &description, bool override)
+{
+    setupDesktopIni(folder, displayName, description, override);
+}
 
 bool Utility::hasSystemLaunchOnStartup(const QString &appName)
 {
