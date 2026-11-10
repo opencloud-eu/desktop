@@ -1879,22 +1879,22 @@ Note that using any logging command line options will override the settings.</so
         <translation>اسم الملف مدرج في القائمة السوداء على الخادم.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1086"/>
+        <location filename="../src/libsync/discovery.cpp" line="1087"/>
         <source>Moved to invalid target, restoring</source>
         <translation>تم نقله إلى هدف غير صالح، جارٍ الاستعادة</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1099"/>
+        <location filename="../src/libsync/discovery.cpp" line="1100"/>
         <source>Not allowed to remove, restoring</source>
         <translation>غير مسموح بالإزالة، جارٍ الاستعادة</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1255"/>
+        <location filename="../src/libsync/discovery.cpp" line="1256"/>
         <source>Server replied with an error while reading directory »%1«: %2</source>
         <translation>رد الخادم بخطأ أثناء قراءة المجلد »%1«: %2</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1045"/>
+        <location filename="../src/libsync/discovery.cpp" line="1046"/>
         <source>Not allowed because you don&apos;t have permission to add subfolders to that folder</source>
         <translation>غير مسموح لأنك لا تملك الإذن لإضافة مجلدات فرعية إلى هذا المجلد</translation>
     </message>
@@ -1909,27 +1909,27 @@ Note that using any logging command line options will override the settings.</so
         <translation>خطأ أثناء إعادة التسمية، رمز حالة غير معالج: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1013"/>
+        <location filename="../src/libsync/discovery.cpp" line="1014"/>
         <source>Selective sync: Ignored because its path is deselected</source>
         <translation>مزامنة انتقائية: تم تجاهلها لأن مسارها غير محدد</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1050"/>
+        <location filename="../src/libsync/discovery.cpp" line="1051"/>
         <source>Not allowed because you don&apos;t have permission to add files in that folder</source>
         <translation>غير مسموح لأنك لا تملك الإذن لإضافة ملفات في هذا المجلد</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1063"/>
+        <location filename="../src/libsync/discovery.cpp" line="1064"/>
         <source>Not allowed to upload this file because it is read-only on the server, restoring</source>
         <translation>غير مسموح برفع هذا الملف لأنه للقراءة فقط على الخادم، جارٍ الاستعادة</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1209"/>
+        <location filename="../src/libsync/discovery.cpp" line="1210"/>
         <source>Error while reading the database</source>
         <translation>خطأ أثناء قراءة قاعدة البيانات</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1234"/>
+        <location filename="../src/libsync/discovery.cpp" line="1235"/>
         <source>This Space is currently unavailable</source>
         <translation>هذه المساحة غير متاحة حاليًا</translation>
     </message>

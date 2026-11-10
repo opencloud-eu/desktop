@@ -1879,22 +1879,22 @@ Observera att användning av kommandoradsalternativ för loggning åsidosätter 
         <translation>Filnamnet är svartlistat på servern.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1086"/>
+        <location filename="../src/libsync/discovery.cpp" line="1087"/>
         <source>Moved to invalid target, restoring</source>
         <translation>Flyttad till ogiltigt mål, återställer</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1099"/>
+        <location filename="../src/libsync/discovery.cpp" line="1100"/>
         <source>Not allowed to remove, restoring</source>
         <translation>Får inte tas bort, återställas</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1255"/>
+        <location filename="../src/libsync/discovery.cpp" line="1256"/>
         <source>Server replied with an error while reading directory »%1«: %2</source>
         <translation>Servern svarade med ett fel vid läsning av katalogen »%1«: %2</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1045"/>
+        <location filename="../src/libsync/discovery.cpp" line="1046"/>
         <source>Not allowed because you don&apos;t have permission to add subfolders to that folder</source>
         <translation>Det är inte tillåtet eftersom du inte har behörighet att lägga till undermappar i den mappen</translation>
     </message>
@@ -1909,27 +1909,27 @@ Observera att användning av kommandoradsalternativ för loggning åsidosätter 
         <translation>Fel vid namnbyte, obehandlad statuskod: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1013"/>
+        <location filename="../src/libsync/discovery.cpp" line="1014"/>
         <source>Selective sync: Ignored because its path is deselected</source>
         <translation>Selektiv synkronisering: Ignoreras eftersom dess sökväg är avmarkerad</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1050"/>
+        <location filename="../src/libsync/discovery.cpp" line="1051"/>
         <source>Not allowed because you don&apos;t have permission to add files in that folder</source>
         <translation>Det är inte tillåtet eftersom du inte har behörighet att lägga till filer i den mappen</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1063"/>
+        <location filename="../src/libsync/discovery.cpp" line="1064"/>
         <source>Not allowed to upload this file because it is read-only on the server, restoring</source>
         <translation>Det går inte att ladda upp den här filen eftersom den är skrivskyddad på servern. Återställning pågår</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1209"/>
+        <location filename="../src/libsync/discovery.cpp" line="1210"/>
         <source>Error while reading the database</source>
         <translation>Fel vid läsning av databasen</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1234"/>
+        <location filename="../src/libsync/discovery.cpp" line="1235"/>
         <source>This Space is currently unavailable</source>
         <translation>Denna arbetsyta är för närvarande inte tillgänglig</translation>
     </message>

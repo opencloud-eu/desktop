@@ -1879,22 +1879,22 @@ Note that using any logging command line options will override the settings.</so
         <translation>Имя файла содержится в черном списке вашего сервера.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1086"/>
+        <location filename="../src/libsync/discovery.cpp" line="1087"/>
         <source>Moved to invalid target, restoring</source>
         <translation>Перемещено в невалидное расположение, идет восстановление</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1099"/>
+        <location filename="../src/libsync/discovery.cpp" line="1100"/>
         <source>Not allowed to remove, restoring</source>
         <translation>Не разрешено удалять, идет восстановление</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1255"/>
+        <location filename="../src/libsync/discovery.cpp" line="1256"/>
         <source>Server replied with an error while reading directory »%1«: %2</source>
         <translation>Сервер ответил ошибкой при попытке прочесть папку »%1«: %2</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1045"/>
+        <location filename="../src/libsync/discovery.cpp" line="1046"/>
         <source>Not allowed because you don&apos;t have permission to add subfolders to that folder</source>
         <translation>Не разрешено, потому что у вас нет права добавлять подпапки в данную папку</translation>
     </message>
@@ -1909,27 +1909,27 @@ Note that using any logging command line options will override the settings.</so
         <translation>Ошибка в процессе переименования, необработанный код состояния: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1013"/>
+        <location filename="../src/libsync/discovery.cpp" line="1014"/>
         <source>Selective sync: Ignored because its path is deselected</source>
         <translation>Выборочная синхронизация: Проигнорировано, потому что текущий путь был исключен.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1050"/>
+        <location filename="../src/libsync/discovery.cpp" line="1051"/>
         <source>Not allowed because you don&apos;t have permission to add files in that folder</source>
         <translation>Не разрешено, потому что у вас нет права добавлять файлы в данную папку</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1063"/>
+        <location filename="../src/libsync/discovery.cpp" line="1064"/>
         <source>Not allowed to upload this file because it is read-only on the server, restoring</source>
         <translation>Загрузка файла заблокирована, потому что сервер дает доступ только на чтение, идет восстановление</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1209"/>
+        <location filename="../src/libsync/discovery.cpp" line="1210"/>
         <source>Error while reading the database</source>
         <translation>Ошибка чтения из базы данных</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1234"/>
+        <location filename="../src/libsync/discovery.cpp" line="1235"/>
         <source>This Space is currently unavailable</source>
         <translation>Это Пространство сейчас недоступно</translation>
     </message>
