@@ -24,6 +24,7 @@
 #endif
 
 
+#include <QDomDocument>
 #include <QTemporaryDir>
 #include <QtTest>
 
@@ -565,6 +566,89 @@ private Q_SLOTS:
         }
         QCOMPARE(list.size(), 0);
     }
+
+#ifdef Q_OS_LINUX
+    void testSetupFavLink()
+    {
+        QTemporaryDir dir;
+        QVERIFY(dir.isValid());
+        const QByteArray oldConfig = qgetenv("XDG_CONFIG_HOME");
+        const QByteArray oldData = qgetenv("XDG_DATA_HOME");
+        const auto restoreEnv = qScopeGuard([&] {
+            qputenv("XDG_CONFIG_HOME", oldConfig);
+            qputenv("XDG_DATA_HOME", oldData);
+        });
+        qputenv("XDG_CONFIG_HOME", dir.filePath(u"config"_s).toUtf8());
+        qputenv("XDG_DATA_HOME", dir.filePath(u"data"_s).toUtf8());
+
+        const QString folder = dir.filePath(u"Open Cloud"_s);
+        const QByteArray folderUrl = QUrl::fromLocalFile(folder).toEncoded();
+        const QByteArray similarUrl = QUrl::fromLocalFile(folder + u"2"_s).toEncoded();
+
+        QVERIFY(QDir().mkpath(dir.filePath(u"data"_s)));
+        const QString xbelPath = dir.filePath(u"data/user-places.xbel"_s);
+        {
+            QFile xbel(xbelPath);
+            QVERIFY(xbel.open(QIODevice::WriteOnly));
+            xbel.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+                       "<!DOCTYPE xbel>\n"
+                       "<xbel xmlns:bookmark=\"http://www.freedesktop.org/standards/desktop-bookmarks\">\n"
+                       " <bookmark href=\"file:///home/user\">\n"
+                       "  <title>Home</title>\n"
+                       " </bookmark>\n"
+                       " <bookmark href=\"trash:/\">\n"
+                       "  <title>Trash</title>\n"
+                       " </bookmark>\n"
+                       "</xbel>\n");
+        }
+
+        QVERIFY(QDir().mkpath(dir.filePath(u"config/gtk-3.0"_s)));
+        const QString gtkPath = dir.filePath(u"config/gtk-3.0/bookmarks"_s);
+        {
+            QFile gtk(gtkPath);
+            QVERIFY(gtk.open(QIODevice::WriteOnly));
+            gtk.write(similarUrl + " Similar");
+        }
+
+        auto readGtk = [&gtkPath] {
+            QFile gtk(gtkPath);
+            return gtk.open(QIODevice::ReadOnly) ? gtk.readAll() : QByteArray();
+        };
+        auto readXbel = [&xbelPath] {
+            QFile xbel(xbelPath);
+            QDomDocument doc;
+            if (xbel.open(QIODevice::ReadOnly)) {
+                doc.setContent(&xbel);
+            }
+            return doc;
+        };
+
+        OCC::Utility::setupFavLink(folder, u"Cloud"_s, {}, false);
+        OCC::Utility::setupFavLink(folder, u"Ignored"_s, {}, false);
+
+        QCOMPARE(readGtk(), similarUrl + " Similar\n" + folderUrl + " Cloud\n");
+        auto bookmarks = readXbel().documentElement().elementsByTagName(u"bookmark"_s);
+        QCOMPARE(bookmarks.size(), 3);
+        auto added = bookmarks.at(1).toElement();
+        QCOMPARE(added.attribute(u"href"_s).toUtf8(), folderUrl);
+        QCOMPARE(added.firstChildElement(u"title"_s).text(), u"Cloud"_s);
+        QVERIFY(!added.elementsByTagName(u"bookmark:icon"_s).isEmpty());
+        QCOMPARE(bookmarks.at(2).toElement().attribute(u"href"_s), u"trash:/"_s);
+
+        OCC::Utility::setupFavLink(folder, u"Cloud - Alice"_s, {}, true);
+
+        QCOMPARE(readGtk(), similarUrl + " Similar\n" + folderUrl + " Cloud - Alice\n");
+        bookmarks = readXbel().documentElement().elementsByTagName(u"bookmark"_s);
+        QCOMPARE(bookmarks.size(), 3);
+        QCOMPARE(bookmarks.at(1).toElement().firstChildElement(u"title"_s).text(), u"Cloud - Alice"_s);
+
+        QVERIFY(QFile::remove(xbelPath));
+        QVERIFY(QFile::remove(gtkPath));
+        OCC::Utility::setupFavLink(folder, {}, {}, false);
+        QCOMPARE(readGtk(), folderUrl + " Open Cloud\n");
+        QVERIFY(!QFile::exists(xbelPath));
+    }
+#endif
 };
 
 QTEST_GUILESS_MAIN(TestUtility)
