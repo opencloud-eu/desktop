@@ -159,12 +159,12 @@ private:
 
             for (const QString &s : checked.value()) {
                 const auto status = Utility::stringToEnum<SyncFileItem::Status>(s);
-                if (status == static_cast<SyncFileItem::Status>(-1)) {
+                if (!status) {
                     // The string value is not a valid enum value, so stop processing, and queue a reset.
                     filterNeedsReset = true;
                     break;
                 } else {
-                    filter[status] = true;
+                    filter[status.value()] = true;
                 }
             }
         }
