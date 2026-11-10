@@ -337,6 +337,35 @@ private Q_SLOTS:
         QVERIFY(fakeFolder.applyLocalModificationsAndSync());
     }
 
+    void testTooEarlyRediscoversParent()
+    {
+        QFETCH_GLOBAL(Vfs::Mode, vfsMode);
+        QFETCH_GLOBAL(bool, filesAreDehydrated);
+        if (filesAreDehydrated) {
+            QSKIP("Dehydrated files are not downloaded");
+        }
+
+        FakeFolder fakeFolder(FileInfo::A12_B12_C12_S12(), vfsMode, filesAreDehydrated);
+        ItemCompletedSpy completeSpy(fakeFolder);
+        fakeFolder.remoteModifier().insert(QStringLiteral("A/early"));
+
+        bool tooEarly = true;
+        fakeFolder.setServerOverride([&](QNetworkAccessManager::Operation op, const QNetworkRequest &request, QIODevice *) -> QNetworkReply * {
+            if (tooEarly && op == QNetworkAccessManager::GetOperation && request.url().path().endsWith(QLatin1String("A/early"))) {
+                return new FakeErrorReply(op, request, this, 425);
+            }
+            return nullptr;
+        });
+
+        QVERIFY(fakeFolder.applyLocalModificationsAndSync());
+        QCOMPARE(completeSpy.findItem(QStringLiteral("A/early"))->_status, SyncFileItem::Message);
+        QVERIFY(!fakeFolder.currentLocalState().find(QStringLiteral("A/early")));
+
+        tooEarly = false;
+        QVERIFY(fakeFolder.applyLocalModificationsAndSync());
+        QCOMPARE(fakeFolder.currentLocalState(), fakeFolder.currentRemoteState());
+    }
+
     void testFileName()
     {
         QFETCH_GLOBAL(Vfs::Mode, vfsMode);
