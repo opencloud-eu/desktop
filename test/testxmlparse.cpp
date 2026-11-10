@@ -18,6 +18,7 @@ private:
     bool _success;
     QStringList _subdirs;
     QStringList _items;
+    QHash<QString, QMap<QString, QString>> _properties;
 
 public Q_SLOTS:
     void slotDirectoryListingSubFolders(const QStringList &list)
@@ -26,10 +27,11 @@ public Q_SLOTS:
         _subdirs.append(list);
     }
 
-    void slotDirectoryListingIterated(const QString &item, const QMap<QString, QString> &)
+    void slotDirectoryListingIterated(const QString &item, const QMap<QString, QString> &properties)
     {
         qDebug() << u"     item: " << item;
         _items.append(item);
+        _properties.insert(item, properties);
     }
 
     void slotFinishedSuccessfully() { _success = true; }
@@ -41,6 +43,7 @@ private Q_SLOTS:
         _success = false;
         _subdirs.clear();
         _items.clear();
+        _properties.clear();
     }
 
     void cleanup() { }
@@ -452,6 +455,67 @@ private Q_SLOTS:
 
         QVERIFY(_subdirs.contains(QString::fromUtf8("/ä")));
         QVERIFY(_subdirs.size() == 1);
+    }
+
+    void testParserNotFoundPropertiesDontLeak()
+    {
+        const QByteArray testXml = "<?xml version='1.0' encoding='utf-8'?>"
+                                   "<d:multistatus xmlns:d=\"DAV:\" xmlns:oc=\"http://owncloud.org/ns\">"
+                                   "<d:response>"
+                                   "<d:href>/dav/a.txt</d:href>"
+                                   "<d:propstat>"
+                                   "<d:prop>"
+                                   "<d:getetag>\"a\"</d:getetag>"
+                                   "</d:prop>"
+                                   "<d:status>HTTP/1.1 200 OK</d:status>"
+                                   "</d:propstat>"
+                                   "<d:propstat>"
+                                   "<d:prop>"
+                                   "<oc:share-types/>"
+                                   "</d:prop>"
+                                   "<d:status>HTTP/1.1 404 Not Found</d:status>"
+                                   "</d:propstat>"
+                                   "</d:response>"
+                                   "<d:response>"
+                                   "<d:href>/dav/b.txt</d:href>"
+                                   "<d:propstat>"
+                                   "<d:prop>"
+                                   "<d:getetag>\"b\"</d:getetag>"
+                                   "</d:prop>"
+                                   "<d:status>HTTP/1.1 200 OK</d:status>"
+                                   "</d:propstat>"
+                                   "</d:response>"
+                                   "<d:response>"
+                                   "<d:href>/dav/c.txt</d:href>"
+                                   "<d:propstat>"
+                                   "<d:prop>"
+                                   "<oc:share-types/>"
+                                   "</d:prop>"
+                                   "<d:status>HTTP/1.1 404 Not Found</d:status>"
+                                   "</d:propstat>"
+                                   "<d:propstat>"
+                                   "<d:prop>"
+                                   "<d:getetag>\"c\"</d:getetag>"
+                                   "</d:prop>"
+                                   "<d:status>HTTP/1.1 200 OK</d:status>"
+                                   "</d:propstat>"
+                                   "</d:response>"
+                                   "</d:multistatus>";
+
+        LsColXMLParser parser;
+
+        connect(&parser, &LsColXMLParser::directoryListingIterated, this, &TestXmlParse::slotDirectoryListingIterated);
+        connect(&parser, &LsColXMLParser::finishedWithoutError, this, &TestXmlParse::slotFinishedSuccessfully);
+
+        QVERIFY(parser.parse(testXml, nullptr, QStringLiteral("/dav")));
+        QVERIFY(_success);
+        QCOMPARE(_items.size(), 3);
+
+        for (const auto &item : {QStringLiteral("/dav/a.txt"), QStringLiteral("/dav/b.txt"), QStringLiteral("/dav/c.txt")}) {
+            QVERIFY(_properties.contains(item));
+            QVERIFY2(!_properties[item].contains(QStringLiteral("share-types")), qPrintable(item));
+            QCOMPARE(_properties[item].keys(), QStringList{QStringLiteral("getetag")});
+        }
     }
 };
 
