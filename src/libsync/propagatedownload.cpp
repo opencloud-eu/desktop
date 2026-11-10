@@ -455,6 +455,9 @@ void PropagateDownloadFile::slotGetFinished()
             status = classifyError(err, _item->_httpErrorCode,
                 &propagator()->_anotherSyncNeeded, errorBody);
         }
+        if (status == SyncFileItem::Message) {
+            propagator()->_journal->schedulePathForRemoteDiscovery(_item->localName());
+        }
 
         done(status, errorString);
         return;
