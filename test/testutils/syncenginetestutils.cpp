@@ -399,10 +399,15 @@ FakePropfindReply::FakePropfindReply(FileInfo &remoteRootFileInfo, QNetworkAcces
         xml.writeTextElement(davUri, QStringLiteral("getlastmodified"), OCC::Utility::formatRFC1123Date(gmtDate));
         xml.writeTextElement(davUri, QStringLiteral("getcontentlength"), QString::number(fileInfo.contentSize));
         xml.writeTextElement(davUri, QStringLiteral("getetag"), QStringLiteral("\"%1\"").arg(fileInfo.etag));
-        xml.writeTextElement(ocUri, QStringLiteral("permissions"), !fileInfo.permissions.isNull() ? QString(fileInfo.permissions.toString()) : fileInfo.isShared ? QStringLiteral("SRDNVCKW")
-                                                                                                                                                                 : QStringLiteral("RDNVCKW"));
+        xml.writeTextElement(
+            ocUri, QStringLiteral("permissions"), !fileInfo.permissions.isNull() ? QString(fileInfo.permissions.toString()) : QStringLiteral("RDNVCKW"));
         xml.writeTextElement(ocUri, QStringLiteral("id"), QString::fromUtf8(fileInfo.fileId));
         xml.writeTextElement(ocUri, QStringLiteral("checksums"), QString::fromUtf8(fileInfo.checksums));
+
+        if (fileInfo.isShared) {
+            xml.writeTextElement(ocUri, QStringLiteral("share-types"), QStringLiteral("<oc:share-type>0</oc:share-type>"));
+        }
+
         buffer.write(fileInfo.extraDavProperties);
         xml.writeEndElement(); // prop
         xml.writeTextElement(davUri, QStringLiteral("status"), QStringLiteral("HTTP/1.1 200 OK"));

@@ -1267,6 +1267,7 @@ void OCC::PropagateUpdateMetaDataJob::start()
     // Update the database:  New remote fileid or Etag or RemotePerm
     // Or for files that were detected as "resolved conflict".
     // Or a local inode/mtime change
+    // Or any metadata change
 
     // In case of "resolved conflict": there should have been a conflict because they
     // both were new, or both had their local mtime or remote etag modified, but the
