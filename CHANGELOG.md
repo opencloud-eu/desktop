@@ -12,6 +12,7 @@
 
 ### 🐛 Bug Fixes
 
+- Re-enable share status indicator in shell extension overlay [[#1236](https://github.com/opencloud-eu/desktop/pull/1236)]
 - Don't leak properties from non-200 propstat into the next response [[#1251](https://github.com/opencloud-eu/desktop/pull/1251)]
 - Fix mem leak in JobnQueue [[#1243](https://github.com/opencloud-eu/desktop/pull/1243)]
 - Fix WITH_HTTP2=OFF, the value was not applied [[#1222](https://github.com/opencloud-eu/desktop/pull/1222)]
