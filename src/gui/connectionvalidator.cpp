@@ -166,12 +166,14 @@ void ConnectionValidator::slotStatusFound(const QUrl &url, const QJsonObject &in
 
 void ConnectionValidator::reportResult(Status status)
 {
-    if (OC_ENSURE(!_finished)) {
-        _finished = true;
-        qCDebug(lcConnectionValidator) << status << _duration;
-        Q_EMIT connectionResult(status, _errors);
-        deleteLater();
+    if (_finished) {
+        qCDebug(lcConnectionValidator) << u"Ignoring late result" << status << u"for" << _account->displayNameWithHost();
+        return;
     }
+    _finished = true;
+    qCDebug(lcConnectionValidator) << status << _duration;
+    Q_EMIT connectionResult(status, _errors);
+    deleteLater();
 }
 
 } // namespace OCC
