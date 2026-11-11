@@ -55,10 +55,15 @@ void SpacesManager::refresh()
     if (!_account->credentials()->ready()) {
         return;
     }
+    if (_drivesJob) {
+        return;
+    }
     // TODO: leak the job until we fixed the onwership https://github.com/owncloud/client/issues/11203
     auto drivesJob = new Drives(_account->sharedFromThis(), nullptr);
+    _drivesJob = drivesJob;
     drivesJob->setTimeout(refreshTimeoutC);
     connect(drivesJob, &Drives::finishedSignal, this, [drivesJob, this] {
+        _drivesJob.clear();
         drivesJob->deleteLater();
         if (drivesJob->httpStatusCode() == 200) {
             auto oldKeys = _spacesMap.keys();

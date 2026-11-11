@@ -84,7 +84,6 @@ bool JobQueue::enqueue(AbstractNetworkJob *job)
 
 void JobQueue::clear()
 {
-    _blocked = 0;
     auto tmp = std::move(_jobs);
     for (auto job : tmp) {
         if (job) {
@@ -132,9 +131,8 @@ bool JobQueueGuard::unblock()
 bool JobQueueGuard::clear()
 {
     if (_blocked) {
-        _blocked = false;
         _queue->clear();
-        return true;
+        return unblock();
     }
     return false;
 }

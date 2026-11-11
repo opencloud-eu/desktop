@@ -24,11 +24,13 @@
 #include <algorithm>
 
 #include <QFuture>
+#include <QPointer>
 
 class QTimer;
 
 namespace OCC {
 namespace GraphApi {
+    class Drives;
 
     class OPENCLOUD_SYNC_EXPORT SpacesManager : public QObject
     {
@@ -58,6 +60,7 @@ namespace GraphApi {
 
         Account *_account;
         QTimer *_refreshTimer;
+        QPointer<Drives> _drivesJob;
         QMap<QString, Space *> _spacesMap;
         bool _ready = false;
     };

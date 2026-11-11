@@ -518,17 +518,22 @@ Desktop-Client zur Dateisynchronisierung.</translation>
 <context>
     <name>OCC::AbstractNetworkJob</name>
     <message>
-        <location filename="../src/libsync/abstractnetworkjob.cpp" line="247"/>
+        <location filename="../src/libsync/abstractnetworkjob.cpp" line="47"/>
+        <source>Operation canceled</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/libsync/abstractnetworkjob.cpp" line="278"/>
         <source>Connection timed out</source>
         <translation>Zeitüberschreitung bei der Verbindung</translation>
     </message>
     <message>
-        <location filename="../src/libsync/abstractnetworkjob.cpp" line="249"/>
+        <location filename="../src/libsync/abstractnetworkjob.cpp" line="280"/>
         <source>Unknown error: network reply was deleted</source>
         <translation>Unbekannter Fehler: Netzwerkantwort wurde gelöscht</translation>
     </message>
     <message>
-        <location filename="../src/libsync/abstractnetworkjob.cpp" line="355"/>
+        <location filename="../src/libsync/abstractnetworkjob.cpp" line="386"/>
         <source>Server replied &quot;%1 %2&quot; to &quot;%3 %4&quot;</source>
         <translation>Server antwortete »%1 %2« zu »%3 %4«</translation>
     </message>

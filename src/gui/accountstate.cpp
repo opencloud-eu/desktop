@@ -256,10 +256,12 @@ void AccountState::setState(State state)
     }
 
     // might not have changed but the underlying _connectionErrors might have
-    if (state == Connected) {
+    if (state == Connected && !NetworkInformation::instance()->isBehindCaptivePortal()) {
         QTimer::singleShot(0, this, [stateHasChanged, this] {
             // ensure the connection validator is done
-            _queueGuard.unblock();
+            if (!NetworkInformation::instance()->isBehindCaptivePortal()) {
+                _queueGuard.unblock();
+            }
 
             // update capabilites and fetch relevant settings
             if (!_fetchServerSettingsJob && _fetchCapabilitiesElapsedTimer.duration() > fetchSettingsTimeout) {

@@ -518,17 +518,22 @@ Utilitaire de bureau pour la synchronisation de fichiers.</translation>
 <context>
     <name>OCC::AbstractNetworkJob</name>
     <message>
-        <location filename="../src/libsync/abstractnetworkjob.cpp" line="247"/>
+        <location filename="../src/libsync/abstractnetworkjob.cpp" line="47"/>
+        <source>Operation canceled</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/libsync/abstractnetworkjob.cpp" line="278"/>
         <source>Connection timed out</source>
         <translation>Connexion interrompue</translation>
     </message>
     <message>
-        <location filename="../src/libsync/abstractnetworkjob.cpp" line="249"/>
+        <location filename="../src/libsync/abstractnetworkjob.cpp" line="280"/>
         <source>Unknown error: network reply was deleted</source>
         <translation>Erreur inconnue : la réponse du réseau a été supprimée</translation>
     </message>
     <message>
-        <location filename="../src/libsync/abstractnetworkjob.cpp" line="355"/>
+        <location filename="../src/libsync/abstractnetworkjob.cpp" line="386"/>
         <source>Server replied &quot;%1 %2&quot; to &quot;%3 %4&quot;</source>
         <translation>Le serveur a répondu « %1 %2 » à « %3 %4 »</translation>
     </message>
