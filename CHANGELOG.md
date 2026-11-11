@@ -1,6 +1,6 @@
 # Changelog
 
-## [4.1.0](https://github.com/opencloud-eu/desktop/releases/tag/v4.1.0) - 2026-11-10
+## [4.1.0](https://github.com/opencloud-eu/desktop/releases/tag/v4.1.0) - 2026-11-11
 
 ### ❤️ Thanks to all contributors! ❤️
 
@@ -12,6 +12,7 @@
 
 ### 🐛 Bug Fixes
 
+- Fix mem leak in JobnQueue [[#1243](https://github.com/opencloud-eu/desktop/pull/1243)]
 - Fix WITH_HTTP2=OFF, the value was not applied [[#1222](https://github.com/opencloud-eu/desktop/pull/1222)]
 - Ci: import qt backport for fotconfig crash [[#1189](https://github.com/opencloud-eu/desktop/pull/1189)]
 - Mirror layout for RTL languages [[#1180](https://github.com/opencloud-eu/desktop/pull/1180)]
