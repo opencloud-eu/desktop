@@ -349,9 +349,85 @@ public:
     void fetchFromKeychain() override { }
     void persist() override { }
 
+    QString refreshToken() const { return _refreshToken; }
+    bool refreshRetryPending() const { return _refreshRetryTimer->isActive(); }
+    void setReachability(QNetworkInformation::Reachability reachability) { slotReachabilityChanged(reachability); }
+    void setBehindCaptivePortal(bool behindCaptivePortal) { slotCaptivePortalChanged(behindCaptivePortal); }
+
 private:
     FakeAM::Override _override;
 };
+
+struct RefreshServer
+{
+    using ReplyFactory = std::function<QNetworkReply *(QNetworkAccessManager::Operation, const QNetworkRequest &, QObject *)>;
+
+    QObject replyParent;
+    int statusRequests = 0;
+    int tokenRequests = 0;
+
+    ReplyFactory statusReply = [](QNetworkAccessManager::Operation op, const QNetworkRequest &req, QObject *parent) -> QNetworkReply * {
+        const QJsonDocument json(QJsonObject{
+            {QStringLiteral("installed"), true},
+            {QStringLiteral("maintenance"), false},
+            {QStringLiteral("version"), QStringLiteral("10.0.0")},
+        });
+        return new FakePayloadReply(op, req, json.toJson(), {}, parent);
+    };
+
+    ReplyFactory webfingerReply = [](QNetworkAccessManager::Operation op, const QNetworkRequest &req, QObject *parent) -> QNetworkReply * {
+        const QJsonDocument json(QJsonObject{
+            {QStringLiteral("subject"), sOAuthTestServer.toString()},
+            {QStringLiteral("links"),
+                QJsonArray{
+                    QJsonObject{
+                        {QStringLiteral("rel"), QStringLiteral("http://openid.net/specs/connect/1.0/issuer")},
+                        {QStringLiteral("href"), QStringLiteral("oauthtest://openidserver")},
+                    },
+                }},
+        });
+        QHttpHeaders headers;
+        headers.append(QHttpHeaders::WellKnownHeader::ContentType, QStringLiteral("application/json"));
+        return new FakePayloadReply(op, req, json.toJson(), headers, parent);
+    };
+
+    ReplyFactory openidConfigurationReply = [](QNetworkAccessManager::Operation op, const QNetworkRequest &req, QObject *parent) -> QNetworkReply * {
+        const QJsonDocument json(QJsonObject{
+            {QStringLiteral("authorization_endpoint"), QStringLiteral("oauthtest://openidserver/authorize")},
+            {QStringLiteral("token_endpoint"), QStringLiteral("oauthtest://openidserver/token_endpoint")},
+        });
+        return new FakePayloadReply(op, req, json.toJson(), {}, parent);
+    };
+
+    ReplyFactory tokenReply = [](QNetworkAccessManager::Operation op, const QNetworkRequest &req, QObject *parent) -> QNetworkReply * {
+        const QJsonDocument json(
+            QJsonObject{{QStringLiteral("access_token"), QStringLiteral("123")}, {QStringLiteral("token_type"), QStringLiteral("Bearer")}});
+        return new FakePayloadReply(op, req, json.toJson(), {}, parent);
+    };
+
+    FakeAM::Override override()
+    {
+        return [this](QNetworkAccessManager::Operation op, const QNetworkRequest &req, QIODevice *) -> QNetworkReply * {
+            const QString path = req.url().path();
+            if (path.endsWith(QLatin1String("status.php"))) {
+                ++statusRequests;
+                return statusReply(op, req, &replyParent);
+            }
+            if (path.endsWith(QLatin1String(".well-known/openid-configuration"))) {
+                return openidConfigurationReply(op, req, &replyParent);
+            }
+            if (path.endsWith(QLatin1String(".well-known/webfinger"))) {
+                return webfingerReply(op, req, &replyParent);
+            }
+            if (req.url().toString().contains(QLatin1String("token_endpoint"))) {
+                ++tokenRequests;
+                return tokenReply(op, req, &replyParent);
+            }
+            return new FakePayloadReply(op, req, {}, {}, &replyParent);
+        };
+    }
+};
+Q_DECLARE_METATYPE(RefreshServer::ReplyFactory)
 
 
 class TestOAuth : public QObject
@@ -749,13 +825,13 @@ private Q_SLOTS:
     }
 
 
-    void testDynamicTokenRefresh()
+    void testTokenRefreshDoesNotRegisterClient()
     {
-        // simulate a token refresh with dynamic registration
+        // The refresh token is bound to the client used during the login.
+        // Without stored registration data the login used the default client, so a refresh must not register a new one.
         struct Test : OAuthTestCase
         {
-            QString _expectedClientSecret = QStringLiteral("rmoEXFc1Z5tGTApxanBW7STlWODqRTYx");
-            Test() { _expectedClientId = QStringLiteral("3e4ea0f3-59ea-434a-92f2-b0d3b54443e9"); }
+            bool registrationRequested = false;
 
             QNetworkReply *wellKnownOpenidConfigurationReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req) override
             {
@@ -765,7 +841,6 @@ private Q_SLOTS:
                         QJsonValue(QStringLiteral("oauthtest://openidserver") + sOAuthTestServer.path() + QStringLiteral("/index.php/apps/oauth2/authorize"))},
                     {QStringLiteral("token_endpoint"), QStringLiteral("oauthtest://openidserver/token_endpoint")},
                     {QStringLiteral("registration_endpoint"), QStringLiteral("%1/clients-registrations").arg(localHost)},
-                    // this test explicitly check for the client secret in the post body
                     {QStringLiteral("token_endpoint_auth_methods_supported"), QJsonArray{QStringLiteral("client_secret_post")}},
                 });
                 return new FakePayloadReply(op, req, jsondata.toJson(), {}, fakeAm);
@@ -779,75 +854,7 @@ private Q_SLOTS:
                 auto req = request;
                 const auto query = QUrlQuery(QString::fromUtf8(device->peek(device->size())));
                 OC_ASSERT(query.queryItemValue(QStringLiteral("refresh_token")) == QLatin1String("foo"));
-
-                qDebug() << request.url() << request.url().query() << device->peek(device->size());
-                req.setUrl(QUrl(request.url().toString().replace(
-                    QStringLiteral("oauthtest://openidserver/token_endpoint"), sOAuthTestServer.toString() + QStringLiteral("/token_endpoint"))));
-
-                // OAuthTestCase::tokenReply expects BrowserOpened
-                state = BrowserOpened;
-
-                return OAuthTestCase::tokenReply(op, req, device);
-            }
-
-            QNetworkReply *clientRegistrationReply(QNetworkAccessManager::Operation op, const QNetworkRequest &request) override
-            {
-                auto *out = new FakePayloadReply(op, request, TestUtils::getPayload("testDynamicTokenRefresh/clientRegistrationReply.json"), {}, fakeAm);
-                out->setAttribute(QNetworkRequest::HttpStatusCodeAttribute, 201);
-                return out;
-            }
-
-            virtual void test() override
-            {
-                oauth = prepareOauth();
-                QSignalSpy spy(oauth.get(), &OCC::AccountBasedOAuth::refreshFinished);
-                // Refresh success path: only refreshFinished fires, never result or refreshError.
-                QSignalSpy refreshErrorSpy(oauth.get(), &OCC::AccountBasedOAuth::refreshError);
-                QSignalSpy resultSpy(oauth.get(), &OCC::OAuth::result);
-                oauth->refreshAuthentication(QStringLiteral("foo"));
-                QVERIFY(spy.wait());
-                QCOMPARE(oauth->clientId(), QStringLiteral("d8a5d1f4-dabc-4e6a-a9a9-da729cff8ab0"));
-                QCOMPARE(oauth->clientSecret(), QString());
-                QCOMPARE(refreshErrorSpy.count(), 0);
-                QCOMPARE(resultSpy.count(), 0);
-            }
-
-        } test;
-        test.test();
-    }
-
-
-    void testDynamicTokenRefreshFailingRegistration()
-    {
-        // similar to testDynamicTokenRefresh but the dynamic registration fails and we fall back to the defaul
-        // client id and secret
-        struct Test : OAuthTestCase
-        {
-            Test() { }
-
-            QNetworkReply *wellKnownOpenidConfigurationReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req) override
-            {
-                OC_ASSERT(op == QNetworkAccessManager::GetOperation);
-                const QJsonDocument jsondata(QJsonObject{
-                    {QStringLiteral("authorization_endpoint"),
-                        QJsonValue(QStringLiteral("oauthtest://openidserver") + sOAuthTestServer.path() + QStringLiteral("/index.php/apps/oauth2/authorize"))},
-                    {QStringLiteral("token_endpoint"), QStringLiteral("oauthtest://openidserver/token_endpoint")},
-                    {QStringLiteral("registration_endpoint"), QStringLiteral("%1/clients-registrations").arg(localHost)},
-                    // this test explicitly check for the client secret in the post body
-                    {QStringLiteral("token_endpoint_auth_methods_supported"), QJsonArray{QStringLiteral("client_secret_post")}},
-                });
-                return new FakePayloadReply(op, req, jsondata.toJson(), {}, fakeAm);
-            }
-
-            void openBrowserHook(const QUrl &) override { Q_UNREACHABLE(); }
-
-            QNetworkReply *tokenReply(QNetworkAccessManager::Operation op, const QNetworkRequest &request, QIODevice *device) override
-            {
-                OC_ASSERT(request.url().toString().startsWith(QStringLiteral("oauthtest://openidserver/token_endpoint")));
-                auto req = request;
-                const auto query = QUrlQuery(QString::fromUtf8(device->peek(device->size())));
-                OC_ASSERT(query.queryItemValue(QStringLiteral("refresh_token")) == QLatin1String("foo"));
-                OC_ASSERT(query.queryItemValue(QStringLiteral("client_id")) == _expectedClientId);
+                OC_ASSERT(query.queryItemValue(QStringLiteral("client_id")) == Theme::instance()->oauthClientId());
                 OC_ASSERT(query.queryItemValue(QStringLiteral("client_secret")) == Theme::instance()->oauthClientSecret());
                 req.setUrl(QUrl(request.url().toString().replace(
                     QStringLiteral("oauthtest://openidserver/token_endpoint"), sOAuthTestServer.toString() + QStringLiteral("/token_endpoint"))));
@@ -860,18 +867,25 @@ private Q_SLOTS:
 
             QNetworkReply *clientRegistrationReply(QNetworkAccessManager::Operation op, const QNetworkRequest &request) override
             {
-                return new FakePayloadReply(op, request, {}, {}, fakeAm);
+                registrationRequested = true;
+                return OAuthTestCase::clientRegistrationReply(op, request);
             }
 
-            virtual void test() override
+            void test() override
             {
                 oauth = prepareOauth();
                 QSignalSpy spy(oauth.get(), &OCC::AccountBasedOAuth::refreshFinished);
+                QSignalSpy refreshErrorSpy(oauth.get(), &OCC::AccountBasedOAuth::refreshError);
+                QSignalSpy resultSpy(oauth.get(), &OCC::OAuth::result);
                 oauth->refreshAuthentication(QStringLiteral("foo"));
-
                 QVERIFY(spy.wait());
+                QCOMPARE(spy.first().at(0).toString(), QStringLiteral("123"));
+                QCOMPARE(spy.first().at(1).toString(), QStringLiteral("456"));
+                QCOMPARE(oauth->clientId(), Theme::instance()->oauthClientId());
+                QVERIFY(!registrationRequested);
+                QCOMPARE(refreshErrorSpy.count(), 0);
+                QCOMPARE(resultSpy.count(), 0);
             }
-
         } test;
         test.test();
     }
@@ -957,53 +971,16 @@ private Q_SLOTS:
 
     void testTransientRefreshDoesNotEmitAuthFailed()
     {
-        QObject replyParent;
-        int tokenRequestCount = 0;
-
-        // Use TimeoutError: resets nextTry to 0, so it never reaches TokenRefreshMaxRetries,
-        // and has TokenRefreshDefaultTimeout (30s) so no retry fires during our test window.
-        auto override = [&replyParent, &tokenRequestCount](QNetworkAccessManager::Operation op, const QNetworkRequest &req, QIODevice *) -> QNetworkReply * {
-            if (req.url().path().endsWith(QLatin1String("status.php"))) {
-                const QJsonDocument json(QJsonObject{
-                    {QStringLiteral("installed"), true},
-                    {QStringLiteral("maintenance"), false},
-                    {QStringLiteral("version"), QStringLiteral("10.0.0")},
-                });
-                return new FakePayloadReply(op, req, json.toJson(), {}, &replyParent);
-            }
-            if (req.url().path().endsWith(QLatin1String(".well-known/openid-configuration"))) {
-                const QJsonDocument json(QJsonObject{
-                    {QStringLiteral("authorization_endpoint"), QStringLiteral("oauthtest://openidserver/authorize")},
-                    {QStringLiteral("token_endpoint"), QStringLiteral("oauthtest://openidserver/token_endpoint")},
-                });
-                return new FakePayloadReply(op, req, json.toJson(), {}, &replyParent);
-            }
-            if (req.url().path().endsWith(QLatin1String(".well-known/webfinger"))) {
-                const QJsonDocument json(QJsonObject{
-                    {QStringLiteral("subject"), sOAuthTestServer.toString()},
-                    {QStringLiteral("links"), QJsonArray{
-                         QJsonObject{
-                             {QStringLiteral("rel"), QStringLiteral("http://openid.net/specs/connect/1.0/issuer")},
-                             {QStringLiteral("href"), QStringLiteral("oauthtest://openidserver")},
-                         },
-                     }},
-                });
-                QHttpHeaders headers;
-                headers.append(QHttpHeaders::WellKnownHeader::ContentType, QStringLiteral("application/json"));
-                return new FakePayloadReply(op, req, json.toJson(), headers, &replyParent);
-            }
-            if (req.url().toString().contains(QLatin1String("token_endpoint"))) {
-                ++tokenRequestCount;
-                auto *reply = new FakeErrorReply(op, req, &replyParent, 408);
-                reply->setError(QNetworkReply::TimeoutError, QStringLiteral("Request timed out"));
-                return reply;
-            }
-            return new FakePayloadReply(op, req, {}, {}, &replyParent);
+        RefreshServer server;
+        server.tokenReply = [](QNetworkAccessManager::Operation op, const QNetworkRequest &req, QObject *parent) -> QNetworkReply * {
+            auto *reply = new FakeErrorReply(op, req, parent, 408);
+            reply->setError(QNetworkReply::TimeoutError, QStringLiteral("Request timed out"));
+            return reply;
         };
 
         auto account = Account::create(QUuid::createUuid());
         account->setUrl(sOAuthTestServer);
-        auto *creds = new TestHttpCredentials(override, QStringLiteral("fake-refresh-token"));
+        auto *creds = new TestHttpCredentials(server.override(), QStringLiteral("fake-refresh-token"));
         account->setCredentials(creds);
 
         QSignalSpy authFailedSpy(creds, &AbstractCredentials::authenticationFailed);
@@ -1011,62 +988,26 @@ private Q_SLOTS:
 
         QVERIFY(creds->refreshAccessToken());
 
-        // Wait for the first token request to complete (queued connections fire).
-        // TimeoutError → nextTry resets to 0, retry scheduled in 30s — no retry in this window.
-        QTRY_VERIFY_WITH_TIMEOUT(tokenRequestCount >= 1, 5000);
+        // the retry is scheduled in TokenRefreshDefaultTimeoutOneError (30s), so only one attempt happens in this window
+        QTRY_VERIFY_WITH_TIMEOUT(server.tokenRequests >= 1, 5000);
         QCOMPARE(authStartedSpy.count(), 1);
-        // The fix: transient errors must NOT emit authenticationFailed
         QCOMPARE(authFailedSpy.count(), 0);
     }
 
-    void testTerminalRefreshEmitsAuthFailed()
+    void testInvalidGrantLogsOut()
     {
-        QObject replyParent;
-        int tokenRequestCount = 0;
-        HttpCredentials::TokenRefreshDefaultTimeoutOneError = 0s;
-
-        auto override = [&replyParent, &tokenRequestCount](QNetworkAccessManager::Operation op, const QNetworkRequest &req, QIODevice *) -> QNetworkReply * {
-            if (req.url().path().endsWith(QLatin1String("status.php"))) {
-                const QJsonDocument json(QJsonObject{
-                    {QStringLiteral("installed"), true},
-                    {QStringLiteral("maintenance"), false},
-                    {QStringLiteral("version"), QStringLiteral("10.0.0")},
-                });
-                return new FakePayloadReply(op, req, json.toJson(), {}, &replyParent);
-            }
-            if (req.url().path().endsWith(QLatin1String(".well-known/openid-configuration"))) {
-                const QJsonDocument json(QJsonObject{
-                    {QStringLiteral("authorization_endpoint"), QStringLiteral("oauthtest://openidserver/authorize")},
-                    {QStringLiteral("token_endpoint"), QStringLiteral("oauthtest://openidserver/token_endpoint")},
-                });
-                return new FakePayloadReply(op, req, json.toJson(), {}, &replyParent);
-            }
-            if (req.url().path().endsWith(QLatin1String(".well-known/webfinger"))) {
-                const QJsonDocument json(QJsonObject{
-                    {QStringLiteral("subject"), sOAuthTestServer.toString()},
-                    {QStringLiteral("links"), QJsonArray{
-                         QJsonObject{
-                             {QStringLiteral("rel"), QStringLiteral("http://openid.net/specs/connect/1.0/issuer")},
-                             {QStringLiteral("href"), QStringLiteral("oauthtest://openidserver")},
-                         },
-                     }},
-                });
-                QHttpHeaders headers;
-                headers.append(QHttpHeaders::WellKnownHeader::ContentType, QStringLiteral("application/json"));
-                return new FakePayloadReply(op, req, json.toJson(), headers, &replyParent);
-            }
-            if (req.url().toString().contains(QLatin1String("token_endpoint"))) {
-                ++tokenRequestCount;
-                auto *reply = new FakeErrorReply(op, req, &replyParent, 404);
-                reply->setError(QNetworkReply::ContentNotFoundError, QStringLiteral("Not found"));
-                return reply;
-            }
-            return new FakePayloadReply(op, req, {}, {}, &replyParent);
+        RefreshServer server;
+        server.tokenReply = [](QNetworkAccessManager::Operation op, const QNetworkRequest &req, QObject *parent) -> QNetworkReply * {
+            const QJsonDocument json(QJsonObject{
+                {QStringLiteral("error"), QStringLiteral("invalid_grant")},
+                {QStringLiteral("error_description"), QStringLiteral("Token is not active")},
+            });
+            return new FakeErrorReply(op, req, parent, 400, json.toJson());
         };
 
         auto account = Account::create(QUuid::createUuid());
         account->setUrl(sOAuthTestServer);
-        auto *creds = new TestHttpCredentials(override, QStringLiteral("fake-refresh-token"));
+        auto *creds = new TestHttpCredentials(server.override(), QStringLiteral("fake-refresh-token"));
         account->setCredentials(creds);
 
         QSignalSpy authFailedSpy(creds, &AbstractCredentials::authenticationFailed);
@@ -1074,11 +1015,125 @@ private Q_SLOTS:
 
         QVERIFY(creds->refreshAccessToken());
 
-        // ContentNotFoundError → timeout=0s, nextTry increments each time.
-        // After TokenRefreshMaxRetries (3) errors, terminal branch emits authenticationFailed.
-        QTRY_VERIFY_WITH_TIMEOUT(authFailedSpy.count() == 1, 1s);
+        QTRY_VERIFY_WITH_TIMEOUT(authFailedSpy.count() == 1, 5000);
         QCOMPARE(fetchedSpy.count(), 1);
-        QVERIFY(tokenRequestCount >= 3);
+        QCOMPARE(server.tokenRequests, 1);
+        QVERIFY(creds->refreshToken().isEmpty());
+    }
+
+    void testRetryRefreshOnReconnect()
+    {
+        RefreshServer server;
+        server.tokenReply = [](QNetworkAccessManager::Operation op, const QNetworkRequest &req, QObject *parent) -> QNetworkReply * {
+            return new FakeErrorReply(op, req, parent, 503);
+        };
+
+        auto account = Account::create(QUuid::createUuid());
+        account->setUrl(sOAuthTestServer);
+        auto *creds = new TestHttpCredentials(server.override(), QStringLiteral("fake-refresh-token"));
+        account->setCredentials(creds);
+
+        QVERIFY(creds->refreshAccessToken());
+        QTRY_VERIFY(creds->refreshRetryPending());
+        QCOMPARE(server.tokenRequests, 1);
+
+        creds->setReachability(QNetworkInformation::Reachability::Disconnected);
+        creds->setReachability(QNetworkInformation::Reachability::Local);
+        creds->setBehindCaptivePortal(true);
+        QTest::qWait(100ms);
+        QCOMPARE(server.tokenRequests, 1);
+        QVERIFY(creds->refreshRetryPending());
+
+        creds->setReachability(QNetworkInformation::Reachability::Online);
+        QVERIFY(!creds->refreshRetryPending());
+        QTRY_COMPARE(server.tokenRequests, 2);
+        QTRY_VERIFY(creds->refreshRetryPending());
+
+        creds->setBehindCaptivePortal(false);
+        QTRY_COMPARE(server.tokenRequests, 3);
+        QTRY_VERIFY(creds->refreshRetryPending());
+
+        creds->forgetSensitiveData();
+        QVERIFY(!creds->refreshRetryPending());
+        creds->setReachability(QNetworkInformation::Reachability::Online);
+        QTest::qWait(100ms);
+        QCOMPARE(server.tokenRequests, 3);
+    }
+
+    void testPersistentErrorsDontLogOut_data()
+    {
+        using ReplyFactory = RefreshServer::ReplyFactory;
+        QTest::addColumn<QString>("endpoint");
+        QTest::addColumn<ReplyFactory>("reply");
+
+        const auto error = [](int code) -> ReplyFactory {
+            return [code](QNetworkAccessManager::Operation op, const QNetworkRequest &req, QObject *parent) -> QNetworkReply * {
+                return new FakeErrorReply(op, req, parent, code);
+            };
+        };
+        const auto oauthError = [](const QString &errorCode) -> ReplyFactory {
+            return [errorCode](QNetworkAccessManager::Operation op, const QNetworkRequest &req, QObject *parent) -> QNetworkReply * {
+                return new FakeErrorReply(op, req, parent, 400, QJsonDocument(QJsonObject{{QStringLiteral("error"), errorCode}}).toJson());
+            };
+        };
+        const auto html = [](QNetworkAccessManager::Operation op, const QNetworkRequest &req, QObject *parent) -> QNetworkReply * {
+            QHttpHeaders headers;
+            headers.append(QHttpHeaders::WellKnownHeader::ContentType, QStringLiteral("text/html"));
+            return new FakePayloadReply(op, req, QByteArrayLiteral("<html><body>Please log in to the hotspot</body></html>"), headers, parent);
+        };
+        const auto noAccessToken = [](QNetworkAccessManager::Operation op, const QNetworkRequest &req, QObject *parent) -> QNetworkReply * {
+            return new FakePayloadReply(op, req, QJsonDocument(QJsonObject{{QStringLiteral("token_type"), QStringLiteral("Bearer")}}).toJson(), {}, parent);
+        };
+
+        QTest::newRow("status.php 503") << QStringLiteral("status") << error(503);
+        QTest::newRow("status.php captive portal") << QStringLiteral("status") << ReplyFactory(html);
+        QTest::newRow("webfinger 502") << QStringLiteral("webfinger") << error(502);
+        QTest::newRow("webfinger captive portal") << QStringLiteral("webfinger") << ReplyFactory(html);
+        QTest::newRow("openid-configuration 500") << QStringLiteral("openid") << error(500);
+        QTest::newRow("token 404") << QStringLiteral("token") << error(404);
+        QTest::newRow("token 503") << QStringLiteral("token") << error(503);
+        QTest::newRow("token captive portal") << QStringLiteral("token") << ReplyFactory(html);
+        QTest::newRow("token without access_token") << QStringLiteral("token") << ReplyFactory(noAccessToken);
+        QTest::newRow("token invalid_request") << QStringLiteral("token") << oauthError(QStringLiteral("invalid_request"));
+        QTest::newRow("token temporarily_unavailable") << QStringLiteral("token") << oauthError(QStringLiteral("temporarily_unavailable"));
+        QTest::newRow("token server_error") << QStringLiteral("token") << oauthError(QStringLiteral("server_error"));
+    }
+
+    void testPersistentErrorsDontLogOut()
+    {
+        QFETCH(QString, endpoint);
+        QFETCH(RefreshServer::ReplyFactory, reply);
+
+        const auto oldTimeout = HttpCredentials::TokenRefreshDefaultTimeoutOneError;
+        HttpCredentials::TokenRefreshDefaultTimeoutOneError = 0s;
+        const auto restoreTimeout = qScopeGuard([oldTimeout] { HttpCredentials::TokenRefreshDefaultTimeoutOneError = oldTimeout; });
+
+        RefreshServer server;
+        if (endpoint == QLatin1String("status")) {
+            server.statusReply = reply;
+        } else if (endpoint == QLatin1String("webfinger")) {
+            server.webfingerReply = reply;
+        } else if (endpoint == QLatin1String("openid")) {
+            server.openidConfigurationReply = reply;
+        } else {
+            server.tokenReply = reply;
+        }
+
+        auto account = Account::create(QUuid::createUuid());
+        account->setUrl(sOAuthTestServer);
+        auto *creds = new TestHttpCredentials(server.override(), QStringLiteral("fake-refresh-token"));
+        account->setCredentials(creds);
+
+        QSignalSpy authFailedSpy(creds, &AbstractCredentials::authenticationFailed);
+        QSignalSpy fetchedSpy(creds, &AbstractCredentials::fetched);
+
+        QVERIFY(creds->refreshAccessToken());
+
+        // the old implementation gave up after 3 attempts
+        QTRY_VERIFY_WITH_TIMEOUT(server.statusRequests >= 6, 10000);
+        QCOMPARE(authFailedSpy.count(), 0);
+        QCOMPARE(fetchedSpy.count(), 0);
+        QCOMPARE(creds->refreshToken(), QStringLiteral("fake-refresh-token"));
     }
 };
 
