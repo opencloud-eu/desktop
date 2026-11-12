@@ -21,6 +21,7 @@
 
 #include "libsync/opencloudsynclib.h"
 
+#include <QAnyStringView>
 #include <QByteArray>
 #include <QDateTime>
 #include <QElapsedTimer>
@@ -243,18 +244,15 @@ OPENCLOUD_SYNC_EXPORT Q_DECLARE_LOGGING_CATEGORY(lcUtility)
     OPENCLOUD_SYNC_EXPORT QString conflictFileBaseNameFromPattern(const QString &conflictName);
 
     template <class E>
-    E stringToEnum(const char *key)
+    std::optional<E> stringToEnum(QAnyStringView key)
     {
-        bool ok;
-        auto out = static_cast<E>(QMetaEnum::fromType<E>().keyToValue(key, &ok));
-        Q_ASSERT(ok);
-        return out;
-    }
-
-    template <class E>
-    E stringToEnum(const QString &key)
-    {
-        return stringToEnum<E>(key.toUtf8().constData());
+        const auto metaEnum = QMetaEnum::fromType<E>();
+        for (int i = 0; i < metaEnum.keyCount(); ++i) {
+            if (QAnyStringView(metaEnum.key(i)) == key) {
+                return static_cast<E>(metaEnum.value(i));
+            }
+        }
+        return {};
     }
 
     template <class E>
