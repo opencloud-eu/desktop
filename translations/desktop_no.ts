@@ -520,7 +520,7 @@ Skrivebordsverktøy for filsynkronisering.</translation>
     <message>
         <location filename="../src/libsync/abstractnetworkjob.cpp" line="47"/>
         <source>Operation canceled</source>
-        <translation type="unfinished"/>
+        <translation>Operasjonen ble avbrutt</translation>
     </message>
     <message>
         <location filename="../src/libsync/abstractnetworkjob.cpp" line="278"/>
@@ -834,8 +834,8 @@ Oppdateringen vil bli utført i bakgrunnen og overskrive den nåværende AppImag
 <context>
     <name>OCC::DiscoverySingleDirectoryJob</name>
     <message>
-        <location filename="../src/libsync/discoveryphase.cpp" line="262"/>
-        <location filename="../src/libsync/discoveryphase.cpp" line="304"/>
+        <location filename="../src/libsync/discoveryphase.cpp" line="263"/>
+        <location filename="../src/libsync/discoveryphase.cpp" line="305"/>
         <source>Server error: PROPFIND reply is not XML formatted!</source>
         <translation>Tjenerfeil: PROPFIND-svar er ikke XML-formatert!</translation>
     </message>
@@ -1829,112 +1829,112 @@ Merk at kommandolinjealternativer for logging overstyrer innstillingene.</transl
 <context>
     <name>OCC::ProcessDirectoryJob</name>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="168"/>
+        <location filename="../src/libsync/discovery.cpp" line="162"/>
         <source>Symbolic links are not supported in syncing.</source>
         <translation>Symbolske lenker støttes ikke i synkroniseringen.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="170"/>
+        <location filename="../src/libsync/discovery.cpp" line="164"/>
         <source>Encrypted vault files are not synchronized because they are currently not supported by this application.</source>
         <translation>Krypterte hvelvfiler blir ikke synkronisert fordi de for øyeblikket ikke støttes av denne appen.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="182"/>
+        <location filename="../src/libsync/discovery.cpp" line="176"/>
         <source>File names ending with a period are not supported on this file system.</source>
         <translation>Filnavn som slutter med et punktum støttes ikke på dette filsystemet.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="195"/>
+        <location filename="../src/libsync/discovery.cpp" line="189"/>
         <source>File names containing the character &apos;%1&apos; are not supported on this file system.</source>
         <translation>Filnavn som inneholder tegnet «%1», støttes ikke av dette filsystemet.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="198"/>
+        <location filename="../src/libsync/discovery.cpp" line="192"/>
         <source>File name contains at least one invalid character</source>
         <translation>Filnavnet inneholder minst ett ugyldig tegn</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="200"/>
+        <location filename="../src/libsync/discovery.cpp" line="194"/>
         <source>The file name is a reserved name on this file system.</source>
         <translation>Filnavnet er et reservert navn på dette filsystemet.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="209"/>
+        <location filename="../src/libsync/discovery.cpp" line="203"/>
         <source>Filename contains trailing spaces.</source>
         <translation>Filnavnet inneholder et mellomrom på slutten.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="212"/>
+        <location filename="../src/libsync/discovery.cpp" line="206"/>
         <source>Filename is too long.</source>
         <translation>Filnavnet er for langt.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="215"/>
+        <location filename="../src/libsync/discovery.cpp" line="209"/>
         <source>File/Folder is ignored because it&apos;s hidden.</source>
         <translation>Fil/mappe ignoreres fordi den er skjult.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="219"/>
+        <location filename="../src/libsync/discovery.cpp" line="213"/>
         <source>Conflict: Server version downloaded, local copy renamed and not uploaded.</source>
         <translation>Konflikt: Tjenerversjonen ble lastet ned, den lokale kopien fikk nytt navn og ble ikke lastet opp.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="223"/>
+        <location filename="../src/libsync/discovery.cpp" line="217"/>
         <source>The filename is blacklisted on the server.</source>
         <translation>Filnavnet er svartelistet på tjeneren.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1087"/>
+        <location filename="../src/libsync/discovery.cpp" line="1084"/>
         <source>Moved to invalid target, restoring</source>
         <translation>Flyttet til ugyldig mål, gjenoppretter</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1100"/>
+        <location filename="../src/libsync/discovery.cpp" line="1097"/>
         <source>Not allowed to remove, restoring</source>
         <translation>Ikke tillatt å fjerne, gjenoppretter</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1256"/>
+        <location filename="../src/libsync/discovery.cpp" line="1253"/>
         <source>Server replied with an error while reading directory »%1«: %2</source>
         <translation>Tjeneren svarte med en feil under lesing av mappen «%1»: %2</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1046"/>
+        <location filename="../src/libsync/discovery.cpp" line="1043"/>
         <source>Not allowed because you don&apos;t have permission to add subfolders to that folder</source>
         <translation>Ikke tillatt fordi du ikke har tillatelse til å legge til undermapper i den mappen</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="177"/>
+        <location filename="../src/libsync/discovery.cpp" line="171"/>
         <source>The file is listed on the ignore list.</source>
         <translation>Filen står på listen over ignorerte filer.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="523"/>
+        <location filename="../src/libsync/discovery.cpp" line="520"/>
         <source>Error while doing a rename, unhandled status code: %1</source>
         <translation>Feil under endring av navn, ubehandlet statuskode: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1014"/>
+        <location filename="../src/libsync/discovery.cpp" line="1011"/>
         <source>Selective sync: Ignored because its path is deselected</source>
         <translation>Selektiv synkronisering: Ignorert fordi stien er valgt bort</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1051"/>
+        <location filename="../src/libsync/discovery.cpp" line="1048"/>
         <source>Not allowed because you don&apos;t have permission to add files in that folder</source>
         <translation>Ikke tillatt fordi du ikke har tillatelse til å legge til filer i den mappen</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1064"/>
+        <location filename="../src/libsync/discovery.cpp" line="1061"/>
         <source>Not allowed to upload this file because it is read-only on the server, restoring</source>
         <translation>Ikke tillatt å laste opp denne filen fordi den er skrivebeskyttet på tjeneren, gjenoppretter</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1210"/>
+        <location filename="../src/libsync/discovery.cpp" line="1207"/>
         <source>Error while reading the database</source>
         <translation>Feil under lesing av databasen</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1235"/>
+        <location filename="../src/libsync/discovery.cpp" line="1232"/>
         <source>This Space is currently unavailable</source>
         <translation>Dette rommet er for øyeblikket utilgjengelig</translation>
     </message>
@@ -1955,67 +1955,67 @@ Merk at kommandolinjealternativer for logging overstyrer innstillingene.</transl
 <context>
     <name>OCC::PropagateDownloadFile</name>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="343"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="278"/>
         <source>The download would reduce free local disk space below the limit</source>
         <translation>Nedlastingen ville redusere ledig lokal diskplass under grensen</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="347"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="282"/>
         <source>Free space on disk is less than %1</source>
         <translation>Ledig plass på disken er mindre enn %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="170"/>
-        <location filename="../src/libsync/propagatedownload.cpp" line="666"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="105"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="601"/>
         <source>The file has changed since discovery</source>
         <translation>Filen er endret siden den ble oppdaget</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="175"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="110"/>
         <source>Failed to free up space, the file »%1« is currently in use</source>
         <translation>Kunne ikke frigjøre plass, filen «%1» er for øyeblikket i bruk</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="201"/>
-        <location filename="../src/libsync/propagatedownload.cpp" line="284"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="136"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="219"/>
         <source>The file »%1« can not be downloaded because of a local file name clash with %2!</source>
         <translation>Filen «%1» kan ikke lastes ned på grunn av en lokal filnavnkonflikt med %2!</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="293"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="228"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="579"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="609"/>
         <location filename="../src/libsync/propagatedownload.cpp" line="644"/>
-        <location filename="../src/libsync/propagatedownload.cpp" line="674"/>
-        <location filename="../src/libsync/propagatedownload.cpp" line="709"/>
         <source>The file »%1« is currently in use</source>
         <translation>Filen «%1» er for øyeblikket i bruk</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="441"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="376"/>
         <source>The file was deleted from server</source>
         <translation>Filen ble slettet fra tjeneren</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="500"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="435"/>
         <source>Broken webserver returned empty content length for non-empty file on resume</source>
         <translation>Feil i nettjeneren: Den returnerte tom innholdslengde for en fil som ikke er tom, ved gjenopptaking</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="507"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="442"/>
         <source>The file could not be downloaded completely.</source>
         <translation>Filen kunne ikke lastes ned fullstendig.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="514"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="449"/>
         <source>The downloaded file is empty despite the server announced it should have been %1.</source>
         <translation>Den nedlastede filen er tom til tross for at tjeneren oppga at den skulle ha vært %1.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="619"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="554"/>
         <source>The file »%1« cannot be saved because of a local file name clash with »%2«!</source>
         <translation>Filen «%1» kan ikke lagres på grunn av en lokal filnavnkonflikt med «%2»!</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="706"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="641"/>
         <source>Error updating metadata: %1</source>
         <translation>Feil ved oppdatering av metadata: %1</translation>
     </message>
@@ -2160,12 +2160,12 @@ Merk at kommandolinjealternativer for logging overstyrer innstillingene.</transl
 <context>
     <name>OCC::PropagateUpdateMetaDataJob</name>
     <message>
-        <location filename="../src/libsync/owncloudpropagator.cpp" line="1289"/>
+        <location filename="../src/libsync/owncloudpropagator.cpp" line="1290"/>
         <source>Could not update file: %1</source>
         <translation>Kunne ikke oppdatere filen: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/owncloudpropagator.cpp" line="1292"/>
+        <location filename="../src/libsync/owncloudpropagator.cpp" line="1293"/>
         <source>The file »%1« is currently in use</source>
         <translation>Filen «%1» er for øyeblikket i bruk</translation>
     </message>
@@ -2194,12 +2194,12 @@ Merk at kommandolinjealternativer for logging overstyrer innstillingene.</transl
         <translation>Filen «%1» er for øyeblikket i bruk</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateupload.cpp" line="562"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="551"/>
         <source>The server did not provide the file permissions</source>
         <translation>Tjeneren oppga ikke filtillatelsene</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateupload.cpp" line="570"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="559"/>
         <source>Error updating metadata: %1</source>
         <translation>Feil ved oppdatering av metadata: %1</translation>
     </message>
@@ -2584,7 +2584,7 @@ Merk at kommandolinjealternativer for logging overstyrer innstillingene.</transl
 <context>
     <name>OCC::SyncJournalDb</name>
     <message>
-        <location filename="../src/libsync/common/syncjournaldb.cpp" line="822"/>
+        <location filename="../src/libsync/common/syncjournaldb.cpp" line="835"/>
         <source>Failed to connect database.</source>
         <translation>Kunne ikke koble til databasen.</translation>
     </message>
@@ -3003,7 +3003,7 @@ Merk at kommandolinjealternativer for logging overstyrer innstillingene.</transl
 <context>
     <name>RemoteInfo</name>
     <message>
-        <location filename="../src/libsync/discoveryremoteinfo.cpp" line="69"/>
+        <location filename="../src/libsync/discoveryremoteinfo.cpp" line="73"/>
         <source>server reported no %1</source>
         <translation>tjeneren rapporterte ingen %1</translation>
     </message>
@@ -3127,63 +3127,63 @@ Merk at kommandolinjealternativer for logging overstyrer innstillingene.</transl
 <context>
     <name>SyncFileItem::Status</name>
     <message>
-        <location filename="../src/libsync/syncfileitem.cpp" line="62"/>
+        <location filename="../src/libsync/syncfileitem.cpp" line="63"/>
         <source>Undefined</source>
         <translation>Udefinert</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncfileitem.cpp" line="64"/>
+        <location filename="../src/libsync/syncfileitem.cpp" line="65"/>
         <source>Fatal Error</source>
         <translation>Alvorlig feil</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncfileitem.cpp" line="66"/>
-        <location filename="../src/libsync/syncfileitem.cpp" line="78"/>
+        <location filename="../src/libsync/syncfileitem.cpp" line="67"/>
+        <location filename="../src/libsync/syncfileitem.cpp" line="79"/>
         <source>Error</source>
         <translation>Feil</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncfileitem.cpp" line="68"/>
+        <location filename="../src/libsync/syncfileitem.cpp" line="69"/>
         <source>Info</source>
         <translation>Informasjon</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncfileitem.cpp" line="70"/>
+        <location filename="../src/libsync/syncfileitem.cpp" line="71"/>
         <source>Success</source>
         <translation>Vellykket</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncfileitem.cpp" line="72"/>
+        <location filename="../src/libsync/syncfileitem.cpp" line="73"/>
         <source>Conflict</source>
         <translation>Konflikt</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncfileitem.cpp" line="74"/>
+        <location filename="../src/libsync/syncfileitem.cpp" line="75"/>
         <source>File Ignored</source>
         <translation>Fil ignorert</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncfileitem.cpp" line="76"/>
+        <location filename="../src/libsync/syncfileitem.cpp" line="77"/>
         <source>Restored</source>
         <translation>Gjenopprettet</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncfileitem.cpp" line="80"/>
+        <location filename="../src/libsync/syncfileitem.cpp" line="81"/>
         <source>Blacklisted</source>
         <translation>Svartelistet</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncfileitem.cpp" line="82"/>
+        <location filename="../src/libsync/syncfileitem.cpp" line="83"/>
         <source>Excluded</source>
         <translation>Ekskludert</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncfileitem.cpp" line="84"/>
+        <location filename="../src/libsync/syncfileitem.cpp" line="85"/>
         <source>Message</source>
         <translation>Melding</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncfileitem.cpp" line="86"/>
+        <location filename="../src/libsync/syncfileitem.cpp" line="87"/>
         <source>Filename Reserved</source>
         <translation>Filnavn reservert</translation>
     </message>
