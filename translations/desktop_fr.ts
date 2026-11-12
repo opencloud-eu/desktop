@@ -834,8 +834,8 @@ La mise à jour sera effectuée en arrière-plan et écrasera le fichier AppImag
 <context>
     <name>OCC::DiscoverySingleDirectoryJob</name>
     <message>
-        <location filename="../src/libsync/discoveryphase.cpp" line="262"/>
-        <location filename="../src/libsync/discoveryphase.cpp" line="304"/>
+        <location filename="../src/libsync/discoveryphase.cpp" line="263"/>
+        <location filename="../src/libsync/discoveryphase.cpp" line="305"/>
         <source>Server error: PROPFIND reply is not XML formatted!</source>
         <translation>Erreur du serveur : La réponse PROPFIND n&apos;est pas au format XML !</translation>
     </message>
@@ -1828,112 +1828,112 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
 <context>
     <name>OCC::ProcessDirectoryJob</name>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="168"/>
+        <location filename="../src/libsync/discovery.cpp" line="162"/>
         <source>Symbolic links are not supported in syncing.</source>
         <translation>Les liens symboliques ne sont pas pris en charge pour la synchronisation.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="170"/>
+        <location filename="../src/libsync/discovery.cpp" line="164"/>
         <source>Encrypted vault files are not synchronized because they are currently not supported by this application.</source>
         <translation>Les fichiers de coffre-fort chiffrés ne sont pas synchronisés car ils ne sont pas pris en charge par cette application pour le moment.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="182"/>
+        <location filename="../src/libsync/discovery.cpp" line="176"/>
         <source>File names ending with a period are not supported on this file system.</source>
         <translation>Les noms de fichiers se terminant par un point ne sont pas pris en charge sur ce système de fichiers.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="195"/>
+        <location filename="../src/libsync/discovery.cpp" line="189"/>
         <source>File names containing the character &apos;%1&apos; are not supported on this file system.</source>
         <translation>Les noms de fichiers contenant le caractère « %1 » ne sont pas pris en charge sur ce système de fichiers.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="198"/>
+        <location filename="../src/libsync/discovery.cpp" line="192"/>
         <source>File name contains at least one invalid character</source>
         <translation>Le nom du fichier contient au moins un caractère non valide</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="200"/>
+        <location filename="../src/libsync/discovery.cpp" line="194"/>
         <source>The file name is a reserved name on this file system.</source>
         <translation>Le nom du fichier est un nom réservé sur ce système de fichiers.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="209"/>
+        <location filename="../src/libsync/discovery.cpp" line="203"/>
         <source>Filename contains trailing spaces.</source>
         <translation>Le nom du fichier contient des espaces à la fin.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="212"/>
+        <location filename="../src/libsync/discovery.cpp" line="206"/>
         <source>Filename is too long.</source>
         <translation>Le nom du fichier est trop long.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="215"/>
+        <location filename="../src/libsync/discovery.cpp" line="209"/>
         <source>File/Folder is ignored because it&apos;s hidden.</source>
         <translation>Le fichier/dossier est ignoré parce qu&apos;il est caché.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="219"/>
+        <location filename="../src/libsync/discovery.cpp" line="213"/>
         <source>Conflict: Server version downloaded, local copy renamed and not uploaded.</source>
         <translation>Conflit : Version serveur téléchargée, copie locale renommée et non téléversée.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="223"/>
+        <location filename="../src/libsync/discovery.cpp" line="217"/>
         <source>The filename is blacklisted on the server.</source>
         <translation>Le nom de fichier est sur la liste noire du serveur.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1087"/>
+        <location filename="../src/libsync/discovery.cpp" line="1084"/>
         <source>Moved to invalid target, restoring</source>
         <translation>Déplacement vers une cible invalide, restauration en cours</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1100"/>
+        <location filename="../src/libsync/discovery.cpp" line="1097"/>
         <source>Not allowed to remove, restoring</source>
         <translation>Suppression non autorisée, restauration en cours</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1256"/>
+        <location filename="../src/libsync/discovery.cpp" line="1253"/>
         <source>Server replied with an error while reading directory »%1«: %2</source>
         <translation>Le serveur a renvoyé une erreur lors de la lecture du répertoire « %1 » : %2</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1046"/>
+        <location filename="../src/libsync/discovery.cpp" line="1043"/>
         <source>Not allowed because you don&apos;t have permission to add subfolders to that folder</source>
         <translation>Non autorisé car vous n&apos;avez pas le droit d&apos;ajouter des sous-dossiers à ce dossier.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="177"/>
+        <location filename="../src/libsync/discovery.cpp" line="171"/>
         <source>The file is listed on the ignore list.</source>
         <translation>Le fichier figure sur la liste des fichiers ignorés.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="523"/>
+        <location filename="../src/libsync/discovery.cpp" line="520"/>
         <source>Error while doing a rename, unhandled status code: %1</source>
         <translation>Erreur lors du renommage, code non géré : %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1014"/>
+        <location filename="../src/libsync/discovery.cpp" line="1011"/>
         <source>Selective sync: Ignored because its path is deselected</source>
         <translation>Synchronisation sélective : ignoré car son chemin est désélectionné</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1051"/>
+        <location filename="../src/libsync/discovery.cpp" line="1048"/>
         <source>Not allowed because you don&apos;t have permission to add files in that folder</source>
         <translation>Non autorisé car vous n&apos;avez pas la permission d&apos;ajouter des fichiers dans ce dossier</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1064"/>
+        <location filename="../src/libsync/discovery.cpp" line="1061"/>
         <source>Not allowed to upload this file because it is read-only on the server, restoring</source>
         <translation>Pas autorisé à téléverser ce fichier car il est en lecture seule sur le serveur, restauration</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1210"/>
+        <location filename="../src/libsync/discovery.cpp" line="1207"/>
         <source>Error while reading the database</source>
         <translation>Erreur lors de la lecture de la base de données</translation>
     </message>
     <message>
-        <location filename="../src/libsync/discovery.cpp" line="1235"/>
+        <location filename="../src/libsync/discovery.cpp" line="1232"/>
         <source>This Space is currently unavailable</source>
         <translation>Cet espace est actuellement indisponible</translation>
     </message>
@@ -1954,67 +1954,67 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
 <context>
     <name>OCC::PropagateDownloadFile</name>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="343"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="278"/>
         <source>The download would reduce free local disk space below the limit</source>
         <translation>Le téléchargement réduirait l’espace libre sur le disque local en dessous de la limite</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="347"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="282"/>
         <source>Free space on disk is less than %1</source>
         <translation>L’espace libre sur le disque est inférieur à %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="170"/>
-        <location filename="../src/libsync/propagatedownload.cpp" line="666"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="105"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="601"/>
         <source>The file has changed since discovery</source>
         <translation>Le fichier a été modifié depuis</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="175"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="110"/>
         <source>Failed to free up space, the file »%1« is currently in use</source>
         <translation>Échec de la libération de l&apos;espace, le fichier  « %1 » est en cours d&apos;utilisation</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="201"/>
-        <location filename="../src/libsync/propagatedownload.cpp" line="284"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="136"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="219"/>
         <source>The file »%1« can not be downloaded because of a local file name clash with %2!</source>
         <translation>Le fichier « %1 » ne peut pas être téléchargé en raison d&apos;un conflit de nom de fichier local avec %2 !</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="293"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="228"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="579"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="609"/>
         <location filename="../src/libsync/propagatedownload.cpp" line="644"/>
-        <location filename="../src/libsync/propagatedownload.cpp" line="674"/>
-        <location filename="../src/libsync/propagatedownload.cpp" line="709"/>
         <source>The file »%1« is currently in use</source>
         <translation>Le fichier « %1 » est actuellement utilisé</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="441"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="376"/>
         <source>The file was deleted from server</source>
         <translation>Le fichier a été supprimé du serveur</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="500"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="435"/>
         <source>Broken webserver returned empty content length for non-empty file on resume</source>
         <translation>Le serveur Web cassé renvoie une longueur de contenu vide pour un fichier non vide lors de la reprise.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="507"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="442"/>
         <source>The file could not be downloaded completely.</source>
         <translation>Le fichier n&apos;a pas pu être téléchargé complètement.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="514"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="449"/>
         <source>The downloaded file is empty despite the server announced it should have been %1.</source>
         <translation>Le fichier téléchargé est vide alors que le serveur a annoncé qu&apos;il aurait dû être %1.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="619"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="554"/>
         <source>The file »%1« cannot be saved because of a local file name clash with »%2«!</source>
         <translation>Le fichier « %1 » ne peut pas être enregistré en raison d’un conflit de nom avec le fichier local « %2 » !</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="706"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="641"/>
         <source>Error updating metadata: %1</source>
         <translation>Erreur lors de la mise à jour des métadonnées : %1</translation>
     </message>
@@ -2159,12 +2159,12 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
 <context>
     <name>OCC::PropagateUpdateMetaDataJob</name>
     <message>
-        <location filename="../src/libsync/owncloudpropagator.cpp" line="1289"/>
+        <location filename="../src/libsync/owncloudpropagator.cpp" line="1290"/>
         <source>Could not update file: %1</source>
         <translation>Impossible de mettre à jour le fichier : %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/owncloudpropagator.cpp" line="1292"/>
+        <location filename="../src/libsync/owncloudpropagator.cpp" line="1293"/>
         <source>The file »%1« is currently in use</source>
         <translation>Le fichier « %1 » est actuellement utilisé</translation>
     </message>
@@ -2193,12 +2193,12 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
         <translation>Le fichier « %1 » est actuellement utilisé</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateupload.cpp" line="562"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="551"/>
         <source>The server did not provide the file permissions</source>
         <translation>Le serveur n&apos;a pas fourni les permissions du fichier</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagateupload.cpp" line="570"/>
+        <location filename="../src/libsync/propagateupload.cpp" line="559"/>
         <source>Error updating metadata: %1</source>
         <translation>Erreur lors de la mise à jour des métadonnées : %1</translation>
     </message>
@@ -2583,7 +2583,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
 <context>
     <name>OCC::SyncJournalDb</name>
     <message>
-        <location filename="../src/libsync/common/syncjournaldb.cpp" line="822"/>
+        <location filename="../src/libsync/common/syncjournaldb.cpp" line="835"/>
         <source>Failed to connect database.</source>
         <translation>Échec de la connexion à la base de données.</translation>
     </message>
@@ -3002,7 +3002,7 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
 <context>
     <name>RemoteInfo</name>
     <message>
-        <location filename="../src/libsync/discoveryremoteinfo.cpp" line="69"/>
+        <location filename="../src/libsync/discoveryremoteinfo.cpp" line="73"/>
         <source>server reported no %1</source>
         <translation>Le serveur n’a signalé aucun/aucune %1</translation>
     </message>
@@ -3126,63 +3126,63 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
 <context>
     <name>SyncFileItem::Status</name>
     <message>
-        <location filename="../src/libsync/syncfileitem.cpp" line="62"/>
+        <location filename="../src/libsync/syncfileitem.cpp" line="63"/>
         <source>Undefined</source>
         <translation>Non défini</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncfileitem.cpp" line="64"/>
+        <location filename="../src/libsync/syncfileitem.cpp" line="65"/>
         <source>Fatal Error</source>
         <translation>Erreur fatale</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncfileitem.cpp" line="66"/>
-        <location filename="../src/libsync/syncfileitem.cpp" line="78"/>
+        <location filename="../src/libsync/syncfileitem.cpp" line="67"/>
+        <location filename="../src/libsync/syncfileitem.cpp" line="79"/>
         <source>Error</source>
         <translation>Erreur</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncfileitem.cpp" line="68"/>
+        <location filename="../src/libsync/syncfileitem.cpp" line="69"/>
         <source>Info</source>
         <translation>Info</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncfileitem.cpp" line="70"/>
+        <location filename="../src/libsync/syncfileitem.cpp" line="71"/>
         <source>Success</source>
         <translation>Succès</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncfileitem.cpp" line="72"/>
+        <location filename="../src/libsync/syncfileitem.cpp" line="73"/>
         <source>Conflict</source>
         <translation>Conflit</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncfileitem.cpp" line="74"/>
+        <location filename="../src/libsync/syncfileitem.cpp" line="75"/>
         <source>File Ignored</source>
         <translation>Fichier ignoré</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncfileitem.cpp" line="76"/>
+        <location filename="../src/libsync/syncfileitem.cpp" line="77"/>
         <source>Restored</source>
         <translation>Restauré</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncfileitem.cpp" line="80"/>
+        <location filename="../src/libsync/syncfileitem.cpp" line="81"/>
         <source>Blacklisted</source>
         <translation>Sur liste noire</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncfileitem.cpp" line="82"/>
+        <location filename="../src/libsync/syncfileitem.cpp" line="83"/>
         <source>Excluded</source>
         <translation>Exclus</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncfileitem.cpp" line="84"/>
+        <location filename="../src/libsync/syncfileitem.cpp" line="85"/>
         <source>Message</source>
         <translation>Message</translation>
     </message>
     <message>
-        <location filename="../src/libsync/syncfileitem.cpp" line="86"/>
+        <location filename="../src/libsync/syncfileitem.cpp" line="87"/>
         <source>Filename Reserved</source>
         <translation>Nom de fichier réservé</translation>
     </message>

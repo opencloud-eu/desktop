@@ -47,71 +47,6 @@ namespace OCC {
 Q_LOGGING_CATEGORY(lcPropagateDownload, "sync.propagator.download", QtInfoMsg)
 
 
-namespace CernRecallFeature {
-    void handleRecallFile(const QString &filePath, const QString &folderPath, SyncJournalDb &journal)
-    {
-        OC_ENFORCE(Theme::instance()->enableCernBranding());
-
-        auto makeRecallFileName = [](const QString &fn) {
-            QString recallFileName(fn);
-            // Add _recall-XXXX  before the extension.
-            int dotLocation = recallFileName.lastIndexOf(QLatin1Char('.'));
-            // If no extension, add it at the end  (take care of cases like foo/.hidden or foo.bar/file)
-            if (dotLocation <= recallFileName.lastIndexOf(QLatin1Char('/')) + 1) {
-                dotLocation = recallFileName.size();
-            }
-
-            QString timeString = QDateTime::currentDateTimeUtc().toString(QStringLiteral("yyyyMMdd-hhmmss"));
-            recallFileName.insert(dotLocation, QStringLiteral("_.sys.admin#recall#-") + timeString);
-
-            return recallFileName;
-        };
-
-        qCDebug(lcPropagateDownload) << u"handleRecallFile: " << filePath;
-
-        FileSystem::setFileHidden(filePath, true);
-
-        QFile file(filePath);
-        if (!file.open(QIODevice::ReadOnly)) {
-            qCWarning(lcPropagateDownload) << u"Could not open recall file" << file.errorString();
-            return;
-        }
-        QFileInfo existingFile(filePath);
-        QDir baseDir = existingFile.dir();
-
-        while (!file.atEnd()) {
-            QByteArray line = file.readLine();
-            line.chop(1); // remove trailing \n
-
-            QString recalledFile = QDir::cleanPath(baseDir.filePath(QString::fromUtf8(line)));
-            if (!recalledFile.startsWith(folderPath) || !recalledFile.startsWith(baseDir.path())) {
-                qCWarning(lcPropagateDownload) << u"Ignoring recall of " << recalledFile;
-                continue;
-            }
-
-            // Path of the recalled file in the local folder
-            QString localRecalledFile = recalledFile.mid(folderPath.size());
-
-            const SyncJournalFileRecord record = journal.getFileRecord(localRecalledFile);
-            if (!record.isValid()) {
-                qCWarning(lcPropagateDownload) << u"No db entry for recall of" << localRecalledFile;
-                continue;
-            }
-
-            qCInfo(lcPropagateDownload) << u"Recalling" << localRecalledFile << u"Checksum:" << record.checksumHeader();
-
-            QString targetPath = makeRecallFileName(recalledFile);
-
-            qCDebug(lcPropagateDownload) << u"Copy recall file: " << recalledFile << u" -> " << targetPath;
-            // Remove the target first, QFile::copy will not overwrite it.
-            FileSystem::remove(targetPath);
-            QFile::copy(recalledFile, targetPath);
-        }
-    }
-
-
-}
-
 namespace {
     void preserveGroupOwnership(const QString &fileName, const QFileInfo &fi)
     {
@@ -713,15 +648,6 @@ void PropagateDownloadFile::updateMetadata(bool isConflict)
     propagator()->_journal->commit(QStringLiteral("download file start2"));
 
     done(isConflict ? SyncFileItem::Conflict : SyncFileItem::Success);
-
-    // handle the special recall file
-    if (Q_UNLIKELY(Theme::instance()->enableCernBranding())) {
-        if (!_item->_remotePerm.hasPermission(RemotePermissions::IsShared)
-            && (_item->localName() == QLatin1String(".sys.admin#recall#") || _item->localName().endsWith(QLatin1String("/.sys.admin#recall#")))) {
-            const QString fn = propagator()->fullLocalPath(_item->destination());
-            CernRecallFeature::handleRecallFile(fn, propagator()->localPath(), *propagator()->_journal);
-        }
-    }
 
     const auto duration = std::chrono::milliseconds(_stopwatch.elapsed());
     if (isLikelyFinishedQuickly() && duration > 5s) {

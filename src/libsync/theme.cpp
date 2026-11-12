@@ -209,11 +209,6 @@ bool Theme::enableMoveToTrash() const
     return true;
 }
 
-bool Theme::enableCernBranding() const
-{
-    return false;
-}
-
 bool Theme::withCrashReporter() const
 {
     return false;
