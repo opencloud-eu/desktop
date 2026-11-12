@@ -92,12 +92,11 @@ FolderMan::FolderMan()
     , _scheduler(new SyncScheduler(this))
     , _socketApi(new SocketApi)
 {
-#ifdef Q_OS_WIN
     auto updateSyncRoots = [] {
         // set the metadata for a sync root, depending on the number of accounts
         for (const auto &accountStatePtr : AccountManager::instance()->accounts()) {
             if (accountStatePtr->account()->hasDefaultSyncRoot()) {
-                Folder::prepareFolder(accountStatePtr->account()->defaultSyncRoot(),
+                Utility::setupFavLink(accountStatePtr->account()->defaultSyncRoot(),
                     AccountManager::instance()->accounts().size() == 1
                         ? Resources::JsonTheme::instance().applicationName()
                         : u"%1 - %2"_s.arg(Resources::JsonTheme::instance().applicationName(), accountStatePtr->account()->davDisplayName()),
@@ -107,7 +106,7 @@ FolderMan::FolderMan()
     };
     updateSyncRoots();
     connect(AccountManager::instance(), &AccountManager::accountAdded, this, updateSyncRoots);
-#endif
+
     connect(AccountManager::instance(), &AccountManager::accountRemoved,
         this, &FolderMan::slotRemoveFoldersForAccount);
 
@@ -761,7 +760,9 @@ bool FolderMan::prepareFolder(const QString &folder)
             return false;
         }
         FileSystem::setFolderMinimumPermissions(folder);
-        Folder::prepareFolder(folder, {}, {}, false);
+#ifdef Q_OS_WIN
+        Utility::setupDesktopIni(folder, {}, {}, false);
+#endif
     }
     return true;
 }

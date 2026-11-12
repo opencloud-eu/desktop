@@ -84,7 +84,6 @@ void setUpInitialSyncFolder(AccountStatePtr accountStatePtr, bool useVfs)
             if (!spaces.isEmpty()) {
                 const QString localDir(accountStatePtr->account()->defaultSyncRoot());
                 FileSystem::setFolderMinimumPermissions(localDir);
-                Utility::setupFavLink(localDir);
                 for (const auto *space : spaces) {
                     const QString name = space->displayName();
                     const QString folderName = FolderMan::instance()->findGoodPathForNewSyncFolder(

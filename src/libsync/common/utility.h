@@ -49,7 +49,7 @@ OPENCLOUD_SYNC_EXPORT Q_DECLARE_LOGGING_CATEGORY(lcUtility)
      */
     namespace Utility
 {
-    OPENCLOUD_SYNC_EXPORT void setupFavLink(const QString &folder);
+    OPENCLOUD_SYNC_EXPORT void setupFavLink(const QString &folder, const QString &displayName, const QString &description, bool override);
     OPENCLOUD_SYNC_EXPORT QString octetsToString(qint64 octets);
     OPENCLOUD_SYNC_EXPORT QByteArray userAgentString();
 
