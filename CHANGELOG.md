@@ -1,5 +1,65 @@
 # Changelog
 
+## [5.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v5.0.0) - 2026-11-13
+
+### ❤️ Thanks to all contributors! ❤️
+
+@Asmitapaudel, @Mortimer-RR, @TheOneRing, @dragotin, @flimmy, @fracturehill, @jnweiger, @junkerderprovinz, @prashant-gurung899, @saw-jan, @v-scharf
+
+### 💥 Breaking changes
+
+- Remove .OpenCloudSync.log we have the sync log in the ui and extensiv… [[#1132](https://github.com/opencloud-eu/desktop/pull/1132)]
+
+### ✨ Features
+
+- add support for arm platforms [[#1210](https://github.com/opencloud-eu/desktop/pull/1210)]
+- Reimplement the windows context menu [[#1190](https://github.com/opencloud-eu/desktop/pull/1190)]
+- Json theme [[#1114](https://github.com/opencloud-eu/desktop/pull/1114)]
+- Extend context menu with copy to clipboard [[#1115](https://github.com/opencloud-eu/desktop/pull/1115)]
+
+### 🐛 Bug Fixes
+
+- Re-enable share status indicator in shell extension overlay [[#1236](https://github.com/opencloud-eu/desktop/pull/1236)]
+- Don't leak properties from non-200 propstat into the next response [[#1251](https://github.com/opencloud-eu/desktop/pull/1251)]
+- Fix mem leak in JobnQueue [[#1243](https://github.com/opencloud-eu/desktop/pull/1243)]
+- Discovery: Don't treat replaced virtual files as placeholders [[#1232](https://github.com/opencloud-eu/desktop/pull/1232)]
+- Fix WITH_HTTP2=OFF, the value was not applied [[#1222](https://github.com/opencloud-eu/desktop/pull/1222)]
+- Ci: import qt backport for fotconfig crash [[#1189](https://github.com/opencloud-eu/desktop/pull/1189)]
+- Mirror layout for RTL languages [[#1180](https://github.com/opencloud-eu/desktop/pull/1180)]
+- Fix broken scrollbar in SpacesView [[#1186](https://github.com/opencloud-eu/desktop/pull/1186)]
+- Fix incorrect parsing of translation strings [[#1168](https://github.com/opencloud-eu/desktop/pull/1168)]
+- Filter out vault spaces which are not yet supported [[#1170](https://github.com/opencloud-eu/desktop/pull/1170)]
+- Fix hanging sync if propfind after upload fails [[#1169](https://github.com/opencloud-eu/desktop/pull/1169)]
+- Recover TUS uploads whose resume URL is no longer valid [[#1145](https://github.com/opencloud-eu/desktop/pull/1145)]
+- Fix sorting by file size in IssuesWidget [[#1160](https://github.com/opencloud-eu/desktop/pull/1160)]
+- Ensure the default sync root is always saved [[#1134](https://github.com/opencloud-eu/desktop/pull/1134)]
+- CI: mac: backport https://qt-project.atlassian.net/browse/QTBUG-150017 [[#1143](https://github.com/opencloud-eu/desktop/pull/1143)]
+- Invalidate the discovery state when hidden files are enabled [[#1029](https://github.com/opencloud-eu/desktop/pull/1029)]
+- Fix some leaks in the linux folder watcher [[#1120](https://github.com/opencloud-eu/desktop/pull/1120)]
+- Cfapi: Fix attributes of newly created folder [[#1135](https://github.com/opencloud-eu/desktop/pull/1135)]
+- Don't sync .vault folders for now [[#1118](https://github.com/opencloud-eu/desktop/pull/1118)]
+- Close all handles of FolderWatcher [[#1107](https://github.com/opencloud-eu/desktop/pull/1107)]
+- Backport fix for systray crash in macOS 27 [[#1109](https://github.com/opencloud-eu/desktop/pull/1109)]
+- Cfapi::updatePlaceholderState only update meta data if file is virtual [[#1103](https://github.com/opencloud-eu/desktop/pull/1103)]
+- Fix endless loop in wizard od failed auth [[#1090](https://github.com/opencloud-eu/desktop/pull/1090)]
+- Display logout button if reauthentication failed [[#1089](https://github.com/opencloud-eu/desktop/pull/1089)]
+- Fix check for OAuth::PromptValuesSupported [[#1091](https://github.com/opencloud-eu/desktop/pull/1091)]
+
+### 📈 Enhancement
+
+- make cfapi registration more resiliant [[#1213](https://github.com/opencloud-eu/desktop/pull/1213)]
+- Remove mac os opt out from liquid glass [[#1171](https://github.com/opencloud-eu/desktop/pull/1171)]
+- Improve keyboard navigation in context menus [[#1155](https://github.com/opencloud-eu/desktop/pull/1155)]
+- Reduce number of possible stats in LocalInfo [[#1123](https://github.com/opencloud-eu/desktop/pull/1123)]
+- Cfapi: Reuse created handles [[#1104](https://github.com/opencloud-eu/desktop/pull/1104)]
+- Update system info string format in theme.cpp [[#1076](https://github.com/opencloud-eu/desktop/pull/1076)]
+- Fallback to consent if prompt_values_supported is not exposed [[#1092](https://github.com/opencloud-eu/desktop/pull/1092)]
+- clanup and make errors translatable [[#1083](https://github.com/opencloud-eu/desktop/pull/1083)]
+
+### 📦️ Dependencies
+
+- build(deps): bump signpath/github-action-submit-signing-request from 2 to 3 [[#1100](https://github.com/opencloud-eu/desktop/pull/1100)]
+
 ## [4.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v4.0.0) - 2026-09-03
 
 ### ❤️ Thanks to all contributors! ❤️
