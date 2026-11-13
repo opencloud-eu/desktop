@@ -15,7 +15,9 @@
 #include "gui/qmlutils.h"
 
 #include "gui/fonticonmessagebox.h"
+#include "gui/guiutility.h"
 #include "gui/openfilemanager.h"
+#include "resources/jsontheme.h"
 #include "resources/resources.h"
 
 #include <QClipboard>
@@ -86,6 +88,34 @@ bool OCC::QmlUtils::OCQuickWidget::event(QEvent *event)
     return QQuickWidget::event(event);
 }
 
+OCC::QmlUtils::OCUtils *OCC::QmlUtils::OCUtils::_instance = nullptr;
+
+OCC::QmlUtils::OCUtils::OCUtils(QObject *parent)
+    : _hasLaunchOnStartup(OCC::Utility::hasLaunchOnStartup(OCC::Resources::JsonTheme::instance().applicationName()))
+{
+}
+
+OCC::QmlUtils::OCUtils::~OCUtils()
+{
+    _instance = nullptr;
+}
+
+OCC::QmlUtils::OCUtils *OCC::QmlUtils::OCUtils::instance()
+{
+    if (!_instance) {
+        _instance = new OCUtils();
+    }
+
+    return _instance;
+}
+
+OCC::QmlUtils::OCUtils *OCC::QmlUtils::OCUtils::create(QQmlEngine *qmlEngine, QJSEngine *)
+{
+    Q_ASSERT(qmlEngine->thread() == instance()->thread());
+    QJSEngine::setObjectOwnership(instance(), QJSEngine::CppOwnership);
+    return instance();
+}
+
 QString OCC::QmlUtils::OCUtils::qVersion() const
 {
     return QString::fromUtf8(::qVersion());
@@ -133,4 +163,27 @@ void OCC::QmlUtils::OCUtils::setClipBoard(const QString &text) const
 void OCC::QmlUtils::OCUtils::setClipBoardFromFilePath(const QString &text) const
 {
     QGuiApplication::clipboard()->setText(QDir::toNativeSeparators(text));
+}
+
+bool OCC::QmlUtils::OCUtils::hasSystemLaunchOnStartup() const
+{
+    return OCC::Utility::hasSystemLaunchOnStartup(OCC::Resources::JsonTheme::instance().applicationName());
+}
+
+bool OCC::QmlUtils::OCUtils::hasLaunchOnStartup() const
+{
+    return _hasLaunchOnStartup;
+}
+
+void OCC::QmlUtils::OCUtils::setLaunchOnStartup(bool launch)
+{
+    OCC::Utility::setLaunchOnStartup(
+        OCC::Resources::JsonTheme::instance().applicationName(), OCC::Resources::JsonTheme::instance().applicationDisplayName(), launch);
+    _hasLaunchOnStartup = launch;
+    Q_EMIT hasLaunchOnStartupChanged();
+}
+
+bool OCC::QmlUtils::OCUtils::isInstalledByStore() const
+{
+    return OCC::Utility::isInstalledByStore();
 }

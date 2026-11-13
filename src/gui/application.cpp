@@ -30,6 +30,7 @@
 #include "gui/newwizard/setupwizardcontroller.h"
 #include "gui/notifications/systemnotification.h"
 #include "gui/notifications/systemnotificationmanager.h"
+#include "gui/qmlutils.h"
 #include "gui/systray.h"
 #include "libsync/graphapi/spacesmanager.h"
 #include "libsync/vfs/vfs.h"
@@ -233,7 +234,7 @@ AccountStatePtr Application::addNewAccount(AccountPtr newAccount)
     shouldSetAutoStart = shouldSetAutoStart && QCoreApplication::applicationDirPath().startsWith(QLatin1String("/Applications/"));
 #endif
     if (shouldSetAutoStart) {
-        Utility::setLaunchOnStartup(Resources::JsonTheme::instance().applicationName(), Resources::JsonTheme::instance().applicationDisplayName(), true);
+        OCC::QmlUtils::OCUtils::instance()->setLaunchOnStartup(true);
     }
 
     // showing the UI to show the user that the account has been added successfully

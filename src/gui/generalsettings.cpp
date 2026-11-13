@@ -21,6 +21,7 @@
 #include "gui/folderman.h"
 #include "gui/ignorelisteditor.h"
 #include "gui/logbrowser.h"
+#include "gui/networkinformation.h"
 #include "gui/settingsdialog.h"
 #include "gui/translations.h"
 #include "libsync/configfile.h"
@@ -29,6 +30,9 @@
 
 #include <QMessageBox>
 #include <QOperatingSystemVersion>
+#include <QQmlContext>
+#include <QQuickItem>
+#include <QQuickWidget>
 #include <QScopedValueRollback>
 
 Q_LOGGING_CATEGORY(lcGeneralSettings, "gui.generalsettings", QtInfoMsg)
@@ -37,130 +41,11 @@ namespace OCC {
 GeneralSettings::GeneralSettings(QWidget *parent)
     : QWidget(parent)
     , _ui(new Ui::GeneralSettings)
-    , _currentlyLoading(false)
 {
     _ui->setupUi(this);
 
-    reloadConfig();
-    loadMiscSettings();
-
-    // misc
-    connect(_ui->crashreporterCheckBox, &QAbstractButton::toggled, this, &GeneralSettings::saveMiscSettings);
-
-    connect(_ui->languageDropdown, QOverload<int>::of(&QComboBox::activated), this, [this]() {
-        // first, store selected language in config file
-        saveMiscSettings();
-
-        // warn user that a language change requires a restart to take effect
-        QMessageBox::warning(this, tr("Warning"), tr("Language changes require a restart of this application to take effect."), QMessageBox::Ok);
-    });
-
-    /* handle the hidden file checkbox */
-
-    /* the ignoreHiddenFiles flag is a folder specific setting, but for now, it is
-     * handled globally. Save it to every folder that is defined.
-     */
-    connect(_ui->syncHiddenFilesCheckBox, &QCheckBox::toggled, this, [](bool checked) { FolderMan::instance()->setIgnoreHiddenFiles(!checked); });
-
-    _ui->crashreporterCheckBox->setVisible(Theme::instance()->withCrashReporter());
-
-    _ui->moveToTrashCheckBox->setVisible(Theme::instance()->enableMoveToTrash());
-    connect(_ui->moveToTrashCheckBox, &QCheckBox::toggled, this, [this](bool checked) {
-        ConfigFile().setMoveToTrash(checked);
-        Q_EMIT syncOptionsChanged();
-    });
-
-    connect(_ui->ignoredFilesButton, &QAbstractButton::clicked, this, &GeneralSettings::slotIgnoreFilesEditor);
-    connect(_ui->logSettingsButton, &QPushButton::clicked, this, [] {
-        // only access occApp after things are set up
-        auto logBrowser = new LogBrowser(ocApp()->settingsDialog());
-        logBrowser->setAttribute(Qt::WA_DeleteOnClose);
-        ocApp()->showSettings();
-        logBrowser->open();
-    });
-
-    connect(_ui->about_pushButton, &QPushButton::clicked, ocApp(), &Application::showAbout);
-}
-
-GeneralSettings::~GeneralSettings()
-{
-    delete _ui;
-}
-
-void GeneralSettings::loadMiscSettings()
-{
-    QScopedValueRollback<bool> scope(_currentlyLoading, true);
-    ConfigFile cfgFile;
-    _ui->crashreporterCheckBox->setChecked(cfgFile.crashReporter());
-
-    // the dropdown has to be populated before we can can pick an entry below based on the stored setting
-    loadLanguageNamesIntoDropdown();
-
-    const auto &locale = cfgFile.uiLanguage();
-    const auto index = _ui->languageDropdown->findData(locale);
-    _ui->languageDropdown->setCurrentIndex(index < 0 ? 0 : index);
-}
-
-void GeneralSettings::showEvent(QShowEvent *)
-{
-    reloadConfig();
-}
-
-void GeneralSettings::saveMiscSettings()
-{
-    if (_currentlyLoading)
-        return;
-    ConfigFile cfgFile;
-    cfgFile.setCrashReporter(_ui->crashreporterCheckBox->isChecked());
-
-    // the first entry, identified by index 0, means "use default", which is a special case handled below
-    const QString pickedLocale = _ui->languageDropdown->currentData().toString();
-    cfgFile.setUiLanguage(pickedLocale);
-}
-
-void GeneralSettings::slotToggleLaunchOnStartup(bool enable)
-{
-    Utility::setLaunchOnStartup(Resources::JsonTheme::instance().applicationName(), Resources::JsonTheme::instance().applicationDisplayName(), enable);
-}
-
-void GeneralSettings::slotIgnoreFilesEditor()
-{
-    if (_ignoreEditor.isNull()) {
-        _ignoreEditor = new IgnoreListEditor(ocApp()->settingsDialog());
-        _ignoreEditor->setAttribute(Qt::WA_DeleteOnClose, true);
-        ocApp()->showSettings();
-        _ignoreEditor->open();
-    }
-}
-
-void GeneralSettings::reloadConfig()
-{
-    _ui->syncHiddenFilesCheckBox->setChecked(!FolderMan::instance()->ignoreHiddenFiles());
-    _ui->moveToTrashCheckBox->setChecked(ConfigFile().moveToTrash());
-    if (Utility::isWindows() && Utility::isInstalledByStore()) {
-        _ui->autostartCheckBox->setVisible(false);
-    } else {
-        if (Utility::hasSystemLaunchOnStartup(Resources::JsonTheme::instance().applicationName())) {
-            _ui->autostartCheckBox->setChecked(true);
-            _ui->autostartCheckBox->setDisabled(true);
-            _ui->autostartCheckBox->setToolTip(tr("You cannot disable autostart because system-wide autostart is enabled."));
-        } else {
-            const bool hasAutoStart = Utility::hasLaunchOnStartup(Resources::JsonTheme::instance().applicationName());
-            // make sure the binary location is correctly set
-            slotToggleLaunchOnStartup(hasAutoStart);
-            _ui->autostartCheckBox->setChecked(hasAutoStart);
-            connect(_ui->autostartCheckBox, &QAbstractButton::toggled, this, &GeneralSettings::slotToggleLaunchOnStartup);
-        }
-    }
-}
-
-void GeneralSettings::loadLanguageNamesIntoDropdown()
-{
-    // allow method to be called more than once
-    _ui->languageDropdown->clear();
-
-    // if no option has been chosen explicitly by the user, the first entry shall be used
-    _ui->languageDropdown->addItem(tr("(use default)"));
+    // Init languages
+    _allLanguages.emplace_back(tr("(use default)"), QString());
 
     // initialize map of locales to language names
     const auto availableLocales = []() {
@@ -169,19 +54,164 @@ void GeneralSettings::loadLanguageNamesIntoDropdown()
         return rv;
     }();
 
-    for (const auto &availableLocale : availableLocales) {
-        auto nativeLanguageName = QLocale(availableLocale).nativeLanguageName();
+    for (const auto &localeId : availableLocales) {
+        auto nativeLanguageName = QLocale(localeId).nativeLanguageName();
 
         // fallback if there's a locale whose name Qt doesn't know
         // this indicates a broken filename
         if (nativeLanguageName.isEmpty()) {
-            qCDebug(lcGeneralSettings) << u"Warning: could not find native language name for locale" << availableLocale;
-            nativeLanguageName = tr("unknown (%1)").arg(availableLocale);
+            qCDebug(lcGeneralSettings) << u"Warning: could not find native language name for locale" << localeId;
+            nativeLanguageName = QObject::tr("unknown (%1)").arg(localeId);
         }
 
-        QString entryText = QStringLiteral("%1 (%2)").arg(nativeLanguageName, availableLocale);
-        _ui->languageDropdown->addItem(entryText, availableLocale);
+        QString displayText = QStringLiteral("%1 (%2)").arg(nativeLanguageName, localeId);
+        _allLanguages.emplace_back(displayText, localeId);
     }
+
+    // Make sure the binary location is set correctly on startup
+    // TODO this should probably be moved elsewhere
+    const QString appName = Resources::JsonTheme::instance().applicationName();
+    const QString displayName = Resources::JsonTheme::instance().applicationDisplayName();
+    if (!Utility::hasSystemLaunchOnStartup(appName) && !Utility::isInstalledByStore()) {
+        Utility::setLaunchOnStartup(appName, displayName, Utility::hasLaunchOnStartup(appName));
+    }
+
+    _ui->quickWidget->setOCContext(QUrl(QStringLiteral("qrc:/qt/qml/eu/OpenCloud/gui/qml/GeneralSettings.qml")), this);
+}
+
+GeneralSettings::~GeneralSettings()
+{
+    delete _ui;
+}
+
+bool GeneralSettings::themeHasCrashReporter() const
+{
+    return Theme::instance()->withCrashReporter();
+}
+
+bool GeneralSettings::crashReporter() const
+{
+    return ConfigFile().crashReporter();
+}
+
+void GeneralSettings::setCrashReporter(bool enabled)
+{
+    ConfigFile().setCrashReporter(enabled);
+    Q_EMIT crashReporterChanged();
+}
+
+bool GeneralSettings::moveToTrash() const
+{
+    return ConfigFile().moveToTrash();
+}
+
+void GeneralSettings::setMoveToTrash(bool enabled)
+{
+    ConfigFile().setMoveToTrash(enabled);
+    Q_EMIT moveToTrashChanged();
+    Q_EMIT syncOptionsChanged();
+}
+
+QString GeneralSettings::language() const
+{
+    return ConfigFile().uiLanguage();
+}
+
+void GeneralSettings::setLanguage(QString languageId)
+{
+    ConfigFile().setUiLanguage(languageId);
+    Q_EMIT languageChanged();
+}
+
+const QList<LanguagePair> &GeneralSettings::allLanguages()
+{
+    return _allLanguages;
+}
+
+bool GeneralSettings::supportsMetered() const
+{
+    return NetworkInformation::instance()->supports(NetworkInformation::Feature::Metered);
+}
+
+int GeneralSettings::useDownloadLimit() const
+{
+    return ConfigFile().useDownloadLimit();
+}
+
+void GeneralSettings::setUseDownloadLimit(int use)
+{
+    ConfigFile().setUseDownloadLimit(use);
+    FolderMan::instance()->setDirtyNetworkLimits();
+    Q_EMIT useDownloadLimitChanged();
+}
+
+int GeneralSettings::downloadLimit() const
+{
+    return ConfigFile().downloadLimit();
+}
+
+void GeneralSettings::setDownloadLimit(int limit)
+{
+    ConfigFile().setDownloadLimit(limit);
+    FolderMan::instance()->setDirtyNetworkLimits();
+    Q_EMIT downloadLimitChanged();
+}
+
+int GeneralSettings::useUploadLimit() const
+{
+    return ConfigFile().useUploadLimit();
+}
+
+void GeneralSettings::setUseUploadLimit(int use)
+{
+    ConfigFile().setUseUploadLimit(use);
+    FolderMan::instance()->setDirtyNetworkLimits();
+    Q_EMIT useUploadLimitChanged();
+}
+
+int GeneralSettings::uploadLimit() const
+{
+    return ConfigFile().uploadLimit();
+}
+
+void GeneralSettings::setUploadLimit(int limit)
+{
+    ConfigFile().setUploadLimit(limit);
+    FolderMan::instance()->setDirtyNetworkLimits();
+    Q_EMIT uploadLimitChanged();
+}
+
+bool GeneralSettings::pauseSyncWhenMetered() const
+{
+    return ConfigFile().pauseSyncWhenMetered();
+}
+
+void GeneralSettings::setPauseSyncWhenMetered(bool pause)
+{
+    ConfigFile().setPauseSyncWhenMetered(pause);
+    FolderMan::instance()->scheduler()->setPauseSyncWhenMetered(pause);
+    Q_EMIT pauseSyncWhenMeteredChanged();
+}
+
+void GeneralSettings::slotIgnoreFilesEditor()
+{
+    auto ignoreEditor = new IgnoreListEditor(ocApp()->settingsDialog());
+    ignoreEditor->setAttribute(Qt::WA_DeleteOnClose, true);
+    ocApp()->showSettings();
+    ignoreEditor->open();
+}
+
+void GeneralSettings::slotLogBrowser()
+{
+    auto logBrowser = new LogBrowser(ocApp()->settingsDialog());
+    logBrowser->setAttribute(Qt::WA_DeleteOnClose);
+    ocApp()->showSettings();
+    logBrowser->open();
+}
+
+void GeneralSettings::slotAboutButton()
+{
+    ocApp()->showAbout();
 }
 
 } // namespace OCC
