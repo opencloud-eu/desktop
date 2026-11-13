@@ -520,7 +520,7 @@ Verktyg för filsynkronisering på skrivbordet.</translation>
     <message>
         <location filename="../src/libsync/abstractnetworkjob.cpp" line="47"/>
         <source>Operation canceled</source>
-        <translation type="unfinished"/>
+        <translation>Åtgärden avbröts</translation>
     </message>
     <message>
         <location filename="../src/libsync/abstractnetworkjob.cpp" line="278"/>
