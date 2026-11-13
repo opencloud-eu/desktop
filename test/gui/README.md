@@ -13,6 +13,7 @@
   - [Windows](#windows)
     - [Set up Test Environment](#set-up-test-environment)
     - [Run GUI Tests](#run-gui-tests-1)
+  - [Testing Beta, RC or Branded Clients](#testing-beta-rc-or-branded-clients)
   - [Test Reports](#test-reports)
 - [Writing GUI Test](#writing-gui-test)
   - [Code Formatting and Linting](#code-formatting-and-linting)
@@ -157,9 +158,18 @@ This guide explains how to build the OpenCloud desktop client and run the GUI te
 
    ```ini
    [DEFAULT]
-   APP_PATH=<full-path-to>/opencloud # desktop app binary: <desktop-repo-root>/build/bin/opencloud
-   BACKEND_HOST=<opencloud-server-url> # https://localhost:9200
+   # Desktop app binary: <desktop-repo-root>/build/bin/opencloud
+   APP_PATH=<full-path-to>/opencloud
+   # For example: https://localhost:9200
+   BACKEND_HOST=<opencloud-server-url>
+   # optional, for Beta/RC or branded clients
+   APP_NAME=
+   APP_DISPLAY_NAME=
+   APP_CONFIG_FILE=
    ```
+
+   > [!NOTE]
+   > Testing a Beta/RC or branded client? See [Testing Beta, RC or Branded Clients](#testing-beta-rc-or-branded-clients).
 
 4. Start the AT-SPI WebDriver
 
@@ -232,9 +242,19 @@ For Windows, we use Appium with the NovaWindows driver to automate the OpenCloud
 
    ```ini
    [DEFAULT]
-   APP_PATH=<full-path-to>\opencloud.exe # path to the desktop app executable
-   BACKEND_HOST=<opencloud-server-url> # https://localhost:9200
+   # Path to the desktop app executable
+   APP_PATH=<full-path-to>\opencloud.exe
+   # For example: https://localhost:9200
+   BACKEND_HOST=<opencloud-server-url>
+   # optional, for Beta/RC or branded clients
+   APP_NAME=
+   APP_DISPLAY_NAME=
+   APP_CONFIG_FILE=
    ```
+
+   > [!NOTE]
+   > Testing a Beta/RC or branded client? See [Testing Beta, RC or Branded Clients](#testing-beta-rc-or-branded-clients).
+
 3. Install python test dependencies
 
    ```powershell
@@ -257,6 +277,26 @@ For Windows, we use Appium with the NovaWindows driver to automate the OpenCloud
 > [!IMPORTANT]
 >
 > Close any running OpenCloud desktop client before running the GUI tests.
+
+## Testing Beta, RC or Branded Clients
+
+For the stable vanilla client, set `APP_PATH` and, if needed, `BACKEND_HOST` in
+`config.ini` or as environment variables. `BACKEND_HOST` defaults to
+`https://localhost:9200/`. For other clients, also set:
+
+```ini
+APP_NAME=OpenCloud Beta
+APP_DISPLAY_NAME=OpenCloud Desktop Beta
+```
+
+- `APP_NAME` and `APP_DISPLAY_NAME` are `applicationName` and `applicationDisplayName` in the build's `opencloud_theme.json`.
+  For a local Beta build, `-DBETA_CHANNEL_BUILD=ON` creates this file from `beta.json`.
+  Without a theme file, the defaults (`OpenCloud` / `OpenCloud Desktop`) apply.
+  To get the `APP_NAME`, check the client version details and for `APP_DISPLAY_NAME`, check the client window title.
+  For a prebuilt AppImage or installer, launch it once and check the config home for the folder and `.cfg` file it creates.
+- The client config file is `<config-home>/<APP_NAME>/<APP_CONFIG_FILE>`.
+  If `APP_CONFIG_FILE` is not provided, it is built from `APP_NAME` (for example, `OpenCloud Beta` becomes `opencloud_beta.cfg`).
+  Set it explicitly only if the client uses a different config filename.
 
 ## Test Reports
 

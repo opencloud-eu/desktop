@@ -8,7 +8,11 @@ from behave import when as When, then as Then, given as Given
 from sure import ensure
 
 import helpers.FileExplorerHelper as FileExplorer
-from helpers.SetupClientHelper import get_resource_path, get_temp_resource_path
+from helpers.SetupClientHelper import (
+    get_resource_path,
+    get_temp_resource_path,
+    substitute_inline_codes,
+)
 from helpers.SyncHelper import (
     listen_sync_status_for_item,
 )
@@ -434,6 +438,7 @@ def step(context, username, source):
 
 @Given('the user has created folder "{folder_name}" in the default home path')
 def step(context, folder_name):
+    folder_name = substitute_inline_codes(folder_name)
     folder_path = join(get_config('home_dir'), folder_name)
     os.makedirs(prefix_path_namespace(folder_path))
     remember_path(folder_path)
