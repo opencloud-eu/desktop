@@ -19,6 +19,7 @@
 #include "configfile.h"
 #include "creds/credentialmanager.h"
 #include "oauth.h"
+#include "refreshactivity.h"
 #include "syncengine.h"
 
 #include <QAuthenticator>
@@ -178,7 +179,18 @@ bool HttpCredentials::refreshAccessTokenInternal(int tokenRefreshRetriesCount)
 {
     if (_refreshToken.isEmpty())
         return false;
-    if (_oAuthJob) {
+    if (_oAuthJob || _refreshDeferred) {
+        return true;
+    }
+
+    _refreshActivity = acquireRefreshActivity();
+    if (!_refreshActivity) {
+        qCInfo(lcHttpCredentials) << "Deferring token refresh until sleep can be inhibited";
+        _refreshDeferred = true;
+        QTimer::singleShot(TokenRefreshDefaultTimeoutOneError, this, [this, tokenRefreshRetriesCount] {
+            _refreshDeferred = false;
+            refreshAccessTokenInternal(tokenRefreshRetriesCount);
+        });
         return true;
     }
 
@@ -187,8 +199,12 @@ bool HttpCredentials::refreshAccessTokenInternal(int tokenRefreshRetriesCount)
 
     // parent with nam to ensure we reset when the nam is reset
     _oAuthJob = new AccountBasedOAuth(_account->sharedFromThis(), _account->accessManager());
+    connect(_oAuthJob, &QObject::destroyed, this, [this] { _refreshActivity.reset(); });
+    // Restore failures use the initial-auth result signal, before any token POST.
+    connect(_oAuthJob, &OAuth::result, this, [this] { _refreshActivity.reset(); });
     connect(_oAuthJob, &AccountBasedOAuth::refreshError, this, [tokenRefreshRetriesCount, this](QNetworkReply::NetworkError error, const QString &) {
         _oAuthJob->deleteLater();
+        _refreshActivity.reset();
 
         auto networkUnavailable = []() {
             if (auto qni = QNetworkInformation::instance()) {
@@ -203,7 +219,10 @@ bool HttpCredentials::refreshAccessTokenInternal(int tokenRefreshRetriesCount)
         int nextTry = tokenRefreshRetriesCount + 1;
         std::chrono::seconds timeout = {};
 
-        if (networkUnavailable()) {
+        if (_refreshDeferred) {
+            nextTry = tokenRefreshRetriesCount;
+            timeout = TokenRefreshDefaultTimeoutOneError;
+        } else if (networkUnavailable()) {
             nextTry = 0;
             timeout = TokenRefreshDefaultTimeoutOneError;
         } else {
@@ -237,6 +256,7 @@ bool HttpCredentials::refreshAccessTokenInternal(int tokenRefreshRetriesCount)
             // would clear the job queue and abort in-flight uploads, silently dropping
             // files when the run then finalizes as complete (opencloud-eu/desktop#900, #948).
             QTimer::singleShot(timeout, this, [nextTry, this] {
+                _refreshDeferred = false;
                 refreshAccessTokenInternal(nextTry);
             });
         }
@@ -245,6 +265,7 @@ bool HttpCredentials::refreshAccessTokenInternal(int tokenRefreshRetriesCount)
     connect(_oAuthJob, &AccountBasedOAuth::refreshFinished, this, [this](const QString &accessToken, const QString &refreshToken) {
         _oAuthJob->deleteLater();
         if (refreshToken.isEmpty()) {
+            _refreshActivity.reset();
             // an error occured, log out
             forgetSensitiveData();
             Q_EMIT authenticationFailed();
@@ -257,10 +278,18 @@ bool HttpCredentials::refreshAccessTokenInternal(int tokenRefreshRetriesCount)
             _accessToken = accessToken;
             persist();
         }
+        _refreshActivity.reset();
         Q_EMIT fetched();
     });
     Q_EMIT authenticationStarted();
-    _oAuthJob->refreshAuthentication(_refreshToken);
+    _oAuthJob->refreshAuthentication(_refreshToken, [credentials = QPointer<HttpCredentials>(this)] {
+        if (!credentials) {
+            return false;
+        }
+        credentials->_refreshActivity = credentials->acquireRefreshActivity();
+        credentials->_refreshDeferred = !credentials->_refreshActivity;
+        return !credentials->_refreshDeferred;
+    });
 
     return true;
 }
@@ -307,8 +336,21 @@ void HttpCredentials::persist()
     // write secrets to the keychain
     // _refreshToken should only be empty when we are logged out...
     if (!_refreshToken.isEmpty()) {
-        _account->credentialManager()->set(refreshTokenKeyC(), _refreshToken);
+        auto *job = writeRefreshToken();
+        // Keychain writes are asynchronous. Keep the activity alive until the
+        // replacement token is stored, even after the OAuth job is gone.
+        connect(job, &QKeychain::Job::finished, job, [activity = _refreshActivity]() mutable { activity.reset(); });
     }
+}
+
+std::shared_ptr<QObject> HttpCredentials::acquireRefreshActivity()
+{
+    return createTokenRefreshActivity();
+}
+
+QKeychain::Job *HttpCredentials::writeRefreshToken()
+{
+    return _account->credentialManager()->set(refreshTokenKeyC(), _refreshToken);
 }
 
 } // namespace OCC

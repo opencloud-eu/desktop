@@ -801,7 +801,7 @@ void AccountBasedOAuth::restore()
     });
 }
 
-void AccountBasedOAuth::refreshAuthentication(const QString &refreshToken)
+void AccountBasedOAuth::refreshAuthentication(const QString &refreshToken, std::function<bool()> beforeTokenRequest)
 {
     if (!OC_ENSURE(!_isRefreshingToken)) {
         qCDebug(lcOauth) << u"already refreshing token, aborting";
@@ -810,9 +810,15 @@ void AccountBasedOAuth::refreshAuthentication(const QString &refreshToken)
 
     _isRefreshingToken = true;
 
-    connect(this, &AccountBasedOAuth::restored, this, [refreshToken, this] {
-        connect(this, &OAuth::fetchWellKnownFinished, this, [refreshToken, this] {
-            connect(this, &AccountBasedOAuth::dynamicRegistrationDataReceived, this, [refreshToken, this] {
+    connect(this, &AccountBasedOAuth::restored, this, [refreshToken, beforeTokenRequest, this] {
+        connect(this, &OAuth::fetchWellKnownFinished, this, [refreshToken, beforeTokenRequest, this] {
+            connect(this, &AccountBasedOAuth::dynamicRegistrationDataReceived, this, [refreshToken, beforeTokenRequest, this] {
+                // Discovery and Keychain reads may have outlived an earlier
+                // power assertion. Recheck immediately before consuming a token.
+                if (beforeTokenRequest && !beforeTokenRequest()) {
+                    Q_EMIT refreshError(QNetworkReply::OperationCanceledError, QStringLiteral("Token refresh deferred until sleep can be inhibited"));
+                    return;
+                }
                 auto reply =
                     postTokenRequest({{QStringLiteral("grant_type"), QStringLiteral("refresh_token")}, {QStringLiteral("refresh_token"), refreshToken}});
                 connect(reply, &QNetworkReply::finished, this, [reply, refreshToken, this]() {
