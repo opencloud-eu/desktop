@@ -23,6 +23,8 @@
 #include <QTcpServer>
 #include <QUrl>
 
+#include <functional>
+
 namespace OCC {
 class JsonJob;
 
@@ -159,7 +161,7 @@ public:
 
     void startAuthentication() override;
 
-    void refreshAuthentication(const QString &refreshToken);
+    void refreshAuthentication(const QString &refreshToken, std::function<bool()> beforeTokenRequest = {});
 
 Q_SIGNALS:
     void refreshFinished(const QString &accessToken, const QString &refreshToken);

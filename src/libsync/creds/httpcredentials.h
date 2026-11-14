@@ -25,6 +25,9 @@
 
 class QNetworkReply;
 class QAuthenticator;
+namespace QKeychain {
+class Job;
+}
 
 namespace OCC {
 class OAuth;
@@ -73,6 +76,9 @@ protected:
     void slotAuthentication(QNetworkReply *reply, QAuthenticator *authenticator);
     void fetchFromKeychainHelper();
 
+    virtual std::shared_ptr<QObject> acquireRefreshActivity();
+    virtual QKeychain::Job *writeRefreshToken();
+
     QString _accessToken;
     QString _refreshToken;
     QString _previousPassword;
@@ -83,6 +89,8 @@ protected:
 
 private:
     bool refreshAccessTokenInternal(int tokenRefreshRetriesCount);
+    std::shared_ptr<QObject> _refreshActivity;
+    bool _refreshDeferred = false;
 };
 
 

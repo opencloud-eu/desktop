@@ -7,11 +7,19 @@
 
 #include <QDesktopServices>
 
+#ifdef Q_OS_MACOS
+#include <CoreGraphics/CoreGraphics.h>
+#include <IOKit/pwr_mgt/IOPMLib.h>
+#include <unistd.h>
+#endif
+
 #include "common/asserts.h"
+#include "libsync/creds/credentialmanager.h"
 #include "libsync/creds/httpcredentials.h"
 #include "libsync/creds/oauth.h"
 #include "testutils/syncenginetestutils.h"
 #include "theme.h"
+#include <QScopeGuard>
 
 using namespace std::chrono_literals;
 using namespace OCC;
@@ -347,11 +355,129 @@ public:
 
     void restartOauth() override { }
     void fetchFromKeychain() override { }
-    void persist() override { }
+    bool activityAllowed = true;
+    bool nativeActivity = false;
+    bool completeWrite = true;
+    int activityAttempts = 0;
+    std::weak_ptr<QObject> activity;
+    QPointer<QKeychain::WritePasswordJob> pendingWrite;
+
+protected:
+    std::shared_ptr<QObject> acquireRefreshActivity() override
+    {
+        ++activityAttempts;
+        if (nativeActivity) {
+            return HttpCredentials::acquireRefreshActivity();
+        }
+        auto result = activityAllowed ? std::make_shared<QObject>() : std::shared_ptr<QObject>{};
+        activity = result;
+        return result;
+    }
+
+    QKeychain::Job *writeRefreshToken() override
+    {
+        pendingWrite = new QKeychain::WritePasswordJob(QStringLiteral("oauth-unit-test"), this);
+        if (completeWrite) {
+            QTimer::singleShot(0, pendingWrite, [job = pendingWrite] {
+                Q_EMIT job->finished(job);
+                job->deleteLater();
+            });
+        }
+        return pendingWrite;
+    }
 
 private:
     FakeAM::Override _override;
 };
+
+// All network and Keychain traffic stays in-process; no real account is used.
+struct RefreshScenario
+{
+    QObject replies;
+    int tokenRequests = 0;
+    QString tokenError;
+    bool timeout = false;
+    AccountPtr account;
+    TestHttpCredentials *creds;
+
+    ~RefreshScenario()
+    {
+        account->setCredentials(new TestHttpCredentials({}, {}));
+        QCoreApplication::sendPostedEvents(nullptr, QEvent::DeferredDelete);
+    }
+
+    RefreshScenario()
+    {
+        account = Account::create(QUuid::createUuid());
+        account->setUrl(sOAuthTestServer);
+        creds = new TestHttpCredentials(
+            [this](QNetworkAccessManager::Operation op, const QNetworkRequest &req, QIODevice *) -> QNetworkReply * {
+                QJsonObject data;
+                if (req.url().path().endsWith(QLatin1String("status.php"))) {
+                    data = {{QStringLiteral("installed"), true}, {QStringLiteral("maintenance"), false}, {QStringLiteral("version"), QStringLiteral("10.0.0")}};
+                } else if (req.url().path().endsWith(QLatin1String(".well-known/webfinger"))) {
+                    data = {{QStringLiteral("subject"), sOAuthTestServer.toString()},
+                        {QStringLiteral("links"),
+                            QJsonArray{QJsonObject{{QStringLiteral("rel"), QStringLiteral("http://openid.net/specs/connect/1.0/issuer")},
+                                {QStringLiteral("href"), QStringLiteral("oauthtest://openidserver")}}}}};
+                } else if (req.url().path().endsWith(QLatin1String(".well-known/openid-configuration"))) {
+                    data = {{QStringLiteral("authorization_endpoint"), QStringLiteral("oauthtest://openidserver/authorize")},
+                        {QStringLiteral("token_endpoint"), QStringLiteral("oauthtest://openidserver/token_endpoint")}};
+                } else if (req.url().path().endsWith(QLatin1String("token_endpoint"))) {
+                    ++tokenRequests;
+                    if (timeout) {
+                        auto *reply = new FakeErrorReply(op, req, &replies, 408);
+                        reply->setError(QNetworkReply::TimeoutError, QStringLiteral("Request timed out"));
+                        return reply;
+                    }
+                    data = tokenError.isEmpty() ? QJsonObject{{QStringLiteral("access_token"), QStringLiteral("replacement-access-token")},
+                                                      {QStringLiteral("refresh_token"), QStringLiteral("replacement-refresh-token")}}
+                                                : QJsonObject{{QStringLiteral("error"), tokenError}};
+                }
+                QHttpHeaders headers;
+                if (req.url().path().endsWith(QLatin1String(".well-known/webfinger"))) {
+                    headers.append(QHttpHeaders::WellKnownHeader::ContentType, QStringLiteral("application/json"));
+                }
+                return new FakePayloadReply(op, req, QJsonDocument(data).toJson(), headers, &replies);
+            },
+            QStringLiteral("fake-refresh-token"));
+        account->setCredentials(creds);
+    }
+};
+
+#ifdef Q_OS_MACOS
+static bool hasRefreshSleepAssertion()
+{
+    CFDictionaryRef assertions = nullptr;
+    if (IOPMCopyAssertionsByProcess(&assertions) != kIOReturnSuccess || !assertions) {
+        return false;
+    }
+    const auto pid = getpid();
+    const auto pidKey = CFNumberCreate(nullptr, kCFNumberIntType, &pid);
+    const auto entries = static_cast<CFArrayRef>(CFDictionaryGetValue(assertions, pidKey));
+    bool idle = false;
+    bool network = false;
+    if (entries) {
+        for (CFIndex i = 0; i < CFArrayGetCount(entries); ++i) {
+            const auto entry = static_cast<CFDictionaryRef>(CFArrayGetValueAtIndex(entries, i));
+            const auto name = static_cast<CFStringRef>(CFDictionaryGetValue(entry, kIOPMAssertionNameKey));
+            const auto type = static_cast<CFStringRef>(CFDictionaryGetValue(entry, kIOPMAssertionTypeKey));
+            const auto level = static_cast<CFNumberRef>(CFDictionaryGetValue(entry, kIOPMAssertionLevelKey));
+            const auto timeout = static_cast<CFNumberRef>(CFDictionaryGetValue(entry, kIOPMAssertionTimeoutKey));
+            int enabled = 0;
+            double seconds = 0;
+            if (name && type && level && timeout && CFEqual(name, CFSTR("OpenCloud OAuth token refresh")) && CFNumberGetValue(level, kCFNumberIntType, &enabled)
+                && enabled == kIOPMAssertionLevelOn && CFNumberGetValue(timeout, kCFNumberDoubleType, &seconds) && seconds == 60) {
+                idle |= CFEqual(type, kIOPMAssertPreventUserIdleSystemSleep);
+                network |= CFEqual(type, kIOPMAssertNetworkClientActive);
+            }
+        }
+    }
+    CFRelease(pidKey);
+    CFRelease(assertions);
+    return idle && network;
+}
+#endif
 
 
 class TestOAuth : public QObject
@@ -359,6 +485,114 @@ class TestOAuth : public QObject
     Q_OBJECT
 
 private Q_SLOTS:
+#ifdef Q_OS_MACOS
+    void testRefreshPreventsIdleSleep()
+    {
+        if (CGDisplayIsAsleep(CGMainDisplayID())) {
+            QSKIP("This native assertion test needs an awake display.");
+        }
+        auto account = Account::create(QUuid::createUuid());
+        account->setUrl(sOAuthTestServer);
+        auto *creds = new TestHttpCredentials({}, QStringLiteral("fake-refresh-token"));
+        account->setCredentials(creds);
+        creds->nativeActivity = true;
+        QVERIFY(!hasRefreshSleepAssertion());
+        QVERIFY(creds->refreshAccessToken());
+        QVERIFY2(hasRefreshSleepAssertion(), "Token refresh must inhibit sleep before sending a rotating token.");
+        account->setCredentials(new TestHttpCredentials({}, {}));
+        QTRY_VERIFY(!hasRefreshSleepAssertion());
+    }
+#endif
+
+    void testDeferredRefreshResumesWithoutLogout()
+    {
+        const auto oldTimeout = HttpCredentials::TokenRefreshDefaultTimeoutOneError;
+        const QScopeGuard restoreTimeout([oldTimeout] { HttpCredentials::TokenRefreshDefaultTimeoutOneError = oldTimeout; });
+        HttpCredentials::TokenRefreshDefaultTimeoutOneError = 1s;
+        RefreshScenario test;
+        test.creds->activityAllowed = false;
+        QSignalSpy failed(test.creds, &AbstractCredentials::authenticationFailed);
+        QSignalSpy started(test.creds, &AbstractCredentials::authenticationStarted);
+        QSignalSpy fetched(test.creds, &AbstractCredentials::fetched);
+        QVERIFY(test.creds->refreshAccessToken());
+        QVERIFY(test.creds->refreshAccessToken());
+        QCOMPARE(test.creds->activityAttempts, 1);
+        QCOMPARE(test.tokenRequests, 0);
+        QCOMPARE(started.count(), 0);
+        QCOMPARE(failed.count(), 0);
+        test.creds->activityAllowed = true;
+        QTRY_COMPARE(fetched.count(), 1);
+        QCOMPARE(test.tokenRequests, 1);
+        QCOMPARE(started.count(), 1);
+        QCOMPARE(failed.count(), 0);
+    }
+
+    void testRechecksActivityAfterPreflight()
+    {
+        const auto oldTimeout = HttpCredentials::TokenRefreshDefaultTimeoutOneError;
+        const QScopeGuard restoreTimeout([oldTimeout] { HttpCredentials::TokenRefreshDefaultTimeoutOneError = oldTimeout; });
+        HttpCredentials::TokenRefreshDefaultTimeoutOneError = 1s;
+        RefreshScenario test;
+        QSignalSpy failed(test.creds, &AbstractCredentials::authenticationFailed);
+        QSignalSpy fetched(test.creds, &AbstractCredentials::fetched);
+        QVERIFY(test.creds->refreshAccessToken());
+        // Simulate an activity lease that is no longer safe after slow discovery.
+        test.creds->activityAllowed = false;
+        QTRY_COMPARE_WITH_TIMEOUT(test.creds->activityAttempts, 2, 500ms);
+        QCOMPARE(test.tokenRequests, 0);
+        QCOMPARE(failed.count(), 0);
+        test.creds->activityAllowed = true;
+        QTRY_COMPARE(fetched.count(), 1);
+        QCOMPARE(test.tokenRequests, 1);
+        QCOMPARE(failed.count(), 0);
+    }
+
+    void testRefreshActivitySurvivesUntilKeychainWriteFinishes()
+    {
+        RefreshScenario test;
+        test.creds->completeWrite = false;
+        QVERIFY(test.creds->refreshAccessToken());
+        QVERIFY(!test.creds->activity.expired());
+        QTRY_VERIFY(test.creds->pendingWrite);
+        // Destroy the completed OAuth job; persistence is still outstanding.
+        QCoreApplication::sendPostedEvents(nullptr, QEvent::DeferredDelete);
+        QVERIFY(!test.creds->activity.expired());
+        Q_EMIT test.creds->pendingWrite->finished(test.creds->pendingWrite);
+        QVERIFY(test.creds->activity.expired());
+    }
+
+    void testRefreshActivityReleasedOnError_data()
+    {
+        QTest::addColumn<bool>("timeout");
+        QTest::newRow("timeout") << true;
+        QTest::newRow("invalid-grant") << false;
+    }
+
+    void testRefreshActivityReleasedOnError()
+    {
+        QFETCH(bool, timeout);
+        RefreshScenario test;
+        test.timeout = timeout;
+        if (!timeout) {
+            test.tokenError = QStringLiteral("invalid_grant");
+        }
+        QSignalSpy failed(test.creds, &AbstractCredentials::authenticationFailed);
+        QVERIFY(test.creds->refreshAccessToken());
+        QTRY_COMPARE(test.tokenRequests, 1);
+        QTRY_VERIFY(test.creds->activity.expired());
+        QCOMPARE(failed.count(), timeout ? 0 : 1);
+    }
+
+    void testRefreshActivityReleasedOnDestruction()
+    {
+        RefreshScenario test;
+        QVERIFY(test.creds->refreshAccessToken());
+        const auto activity = test.creds->activity;
+        QVERIFY(!activity.expired());
+        test.account->setCredentials(new TestHttpCredentials({}, {}));
+        QVERIFY(activity.expired());
+    }
+
     void testBasic()
     {
         // Initial-auth success path: only result(LoggedIn) fires.

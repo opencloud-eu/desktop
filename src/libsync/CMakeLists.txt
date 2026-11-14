@@ -45,6 +45,7 @@ add_library(libsync SHARED
     creds/abstractcredentials.cpp
     creds/credentialmanager.cpp
     creds/httpcredentials.cpp
+    creds/refreshactivity.cpp
     creds/oauth.cpp
     creds/jwt.cpp
     creds/idtoken.cpp
@@ -128,6 +129,7 @@ if ( APPLE )
          /System/Library/Frameworks/Foundation.framework
          /System/Library/Frameworks/AppKit.framework
          /System/Library/Frameworks/IOKit.framework
+         /System/Library/Frameworks/CoreGraphics.framework
     )
 endif()
 
