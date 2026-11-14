@@ -69,6 +69,9 @@ CheckServerJobFactory CheckServerJobFactory::createFromAccount(const AccountPtr 
     // in order to receive all ssl erorrs we need a fresh QNam
     auto nam = account->credentials()->createAM();
     nam->setCustomTrustedCaCertificates(account->approvedCerts());
+    if (account->hasClientCertificate()) {
+        nam->setClientCertificate(account->clientCertificate(), account->clientPrivateKey());
+    }
     nam->setParent(parent);
     // do we start with the old cookies or new
     if (!(clearCookies && Theme::instance()->connectionValidatorClearCookies())) {
