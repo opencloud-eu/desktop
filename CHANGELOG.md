@@ -20,6 +20,7 @@
 
 ### 🐛 Bug Fixes
 
+- Don't drop changes that failed with Message [[#1250](https://github.com/opencloud-eu/desktop/pull/1250)]
 - Return std::optional from Utility::stringToEnum [[#1249](https://github.com/opencloud-eu/desktop/pull/1249)]
 - Re-enable share status indicator in shell extension overlay [[#1236](https://github.com/opencloud-eu/desktop/pull/1236)]
 - Don't leak properties from non-200 propstat into the next response [[#1251](https://github.com/opencloud-eu/desktop/pull/1251)]
