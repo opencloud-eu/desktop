@@ -20,8 +20,10 @@
 #include "creds/oauth.h"
 #include "networkjobs.h"
 
-#include <QSslKey>
+#include <QNetworkInformation>
 #include <QNetworkRequest>
+#include <QSslKey>
+#include <QTimer>
 
 class QNetworkReply;
 class QAuthenticator;
@@ -68,10 +70,12 @@ public:
 
 
 protected:
-    HttpCredentials() = default;
+    HttpCredentials();
 
     void slotAuthentication(QNetworkReply *reply, QAuthenticator *authenticator);
     void fetchFromKeychainHelper();
+    void slotReachabilityChanged(QNetworkInformation::Reachability reachability);
+    void slotCaptivePortalChanged(bool behindCaptivePortal);
 
     QString _accessToken;
     QString _refreshToken;
@@ -80,9 +84,13 @@ protected:
     QString _fetchErrorString;
     bool _ready = false;
     QPointer<AccountBasedOAuth> _oAuthJob;
+    QTimer _refreshRetryTimer{this};
 
 private:
     bool refreshAccessTokenInternal(int tokenRefreshRetriesCount);
+    void retryRefreshNow();
+
+    int _refreshRetryCount = 0;
 };
 
 
