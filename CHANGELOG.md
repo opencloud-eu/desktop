@@ -1,6 +1,6 @@
 # Changelog
 
-## [5.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v5.0.0) - 2026-11-13
+## [5.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v5.0.0) - 2026-11-16
 
 ### ❤️ Thanks to all contributors! ❤️
 
@@ -12,6 +12,7 @@
 
 ### ✨ Features
 
+- oauth: don't invalidate refresh token if server is unavailable [[#1244](https://github.com/opencloud-eu/desktop/pull/1244)]
 - add support for arm platforms [[#1210](https://github.com/opencloud-eu/desktop/pull/1210)]
 - Reimplement the windows context menu [[#1190](https://github.com/opencloud-eu/desktop/pull/1190)]
 - Json theme [[#1114](https://github.com/opencloud-eu/desktop/pull/1114)]
