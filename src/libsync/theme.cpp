@@ -13,7 +13,6 @@
  */
 
 #include "theme.h"
-#include "common/depreaction.h"
 #include "common/utility.h"
 #include "common/version.h"
 #include "configfile.h"
