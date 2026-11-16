@@ -673,8 +673,9 @@ void OAuth::fetchWellKnown()
                         _supportedPromtValues = PromptValuesSupported::none;
                         for (const auto &x : promptValuesSupported) {
                             const auto flag = Utility::stringToEnum<PromptValuesSupported>(x.toString());
-                            if (flag & defaultOauthPromtValue)
-                                _supportedPromtValues |= flag;
+                            Q_ASSERT(flag);
+                            if (flag.value_or(PromptValuesSupported::none) & defaultOauthPromtValue)
+                                _supportedPromtValues |= flag.value();
                         }
                     } else {
                         // fall back to consent if the idp does not support any prompt values
