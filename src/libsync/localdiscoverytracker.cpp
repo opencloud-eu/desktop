@@ -79,8 +79,6 @@ void LocalDiscoveryTracker::slotItemCompleted(const SyncFileItemPtr &item)
     case SyncFileItem::Restoration:
         Q_FALLTHROUGH();
     case SyncFileItem::Conflict:
-        Q_FALLTHROUGH();
-    case OCC::SyncFileItem::Message:
         if (_previousLocalDiscoveryPaths.erase(item->localName())) {
             qCDebug(lcLocalDiscoveryTracker) << u"wiped successful item" << item->localName();
         }
@@ -88,6 +86,8 @@ void LocalDiscoveryTracker::slotItemCompleted(const SyncFileItemPtr &item)
             qCDebug(lcLocalDiscoveryTracker) << u"wiped successful item" << item->_renameTarget;
         }
         return;
+    case OCC::SyncFileItem::Message:
+        Q_FALLTHROUGH();
     case OCC::SyncFileItem::FatalError:
         Q_FALLTHROUGH();
     case OCC::SyncFileItem::NormalError:
