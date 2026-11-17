@@ -16,11 +16,11 @@
 #include "openfilemanager.h"
 #include "application.h"
 #include "common/utility.h"
+#include "libsync/settings.h"
 
 #include <QDesktopServices>
 #include <QDir>
 #include <QProcess>
-#include <QSettings>
 #include <QUrl>
 
 using namespace Qt::Literals::StringLiterals;
@@ -117,7 +117,7 @@ void showInFileManager(const QString &localPath)
         QStringList args;
 
         static QString defaultManager = findDefaultFileManager();
-        QSettings desktopFile(defaultManager, QSettings::IniFormat);
+        Settings desktopFile(defaultManager, QSettings::IniFormat);
         QString exec = desktopFile.value(QStringLiteral("Desktop Entry/Exec")).toString();
 
         QString fileToOpen = QFileInfo(localPath).absoluteFilePath();

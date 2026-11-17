@@ -4,10 +4,9 @@
 #include "libsync/globalconfig.h"
 
 #include "gui/application.h"
+#include "libsync/settings.h"
 #include "libsync/theme.h"
 #include "resources/jsontheme.h"
-
-#include <QSettings>
 
 using namespace OCC;
 
@@ -22,7 +21,7 @@ QUrl GlobalConfig::serverUrl()
 
 QVariant GlobalConfig::getValue(QAnyStringView param, const QVariant &defaultValue)
 {
-    static const QSettings systemSettings = {
+    const Settings systemSettings = {
 #ifdef Q_OS_MAC
         QStringLiteral("/Library/Preferences/%1.plist").arg(Resources::JsonTheme::instance().organizationDomain()), QSettings::NativeFormat
 #elif defined(Q_OS_UNIX)
@@ -42,14 +41,14 @@ QVariant GlobalConfig::getValue(QAnyStringView param, const QVariant &defaultVal
 QVariant GlobalConfig::getPolicySetting(QAnyStringView setting, const QVariant &defaultValue)
 {
     // check for policies first and return immediately if a value is found.
-    QVariant out = QSettings(QStringLiteral(R"(HKEY_CURRENT_USER\Software\Policies\%1\%2)")
-                                 .arg(Resources::JsonTheme::instance().applicationName(), Resources::JsonTheme::instance().applicationDisplayName()),
+    QVariant out = Settings(QStringLiteral(R"(HKEY_CURRENT_USER\Software\Policies\%1\%2)")
+                                .arg(Resources::JsonTheme::instance().applicationName(), Resources::JsonTheme::instance().applicationDisplayName()),
         QSettings::NativeFormat)
                        .value(setting);
 
     if (!out.isValid()) {
-        out = QSettings(QStringLiteral(R"(HKEY_LOCAL_MACHINE\Software\Policies\%1\%2)")
-                            .arg(Resources::JsonTheme::instance().applicationName(), Resources::JsonTheme::instance().applicationDisplayName()),
+        out = Settings(QStringLiteral(R"(HKEY_LOCAL_MACHINE\Software\Policies\%1\%2)")
+                           .arg(Resources::JsonTheme::instance().applicationName(), Resources::JsonTheme::instance().applicationDisplayName()),
             QSettings::NativeFormat)
                   .value(setting, defaultValue);
     }

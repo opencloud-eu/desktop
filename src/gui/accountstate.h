@@ -29,11 +29,11 @@
 
 class QDialog;
 class QMessageBox;
-class QSettings;
 
 namespace OCC {
 
 class Account;
+class Settings;
 class TlsErrorDialog;
 class FetchServerSettingsJob;
 
@@ -67,9 +67,9 @@ public:
 
     /** Creates an account state from settings and an Account object.
      *
-     * Use from AccountManager with a prepared QSettings object only.
+     * Use from AccountManager with a prepared Settings object only.
      */
-    static std::unique_ptr<AccountState> loadFromSettings(AccountPtr account, const QSettings &settings);
+    static std::unique_ptr<AccountState> loadFromSettings(AccountPtr account, const Settings &settings);
 
     static std::unique_ptr<AccountState> fromNewAccount(AccountPtr account);
 
@@ -77,7 +77,7 @@ public:
      *
      * It does not write the Account data.
      */
-    void writeToSettings(QSettings &settings) const;
+    void writeToSettings(Settings &settings) const;
 
     AccountPtr account() const;
 

@@ -218,7 +218,7 @@ void OCUpdater::slotOpenUpdateUrl()
 
 bool OCUpdater::updateSucceeded() const
 {
-    auto settings = ConfigFile::makeQSettings();
+    auto settings = ConfigFile::makeSettings();
 
     const auto targetVersionInt = QVersionNumber::fromString(settings.value(updateTargetVersionC).toString());
     return Version::versionWithBuildNumber() >= targetVersionInt;
@@ -256,7 +256,7 @@ void OCUpdater::slotTimedOut()
 
 QVersionNumber OCUpdater::previouslySkippedVersion()
 {
-    auto settings = ConfigFile::makeQSettings();
+    auto settings = ConfigFile::makeSettings();
     return QVersionNumber::fromString(settings.value(previouslySkippedVersionC).toString());
 }
 
@@ -267,7 +267,7 @@ void OCUpdater::setPreviouslySkippedVersion(const QVersionNumber &previouslySkip
 
 void OCUpdater::setPreviouslySkippedVersion(const QString &previouslySkippedVersionString)
 {
-    auto settings = ConfigFile::makeQSettings();
+    auto settings = ConfigFile::makeSettings();
     settings.setValue(previouslySkippedVersionC, previouslySkippedVersionString);
 }
 
@@ -288,7 +288,7 @@ void WindowsUpdater::slotWriteFile()
 
 void WindowsUpdater::wipeUpdateData()
 {
-    auto settings = ConfigFile::makeQSettings();
+    auto settings = ConfigFile::makeSettings();
     QString updateFileName = settings.value(updateAvailableC).toString();
     if (!updateFileName.isEmpty())
         QFile::remove(updateFileName);
@@ -315,7 +315,7 @@ void WindowsUpdater::slotDownloadFinished()
     }
 
 
-    auto settings = ConfigFile::makeQSettings();
+    auto settings = ConfigFile::makeSettings();
 
     // remove previously downloaded but not used installer
     QFile oldTargetFile(settings.value(updateAvailableC).toString());
@@ -333,7 +333,7 @@ void WindowsUpdater::slotDownloadFinished()
 
 void WindowsUpdater::versionInfoArrived(const UpdateInfo &info)
 {
-    auto settings = ConfigFile::makeQSettings();
+    auto settings = ConfigFile::makeSettings();
     const auto infoVersion = QVersionNumber::fromString(info.version());
     const auto previouslySkippedVersion = this->previouslySkippedVersion();
     qCInfo(lcUpdater) << u"Version info arrived:" << u"Your version:" << Version::versionWithBuildNumber() << u"Skipped version:" << previouslySkippedVersion
@@ -449,7 +449,7 @@ void WindowsUpdater::showUpdateErrorDialog(const QString &targetVersion)
 
 void WindowsUpdater::validateUpdate()
 {
-    const auto settings = ConfigFile::makeQSettings();
+    const auto settings = ConfigFile::makeSettings();
     const QString updateFileName = settings.value(updateAvailableC).toString();
     // has the previous run downloaded an update?
     if (!updateFileName.isEmpty() && QFile(updateFileName).exists()) {
@@ -478,7 +478,7 @@ void WindowsUpdater::applyUpdateAndRestart()
 {
     Q_ASSERT(downloadState() == DownloadState::DownloadComplete);
 
-    auto settings = ConfigFile::makeQSettings();
+    auto settings = ConfigFile::makeSettings();
     QString updateFile = settings.value(updateAvailableC).toString();
     settings.setValue(autoUpdateAttemptedC, true);
     settings.sync();

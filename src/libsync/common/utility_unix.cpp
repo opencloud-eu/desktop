@@ -17,6 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
+#include "libsync/settings.h"
 #include "utility.h"
 
 #include "resources/jsontheme.h"
@@ -31,7 +32,6 @@
 #include <QPixmap>
 #include <QRegularExpression>
 #include <QSaveFile>
-#include <QSettings>
 #include <QStandardPaths>
 #include <QString>
 #include <QTextStream>
@@ -295,7 +295,7 @@ void Utility::setLaunchOnStartup(const QString &appName, const QString &guiName,
             QString linuxdeployConfPath = qApp->applicationDirPath() + QStringLiteral("/linuxdeploy.conf");
 
             if (QFile(linuxdeployConfPath).exists()) {
-                QSettings linuxdeployConf(linuxdeployConfPath, QSettings::IniFormat);
+                Settings linuxdeployConf(linuxdeployConfPath, QSettings::IniFormat);
 
                 const auto appdirInstallatedPath = linuxdeployConf.value(QStringLiteral("native_packages/appdir_installed_path"));
                 if (!appdirInstallatedPath.isNull()) {
