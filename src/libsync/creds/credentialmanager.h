@@ -1,8 +1,8 @@
 #pragma once
 
-#include <QSettings>
 #include <QVariant>
 
+#include "libsync/settings.h"
 #include "opencloudsynclib.h"
 
 #include <qt6keychain/keychain.h>
@@ -34,13 +34,13 @@ public:
     const Account *account() const;
 
 private:
-    QSettings &credentialsList() const;
+    Settings &credentialsList() const;
 
     // TestCredentialManager
     QStringList knownKeys(const QString &group = {}) const;
 
     const Account *const _account = nullptr;
-    mutable std::unique_ptr<QSettings> _credentialsList;
+    mutable std::unique_ptr<Settings> _credentialsList;
 
     friend class TestCredentialManager;
 };
