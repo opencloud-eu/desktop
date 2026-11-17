@@ -102,5 +102,7 @@ namespace Utility {
     OPENCLOUD_SYNC_EXPORT void UnixTimeToLargeIntegerFiletime(time_t t, LARGE_INTEGER *hundredNSecs);
 
     OPENCLOUD_SYNC_EXPORT QString formatWinError(long error);
+
+    OPENCLOUD_SYNC_EXPORT void setupDesktopIni(const QString &folder, const QString &displayName, const QString &description, bool override);
 }
 }

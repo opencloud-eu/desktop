@@ -547,6 +547,19 @@ File synchronization desktop utility.</source>
     </message>
 </context>
 <context>
+    <name>OCC::AccountBasedOAuth</name>
+    <message>
+        <location filename="../src/libsync/creds/oauth.cpp" line="855"/>
+        <source>Could not parse the token response: %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../src/libsync/creds/oauth.cpp" line="862"/>
+        <source>The token response did not contain an access token</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
     <name>OCC::AccountModalWidget</name>
     <message>
         <location filename="../src/gui/accountmodalwidget.ui" line="14"/>
@@ -738,17 +751,17 @@ The update will be performed in the background, and overwrite the current AppIma
         <translation>Έξοδος</translation>
     </message>
     <message>
-        <location filename="../src/gui/application.cpp" line="189"/>
+        <location filename="../src/gui/application.cpp" line="188"/>
         <source>Unsupported Server Version</source>
         <translation>Μη υποστηριζόμενη έκδοση διακομιστή</translation>
     </message>
     <message>
-        <location filename="../src/gui/application.cpp" line="190"/>
+        <location filename="../src/gui/application.cpp" line="189"/>
         <source>The server on account »%1« runs an unsupported version %2. Using this client with unsupported server versions is untested and potentially dangerous. Proceed at your own risk.</source>
         <translation>Ο διακομιστής στον λογαριασμό »%1« εκτελεί μια μη υποστηριζόμενη έκδοση %2. Η χρήση αυτής της εφαρμογής με μη υποστηριζόμενες εκδόσεις διακομιστή δεν έχει δοκιμαστεί και είναι δυνητικά επικίνδυνη. Προχωρήστε με δική σας ευθύνη.</translation>
     </message>
     <message>
-        <location filename="../src/gui/application.cpp" line="215"/>
+        <location filename="../src/gui/application.cpp" line="214"/>
         <source>Application is shutting down</source>
         <translation>Η εφαρμογή τερματίζεται</translation>
     </message>
@@ -826,7 +839,7 @@ The update will be performed in the background, and overwrite the current AppIma
 <context>
     <name>OCC::CredentialJob</name>
     <message>
-        <location filename="../src/libsync/creds/credentialmanager.cpp" line="223"/>
+        <location filename="../src/libsync/creds/credentialmanager.cpp" line="225"/>
         <source>Failed to parse credentials %1</source>
         <translation>Αποτυχία ανάλυσης διαπιστευτηρίων %1</translation>
     </message>
@@ -869,147 +882,147 @@ The update will be performed in the background, and overwrite the current AppIma
 <context>
     <name>OCC::Folder</name>
     <message>
-        <location filename="../src/gui/folder.cpp" line="161"/>
+        <location filename="../src/gui/folder.cpp" line="163"/>
         <source>The path »%1« is too long. Please enable long paths in the Windows settings or choose a different folder.</source>
         <translation>Η διαδρομή »%1« είναι πολύ μεγάλη. Παρακαλούμε ενεργοποιήστε τις μεγάλες διαδρομές (long paths) στις ρυθμίσεις των Windows ή επιλέξτε έναν διαφορετικό φάκελο.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="211"/>
+        <location filename="../src/gui/folder.cpp" line="213"/>
         <source>Failed to open the database for »%1«.</source>
         <translation>Αποτυχία ανοίγματος της βάσης δεδομένων για το »%1«.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="189"/>
+        <location filename="../src/gui/folder.cpp" line="191"/>
         <source>Local folder »%1« does not exist.</source>
         <translation>Ο τοπικός φάκελος »%1« δεν υπάρχει.</translation>
     </message>
     <message>
         <location filename="../src/gui/folder.cpp" line="95"/>
-        <location filename="../src/gui/folder.cpp" line="848"/>
+        <location filename="../src/gui/folder.cpp" line="794"/>
         <source>Failed to load excludes</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="217"/>
+        <location filename="../src/gui/folder.cpp" line="219"/>
         <source>»%1« should be a folder but is not.</source>
         <translation>Το »%1« θα έπρεπε να είναι φάκελος αλλά δεν είναι.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="219"/>
+        <location filename="../src/gui/folder.cpp" line="221"/>
         <source>»%1« is not readable.</source>
         <translation>Το »%1« δεν είναι αναγνώσιμο.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="221"/>
+        <location filename="../src/gui/folder.cpp" line="223"/>
         <source>»%1« is not writable.</source>
         <translation>Το »%1« δεν είναι εγγράψιμο.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="488"/>
+        <location filename="../src/gui/folder.cpp" line="434"/>
         <source>»%1« and %n other file(s) have been removed.</source>
         <translation><numerusform>Το »%1« και %n ακόμη αρχείο αφαιρέθηκαν.</numerusform><numerusform>Το »%1« και %n ακόμη αρχεία αφαιρέθηκαν.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="490"/>
+        <location filename="../src/gui/folder.cpp" line="436"/>
         <source>»%1« has been removed.</source>
         <comment>%1 names a file.</comment>
         <translation>Το »%1« αφαιρέθηκε.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="495"/>
+        <location filename="../src/gui/folder.cpp" line="441"/>
         <source>»%1« and %n other file(s) have been added.</source>
         <translation><numerusform>Το »%1« και %n ακόμη αρχείο προστέθηκαν.</numerusform><numerusform>Το »%1« και %n ακόμη αρχεία προστέθηκαν.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="497"/>
+        <location filename="../src/gui/folder.cpp" line="443"/>
         <source>»%1« has been added.</source>
         <comment>%1 names a file.</comment>
         <translation>Το »%1« προστέθηκε.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="502"/>
+        <location filename="../src/gui/folder.cpp" line="448"/>
         <source>»%1« and %n other file(s) have been updated.</source>
         <translation><numerusform>Το »%1« και %n ακόμη αρχείο ενημερώθηκαν.</numerusform><numerusform>Το »%1« και %n ακόμη αρχεία ενημερώθηκαν.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="504"/>
+        <location filename="../src/gui/folder.cpp" line="450"/>
         <source>»%1« has been updated.</source>
         <comment>%1 names a file.</comment>
         <translation>Το »%1« ενημερώθηκε.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="509"/>
+        <location filename="../src/gui/folder.cpp" line="455"/>
         <source>»%1« has been renamed to »%2« and %n other file(s) have been renamed.</source>
         <translation><numerusform>Το »%1« μετονομάστηκε σε »%2« και %n ακόμη αρχείο μετονομάστηκε.</numerusform><numerusform>Το »%1« μετονομάστηκε σε »%2« και %n ακόμη αρχεία μετονομάστηκαν.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="511"/>
+        <location filename="../src/gui/folder.cpp" line="457"/>
         <source>»%1« has been renamed to »%2«.</source>
         <comment>%1 and %2 name files.</comment>
         <translation>Το »%1« μετονομάστηκε σε »%2«.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="516"/>
+        <location filename="../src/gui/folder.cpp" line="462"/>
         <source>»%1« has been moved to »%2« and %n other file(s) have been moved.</source>
         <translation><numerusform>Το »%1« μετακινήθηκε στο »%2« και %n ακόμη αρχείο μετακινήθηκε.</numerusform><numerusform>Το »%1« μετακινήθηκε στο »%2« και %n ακόμη αρχεία μετακινήθηκαν.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="518"/>
+        <location filename="../src/gui/folder.cpp" line="464"/>
         <source>»%1« has been moved to »%2«.</source>
         <translation>Το »%1« μετακινήθηκε στο »%2«.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="523"/>
+        <location filename="../src/gui/folder.cpp" line="469"/>
         <source>»%1« and %n other file(s) have sync conflicts.</source>
         <translation><numerusform>Το »%1« και %n ακόμη αρχείο έχουν διενέξεις συγχρονισμού.</numerusform><numerusform>Το »%1« και %n ακόμη αρχεία έχουν διενέξεις συγχρονισμού.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="525"/>
+        <location filename="../src/gui/folder.cpp" line="471"/>
         <source>»%1« has a sync conflict. Please check the conflict file!</source>
         <translation>Το »%1« έχει μια διένεξη συγχρονισμού. Παρακαλούμε ελέγξτε το αρχείο διένεξης!</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="530"/>
+        <location filename="../src/gui/folder.cpp" line="476"/>
         <source>»%1« and %n other file(s) could not be synced due to errors. See the log for details.</source>
         <translation><numerusform>Το »%1« και %n ακόμη αρχείο δεν ήταν δυνατό να συγχρονιστούν λόγω σφαλμάτων. Δείτε την καταγραφή για λεπτομέρειες.</numerusform><numerusform>Το »%1« και %n ακόμη αρχεία δεν ήταν δυνατό να συγχρονιστούν λόγω σφαλμάτων. Δείτε την καταγραφή για λεπτομέρειες.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="532"/>
+        <location filename="../src/gui/folder.cpp" line="478"/>
         <source>»%1« could not be synced due to an error. See the log for details.</source>
         <translation>Το »%1« δεν ήταν δυνατό να συγχρονιστεί λόγω σφάλματος. Δείτε την καταγραφή για λεπτομέρειες.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="538"/>
+        <location filename="../src/gui/folder.cpp" line="484"/>
         <source>Sync Activity</source>
         <translation>Δραστηριότητα συγχρονισμού</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="740"/>
+        <location filename="../src/gui/folder.cpp" line="686"/>
         <source>Switching VFS mode on folder »%1«</source>
         <translation>Εναλλαγή λειτουργίας VFS στον φάκελο »%1«</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="873"/>
+        <location filename="../src/gui/folder.cpp" line="819"/>
         <source>Reloading excludes on folder »%1«</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1095"/>
+        <location filename="../src/gui/folder.cpp" line="1041"/>
         <source>The folder »%1« was created but was excluded from synchronization previously. Data inside it will not be synchronized.</source>
         <translation>Ο φάκελος »%1« δημιουργήθηκε αλλά είχε εξαιρεθεί από τον συγχρονισμό προηγουμένως. Τα δεδομένα εντός αυτού δεν θα συγχρονιστούν.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1098"/>
+        <location filename="../src/gui/folder.cpp" line="1044"/>
         <source>The file »%1« was created but was excluded from synchronization previously. It will not be synchronized.</source>
         <translation>Το αρχείο »%1« δημιουργήθηκε αλλά είχε εξαιρεθεί από τον συγχρονισμό προηγουμένως. Δεν θα συγχρονιστεί.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1102"/>
+        <location filename="../src/gui/folder.cpp" line="1048"/>
         <source>»%1« is not synchronized</source>
         <translation>Το »%1« δεν συγχρονίζεται</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1110"/>
+        <location filename="../src/gui/folder.cpp" line="1056"/>
         <source>Changes in synchronized folders could not be tracked reliably.
 
 This means that the synchronization client might not upload local changes immediately and will instead only scan for local changes and upload them occasionally (every two hours by default).
@@ -1025,97 +1038,97 @@ This means that the synchronization client might not upload local changes immedi
 <context>
     <name>OCC::FolderMan</name>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="240"/>
+        <location filename="../src/gui/folderman.cpp" line="239"/>
         <source>Could not reset folder state</source>
         <translation>Αδυναμία επαναφοράς της κατάστασης του φακέλου</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="241"/>
+        <location filename="../src/gui/folderman.cpp" line="240"/>
         <source>An old sync journal %1 was found, but could not be removed. Please make sure that no application is currently using it.</source>
         <translation>Βρέθηκε ένα παλιό ημερολόγιο συγχρονισμού %1, αλλά δεν ήταν δυνατή η αφαίρεσή του. Παρακαλούμε βεβαιωθείτε ότι καμία εφαρμογή δεν το χρησιμοποιεί αυτή τη στιγμή.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="303"/>
+        <location filename="../src/gui/folderman.cpp" line="302"/>
         <source>Account disconnected or paused</source>
         <translation>Ο λογαριασμός αποσυνδέθηκε ή είναι σε παύση</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="447"/>
+        <location filename="../src/gui/folderman.cpp" line="446"/>
         <source>Folder is about to be removed</source>
         <translation>Ο φάκελος πρόκειται να αφαιρεθεί</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="470"/>
+        <location filename="../src/gui/folderman.cpp" line="469"/>
         <source> (backup)</source>
         <translation> (αντίγραφο ασφαλείας)</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="475"/>
+        <location filename="../src/gui/folderman.cpp" line="474"/>
         <source> (backup %1)</source>
         <translation> (αντίγραφο ασφαλείας %1)</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="516"/>
+        <location filename="../src/gui/folderman.cpp" line="515"/>
         <source>Sync was successful, unresolved conflicts.</source>
         <translation>Ο συγχρονισμός ήταν επιτυχής, υπάρχουν ανεπίλυτες διενέξεις.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="525"/>
+        <location filename="../src/gui/folderman.cpp" line="524"/>
         <source>%1 (Sync is paused)</source>
         <translation>%1 (Ο συγχρονισμός είναι σε παύση)</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="536"/>
+        <location filename="../src/gui/folderman.cpp" line="535"/>
         <source>The folder »%1« is already in use by application %2!</source>
         <translation>Ο φάκελος »%1« χρησιμοποιείται ήδη από την εφαρμογή %2!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="549"/>
+        <location filename="../src/gui/folderman.cpp" line="548"/>
         <source>The folder »%1« is already in use by another account.</source>
         <translation>Ο φάκελος »%1« χρησιμοποιείται ήδη από έναν άλλο λογαριασμό.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="625"/>
+        <location filename="../src/gui/folderman.cpp" line="624"/>
         <source>The local folder »%1« already contains a folder used in a folder sync connection. Please pick another local folder!</source>
         <translation>Ο τοπικός φάκελος »%1« περιέχει ήδη έναν φάκελο που χρησιμοποιείται σε μια σύνδεση συγχρονισμού. Παρακαλούμε επιλέξτε έναν άλλο τοπικό φάκελο!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="631"/>
+        <location filename="../src/gui/folderman.cpp" line="630"/>
         <source>The local folder »%1« is already contained in a folder used in a folder sync connection. Please pick another local folder!</source>
         <translation>Ο τοπικός φάκελος »%1« περιέχεται ήδη σε έναν φάκελο που χρησιμοποιείται σε μια σύνδεση συγχρονισμού. Παρακαλούμε επιλέξτε έναν άλλο τοπικό φάκελο!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="639"/>
+        <location filename="../src/gui/folderman.cpp" line="638"/>
         <source>Please pick another local folder for »%1«.</source>
         <translation>Παρακαλούμε επιλέξτε έναν άλλο τοπικό φάκελο για το »%1«.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="564"/>
+        <location filename="../src/gui/folderman.cpp" line="563"/>
         <source>No valid folder selected!</source>
         <translation>Δεν επιλέχθηκε έγκυρος φάκελος!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="582"/>
+        <location filename="../src/gui/folderman.cpp" line="581"/>
         <source>The selected path does not exist!</source>
         <translation>Η επιλεγμένη διαδρομή δεν υπάρχει!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="586"/>
+        <location filename="../src/gui/folderman.cpp" line="585"/>
         <source>The folder »%1« is used in a folder sync connection!</source>
         <translation>Ο φάκελος »%1« χρησιμοποιείται σε μια σύνδεση συγχρονισμού!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="592"/>
+        <location filename="../src/gui/folderman.cpp" line="591"/>
         <source>The selected path is not a folder!</source>
         <translation>Η επιλεγμένη διαδρομή δεν είναι φάκελος!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="596"/>
+        <location filename="../src/gui/folderman.cpp" line="595"/>
         <source>You have no permission to write to the selected folder!</source>
         <translation>Δεν έχετε δικαίωμα εγγραφής στον επιλεγμένο φάκελο!</translation>
     </message>
     <message>
-        <location filename="../src/gui/folderman.cpp" line="622"/>
+        <location filename="../src/gui/folderman.cpp" line="621"/>
         <source>There is already a sync from the server to this local folder. Please pick another local folder!</source>
         <translation>Υπάρχει ήδη ένας συγχρονισμός από τον διακομιστή σε αυτόν τον τοπικό φάκελο. Παρακαλούμε επιλέξτε έναν άλλο τοπικό φάκελο!</translation>
     </message>
@@ -1669,32 +1682,32 @@ Note that using any logging command line options will override the settings.</so
         <translation>Επιτυχής σύνδεση</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="563"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="566"/>
         <source>WebFinger response had unexpected content type: %1</source>
         <translation>Η απόκριση WebFinger είχε μη αναμενόμενο τύπο περιεχομένου: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="573"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="576"/>
         <source>Could not parse WebFinger response: %1</source>
         <translation>Δεν ήταν δυνατή η ανάλυση της απόκρισης WebFinger: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="581"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="584"/>
         <source>WebFinger response subject did not match the requested resource</source>
         <translation>Το θέμα της απόκρισης WebFinger δεν ταίριαζε με τον ζητούμενο πόρο</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="593"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="596"/>
         <source>WebFinger response did not contain an OpenID Connect issuer</source>
         <translation>Η απόκριση WebFinger δεν περιείχε εκδότη OpenID Connect</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="600"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="603"/>
         <source>WebFinger issuer link had no href</source>
         <translation>Ο σύνδεσμος εκδότη WebFinger δεν είχε href</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="685"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="689"/>
         <source>Could not parse OIDC discovery response: %1</source>
         <translation>Δεν ήταν δυνατή η ανάλυση της απόκρισης εντοπισμού OIDC: %1</translation>
     </message>
@@ -1966,7 +1979,7 @@ Note that using any logging command line options will override the settings.</so
     </message>
     <message>
         <location filename="../src/libsync/propagatedownload.cpp" line="105"/>
-        <location filename="../src/libsync/propagatedownload.cpp" line="601"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="604"/>
         <source>The file has changed since discovery</source>
         <translation>Το αρχείο άλλαξε μετά την ανίχνευση</translation>
     </message>
@@ -1983,9 +1996,9 @@ Note that using any logging command line options will override the settings.</so
     </message>
     <message>
         <location filename="../src/libsync/propagatedownload.cpp" line="228"/>
-        <location filename="../src/libsync/propagatedownload.cpp" line="579"/>
-        <location filename="../src/libsync/propagatedownload.cpp" line="609"/>
-        <location filename="../src/libsync/propagatedownload.cpp" line="644"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="582"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="612"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="647"/>
         <source>The file »%1« is currently in use</source>
         <translation>Το αρχείο »%1« χρησιμοποιείται ήδη</translation>
     </message>
@@ -1995,27 +2008,27 @@ Note that using any logging command line options will override the settings.</so
         <translation>Το αρχείο διαγράφηκε από τον διακομιστή</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="435"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="438"/>
         <source>Broken webserver returned empty content length for non-empty file on resume</source>
         <translation>Ο διακομιστής επέστρεψε κενό content length για μη κενό αρχείο κατά τη συνέχιση</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="442"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="445"/>
         <source>The file could not be downloaded completely.</source>
         <translation>Η λήψη του αρχείου δεν μπόρεσε να ολοκληρωθεί.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="449"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="452"/>
         <source>The downloaded file is empty despite the server announced it should have been %1.</source>
         <translation>Το αρχείο που λήφθηκε είναι κενό, παρόλο που ο διακομιστής ανακοίνωσε μέγεθος %1.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="554"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="557"/>
         <source>The file »%1« cannot be saved because of a local file name clash with »%2«!</source>
         <translation>Το αρχείο »%1« δεν μπορεί να αποθηκευτεί λόγω τοπικής διένεξης ονόματος με το »%2«!</translation>
     </message>
     <message>
-        <location filename="../src/libsync/propagatedownload.cpp" line="641"/>
+        <location filename="../src/libsync/propagatedownload.cpp" line="644"/>
         <source>Error updating metadata: %1</source>
         <translation>Σφάλμα κατά την ενημέρωση μεταδεδομένων: %1</translation>
     </message>
@@ -2409,38 +2422,38 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::SocketApi</name>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="508"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="507"/>
         <source>Share with %1</source>
         <comment>parameter is OpenCloud</comment>
         <translation>Κοινή χρήση με %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="606"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="605"/>
         <source>Confirm deletion</source>
         <translation>Επιβεβαίωση διαγραφής</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="608"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="607"/>
         <source>Do you want to delete the directory »%1« and all its contents permanently?</source>
         <translation>Θέλετε να διαγράψετε οριστικά τον κατάλογο »%1« και όλα τα περιεχόμενά του;</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="609"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="608"/>
         <source>Do you want to delete the file »%1« permanently?</source>
         <translation>Θέλετε να διαγράψετε το αρχείο »%1« οριστικά;</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="651"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="650"/>
         <source>Select new location...</source>
         <translation>Επιλέξτε νέα τοποθεσία...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="661"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="660"/>
         <source>Error</source>
         <translation>Σφάλμα</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="662"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="661"/>
         <source>Moving file failed:
 
 %1</source>
@@ -2449,80 +2462,80 @@ Note that using any logging command line options will override the settings.</so
 %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="764"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="763"/>
         <source>I shared something with you</source>
         <translation>Μοιράστηκα κάτι μαζί σας</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="777"/>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="811"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="776"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="810"/>
         <source>Share...</source>
         <translation>Κοινή χρήση...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="779"/>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="815"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="778"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="814"/>
         <source>Copy private link to clipboard</source>
         <translation>Αντιγραφή ιδιωτικού συνδέσμου στο πρόχειρο</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="780"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="779"/>
         <source>Send private link by email...</source>
         <translation>Αποστολή ιδιωτικού συνδέσμου μέσω email...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="809"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="808"/>
         <source>Resharing this file is not allowed</source>
         <translation>Δεν επιτρέπεται η εκ νέου κοινή χρήση αυτού του αρχείου</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="809"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="808"/>
         <source>Resharing this folder is not allowed</source>
         <translation>Δεν επιτρέπεται η εκ νέου κοινή χρήση αυτού του φακέλου</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="880"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="879"/>
         <source>Open in %1</source>
         <translation>Άνοιγμα σε %1</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="891"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="890"/>
         <source>Show file versions in web browser</source>
         <translation>Εμφάνιση εκδόσεων αρχείου στο πρόγραμμα περιήγησης</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="913"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="912"/>
         <source>Rename...</source>
         <translation>Μετονομασία...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="916"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="915"/>
         <source>Rename and upload...</source>
         <translation>Μετονομασία και μεταφόρτωση...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="921"/>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="925"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="920"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="924"/>
         <source>Move and rename...</source>
         <translation>Μετακίνηση και μετονομασία...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="928"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="927"/>
         <source>Move, rename and upload...</source>
         <translation>Μετακίνηση, μετονομασία και μεταφόρτωση...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="931"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="930"/>
         <source>Delete local changes</source>
         <translation>Διαγραφή τοπικών αλλαγών</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="936"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="935"/>
         <source>Move and upload...</source>
         <translation>Μετακίνηση και μεταφόρτωση...</translation>
     </message>
     <message>
-        <location filename="../src/gui/socketapi/socketapi.cpp" line="937"/>
+        <location filename="../src/gui/socketapi/socketapi.cpp" line="936"/>
         <source>Delete</source>
         <translation>Διαγραφή</translation>
     </message>
@@ -2670,7 +2683,7 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OCC::Theme</name>
     <message>
-        <location filename="../src/libsync/theme.cpp" line="146"/>
+        <location filename="../src/libsync/theme.cpp" line="145"/>
         <source>&lt;p&gt;Version %1. For more information visit &lt;a href=&quot;https://opencloud.eu/&quot;&gt;https://opencloud.eu/&lt;/a&gt;&lt;/p&gt;&lt;p&gt;For known issues and help, please visit: &lt;a href=&quot;https://github.com/opencloud-eu/desktop&quot;&gt;GitHub&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Copyright OpenCloud GmbH&lt;br/&gt;Copyright ownCloud GmbH&lt;/p&gt;&lt;p&gt;Distributed by OpenCloud GmbH and licensed under the GNU General Public License (GPL) Version 2.0.&lt;br/&gt;&lt;p&gt;&lt;small&gt;%2&lt;/small&gt;&lt;/p&gt;</source>
         <translation>&lt;p&gt;Έκδοση %1. Για περισσότερες πληροφορίες επισκεφθείτε το &lt;a href=&quot;https://opencloud.eu/&quot;&gt;https://opencloud.eu/&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Για γνωστά ζητήματα και βοήθεια, παρακαλούμε επισκεφθείτε το: &lt;a href=&quot;https://github.com/opencloud-eu/desktop&quot;&gt;GitHub&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Copyright OpenCloud GmbH&lt;br/&gt;Copyright ownCloud GmbH&lt;/p&gt;&lt;p&gt;Διανέμεται από την OpenCloud GmbH και αδειοδοτείται υπό την GNU General Public License (GPL) Έκδοση 2.0.&lt;br/&gt;&lt;p&gt;&lt;small&gt;%2&lt;/small&gt;&lt;/p&gt;</translation>
     </message>
@@ -2940,7 +2953,7 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OpenCloudTheme::aboutVersions()</name>
     <message>
-        <location filename="../src/libsync/theme.cpp" line="133"/>
+        <location filename="../src/libsync/theme.cpp" line="132"/>
         <source>%1 %2%7%8Libraries Qt %3, %4%7Using virtual files plugin: %5%7%6</source>
         <translation>%1 %2%7%8Βιβλιοθήκες Qt %3, %4%7Χρήση πρόσθετου εικονικών αρχείων: %5%7%6</translation>
     </message>
@@ -2948,7 +2961,7 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OpenCloudTheme::qtVer</name>
     <message>
-        <location filename="../src/libsync/theme.cpp" line="116"/>
+        <location filename="../src/libsync/theme.cpp" line="115"/>
         <source>%1 (Built against Qt %2)</source>
         <translation>%1 (Δημιουργήθηκε με το Qt %2)</translation>
     </message>
@@ -2956,7 +2969,7 @@ Note that using any logging command line options will override the settings.</so
 <context>
     <name>OpenCloudTheme::versionWithSha</name>
     <message>
-        <location filename="../src/libsync/theme.cpp" line="121"/>
+        <location filename="../src/libsync/theme.cpp" line="120"/>
         <source>%1 %2</source>
         <translation>%1 %2</translation>
     </message>

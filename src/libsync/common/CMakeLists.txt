@@ -30,4 +30,5 @@ elseif(UNIX AND NOT APPLE)
     target_sources(libsync PRIVATE
             utility_unix.cpp
     )
+    target_link_libraries(libsync PRIVATE Qt::Xml)
 endif()
