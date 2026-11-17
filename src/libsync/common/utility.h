@@ -36,7 +36,6 @@
 #include <optional>
 #include <ranges>
 
-class QSettings;
 class QQuickWidget;
 
 namespace OCC {
@@ -207,10 +206,6 @@ OPENCLOUD_SYNC_EXPORT Q_DECLARE_LOGGING_CATEGORY(lcUtility)
 
     /** Compares two urls and ignores whether thei end wit / */
     OPENCLOUD_SYNC_EXPORT bool urlEqual(QUrl a, QUrl b);
-
-    /**  Returns a new settings pre-set in a specific group.  The Settings will be created
-         with the given parent. If no parent is specified, the caller must destroy the settings */
-    OPENCLOUD_SYNC_EXPORT std::unique_ptr<QSettings> settingsWithGroup(const QString &group, QObject *parent = nullptr);
 
     /** Sanitizes a string that shall become part of a filename.
      *

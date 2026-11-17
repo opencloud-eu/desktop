@@ -18,13 +18,13 @@
 
 #include "filesystembase.h"
 #include "common/asserts.h"
+#include "libsync/settings.h"
 #include "utility.h"
 
 #include <QCoreApplication>
 #include <QDateTime>
 #include <QDir>
 #include <QFile>
-#include <QSettings>
 
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -388,7 +388,7 @@ bool FileSystem::longPathsEnabledOnWindows()
 
     if (!longPathsEnabledCached.has_value()) {
         // https://learn.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation?tabs=registry#enable-long-paths-in-windows-10-version-1607-and-later
-        QSettings fsSettings(QStringLiteral("HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\FileSystem"), QSettings::NativeFormat);
+        Settings fsSettings(QStringLiteral("HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\FileSystem"), QSettings::NativeFormat);
         QVariant longPathsEnabled = fsSettings.value(QStringLiteral("LongPathsEnabled"));
         qCDebug(lcFileSystem) << u"LongPathsEnabled:" << longPathsEnabled;
         longPathsEnabledCached = longPathsEnabled.value<uint32_t>() == 1;
