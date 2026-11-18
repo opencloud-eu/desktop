@@ -107,7 +107,7 @@ LsColXMLParser::LsColXMLParser()
 {
 }
 
-bool LsColXMLParser::parse(const QByteArray &xml, QHash<QString, qint64> *sizes, const QString &expectedPath)
+bool LsColXMLParser::parse(const QByteArray &xml, QHash<QString, qint64> *sizes, QSet<QString> *vaults, const QString &expectedPath)
 {
     // Parse DAV response
     QXmlStreamReader reader(xml);
@@ -166,6 +166,10 @@ bool LsColXMLParser::parse(const QByteArray &xml, QHash<QString, qint64> *sizes,
                 auto s = propertyContent.toLongLong(&ok);
                 if (ok && sizes) {
                     sizes->insert(currentHref, s);
+                }
+            } else if (name == QLatin1String("integrity-id")) {
+                if (vaults) {
+                    vaults->insert(currentHref);
                 }
             }
             currentTmpProperties.insert(reader.name().toString(), propertyContent);
@@ -294,7 +298,7 @@ void PropfindJob::finished()
             }
 
             const QString expectedPath = reply()->request().url().path(); // something like "/remote.php/webdav/folder"
-            if (!parser.parse(reply()->readAll(), &_sizes, expectedPath)) {
+            if (!parser.parse(reply()->readAll(), &_sizes, &_vaults, expectedPath)) {
                 // XML parse error
                 Q_EMIT finishedWithError();
             }
@@ -312,6 +316,11 @@ void PropfindJob::finished()
 const QHash<QString, qint64> &PropfindJob::sizes() const
 {
     return _sizes;
+}
+
+const QSet<QString> &PropfindJob::vaults() const
+{
+    return _vaults;
 }
 
 /*********************************************************************************************/
