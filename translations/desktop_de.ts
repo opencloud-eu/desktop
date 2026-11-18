@@ -551,12 +551,12 @@ Desktop-Client zur Dateisynchronisierung.</translation>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="855"/>
         <source>Could not parse the token response: %1</source>
-        <translation type="unfinished"/>
+        <translation>Die Token-Antwort konnte nicht verarbeitet werden: %1</translation>
     </message>
     <message>
         <location filename="../src/libsync/creds/oauth.cpp" line="862"/>
         <source>The token response did not contain an access token</source>
-        <translation type="unfinished"/>
+        <translation>Die Token-Antwort enthielt kein Zugriffstoken.</translation>
     </message>
 </context>
 <context>
