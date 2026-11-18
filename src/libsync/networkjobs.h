@@ -63,7 +63,7 @@ class OPENCLOUD_SYNC_EXPORT LsColXMLParser : public QObject
 public:
     explicit LsColXMLParser();
 
-    bool parse(const QByteArray &xml, QHash<QString, qint64> *sizes, const QString &expectedPath);
+    bool parse(const QByteArray &xml, QHash<QString, qint64> *sizes, QSet<QString> *vaults, const QString &expectedPath);
 
 Q_SIGNALS:
     void directoryListingSubfolders(const QStringList &items);
@@ -93,6 +93,7 @@ public:
 
     // TODO: document...
     const QHash<QString, qint64> &sizes() const;
+    const QSet<QString> &vaults() const;
 
 Q_SIGNALS:
     void directoryListingSubfolders(const QStringList &items);
@@ -106,6 +107,7 @@ private Q_SLOTS:
 private:
     QList<QByteArray> _properties;
     QHash<QString, qint64> _sizes;
+    QSet<QString> _vaults;
     Depth _depth;
 };
 
