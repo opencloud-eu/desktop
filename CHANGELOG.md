@@ -62,6 +62,8 @@
 
 ### 📦️ Dependencies
 
+- Update craft dependencies [[#1265](https://github.com/opencloud-eu/desktop/pull/1265)]
+- Ci: use our own cache [[#1207](https://github.com/opencloud-eu/desktop/pull/1207)]
 - build(deps): bump signpath/github-action-submit-signing-request from 2 to 3 [[#1100](https://github.com/opencloud-eu/desktop/pull/1100)]
 
 ## [4.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v4.0.0) - 2026-09-03
