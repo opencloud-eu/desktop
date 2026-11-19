@@ -361,15 +361,17 @@ Pane {
                             OCMenuItem {
                                 text: CommonStrings.showInWebBrowser()
                                 onTriggered: Qt.openUrlExternally(folderDelegate.folder.webUrl)
-                                enabled: folderDelegate.folder.webUrl
+                                visible: folderDelegate.folder.webUrl != ""
+                                height: visible ? implicitHeight : 0
+                                enabled: visible
                             }
 
                             OCMenuItem {
                                 text: CommonStrings.copyUrlToClipBoard()
                                 onTriggered: OCUtils.setClipBoard(folderDelegate.folder.webUrl)
-                                visible: contextMenu.shiftPressed
+                                visible: contextMenu.shiftPressed && folderDelegate.folder.webUrl != ""
                                 height: visible ? implicitHeight : 0
-                                enabled: folderDelegate.folder.webUrl && visible
+                                enabled: visible
                             }
 
                             MenuSeparator {}
