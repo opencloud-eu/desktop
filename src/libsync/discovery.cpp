@@ -286,6 +286,17 @@ void ProcessDirectoryJob::processFile(const PathTuple &path,
     processFileAnalyzeLocalInfo(item, path, localEntry, serverEntry, dbEntry, _queryServer);
 }
 
+// Whether the server reports the same content we synced last time, even if the etag differs
+static bool serverContentUnchanged(const RemoteInfo &serverEntry, const SyncJournalFileRecord &dbEntry)
+{
+    if (serverEntry.size() != dbEntry.size()) {
+        return false;
+    }
+    const auto serverChecksum = ChecksumHeader::parseChecksumHeader(serverEntry.checksumHeader());
+    const auto dbChecksum = ChecksumHeader::parseChecksumHeader(dbEntry.checksumHeader());
+    return serverChecksum.isValid() && dbChecksum.isValid() && serverChecksum == dbChecksum;
+}
+
 // Compute the checksum of the given file and assign the result in item->_checksumHeader
 // Returns true if the checksum was successfully computed
 static bool computeLocalChecksum(const QByteArray &header, const QString &path, const SyncFileItemPtr &item)
@@ -346,6 +357,12 @@ void ProcessDirectoryJob::processFileAnalyzeRemoteInfo(
             item->setInstruction(CSYNC_INSTRUCTION_SYNC);
             item->_type = ItemTypeVirtualFileDownload;
             item->_size = serverEntry.size();
+        } else if (dbEntry.etag() != serverEntry.etag() && !serverEntry.isDirectory() && localEntry.isValid() && serverContentUnchanged(serverEntry, dbEntry)) {
+            // The etag changed but the content didn't: the server touched the file without modifying it
+            qCInfo(lcDisco) << u"Etag changed on the server but the content checksum did not, not a server modification:" << path._server
+                            << dbEntry.etag() << serverEntry.etag();
+            item->setInstruction(CSYNC_INSTRUCTION_UPDATE_METADATA);
+            item->_direction = SyncFileItem::Down;
         } else if (dbEntry.etag() != serverEntry.etag()) {
             item->_direction = SyncFileItem::Down;
             item->_modtime = serverEntry.modtime();
