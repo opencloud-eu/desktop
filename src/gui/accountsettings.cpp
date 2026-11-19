@@ -149,6 +149,7 @@ void AccountSettings::showSelectiveSyncDialog(Folder *folder)
     modalWidget->setStandardButtons(QDialogButtonBox::Cancel | QDialogButtonBox::Ok);
     connect(modalWidget, &AccountModalWidget::accepted, this, [selectiveSync, folder, this] {
         folder->journalDb()->setSelectiveSyncList(SyncJournalDb::SelectiveSyncBlackList, selectiveSync->createBlackList());
+        folder->reloadExcludes();
         doForceSyncCurrentFolder(folder);
     });
     addModalWidget(modalWidget);
