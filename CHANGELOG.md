@@ -21,6 +21,7 @@
 
 ### 🐛 Bug Fixes
 
+- Load web URL for newly added spaces [[#1267](https://github.com/opencloud-eu/desktop/pull/1267)]
 - Don't drop changes that failed with Message [[#1250](https://github.com/opencloud-eu/desktop/pull/1250)]
 - Return std::optional from Utility::stringToEnum [[#1249](https://github.com/opencloud-eu/desktop/pull/1249)]
 - Re-enable share status indicator in shell extension overlay [[#1236](https://github.com/opencloud-eu/desktop/pull/1236)]
