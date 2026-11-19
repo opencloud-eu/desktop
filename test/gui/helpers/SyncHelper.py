@@ -2,7 +2,6 @@ import os
 import re
 import time
 import urllib.request
-
 from pageObjects.SyncConnection import SyncConnection
 from helpers.ConfigHelper import get_config, is_windows, is_linux
 from helpers.FilesHelper import normalize_path
@@ -68,18 +67,23 @@ SYNC_PATTERNS = {
     # default sync patterns for the initial sync (after adding account)
     # the pattern can be of TWO types depending on the
     # available resources (files/folders)
+   
     'initial': [
-        # when adding account via New Account wizard
+        # when adding account via New Account wizard (Linux)
         [
             SYNC_STATUS['NOP'],
             SYNC_STATUS['REGISTER'],
             SYNC_STATUS['UPDATE'],
         ],
-        # when syncing empty account (hidden files are ignored)
-        # [SYNC_STATUS['UPDATE'], SYNC_STATUS['OK']],
-        # [SYNC_STATUS['UPDATE'], SYNC_STATUS['OKAL']],
-        # when syncing an account that has some files/folders
-        # [SYNC_STATUS['SYNC'], SYNC_STATUS['OK']],
+        # when adding account via New Account wizard (Windows Spaces Personal folder)
+        [
+            SYNC_STATUS['NOP'],
+            SYNC_STATUS['UPDATE'],
+        ],
+        # when adding account via New Account wizard (Windows Spaces root)
+        [
+            SYNC_STATUS['REGISTER'],
+        ],
         # initial root sync
         [
             SYNC_STATUS['OK'],
@@ -226,16 +230,15 @@ def filter_sync_messages(messages):
         start_idx = messages.index('GET_STRINGS:END') + 1
     return messages[start_idx:]
 
-
 def filter_messages_for_item(messages, item):
     filtered_messages = []
+    normalized_item = normalize_path(item).rstrip('/').rstrip('\\')
     for msg in messages:
-        normalized_msg = msg.rstrip('/').rstrip('\\')
-        item = item.rstrip('/').rstrip('\\')
-        if normalized_msg.endswith(item):
-            filtered_messages.append(msg)
+        if match := re.search(r':(/|[A-Za-z]:[\\/]).*', msg):
+            msg_path = normalize_path(msg[match.start() + 1 :]).rstrip('/').rstrip('\\')
+            if msg_path == normalized_item:
+                filtered_messages.append(msg)
     return filtered_messages
-
 
 def listen_sync_status_for_item(item, resource_type='FOLDER'):
     if (resource_type := resource_type.upper()) not in ('FILE', 'FOLDER'):

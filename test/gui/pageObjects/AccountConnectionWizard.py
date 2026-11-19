@@ -3,7 +3,6 @@ import time
 from types import SimpleNamespace
 from appium.webdriver.common.appiumby import AppiumBy as By
 from selenium.common.exceptions import WebDriverException
-
 from helpers.WebUIHelper import authorize_via_webui
 from helpers.ConfigHelper import get_config, is_linux, is_windows
 from helpers.SetupClientHelper import (
@@ -153,13 +152,14 @@ class AccountConnectionWizard:
         ).click()
 
         dir_input_selector = AccountConnectionWizard.get_native_directory_path_edit()
-        dir_location_input = app().find_element(
+        
+        dir_location_input = app().find_elements_with_wait(
             dir_input_selector.by,
             dir_input_selector.selector,
-        )
+        )[0]
+
         dir_location_input.clear()
         dir_location_input.send_keys(sync_path)
-
         choose_button_selector = AccountConnectionWizard.get_native_choose_folder_button()
         app().find_element(
             choose_button_selector.by,

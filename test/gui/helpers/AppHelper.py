@@ -4,14 +4,14 @@ import psutil
 import threading
 import json
 import base64
+import time
+import helpers.api.http_helper as request
 from appium.webdriver import Remote, WebElement
 from appium.options.common.base import AppiumOptions
 from appium.webdriver.common.appiumby import AppiumBy as By
 from selenium.common.exceptions import WebDriverException, NoSuchElementException
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-
-import helpers.api.http_helper as request
 from helpers.ConfigHelper import get_config, get_app_env, is_linux, is_windows
 from helpers.ElementHelper import get_element_center_xy
 from helpers.keys.keys_map import get_key
@@ -57,10 +57,10 @@ def find_element(self, by, selector, timeout=None):
     Returns a visible element.
     Throws if no elements are found or if multiple visible elements are found.
     """
-    if timeout is not None:
-        set_implicit_wait(timeout)
+    wait_time = timeout if timeout is not None else get_config('min_timeout')
+    deadline = time.time() + wait_time
 
-    try:
+    while True:
         elements = self.find_elements(by, selector)
         elements_count = len(elements)
         if elements_count > 1:
@@ -68,13 +68,11 @@ def find_element(self, by, selector, timeout=None):
             if len(visible_elements) == 1:
                 return visible_elements.pop()
             raise WebDriverException(f'Found {elements_count} elements using "{by}={selector}"')
-        if elements_count == 0:
+        if elements_count == 1:
+            return elements[0]
+        if time.time() >= deadline:
             raise NoSuchElementException(f'No element found for "{by}={selector}"')
-        return elements[0]
-    finally:
-        # reset implicit wait to default value
-        if timeout is not None:
-            set_implicit_wait(get_config('min_timeout'))
+        time.sleep(0.2)
 
 
 def find_elements_with_wait(self, by, selector, timeout=get_config('min_timeout')):

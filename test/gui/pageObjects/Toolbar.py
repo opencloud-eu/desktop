@@ -2,7 +2,7 @@ from types import SimpleNamespace
 from urllib.parse import urlparse
 from appium.webdriver.common.appiumby import AppiumBy as By
 from selenium.common.exceptions import NoSuchElementException
-
+from helpers.ConfigHelper import get_config, is_linux, is_windows
 from helpers.AppHelper import app
 from helpers.ConfigHelper import get_config
 from helpers.UserHelper import get_displayname_for_user
@@ -11,11 +11,21 @@ from helpers.Utils import wait_for
 
 class Toolbar:
     NAVIGATION_BAR = SimpleNamespace(by=By.XPATH, selector="//*[@name='Navigation bar']/..")
-    ACCOUNT_TAB = SimpleNamespace(by=By.CLASS_NAME, selector="[page tab | {text}]")
-    ADD_ACCOUNT_BUTTON = SimpleNamespace(by=By.CLASS_NAME, selector="[push button | Add Account]")
-    ACTIVITY_TAB = SimpleNamespace(by=By.CLASS_NAME, selector="[page tab | Activity]")
-    SETTINGS_TAB = SimpleNamespace(by=By.CLASS_NAME, selector="[page tab | Settings]")
-    QUIT_BUTTON = SimpleNamespace(by=By.CLASS_NAME, selector="[push button | Quit]")
+    if is_windows():
+        ACCOUNT_TAB = SimpleNamespace(by=By.NAME, selector="{text}")
+        ADD_ACCOUNT_BUTTON = SimpleNamespace(by=By.NAME, selector="Add Account")
+        ACTIVITY_TAB = SimpleNamespace(by=By.NAME, selector="Activity")
+        SETTINGS_TAB = SimpleNamespace(by=By.NAME, selector="Settings")
+        QUIT_BUTTON = SimpleNamespace(by=By.NAME, selector="Quit")
+    elif is_linux():
+        ACCOUNT_TAB = SimpleNamespace(by=By.CLASS_NAME, selector="[page tab | {text}]")
+        ADD_ACCOUNT_BUTTON = SimpleNamespace(by=By.CLASS_NAME, selector="[push button | Add Account]")
+        ACTIVITY_TAB = SimpleNamespace(by=By.CLASS_NAME, selector="[page tab | Activity]")
+        SETTINGS_TAB = SimpleNamespace(by=By.CLASS_NAME, selector="[page tab | Settings]")
+        QUIT_BUTTON = SimpleNamespace(by=By.CLASS_NAME, selector="[push button | Quit]")
+    else:
+        raise NotImplementedError("Unsupported platform")
+
     CONFIRM_QUIT_BUTTON = SimpleNamespace(
         by=By.NAME,
         selector="Yes",
