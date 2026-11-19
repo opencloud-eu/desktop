@@ -17,6 +17,7 @@ def substitute_inline_codes(value):
     value = value.replace('%client_root_sync_path%', get_config('clientRootSyncPath'))
     value = value.replace('%current_user_sync_path%', get_config('currentUserSyncPath'))
     value = value.replace('%local_server_hostname%', urlparse(get_config('localBackendUrl')).netloc)
+    value = value.replace('%app_name%', get_config('app_name'))
     return value.replace('%home%', get_config('home_dir'))
 
 
