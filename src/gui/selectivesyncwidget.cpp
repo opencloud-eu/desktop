@@ -102,7 +102,11 @@ QSize SelectiveSyncWidget::sizeHint() const
 void SelectiveSyncWidget::refreshFolders()
 {
     auto *job = new PropfindJob(_account, davUrl(), _folderPath, PropfindJob::Depth::One, this);
-    job->setProperties({QByteArrayLiteral("resourcetype"), QByteArrayLiteral("http://owncloud.org/ns:size")});
+    job->setProperties({
+        QByteArrayLiteral("resourcetype"), //
+        QByteArrayLiteral("http://owncloud.org/ns:size"), //
+        QByteArrayLiteral("ocrclone:integrity-id"), // vault files
+    });
     connect(job, &PropfindJob::directoryListingSubfolders, this, &SelectiveSyncWidget::slotUpdateDirectories);
     connect(job, &PropfindJob::finishedWithError, this, [job, this] {
         if (job->reply()->error() == QNetworkReply::ContentNotFoundError) {
@@ -215,11 +219,11 @@ void SelectiveSyncWidget::slotUpdateDirectories(QStringList list)
 
     // Check for excludes.
     list.erase(std::remove_if(list.begin(), list.end(),
-                   [&rootPath, this](const QString &it) {
-                       return _excludedFiles.isExcludedRemote(it, rootPath, FolderMan::instance()->ignoreHiddenFiles(), ItemTypeDirectory);
+                   [&rootPath, &job, this](const QString &it) {
+                       return _excludedFiles.isExcludedRemote(it, rootPath, FolderMan::instance()->ignoreHiddenFiles(), ItemTypeDirectory)
+                           || job->vaults().contains(it);
                    }),
         list.end());
-
 
     QStringList relativeList;
     relativeList.reserve(list.size());
@@ -296,7 +300,11 @@ void SelectiveSyncWidget::slotItemExpanded(QTreeWidgetItem *item)
         return;
     }
     PropfindJob *job = new PropfindJob(_account, davUrl(), Utility::concatUrlPathItems({_folderPath, dir}), PropfindJob::Depth::One, this);
-    job->setProperties({QByteArrayLiteral("resourcetype"), QByteArrayLiteral("http://owncloud.org/ns:size")});
+    job->setProperties({
+        QByteArrayLiteral("resourcetype"), //
+        QByteArrayLiteral("http://owncloud.org/ns:size"), //
+        QByteArrayLiteral("ocrclone:integrity-id"), // vault files
+    });
     connect(job, &PropfindJob::directoryListingSubfolders, this, &SelectiveSyncWidget::slotUpdateDirectories);
     job->start();
 }
