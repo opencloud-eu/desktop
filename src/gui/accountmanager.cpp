@@ -25,7 +25,6 @@
 #include "gui/navigationpanehelper.h"
 #endif
 
-#include <QSettings>
 
 using namespace Qt::Literals::StringLiterals;
 
@@ -167,7 +166,9 @@ void AccountManager::save()
     }
     settings.endArray();
 
-    qCInfo(lcAccountManager) << u"Saved all account settings";
+    if (settings.syncAndLog()) {
+        qCInfo(lcAccountManager) << u"Saved all account settings to" << settings.fileName();
+    }
 }
 
 QStringList AccountManager::accountNames() const

@@ -22,6 +22,7 @@
 #include <QUuid>
 
 namespace OCC {
+class Settings;
 
 
 /**
@@ -43,10 +44,10 @@ public:
     Vfs::Mode virtualFilesMode = Vfs::Mode::Off;
 
     /// Saves the folder definition into the current settings.
-    static void save(QSettings &settings, const FolderDefinition &folder);
+    static void save(Settings &settings, const FolderDefinition &folder);
 
     /// Reads a folder definition from the current settings.
-    static FolderDefinition load(QSettings &settings);
+    static FolderDefinition load(Settings &settings);
 
     /// Ensure / as separator and trailing /.
     void setLocalPath(const QString &path);

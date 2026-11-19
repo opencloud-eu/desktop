@@ -31,7 +31,6 @@
 #include <QHeaderView>
 #include <QLoggingCategory>
 #include <QOperatingSystemVersion>
-#include <QSettings>
 #include <QStandardPaths>
 
 #include <chrono>
@@ -104,8 +103,7 @@ QString excludeFileNameC()
 QString ConfigFile::_confDir = QString();
 const std::chrono::seconds DefaultRemotePollInterval { 30 };
 
-static chrono::milliseconds millisecondsValue(const QSettings &setting, const QString &key,
-    chrono::milliseconds defaultValue)
+static chrono::milliseconds millisecondsValue(const Settings &setting, const QString &key, chrono::milliseconds defaultValue)
 {
     return chrono::milliseconds(setting.value(key, qlonglong(defaultValue.count())).toLongLong());
 }
@@ -253,14 +251,14 @@ QString ConfigFile::configFile()
     return u"%1%2.cfg"_s.arg(configPath(), Resources::JsonTheme::instance().applicationName().toLower());
 }
 
-QSettings ConfigFile::makeQSettings()
+Settings ConfigFile::makeQSettings()
 {
     return {configFile(), QSettings::IniFormat};
 }
 
-std::unique_ptr<QSettings> ConfigFile::makeQSettingsPointer()
+std::unique_ptr<Settings> ConfigFile::makeQSettingsPointer()
 {
-    return std::unique_ptr<QSettings>(new QSettings(makeQSettings()));
+    return std::make_unique<Settings>(configFile(), QSettings::IniFormat);
 }
 
 bool ConfigFile::exists()

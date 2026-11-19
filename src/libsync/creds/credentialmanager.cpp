@@ -158,7 +158,7 @@ QStringList CredentialManager::knownKeys(const QString &group) const
  *
  * IMPORTANT: the underlying storage is a std::unique_ptr, so do *NOT* store this reference anywhere!
  */
-QSettings &CredentialManager::credentialsList() const
+Settings &CredentialManager::credentialsList() const
 {
     // delayed init as scope requires a fully inizialised acc
     if (!_credentialsList) {

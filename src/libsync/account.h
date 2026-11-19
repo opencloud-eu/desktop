@@ -40,7 +40,6 @@
 #include <QUuid>
 #include <QtQmlIntegration/QtQmlIntegration>
 
-class QSettings;
 class QNetworkReply;
 class QUrl;
 class AccessManager;

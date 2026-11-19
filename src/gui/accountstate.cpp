@@ -24,6 +24,7 @@
 
 #include "libsync/creds/abstractcredentials.h"
 #include "libsync/creds/httpcredentials.h"
+#include "libsync/settings.h"
 
 #include "gui/folderman.h"
 #include "gui/fonticonmessagebox.h"
@@ -37,7 +38,6 @@
 
 #include <QMessageBox>
 #include <QRandomGenerator>
-#include <QSettings>
 #include <QTimer>
 
 using namespace std::chrono;
@@ -186,7 +186,7 @@ AccountState::AccountState(AccountPtr account)
 
 AccountState::~AccountState() { }
 
-std::unique_ptr<AccountState> AccountState::loadFromSettings(AccountPtr account, const QSettings &settings)
+std::unique_ptr<AccountState> AccountState::loadFromSettings(AccountPtr account, const Settings &settings)
 {
     auto accountState = std::unique_ptr<AccountState>(new AccountState(account));
     const bool userExplicitlySignedOut = settings.value(userExplicitlySignedOutC(), false).toBool();
@@ -202,7 +202,7 @@ std::unique_ptr<AccountState> AccountState::fromNewAccount(AccountPtr account)
     return std::unique_ptr<AccountState>(new AccountState(account));
 }
 
-void AccountState::writeToSettings(QSettings &settings) const
+void AccountState::writeToSettings(Settings &settings) const
 {
     // The SignedOut state is the only state where the client should *not* ask for credentials, nor
     // try to connect to the server. All other states should transition to Connected by either

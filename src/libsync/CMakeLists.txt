@@ -21,6 +21,7 @@ add_library(libsync SHARED
     accessmanager.cpp
     configfile.cpp
     globalconfig.cpp
+    settings.cpp
     abstractnetworkjob.cpp
     networkjobs.cpp
     owncloudpropagator.cpp
