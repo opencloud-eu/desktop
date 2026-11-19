@@ -21,6 +21,7 @@
 
 ### 🐛 Bug Fixes
 
+- Don't show .vault folders in the selective sync widget [[#1264](https://github.com/opencloud-eu/desktop/pull/1264)]
 - Fix selective syncing of previously unsynced folders [[#1270](https://github.com/opencloud-eu/desktop/pull/1270)]
 - Load web URL for newly added spaces [[#1267](https://github.com/opencloud-eu/desktop/pull/1267)]
 - Don't drop changes that failed with Message [[#1250](https://github.com/opencloud-eu/desktop/pull/1250)]
