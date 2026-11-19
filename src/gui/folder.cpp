@@ -99,19 +99,19 @@ Folder::Folder(const FolderDefinition &definition, const AccountStatePtr &accoun
 
         connect(_accountState.data(), &AccountState::isConnectedChanged, this, &Folder::canSyncChanged);
 
-        auto *context = new QObject(this);
-        // once we successfully retrieved the private link we can delete the context to disconnect the signal
-        connect(_accountState->account().data(), &Account::capabilitiesChanged, context, [context, this] {
+        auto setWebUrl = [this] {
             if (_accountState->account()->capabilities().privateLinkPropertyAvailable()) {
-                fetchPrivateLinkUrl(_accountState->account(), webDavUrl(), {}, this, [context, this](const QUrl &privateLinkUrl) {
-                    _webUrl = privateLinkUrl;
-                    Q_EMIT webUrlChanged();
-                    context->deleteLater();
+                fetchPrivateLinkUrl(_accountState->account(), webDavUrl(), {}, this, [this](const QUrl &privateLinkUrl) {
+                    if (_webUrl != privateLinkUrl) {
+                        _webUrl = privateLinkUrl;
+                        Q_EMIT webUrlChanged();
+                    }
                 });
-            } else {
-                context->deleteLater();
             }
-        });
+        };
+
+        setWebUrl();
+        connect(_accountState->account().data(), &Account::capabilitiesChanged, this, setWebUrl);
 
         // use a direct connection, the folder status has to be up to date
         connect(_engine.data(), &SyncEngine::finished, this, &Folder::slotSyncFinished, Qt::DirectConnection);
