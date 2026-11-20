@@ -16,8 +16,8 @@
 #include "accountsettings.h"
 #include "ui_accountsettings.h"
 
-
 #include "account.h"
+#include "clientcertificatedialog.h"
 #include "accountmanager.h"
 #include "accountstate.h"
 #include "application.h"
@@ -488,6 +488,12 @@ QChar AccountSettings::accountStateIconGlype()
 const QSet<Notification> &AccountSettings::notifications() const
 {
     return _notifications;
+}
+
+void AccountSettings::slotConfigureClientCertificate()
+{
+    auto *dialog = new ClientCertificateDialog(_accountState->account(), this);
+    addModalLegacyDialog(dialog, ModalWidgetSizePolicy::Minimum);
 }
 
 void AccountSettings::slotDeleteAccount()
