@@ -415,15 +415,7 @@ Feature: Syncing files
         Then the following folders should be displayed in the selective sync wizard:
             | folder         |
             | notvault.vault |
-        # Issue: https://github.com/opencloud-eu/desktop/issues/1205
-        # Vault folders are also listed in the selective sync table
-        # TODO: uncomment this step and remove the following one.
-        #
-        # But the following folders should not be displayed in the selective sync wizard:
-        #     | folder        |
-        #     | parentvault   |
-        #     | secrets.vault |
-        But the following folders should be displayed in the selective sync wizard:
+        But the following folders should not be displayed in the selective sync wizard:
             | folder        |
             | parentvault   |
             | secrets.vault |
