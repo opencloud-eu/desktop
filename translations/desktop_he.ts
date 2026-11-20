@@ -244,47 +244,47 @@ File synchronization desktop utility.</source>
         <translation>תפריט אפשרויות חשבון</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="378"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="380"/>
         <source>Restart sync</source>
         <translation>הפעלת סנכרון מחדש</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="378"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="380"/>
         <source>Force sync now</source>
         <translation>אלץ סנכרון כעת</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="386"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="388"/>
         <source>Resume sync</source>
         <translation>חידוש סנכרון</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="386"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="388"/>
         <source>Pause sync</source>
         <translation>השהיית סנכרון</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="394"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="396"/>
         <source>Choose what to sync</source>
         <translation>בחר מה לסנכרן</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="402"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="404"/>
         <source>Remove Space</source>
         <translation>הסרת מרחב</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="410"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="412"/>
         <source>Sync options menu</source>
         <translation>תפריט אפשרויות סנכרון</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="422"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="424"/>
         <source>Add Space</source>
         <translation>הוספת מרחב</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="442"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="444"/>
         <source>You are synchronizing %1 out of %2 Spaces</source>
         <translation>הנך מסנכרן %1 מתוך %2 מרחבים</translation>
     </message>
@@ -590,8 +590,8 @@ File synchronization desktop utility.</source>
         <translation>חיבורי סנכרון</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="204"/>
-        <location filename="../src/gui/accountsettings.cpp" line="502"/>
+        <location filename="../src/gui/accountsettings.cpp" line="205"/>
+        <location filename="../src/gui/accountsettings.cpp" line="503"/>
         <source>Cancel</source>
         <translation>ביטול</translation>
     </message>
@@ -601,102 +601,102 @@ File synchronization desktop utility.</source>
         <translation>בחר מה לסנכרן</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="197"/>
+        <location filename="../src/gui/accountsettings.cpp" line="198"/>
         <source>Confirm removal of Space</source>
         <translation>אישור הסרת מרחב</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="198"/>
+        <location filename="../src/gui/accountsettings.cpp" line="199"/>
         <source>&lt;p&gt;Do you really want to stop syncing the Space »%1«?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; This will &lt;b&gt;not&lt;/b&gt; delete any files.&lt;/p&gt;</source>
         <translation>&lt;p&gt;האם אתה בטוח שברצונך להפסיק לסנכרן את המרחב »%1«?&lt;/p&gt;&lt;p&gt;&lt;b&gt;הערה:&lt;/b&gt; פעולה זו &lt;b&gt;לא&lt;/b&gt; תמחק קבצים כלשהם.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="203"/>
+        <location filename="../src/gui/accountsettings.cpp" line="204"/>
         <source>Remove Space</source>
         <translation>הסרת מרחב</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="240"/>
+        <location filename="../src/gui/accountsettings.cpp" line="241"/>
         <source>Sync Running</source>
         <translation>סנכרון פעיל</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="240"/>
+        <location filename="../src/gui/accountsettings.cpp" line="241"/>
         <source>The sync operation is running.&lt;br/&gt;Do you want to stop it?</source>
         <translation>פעולת הסנכרון פועלת.&lt;br/&gt;האם ברצונך להפסיק אותה?</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="263"/>
+        <location filename="../src/gui/accountsettings.cpp" line="264"/>
         <source>Sync paused by user</source>
         <translation>הסנכרון הושהה על ידי המשתמש</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="272"/>
+        <location filename="../src/gui/accountsettings.cpp" line="273"/>
         <source>Internet connection is metered</source>
         <translation>חיבור האינטרנט מדוד</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="273"/>
+        <location filename="../src/gui/accountsettings.cpp" line="274"/>
         <source>Synchronization is paused because the Internet connection is a metered connection&lt;p&gt;Do you really want to force a Synchronization now?</source>
         <translation>הסנכרון מושהה מכיוון שחיבור האינטרנט הוא חיבור מדוד&lt;p&gt;האם אתה בטוח שברצונך לאלץ סנכרון כעת?</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="296"/>
+        <location filename="../src/gui/accountsettings.cpp" line="297"/>
         <source>User triggered force sync</source>
         <translation>המשתמש הפעיל סנכרון מאולץ</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="320"/>
+        <location filename="../src/gui/accountsettings.cpp" line="321"/>
         <source>Mark as read</source>
         <translation>סמן כנקרא</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="355"/>
+        <location filename="../src/gui/accountsettings.cpp" line="356"/>
         <source>Connected</source>
         <translation>מחובר</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="363"/>
+        <location filename="../src/gui/accountsettings.cpp" line="364"/>
         <source>Signed out</source>
         <translation>מנותק</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="367"/>
+        <location filename="../src/gui/accountsettings.cpp" line="368"/>
         <source>Captive portal prevents connections to the server.</source>
         <translation>פורטל שבוי מונע חיבורים לשרת.</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="369"/>
+        <location filename="../src/gui/accountsettings.cpp" line="370"/>
         <source>Sync is paused due to metered internet connection</source>
         <translation>הסנכרון מושהה עקב חיבור אינטרנט מדוד</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="371"/>
+        <location filename="../src/gui/accountsettings.cpp" line="372"/>
         <source>Connecting...</source>
         <translation>מתחבר...</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="375"/>
+        <location filename="../src/gui/accountsettings.cpp" line="376"/>
         <source>Disconnected</source>
         <translation>מנותק</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="496"/>
+        <location filename="../src/gui/accountsettings.cpp" line="497"/>
         <source>Confirm Account Removal</source>
         <translation>אישור הסרת חשבון</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="497"/>
+        <location filename="../src/gui/accountsettings.cpp" line="498"/>
         <source>&lt;p&gt;Do you really want to remove the connection to the account %1«?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; This will &lt;b&gt;not&lt;/b&gt; delete any files.&lt;/p&gt;</source>
         <translation>&lt;p&gt;האם אתה בטוח שברצונך להסיר את החיבור לחשבון %1«?&lt;/p&gt;&lt;p&gt;&lt;b&gt;הערה:&lt;/b&gt; פעולה זו &lt;b&gt;לא&lt;/b&gt; תמחק קבצים כלשהם.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="501"/>
+        <location filename="../src/gui/accountsettings.cpp" line="502"/>
         <source>Remove connection</source>
         <translation>הסרת חיבור</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="352"/>
+        <location filename="../src/gui/accountsettings.cpp" line="353"/>
         <source>The server version %1 is unsupported! Proceed at your own risk.</source>
         <translation>גרסת השרת %1 אינה נתמכת! המשך על אחריותך בלבד.</translation>
     </message>
@@ -2380,13 +2380,13 @@ Note that using any logging command line options will override the settings.</so
         <translation>גודל</translation>
     </message>
     <message>
-        <location filename="../src/gui/selectivesyncwidget.cpp" line="109"/>
-        <location filename="../src/gui/selectivesyncwidget.cpp" line="244"/>
+        <location filename="../src/gui/selectivesyncwidget.cpp" line="113"/>
+        <location filename="../src/gui/selectivesyncwidget.cpp" line="248"/>
         <source>Currently there are no subfolders on the server.</source>
         <translation>כרגע אין תיקיות משנה בשרת.</translation>
     </message>
     <message>
-        <location filename="../src/gui/selectivesyncwidget.cpp" line="111"/>
+        <location filename="../src/gui/selectivesyncwidget.cpp" line="115"/>
         <source>An error occurred while loading the list of subfolders.</source>
         <translation>אירעה שגיאה בעת טעינת רשימת תיקיות המשנה.</translation>
     </message>

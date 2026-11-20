@@ -244,47 +244,47 @@ Utilitaire de bureau pour la synchronisation de fichiers.</translation>
         <translation>Menu des options de compte</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="378"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="380"/>
         <source>Restart sync</source>
         <translation>Redémarrer la synchronisation</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="378"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="380"/>
         <source>Force sync now</source>
         <translation>Forcer la synchronisation maintenant</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="386"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="388"/>
         <source>Resume sync</source>
         <translation>Reprendre la synchronisation</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="386"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="388"/>
         <source>Pause sync</source>
         <translation>Suspendre la synchronisation</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="394"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="396"/>
         <source>Choose what to sync</source>
         <translation>Choisissez ce que vous souhaitez synchroniser</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="402"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="404"/>
         <source>Remove Space</source>
         <translation>Supprimer l&apos;Espace</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="410"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="412"/>
         <source>Sync options menu</source>
         <translation>Menu des options de synchronisation</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="422"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="424"/>
         <source>Add Space</source>
         <translation>Ajouter un Espace</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="442"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="444"/>
         <source>You are synchronizing %1 out of %2 Spaces</source>
         <translation>Vous synchronisez %1 sur %2 Espaces</translation>
     </message>
@@ -590,8 +590,8 @@ Utilitaire de bureau pour la synchronisation de fichiers.</translation>
         <translation>Synchroniser les connexions</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="204"/>
-        <location filename="../src/gui/accountsettings.cpp" line="502"/>
+        <location filename="../src/gui/accountsettings.cpp" line="205"/>
+        <location filename="../src/gui/accountsettings.cpp" line="503"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
@@ -601,102 +601,102 @@ Utilitaire de bureau pour la synchronisation de fichiers.</translation>
         <translation>Choisissez ce que vous souhaitez synchroniser</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="197"/>
+        <location filename="../src/gui/accountsettings.cpp" line="198"/>
         <source>Confirm removal of Space</source>
         <translation>Confirmer la suppression de l&apos;Espace</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="198"/>
+        <location filename="../src/gui/accountsettings.cpp" line="199"/>
         <source>&lt;p&gt;Do you really want to stop syncing the Space »%1«?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; This will &lt;b&gt;not&lt;/b&gt; delete any files.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Voulez-vous vraiment arrêter la synchronisation de l&apos;Espace « %1 »?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Note :&lt;/b&gt; Cette opération &lt;b&gt;ne&lt;/b&gt; supprime aucun fichier.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="203"/>
+        <location filename="../src/gui/accountsettings.cpp" line="204"/>
         <source>Remove Space</source>
         <translation>Supprimer l&apos;Espace</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="240"/>
+        <location filename="../src/gui/accountsettings.cpp" line="241"/>
         <source>Sync Running</source>
         <translation>Synchronisation en cours d&apos;exécution</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="240"/>
+        <location filename="../src/gui/accountsettings.cpp" line="241"/>
         <source>The sync operation is running.&lt;br/&gt;Do you want to stop it?</source>
         <translation>L&apos;opération de synchronisation est en cours.&lt;br/&gt;Voulez-vous l&apos;arrêter ?</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="263"/>
+        <location filename="../src/gui/accountsettings.cpp" line="264"/>
         <source>Sync paused by user</source>
         <translation>Synchronisation suspendue par l&apos;utilisateur</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="272"/>
+        <location filename="../src/gui/accountsettings.cpp" line="273"/>
         <source>Internet connection is metered</source>
         <translation>La connexion Internet est mesurée</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="273"/>
+        <location filename="../src/gui/accountsettings.cpp" line="274"/>
         <source>Synchronization is paused because the Internet connection is a metered connection&lt;p&gt;Do you really want to force a Synchronization now?</source>
         <translation>La synchronisation est interrompue parce que la connexion Internet est une connexion payante&lt;p&gt;Voulez-vous vraiment forcer une synchronisation maintenant ?</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="296"/>
+        <location filename="../src/gui/accountsettings.cpp" line="297"/>
         <source>User triggered force sync</source>
         <translation>Synchronisation forcée par l&apos;utilisateur</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="320"/>
+        <location filename="../src/gui/accountsettings.cpp" line="321"/>
         <source>Mark as read</source>
         <translation>Marquer comme lu</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="355"/>
+        <location filename="../src/gui/accountsettings.cpp" line="356"/>
         <source>Connected</source>
         <translation>Connecté</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="363"/>
+        <location filename="../src/gui/accountsettings.cpp" line="364"/>
         <source>Signed out</source>
         <translation>Déconnecté</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="367"/>
+        <location filename="../src/gui/accountsettings.cpp" line="368"/>
         <source>Captive portal prevents connections to the server.</source>
         <translation>Le portail captif empêche les connexions au serveur.</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="369"/>
+        <location filename="../src/gui/accountsettings.cpp" line="370"/>
         <source>Sync is paused due to metered internet connection</source>
         <translation>La synchronisation est interrompue en raison d&apos;une connexion Internet limitée</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="371"/>
+        <location filename="../src/gui/accountsettings.cpp" line="372"/>
         <source>Connecting...</source>
         <translation>Connexion...</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="375"/>
+        <location filename="../src/gui/accountsettings.cpp" line="376"/>
         <source>Disconnected</source>
         <translation>Déconnecté</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="496"/>
+        <location filename="../src/gui/accountsettings.cpp" line="497"/>
         <source>Confirm Account Removal</source>
         <translation>Confirmer la suppression du compte</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="497"/>
+        <location filename="../src/gui/accountsettings.cpp" line="498"/>
         <source>&lt;p&gt;Do you really want to remove the connection to the account %1«?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; This will &lt;b&gt;not&lt;/b&gt; delete any files.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Voulez-vous vraiment supprimer la connexion au compte « %1 »?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; Cette opération &lt;b&gt;ne&lt;/b&gt; supprimera aucun fichier.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="501"/>
+        <location filename="../src/gui/accountsettings.cpp" line="502"/>
         <source>Remove connection</source>
         <translation>Retirer la connexion</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="352"/>
+        <location filename="../src/gui/accountsettings.cpp" line="353"/>
         <source>The server version %1 is unsupported! Proceed at your own risk.</source>
         <translation>La version du serveur %1 n&apos;est pas prise en charge ! Poursuivez à vos risques et périls.</translation>
     </message>
@@ -2379,13 +2379,13 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
         <translation>Taille</translation>
     </message>
     <message>
-        <location filename="../src/gui/selectivesyncwidget.cpp" line="109"/>
-        <location filename="../src/gui/selectivesyncwidget.cpp" line="244"/>
+        <location filename="../src/gui/selectivesyncwidget.cpp" line="113"/>
+        <location filename="../src/gui/selectivesyncwidget.cpp" line="248"/>
         <source>Currently there are no subfolders on the server.</source>
         <translation>Actuellement, il n&apos;y a pas de sous-dossiers sur le serveur.</translation>
     </message>
     <message>
-        <location filename="../src/gui/selectivesyncwidget.cpp" line="111"/>
+        <location filename="../src/gui/selectivesyncwidget.cpp" line="115"/>
         <source>An error occurred while loading the list of subfolders.</source>
         <translation>Une erreur s&apos;est produite lors du chargement de la liste des sous-dossiers.</translation>
     </message>
