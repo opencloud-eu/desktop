@@ -421,11 +421,7 @@ void ConfigFile::setPauseSyncWhenMetered(bool isChecked)
 
 bool ConfigFile::moveToTrash() const
 {
-    if (Theme::instance()->enableMoveToTrash()) {
-        return getValue(moveToTrashC(), false).toBool();
-    }
-
-    return false;
+    return getValue(moveToTrashC(), false).toBool();
 }
 
 void ConfigFile::setMoveToTrash(bool isChecked)

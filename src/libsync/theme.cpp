@@ -203,11 +203,6 @@ bool Theme::allowDuplicatedFolderSyncPair() const
     return true;
 }
 
-bool Theme::enableMoveToTrash() const
-{
-    return true;
-}
-
 bool Theme::withCrashReporter() const
 {
     return false;
