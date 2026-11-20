@@ -244,47 +244,47 @@ Verktyg för filsynkronisering på skrivbordet.</translation>
         <translation>Kontoalternativ Meny</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="378"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="380"/>
         <source>Restart sync</source>
         <translation>Starta om synkroniseringen</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="378"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="380"/>
         <source>Force sync now</source>
         <translation>Tvinga synkronisering nu</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="386"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="388"/>
         <source>Resume sync</source>
         <translation>Synkronisera CV</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="386"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="388"/>
         <source>Pause sync</source>
         <translation>Pausa synkronisering</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="394"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="396"/>
         <source>Choose what to sync</source>
         <translation>Välj vad du vill synkronisera</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="402"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="404"/>
         <source>Remove Space</source>
         <translation>Ta bort arbetsyta</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="410"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="412"/>
         <source>Sync options menu</source>
         <translation>Synkroniseringsalternativ-menyn</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="422"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="424"/>
         <source>Add Space</source>
         <translation>Lägg till arbetsyta</translation>
     </message>
     <message>
-        <location filename="../src/gui/qml/FolderDelegate.qml" line="442"/>
+        <location filename="../src/gui/qml/FolderDelegate.qml" line="444"/>
         <source>You are synchronizing %1 out of %2 Spaces</source>
         <translation>Du synkroniserar %1 av %2 arbetsytor</translation>
     </message>
@@ -590,8 +590,8 @@ Verktyg för filsynkronisering på skrivbordet.</translation>
         <translation>Synkronisera anslutningar</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="204"/>
-        <location filename="../src/gui/accountsettings.cpp" line="502"/>
+        <location filename="../src/gui/accountsettings.cpp" line="205"/>
+        <location filename="../src/gui/accountsettings.cpp" line="503"/>
         <source>Cancel</source>
         <translation>Avbryt</translation>
     </message>
@@ -601,102 +601,102 @@ Verktyg för filsynkronisering på skrivbordet.</translation>
         <translation>Välj vad du vill synkronisera</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="197"/>
+        <location filename="../src/gui/accountsettings.cpp" line="198"/>
         <source>Confirm removal of Space</source>
         <translation>Bekräfta borttagning av Space</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="198"/>
+        <location filename="../src/gui/accountsettings.cpp" line="199"/>
         <source>&lt;p&gt;Do you really want to stop syncing the Space »%1«?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; This will &lt;b&gt;not&lt;/b&gt; delete any files.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Vill du verkligen sluta synkronisera arbetsytan »%1«?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Observera!&lt;/b&gt; Detta raderar &lt;b&gt;inga&lt;/b&gt; filer.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="203"/>
+        <location filename="../src/gui/accountsettings.cpp" line="204"/>
         <source>Remove Space</source>
         <translation>Ta bort arbetsyta</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="240"/>
+        <location filename="../src/gui/accountsettings.cpp" line="241"/>
         <source>Sync Running</source>
         <translation>Synkronisera körning</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="240"/>
+        <location filename="../src/gui/accountsettings.cpp" line="241"/>
         <source>The sync operation is running.&lt;br/&gt;Do you want to stop it?</source>
         <translation>Synkroniseringen pågår.&lt;br/&gt;Vill du avbryta den?</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="263"/>
+        <location filename="../src/gui/accountsettings.cpp" line="264"/>
         <source>Sync paused by user</source>
         <translation>Synkronisering pausad av användaren</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="272"/>
+        <location filename="../src/gui/accountsettings.cpp" line="273"/>
         <source>Internet connection is metered</source>
         <translation>Internetanslutningen är mätbar</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="273"/>
+        <location filename="../src/gui/accountsettings.cpp" line="274"/>
         <source>Synchronization is paused because the Internet connection is a metered connection&lt;p&gt;Do you really want to force a Synchronization now?</source>
         <translation>Synkroniseringen är pausad eftersom internetanslutningen är en mätbar anslutning&lt;p&gt;Vill du verkligen tvinga fram en synkronisering nu?</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="296"/>
+        <location filename="../src/gui/accountsettings.cpp" line="297"/>
         <source>User triggered force sync</source>
         <translation>Användaraktiverad tvångssynkronisering</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="320"/>
+        <location filename="../src/gui/accountsettings.cpp" line="321"/>
         <source>Mark as read</source>
         <translation>Markera alla som lästa</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="355"/>
+        <location filename="../src/gui/accountsettings.cpp" line="356"/>
         <source>Connected</source>
         <translation>Ansluten</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="363"/>
+        <location filename="../src/gui/accountsettings.cpp" line="364"/>
         <source>Signed out</source>
         <translation>Utloggad</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="367"/>
+        <location filename="../src/gui/accountsettings.cpp" line="368"/>
         <source>Captive portal prevents connections to the server.</source>
         <translation>Captive portal förhindrar anslutningar till servern.</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="369"/>
+        <location filename="../src/gui/accountsettings.cpp" line="370"/>
         <source>Sync is paused due to metered internet connection</source>
         <translation>Synkroniseringen är pausad på grund av begränsad internetanslutning</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="371"/>
+        <location filename="../src/gui/accountsettings.cpp" line="372"/>
         <source>Connecting...</source>
         <translation>Ansluter...</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="375"/>
+        <location filename="../src/gui/accountsettings.cpp" line="376"/>
         <source>Disconnected</source>
         <translation>Frånkopplad</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="496"/>
+        <location filename="../src/gui/accountsettings.cpp" line="497"/>
         <source>Confirm Account Removal</source>
         <translation>Bekräfta borttagning av konto</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="497"/>
+        <location filename="../src/gui/accountsettings.cpp" line="498"/>
         <source>&lt;p&gt;Do you really want to remove the connection to the account %1«?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; This will &lt;b&gt;not&lt;/b&gt; delete any files.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Vill du verkligen ta bort kopplingen till kontot %1«?&lt;/p&gt;&lt;p&gt;&lt;b&gt;Obs!&lt;/b&gt; Detta raderar &lt;b&gt;inga&lt;/b&gt; filer.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="501"/>
+        <location filename="../src/gui/accountsettings.cpp" line="502"/>
         <source>Remove connection</source>
         <translation>Ta bort anslutning</translation>
     </message>
     <message>
-        <location filename="../src/gui/accountsettings.cpp" line="352"/>
+        <location filename="../src/gui/accountsettings.cpp" line="353"/>
         <source>The server version %1 is unsupported! Proceed at your own risk.</source>
         <translation>Serverversionen %1 stöds inte! Fortsätt på egen risk.</translation>
     </message>
@@ -2380,13 +2380,13 @@ Observera att användning av kommandoradsalternativ för loggning åsidosätter 
         <translation>Storlek</translation>
     </message>
     <message>
-        <location filename="../src/gui/selectivesyncwidget.cpp" line="109"/>
-        <location filename="../src/gui/selectivesyncwidget.cpp" line="244"/>
+        <location filename="../src/gui/selectivesyncwidget.cpp" line="113"/>
+        <location filename="../src/gui/selectivesyncwidget.cpp" line="248"/>
         <source>Currently there are no subfolders on the server.</source>
         <translation>För närvarande finns det inga undermappar på servern.</translation>
     </message>
     <message>
-        <location filename="../src/gui/selectivesyncwidget.cpp" line="111"/>
+        <location filename="../src/gui/selectivesyncwidget.cpp" line="115"/>
         <source>An error occurred while loading the list of subfolders.</source>
         <translation>Ett fel uppstod vid laddningen av listan över undermappar.</translation>
     </message>
