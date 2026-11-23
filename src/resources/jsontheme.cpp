@@ -523,10 +523,6 @@ QIcon JsonTheme::sysTrayIcon(const SysTrayIconType type, const SysTrayIconStyle 
     }
 
     if (!ret.isNull()) {
-        if (style == SysTrayIconStyle::Mask) {
-            ret.setIsMask(true);
-        }
-
         return ret;
     }
 
@@ -534,5 +530,11 @@ QIcon JsonTheme::sysTrayIcon(const SysTrayIconType type, const SysTrayIconStyle 
     QString fileName = sysTrayTypeToString(type);
     QString themeName = sysTrayStyleToString(style);
 
-    return Resources::loadIcon(themeName, fileName);
+    ret = Resources::loadIcon(themeName, fileName);
+
+    if (style == SysTrayIconStyle::Mask) {
+        ret.setIsMask(true);
+    }
+
+    return ret;
 }
