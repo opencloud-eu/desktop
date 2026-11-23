@@ -28,10 +28,10 @@
 - Return std::optional from Utility::stringToEnum [[#1249](https://github.com/opencloud-eu/desktop/pull/1249)]
 - Re-enable share status indicator in shell extension overlay [[#1236](https://github.com/opencloud-eu/desktop/pull/1236)]
 - Don't leak properties from non-200 propstat into the next response [[#1251](https://github.com/opencloud-eu/desktop/pull/1251)]
-- Fix mem leak in JobnQueue [[#1243](https://github.com/opencloud-eu/desktop/pull/1243)]
+- Fix mem leak in JobQueue [[#1243](https://github.com/opencloud-eu/desktop/pull/1243)]
 - Discovery: Don't treat replaced virtual files as placeholders [[#1232](https://github.com/opencloud-eu/desktop/pull/1232)]
 - Fix WITH_HTTP2=OFF, the value was not applied [[#1222](https://github.com/opencloud-eu/desktop/pull/1222)]
-- Ci: import qt backport for fotconfig crash [[#1189](https://github.com/opencloud-eu/desktop/pull/1189)]
+- Ci: import qt backport for fontconfig crash [[#1189](https://github.com/opencloud-eu/desktop/pull/1189)]
 - Mirror layout for RTL languages [[#1180](https://github.com/opencloud-eu/desktop/pull/1180)]
 - Fix broken scrollbar in SpacesView [[#1186](https://github.com/opencloud-eu/desktop/pull/1186)]
 - Fix incorrect parsing of translation strings [[#1168](https://github.com/opencloud-eu/desktop/pull/1168)]
@@ -48,20 +48,20 @@
 - Close all handles of FolderWatcher [[#1107](https://github.com/opencloud-eu/desktop/pull/1107)]
 - Backport fix for systray crash in macOS 27 [[#1109](https://github.com/opencloud-eu/desktop/pull/1109)]
 - Cfapi::updatePlaceholderState only update meta data if file is virtual [[#1103](https://github.com/opencloud-eu/desktop/pull/1103)]
-- Fix endless loop in wizard od failed auth [[#1090](https://github.com/opencloud-eu/desktop/pull/1090)]
+- Fix endless loop in wizard on failed auth [[#1090](https://github.com/opencloud-eu/desktop/pull/1090)]
 - Display logout button if reauthentication failed [[#1089](https://github.com/opencloud-eu/desktop/pull/1089)]
 - Fix check for OAuth::PromptValuesSupported [[#1091](https://github.com/opencloud-eu/desktop/pull/1091)]
 
 ### 📈 Enhancement
 
-- make cfapi registration more resiliant [[#1213](https://github.com/opencloud-eu/desktop/pull/1213)]
+- make cfapi registration more resilient [[#1213](https://github.com/opencloud-eu/desktop/pull/1213)]
 - Remove mac os opt out from liquid glass [[#1171](https://github.com/opencloud-eu/desktop/pull/1171)]
 - Improve keyboard navigation in context menus [[#1155](https://github.com/opencloud-eu/desktop/pull/1155)]
 - Reduce number of possible stats in LocalInfo [[#1123](https://github.com/opencloud-eu/desktop/pull/1123)]
 - Cfapi: Reuse created handles [[#1104](https://github.com/opencloud-eu/desktop/pull/1104)]
 - Update system info string format in theme.cpp [[#1076](https://github.com/opencloud-eu/desktop/pull/1076)]
 - Fallback to consent if prompt_values_supported is not exposed [[#1092](https://github.com/opencloud-eu/desktop/pull/1092)]
-- clanup and make errors translatable [[#1083](https://github.com/opencloud-eu/desktop/pull/1083)]
+- cleanup and make errors translatable [[#1083](https://github.com/opencloud-eu/desktop/pull/1083)]
 
 ### 📦️ Dependencies
 
