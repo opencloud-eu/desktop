@@ -67,12 +67,18 @@ public:
     void setFilter(const StatusSet &newFilter, bool save = true)
     {
         if (_filter != newFilter) {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
             beginFilterChange();
+#endif
             _filter = newFilter;
             if (save) {
                 saveFilter();
             }
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
             endFilterChange(QSortFilterProxyModel::Direction::Rows);
+#else
+            invalidateFilter();
+#endif
             Q_EMIT filterChanged();
         }
     }
