@@ -13,7 +13,6 @@
  */
 
 #include <QMessageBox>
-#include <QSettings>
 #include <QTimer>
 #include <appimage/update.h>
 #include <chrono>

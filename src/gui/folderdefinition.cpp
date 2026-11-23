@@ -14,8 +14,9 @@
 
 #include "folderdefinition.h"
 
+#include "libsync/settings.h"
+
 #include <QDir>
-#include <QSettings>
 
 using namespace OCC;
 
@@ -73,7 +74,7 @@ uint32_t FolderDefinition::priority() const
     return _priority;
 }
 
-void FolderDefinition::save(QSettings &settings, const FolderDefinition &folder)
+void FolderDefinition::save(Settings &settings, const FolderDefinition &folder)
 {
     settings.setValue("accountUUID", folder.accountUUID());
     settings.setValue("localPath", folder.localPath());
@@ -89,7 +90,7 @@ void FolderDefinition::save(QSettings &settings, const FolderDefinition &folder)
     settings.setValue("virtualFilesMode", Utility::enumToString(folder.virtualFilesMode));
 }
 
-FolderDefinition FolderDefinition::load(QSettings &settings)
+FolderDefinition FolderDefinition::load(Settings &settings)
 {
     FolderDefinition folder{settings.value("accountUUID").toUuid(), settings.value(davUrlC()).toUrl(), settings.value(spaceIdC()).toString(),
         settings.value(displayNameC()).toString()};

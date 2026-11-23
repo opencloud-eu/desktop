@@ -5,6 +5,7 @@
 #include "gui/navigationpanehelper.h"
 #include "gui/accountmanager.h"
 #include "gui/accountstate.h"
+#include "libsync/settings.h"
 #include "resources/jsontheme.h"
 
 using namespace OCC;
@@ -20,12 +21,12 @@ void OCC::NavigationPaneHelper::removeLegacyCloudStorageRegistry()
 
     auto removeGroup = [](const QString &key) {
         qCDebug(lcNavPane) << u"Removing" << key;
-        QSettings settings(key, QSettings::NativeFormat);
+        Settings settings(key, QSettings::NativeFormat);
         settings.remove(QString());
     };
 
     const auto groupKey = uR"(HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Desktop\NameSpace)"_s;
-    QSettings explorerNamespaceRegistry(groupKey, QSettings::NativeFormat);
+    Settings explorerNamespaceRegistry(groupKey, QSettings::NativeFormat);
     for (auto &clsi : explorerNamespaceRegistry.childGroups()) {
         const auto key = uR"(%1\%2)"_s.arg(groupKey, clsi);
         if (explorerNamespaceRegistry.value(uR"(%1\ApplicationName)"_s.arg(key)).toString() != Resources::JsonTheme::instance().applicationDisplayName()) {

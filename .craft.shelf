@@ -7,7 +7,7 @@ version = 2026-10-20
 
 [craft/craft-blueprints-kde]
 version = master
-revision = 8b95239b0
+revision = e66eb01d7
 
 [craft/craft-blueprints-opencloud]
 version = main
@@ -15,7 +15,7 @@ revision = 27b123f
 
 [craft/craft-core]
 version = master
-revision = 93195a7e7
+revision = cae7aeac791e170c157eed18bb037e1fad8edf57
 
 [dev-utils/7zip-base]
 version = 26.06
