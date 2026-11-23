@@ -537,7 +537,8 @@ void OAuth::fetchWellKnown()
         webfingerReq.setAttribute(HttpCredentials::DontAddCredentialsAttribute, true);
         webfingerReq.setUrl(Utility::concatUrlPath(_serverUrl, QStringLiteral("/.well-known/webfinger"),
             {
-                {QStringLiteral("resource"), _serverUrl.toString()},
+                // use the ACE (punycode) form, toString() would return internationalized domain names in Unicode
+                {QStringLiteral("resource"), _serverUrl.toString(QUrl::EncodeUnicode)},
                 {QStringLiteral("rel"), QStringLiteral("http://openid.net/specs/connect/1.0/issuer")},
                 {QStringLiteral("platform"), QStringLiteral("desktop")},
             }));
@@ -578,8 +579,9 @@ void OAuth::fetchWellKnown()
             }
 
             // make sure the reported subject matches the requested resource
-            const auto subject = doc.object().value(QStringLiteral("subject"));
-            if (subject != _serverUrl.toString()) {
+            // compare as URLs, the server might return a different but equivalent encoding (e.g. for internationalized domain names)
+            const auto subject = doc.object().value(QStringLiteral("subject")).toString();
+            if (!Utility::urlEqual(QUrl(subject), _serverUrl)) {
                 qCWarning(lcOauth) << u"reply sent for different subject (server):" << subject;
                 handleError(QNetworkReply::NoError, tr("WebFinger response subject did not match the requested resource"));
                 return;
