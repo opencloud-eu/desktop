@@ -464,3 +464,97 @@ jobs:
       with:
         path: ${{ github.workspace }}/msixbundle/*.msixupload
         archive: false
+
+# ------------------------------------------------------------------------------------------------------------------------------------------
+  release:
+    needs: build
+    if: github.ref_type == 'tag' && github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: read
+      pull-requests: read
+
+    defaults:
+      run:
+        shell: bash
+
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      TAG: ${{ github.ref_name }}
+      READY_RELEASE_AUTHOR: openclouders
+
+    steps:
+    - name: Check out release notes templates
+      uses: actions/checkout@v7
+      with:
+        sparse-checkout: |
+          .github/prerelease-notes.md
+          .github/store-badge.md
+        sparse-checkout-cone-mode: false
+
+    - name: Download linux binaries
+      uses: actions/download-artifact@v8
+      with:
+        pattern: linux-*-${{ github.run_number }}
+        path: ${{ runner.temp }}/binaries
+        merge-multiple: true
+
+    - name: Download macos binaries
+      uses: actions/download-artifact@v8
+      with:
+        pattern: macos-*-${{ github.run_number }}
+        path: ${{ runner.temp }}/binaries
+        merge-multiple: true
+
+    - name: Create or complete release
+      working-directory: ${{ runner.temp }}/binaries
+      run: |
+        shopt -s nullglob
+        files=("OpenCloud_Desktop-${TAG}-"*)
+        if [ ${#files[@]} -eq 0 ]; then
+          echo "::error::No release binaries found for ${TAG}"
+          exit 1
+        fi
+        printf '%s\n' "${files[@]}"
+
+        if author=$(gh release view "${TAG}" --json author --jq .author.login 2> /dev/null); then
+          if [ "${author}" != "${READY_RELEASE_AUTHOR}" ]; then
+            echo "::warning::Release ${TAG} was not created by ready-release-go, not touching it"
+            exit 0
+          fi
+          mapfile -t existing < <(gh release view "${TAG}" --json assets --jq '.assets[].name')
+          upload=()
+          for f in "${files[@]}"; do
+            if printf '%s\n' "${existing[@]}" | grep -qxF "${f}"; then
+              echo "::warning::${f} is already attached to ${TAG}, not overwriting it"
+            else
+              upload+=("${f}")
+            fi
+          done
+          if [ ${#upload[@]} -gt 0 ]; then
+            gh release upload "${TAG}" "${upload[@]}"
+          fi
+          body=$(gh release view "${TAG}" --json body --jq .body)
+          if [[ "${body}" != *apps.microsoft.com* ]]; then
+            notes="${RUNNER_TEMP}/notes.md"
+            { cat "${GITHUB_WORKSPACE}/.github/store-badge.md"; printf '%s\n' "${body}"; } > "${notes}"
+            gh release edit "${TAG}" --notes-file "${notes}"
+          fi
+          exit 0
+        fi
+
+        version="${TAG#v}"
+        version="${version%%-*}"
+        notes="${RUNNER_TEMP}/notes.md"
+        : > "${notes}"
+        prerelease=()
+        if [[ "${TAG}" == *-* ]]; then
+          prerelease=(--prerelease --latest=false)
+          cp "${GITHUB_WORKSPACE}/.github/prerelease-notes.md" "${notes}"
+        fi
+        gh pr list --state open --json headRefName,body \
+          --jq ".[] | select(.headRefName | startswith(\"next-release/\")) | select(.body | contains(\"## [${version}]\")) | .body" \
+          | tr -d '\r' | sed -n '/^## \[/,$p' >> "${notes}"
+        gh release create "${TAG}" --verify-tag --draft "${prerelease[@]}" --title "${TAG}" --notes-file "${notes}" "${files[@]}"
