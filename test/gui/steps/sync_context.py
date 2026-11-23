@@ -197,6 +197,11 @@ def step(context, folder_name):
 def step(context, space_name):
     SyncConnectionWizard.sync_space(space_name)
 
+@When('the user syncs the another space "{space_name}"')
+def step(context, space_name):
+    SyncConnectionWizard.open_add_space_wizard()
+    SyncConnectionWizard.sync_space(space_name, set_sync_path=False)
+
 
 @Then('the settings tab should have the following options in the general section:')
 def step(context):

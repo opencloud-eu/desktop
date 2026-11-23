@@ -124,8 +124,17 @@ class SyncConnectionWizard:
             raise AssertionError("Failed to select the space: " + space_name)
 
     @staticmethod
-    def sync_space(space_name):
-        SyncConnectionWizard.set_sync_path(get_current_user_sync_path())
+    def open_add_space_wizard():
+        app().find_element(
+            SyncConnectionWizard.ADD_SPACE_BUTTON.by,
+            SyncConnectionWizard.ADD_SPACE_BUTTON.selector,
+        ).click()
+
+    @staticmethod
+    def sync_space(space_name, set_sync_path=True):
+        if set_sync_path:
+            SyncConnectionWizard.set_sync_path(get_current_user_sync_path())
+
         SyncConnectionWizard.select_space(space_name)
         SyncConnectionWizard.next_step()
         SyncConnectionWizard.add_sync_connection()
