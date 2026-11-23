@@ -124,11 +124,13 @@ public:
 
     std::unique_ptr<AccountBasedOAuth> oauth;
 
+    virtual QUrl serverUrl() const { return sOAuthTestServer; }
+
     virtual std::unique_ptr<AccountBasedOAuth> prepareOauth()
     {
         fakeAm = new FakeAM({}, nullptr);
         account = Account::create(QUuid::createUuid());
-        account->setUrl(sOAuthTestServer);
+        account->setUrl(serverUrl());
         // the account seizes ownership over the qnam in account->setCredentials(...) by keeping a shared pointer on it
         // therefore, we should never call fakeAm->setThis(...)
         account->setCredentials(new FakeCredentials{fakeAm});
@@ -219,8 +221,8 @@ public:
         OC_ASSERT(state == StartState);
         state = StatusPhpState;
         OC_ASSERT(op == QNetworkAccessManager::GetOperation);
-        OC_ASSERT(req.url().toString().startsWith(sOAuthTestServer.toString()));
-        OC_ASSERT(req.url().path() == sOAuthTestServer.path() + QStringLiteral("/status.php"));
+        OC_ASSERT(req.url().toString().startsWith(serverUrl().toString()));
+        OC_ASSERT(req.url().path() == serverUrl().path() + QStringLiteral("/status.php"));
         auto payload = std::make_unique<QBuffer>();
         payload->setData(statusPhpPayload());
         return new FakePostReply(op, req, std::move(payload), fakeAm);
@@ -967,6 +969,49 @@ private Q_SLOTS:
         test.test();
         QCOMPARE(test.refreshErrorSpy->count(), 0);
         QCOMPARE(test.refreshFinishedSpy->count(), 0);
+    }
+
+    void testInternationalizedDomainName()
+    {
+        // QUrl stores hosts with an IDN whitelisted TLD (like .de) in Unicode form, even if they were set in punycode.
+        // The WebFinger resource must use the punycode form, and a subject with an equivalent but
+        // differently encoded host (here: percent-encoded UTF-8) must be accepted.
+        struct Test : OAuthTestCase
+        {
+            QString resource;
+
+            QUrl serverUrl() const override { return QUrl(QStringLiteral("oauthtest://cloud.xn--bcher-kva.de/opencloud")); }
+
+            QNetworkReply *wellKnownWebfingerReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req) override
+            {
+                OC_ASSERT(op == QNetworkAccessManager::GetOperation);
+                resource = QUrlQuery(req.url()).queryItemValue(QStringLiteral("resource"));
+                QJsonDocument jsondata(QJsonObject{
+                    {QStringLiteral("subject"), QStringLiteral("oauthtest://cloud.b%C3%BCcher.de/opencloud")},
+                    {QStringLiteral("links"),
+                        QJsonArray{QJsonObject{
+                            {QStringLiteral("rel"), QStringLiteral("http://openid.net/specs/connect/1.0/issuer")},
+                            {QStringLiteral("href"), QStringLiteral("oauthtest://openidserver")},
+                        }}},
+                });
+                QHttpHeaders headers;
+                headers.append(QHttpHeaders::WellKnownHeader::ContentType, QStringLiteral("application/json"));
+
+                return new FakePayloadReply(op, req, jsondata.toJson(), headers, fakeAm);
+            }
+
+            void test() override
+            {
+                oauth = prepareOauth();
+                QSignalSpy resultSpy(oauth.get(), &OCC::OAuth::result);
+                QSignalSpy authorisationLinkSpy(oauth.get(), &OCC::OAuth::authorisationLinkChanged);
+                oauth->startAuthentication();
+                QVERIFY(authorisationLinkSpy.wait());
+                QCOMPARE(resultSpy.count(), 0);
+                QCOMPARE(resource, QStringLiteral("oauthtest://cloud.xn--bcher-kva.de/opencloud"));
+            }
+        } test;
+        test.test();
     }
 
     void testTransientRefreshDoesNotEmitAuthFailed()
