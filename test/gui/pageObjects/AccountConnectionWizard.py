@@ -152,7 +152,7 @@ class AccountConnectionWizard:
         ).click()
 
         dir_input_selector = AccountConnectionWizard.get_native_directory_path_edit()
-        
+
         dir_location_input = app().find_elements_with_wait(
             dir_input_selector.by,
             dir_input_selector.selector,

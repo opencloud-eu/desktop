@@ -1,6 +1,5 @@
 from urllib.parse import urlparse
-from os import makedirs
-from os.path import exists, join
+from os.path import join
 from PySide6.QtCore import QSettings, QUuid, QUrl, QJsonValue
 from helpers.SpaceHelper import get_space_id, get_personal_space_id
 from helpers.ConfigHelper import get_config, set_config, is_windows
@@ -39,25 +38,21 @@ def get_client_details(table):
             client_details.update({'sync_folder': actual_value})
     return client_details
 
+
 def create_user_sync_path(username):
-    user_sync_path = os.path.normpath(
-        os.path.join(
-            get_config('clientRootSyncPath'),
-            username,
-            ''
-        )
-    )
+    user_sync_path = os.path.normpath(os.path.join(get_config('clientRootSyncPath'), username, ''))
     user_sync_path += os.sep if not user_sync_path.endswith(os.sep) else ''
     os.makedirs(user_sync_path, exist_ok=True)
     set_current_user_sync_path(user_sync_path)
     return user_sync_path
 
+
 def create_space_path(username, space='Personal'):
     user_sync_path = create_user_sync_path(username)
-    space_path = join(user_sync_path, space, '')
-    if not exists(space_path):
-        makedirs(space_path)
+    space_path = os.path.join(user_sync_path, space, '')
+    os.makedirs(space_path, exist_ok=True)
     return space_path
+
 
 def set_current_user_sync_path(sync_path):
     set_config('currentUserSyncPath', sync_path)
@@ -75,6 +70,7 @@ def get_resource_path(resource='', user='', space=''):
         sync_path,
         resource,
     )
+
 
 def get_temp_resource_path(resource_name):
     return join(get_config('test_temp_dir'), resource_name)

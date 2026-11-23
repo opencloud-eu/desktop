@@ -67,7 +67,6 @@ SYNC_PATTERNS = {
     # default sync patterns for the initial sync (after adding account)
     # the pattern can be of TWO types depending on the
     # available resources (files/folders)
-   
     'initial': [
         # when adding account via New Account wizard (Linux)
         [
@@ -79,10 +78,6 @@ SYNC_PATTERNS = {
         [
             SYNC_STATUS['NOP'],
             SYNC_STATUS['UPDATE'],
-        ],
-        # when adding account via New Account wizard (Windows Spaces root)
-        [
-            SYNC_STATUS['REGISTER'],
         ],
         # initial root sync
         [
@@ -230,6 +225,7 @@ def filter_sync_messages(messages):
         start_idx = messages.index('GET_STRINGS:END') + 1
     return messages[start_idx:]
 
+
 def filter_messages_for_item(messages, item):
     filtered_messages = []
     normalized_item = normalize_path(item).rstrip('/').rstrip('\\')
@@ -239,6 +235,7 @@ def filter_messages_for_item(messages, item):
             if msg_path == normalized_item:
                 filtered_messages.append(msg)
     return filtered_messages
+
 
 def listen_sync_status_for_item(item, resource_type='FOLDER'):
     if (resource_type := resource_type.upper()) not in ('FILE', 'FOLDER'):

@@ -36,7 +36,7 @@ def get_config_home_linux():
 
 
 def get_config_home_win():
-    return os.path.join(get_win_user_home(), 'AppData', 'Local', 'Temp', 'opencloudtest', '.config')
+    return os.environ.get('APPDATA', os.path.join(get_win_user_home(), 'AppData', 'Roaming'))
 
 
 def get_config_home():

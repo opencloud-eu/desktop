@@ -1,8 +1,7 @@
 from types import SimpleNamespace
 from appium.webdriver.common.appiumby import AppiumBy as By
 from selenium.common.exceptions import NoSuchElementException, WebDriverException
-from helpers.ConfigHelper import get_config, get_app_env, is_linux, is_windows
-from helpers.ConfigHelper import get_config
+from helpers.ConfigHelper import get_config, is_linux, is_windows
 from helpers.AppHelper import app
 from helpers.Utils import wait_for
 
@@ -19,7 +18,6 @@ class SyncConnection:
         by=By.XPATH, selector="//label[contains(@name, 'permission')]"
     )
 
- 
     @staticmethod
     def get_current_account_connection():
         connections = app().find_elements(
@@ -38,7 +36,7 @@ class SyncConnection:
             if is_active:
                 return connection
         return None
-        
+
     @staticmethod
     def open_menu(sync_folder=None, sync_state="success"):
         if sync_folder is None:
