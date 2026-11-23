@@ -46,7 +46,7 @@ Item {
                 Layout.preferredWidth: normalSize - 20
                 Layout.alignment: Qt.AlignTop
 
-                color: spaceDelegate.palette.alternateBase
+                color: Application.styleHints.colorScheme === Qt.ColorScheme.Dark ? Qt.lighter(delegatePane.background.color, 1.2) : Qt.darker(delegatePane.background.color, 1.1)
 
                 Image {
                     id: image
