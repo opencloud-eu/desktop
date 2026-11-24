@@ -882,147 +882,147 @@ A frissítés a háttérben fut, és felülírja az aktuális AppImage fájlt. A
 <context>
     <name>OCC::Folder</name>
     <message>
-        <location filename="../src/gui/folder.cpp" line="163"/>
+        <location filename="../src/gui/folder.cpp" line="162"/>
         <source>The path »%1« is too long. Please enable long paths in the Windows settings or choose a different folder.</source>
         <translation>A(z) »%1« elérési út túl hosszú. Engedélyezze a hosszú elérési utakat a Windows beállításokban, vagy válasszon másik mappát.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="213"/>
+        <location filename="../src/gui/folder.cpp" line="212"/>
         <source>Failed to open the database for »%1«.</source>
         <translation>Nem sikerült megnyitni az adatbázist a(z) »%1« számára.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="191"/>
+        <location filename="../src/gui/folder.cpp" line="190"/>
         <source>Local folder »%1« does not exist.</source>
         <translation>A(z) »%1« helyi mappa nem létezik.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="95"/>
-        <location filename="../src/gui/folder.cpp" line="794"/>
+        <location filename="../src/gui/folder.cpp" line="94"/>
+        <location filename="../src/gui/folder.cpp" line="793"/>
         <source>Failed to load excludes</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="219"/>
+        <location filename="../src/gui/folder.cpp" line="218"/>
         <source>»%1« should be a folder but is not.</source>
         <translation>A(z) »%1« mappának kellene lennie, de nem az.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="221"/>
+        <location filename="../src/gui/folder.cpp" line="220"/>
         <source>»%1« is not readable.</source>
         <translation>A(z) »%1« nem olvasható.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="223"/>
+        <location filename="../src/gui/folder.cpp" line="222"/>
         <source>»%1« is not writable.</source>
         <translation>A(z) »%1« nem írható.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="434"/>
+        <location filename="../src/gui/folder.cpp" line="433"/>
         <source>»%1« and %n other file(s) have been removed.</source>
         <translation><numerusform>»%1« és %n másik fájl el lett távolítva.</numerusform><numerusform>»%1« és %n másik fájl el lett távolítva.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="436"/>
+        <location filename="../src/gui/folder.cpp" line="435"/>
         <source>»%1« has been removed.</source>
         <comment>%1 names a file.</comment>
         <translation>A(z) »%1« eltávolítva.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="441"/>
+        <location filename="../src/gui/folder.cpp" line="440"/>
         <source>»%1« and %n other file(s) have been added.</source>
         <translation><numerusform>»%1« és %n másik fájl hozzáadva.</numerusform><numerusform>»%1« és %n másik fájl hozzáadva.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="443"/>
+        <location filename="../src/gui/folder.cpp" line="442"/>
         <source>»%1« has been added.</source>
         <comment>%1 names a file.</comment>
         <translation>A(z) »%1« hozzáadva.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="448"/>
+        <location filename="../src/gui/folder.cpp" line="447"/>
         <source>»%1« and %n other file(s) have been updated.</source>
         <translation><numerusform>»%1« és %n másik fájl frissítve.</numerusform><numerusform>»%1« és %n másik fájl frissítve.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="450"/>
+        <location filename="../src/gui/folder.cpp" line="449"/>
         <source>»%1« has been updated.</source>
         <comment>%1 names a file.</comment>
         <translation>A(z) »%1« frissítve.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="455"/>
+        <location filename="../src/gui/folder.cpp" line="454"/>
         <source>»%1« has been renamed to »%2« and %n other file(s) have been renamed.</source>
         <translation><numerusform>»%1« átnevezve »%2«-re és %n másik fájl átnevezve.</numerusform><numerusform>»%1« átnevezve »%2«-re és %n másik fájl átnevezve.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="457"/>
+        <location filename="../src/gui/folder.cpp" line="456"/>
         <source>»%1« has been renamed to »%2«.</source>
         <comment>%1 and %2 name files.</comment>
         <translation>A(z) »%1« átnevezve erre: »%2«.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="462"/>
+        <location filename="../src/gui/folder.cpp" line="461"/>
         <source>»%1« has been moved to »%2« and %n other file(s) have been moved.</source>
         <translation><numerusform>»%1« áthelyezve »%2«-be és %n másik fájl áthelyezve.</numerusform><numerusform>»%1« áthelyezve »%2«-be és %n másik fájl áthelyezve.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="464"/>
+        <location filename="../src/gui/folder.cpp" line="463"/>
         <source>»%1« has been moved to »%2«.</source>
         <translation>A(z) »%1« áthelyezve ide: »%2«.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="469"/>
+        <location filename="../src/gui/folder.cpp" line="468"/>
         <source>»%1« and %n other file(s) have sync conflicts.</source>
         <translation><numerusform>»%1« és %n másik fájlnak szinkronizálási ütközése van.</numerusform><numerusform>»%1« és %n másik fájlnak szinkronizálási ütközése van.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="471"/>
+        <location filename="../src/gui/folder.cpp" line="470"/>
         <source>»%1« has a sync conflict. Please check the conflict file!</source>
         <translation>A(z) »%1« szinkronizálási konfliktusban van. Kérjük ellenőrizze a konfliktus fájlt!</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/gui/folder.cpp" line="476"/>
+        <location filename="../src/gui/folder.cpp" line="475"/>
         <source>»%1« and %n other file(s) could not be synced due to errors. See the log for details.</source>
         <translation><numerusform>»%1« és %n másik fájl nem szinkronizálható hibák miatt. Részletekért tekintse meg a naplót.</numerusform><numerusform>»%1« és %n másik fájl nem szinkronizálható hibák miatt. Részletekért tekintse meg a naplót.</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="478"/>
+        <location filename="../src/gui/folder.cpp" line="477"/>
         <source>»%1« could not be synced due to an error. See the log for details.</source>
         <translation>A(z) »%1« hiba miatt nem szinkronizálható. Részletekért tekintse meg a naplót.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="484"/>
+        <location filename="../src/gui/folder.cpp" line="483"/>
         <source>Sync Activity</source>
         <translation>Szinkronizálási tevékenység</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="686"/>
+        <location filename="../src/gui/folder.cpp" line="685"/>
         <source>Switching VFS mode on folder »%1«</source>
         <translation>VFS mód váltása a(z) »%1« mappán</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="819"/>
+        <location filename="../src/gui/folder.cpp" line="818"/>
         <source>Reloading excludes on folder »%1«</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1041"/>
+        <location filename="../src/gui/folder.cpp" line="1040"/>
         <source>The folder »%1« was created but was excluded from synchronization previously. Data inside it will not be synchronized.</source>
         <translation>A(z) »%1« mappa létrejött, de korábban ki volt zárva a szinkronizálásból. A benne lévő adatok nem lesznek szinkronizálva.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1044"/>
+        <location filename="../src/gui/folder.cpp" line="1043"/>
         <source>The file »%1« was created but was excluded from synchronization previously. It will not be synchronized.</source>
         <translation>A(z) »%1« fájl létrejött, de korábban ki volt zárva a szinkronizálásból. Nem lesz szinkronizálva.</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1048"/>
+        <location filename="../src/gui/folder.cpp" line="1047"/>
         <source>»%1« is not synchronized</source>
         <translation>»%1« nincs szinkronizálva</translation>
     </message>
     <message>
-        <location filename="../src/gui/folder.cpp" line="1056"/>
+        <location filename="../src/gui/folder.cpp" line="1055"/>
         <source>Changes in synchronized folders could not be tracked reliably.
 
 This means that the synchronization client might not upload local changes immediately and will instead only scan for local changes and upload them occasionally (every two hours by default).
@@ -2977,32 +2977,32 @@ Figyelje, hogy a parancssori naplózási beállítások felülírják ezeket.</t
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../src/libsync/common/utility.cpp" line="316"/>
+        <location filename="../src/libsync/common/utility.cpp" line="315"/>
         <source>in the future</source>
         <translation>a jövőben</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/libsync/common/utility.cpp" line="311"/>
+        <location filename="../src/libsync/common/utility.cpp" line="310"/>
         <source>%n day(s) ago</source>
         <translation><numerusform>%n day ago</numerusform><numerusform>%n napja</numerusform></translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/libsync/common/utility.cpp" line="321"/>
+        <location filename="../src/libsync/common/utility.cpp" line="320"/>
         <source>%n hour(s) ago</source>
         <translation><numerusform>%n hour ago</numerusform><numerusform>%n órája</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/libsync/common/utility.cpp" line="327"/>
+        <location filename="../src/libsync/common/utility.cpp" line="326"/>
         <source>now</source>
         <translation>most</translation>
     </message>
     <message>
-        <location filename="../src/libsync/common/utility.cpp" line="329"/>
+        <location filename="../src/libsync/common/utility.cpp" line="328"/>
         <source>less than a minute ago</source>
         <translation>kevesebb, mint egy perce</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/libsync/common/utility.cpp" line="333"/>
+        <location filename="../src/libsync/common/utility.cpp" line="332"/>
         <source>%n minute(s) ago</source>
         <translation><numerusform>%n minute ago</numerusform><numerusform>%n perce</numerusform></translation>
     </message>
@@ -3278,37 +3278,37 @@ Figyelje, hogy a parancssori naplózási beállítások felülírják ezeket.</t
 <context>
     <name>Utility</name>
     <message numerus="yes">
-        <location filename="../src/libsync/common/utility.cpp" line="215"/>
+        <location filename="../src/libsync/common/utility.cpp" line="214"/>
         <source>%n year(s)</source>
         <translation><numerusform>%n év</numerusform><numerusform>%n év</numerusform></translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/libsync/common/utility.cpp" line="216"/>
+        <location filename="../src/libsync/common/utility.cpp" line="215"/>
         <source>%n month(s)</source>
         <translation><numerusform>%n hónap</numerusform><numerusform>%n hónap</numerusform></translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/libsync/common/utility.cpp" line="217"/>
+        <location filename="../src/libsync/common/utility.cpp" line="216"/>
         <source>%n day(s)</source>
         <translation><numerusform>%n nap</numerusform><numerusform>%n nap</numerusform></translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/libsync/common/utility.cpp" line="218"/>
+        <location filename="../src/libsync/common/utility.cpp" line="217"/>
         <source>%n hour(s)</source>
         <translation><numerusform>%n óra</numerusform><numerusform>%n óra</numerusform></translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/libsync/common/utility.cpp" line="219"/>
+        <location filename="../src/libsync/common/utility.cpp" line="218"/>
         <source>%n minute(s)</source>
         <translation><numerusform>%n perc</numerusform><numerusform>%n perc</numerusform></translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/libsync/common/utility.cpp" line="220"/>
+        <location filename="../src/libsync/common/utility.cpp" line="219"/>
         <source>%n second(s)</source>
         <translation><numerusform>%n second</numerusform><numerusform>%n másodperce</numerusform></translation>
     </message>
     <message>
-        <location filename="../src/libsync/common/utility.cpp" line="244"/>
+        <location filename="../src/libsync/common/utility.cpp" line="243"/>
         <source>%1 %2</source>
         <translation>%1 %2</translation>
     </message>
