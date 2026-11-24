@@ -157,7 +157,6 @@ class AccountConnectionWizard:
             dir_input_selector.by,
             dir_input_selector.selector,
         )[0]
-
         dir_location_input.clear()
         dir_location_input.send_keys(sync_path)
         choose_button_selector = AccountConnectionWizard.get_native_choose_folder_button()

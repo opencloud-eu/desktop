@@ -1,15 +1,31 @@
 from types import SimpleNamespace
 from appium.webdriver.common.appiumby import AppiumBy as By
 from selenium.webdriver.common.keys import Keys
-
+from helpers.ConfigHelper import is_windows, get_config
 from helpers.SetupClientHelper import get_current_user_sync_path
 from helpers.AppHelper import app
-from helpers.ConfigHelper import get_config
 
 
 class SyncConnectionWizard:
-    CHOOSE_LOCAL_SYNC_FOLDER = SimpleNamespace(
-        by=By.ACCESSIBILITY_ID, selector="localFolderLineEdit"
+    if is_windows():
+        CHOOSE_LOCAL_SYNC_FOLDER = SimpleNamespace(
+            by=By.XPATH,
+            selector="//Edit[@Name='Select a local folder to synchronize your Spaces to:']",
+        )
+        ADD_SYNC_CONNECTION_BUTTON = SimpleNamespace(
+            by=By.XPATH,
+            selector="//Window[@Name='Add Space']//Button[@Name='Add Space']",
+        )
+    else:
+        CHOOSE_LOCAL_SYNC_FOLDER = SimpleNamespace(
+            by=By.ACCESSIBILITY_ID,
+            selector="localFolderLineEdit",
+        )
+        ADD_SYNC_CONNECTION_BUTTON = SimpleNamespace(
+            by=By.XPATH, selector="//dialog[@name='Add Space']//*[@name='Add Space']"
+        )
+    SELECTIVE_SYNC_TABLE = SimpleNamespace(
+        by=By.XPATH, selector='//filler[@name="Choose what to sync"]'
     )
     BACK_BUTTON = SimpleNamespace(by=By.NAME, selector="< Back")
     NEXT_BUTTON = SimpleNamespace(by=By.NAME, selector="Next >")
@@ -18,12 +34,11 @@ class SyncConnectionWizard:
         by=By.XPATH,
         selector="//table_cell[@name and contains(@states, 'checkable') and @name!='{space}']",
     )
-    ADD_SYNC_CONNECTION_BUTTON = SimpleNamespace(
-        by=By.XPATH, selector="//dialog[@name='Add Space']//*[@name='Add Space']"
-    )
+    SELECTIVE_SYNC_TABLE_CELL = SimpleNamespace(by=By.XPATH, selector='//table_cell')
     SELECTIVE_SYNC_TREE_HEADER = SimpleNamespace(by=By.NAME, selector='{header}')
     CANCEL_FOLDER_SYNC_CONNECTION_WIZARD = SimpleNamespace(by=By.NAME, selector="Cancel")
     SPACES_LIST = SimpleNamespace(by=By.NAME, selector="Spaces list")
+    SPACES_LIST_ITEM = SimpleNamespace(by=By.XPATH, selector="//list_item")
     SPACE_NAME_SELECTOR = SimpleNamespace(by=By.NAME, selector="{space_name},")
     ADD_SPACE_BUTTON = SimpleNamespace(by=By.NAME, selector='Add Space')
 
@@ -120,14 +135,18 @@ class SyncConnectionWizard:
             SyncConnectionWizard.SPACE_NAME_SELECTOR.selector.format(space_name=space_name),
         )
         space_item.click()
-        if space_item.get_attribute("selected") != "true":
+        is_selected = (
+            space_item.is_selected()
+            if is_windows()
+            else space_item.get_attribute("selected") == "true"
+        )
+        if not is_selected:
             raise AssertionError("Failed to select the space: " + space_name)
 
     @staticmethod
     def sync_space(space_name):
         SyncConnectionWizard.set_sync_path(get_current_user_sync_path())
         SyncConnectionWizard.select_space(space_name)
-        SyncConnectionWizard.next_step()
         SyncConnectionWizard.add_sync_connection()
 
     @staticmethod

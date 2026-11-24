@@ -1,12 +1,11 @@
 from types import SimpleNamespace
 from appium.webdriver.common.appiumby import AppiumBy as By
-
 from pageObjects.Toolbar import Toolbar
 from helpers.UserHelper import get_displayname_for_user
 from helpers.SetupClientHelper import substitute_inline_codes
 from helpers.AppHelper import app
 from helpers.Utils import wait_for
-from helpers.ConfigHelper import get_config
+from helpers.ConfigHelper import get_config, is_windows
 
 
 class AccountSetting:
@@ -28,7 +27,12 @@ class AccountSetting:
         manage_button = None
         for connection in connections:
             # use the active connection
-            if connection.get_attribute("showing") == "true":
+            is_showing = (
+                connection.is_displayed()
+                if is_windows()
+                else connection.get_attribute("showing") == "true"
+            )
+            if is_showing:
                 manage_button = connection.find_element(
                     AccountSetting.MANAGE_ACCOUNT_BUTTON.by,
                     AccountSetting.MANAGE_ACCOUNT_BUTTON.selector,

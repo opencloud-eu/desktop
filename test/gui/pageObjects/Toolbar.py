@@ -84,7 +84,7 @@ class Toolbar:
         account_tab = Toolbar.get_account(username)
         account_tab.click()
         # confirm account is active
-        if account_tab.get_attribute("checked") != "true":
+        if not account_tab.is_checked():
             raise AssertionError(f"Account is not active: {username}")
 
     @staticmethod

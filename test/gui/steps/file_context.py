@@ -6,7 +6,6 @@ import zipfile
 from os.path import isfile, join, isdir, exists
 from behave import when as When, then as Then, given as Given
 from sure import ensure
-
 import helpers.FileExplorerHelper as FileExplorer
 from helpers.SetupClientHelper import get_resource_path, get_temp_resource_path
 from helpers.SyncHelper import (
