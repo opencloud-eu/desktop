@@ -21,6 +21,7 @@
 
 ### 🐛 Bug Fixes
 
+- Fix folder stuck in Queued state after a spurious file change [[#1287](https://github.com/opencloud-eu/desktop/pull/1287)]
 - Work around broken mac os palette [[#1282](https://github.com/opencloud-eu/desktop/pull/1282)]
 - Don't show .vault folders in the selective sync widget [[#1264](https://github.com/opencloud-eu/desktop/pull/1264)]
 - Fix selective syncing of previously unsynced folders [[#1270](https://github.com/opencloud-eu/desktop/pull/1270)]
