@@ -185,8 +185,8 @@ Pane {
 
                         background: Rectangle {
                             color: scrollView.palette.base
-                            border.width: delegatePane.visualFocus || folderDelegate.ListView.isCurrentItem ? 2 : 0
-                            border.color: delegatePane.visualFocus || folderDelegate.ListView.isCurrentItem ? scrollView.palette.highlight : scrollView.palette.base
+                            border.width: delegatePane.visualFocus || folderDelegate.ListView.isCurrentItem ? 2 : (Qt.colorEqual(scrollView.palette.base, folderSyncPanel.palette.window) ? 1 : 0)
+                            border.color: delegatePane.visualFocus || folderDelegate.ListView.isCurrentItem ? scrollView.palette.highlight : scrollView.palette.mid
                         }
 
                         Keys.onBacktabPressed: {

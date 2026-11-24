@@ -127,6 +127,8 @@ Pane {
 
                     background: Rectangle {
                         color: spaceDelegate.ListView.isCurrentItem ? spacesView.palette.highlight : spacesView.palette.base
+                        border.width: Qt.colorEqual(spacesView.palette.base, spacesView.palette.window) ? 1 : 0
+                        border.color: spacesView.palette.mid
                     }
                     SpaceDelegate {
                         anchors.fill: parent
