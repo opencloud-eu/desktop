@@ -623,7 +623,7 @@ void Folder::slotWatchedPathsChanged(const QSet<QString> &paths, ChangeReason re
     }
     if (needSync && canSync()) {
         FolderMan::instance()->scheduler()->enqueueFolder(this);
-    } else if (!needSync && _syncResult.status() == SyncResult::Queued && FolderMan::instance()->scheduler()->isFolderQueued(this)) {
+    } else if (!needSync && _syncResult.status() == SyncResult::Queued && !FolderMan::instance()->scheduler()->isFolderQueued(this)) {
         // the folder entered queued when a file change was detected (not actually queued), it later turned out the change was irrelevant
         setSyncState(SyncResult::Success);
     }

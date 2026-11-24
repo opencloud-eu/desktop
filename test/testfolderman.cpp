@@ -9,13 +9,15 @@
 #include <QTemporaryDir>
 #include <QtTest>
 
+#include "account.h"
+#include "accountstate.h"
 #include "common/syncjournaldb.h"
 #include "common/syncjournalfilerecord.h"
 #include "common/utility.h"
-#include "folderman.h"
-#include "account.h"
-#include "accountstate.h"
 #include "configfile.h"
+#include "filesystem.h"
+#include "folder.h"
+#include "folderman.h"
 #include "syncfileitem.h"
 
 #include "testutils/testutils.h"
@@ -256,6 +258,35 @@ private Q_SLOTS:
         // turning it off again
         folderman->setIgnoreHiddenFiles(true);
         QVERIFY(folder->ignoreHiddenFiles());
+    }
+
+    void testSpuriousChangeResetsQueuedState()
+    {
+        auto dir = TestUtils::createTempDir();
+        QVERIFY(dir.isValid());
+        QDir dir2(dir.path());
+        QVERIFY(dir2.mkpath(QStringLiteral("OpenCloud")));
+        const QString folderPath = dir2.canonicalPath() + QStringLiteral("/OpenCloud");
+
+        auto accountState = TestUtils::createDummyAccount();
+        FolderMan *folderman = TestUtils::folderMan();
+        auto *folder = folderman->addFolder(accountState.get(), TestUtils::createDummyFolderDefinition(accountState->account(), folderPath));
+        QVERIFY(folder);
+        QTRY_VERIFY(folder->isReady());
+
+        const QString filePath = folder->path() + QStringLiteral("file.txt");
+        QVERIFY(TestUtils::writeRandomFile(filePath, 100));
+
+        auto item = TestUtils::dummyItem(QStringLiteral("file.txt"));
+        item._size = FileSystem::getSize(FileSystem::toFilesystemPath(filePath));
+        item._modtime = FileSystem::getModTime(filePath);
+        item._inode = FileSystem::getInode(filePath).value();
+        QVERIFY(folder->journalDb()->setFileRecord(SyncJournalFileRecord::fromSyncFileItem(item)));
+
+        folder->setSyncState(SyncResult::Queued);
+
+        folder->slotWatchedPathsChanged({filePath}, Folder::ChangeReason::Other);
+        QCOMPARE(folder->syncState(), SyncResult::Success);
     }
 
     void testSpacesSyncRootAndFolderCreation()
