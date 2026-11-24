@@ -31,7 +31,6 @@
 #include <QHeaderView>
 #include <QLoggingCategory>
 #include <QOperatingSystemVersion>
-#include <QSettings>
 #include <QStandardPaths>
 
 #include <chrono>
@@ -104,8 +103,7 @@ QString excludeFileNameC()
 QString ConfigFile::_confDir = QString();
 const std::chrono::seconds DefaultRemotePollInterval { 30 };
 
-static chrono::milliseconds millisecondsValue(const QSettings &setting, const QString &key,
-    chrono::milliseconds defaultValue)
+static chrono::milliseconds millisecondsValue(const Settings &setting, const QString &key, chrono::milliseconds defaultValue)
 {
     return chrono::milliseconds(setting.value(key, qlonglong(defaultValue.count())).toLongLong());
 }
@@ -137,7 +135,7 @@ bool ConfigFile::setConfDir(const QString &value)
 
 std::optional<QStringList> ConfigFile::issuesWidgetFilter() const
 {
-    auto settings = makeQSettings();
+    auto settings = makeSettings();
     if (settings.contains(issuesWidgetFilterC())) {
         return settings.value(issuesWidgetFilterC()).toStringList();
     }
@@ -147,14 +145,14 @@ std::optional<QStringList> ConfigFile::issuesWidgetFilter() const
 
 void ConfigFile::setIssuesWidgetFilter(const QStringList &checked)
 {
-    auto settings = makeQSettings();
+    auto settings = makeSettings();
     settings.setValue(issuesWidgetFilterC(), checked);
     settings.sync();
 }
 
 std::chrono::seconds ConfigFile::timeout() const
 {
-    auto settings = makeQSettings();
+    auto settings = makeSettings();
     const auto val = settings.value(timeoutC()).toInt(); // default to 5 min
     return val ? std::chrono::seconds(val) : 5min;
 }
@@ -162,7 +160,7 @@ std::chrono::seconds ConfigFile::timeout() const
 void ConfigFile::saveGeometry(QWidget *w)
 {
     OC_ASSERT(!w->objectName().isNull());
-    auto settings = makeQSettings();
+    auto settings = makeSettings();
     settings.beginGroup(w->objectName());
     settings.setValue(geometryC(), w->saveGeometry());
     settings.sync();
@@ -179,7 +177,7 @@ void ConfigFile::saveGeometryHeader(QHeaderView *header)
         return;
     OC_ASSERT(!header->objectName().isEmpty());
 
-    auto settings = makeQSettings();
+    auto settings = makeSettings();
     settings.beginGroup(header->objectName());
     settings.setValue(geometryC(), header->saveState());
     settings.sync();
@@ -189,7 +187,7 @@ bool ConfigFile::restoreGeometryHeader(QHeaderView *header)
 {
     Q_ASSERT(header && !header->objectName().isNull());
 
-    auto settings = makeQSettings();
+    auto settings = makeSettings();
     settings.beginGroup(header->objectName());
     if (settings.contains(geometryC())) {
         header->restoreState(settings.value(geometryC()).toByteArray());
@@ -253,14 +251,14 @@ QString ConfigFile::configFile()
     return u"%1%2.cfg"_s.arg(configPath(), Resources::JsonTheme::instance().applicationName().toLower());
 }
 
-QSettings ConfigFile::makeQSettings()
+Settings ConfigFile::makeSettings()
 {
     return {configFile(), QSettings::IniFormat};
 }
 
-std::unique_ptr<QSettings> ConfigFile::makeQSettingsPointer()
+std::unique_ptr<Settings> ConfigFile::makeSettingsPointer()
 {
-    return std::unique_ptr<QSettings>(new QSettings(makeQSettings()));
+    return std::make_unique<Settings>(configFile(), QSettings::IniFormat);
 }
 
 bool ConfigFile::exists()
@@ -271,7 +269,7 @@ bool ConfigFile::exists()
 
 chrono::milliseconds ConfigFile::remotePollInterval(std::chrono::seconds defaultVal) const
 {
-    auto settings = makeQSettings();
+    auto settings = makeSettings();
 
     auto defaultPollInterval { DefaultRemotePollInterval };
 
@@ -293,13 +291,13 @@ chrono::milliseconds ConfigFile::remotePollInterval(std::chrono::seconds default
 
 chrono::milliseconds OCC::ConfigFile::fullLocalDiscoveryInterval() const
 {
-    auto settings = makeQSettings();
+    auto settings = makeSettings();
     return millisecondsValue(settings, fullLocalDiscoveryIntervalC(), 1h);
 }
 
 chrono::milliseconds ConfigFile::updateCheckInterval() const
 {
-    auto settings = makeQSettings();
+    auto settings = makeSettings();
 
     auto defaultInterval = chrono::hours(10);
     auto interval = millisecondsValue(settings, updateCheckIntervalC(), defaultInterval);
@@ -324,38 +322,38 @@ bool ConfigFile::skipUpdateCheck() const
 
 void ConfigFile::setSkipUpdateCheck(bool skip)
 {
-    auto settings = makeQSettings();
+    auto settings = makeSettings();
     settings.setValue(skipUpdateCheckC(), QVariant(skip));
     settings.sync();
 }
 
 QString ConfigFile::updateChannel() const
 {
-    auto settings = makeQSettings();
+    auto settings = makeSettings();
     return settings.value(updateChannelC(), OCC::Version::isBeta() ? u"stable"_s : u"beta"_s).toString();
 }
 
 void ConfigFile::setUpdateChannel(const QString &channel)
 {
-    auto settings = makeQSettings();
+    auto settings = makeSettings();
     settings.setValue(updateChannelC(), channel);
 }
 
 QString ConfigFile::uiLanguage() const
 {
-    auto settings = makeQSettings();
+    auto settings = makeSettings();
     return settings.value(uiLanguageC(), QString()).toString();
 }
 
 void ConfigFile::setUiLanguage(const QString &uiLanguage)
 {
-    auto settings = makeQSettings();
+    auto settings = makeSettings();
     settings.setValue(uiLanguageC(), uiLanguage);
 }
 
 QVariant ConfigFile::getValue(const QString &param, const QVariant &defaultValue) const
 {
-    auto setting = makeQSettings().value(param);
+    auto setting = makeSettings().value(param);
     if (!setting.isValid()) {
         return GlobalConfig::getValue(param, defaultValue);
     }
@@ -364,7 +362,7 @@ QVariant ConfigFile::getValue(const QString &param, const QVariant &defaultValue
 
 void ConfigFile::setValue(const QString &key, const QVariant &value)
 {
-    auto settings = makeQSettings();
+    auto settings = makeSettings();
 
     settings.setValue(key, value);
 }
@@ -435,37 +433,37 @@ void ConfigFile::setMoveToTrash(bool isChecked)
 
 bool ConfigFile::crashReporter() const
 {
-    auto settings = makeQSettings();
+    auto settings = makeSettings();
     return settings.value(crashReporterC(), true).toBool();
 }
 
 void ConfigFile::setCrashReporter(bool enabled)
 {
-    auto settings = makeQSettings();
+    auto settings = makeSettings();
     settings.setValue(crashReporterC(), enabled);
 }
 
 bool ConfigFile::automaticLogDir() const
 {
-    auto settings = makeQSettings();
+    auto settings = makeSettings();
     return settings.value(automaticLogDirC(), false).toBool();
 }
 
 void ConfigFile::setAutomaticLogDir(bool enabled)
 {
-    auto settings = makeQSettings();
+    auto settings = makeSettings();
     settings.setValue(automaticLogDirC(), enabled);
 }
 
 int ConfigFile::automaticDeleteOldLogs() const
 {
-    auto settings = makeQSettings();
+    auto settings = makeSettings();
     return settings.value(numberOfLogsToKeepC()).toInt();
 }
 
 void ConfigFile::setAutomaticDeleteOldLogs(int number)
 {
-    auto settings = makeQSettings();
+    auto settings = makeSettings();
     settings.setValue(numberOfLogsToKeepC(), number);
 }
 
@@ -475,7 +473,7 @@ void ConfigFile::configureHttpLogging(std::optional<bool> enable)
         enable = logHttp();
     }
 
-    auto settings = makeQSettings();
+    auto settings = makeSettings();
     settings.setValue(logHttpC(), enable.value());
 
     static const QSet<QString> rule = { QStringLiteral("sync.httplogger=true") };
@@ -489,19 +487,19 @@ void ConfigFile::configureHttpLogging(std::optional<bool> enable)
 
 bool ConfigFile::logHttp() const
 {
-    auto settings = makeQSettings();
+    auto settings = makeSettings();
     return settings.value(logHttpC(), false).toBool();
 }
 
 QString ConfigFile::clientVersionWithBuildNumberString() const
 {
-    auto settings = makeQSettings();
+    auto settings = makeSettings();
     return settings.value(clientVersionC(), QString()).toString();
 }
 
 void ConfigFile::setClientVersionWithBuildNumberString(const QString &version)
 {
-    auto settings = makeQSettings();
+    auto settings = makeSettings();
     settings.setValue(clientVersionC(), version);
 }
 

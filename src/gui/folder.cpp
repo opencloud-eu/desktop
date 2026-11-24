@@ -50,7 +50,6 @@
 
 
 #include <QDir>
-#include <QSettings>
 #include <QTimer>
 #include <QUrl>
 

@@ -25,7 +25,6 @@
 #include "gui/navigationpanehelper.h"
 #endif
 
-#include <QSettings>
 
 using namespace Qt::Literals::StringLiterals;
 
@@ -86,7 +85,7 @@ AccountManager *AccountManager::create(QQmlEngine *qmlEngine, QJSEngine *)
 
 bool AccountManager::restore()
 {
-    auto settings = ConfigFile::makeQSettings();
+    auto settings = ConfigFile::makeSettings();
     if (settings.status() != QSettings::NoError) {
         qCWarning(lcAccountManager) << u"Could not read settings from" << settings.fileName() << settings.status();
         return false;
@@ -132,7 +131,7 @@ bool AccountManager::restore()
 
 void AccountManager::save()
 {
-    auto settings = ConfigFile::makeQSettings();
+    auto settings = ConfigFile::makeSettings();
     settings.remove(accountsC());
     settings.beginWriteArray(accountsC(), _accounts.size());
 
@@ -167,7 +166,9 @@ void AccountManager::save()
     }
     settings.endArray();
 
-    qCInfo(lcAccountManager) << u"Saved all account settings";
+    if (settings.syncAndLog()) {
+        qCInfo(lcAccountManager) << u"Saved all account settings to" << settings.fileName();
+    }
 }
 
 QStringList AccountManager::accountNames() const

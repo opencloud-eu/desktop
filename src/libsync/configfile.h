@@ -15,9 +15,8 @@
 #ifndef CONFIGFILE_H
 #define CONFIGFILE_H
 
+#include "libsync/settings.h"
 #include "opencloudsynclib.h"
-
-#include <QSettings>
 
 #include <chrono>
 #include <memory>
@@ -40,8 +39,8 @@ class OPENCLOUD_SYNC_EXPORT ConfigFile
 public:
     static QString configPath();
     static QString configFile();
-    static QSettings makeQSettings();
-    static std::unique_ptr<QSettings> makeQSettingsPointer();
+    static Settings makeSettings();
+    static std::unique_ptr<Settings> makeSettingsPointer();
 
     static bool exists();
 

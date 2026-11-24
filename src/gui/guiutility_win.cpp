@@ -15,6 +15,8 @@
 #include "application.h"
 #include "guiutility.h"
 
+#include "libsync/settings.h"
+
 #include "resources/jsontheme.h"
 
 #include "explorercommandids.h"
@@ -22,7 +24,6 @@
 #include <QCoreApplication>
 #include <QDir>
 #include <QFileInfo>
-#include <QSettings>
 
 // windows.h mus be included before appmodel.h
 #include <windows.h>
@@ -48,13 +49,13 @@ void Utility::startShellIntegration()
         return;
     }
 
-    QSettings server(QStringLiteral("HKEY_CURRENT_USER\\" OC_EXPLORER_COMMAND_CLSID_KEY), QSettings::NativeFormat);
+    Settings server(QStringLiteral("HKEY_CURRENT_USER\\" OC_EXPLORER_COMMAND_CLSID_KEY), QSettings::NativeFormat);
     // "." is the default value of a key
     server.setValue(u"."_s, Resources::JsonTheme::instance().applicationDisplayName());
     server.setValue(u"InprocServer32/."_s, dllPath);
     server.setValue(u"InprocServer32/ThreadingModel"_s, u"Apartment"_s);
 
-    QSettings verb(QStringLiteral("HKEY_CURRENT_USER\\" OC_EXPLORER_COMMAND_VERB_KEY), QSettings::NativeFormat);
+    Settings verb(QStringLiteral("HKEY_CURRENT_USER\\" OC_EXPLORER_COMMAND_VERB_KEY), QSettings::NativeFormat);
     verb.setValue(u"ExplorerCommandHandler"_s, QStringLiteral("{" OC_EXPLORER_COMMAND_CLSID_STRING "}"));
     // an empty SubCommands value turns the verb into a cascading menu, populated by IExplorerCommand::EnumSubCommands
     verb.setValue(u"SubCommands"_s, u""_s);

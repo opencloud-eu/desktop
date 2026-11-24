@@ -184,7 +184,7 @@ std::optional<qsizetype> FolderMan::loadFolders()
 {
     qCInfo(lcFolderMan) << u"Setup folders from settings file";
 
-    auto settings = ConfigFile::makeQSettings();
+    auto settings = ConfigFile::makeSettings();
     const auto size = settings.beginReadArray(foldersC());
 
     for (auto i = 0; i < size; ++i) {
@@ -215,7 +215,7 @@ std::optional<qsizetype> FolderMan::loadFolders()
 
 void FolderMan::saveFolders()
 {
-    auto settings = ConfigFile::makeQSettings();
+    auto settings = ConfigFile::makeSettings();
     settings.remove(foldersC());
     settings.beginWriteArray(foldersC(), _folders.size());
     int i = 0;

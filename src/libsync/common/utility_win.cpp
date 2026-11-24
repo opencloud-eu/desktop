@@ -22,6 +22,7 @@
 #include "libsync/common/asserts.h"
 #include "libsync/common/filesystembase.h"
 #include "libsync/filesystem.h"
+#include "libsync/settings.h"
 #include "resources/jsontheme.h"
 
 #include <comdef.h>
@@ -34,7 +35,6 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
-#include <QSettings>
 #include <QTextStream>
 
 using namespace Qt::Literals::StringLiterals;
@@ -114,20 +114,20 @@ void Utility::setupFavLink(const QString &folder, const QString &displayName, co
 
 bool Utility::hasSystemLaunchOnStartup(const QString &appName)
 {
-    QSettings settings(systemRunPathC(), QSettings::NativeFormat);
+    Settings settings(systemRunPathC(), QSettings::NativeFormat);
     return settings.contains(appName);
 }
 
 bool Utility::hasLaunchOnStartup(const QString &appName)
 {
-    QSettings settings(runPathC(), QSettings::NativeFormat);
+    Settings settings(runPathC(), QSettings::NativeFormat);
     return settings.contains(appName);
 }
 
 void Utility::setLaunchOnStartup(const QString &appName, const QString &guiName, bool enable)
 {
     Q_UNUSED(guiName)
-    QSettings settings(runPathC(), QSettings::NativeFormat);
+    Settings settings(runPathC(), QSettings::NativeFormat);
     if (enable) {
         settings.setValue(appName, QDir::toNativeSeparators(QCoreApplication::applicationFilePath()));
     } else {
@@ -137,7 +137,7 @@ void Utility::setLaunchOnStartup(const QString &appName, const QString &guiName,
 
 bool Utility::hasDarkSystray()
 {
-    const QSettings settings(systemThemesC(), QSettings::NativeFormat);
+    const Settings settings(systemThemesC(), QSettings::NativeFormat);
     return !settings.value(QStringLiteral("SystemUsesLightTheme"), false).toBool();
 }
 
