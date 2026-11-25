@@ -1426,7 +1426,7 @@ Objekt som får raderas kommer att raderas om de hindrar en katalog från att ta
 <context>
     <name>OCC::IssuesWidget</name>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="354"/>
+        <location filename="../src/gui/issueswidget.cpp" line="360"/>
         <source>Filter</source>
         <translation>Filtrera</translation>
     </message>
@@ -1441,17 +1441,17 @@ Objekt som får raderas kommer att raderas om de hindrar en katalog från att ta
         <translation>Det fanns för många problem. Alla kommer inte att synas här.</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="230"/>
+        <location filename="../src/gui/issueswidget.cpp" line="236"/>
         <source>Reset column sizes</source>
         <translation>Återställ kolumnstorlekar</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="264"/>
+        <location filename="../src/gui/issueswidget.cpp" line="270"/>
         <source>Filter menu</source>
         <translation>Filtermeny</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="266"/>
+        <location filename="../src/gui/issueswidget.cpp" line="272"/>
         <source>Account</source>
         <translation>Konto</translation>
     </message>
@@ -1526,12 +1526,12 @@ Observera att användning av kommandoradsalternativ för loggning åsidosätter 
         <translation>Alla</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="284"/>
+        <location filename="../src/gui/issueswidget.cpp" line="290"/>
         <source>Reset Filters</source>
         <translation>Återställ filter</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="369"/>
+        <location filename="../src/gui/issueswidget.cpp" line="375"/>
         <source>Status Filter:</source>
         <translation>Statusfilter:</translation>
     </message>

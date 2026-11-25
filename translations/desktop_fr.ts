@@ -1426,7 +1426,7 @@ Les éléments dont la suppression est autorisée seront supprimés s&apos;ils e
 <context>
     <name>OCC::IssuesWidget</name>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="354"/>
+        <location filename="../src/gui/issueswidget.cpp" line="360"/>
         <source>Filter</source>
         <translation>Filtre</translation>
     </message>
@@ -1441,17 +1441,17 @@ Les éléments dont la suppression est autorisée seront supprimés s&apos;ils e
         <translation>Il y a eu trop de problèmes. Tout ne pourra pas être affiché ici.</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="230"/>
+        <location filename="../src/gui/issueswidget.cpp" line="236"/>
         <source>Reset column sizes</source>
         <translation>Réinitialiser la taille des colonnes</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="264"/>
+        <location filename="../src/gui/issueswidget.cpp" line="270"/>
         <source>Filter menu</source>
         <translation>Menu filtre</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="266"/>
+        <location filename="../src/gui/issueswidget.cpp" line="272"/>
         <source>Account</source>
         <translation>Compte</translation>
     </message>
@@ -1525,12 +1525,12 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
         <translation>Tout</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="284"/>
+        <location filename="../src/gui/issueswidget.cpp" line="290"/>
         <source>Reset Filters</source>
         <translation>Réinitialiser les filtres</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="369"/>
+        <location filename="../src/gui/issueswidget.cpp" line="375"/>
         <source>Status Filter:</source>
         <translation>Filtre par statut :</translation>
     </message>
