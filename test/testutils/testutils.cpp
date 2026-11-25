@@ -9,6 +9,8 @@
 #include <QRandomGenerator>
 #include <QTest>
 
+using namespace Qt::StringLiterals;
+
 namespace {
 class HttpCredentialsTest : public OCC::HttpCredentials
 {
@@ -31,24 +33,24 @@ namespace TestUtils {
         std::ignore = folderMan();
         // don't use the account manager to create the account, it would try to use widgets
         auto acc = Account::create(QUuid::createUuid());
-        HttpCredentialsTest *cred = new HttpCredentialsTest(QStringLiteral("secret"));
+        HttpCredentialsTest *cred = new HttpCredentialsTest("secret"_L1);
         acc->setCredentials(cred);
-        acc->setUrl(QUrl(QStringLiteral("http://localhost/")));
-        acc->setDavDisplayName(QStringLiteral("fakename") + acc->uuid().toString(QUuid::WithoutBraces));
+        acc->setUrl(QUrl("http://localhost/"_L1));
+        acc->setDavDisplayName("fakename"_L1 + acc->uuid().toString(QUuid::WithoutBraces));
         acc->setCapabilities({acc->url(), OCC::TestUtils::testCapabilities()});
         return {OCC::AccountManager::instance()->addAccount(acc).get(), &TestUtilsPrivate::accountStateDeleter};
     }
 
     FolderDefinition createDummyFolderDefinition(const AccountPtr &acc, const QString &path)
     {
-        auto d = OCC::FolderDefinition(acc->uuid(), Utility::concatUrlPath(dummyDavUrl(), path), {}, QStringLiteral("Dummy Folder"));
+        auto d = OCC::FolderDefinition(acc->uuid(), Utility::concatUrlPath(dummyDavUrl(), path), {}, "Dummy Folder"_L1);
         d.setLocalPath(path);
         return d;
     }
 
     QTemporaryDir createTempDir()
     {
-        return QTemporaryDir{QStringLiteral("%1/OpenCloud-unit-test-%2-XXXXXX").arg(QDir::tempPath(), qApp->applicationName())};
+        return QTemporaryDir{"%1/OpenCloud-unit-test-%2-XXXXXX"_L1.arg(QDir::tempPath(), qApp->applicationName())};
     }
 
     FolderMan *folderMan()
@@ -97,16 +99,18 @@ namespace TestUtils {
             }
             return out;
         }();
-        return {{QStringLiteral("core"),
-                    QVariantMap{{QStringLiteral("status"),
-                        QVariantMap{{QStringLiteral("installed"), QStringLiteral("1")}, {QStringLiteral("maintenance"), QStringLiteral("0")},
-                            {QStringLiteral("needsDbUpgrade"), QStringLiteral("0")}, {QStringLiteral("version"), QStringLiteral("10.11.0.0")},
-                            {QStringLiteral("versionstring"), QStringLiteral("10.11.0")}, {QStringLiteral("edition"), QStringLiteral("Community")},
-                            {QStringLiteral("productname"), QStringLiteral("OpenCloud")}, {QStringLiteral("product"), QStringLiteral("OpenCloud")},
-                            {QStringLiteral("productversion"), QStringLiteral("2.0.0-beta1+7c2e3201b")}}}}},
-            {QStringLiteral("files"), QVariantList{}}, {QStringLiteral("dav"), QVariantMap{{QStringLiteral("chunking"), QStringLiteral("1.0")}}},
-            {QStringLiteral("checksums"),
-                QVariantMap{{QStringLiteral("preferredUploadType"), Utility::enumToString(algo)}, {QStringLiteral("supportedTypes"), algorithmNames}}}};
+        // clang-format off
+        return {{"core"_L1,
+                    QVariantMap{{"status"_L1,
+                        QVariantMap{{"installed"_L1, "1"_L1}, {"maintenance"_L1, "0"_L1},
+                            {"needsDbUpgrade"_L1, "0"_L1}, {"version"_L1, "10.11.0.0"_L1},
+                            {"versionstring"_L1, "10.11.0"_L1}, {"edition"_L1, "Community"_L1},
+                            {"productname"_L1, "OpenCloud"_L1}, {"product"_L1, "OpenCloud"_L1},
+                            {"productversion"_L1, "2.0.0-beta1+7c2e3201b"_L1}}}}},
+            {"files"_L1, QVariantList{}}, {"dav"_L1, QVariantMap{{"chunking"_L1, "1.0"_L1}}},
+            {"checksums"_L1,
+                QVariantMap{{"preferredUploadType"_L1, Utility::enumToString(algo)}, {"supportedTypes"_L1, algorithmNames}}}};
+        // clang-format on
     }
 
     QByteArray getPayload(QAnyStringView payloadName)
@@ -137,7 +141,7 @@ namespace TestUtils {
 
     QUrl dummyDavUrl()
     {
-        return QUrl(QStringLiteral("http://localhost/dav/spaces/0e443965-2ebb-4673-9464-b2c1d388e666$cb867555-fdf7-48ce-8f1c-d64570812f21"));
+        return QUrl("http://localhost/dav/spaces/0e443965-2ebb-4673-9464-b2c1d388e666$cb867555-fdf7-48ce-8f1c-d64570812f21"_L1);
     }
 
     void TestUtilsPrivate::accountStateDeleter(OCC::AccountState *acc)
