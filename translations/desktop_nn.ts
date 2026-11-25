@@ -1426,7 +1426,7 @@ Element der sletting er tillate, vert sletta om dei hindrar at ei mappe vert fje
 <context>
     <name>OCC::IssuesWidget</name>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="354"/>
+        <location filename="../src/gui/issueswidget.cpp" line="360"/>
         <source>Filter</source>
         <translation>Filter</translation>
     </message>
@@ -1441,17 +1441,17 @@ Element der sletting er tillate, vert sletta om dei hindrar at ei mappe vert fje
         <translation>Det var for mange problem. Ikkje alle vert viste her.</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="230"/>
+        <location filename="../src/gui/issueswidget.cpp" line="236"/>
         <source>Reset column sizes</source>
         <translation>Tilbakestill kolonnebreiddene</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="264"/>
+        <location filename="../src/gui/issueswidget.cpp" line="270"/>
         <source>Filter menu</source>
         <translation>Filtermeny</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="266"/>
+        <location filename="../src/gui/issueswidget.cpp" line="272"/>
         <source>Account</source>
         <translation>Konto</translation>
     </message>
@@ -1526,12 +1526,12 @@ Merk at kommandolinjeval for logging overstyrer innstillingane.</translation>
         <translation>Alle</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="284"/>
+        <location filename="../src/gui/issueswidget.cpp" line="290"/>
         <source>Reset Filters</source>
         <translation>Tilbakestill filter</translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="369"/>
+        <location filename="../src/gui/issueswidget.cpp" line="375"/>
         <source>Status Filter:</source>
         <translation>Statusfilter:</translation>
     </message>

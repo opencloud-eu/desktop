@@ -1441,7 +1441,7 @@ Items where deletion is allowed will be deleted if they prevent a directory from
 <context>
     <name>OCC::IssuesWidget</name>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="354"/>
+        <location filename="../src/gui/issueswidget.cpp" line="360"/>
         <source>Filter</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1456,17 +1456,17 @@ Items where deletion is allowed will be deleted if they prevent a directory from
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="230"/>
+        <location filename="../src/gui/issueswidget.cpp" line="236"/>
         <source>Reset column sizes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="264"/>
+        <location filename="../src/gui/issueswidget.cpp" line="270"/>
         <source>Filter menu</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="266"/>
+        <location filename="../src/gui/issueswidget.cpp" line="272"/>
         <source>Account</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1539,12 +1539,12 @@ Note that using any logging command line options will override the settings.</so
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="284"/>
+        <location filename="../src/gui/issueswidget.cpp" line="290"/>
         <source>Reset Filters</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/gui/issueswidget.cpp" line="369"/>
+        <location filename="../src/gui/issueswidget.cpp" line="375"/>
         <source>Status Filter:</source>
         <translation type="unfinished"></translation>
     </message>
