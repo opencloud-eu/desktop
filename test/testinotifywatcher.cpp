@@ -11,6 +11,7 @@
 
 
 using namespace OCC;
+using namespace Qt::StringLiterals;
 
 class TestInotifyWatcher: public FolderWatcherPrivate
 {
@@ -21,15 +22,15 @@ private:
 
 private Q_SLOTS:
     void initTestCase() {
-        _root = QDir::tempPath() + QStringLiteral("/test_") + QString::number(QRandomGenerator::global()->generate());
+        _root = QDir::tempPath() + "/test_"_L1 + QString::number(QRandomGenerator::global()->generate());
         qDebug() << u"creating test directory tree in " << _root;
         QDir rootDir(_root);
 
-        rootDir.mkpath(_root + QStringLiteral("/a1/b1/c1"));
-        rootDir.mkpath(_root + QStringLiteral("/a1/b1/c2"));
-        rootDir.mkpath(_root + QStringLiteral("/a1/b2/c1"));
-        rootDir.mkpath(_root + QStringLiteral("/a1/b3/c3"));
-        rootDir.mkpath(_root + QStringLiteral("/a2/b3/c3"));
+        rootDir.mkpath(_root + "/a1/b1/c1"_L1);
+        rootDir.mkpath(_root + "/a1/b1/c2"_L1);
+        rootDir.mkpath(_root + "/a1/b2/c1"_L1);
+        rootDir.mkpath(_root + "/a1/b3/c3"_L1);
+        rootDir.mkpath(_root + "/a2/b3/c3"_L1);
     }
 
     // Test the recursive path listing function findFoldersBelow
@@ -37,23 +38,23 @@ private Q_SLOTS:
         QStringList dirs;
 
         bool ok = findFoldersBelow(QDir(_root), dirs);
-        QVERIFY(dirs.indexOf(_root + QStringLiteral("/a1")) > -1);
-        QVERIFY(dirs.indexOf(_root + QStringLiteral("/a1/b1")) > -1);
-        QVERIFY(dirs.indexOf(_root + QStringLiteral("/a1/b1/c1")) > -1);
-        QVERIFY(dirs.indexOf(_root + QStringLiteral("/a1/b1/c2")) > -1);
+        QVERIFY(dirs.indexOf(_root + "/a1"_L1) > -1);
+        QVERIFY(dirs.indexOf(_root + "/a1/b1"_L1) > -1);
+        QVERIFY(dirs.indexOf(_root + "/a1/b1/c1"_L1) > -1);
+        QVERIFY(dirs.indexOf(_root + "/a1/b1/c2"_L1) > -1);
 
-        QVERIFY(TestUtils::writeRandomFile(_root + QStringLiteral("/a1/rand1.dat")));
-        QVERIFY(TestUtils::writeRandomFile(_root + QStringLiteral("/a1/b1/rand2.dat")));
-        QVERIFY(TestUtils::writeRandomFile(_root + QStringLiteral("/a1/b1/c1/rand3.dat")));
+        QVERIFY(TestUtils::writeRandomFile(_root + "/a1/rand1.dat"_L1));
+        QVERIFY(TestUtils::writeRandomFile(_root + "/a1/b1/rand2.dat"_L1));
+        QVERIFY(TestUtils::writeRandomFile(_root + "/a1/b1/c1/rand3.dat"_L1));
 
-        QVERIFY(dirs.indexOf(_root + QStringLiteral("/a1/b2")) > -1);
-        QVERIFY(dirs.indexOf(_root + QStringLiteral("/a1/b2/c1")) > -1);
-        QVERIFY(dirs.indexOf(_root + QStringLiteral("/a1/b3")) > -1);
-        QVERIFY(dirs.indexOf(_root + QStringLiteral("/a1/b3/c3")) > -1);
+        QVERIFY(dirs.indexOf(_root + "/a1/b2"_L1) > -1);
+        QVERIFY(dirs.indexOf(_root + "/a1/b2/c1"_L1) > -1);
+        QVERIFY(dirs.indexOf(_root + "/a1/b3"_L1) > -1);
+        QVERIFY(dirs.indexOf(_root + "/a1/b3/c3"_L1) > -1);
 
-        QVERIFY(dirs.indexOf(_root + QStringLiteral("/a2")));
-        QVERIFY(dirs.indexOf(_root + QStringLiteral("/a2/b3")));
-        QVERIFY(dirs.indexOf(_root + QStringLiteral("/a2/b3/c3")));
+        QVERIFY(dirs.indexOf(_root + "/a2"_L1));
+        QVERIFY(dirs.indexOf(_root + "/a2/b3"_L1));
+        QVERIFY(dirs.indexOf(_root + "/a2/b3/c3"_L1));
 
         QVERIFY2(dirs.count() == 11, "Directory count wrong.");
 
@@ -62,7 +63,7 @@ private Q_SLOTS:
 
     void cleanupTestCase() {
         if( _root.startsWith(QDir::tempPath() )) {
-            system(QStringLiteral("rm -rf %1").arg(_root).toLocal8Bit().constData());
+            system("rm -rf %1"_L1.arg(_root).toLocal8Bit().constData());
         }
     }
 };
