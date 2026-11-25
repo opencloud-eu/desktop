@@ -1,10 +1,10 @@
 # Changelog
 
-## [5.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v5.0.0) - 2026-11-24
+## [5.0.0](https://github.com/opencloud-eu/desktop/releases/tag/v5.0.0) - 2026-11-25
 
 ### ❤️ Thanks to all contributors! ❤️
 
-@Asmitapaudel, @Mortimer-RR, @TheOneRing, @dragotin, @flimmy, @fracturehill, @jnweiger, @junkerderprovinz, @prashant-gurung899, @saw-jan, @v-scharf
+@Asmitapaudel, @Mortimer-RR, @TheOneRing, @dragotin, @flimmy, @fracturehill, @jnodev, @jnweiger, @junkerderprovinz, @prashant-gurung899, @saw-jan, @v-scharf
 
 ### 💥 Breaking changes
 
@@ -21,6 +21,7 @@
 
 ### 🐛 Bug Fixes
 
+- oauth: fix WebFinger subject check for internationalized domain names [[#1281](https://github.com/opencloud-eu/desktop/pull/1281)]
 - Fix folder stuck in Queued state after a spurious file change [[#1287](https://github.com/opencloud-eu/desktop/pull/1287)]
 - Work around broken mac os palette [[#1282](https://github.com/opencloud-eu/desktop/pull/1282)]
 - Don't show .vault folders in the selective sync widget [[#1264](https://github.com/opencloud-eu/desktop/pull/1264)]
