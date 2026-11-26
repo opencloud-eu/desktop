@@ -208,8 +208,11 @@ void sync(const SyncCTX &ctx, const QUrl &spaceUrl)
     // Always try to load the user-provided exclude list if one is specified
     if (!ctx.options.exclude.isEmpty()) {
         engine->addExcludeList(ctx.options.exclude);
-    } else {
-        engine->addExcludeList(ConfigFile::defaultExcludeFile());
+    }
+
+    // Then, load the system excludes as well
+    if (auto defaultExcludes = ConfigFile::defaultExcludeFile(); QFile::exists(defaultExcludes)) {
+        engine->addExcludeList(defaultExcludes);
     }
 
     if (!engine->reloadExcludes()) {
