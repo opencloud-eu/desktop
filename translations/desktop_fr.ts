@@ -549,12 +549,12 @@ Utilitaire de bureau pour la synchronisation de fichiers.</translation>
 <context>
     <name>OCC::AccountBasedOAuth</name>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="855"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="857"/>
         <source>Could not parse the token response: %1</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="862"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="864"/>
         <source>The token response did not contain an access token</source>
         <translation type="unfinished"/>
     </message>
@@ -1681,32 +1681,32 @@ Notez que l&apos;utilisation de n&apos;importe quelle option de ligne de command
         <translation>Connexion réussie</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="566"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="567"/>
         <source>WebFinger response had unexpected content type: %1</source>
         <translation>La réponse WebFinger avait un type de contenu inattendu : %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="576"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="577"/>
         <source>Could not parse WebFinger response: %1</source>
         <translation>Impossible d&apos;analyser la réponse WebFinger : %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="584"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="586"/>
         <source>WebFinger response subject did not match the requested resource</source>
         <translation>L&apos;objet de la réponse WebFinger ne correspondait pas à la ressource demandée.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="596"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="598"/>
         <source>WebFinger response did not contain an OpenID Connect issuer</source>
         <translation>La réponse WebFinger ne contenait pas d&apos;émetteur OpenID Connect.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="603"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="605"/>
         <source>WebFinger issuer link had no href</source>
         <translation>Le lien d&apos;émetteur WebFinger ne contenait pas d&apos;attribut href.</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="689"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="691"/>
         <source>Could not parse OIDC discovery response: %1</source>
         <translation>Impossible d&apos;analyser la réponse de découverte OIDC : %1</translation>
     </message>

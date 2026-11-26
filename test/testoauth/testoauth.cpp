@@ -14,6 +14,7 @@
 #include "theme.h"
 
 using namespace std::chrono_literals;
+using namespace Qt::Literals::StringLiterals;
 using namespace OCC;
 namespace {
 class DesktopServiceHook : public QObject
@@ -971,23 +972,66 @@ private Q_SLOTS:
         QCOMPARE(test.refreshFinishedSpy->count(), 0);
     }
 
+    void testInternationalizedDomainName_data()
+    {
+        QTest::addColumn<QString>("serverHost");
+        QTest::addColumn<bool>("unicodeHost");
+        QTest::addColumn<QString>("subjectHost");
+        QTest::addColumn<bool>("accepted");
+
+        QTest::newRow("example.com: punycode server, url-encoded subject") << u"xn--bcher-kva.example.com"_s << true << u"b%C3%BCcher.example.com"_s << true;
+        QTest::newRow("example.com: punycode server, unicode subject") << u"xn--bcher-kva.example.com"_s << true << u"b\u00FCcher.example.com"_s << true;
+        QTest::newRow("example.com: punycode server, punycode subject") << u"xn--bcher-kva.example.com"_s << true << u"xn--bcher-kva.example.com"_s << true;
+        QTest::newRow("example.com: punycode server, uppercase subject") << u"xn--bcher-kva.example.com"_s << true << u"B\u00DCCHER.example.com"_s << true;
+        QTest::newRow("example.com: punycode server, decomposed subject") << u"xn--bcher-kva.example.com"_s << true << u"bu\u0308cher.example.com"_s << true;
+        QTest::newRow("example.com: punycode server, different host subject") << u"xn--bcher-kva.example.com"_s << true << u"bucher.example.com"_s << false;
+        QTest::newRow("example.com: punycode server, different tld subject") << u"xn--bcher-kva.example.com"_s << true << u"xn--bcher-kva.example"_s << false;
+        QTest::newRow("example.com: unicode server, url-encoded subject") << u"b\u00FCcher.example.com"_s << true << u"b%C3%BCcher.example.com"_s << true;
+        QTest::newRow("example.com: unicode server, unicode subject") << u"b\u00FCcher.example.com"_s << true << u"b\u00FCcher.example.com"_s << true;
+        QTest::newRow("example.com: unicode server, punycode subject") << u"b\u00FCcher.example.com"_s << true << u"xn--bcher-kva.example.com"_s << true;
+
+        QTest::newRow("example: punycode server, url-encoded subject") << u"xn--bcher-kva.example"_s << false << u"b%C3%BCcher.example"_s << true;
+        QTest::newRow("example: punycode server, unicode subject") << u"xn--bcher-kva.example"_s << false << u"b\u00FCcher.example"_s << true;
+        QTest::newRow("example: punycode server, punycode subject") << u"xn--bcher-kva.example"_s << false << u"xn--bcher-kva.example"_s << true;
+        QTest::newRow("example: punycode server, uppercase subject") << u"xn--bcher-kva.example"_s << false << u"B\u00DCCHER.example"_s << true;
+        QTest::newRow("example: punycode server, decomposed subject") << u"xn--bcher-kva.example"_s << false << u"bu\u0308cher.example"_s << true;
+        QTest::newRow("example: punycode server, different host subject") << u"xn--bcher-kva.example"_s << false << u"bucher.example"_s << false;
+        QTest::newRow("example: punycode server, different tld subject") << u"xn--bcher-kva.example"_s << false << u"xn--bcher-kva.example.com"_s << false;
+        QTest::newRow("example: unicode server, url-encoded subject") << u"b\u00FCcher.example"_s << false << u"b%C3%BCcher.example"_s << true;
+        QTest::newRow("example: unicode server, unicode subject") << u"b\u00FCcher.example"_s << false << u"b\u00FCcher.example"_s << true;
+        QTest::newRow("example: unicode server, punycode subject") << u"b\u00FCcher.example"_s << false << u"xn--bcher-kva.example"_s << true;
+
+        QTest::newRow("example.com: sharp s server, punycode subject") << u"stra\u00DFe.example.com"_s << true << u"xn--strae-oqa.example.com"_s << true;
+        QTest::newRow("example.com: sharp s server, ss subject") << u"stra\u00DFe.example.com"_s << true << u"strasse.example.com"_s << false;
+    }
+
     void testInternationalizedDomainName()
     {
-        // QUrl stores hosts with an IDN whitelisted TLD (like .de) in Unicode form, even if they were set in punycode.
-        // The WebFinger resource must use the punycode form, and a subject with an equivalent but
-        // differently encoded host (here: percent-encoded UTF-8) must be accepted.
+        QFETCH(QString, serverHost);
+        QFETCH(bool, unicodeHost);
+        QFETCH(QString, subjectHost);
+        QFETCH(bool, accepted);
+
+        const QUrl serverUrl(u"oauthtest://%1/opencloud"_s.arg(serverHost));
+        const QString subject = u"oauthtest://%1/opencloud"_s.arg(subjectHost);
+        QCOMPARE(serverUrl.host().contains(u"xn--"_s), !unicodeHost);
+
         struct Test : OAuthTestCase
         {
-            QString resource;
+            QUrl _serverUrl;
+            QString _subject;
+            QString _resource;
 
-            QUrl serverUrl() const override { return QUrl(QStringLiteral("oauthtest://cloud.xn--bcher-kva.de/opencloud")); }
+            QUrl serverUrl() const override { return _serverUrl; }
+
+            void oauthResult(OAuth::Result, const QString &, const QString &) override { }
 
             QNetworkReply *wellKnownWebfingerReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req) override
             {
                 OC_ASSERT(op == QNetworkAccessManager::GetOperation);
-                resource = QUrlQuery(req.url()).queryItemValue(QStringLiteral("resource"));
+                _resource = QUrlQuery(req.url()).queryItemValue(QStringLiteral("resource"));
                 QJsonDocument jsondata(QJsonObject{
-                    {QStringLiteral("subject"), QStringLiteral("oauthtest://cloud.b%C3%BCcher.de/opencloud")},
+                    {QStringLiteral("subject"), _subject},
                     {QStringLiteral("links"),
                         QJsonArray{QJsonObject{
                             {QStringLiteral("rel"), QStringLiteral("http://openid.net/specs/connect/1.0/issuer")},
@@ -999,19 +1043,24 @@ private Q_SLOTS:
 
                 return new FakePayloadReply(op, req, jsondata.toJson(), headers, fakeAm);
             }
-
-            void test() override
-            {
-                oauth = prepareOauth();
-                QSignalSpy resultSpy(oauth.get(), &OCC::OAuth::result);
-                QSignalSpy authorisationLinkSpy(oauth.get(), &OCC::OAuth::authorisationLinkChanged);
-                oauth->startAuthentication();
-                QVERIFY(authorisationLinkSpy.wait());
-                QCOMPARE(resultSpy.count(), 0);
-                QCOMPARE(resource, QStringLiteral("oauthtest://cloud.xn--bcher-kva.de/opencloud"));
-            }
         } test;
-        test.test();
+        test._serverUrl = serverUrl;
+        test._subject = subject;
+
+        test.oauth = test.prepareOauth();
+        QSignalSpy resultSpy(test.oauth.get(), &OCC::OAuth::result);
+        QSignalSpy authorisationLinkSpy(test.oauth.get(), &OCC::OAuth::authorisationLinkChanged);
+        test.oauth->startAuthentication();
+        if (accepted) {
+            QVERIFY(authorisationLinkSpy.wait());
+            QCOMPARE(resultSpy.count(), 0);
+        } else {
+            QVERIFY(resultSpy.wait());
+            QCOMPARE(resultSpy.first().first().value<OCC::OAuth::Result>(), OCC::OAuth::Error);
+            QCOMPARE(authorisationLinkSpy.count(), 0);
+        }
+        QVERIFY(test._resource.section(QLatin1Char('/'), 2, 2).contains(QStringLiteral("xn--")));
+        QVERIFY(Utility::urlEqual(QUrl(test._resource), serverUrl));
     }
 
     void testTransientRefreshDoesNotEmitAuthFailed()
