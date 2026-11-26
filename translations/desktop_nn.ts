@@ -549,12 +549,12 @@ Skrivebordsverktøy for filsynkronisering.</translation>
 <context>
     <name>OCC::AccountBasedOAuth</name>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="855"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="857"/>
         <source>Could not parse the token response: %1</source>
         <translation>Klarte ikkje tolke tokensvaret: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="862"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="864"/>
         <source>The token response did not contain an access token</source>
         <translation>Tokensvaret inneheldt ikkje noko tilgangstoken</translation>
     </message>
@@ -1682,32 +1682,32 @@ Merk at kommandolinjeval for logging overstyrer innstillingane.</translation>
         <translation>Innlogginga er fullført</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="566"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="567"/>
         <source>WebFinger response had unexpected content type: %1</source>
         <translation>WebFinger-svaret hadde uventa innhaldstype: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="576"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="577"/>
         <source>Could not parse WebFinger response: %1</source>
         <translation>Klarte ikkje tolke WebFinger-svaret: %1</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="584"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="586"/>
         <source>WebFinger response subject did not match the requested resource</source>
         <translation>Subjektet i WebFinger-svaret samsvarte ikkje med den etterspurde ressursen</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="596"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="598"/>
         <source>WebFinger response did not contain an OpenID Connect issuer</source>
         <translation>WebFinger-svaret inneheldt ingen OpenID Connect-utskrivar</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="603"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="605"/>
         <source>WebFinger issuer link had no href</source>
         <translation>WebFinger-lenkja til utskrivaren hadde ingen href</translation>
     </message>
     <message>
-        <location filename="../src/libsync/creds/oauth.cpp" line="689"/>
+        <location filename="../src/libsync/creds/oauth.cpp" line="691"/>
         <source>Could not parse OIDC discovery response: %1</source>
         <translation>Klarte ikkje tolke OIDC-oppdagingssvar: %1</translation>
     </message>
