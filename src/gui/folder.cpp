@@ -50,7 +50,6 @@
 
 
 #include <QDir>
-#include <QSettings>
 #include <QTimer>
 #include <QUrl>
 
@@ -99,19 +98,19 @@ Folder::Folder(const FolderDefinition &definition, const AccountStatePtr &accoun
 
         connect(_accountState.data(), &AccountState::isConnectedChanged, this, &Folder::canSyncChanged);
 
-        auto *context = new QObject(this);
-        // once we successfully retrieved the private link we can delete the context to disconnect the signal
-        connect(_accountState->account().data(), &Account::capabilitiesChanged, context, [context, this] {
+        auto setWebUrl = [this] {
             if (_accountState->account()->capabilities().privateLinkPropertyAvailable()) {
-                fetchPrivateLinkUrl(_accountState->account(), webDavUrl(), {}, this, [context, this](const QUrl &privateLinkUrl) {
-                    _webUrl = privateLinkUrl;
-                    Q_EMIT webUrlChanged();
-                    context->deleteLater();
+                fetchPrivateLinkUrl(_accountState->account(), webDavUrl(), {}, this, [this](const QUrl &privateLinkUrl) {
+                    if (_webUrl != privateLinkUrl) {
+                        _webUrl = privateLinkUrl;
+                        Q_EMIT webUrlChanged();
+                    }
                 });
-            } else {
-                context->deleteLater();
             }
-        });
+        };
+
+        setWebUrl();
+        connect(_accountState->account().data(), &Account::capabilitiesChanged, this, setWebUrl);
 
         // use a direct connection, the folder status has to be up to date
         connect(_engine.data(), &SyncEngine::finished, this, &Folder::slotSyncFinished, Qt::DirectConnection);
@@ -624,7 +623,7 @@ void Folder::slotWatchedPathsChanged(const QSet<QString> &paths, ChangeReason re
     }
     if (needSync && canSync()) {
         FolderMan::instance()->scheduler()->enqueueFolder(this);
-    } else if (!needSync && _syncResult.status() == SyncResult::Queued && FolderMan::instance()->scheduler()->isFolderQueued(this)) {
+    } else if (!needSync && _syncResult.status() == SyncResult::Queued && !FolderMan::instance()->scheduler()->isFolderQueued(this)) {
         // the folder entered queued when a file change was detected (not actually queued), it later turned out the change was irrelevant
         setSyncState(SyncResult::Success);
     }

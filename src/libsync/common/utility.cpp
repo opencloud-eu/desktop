@@ -36,7 +36,6 @@
 #include <QProcess>
 #include <QRandomGenerator>
 #include <QRegularExpression>
-#include <QSettings>
 #include <QStandardPaths>
 #include <QSysInfo>
 #include <QTextStream>

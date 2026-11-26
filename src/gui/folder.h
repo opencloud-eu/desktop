@@ -35,7 +35,6 @@
 #include <set>
 
 class QThread;
-class QSettings;
 
 namespace OCC {
 

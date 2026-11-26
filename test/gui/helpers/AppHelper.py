@@ -102,6 +102,10 @@ def get_native_clipboard_text(self):
     raise NotImplementedError("unsupported platform.")
 
 
+def get_name(self):
+    return self.get_attribute("name")
+
+
 def pause(self):
     threading.Event().wait()
 
@@ -118,6 +122,7 @@ WebElement.native_send_keys = native_send_keys
 WebElement.find_element = find_element
 WebElement.find_elements_with_wait = find_elements_with_wait
 WebElement.is_checked = is_checked
+WebElement.get_name = get_name
 
 app_driver = None
 
@@ -203,7 +208,8 @@ def wait_until_app_terminated():
 
 
 def get_window_location():
-    window = app().find_element(By.XPATH, "//*[contains(@name,'OpenCloud Desktop')]").location
+    display_name = get_config('app_display_name')
+    window = app().find_element(By.XPATH, f"//*[contains(@name,'{display_name}')]").location
     return window['x'], window['y']
 
 

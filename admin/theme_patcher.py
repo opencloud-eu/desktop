@@ -98,6 +98,11 @@ class Patcher(object):
         with destFile.open("wb") as f:
             f.write(data)
 
+    @staticmethod
+    def replaceAll(content : str, replacements : dict[str, str]):
+        pattern = re.compile("|".join(re.escape(k) for k in sorted(replacements, key=len, reverse=True)))
+        return pattern.sub(lambda match: replacements[match.group(0)], content)
+
     def renamedFileName(self, name : str):
         return name.replace("opencloud", self.executableName)
 
@@ -128,23 +133,29 @@ class Patcher(object):
     def patchInfoPlist(self):
         infoPlist = self.bundleRoot / "Contents/Info.plist"
         content = infoPlist.read_text()
-        content = (content.replace("<string>OpenCloud Desktop</string>", f"<string>{self.applicationDisplayName}</string>")
-                   .replace("<string>OpenCloud</string>", f"<string>{self.applicationName}</string>"))
+        content = Patcher.replaceAll(content, {
+            "<string>OpenCloud Desktop</string>": f"<string>{self.applicationDisplayName}</string>",
+            "<string>OpenCloud</string>": f"<string>{self.applicationName}</string>",
+        })
         infoPlist.write_text(content)
 
         infoPlist = self.bundleRoot / "Contents/PlugIns/FinderSyncExt.appex/Contents/Info.plist"
         content = infoPlist.read_text()
-        content = (content.replace("<string>OpenCloud Desktop Extensions</string>", f"<string>{self.applicationDisplayName} Extensions</string>")
-                   .replace("eu.opencloud.desktop", self.organizationDomain))
+        content = Patcher.replaceAll(content, {
+            "<string>OpenCloud Desktop Extensions</string>": f"<string>{self.applicationDisplayName} Extensions</string>",
+            "eu.opencloud.desktop": self.organizationDomain,
+        })
         infoPlist.write_text(content)
 
     def patchMackPkg(self):
         for script in ["macosx.pkgproj", "pre_install.sh", "post_install.sh"]:
             script = self.installDir / "OpenCloudAssets" / script
             content = script.read_text()
-            content = (content.replace("OpenCloud Desktop", self.applicationDisplayName)
-                       .replace("eu.opencloud.desktop", self.organizationDomain)
-                       .replace("OpenCloud", self.applicationName))
+            content = Patcher.replaceAll(content, {
+                "OpenCloud Desktop": self.applicationDisplayName,
+                "eu.opencloud.desktop": self.organizationDomain,
+                "OpenCloud": self.applicationName,
+            })
             script.write_text(content)
 
     def patchDesktopFiles(self):
@@ -154,8 +165,10 @@ class Patcher(object):
             print(f"Renaming {desktopFile} to {newDesktopFile}")
             desktopFile.rename(newDesktopFile)
             content = newDesktopFile.read_text()
-            content = (content.replace("opencloud", self.executableName)
-                       .replace("OpenCloud Desktop", self.applicationDisplayName))
+            content = Patcher.replaceAll(content, {
+                "opencloud": self.executableName,
+                "OpenCloud Desktop": self.applicationDisplayName,
+            })
             newDesktopFile.write_text(content)
 
 

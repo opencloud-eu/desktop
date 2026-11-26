@@ -89,6 +89,16 @@ SYNC_PATTERNS = {
             SYNC_STATUS['REGISTER'],
             SYNC_STATUS['UPDATE'],
         ],
+        [
+            SYNC_STATUS['REGISTER'],
+            SYNC_STATUS['NOP'],
+            SYNC_STATUS['UPDATE'],
+        ],
+        [
+            SYNC_STATUS['REGISTER'],
+            SYNC_STATUS['REGISTER'],
+            SYNC_STATUS['UPDATE'],
+        ],
         # when syncing empty account (hidden files are ignored)
         # [SYNC_STATUS['UPDATE'], SYNC_STATUS['OK']],
         # [SYNC_STATUS['UPDATE'], SYNC_STATUS['OKAL']],

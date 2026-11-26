@@ -14,6 +14,7 @@
 #include "theme.h"
 
 using namespace std::chrono_literals;
+using namespace Qt::Literals::StringLiterals;
 using namespace OCC;
 namespace {
 class DesktopServiceHook : public QObject
@@ -124,11 +125,13 @@ public:
 
     std::unique_ptr<AccountBasedOAuth> oauth;
 
+    virtual QUrl serverUrl() const { return sOAuthTestServer; }
+
     virtual std::unique_ptr<AccountBasedOAuth> prepareOauth()
     {
         fakeAm = new FakeAM({}, nullptr);
         account = Account::create(QUuid::createUuid());
-        account->setUrl(sOAuthTestServer);
+        account->setUrl(serverUrl());
         // the account seizes ownership over the qnam in account->setCredentials(...) by keeping a shared pointer on it
         // therefore, we should never call fakeAm->setThis(...)
         account->setCredentials(new FakeCredentials{fakeAm});
@@ -219,8 +222,8 @@ public:
         OC_ASSERT(state == StartState);
         state = StatusPhpState;
         OC_ASSERT(op == QNetworkAccessManager::GetOperation);
-        OC_ASSERT(req.url().toString().startsWith(sOAuthTestServer.toString()));
-        OC_ASSERT(req.url().path() == sOAuthTestServer.path() + QStringLiteral("/status.php"));
+        OC_ASSERT(req.url().toString().startsWith(serverUrl().toString()));
+        OC_ASSERT(req.url().path() == serverUrl().path() + QStringLiteral("/status.php"));
         auto payload = std::make_unique<QBuffer>();
         payload->setData(statusPhpPayload());
         return new FakePostReply(op, req, std::move(payload), fakeAm);
@@ -967,6 +970,97 @@ private Q_SLOTS:
         test.test();
         QCOMPARE(test.refreshErrorSpy->count(), 0);
         QCOMPARE(test.refreshFinishedSpy->count(), 0);
+    }
+
+    void testInternationalizedDomainName_data()
+    {
+        QTest::addColumn<QString>("serverHost");
+        QTest::addColumn<bool>("unicodeHost");
+        QTest::addColumn<QString>("subjectHost");
+        QTest::addColumn<bool>("accepted");
+
+        QTest::newRow("example.com: punycode server, url-encoded subject") << u"xn--bcher-kva.example.com"_s << true << u"b%C3%BCcher.example.com"_s << true;
+        QTest::newRow("example.com: punycode server, unicode subject") << u"xn--bcher-kva.example.com"_s << true << u"b\u00FCcher.example.com"_s << true;
+        QTest::newRow("example.com: punycode server, punycode subject") << u"xn--bcher-kva.example.com"_s << true << u"xn--bcher-kva.example.com"_s << true;
+        QTest::newRow("example.com: punycode server, uppercase subject") << u"xn--bcher-kva.example.com"_s << true << u"B\u00DCCHER.example.com"_s << true;
+        QTest::newRow("example.com: punycode server, decomposed subject") << u"xn--bcher-kva.example.com"_s << true << u"bu\u0308cher.example.com"_s << true;
+        QTest::newRow("example.com: punycode server, different host subject") << u"xn--bcher-kva.example.com"_s << true << u"bucher.example.com"_s << false;
+        QTest::newRow("example.com: punycode server, different tld subject") << u"xn--bcher-kva.example.com"_s << true << u"xn--bcher-kva.example"_s << false;
+        QTest::newRow("example.com: unicode server, url-encoded subject") << u"b\u00FCcher.example.com"_s << true << u"b%C3%BCcher.example.com"_s << true;
+        QTest::newRow("example.com: unicode server, unicode subject") << u"b\u00FCcher.example.com"_s << true << u"b\u00FCcher.example.com"_s << true;
+        QTest::newRow("example.com: unicode server, punycode subject") << u"b\u00FCcher.example.com"_s << true << u"xn--bcher-kva.example.com"_s << true;
+
+        QTest::newRow("example: punycode server, url-encoded subject") << u"xn--bcher-kva.example"_s << false << u"b%C3%BCcher.example"_s << true;
+        QTest::newRow("example: punycode server, unicode subject") << u"xn--bcher-kva.example"_s << false << u"b\u00FCcher.example"_s << true;
+        QTest::newRow("example: punycode server, punycode subject") << u"xn--bcher-kva.example"_s << false << u"xn--bcher-kva.example"_s << true;
+        QTest::newRow("example: punycode server, uppercase subject") << u"xn--bcher-kva.example"_s << false << u"B\u00DCCHER.example"_s << true;
+        QTest::newRow("example: punycode server, decomposed subject") << u"xn--bcher-kva.example"_s << false << u"bu\u0308cher.example"_s << true;
+        QTest::newRow("example: punycode server, different host subject") << u"xn--bcher-kva.example"_s << false << u"bucher.example"_s << false;
+        QTest::newRow("example: punycode server, different tld subject") << u"xn--bcher-kva.example"_s << false << u"xn--bcher-kva.example.com"_s << false;
+        QTest::newRow("example: unicode server, url-encoded subject") << u"b\u00FCcher.example"_s << false << u"b%C3%BCcher.example"_s << true;
+        QTest::newRow("example: unicode server, unicode subject") << u"b\u00FCcher.example"_s << false << u"b\u00FCcher.example"_s << true;
+        QTest::newRow("example: unicode server, punycode subject") << u"b\u00FCcher.example"_s << false << u"xn--bcher-kva.example"_s << true;
+
+        QTest::newRow("example.com: sharp s server, punycode subject") << u"stra\u00DFe.example.com"_s << true << u"xn--strae-oqa.example.com"_s << true;
+        QTest::newRow("example.com: sharp s server, ss subject") << u"stra\u00DFe.example.com"_s << true << u"strasse.example.com"_s << false;
+    }
+
+    void testInternationalizedDomainName()
+    {
+        QFETCH(QString, serverHost);
+        QFETCH(bool, unicodeHost);
+        QFETCH(QString, subjectHost);
+        QFETCH(bool, accepted);
+
+        const QUrl serverUrl(u"oauthtest://%1/opencloud"_s.arg(serverHost));
+        const QString subject = u"oauthtest://%1/opencloud"_s.arg(subjectHost);
+        QCOMPARE(serverUrl.host().contains(u"xn--"_s), !unicodeHost);
+
+        struct Test : OAuthTestCase
+        {
+            QUrl _serverUrl;
+            QString _subject;
+            QString _resource;
+
+            QUrl serverUrl() const override { return _serverUrl; }
+
+            void oauthResult(OAuth::Result, const QString &, const QString &) override { }
+
+            QNetworkReply *wellKnownWebfingerReply(QNetworkAccessManager::Operation op, const QNetworkRequest &req) override
+            {
+                OC_ASSERT(op == QNetworkAccessManager::GetOperation);
+                _resource = QUrlQuery(req.url()).queryItemValue(QStringLiteral("resource"));
+                QJsonDocument jsondata(QJsonObject{
+                    {QStringLiteral("subject"), _subject},
+                    {QStringLiteral("links"),
+                        QJsonArray{QJsonObject{
+                            {QStringLiteral("rel"), QStringLiteral("http://openid.net/specs/connect/1.0/issuer")},
+                            {QStringLiteral("href"), QStringLiteral("oauthtest://openidserver")},
+                        }}},
+                });
+                QHttpHeaders headers;
+                headers.append(QHttpHeaders::WellKnownHeader::ContentType, QStringLiteral("application/json"));
+
+                return new FakePayloadReply(op, req, jsondata.toJson(), headers, fakeAm);
+            }
+        } test;
+        test._serverUrl = serverUrl;
+        test._subject = subject;
+
+        test.oauth = test.prepareOauth();
+        QSignalSpy resultSpy(test.oauth.get(), &OCC::OAuth::result);
+        QSignalSpy authorisationLinkSpy(test.oauth.get(), &OCC::OAuth::authorisationLinkChanged);
+        test.oauth->startAuthentication();
+        if (accepted) {
+            QVERIFY(authorisationLinkSpy.wait());
+            QCOMPARE(resultSpy.count(), 0);
+        } else {
+            QVERIFY(resultSpy.wait());
+            QCOMPARE(resultSpy.first().first().value<OCC::OAuth::Result>(), OCC::OAuth::Error);
+            QCOMPARE(authorisationLinkSpy.count(), 0);
+        }
+        QVERIFY(test._resource.section(QLatin1Char('/'), 2, 2).contains(QStringLiteral("xn--")));
+        QVERIFY(Utility::urlEqual(QUrl(test._resource), serverUrl));
     }
 
     void testTransientRefreshDoesNotEmitAuthFailed()
