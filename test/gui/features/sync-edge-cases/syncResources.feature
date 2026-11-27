@@ -234,10 +234,13 @@ Feature: Syncing files
         And the user waits for "1" seconds
         And the user resumes the file sync on the client
         And the user waits for the files to sync
-        Then the file "Öü/newfile.txt" should exist on the file system
+        Then the following files should exist on the file system with the content:
+            | filename        | content        |
+            | Öü/testFile.txt | openCloud test |
+            | Öü/newfile.txt  | test content   |
+        And as "Alice" the file "Öü/testFile.txt" should have the content "openCloud test" in the server
+        And as "Alice" the file "Öü/newfile.txt" should have the content "test content" in the server
         And as user "Alice" folder "/" should contain "1" items in the server
-        And as "Alice" file "Öü/testFile.txt" should exist in the server
-        And as "Alice" file "Öü/newfile.txt" should exist in the server
 
 
     Scenario: Try to sync hidden files and folders
@@ -310,7 +313,7 @@ Feature: Syncing files
         And user "Alice" has set up a client with default settings
         When the user enables sync of hidden files in the settings
         And the user opens the account "Alice"
-        And the user waits for the files to sync
+        And the user waits for the files to sync without force sync
         Then the following files should exist on the file system with the content:
             | filename                          | content |
             | .roothide.txt                     | lorem   |

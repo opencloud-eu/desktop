@@ -140,6 +140,8 @@ void FolderMan::unloadFolder(Folder *f)
 {
     Q_ASSERT(f);
 
+    bool hiddenFiles = ignoreHiddenFiles();
+
     _folders.removeAll(f);
     _socketApi->slotUnregisterPath(f);
 
@@ -151,6 +153,11 @@ void FolderMan::unloadFolder(Folder *f)
         disconnect(&f->syncEngine(), nullptr, f, nullptr);
         disconnect(
             &f->syncEngine().syncFileStatusTracker(), &SyncFileStatusTracker::fileStatusChanged, _socketApi.get(), &SocketApi::broadcastStatusPushMessage);
+    }
+
+    if (_folders.isEmpty() && hiddenFiles == false) {
+        // Folders list empty, setting reverts to true
+        Q_EMIT ignoreHiddenFilesChanged(true);
     }
 }
 
@@ -684,12 +691,14 @@ bool FolderMan::ignoreHiddenFiles() const
 
 void FolderMan::setIgnoreHiddenFiles(bool ignore)
 {
+    bool changed = false;
     // Note that the setting will revert to 'true' if all folders
     // are deleted...
     for (auto *folder : std::as_const(_folders)) {
         if (folder->ignoreHiddenFiles() == ignore) {
             continue;
         }
+        changed = true;
         folder->setIgnoreHiddenFiles(ignore);
         if (!ignore && folder->canSync()) {
             // sync the items that were hidden so far instead of waiting for the next scheduled run
@@ -697,6 +706,10 @@ void FolderMan::setIgnoreHiddenFiles(bool ignore)
         }
     }
     saveFolders();
+
+    if (changed) {
+        Q_EMIT ignoreHiddenFilesChanged(ignore);
+    }
 }
 
 bool FolderMan::isSpaceSynced(GraphApi::Space *space) const
@@ -772,6 +785,13 @@ std::unique_ptr<FolderMan> FolderMan::createInstance()
     OC_ASSERT(!_instance);
     _instance = new FolderMan();
     return std::unique_ptr<FolderMan>(_instance);
+}
+
+FolderMan *FolderMan::create(QQmlEngine *qmlEngine, QJSEngine *)
+{
+    Q_ASSERT(qmlEngine->thread() == FolderMan::instance()->thread());
+    QJSEngine::setObjectOwnership(FolderMan::instance(), QJSEngine::CppOwnership);
+    return instance();
 }
 
 } // namespace OCC
