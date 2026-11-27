@@ -26,7 +26,7 @@ class TestSyncJournalDB : public QObject
 
 public:
     TestSyncJournalDB()
-        : _db((_tempDir.path() + QStringLiteral("/sync.db")))
+        : _db((_tempDir.path() + "/sync.db"_L1))
     {
         QVERIFY(_tempDir.isValid());
     }
@@ -50,15 +50,15 @@ private Q_SLOTS:
 
     void testFileRecord()
     {
-        QVERIFY(!_db.getFileRecord(u"nonexistant"_s).isValid());
+        QVERIFY(!_db.getFileRecord("nonexistant"_L1).isValid());
 
-        auto item = TestUtils::dummyItem(u"foo"_s);
+        auto item = TestUtils::dummyItem("foo"_L1);
         // Use a value that exceeds uint32 and isn't representable by the
         // signed int being cast to uint64 either (like uint64::max would be)
         item._inode = std::numeric_limits<quint32>::max() + 12ull;
         item._modtime = dropMsecs(QDateTime::currentDateTime());
         item._type = ItemTypeDirectory;
-        item._etag = u"789789"_s;
+        item._etag = "789789"_L1;
         item._fileId = "abcd"_ba;
         item._remotePerm = RemotePermissions::fromDbValue("RW");
         item._size = 213089055;
@@ -67,14 +67,14 @@ private Q_SLOTS:
         const auto record = [&] { return SyncJournalFileRecord::fromSyncFileItem(item); };
         QVERIFY(_db.setFileRecord(record()));
 
-        SyncJournalFileRecord storedRecord = _db.getFileRecord(u"foo"_s);
+        SyncJournalFileRecord storedRecord = _db.getFileRecord("foo"_L1);
         QVERIFY(storedRecord.isValid());
         QVERIFY(storedRecord == record());
 
         // Update checksum
         item._checksumHeader = "ADLER32:newchecksum";
-        _db.updateFileRecordChecksum(QStringLiteral("foo"), "newchecksum", CheckSums::fromByteArray("Adler32"));
-        storedRecord = _db.getFileRecord(u"foo"_s);
+        _db.updateFileRecordChecksum("foo"_L1, "newchecksum", CheckSums::fromByteArray("Adler32"));
+        storedRecord = _db.getFileRecord("foo"_L1);
         QVERIFY(storedRecord.isValid());
         QVERIFY(storedRecord == record());
 
@@ -83,17 +83,17 @@ private Q_SLOTS:
         // try a value that only fits uint64, not int64
         item._inode = std::numeric_limits<quint64>::max() - std::numeric_limits<quint32>::max() - 1;
         item._type = ItemTypeFile;
-        item._etag = u"789FFF"_s;
+        item._etag = "789FFF"_L1;
         item._fileId = "efg"_ba;
         item._remotePerm = RemotePermissions::fromDbValue("NV");
         item._size = 289055;
         _db.setFileRecord(record());
-        storedRecord = _db.getFileRecord(u"foo"_s);
+        storedRecord = _db.getFileRecord("foo"_L1);
         QVERIFY(storedRecord.isValid());
         QVERIFY(storedRecord == record());
 
-        QVERIFY(_db.deleteFileRecord(u"foo"_s));
-        storedRecord = _db.getFileRecord(u"foo"_s);
+        QVERIFY(_db.deleteFileRecord("foo"_L1));
+        storedRecord = _db.getFileRecord("foo"_L1);
         QVERIFY(!storedRecord.isValid());
     }
 
@@ -101,7 +101,7 @@ private Q_SLOTS:
     {
         // Try with and without a checksum
         {
-            auto item = TestUtils::dummyItem(u"foo-checksum"_s);
+            auto item = TestUtils::dummyItem("foo-checksum"_L1);
             item._checksumHeader = "MD5:mychecksum"_ba;
             const auto record = SyncJournalFileRecord::fromSyncFileItem(item);
             QVERIFY(_db.setFileRecord(record));
@@ -120,7 +120,7 @@ private Q_SLOTS:
             QVERIFY(storedRecord == record);
         }
         {
-            auto item = TestUtils::dummyItem(u"foo-nochecksum"_s);
+            auto item = TestUtils::dummyItem("foo-nochecksum"_L1);
             item._remotePerm = RemotePermissions::fromDbValue("RW");
             const auto record = SyncJournalFileRecord::fromSyncFileItem(item);
             QVERIFY(_db.setFileRecord(record));
@@ -134,40 +134,40 @@ private Q_SLOTS:
     void testDownloadInfo()
     {
         typedef SyncJournalDb::DownloadInfo Info;
-        Info record = _db.getDownloadInfo(QStringLiteral("nonexistant"));
+        Info record = _db.getDownloadInfo("nonexistant"_L1);
         QVERIFY(!record._valid);
 
         record._errorCount = 5;
         record._etag = "ABCDEF";
         record._valid = true;
-        record._tmpfile = QStringLiteral("/tmp/foo");
-        _db.setDownloadInfo(QStringLiteral("foo"), record);
+        record._tmpfile = "/tmp/foo"_L1;
+        _db.setDownloadInfo("foo"_L1, record);
 
-        Info storedRecord = _db.getDownloadInfo(QStringLiteral("foo"));
+        Info storedRecord = _db.getDownloadInfo("foo"_L1);
         QVERIFY(storedRecord == record);
 
-        _db.setDownloadInfo(QStringLiteral("foo"), Info());
-        Info wipedRecord = _db.getDownloadInfo(QStringLiteral("foo"));
+        _db.setDownloadInfo("foo"_L1, Info());
+        Info wipedRecord = _db.getDownloadInfo("foo"_L1);
         QVERIFY(!wipedRecord._valid);
     }
 
     void testUploadInfo()
     {
         typedef SyncJournalDb::UploadInfo Info;
-        Info record = _db.getUploadInfo(QStringLiteral("nonexistant"));
+        Info record = _db.getUploadInfo("nonexistant"_L1);
         QVERIFY(!record._valid);
 
         record._size = 12894789147;
         record._modtime = dropMsecs(QDateTime::currentDateTime());
         record._valid = true;
-        record._url = QUrl(QStringLiteral("http://example.com/foo"));
-        _db.setUploadInfo(QStringLiteral("foo"), record);
+        record._url = QUrl("http://example.com/foo"_L1);
+        _db.setUploadInfo("foo"_L1, record);
 
-        Info storedRecord = _db.getUploadInfo(QStringLiteral("foo"));
+        Info storedRecord = _db.getUploadInfo("foo"_L1);
         QVERIFY(storedRecord == record);
 
-        _db.setUploadInfo(QStringLiteral("foo"), Info());
-        Info wipedRecord = _db.getUploadInfo(QStringLiteral("foo"));
+        _db.setUploadInfo("foo"_L1, Info());
+        Info wipedRecord = _db.getUploadInfo("foo"_L1);
         QVERIFY(!wipedRecord._valid);
     }
 
@@ -195,8 +195,8 @@ private Q_SLOTS:
 
     void testAvoidReadFromDbOnNextSync()
     {
-        auto invalidEtag = u"_invalid_"_s;
-        auto initialEtag = u"etag"_s;
+        auto invalidEtag = "_invalid_"_L1;
+        auto initialEtag = "etag"_L1;
         auto makeEntry = [&](const QAnyStringView &path, ItemType type) {
             auto item = TestUtils::dummyItem(path.toString());
             item._type = type;
@@ -243,7 +243,7 @@ private Q_SLOTS:
         QCOMPARE(getEtag("foodir/subdir/otherdir"), initialEtag);
 
         // Indirect effects: setFileRecord() calls filter etags
-        initialEtag = u"etag2"_s;
+        initialEtag = "etag2"_L1;
 
         makeEntry("foodir", dirType);
         QCOMPARE(getEtag("foodir"), invalidEtag);
@@ -266,7 +266,7 @@ private Q_SLOTS:
             _db.setFileRecord(SyncJournalFileRecord::fromSyncFileItem(item));
         };
 
-        QStringList elements{u"foo"_s, u"foo/file"_s, u"bar"_s, u"moo"_s, u"moo/file"_s, u"foo%bar"_s, u"foo bla bar/file"_s, u"fo_"_s, u"fo_/file"_s};
+        QStringList elements{"foo"_L1, "foo/file"_L1, "bar"_L1, "moo"_L1, "moo/file"_L1, "foo%bar"_L1, "foo bla bar/file"_L1, "fo_"_L1, "fo_/file"_L1};
         for (const auto &elem : std::as_const(elements))
             makeEntry(elem);
 
@@ -282,18 +282,18 @@ private Q_SLOTS:
             return ok;
         };
 
-        _db.deleteFileRecord(QStringLiteral("moo"), true);
-        elements.removeAll(u"moo"_s);
-        elements.removeAll(u"moo/file"_s);
+        _db.deleteFileRecord("moo"_L1, true);
+        elements.removeAll("moo"_L1);
+        elements.removeAll("moo/file"_L1);
         QVERIFY(checkElements());
 
-        _db.deleteFileRecord(u"fo_"_s, true);
-        elements.removeAll(u"fo_"_s);
-        elements.removeAll(u"fo_/file"_s);
+        _db.deleteFileRecord("fo_"_L1, true);
+        elements.removeAll("fo_"_L1);
+        elements.removeAll("fo_/file"_L1);
         QVERIFY(checkElements());
 
-        _db.deleteFileRecord(u"foo%bar"_s, true);
-        elements.removeAll(u"foo%bar"_s);
+        _db.deleteFileRecord("foo%bar"_L1, true);
+        elements.removeAll("foo%bar"_L1);
         QVERIFY(checkElements());
     }
 

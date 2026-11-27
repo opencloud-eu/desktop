@@ -10,6 +10,7 @@
 #include <syncengine.h>
 
 using namespace OCC;
+using namespace Qt::StringLiterals;
 
 class TestSyncDelete : public QObject
 {
@@ -39,22 +40,22 @@ private Q_SLOTS:
         FakeFolder fakeFolder(FileInfo::A12_B12_C12_S12(), vfsMode, filesAreDehydrated);
 
         // Remove a directory on the server with new files on the client
-        fakeFolder.remoteModifier().remove(QStringLiteral("A"));
-        fakeFolder.localModifier().insert(QStringLiteral("A/hello.txt"));
+        fakeFolder.remoteModifier().remove("A"_L1);
+        fakeFolder.localModifier().insert("A/hello.txt"_L1);
 
         // Symetry
-        fakeFolder.localModifier().remove(QStringLiteral("B"));
-        fakeFolder.remoteModifier().insert(QStringLiteral("B/hello.txt"));
+        fakeFolder.localModifier().remove("B"_L1);
+        fakeFolder.remoteModifier().insert("B/hello.txt"_L1);
 
         QVERIFY(fakeFolder.applyLocalModificationsAndSync());
 
         // A/a1 must be gone because the directory was removed on the server, but hello.txt must be there
-        QVERIFY(!fakeFolder.currentRemoteState().find(QStringLiteral("A/a1")));
-        QVERIFY(fakeFolder.currentRemoteState().find(QStringLiteral("A/hello.txt")));
+        QVERIFY(!fakeFolder.currentRemoteState().find("A/a1"_L1));
+        QVERIFY(fakeFolder.currentRemoteState().find("A/hello.txt"_L1));
 
         // Symetry
-        QVERIFY(!fakeFolder.currentRemoteState().find(QStringLiteral("B/b1")));
-        QVERIFY(fakeFolder.currentRemoteState().find(QStringLiteral("B/hello.txt")));
+        QVERIFY(!fakeFolder.currentRemoteState().find("B/b1"_L1));
+        QVERIFY(fakeFolder.currentRemoteState().find("B/hello.txt"_L1));
 
         QCOMPARE(fakeFolder.currentLocalState(), fakeFolder.currentRemoteState());
     }
@@ -66,15 +67,15 @@ private Q_SLOTS:
 
         FakeFolder fakeFolder(FileInfo::A12_B12_C12_S12(), vfsMode, filesAreDehydrated);
 
-        fakeFolder.localModifier().remove(QStringLiteral("B"));
+        fakeFolder.localModifier().remove("B"_L1);
         QVERIFY(fakeFolder.applyLocalModificationsAndSync());
         QCOMPARE(fakeFolder.currentLocalState(), fakeFolder.currentRemoteState());
 
         // Add a directory that was just removed in the previous sync:
-        fakeFolder.localModifier().mkdir(QStringLiteral("B"));
-        fakeFolder.localModifier().insert(QStringLiteral("B/b1"));
+        fakeFolder.localModifier().mkdir("B"_L1);
+        fakeFolder.localModifier().insert("B/b1"_L1);
         QVERIFY(fakeFolder.applyLocalModificationsAndSync());
-        QVERIFY(fakeFolder.currentRemoteState().find(QStringLiteral("B/b1")));
+        QVERIFY(fakeFolder.currentRemoteState().find("B/b1"_L1));
         QCOMPARE(fakeFolder.currentLocalState(), fakeFolder.currentRemoteState());
     }
 };

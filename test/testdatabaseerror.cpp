@@ -10,7 +10,7 @@
 #include <syncengine.h>
 
 using namespace OCC;
-
+using namespace Qt::StringLiterals;
 
 class TestDatabaseError : public QObject
 {
@@ -64,18 +64,18 @@ private Q_SLOTS:
             FakeFolder fakeFolder(FileInfo::A12_B12_C12_S12(), vfsMode, filesAreDehydrated);
 
             // Do a couple of changes
-            fakeFolder.remoteModifier().insert(QStringLiteral("A/a0"));
-            fakeFolder.remoteModifier().appendByte(QStringLiteral("A/a1"));
-            fakeFolder.remoteModifier().remove(QStringLiteral("A/a2"));
-            fakeFolder.remoteModifier().rename(QStringLiteral("S/s1"), QStringLiteral("S/s1_renamed"));
-            fakeFolder.remoteModifier().mkdir(QStringLiteral("D"));
-            fakeFolder.remoteModifier().mkdir(QStringLiteral("D/subdir"));
-            fakeFolder.remoteModifier().insert(QStringLiteral("D/subdir/file"));
-            fakeFolder.localModifier().insert(QStringLiteral("B/b0"));
-            fakeFolder.localModifier().appendByte(QStringLiteral("B/b1"));
-            fakeFolder.remoteModifier().remove(QStringLiteral("B/b2"));
-            fakeFolder.localModifier().mkdir(QStringLiteral("NewDir"));
-            fakeFolder.localModifier().rename(QStringLiteral("C"), QStringLiteral("NewDir/C"));
+            fakeFolder.remoteModifier().insert("A/a0"_L1);
+            fakeFolder.remoteModifier().appendByte("A/a1"_L1);
+            fakeFolder.remoteModifier().remove("A/a2"_L1);
+            fakeFolder.remoteModifier().rename("S/s1"_L1, "S/s1_renamed"_L1);
+            fakeFolder.remoteModifier().mkdir("D"_L1);
+            fakeFolder.remoteModifier().mkdir("D/subdir"_L1);
+            fakeFolder.remoteModifier().insert("D/subdir/file"_L1);
+            fakeFolder.localModifier().insert("B/b0"_L1);
+            fakeFolder.localModifier().appendByte("B/b1"_L1);
+            fakeFolder.remoteModifier().remove("B/b2"_L1);
+            fakeFolder.localModifier().mkdir("NewDir"_L1);
+            fakeFolder.localModifier().rename("C"_L1, "NewDir/C"_L1);
 
             // Set the counter
             fakeFolder.syncJournal().autotestFailCounter = count;

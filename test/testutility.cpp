@@ -45,7 +45,7 @@ class TestUtility : public QObject
 private Q_SLOTS:
     void testOctetsToString()
     {
-        QLocale::setDefault(QLocale(QStringLiteral("en")));
+        QLocale::setDefault(QLocale("en"_L1));
         QCOMPARE(octetsToString(999), QString::fromLatin1("999 bytes"));
         QCOMPARE(octetsToString(1024), QString::fromLatin1("1 kB"));
         QCOMPARE(octetsToString(1364), QString::fromLatin1("1 kB"));
@@ -71,8 +71,8 @@ private Q_SLOTS:
     {
         QString postfix = QString::number(QRandomGenerator::global()->generate());
 
-        const QString appName = QStringLiteral("testLaunchOnStartup.%1").arg(postfix);
-        const QString guiName = QStringLiteral("LaunchOnStartup GUI Name");
+        const QString appName = "testLaunchOnStartup.%1"_L1.arg(postfix);
+        const QString guiName = "LaunchOnStartup GUI Name"_L1;
 
         QVERIFY(hasLaunchOnStartup(appName) == false);
         setLaunchOnStartup(appName, guiName, true);
@@ -90,37 +90,36 @@ private Q_SLOTS:
 
 
         const QDateTime current = QDateTime::currentDateTimeUtc();
-        QTest::newRow("0ms") << false << std::chrono::milliseconds(0ms) << QStringLiteral("0 second(s)") << QString();
-        QTest::newRow("5ms") << false << std::chrono::milliseconds(5ms) << QStringLiteral("0 second(s)") << QString();
-        QTest::newRow("1s") << false << std::chrono::milliseconds(1s) << QStringLiteral("1 second(s)") << QString();
-        QTest::newRow("1005ms") << false << std::chrono::milliseconds(1005ms) << QStringLiteral("1 second(s)") << QString();
-        QTest::newRow("56123ms") << false << std::chrono::milliseconds(56123ms) << QStringLiteral("56 second(s)") << QString();
-        QTest::newRow("90s") << false << std::chrono::milliseconds(90s) << QStringLiteral("2 minute(s)") << QStringLiteral("1 minute(s) 30 second(s)");
-        QTest::newRow("3h") << false << std::chrono::milliseconds(3h) << QStringLiteral("3 hour(s)") << QString();
-        QTest::newRow("3h + 20s") << false << std::chrono::milliseconds(3h + 20s) << QStringLiteral("3 hour(s)") << QString();
-        QTest::newRow("3h + 70s") << false << std::chrono::milliseconds(3h + 70s) << QStringLiteral("3 hour(s)") << QStringLiteral("3 hour(s) 1 minute(s)");
-        QTest::newRow("3h + 100s") << false << std::chrono::milliseconds(3h + 100s) << QStringLiteral("3 hour(s)") << QStringLiteral("3 hour(s) 2 minute(s)");
+        QTest::newRow("0ms") << false << std::chrono::milliseconds(0ms) << u"0 second(s)"_s << QString();
+        QTest::newRow("5ms") << false << std::chrono::milliseconds(5ms) << u"0 second(s)"_s << QString();
+        QTest::newRow("1s") << false << std::chrono::milliseconds(1s) << u"1 second(s)"_s << QString();
+        QTest::newRow("1005ms") << false << std::chrono::milliseconds(1005ms) << u"1 second(s)"_s << QString();
+        QTest::newRow("56123ms") << false << std::chrono::milliseconds(56123ms) << u"56 second(s)"_s << QString();
+        QTest::newRow("90s") << false << std::chrono::milliseconds(90s) << u"2 minute(s)"_s << u"1 minute(s) 30 second(s)"_s;
+        QTest::newRow("3h") << false << std::chrono::milliseconds(3h) << u"3 hour(s)"_s << QString();
+        QTest::newRow("3h + 20s") << false << std::chrono::milliseconds(3h + 20s) << u"3 hour(s)"_s << QString();
+        QTest::newRow("3h + 70s") << false << std::chrono::milliseconds(3h + 70s) << u"3 hour(s)"_s << u"3 hour(s) 1 minute(s)"_s;
+        QTest::newRow("3h + 100s") << false << std::chrono::milliseconds(3h + 100s) << u"3 hour(s)"_s << u"3 hour(s) 2 minute(s)"_s;
         QTest::newRow("4years") << false << std::chrono::milliseconds(current.addYears(4).addMonths(5).addDays(2).addSecs(23 * 60 * 60) - current)
-                                << QStringLiteral("4 year(s)") << QStringLiteral("4 year(s) 5 month(s)");
-        QTest::newRow("2days") << false << std::chrono::milliseconds(current.addDays(2).addSecs(23 * 60 * 60) - current) << QStringLiteral("3 day(s)")
-                               << QStringLiteral("2 day(s) 23 hour(s)");
+                                << u"4 year(s)"_s << u"4 year(s) 5 month(s)"_s;
+        QTest::newRow("2days") << false << std::chrono::milliseconds(current.addDays(2).addSecs(23 * 60 * 60) - current) << u"3 day(s)"_s
+                               << u"2 day(s) 23 hour(s)"_s;
 
 
-        QTest::newRow("0ms translated") << true << std::chrono::milliseconds(0ms) << QStringLiteral("0 seconds") << QString();
-        QTest::newRow("5ms translated") << true << std::chrono::milliseconds(5ms) << QStringLiteral("0 seconds") << QString();
-        QTest::newRow("1s translated") << true << std::chrono::milliseconds(1s) << QStringLiteral("1 second") << QString();
-        QTest::newRow("1005ms translated") << true << std::chrono::milliseconds(1005ms) << QStringLiteral("1 second") << QString();
-        QTest::newRow("56123ms translated") << true << std::chrono::milliseconds(56123ms) << QStringLiteral("56 seconds") << QString();
-        QTest::newRow("90s translated") << true << std::chrono::milliseconds(90s) << QStringLiteral("2 minutes") << QStringLiteral("1 minute 30 seconds");
-        QTest::newRow("3h translated") << true << std::chrono::milliseconds(3h) << QStringLiteral("3 hours") << QString();
-        QTest::newRow("3h + 20s translated") << true << std::chrono::milliseconds(3h + 20s) << QStringLiteral("3 hours") << QString();
-        QTest::newRow("3h + 70s translated") << true << std::chrono::milliseconds(3h + 70s) << QStringLiteral("3 hours") << QStringLiteral("3 hours 1 minute");
-        QTest::newRow("3h + 100s translated") << true << std::chrono::milliseconds(3h + 100s) << QStringLiteral("3 hours")
-                                              << QStringLiteral("3 hours 2 minutes");
+        QTest::newRow("0ms translated") << true << std::chrono::milliseconds(0ms) << u"0 seconds"_s << QString();
+        QTest::newRow("5ms translated") << true << std::chrono::milliseconds(5ms) << u"0 seconds"_s << QString();
+        QTest::newRow("1s translated") << true << std::chrono::milliseconds(1s) << u"1 second"_s << QString();
+        QTest::newRow("1005ms translated") << true << std::chrono::milliseconds(1005ms) << u"1 second"_s << QString();
+        QTest::newRow("56123ms translated") << true << std::chrono::milliseconds(56123ms) << u"56 seconds"_s << QString();
+        QTest::newRow("90s translated") << true << std::chrono::milliseconds(90s) << u"2 minutes"_s << u"1 minute 30 seconds"_s;
+        QTest::newRow("3h translated") << true << std::chrono::milliseconds(3h) << u"3 hours"_s << QString();
+        QTest::newRow("3h + 20s translated") << true << std::chrono::milliseconds(3h + 20s) << u"3 hours"_s << QString();
+        QTest::newRow("3h + 70s translated") << true << std::chrono::milliseconds(3h + 70s) << u"3 hours"_s << u"3 hours 1 minute"_s;
+        QTest::newRow("3h + 100s translated") << true << std::chrono::milliseconds(3h + 100s) << u"3 hours"_s << u"3 hours 2 minutes"_s;
         QTest::newRow("4years translated") << true << std::chrono::milliseconds(current.addYears(4).addMonths(5).addDays(2).addSecs(23 * 60 * 60) - current)
-                                           << QStringLiteral("4 years") << QStringLiteral("4 years 5 months");
-        QTest::newRow("2days translated") << true << std::chrono::milliseconds(current.addDays(2).addSecs(23 * 60 * 60) - current) << QStringLiteral("3 days")
-                                          << QStringLiteral("2 days 23 hours");
+                                           << u"4 years"_s << u"4 years 5 months"_s;
+        QTest::newRow("2days translated") << true << std::chrono::milliseconds(current.addDays(2).addSecs(23 * 60 * 60) - current) << u"3 days"_s
+                                          << u"2 days 23 hours"_s;
     }
 
 
@@ -134,7 +133,7 @@ private Q_SLOTS:
         QScopedPointer<QTranslator> translator;
         if (useTranslation) {
             translator.reset(new QTranslator(QCoreApplication::instance()));
-            QVERIFY(translator->load(QStringLiteral("desktop_en.ts"), QStringLiteral(":/client/translations/")));
+            QVERIFY(translator->load("desktop_en.ts"_L1, ":/client/translations/"_L1));
             QCoreApplication::instance()->installTranslator(translator.data());
         }
 
@@ -145,14 +144,14 @@ private Q_SLOTS:
     void testTimeAgo()
     {
         // Both times in same timezone
-        QDateTime d1 = QDateTime::fromString(QStringLiteral("2015-01-24T09:20:30+01:00"), Qt::ISODate);
-        QDateTime d2 = QDateTime::fromString(QStringLiteral("2015-01-23T09:20:30+01:00"), Qt::ISODate);
+        QDateTime d1 = QDateTime::fromString("2015-01-24T09:20:30+01:00"_L1, Qt::ISODate);
+        QDateTime d2 = QDateTime::fromString("2015-01-23T09:20:30+01:00"_L1, Qt::ISODate);
         QString s = timeAgoInWords(d2, d1);
         QCOMPARE(s, QLatin1String("1 day(s) ago"));
 
         // Different timezones
-        QDateTime earlyTS = QDateTime::fromString(QStringLiteral("2015-01-24T09:20:30+01:00"), Qt::ISODate);
-        QDateTime laterTS = QDateTime::fromString(QStringLiteral("2015-01-24T09:20:30-01:00"), Qt::ISODate);
+        QDateTime earlyTS = QDateTime::fromString("2015-01-24T09:20:30+01:00"_L1, Qt::ISODate);
+        QDateTime laterTS = QDateTime::fromString("2015-01-24T09:20:30-01:00"_L1, Qt::ISODate);
         s = timeAgoInWords(earlyTS, laterTS);
         QCOMPARE(s, QLatin1String("2 hour(s) ago"));
 
@@ -182,25 +181,25 @@ private Q_SLOTS:
         QTemporaryDir dir;
         QVERIFY(dir.isValid());
         QDir dir2(dir.path());
-        QVERIFY(dir2.mkpath(QStringLiteral("1")));
+        QVERIFY(dir2.mkpath("1"_L1));
         if( !fsCasePreserving() ) {
-            QVERIFY(dir2.mkpath(QStringLiteral("TEST")));
+            QVERIFY(dir2.mkpath("TEST"_L1));
         }
-        QVERIFY(dir2.mkpath(QStringLiteral("test/TESTI")));
-        QVERIFY(dir2.mkpath(QStringLiteral("TESTI")));
+        QVERIFY(dir2.mkpath("test/TESTI"_L1));
+        QVERIFY(dir2.mkpath("TESTI"_L1));
 
         QString a = dir.path();
         QString b = dir.path();
 
         QVERIFY(fileNamesEqual(a, b));
 
-        QVERIFY(fileNamesEqual(a + QStringLiteral("/test"), b + QStringLiteral("/test"))); // both exist
-        QVERIFY(fileNamesEqual(a + QStringLiteral("/test/TESTI"), b + QStringLiteral("/test/../test/TESTI"))); // both exist
+        QVERIFY(fileNamesEqual(a + "/test"_L1, b + "/test"_L1)); // both exist
+        QVERIFY(fileNamesEqual(a + "/test/TESTI"_L1, b + "/test/../test/TESTI"_L1)); // both exist
 
         QScopedValueRollback<bool> scope(OCC::fsCasePreserving_override, true);
-        QVERIFY(fileNamesEqual(a + QStringLiteral("/test"), b + QStringLiteral("/TEST"))); // both exist
+        QVERIFY(fileNamesEqual(a + "/test"_L1, b + "/TEST"_L1)); // both exist
 
-        QVERIFY(!fileNamesEqual(a + QStringLiteral("/test"), b + QStringLiteral("/test/TESTI"))); // both are different
+        QVERIFY(!fileNamesEqual(a + "/test"_L1, b + "/test/TESTI"_L1)); // both are different
 
         dir.remove();
     }
@@ -214,38 +213,36 @@ private Q_SLOTS:
 
         int row = 0;
         const auto add = [&row](const QString &child, const QString &parent, OCC::FileSystem::ChildResults result, bool casePreserving = true) {
-            const auto title =
-                QStringLiteral("Row: %1 CasePreserving %2: %3 is %4 child of %5")
-                    .arg(QString::number(++row), casePreserving ? QStringLiteral("yes") : QStringLiteral("no"), child, QDebug::toString(result), parent);
+            const auto title = "Row: %1 CasePreserving %2: %3 is %4 child of %5"_L1.arg(
+                QString::number(++row), casePreserving ? "yes"_L1 : "no"_L1, child, QDebug::toString(result), parent);
             QTest::addRow("%s", qUtf8Printable(title)) << child << parent << result << casePreserving;
         };
-        add(QStringLiteral("/A/a"), QStringLiteral("/A"), OCC::FileSystem::ChildResult::IsChild);
-        add(QStringLiteral("/A/a"), QStringLiteral("/A/a"), OCC::FileSystem::ChildResult::IsChild | OCC::FileSystem::ChildResult::IsEqual);
-        add(QStringLiteral("/A/a"), QStringLiteral("/A/a/"), OCC::FileSystem::ChildResult::IsChild | OCC::FileSystem::ChildResult::IsEqual);
-        add(QStringLiteral("/A/a/"), QStringLiteral("/A/a/"), OCC::FileSystem::ChildResult::IsChild | OCC::FileSystem::ChildResult::IsEqual);
-        add(QStringLiteral("/A/a/"), QStringLiteral("/A/a"), OCC::FileSystem::ChildResult::IsChild | OCC::FileSystem::ChildResult::IsEqual);
-        add(QStringLiteral("C:/A/a"), QStringLiteral("C:/A"), OCC::FileSystem::ChildResult::IsChild);
-        add(QStringLiteral("C:/Aa"), QStringLiteral("C:/A"), OCC::FileSystem::ChildResult::IsNoChild);
-        add(QStringLiteral("A/a"), QStringLiteral("A"), OCC::FileSystem::ChildResult::IsChild);
-        add(QStringLiteral("a/a"), QStringLiteral("A"), OCC::FileSystem::ChildResult::IsChild, true);
-        add(QStringLiteral("a/a"), QStringLiteral("A"), OCC::FileSystem::ChildResult::IsNoChild, false);
-        add(QStringLiteral("Aa"), QStringLiteral("A"), OCC::FileSystem::ChildResult::IsNoChild);
-        add(QStringLiteral("A/a"), QStringLiteral("A"), OCC::FileSystem::ChildResult::IsChild);
-        add(QStringLiteral("A/a"), QStringLiteral("A/"), OCC::FileSystem::ChildResult::IsChild);
-        add(QStringLiteral("ä/a"), QStringLiteral("ä/"), OCC::FileSystem::ChildResult::IsChild);
-        add(QStringLiteral("Ä/è/a"), QStringLiteral("Ä/è/"), OCC::FileSystem::ChildResult::IsChild);
-        add(QStringLiteral("Ä/a"), QStringLiteral("Ä/"), OCC::FileSystem::ChildResult::IsChild);
-        add(QStringLiteral("https://foo/bar"), QStringLiteral("https://foo"), OCC::FileSystem::ChildResult::IsChild);
-        add(QStringLiteral("https://foo/bar"), QStringLiteral("http://foo"), OCC::FileSystem::ChildResult::IsNoChild);
-        add(QStringLiteral("https://foo/bar"), QStringLiteral("http://foo/foo"), OCC::FileSystem::ChildResult::IsNoChild);
-        add(QStringLiteral("https://foo/bar"), QString(), OCC::FileSystem::ChildResult::IsChild | OCC::FileSystem::ChildResult::IsParentEmpty);
+        add("/A/a"_L1, "/A"_L1, OCC::FileSystem::ChildResult::IsChild);
+        add("/A/a"_L1, "/A/a"_L1, OCC::FileSystem::ChildResult::IsChild | OCC::FileSystem::ChildResult::IsEqual);
+        add("/A/a"_L1, "/A/a/"_L1, OCC::FileSystem::ChildResult::IsChild | OCC::FileSystem::ChildResult::IsEqual);
+        add("/A/a/"_L1, "/A/a/"_L1, OCC::FileSystem::ChildResult::IsChild | OCC::FileSystem::ChildResult::IsEqual);
+        add("/A/a/"_L1, "/A/a"_L1, OCC::FileSystem::ChildResult::IsChild | OCC::FileSystem::ChildResult::IsEqual);
+        add("C:/A/a"_L1, "C:/A"_L1, OCC::FileSystem::ChildResult::IsChild);
+        add("C:/Aa"_L1, "C:/A"_L1, OCC::FileSystem::ChildResult::IsNoChild);
+        add("A/a"_L1, "A"_L1, OCC::FileSystem::ChildResult::IsChild);
+        add("a/a"_L1, "A"_L1, OCC::FileSystem::ChildResult::IsChild, true);
+        add("a/a"_L1, "A"_L1, OCC::FileSystem::ChildResult::IsNoChild, false);
+        add("Aa"_L1, "A"_L1, OCC::FileSystem::ChildResult::IsNoChild);
+        add("A/a"_L1, "A"_L1, OCC::FileSystem::ChildResult::IsChild);
+        add("A/a"_L1, "A/"_L1, OCC::FileSystem::ChildResult::IsChild);
+        add("ä/a"_L1, "ä/"_L1, OCC::FileSystem::ChildResult::IsChild);
+        add("Ä/è/a"_L1, "Ä/è/"_L1, OCC::FileSystem::ChildResult::IsChild);
+        add("Ä/a"_L1, "Ä/"_L1, OCC::FileSystem::ChildResult::IsChild);
+        add("https://foo/bar"_L1, "https://foo"_L1, OCC::FileSystem::ChildResult::IsChild);
+        add("https://foo/bar"_L1, "http://foo"_L1, OCC::FileSystem::ChildResult::IsNoChild);
+        add("https://foo/bar"_L1, "http://foo/foo"_L1, OCC::FileSystem::ChildResult::IsNoChild);
+        add("https://foo/bar"_L1, QString(), OCC::FileSystem::ChildResult::IsChild | OCC::FileSystem::ChildResult::IsParentEmpty);
 #ifdef Q_OS_WIN
         // QDir::cleanPath converts \\ only on Windows
-        add(QStringLiteral("C:/Program Files/test)"), QStringLiteral("C:/Program Files"), OCC::FileSystem::ChildResult::IsChild);
-        add(QStringLiteral(R"(C:\Program Files\test)"), QStringLiteral("C:/Program Files"), OCC::FileSystem::ChildResult::IsChild);
-        add(QStringLiteral(R"(C:\Program Files\test\)"), QStringLiteral("C:/Program Files\\"), OCC::FileSystem::ChildResult::IsChild);
-        add(QStringLiteral(R"(C:\Program Files\test\\\)"), QStringLiteral("C:/Program Files/test"),
-            OCC::FileSystem::ChildResult::IsChild | OCC::FileSystem::ChildResult::IsEqual);
+        add("C:/Program Files/test)"_L1, "C:/Program Files"_L1, OCC::FileSystem::ChildResult::IsChild);
+        add(R"(C:\Program Files\test)"_L1, "C:/Program Files"_L1, OCC::FileSystem::ChildResult::IsChild);
+        add(R"(C:\Program Files\test\)"_L1, "C:/Program Files\\"_L1, OCC::FileSystem::ChildResult::IsChild);
+        add(R"(C:\Program Files\test\\\)"_L1, "C:/Program Files/test"_L1, OCC::FileSystem::ChildResult::IsChild | OCC::FileSystem::ChildResult::IsEqual);
 #endif
     }
 
@@ -308,14 +305,14 @@ private Q_SLOTS:
         using namespace OCC::FileSystem;
 
         QTemporaryDir temp = createTempDir();
-        QFile tempFile(temp.filePath(QStringLiteral("testfile")));
+        QFile tempFile(temp.filePath("testfile"_L1));
         QVERIFY(tempFile.open(QIODevice::WriteOnly));
         QByteArray data(64, 'X');
         QCOMPARE(tempFile.write(data), data.size());
         tempFile.close();
 
         const auto fn = tempFile.fileName();
-        const QString testKey = QStringLiteral("testKey");
+        const QString testKey = "testKey"_L1;
         const auto testValue(u"testValue"_s);
 
         QVERIFY(!Tags::get(fn, testKey).has_value());
@@ -333,7 +330,7 @@ private Q_SLOTS:
         QTemporaryDir tempDir = createTempDir();
 
         const auto fn = tempDir.path();
-        const QString testKey = QStringLiteral("testKey");
+        const QString testKey = "testKey"_L1;
         const QString testValue(u"testValue"_s);
 
         QVERIFY(!Tags::get(fn, testKey).has_value());

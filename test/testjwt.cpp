@@ -10,6 +10,7 @@
 #include "creds/jwt.h"
 
 using namespace OCC;
+using namespace Qt::StringLiterals;
 
 namespace {
 QByteArray encodeSegment(const QJsonObject &obj)
@@ -35,15 +36,15 @@ private Q_SLOTS:
 
         const JWT jwt("eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9." + payloadPart + ".c2lnbmF0dXJl");
         QVERIFY(jwt.isValid());
-        QCOMPARE(jwt.payload().value(QLatin1String("aud")).toString(), QStringLiteral("OpenCloudDesktop"));
-        QCOMPARE(jwt.payload().value(QLatin1String("pic")).toString(), QStringLiteral("https://x.example/aa?v=1"));
-        QCOMPARE(jwt.payload().value(QLatin1String("note")).toString(), QStringLiteral("b>tag"));
+        QCOMPARE(jwt.payload().value(QLatin1String("aud")).toString(), "OpenCloudDesktop"_L1);
+        QCOMPARE(jwt.payload().value(QLatin1String("pic")).toString(), "https://x.example/aa?v=1"_L1);
+        QCOMPARE(jwt.payload().value(QLatin1String("note")).toString(), "b>tag"_L1);
     }
 
     void testRoundTrip()
     {
-        const QJsonObject header = {{QStringLiteral("alg"), QStringLiteral("RS256")}, {QStringLiteral("typ"), QStringLiteral("JWT")}};
-        const QJsonObject payload = {{QStringLiteral("aud"), QStringLiteral("OpenCloudDesktop")}, {QStringLiteral("pic"), QStringLiteral("https://x.example/aa?v=1")}};
+        const QJsonObject header = {{"alg"_L1, "RS256"_L1}, {"typ"_L1, "JWT"_L1}};
+        const QJsonObject payload = {{"aud"_L1, "OpenCloudDesktop"_L1}, {"pic"_L1, "https://x.example/aa?v=1"_L1}};
 
         const JWT jwt(encodeSegment(header) + "." + encodeSegment(payload) + ".c2lnbmF0dXJl");
         QVERIFY(jwt.isValid());
@@ -68,7 +69,7 @@ private Q_SLOTS:
         // An invalid character inside an otherwise valid payload segment: a
         // permissive decode skips it and accepts a silently corrupted token,
         // strict decoding must reject the whole segment.
-        const QByteArray payload = encodeSegment({{QStringLiteral("aud"), QStringLiteral("OpenCloudDesktop")}});
+        const QByteArray payload = encodeSegment({{"aud"_L1, "OpenCloudDesktop"_L1}});
         QVERIFY(JWT("eyJhbGciOiJSUzI1NiJ9." + payload + ".c2lnbmF0dXJl").isValid());
         QVERIFY(!JWT("eyJhbGciOiJSUzI1NiJ9." + QByteArray(payload).insert(4, '!') + ".c2lnbmF0dXJl").isValid());
     }

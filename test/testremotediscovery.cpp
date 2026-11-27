@@ -87,12 +87,12 @@ private Q_SLOTS:
         QTest::addColumn<bool>("syncSucceeds");
         QTest::addColumn<QString>("syncRootError");
 
-        QString itemErrorMessage = QStringLiteral("Internal Server Fake Error");
+        QString itemErrorMessage = "Internal Server Fake Error"_L1;
 
         QTest::newRow("400") << 400 << itemErrorMessage << false << QString{};
-        QTest::newRow("401") << 401 << QStringLiteral("Fake credentials error") << false << QString{};
-        QTest::newRow("403") << 403 << QStringLiteral("Fake access denied error") << true << QString{};
-        QTest::newRow("404") << 404 << QString{} << true << QStringLiteral("This Space is currently unavailable");
+        QTest::newRow("401") << 401 << u"Fake credentials error"_s << false << QString{};
+        QTest::newRow("403") << 403 << u"Fake access denied error"_s << true << QString{};
+        QTest::newRow("404") << 404 << QString{} << true << u"This Space is currently unavailable"_s;
         QTest::newRow("500") << 500 << itemErrorMessage << true << QString{};
         QTest::newRow("503") << 503 << itemErrorMessage << true << QString{};
         // 200 should be an error since propfind should return 207
@@ -116,19 +116,19 @@ private Q_SLOTS:
         FakeFolder fakeFolder(FileInfo::A12_B12_C12_S12(), vfsMode, filesAreDehydrated);
 
         // Do Some change as well
-        fakeFolder.localModifier().insert(QStringLiteral("A/z1"));
-        fakeFolder.localModifier().insert(QStringLiteral("B/z1"));
-        fakeFolder.localModifier().insert(QStringLiteral("C/z1"));
-        fakeFolder.remoteModifier().insert(QStringLiteral("A/z2"));
-        fakeFolder.remoteModifier().insert(QStringLiteral("B/z2"));
-        fakeFolder.remoteModifier().insert(QStringLiteral("C/z2"));
+        fakeFolder.localModifier().insert("A/z1"_L1);
+        fakeFolder.localModifier().insert("B/z1"_L1);
+        fakeFolder.localModifier().insert("C/z1"_L1);
+        fakeFolder.remoteModifier().insert("A/z2"_L1);
+        fakeFolder.remoteModifier().insert("B/z2"_L1);
+        fakeFolder.remoteModifier().insert("C/z2"_L1);
         QVERIFY(fakeFolder.applyLocalModificationsWithoutSync());
 
         auto oldLocalState = fakeFolder.currentLocalState();
         auto oldRemoteState = fakeFolder.currentRemoteState();
 
-        QString errorFolder = Utility::concatUrlPath(OCC::TestUtils::dummyDavUrl(), QStringLiteral("B")).path();
-        QString fatalErrorPrefix = QStringLiteral("Server replied with an error while reading directory »B«: ");
+        QString errorFolder = Utility::concatUrlPath(OCC::TestUtils::dummyDavUrl(), "B"_L1).path();
+        QString fatalErrorPrefix = u"Server replied with an error while reading directory »B«: "_s;
         fakeFolder.setServerOverride([&](QNetworkAccessManager::Operation op, const QNetworkRequest &req, QIODevice *) -> QNetworkReply * {
             if (req.attribute(QNetworkRequest::CustomVerbAttribute).toByteArray() == "PROPFIND" && req.url().path().endsWith(errorFolder)) {
                 if (errorKind == InvalidXML) {
@@ -150,26 +150,26 @@ private Q_SLOTS:
         QCOMPARE(fakeFolder.applyLocalModificationsAndSync(), syncSucceeds);
 
         // The folder B should not have been sync'ed (and in particular not removed)
-        QCOMPARE(oldLocalState.children[QStringLiteral("B")], fakeFolder.currentLocalState().children[QStringLiteral("B")]);
-        QCOMPARE(oldRemoteState.children[QStringLiteral("B")], fakeFolder.currentRemoteState().children[QStringLiteral("B")]);
+        QCOMPARE(oldLocalState.children["B"_L1], fakeFolder.currentLocalState().children["B"_L1]);
+        QCOMPARE(oldRemoteState.children["B"_L1], fakeFolder.currentRemoteState().children["B"_L1]);
         if (!syncSucceeds) {
             QCOMPARE(errorSpy.size(), 1);
             QCOMPARE(errorSpy[0][0].toString(), formatAbortError(fatalErrorPrefix + expectedErrorString));
         } else {
-            QCOMPARE(completeSpy.findItem(QStringLiteral("B"))->instruction(), CSYNC_INSTRUCTION_IGNORE);
-            QVERIFY(completeSpy.findItem(QStringLiteral("B"))->_errorString.contains(expectedErrorString));
+            QCOMPARE(completeSpy.findItem("B"_L1)->instruction(), CSYNC_INSTRUCTION_IGNORE);
+            QVERIFY(completeSpy.findItem("B"_L1)->_errorString.contains(expectedErrorString));
 
             // The other folder should have been sync'ed as the sync just ignored the faulty dir
-            QCOMPARE(fakeFolder.currentRemoteState().children[QStringLiteral("A")], fakeFolder.currentLocalState().children[QStringLiteral("A")]);
-            QCOMPARE(fakeFolder.currentRemoteState().children[QStringLiteral("C")], fakeFolder.currentLocalState().children[QStringLiteral("C")]);
-            QCOMPARE(completeSpy.findItem(QStringLiteral("A/z1"))->instruction(), CSYNC_INSTRUCTION_NEW);
+            QCOMPARE(fakeFolder.currentRemoteState().children["A"_L1], fakeFolder.currentLocalState().children["A"_L1]);
+            QCOMPARE(fakeFolder.currentRemoteState().children["C"_L1], fakeFolder.currentLocalState().children["C"_L1]);
+            QCOMPARE(completeSpy.findItem("A/z1"_L1)->instruction(), CSYNC_INSTRUCTION_NEW);
         }
 
         //
         // Check the same discovery error on the sync root
         //
         errorFolder = Utility::ensureTrailingSlash(OCC::TestUtils::dummyDavUrl().path());
-        fatalErrorPrefix = QStringLiteral("Server replied with an error while reading directory »/«: ");
+        fatalErrorPrefix = u"Server replied with an error while reading directory »/«: "_s;
         errorSpy.clear();
         QVERIFY(!fakeFolder.applyLocalModificationsAndSync());
         QCOMPARE(errorSpy.size(), 1);
@@ -182,13 +182,13 @@ private Q_SLOTS:
         QFETCH_GLOBAL(bool, filesAreDehydrated);
 
         FakeFolder fakeFolder(FileInfo(), vfsMode, filesAreDehydrated);
-        fakeFolder.remoteModifier().insert(QStringLiteral("good"));
-        fakeFolder.remoteModifier().insert(QStringLiteral("noetag"));
-        fakeFolder.remoteModifier().find(QStringLiteral("noetag"))->etag.clear();
-        fakeFolder.remoteModifier().insert(QStringLiteral("nofileid"));
-        fakeFolder.remoteModifier().find(QStringLiteral("nofileid"))->fileId.clear();
-        fakeFolder.remoteModifier().mkdir(QStringLiteral("nopermissions"));
-        fakeFolder.remoteModifier().insert(QStringLiteral("nopermissions/A"));
+        fakeFolder.remoteModifier().insert("good"_L1);
+        fakeFolder.remoteModifier().insert("noetag"_L1);
+        fakeFolder.remoteModifier().find("noetag"_L1)->etag.clear();
+        fakeFolder.remoteModifier().insert("nofileid"_L1);
+        fakeFolder.remoteModifier().find("nofileid"_L1)->fileId.clear();
+        fakeFolder.remoteModifier().mkdir("nopermissions"_L1);
+        fakeFolder.remoteModifier().insert("nopermissions/A"_L1);
 
         fakeFolder.setServerOverride([&](QNetworkAccessManager::Operation op, const QNetworkRequest &req, QIODevice *) -> QNetworkReply * {
             if (req.attribute(QNetworkRequest::CustomVerbAttribute).toByteArray() == "PROPFIND" && req.url().path().endsWith(QLatin1String("nopermissions")))
@@ -199,14 +199,14 @@ private Q_SLOTS:
         ItemCompletedSpy completeSpy(fakeFolder);
         QVERIFY(!fakeFolder.applyLocalModificationsAndSync());
 
-        QCOMPARE(completeSpy.findItem(QStringLiteral("good"))->instruction(), CSYNC_INSTRUCTION_NEW);
-        QCOMPARE(completeSpy.findItem(QStringLiteral("noetag"))->instruction(), CSYNC_INSTRUCTION_ERROR);
-        QCOMPARE(completeSpy.findItem(QStringLiteral("nofileid"))->instruction(), CSYNC_INSTRUCTION_ERROR);
-        QCOMPARE(completeSpy.findItem(QStringLiteral("nopermissions"))->instruction(), CSYNC_INSTRUCTION_NEW);
-        QCOMPARE(completeSpy.findItem(QStringLiteral("nopermissions/A"))->instruction(), CSYNC_INSTRUCTION_ERROR);
-        QVERIFY(completeSpy.findItem(QStringLiteral("noetag"))->_errorString.contains(QStringLiteral("etag")));
-        QVERIFY(completeSpy.findItem(QStringLiteral("nofileid"))->_errorString.contains(QStringLiteral("id")));
-        QVERIFY(completeSpy.findItem(QStringLiteral("nopermissions/A"))->_errorString.contains(QStringLiteral("permissions")));
+        QCOMPARE(completeSpy.findItem("good"_L1)->instruction(), CSYNC_INSTRUCTION_NEW);
+        QCOMPARE(completeSpy.findItem("noetag"_L1)->instruction(), CSYNC_INSTRUCTION_ERROR);
+        QCOMPARE(completeSpy.findItem("nofileid"_L1)->instruction(), CSYNC_INSTRUCTION_ERROR);
+        QCOMPARE(completeSpy.findItem("nopermissions"_L1)->instruction(), CSYNC_INSTRUCTION_NEW);
+        QCOMPARE(completeSpy.findItem("nopermissions/A"_L1)->instruction(), CSYNC_INSTRUCTION_ERROR);
+        QVERIFY(completeSpy.findItem("noetag"_L1)->_errorString.contains("etag"_L1));
+        QVERIFY(completeSpy.findItem("nofileid"_L1)->_errorString.contains("id"_L1));
+        QVERIFY(completeSpy.findItem("nopermissions/A"_L1)->_errorString.contains(QStringLiteral("permissions")));
     }
 };
 

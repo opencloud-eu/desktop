@@ -9,6 +9,7 @@
 #include "networkjobs.h"
 
 using namespace OCC;
+using namespace Qt::StringLiterals;
 
 class TestXmlParse : public QObject
 {
@@ -110,17 +111,17 @@ private Q_SLOTS:
 
         QHash<QString, qint64> sizes;
         QSet<QString> vaults;
-        QVERIFY(parser.parse(testXml, &sizes, &vaults, QStringLiteral("/oc/remote.php/webdav/sharefolder")));
+        QVERIFY(parser.parse(testXml, &sizes, &vaults, "/oc/remote.php/webdav/sharefolder"_L1));
 
         QVERIFY(_success);
         QCOMPARE(sizes.size(), 1); // Quota info in the XML
         QCOMPARE(vaults.size(), 1);
 
-        QVERIFY(_items.contains(QStringLiteral("/oc/remote.php/webdav/sharefolder/quitte.pdf")));
-        QVERIFY(_items.contains(QStringLiteral("/oc/remote.php/webdav/sharefolder")));
+        QVERIFY(_items.contains("/oc/remote.php/webdav/sharefolder/quitte.pdf"_L1));
+        QVERIFY(_items.contains("/oc/remote.php/webdav/sharefolder"_L1));
         QVERIFY(_items.size() == 2);
 
-        QVERIFY(_subdirs.contains(QStringLiteral("/oc/remote.php/webdav/sharefolder/")));
+        QVERIFY(_subdirs.contains("/oc/remote.php/webdav/sharefolder/"_L1));
         QVERIFY(_subdirs.size() == 1);
     }
 
@@ -185,7 +186,7 @@ private Q_SLOTS:
 
         QHash<QString, qint64> sizes;
         QSet<QString> vaults;
-        QVERIFY(false == parser.parse(testXml, &sizes, &vaults, QStringLiteral("/oc/remote.php/webdav/sharefolder"))); // verify false
+        QVERIFY(false == parser.parse(testXml, &sizes, &vaults, "/oc/remote.php/webdav/sharefolder"_L1)); // verify false
 
         QVERIFY(!_success);
         QVERIFY(sizes.size() == 0); // No quota info in the XML
@@ -208,7 +209,7 @@ private Q_SLOTS:
 
         QHash<QString, qint64> sizes;
         QSet<QString> vaults;
-        QVERIFY(false == parser.parse(testXml, &sizes, &vaults, QStringLiteral("/oc/remote.php/webdav/sharefolder"))); // verify false
+        QVERIFY(false == parser.parse(testXml, &sizes, &vaults, "/oc/remote.php/webdav/sharefolder"_L1)); // verify false
 
         QVERIFY(!_success);
         QVERIFY(sizes.size() == 0); // No quota info in the XML
@@ -230,7 +231,7 @@ private Q_SLOTS:
 
         QHash<QString, qint64> sizes;
         QSet<QString> vaults;
-        QVERIFY(false == parser.parse(testXml, &sizes, &vaults, QStringLiteral("/oc/remote.php/webdav/sharefolder"))); // verify false
+        QVERIFY(false == parser.parse(testXml, &sizes, &vaults, "/oc/remote.php/webdav/sharefolder"_L1)); // verify false
 
         QVERIFY(!_success);
         QVERIFY(sizes.size() == 0); // No quota info in the XML
@@ -269,7 +270,7 @@ private Q_SLOTS:
 
         QHash<QString, qint64> sizes;
         QSet<QString> vaults;
-        QVERIFY(!parser.parse(testXml, &sizes, &vaults, QStringLiteral("/oc/remote.php/webdav/sharefolder")));
+        QVERIFY(!parser.parse(testXml, &sizes, &vaults, "/oc/remote.php/webdav/sharefolder"_L1));
         QVERIFY(!_success);
     }
 
@@ -333,7 +334,7 @@ private Q_SLOTS:
 
         QHash<QString, qint64> sizes;
         QSet<QString> vaults;
-        QVERIFY(false == parser.parse(testXml, &sizes, &vaults, QStringLiteral("/oc/remote.php/webdav/sharefolder")));
+        QVERIFY(false == parser.parse(testXml, &sizes, &vaults, "/oc/remote.php/webdav/sharefolder"_L1));
         QVERIFY(!_success);
     }
 
@@ -397,7 +398,7 @@ private Q_SLOTS:
 
         QHash<QString, qint64> sizes;
         QSet<QString> vaults;
-        QVERIFY(false == parser.parse(testXml, &sizes, &vaults, QStringLiteral("/oc/remote.php/webdav/sharefolder")));
+        QVERIFY(false == parser.parse(testXml, &sizes, &vaults, "/oc/remote.php/webdav/sharefolder"_L1));
         QVERIFY(!_success);
     }
 
@@ -521,14 +522,14 @@ private Q_SLOTS:
         connect(&parser, &LsColXMLParser::directoryListingIterated, this, &TestXmlParse::slotDirectoryListingIterated);
         connect(&parser, &LsColXMLParser::finishedWithoutError, this, &TestXmlParse::slotFinishedSuccessfully);
 
-        QVERIFY(parser.parse(testXml, nullptr, nullptr, QStringLiteral("/dav")));
+        QVERIFY(parser.parse(testXml, nullptr, nullptr, "/dav"_L1));
         QVERIFY(_success);
         QCOMPARE(_items.size(), 3);
 
-        for (const auto &item : {QStringLiteral("/dav/a.txt"), QStringLiteral("/dav/b.txt"), QStringLiteral("/dav/c.txt")}) {
+        for (const auto &item : {"/dav/a.txt"_L1, "/dav/b.txt"_L1, "/dav/c.txt"_L1}) {
             QVERIFY(_properties.contains(item));
-            QVERIFY2(!_properties[item].contains(QStringLiteral("share-types")), qPrintable(item));
-            QCOMPARE(_properties[item].keys(), QStringList{QStringLiteral("getetag")});
+            QVERIFY2(!_properties[item].contains("share-types"_L1), qPrintable(item));
+            QCOMPARE(_properties[item].keys(), QStringList{"getetag"_L1});
         }
     }
 };

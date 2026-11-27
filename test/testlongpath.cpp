@@ -25,6 +25,7 @@
 #include <QTemporaryFile>
 #include <QTest>
 
+using namespace Qt::StringLiterals;
 
 class TestLongWindowsPath : public QObject
 {
@@ -35,48 +36,48 @@ private Q_SLOTS:
     void check_long_win_path()
     {
         {
-            const auto path = QStringLiteral("C://DATA/FILES/MUSIC/MY_MUSIC.mp3"); // check a short path
-            const auto exp_path = QStringLiteral("\\\\?\\C:\\\\DATA\\FILES\\MUSIC\\MY_MUSIC.mp3");
+            const auto path = "C://DATA/FILES/MUSIC/MY_MUSIC.mp3"_L1; // check a short path
+            const auto exp_path = "\\\\?\\C:\\\\DATA\\FILES\\MUSIC\\MY_MUSIC.mp3"_L1;
             QString new_short = OCC::FileSystem::longWinPath(path);
             QCOMPARE(new_short, exp_path);
         }
 
         {
-            const auto path = QStringLiteral("\\\\foo\\bar/MY_MUSIC.mp3");
-            const auto exp_path = QStringLiteral("\\\\foo\\bar\\MY_MUSIC.mp3");
+            const auto path = "\\\\foo\\bar/MY_MUSIC.mp3"_L1;
+            const auto exp_path = "\\\\foo\\bar\\MY_MUSIC.mp3"_L1;
             QString new_short = OCC::FileSystem::longWinPath(path);
             QCOMPARE(new_short, exp_path);
         }
 
         {
-            const auto path = QStringLiteral("//foo\\bar/MY_MUSIC.mp3");
-            const auto exp_path = QStringLiteral("\\\\foo\\bar\\MY_MUSIC.mp3");
+            const auto path = "//foo\\bar/MY_MUSIC.mp3"_L1;
+            const auto exp_path = "\\\\foo\\bar\\MY_MUSIC.mp3"_L1;
             QString new_short = OCC::FileSystem::longWinPath(path);
             QCOMPARE(new_short, exp_path);
         }
 
         {
-            const auto path = QStringLiteral("\\foo\\bar");
-            const auto exp_path = QStringLiteral("\\\\?\\foo\\bar");
+            const auto path = "\\foo\\bar"_L1;
+            const auto exp_path = "\\\\?\\foo\\bar"_L1;
             QString new_short = OCC::FileSystem::longWinPath(path);
             QCOMPARE(new_short, exp_path);
         }
 
         {
-            const auto path = QStringLiteral("/foo/bar");
-            const auto exp_path = QStringLiteral("\\\\?\\foo\\bar");
+            const auto path = "/foo/bar"_L1;
+            const auto exp_path = "\\\\?\\foo\\bar"_L1;
             QString new_short = OCC::FileSystem::longWinPath(path);
             QCOMPARE(new_short, exp_path);
         }
 
-        const auto longPath = QStringLiteral("D://alonglonglonglong/blonglonglonglong/clonglonglonglong/dlonglonglonglong/"
-                                             "elonglonglonglong/flonglonglonglong/glonglonglonglong/hlonglonglonglong/ilonglonglonglong/"
-                                             "jlonglonglonglong/klonglonglonglong/llonglonglonglong/mlonglonglonglong/nlonglonglonglong/"
-                                             "olonglonglonglong/file.txt");
-        const auto longPathConv = QStringLiteral("\\\\?\\D:\\\\alonglonglonglong\\blonglonglonglong\\clonglonglonglong\\dlonglonglonglong\\"
-                                                 "elonglonglonglong\\flonglonglonglong\\glonglonglonglong\\hlonglonglonglong\\ilonglonglonglong\\"
-                                                 "jlonglonglonglong\\klonglonglonglong\\llonglonglonglong\\mlonglonglonglong\\nlonglonglonglong\\"
-                                                 "olonglonglonglong\\file.txt");
+        const auto longPath = u"D://alonglonglonglong/blonglonglonglong/clonglonglonglong/dlonglonglonglong/"
+                              "elonglonglonglong/flonglonglonglong/glonglonglonglong/hlonglonglonglong/ilonglonglonglong/"
+                              "jlonglonglonglong/klonglonglonglong/llonglonglonglong/mlonglonglonglong/nlonglonglonglong/"
+                              "olonglonglonglong/file.txt"_s;
+        const auto longPathConv = u"\\\\?\\D:\\\\alonglonglonglong\\blonglonglonglong\\clonglonglonglong\\dlonglonglonglong\\"
+                                  "elonglonglonglong\\flonglonglonglong\\glonglonglonglong\\hlonglonglonglong\\ilonglonglonglong\\"
+                                  "jlonglonglonglong\\klonglonglonglong\\llonglonglonglong\\mlonglonglonglong\\nlonglonglonglong\\"
+                                  "olonglonglonglong\\file.txt"_s;
 
         QString new_long = OCC::FileSystem::longWinPath(longPath);
         // printf( "XXXXXXXXXXXX %s %d\n", new_long, mem_reserved);
@@ -93,26 +94,26 @@ private Q_SLOTS:
     {
         QTest::addColumn<QString>("name");
 
-        QTest::newRow("long") << QStringLiteral("/alonglonglonglong/blonglonglonglong/clonglonglonglong/dlonglonglonglong/"
-                                                "elonglonglonglong/flonglonglonglong/glonglonglonglong/hlonglonglonglong/ilonglonglonglong/"
-                                                "jlonglonglonglong/klonglonglonglong/llonglonglonglong/mlonglonglonglong/nlonglonglonglong/"
-                                                "olonglonglonglong/file.txt");
-        QTest::newRow("long emoji") << QString::fromUtf8("/alonglonglonglong/blonglonglonglong/clonglonglonglong/dlonglonglonglong/"
-                                                         "elonglonglonglong/flonglonglonglong/glonglonglonglong/hlonglonglonglong/ilonglonglonglong/"
-                                                         "jlonglonglonglong/klonglonglonglong/llonglonglonglong/mlonglonglonglong/nlonglonglonglong/"
-                                                         "olonglonglonglong/file🐷.txt");
-        QTest::newRow("long russian") << QString::fromUtf8("/alonglonglonglong/blonglonglonglong/clonglonglonglong/dlonglonglonglong/"
-                                                           "elonglonglonglong/flonglonglonglong/glonglonglonglong/hlonglonglonglong/ilonglonglonglong/"
-                                                           "jlonglonglonglong/klonglonglonglong/llonglonglonglong/mlonglonglonglong/nlonglonglonglong/"
-                                                           "olonglonglonglong/собственное.txt");
-        QTest::newRow("long arabic") << QString::fromUtf8("/alonglonglonglong/blonglonglonglong/clonglonglonglong/dlonglonglonglong/"
-                                                          "elonglonglonglong/flonglonglonglong/glonglonglonglong/hlonglonglonglong/ilonglonglonglong/"
-                                                          "jlonglonglonglong/klonglonglonglong/llonglonglonglong/mlonglonglonglong/nlonglonglonglong/"
-                                                          "olonglonglonglong/السحاب.txt");
-        QTest::newRow("long chinese") << QString::fromUtf8("/alonglonglonglong/blonglonglonglong/clonglonglonglong/dlonglonglonglong/"
-                                                           "elonglonglonglong/flonglonglonglong/glonglonglonglong/hlonglonglonglong/ilonglonglonglong/"
-                                                           "jlonglonglonglong/klonglonglonglong/llonglonglonglong/mlonglonglonglong/nlonglonglonglong/"
-                                                           "olonglonglonglong/自己的云.txt");
+        QTest::newRow("long") << u"/alonglonglonglong/blonglonglonglong/clonglonglonglong/dlonglonglonglong/"
+                                 "elonglonglonglong/flonglonglonglong/glonglonglonglong/hlonglonglonglong/ilonglonglonglong/"
+                                 "jlonglonglonglong/klonglonglonglong/llonglonglonglong/mlonglonglonglong/nlonglonglonglong/"
+                                 "olonglonglonglong/file.txt"_s;
+        QTest::newRow("long emoji") << u"/alonglonglonglong/blonglonglonglong/clonglonglonglong/dlonglonglonglong/"
+                                       "elonglonglonglong/flonglonglonglong/glonglonglonglong/hlonglonglonglong/ilonglonglonglong/"
+                                       "jlonglonglonglong/klonglonglonglong/llonglonglonglong/mlonglonglonglong/nlonglonglonglong/"
+                                       "olonglonglonglong/file🐷.txt"_s;
+        QTest::newRow("long russian") << u"/alonglonglonglong/blonglonglonglong/clonglonglonglong/dlonglonglonglong/"
+                                         "elonglonglonglong/flonglonglonglong/glonglonglonglong/hlonglonglonglong/ilonglonglonglong/"
+                                         "jlonglonglonglong/klonglonglonglong/llonglonglonglong/mlonglonglonglong/nlonglonglonglong/"
+                                         "olonglonglonglong/собственное.txt"_s;
+        QTest::newRow("long arabic") << u"/alonglonglonglong/blonglonglonglong/clonglonglonglong/dlonglonglonglong/"
+                                        "elonglonglonglong/flonglonglonglong/glonglonglonglong/hlonglonglonglong/ilonglonglonglong/"
+                                        "jlonglonglonglong/klonglonglonglong/llonglonglonglong/mlonglonglonglong/nlonglonglonglong/"
+                                        "olonglonglonglong/السحاب.txt"_s;
+        QTest::newRow("long chinese") << u"/alonglonglonglong/blonglonglonglong/clonglonglonglong/dlonglonglonglong/"
+                                         "elonglonglonglong/flonglonglonglong/glonglonglonglong/hlonglonglonglong/ilonglonglonglong/"
+                                         "jlonglonglonglong/klonglonglonglong/llonglonglonglong/mlonglonglonglong/nlonglonglonglong/"
+                                         "olonglonglonglong/自己的云.txt"_s;
     }
 
     void testLongPathStat()
@@ -123,7 +124,7 @@ private Q_SLOTS:
 
         const auto data = QByteArrayLiteral("hello");
         qDebug() << longPath;
-        QVERIFY(longPath.dir().mkpath(QStringLiteral(".")));
+        QVERIFY(longPath.dir().mkpath("."_L1));
 
         QFile file(longPath.filePath());
         QVERIFY(file.open(QFile::WriteOnly));

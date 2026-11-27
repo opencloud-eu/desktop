@@ -9,6 +9,7 @@
 #include "syncfileitem.h"
 
 using namespace OCC;
+using namespace Qt::StringLiterals;
 
 class TestSyncFileItem : public QObject
 {
@@ -26,18 +27,17 @@ private Q_SLOTS:
         QTest::addColumn<SyncFileItem>("b");
         QTest::addColumn<SyncFileItem>("c");
 
-        QTest::newRow("a1") << SyncFileItem(QStringLiteral("client")) << SyncFileItem(QStringLiteral("client/build"))
-                            << SyncFileItem(QStringLiteral("client-build"));
-        QTest::newRow("a2") << SyncFileItem(QStringLiteral("test/t1")) << SyncFileItem(QStringLiteral("test/t2")) << SyncFileItem(QStringLiteral("test/t3"));
-        QTest::newRow("a3") << SyncFileItem(QStringLiteral("ABCD")) << SyncFileItem(QStringLiteral("abcd")) << SyncFileItem(QStringLiteral("zzzz"));
+        QTest::newRow("a1") << SyncFileItem("client"_L1) << SyncFileItem("client/build"_L1) << SyncFileItem("client-build"_L1);
+        QTest::newRow("a2") << SyncFileItem("test/t1"_L1) << SyncFileItem("test/t2"_L1) << SyncFileItem("test/t3"_L1);
+        QTest::newRow("a3") << SyncFileItem("ABCD"_L1) << SyncFileItem("abcd"_L1) << SyncFileItem("zzzz"_L1);
 
-        SyncFileItem movedItem1(QStringLiteral("folder/source/file.f"));
-        movedItem1._renameTarget = QStringLiteral("folder/destination/file.f");
+        SyncFileItem movedItem1("folder/source/file.f"_L1);
+        movedItem1._renameTarget = "folder/destination/file.f"_L1;
         movedItem1.setInstruction(CSYNC_INSTRUCTION_RENAME);
 
-        QTest::newRow("move1") << SyncFileItem(QStringLiteral("folder/destination")) << movedItem1 << SyncFileItem(QStringLiteral("folder/destination-2"));
-        QTest::newRow("move2") << SyncFileItem(QStringLiteral("folder/destination/1")) << movedItem1 << SyncFileItem(QStringLiteral("folder/source"));
-        QTest::newRow("move3") << SyncFileItem(QStringLiteral("abc")) << movedItem1 << SyncFileItem(QStringLiteral("ijk"));
+        QTest::newRow("move1") << SyncFileItem("folder/destination"_L1) << movedItem1 << SyncFileItem("folder/destination-2"_L1);
+        QTest::newRow("move2") << SyncFileItem("folder/destination/1"_L1) << movedItem1 << SyncFileItem("folder/source"_L1);
+        QTest::newRow("move3") << SyncFileItem("abc"_L1) << movedItem1 << SyncFileItem("ijk"_L1);
     }
 
     void testComparator() {
