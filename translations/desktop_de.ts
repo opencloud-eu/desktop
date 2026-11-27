@@ -502,7 +502,7 @@ Desktop-Client zur Dateisynchronisierung.</translation>
     <message>
         <location filename="../src/gui/aboutdialog.cpp" line="152"/>
         <source>&lt;html&gt;The update channel determines which client updates will be offered for installation.&lt;ul&gt;&lt;li&gt;&quot;stable&quot; contains only upgrades that are considered reliable&lt;/li&gt;&lt;/ul&gt;&lt;br&gt;⚠️Downgrades are not supported. If you switch to a stable channel this change will only be applied with the next major release.&lt;/html&gt;</source>
-        <translation>&lt;html&gt;Der Update-Kanal legt fest, welche Client-Updates zur Installation angeboten werden.&lt;ul&gt;&lt;li&gt;»Stable« enthält nur Upgrades, die als zuverlässig gelten.&lt;/li&gt;&lt;/ul&gt;&lt;br&gt;⚠️Downgrades werden nicht unterstützt. Wenn Sie zu einem Stable-Kanal wechseln, wird diese Änderung erst mit dem nächsten Major-Release wirksam.&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;Der Aktualisierungskanal legt fest, welche Client-Aktualisierungen zur Installation angeboten werden.&lt;ul&gt;&lt;li&gt;»Stable« enthält nur Aktualisierungen, die als zuverlässig gelten.&lt;/li&gt;&lt;/ul&gt;&lt;br&gt;⚠️Downgrades werden nicht unterstützt. Wenn Sie zu einem Stable-Kanal wechseln, wird diese Änderung erst mit dem nächsten Major-Release wirksam.&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../src/gui/aboutdialog.cpp" line="157"/>
@@ -738,9 +738,9 @@ Desktop-Client zur Dateisynchronisierung.</translation>
         <source>An update is available for this AppImage of %1. Do you want to install this update?
 
 The update will be performed in the background, and overwrite the current AppImage file. You need to restart the app to complete the update.</source>
-        <translation>Für dieses AppImage von %1 ist ein Update verfügbar. Möchten Sie dieses Update installieren?
+        <translation>Für dieses AppImage von %1 ist eine Aktualisierung verfügbar. Möchten Sie diese installieren?
 
-Das Update wird im Hintergrund durchgeführt und überschreibt die aktuelle AppImage-Datei. Sie müssen die Anwendung neu starten, um das Update abzuschließen.</translation>
+Die Aktualisierung wird im Hintergrund durchgeführt und überschreibt die aktuelle AppImage-Datei. Sie müssen die Anwendung neu starten, um die Aktualisierung abzuschließen.</translation>
     </message>
 </context>
 <context>
@@ -1609,7 +1609,7 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/gui/updater/newversionavailablewidget.cpp" line="34"/>
         <source>Get update</source>
-        <translation>Update laden</translation>
+        <translation>Aktualisierung laden</translation>
     </message>
     <message>
         <location filename="../src/gui/updater/newversionavailablewidget.cpp" line="35"/>
@@ -1747,12 +1747,12 @@ Beachten Sie, dass die Verwendung von Protokollierungsoptionen in der Befehlszei
     <message>
         <location filename="../src/gui/updater/ocupdater.cpp" line="149"/>
         <source>%1 installed successfully. Restart the application to finish installing the update.</source>
-        <translation>%1 wurde erfolgreich installiert. Starten Sie die Anwendung neu, um die Installation des Updates abzuschließen.</translation>
+        <translation>%1 wurde erfolgreich installiert. Starten Sie die Anwendung neu, um die Installation der Aktualisierung abzuschließen.</translation>
     </message>
     <message>
         <location filename="../src/gui/updater/ocupdater.cpp" line="151"/>
         <source>%1 available. Restart application to start the update.</source>
-        <translation>%1 verfügbar. Starten Sie die Anwendung neu, um das Update zu starten.</translation>
+        <translation>%1 verfügbar. Starten Sie die Anwendung neu, um die Aktualisierung zu starten.</translation>
     </message>
     <message>
         <location filename="../src/gui/updater/ocupdater.cpp" line="162"/>

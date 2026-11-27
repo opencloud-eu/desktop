@@ -104,6 +104,10 @@ def get_native_clipboard_text(self):
     raise NotImplementedError("unsupported platform.")
 
 
+def get_name(self):
+    return self.get_attribute("name")
+
+
 def pause(self):
     threading.Event().wait()
 
@@ -120,6 +124,7 @@ WebElement.native_send_keys = native_send_keys
 WebElement.find_element = find_element
 WebElement.find_elements_with_wait = find_elements_with_wait
 WebElement.is_checked = is_checked
+WebElement.get_name = get_name
 
 app_driver = None
 
