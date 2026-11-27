@@ -62,6 +62,7 @@ Feature: adding accounts
         When the user selects manual sync folder option in advanced section
         And the user syncs the "Personal" space
         Then the folder "simple-folder" should exist on the file system
+        When the user syncs the another space "Shares"
 
 
     Scenario: Check for suffix when sync path exists
