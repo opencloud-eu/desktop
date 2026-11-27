@@ -417,7 +417,7 @@ CmdOptions parseOptions(const QStringList &app_args)
         options.restartTimes = parser.value(maxRetriesOption).toInt();
     }
     if (parser.isSet(uploadLimitOption)) {
-        options.uplimit = parser.value(maxRetriesOption).toInt() * 1000;
+        options.uplimit = parser.value(uploadLimitOption).toInt() * 1000;
     }
     if (parser.isSet(downloadLimitption)) {
         options.downlimit = parser.value(downloadLimitption).toInt() * 1000;
