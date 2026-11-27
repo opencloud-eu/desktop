@@ -2,20 +2,39 @@ from types import SimpleNamespace
 from urllib.parse import urlparse
 from appium.webdriver.common.appiumby import AppiumBy as By
 from selenium.common.exceptions import NoSuchElementException
-
+from helpers.ConfigHelper import get_config, is_linux, is_windows
 from helpers.AppHelper import app
-from helpers.ConfigHelper import get_config
 from helpers.UserHelper import get_displayname_for_user
 from helpers.Utils import wait_for
 
 
 class Toolbar:
     NAVIGATION_BAR = SimpleNamespace(by=By.XPATH, selector="//*[@name='Navigation bar']/..")
-    ACCOUNT_TAB = SimpleNamespace(by=By.CLASS_NAME, selector="[page tab | {text}]")
-    ADD_ACCOUNT_BUTTON = SimpleNamespace(by=By.CLASS_NAME, selector="[push button | Add Account]")
-    ACTIVITY_TAB = SimpleNamespace(by=By.CLASS_NAME, selector="[page tab | Activity]")
-    SETTINGS_TAB = SimpleNamespace(by=By.CLASS_NAME, selector="[page tab | Settings]")
-    QUIT_BUTTON = SimpleNamespace(by=By.CLASS_NAME, selector="[push button | Quit]")
+    if is_windows():
+        ACCOUNT_TAB = SimpleNamespace(by=By.XPATH, selector="//TabItem[@Name='{text}']")
+        ADD_ACCOUNT_BUTTON = SimpleNamespace(by=By.XPATH, selector="//Button[@Name='Add Account']")
+        ACTIVITY_TAB = SimpleNamespace(by=By.NAME, selector="Activity")
+        SETTINGS_TAB = SimpleNamespace(by=By.NAME, selector="Settings")
+        QUIT_BUTTON = SimpleNamespace(by=By.NAME, selector="Quit")
+        PERSONAL_SPACE = SimpleNamespace(
+            by=By.XPATH,
+            selector=(
+                "//ListItem[starts-with(@Name, 'Personal,') "
+                "and contains(@Name, 'Local folder:') "
+                "and contains(@Name, '\\{username}\\')]"
+            ),
+        )
+    elif is_linux():
+        ACCOUNT_TAB = SimpleNamespace(by=By.CLASS_NAME, selector="[page tab | {text}]")
+        ADD_ACCOUNT_BUTTON = SimpleNamespace(
+            by=By.CLASS_NAME, selector="[push button | Add Account]"
+        )
+        ACTIVITY_TAB = SimpleNamespace(by=By.CLASS_NAME, selector="[page tab | Activity]")
+        SETTINGS_TAB = SimpleNamespace(by=By.CLASS_NAME, selector="[page tab | Settings]")
+        QUIT_BUTTON = SimpleNamespace(by=By.CLASS_NAME, selector="[push button | Quit]")
+    else:
+        raise NotImplementedError("Unsupported platform")
+
     CONFIRM_QUIT_BUTTON = SimpleNamespace(
         by=By.NAME,
         selector="Yes",
@@ -65,7 +84,7 @@ class Toolbar:
         account_tab = Toolbar.get_account(username)
         account_tab.click()
         # confirm account is active
-        if account_tab.get_attribute("checked") != "true":
+        if not account_tab.is_checked():
             raise AssertionError(f"Account is not active: {username}")
 
     @staticmethod
@@ -100,6 +119,19 @@ class Toolbar:
 
     @staticmethod
     def account_has_focus(username):
+        if is_windows():
+            account = Toolbar.get_account(username)
+            if account is None:
+                return False
+            try:
+                personal_space = app().find_element(
+                    Toolbar.PERSONAL_SPACE.by,
+                    Toolbar.PERSONAL_SPACE.selector.format(username=username),
+                    timeout=get_config("min_timeout"),
+                )
+                return personal_space.is_displayed()
+            except NoSuchElementException:
+                return False
         account = Toolbar.get_account(username)
         return account.get_attribute("checked") == "true"
 

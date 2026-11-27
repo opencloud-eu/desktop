@@ -2,7 +2,6 @@ import os
 import re
 import time
 import urllib.request
-
 from pageObjects.SyncConnection import SyncConnection
 from helpers.ConfigHelper import get_config, is_windows, is_linux
 from helpers.FilesHelper import normalize_path
@@ -69,9 +68,24 @@ SYNC_PATTERNS = {
     # the pattern can be of TWO types depending on the
     # available resources (files/folders)
     'initial': [
-        # when adding account via New Account wizard
+        # when adding account via New Account wizard (Linux)
         [
             SYNC_STATUS['NOP'],
+            SYNC_STATUS['REGISTER'],
+            SYNC_STATUS['UPDATE'],
+        ],
+        # when adding account via New Account wizard (Windows Spaces Personal folder)
+        [
+            SYNC_STATUS['NOP'],
+            SYNC_STATUS['UPDATE'],
+        ],
+        [
+            SYNC_STATUS['REGISTER'],
+            SYNC_STATUS['NOP'],
+            SYNC_STATUS['UPDATE'],
+        ],
+        [
+            SYNC_STATUS['REGISTER'],
             SYNC_STATUS['REGISTER'],
             SYNC_STATUS['UPDATE'],
         ],
@@ -239,14 +253,15 @@ def filter_sync_messages(messages):
 
 def filter_messages_for_item(messages, item):
     filtered_messages = []
+    normalized_item = normalize_path(item).rstrip('/').rstrip('\\')
+    account_path = None
+    if normalized_item.endswith('Personal'):
+        account_path = normalized_item.removesuffix('Personal').rstrip('/').rstrip('\\')
+
     for msg in messages:
-        normalized_msg = msg.rstrip('/').rstrip('\\')
-        item = item.rstrip('/').rstrip('\\')
-        if normalized_msg.endswith(item):
-            filtered_messages.append(msg)
-        elif item.endswith('Personal'):
-            account_path = item.rstrip('Personal').rstrip('/').rstrip('\\')
-            if normalized_msg.endswith(account_path):
+        if match := re.search(r':(/|[A-Za-z]:[\\/]).*', msg):
+            msg_path = normalize_path(msg[match.start() + 1 :]).rstrip('/').rstrip('\\')
+            if msg_path == normalized_item or (account_path and msg_path == account_path):
                 filtered_messages.append(msg)
     return filtered_messages
 

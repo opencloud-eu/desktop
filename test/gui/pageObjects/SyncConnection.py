@@ -1,8 +1,7 @@
 from types import SimpleNamespace
 from appium.webdriver.common.appiumby import AppiumBy as By
 from selenium.common.exceptions import NoSuchElementException, WebDriverException
-
-from helpers.ConfigHelper import get_config
+from helpers.ConfigHelper import get_config, is_linux, is_windows
 from helpers.AppHelper import app
 from helpers.Utils import wait_for
 
@@ -40,9 +39,16 @@ class SyncConnection:
             SyncConnection.ACCOUNT_CONNECTION_CONTAINER.by,
             SyncConnection.ACCOUNT_CONNECTION_CONTAINER.selector,
         )
+
         for connection in connections:
-            # use the active connection
-            if connection.get_attribute("showing") == "true":
+            if is_linux():
+                is_active = connection.get_attribute("showing") == "true"
+            elif is_windows():
+                is_active = connection.is_displayed()
+            else:
+                raise NotImplementedError("Unsupported platform")
+
+            if is_active:
                 return connection
         return None
 
